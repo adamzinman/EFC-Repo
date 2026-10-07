@@ -1,0 +1,7 @@
+{
+  "title": "PID_Loops",
+  "description": "PID loop templates B1-B4 + LoopConfig popup",
+  "parent": "",
+  "enabled": true,
+  "inheritable": true
+}

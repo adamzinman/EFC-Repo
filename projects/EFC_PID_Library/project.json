@@ -1,6 +1,6 @@
 {
   "title": "EFC_PID_Library",
-  "description": "EFC_Styles + PID controlled-device templates v6.2 in one project (generated). Import standalone, or make it the parent of an HMI project.",
+  "description": "EFC_Styles + PID controlled-device templates v6.3 in one project (generated). Import standalone, or make it the parent of an HMI project.",
   "parent": "",
   "enabled": true,
   "inheritable": true

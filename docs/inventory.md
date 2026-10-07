@@ -1,6 +1,6 @@
 # Design inventory
 
-This lists every design in the "Ignition SCADA Management" project and where it lives. Status as of v6.2 (2026-10-07).
+This lists every design in the "Ignition SCADA Management" project and where it lives. Status as of v6.3 (2026-10-07).
 
 ## In this repo (generated, checked by `check_81.py`)
 | Design | Version | Project / files | Generator | Docs |
@@ -13,18 +13,19 @@ This lists every design in the "Ignition SCADA Management" project and where it 
 | PID tags (UDTs + demo) | v5.1 | `tags/PID_*_UDT.json`, `Valve_Discrete_Demo_UDT.json`, `PID_Demo_Instances.json` | `build_pid.py` | [library-reference](library-reference.md) |
 | EFC_IOFaceplates: Modicon x80 I/O card faceplates | export of 2026-10-07 (imported) | `projects/EFC_IOFaceplates/`: 8 card faceplates (BMXAMI0810, BMXAMO0802, BMXART0814, BMXDDI1602, BMXDDI3202K, BMXDDO1602, BMXDDO3202K, BMXDDO6402K), parts, `RackOverview`, `_Demo` | none (imported; edit in Designer) | [design-briefs](design-briefs.md) |
 | EFC_StationFaceplates: DDT_Station sidebar / fill / tile | export of 2026-10-06 (imported) | `projects/EFC_StationFaceplates/` (`Templates/Station/Station_Sidebar`, `Station_Fill`, `Station_Tile`, `_Demo`; 5 own classes), `tags/DDT_Station_Demo_UDT.json`, `tags/Station_Demo_Instances.json` | none (imported; `build_station.py` not in the repo) | [station-faceplates](station-faceplates.md) |
+| PID_Loops: loop cards B1–B4 + LoopConfig popup | built 2026-10-05, `xMidYMid` fix 2026-10-07; not gateway-tested | `projects/PID_Loops/`, `tags/PID_Loops/`, `mockups/pid-loop-*.html` | `generator/pid_loops/generate_loops.py` | [pid-loop-templates](pid-loop-templates.md) |
+| Nav connectors: To/From off-page connector options A–D | options only; none chosen | `symbols/NavConnectors/`, `mockups/nav-connectors.html` | `generator/nav_connectors/generate_nav_connectors.py` | [design-briefs](design-briefs.md) |
 | Screen design standard | — | docs only | — | [screen-layout-standard](screen-layout-standard.md) |
 
 ## Designs not in this repo yet (exports exist; add with `tools/import_project_zip.py`)
 | Design | Latest export | Docs here |
 |---|---|---|
-| PID_Loops: loop cards B1–B4 + LoopConfig popup | `PID_Loops_PROJECT.zip` (needs the `xMidYMid` version) | [pid-loop-templates](pid-loop-templates.md) |
 | Diaphragm compressor screen | in progress | [design-briefs](design-briefs.md) |
 | Haskel pump faceplate | in progress, not built | [design-briefs](design-briefs.md) |
 
 ## Retired
 - PID_Symbols v2 static views and wrapper templates. They were replaced in v3/v4; their artwork lives on as `symbols/` SVGs.
-- `PID_Compressor_Diaphragm_PROJECT.zip`: the early single-symbol project, superseded by `Templates/Rotating/Compressor_Diaphragm`.
+- **PID_Compressor_Diaphragm (legacy, kept for reference):** the early single-symbol add-on, superseded by `Templates/Rotating/Compressor_Diaphragm`. It's still generated (`generator/compressor_addon/`): `projects/PID_Compressor_Diaphragm/`, `symbols/legacy/`, `mockups/compressor-diaphragm-addon.html`. Don't import it alongside PID_Symbols.
 
 ## Cross-cutting to-dos
 - **PID_Symbols:** move the alarm outline from `isAlarmActiveFiltered` to the `queryStatus` pattern used by EFC_ProcessValues. Perspective doesn't re-run `isAlarmActiveFiltered` when alarms change. Preview first, per the workflow rule.

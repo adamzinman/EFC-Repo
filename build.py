@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-EFC Ignition library build (EFC_Styles, PID_Symbols, EFC_PID_Library, EFC_ProcessValues + any imported projects).
+EFC Ignition library build (EFC_Styles, PID_Symbols, EFC_PID_Library, EFC_ProcessValues, PID_Loops, nav connectors,
+legacy compressor add-on + any imported projects).
 
     python3 build.py              regenerate everything tracked in git (projects/, tags/, symbols/, docs/style-class-index.md)
     python3 build.py --preview    also render docs/previews/*.png (needs Playwright + Chromium)
@@ -97,6 +98,11 @@ def generate(preview):
     replace_tree(os.path.join(BUILD, "pid", "symbols"), os.path.join(ROOT, "symbols"))
     shutil.copy(os.path.join(BUILD, "styles", "style_index.md"), os.path.join(ROOT, "docs", "style-class-index.md"))
     run("build_pv.py")                    # EFC_ProcessValues -> projects/, tags/PV_Demo_Tags.json, docs/pv-style-index.md
+    run("pid_loops/generate_loops.py")           # PID_Loops -> projects/PID_Loops, tags/PID_Loops/
+    run("nav_connectors/generate_nav_connectors.py")   # symbols/NavConnectors, mockups/nav-connectors.html
+    run("compressor_addon/generate_compressor.py")     # legacy: projects/PID_Compressor_Diaphragm, symbols/legacy, mockup
+    os.makedirs(os.path.join(ROOT, "mockups"), exist_ok=True)
+    shutil.copy(os.path.join(BUILD, "styles", "style_preview.html"), os.path.join(ROOT, "mockups", "style-preview.html"))
     if preview:
         os.makedirs(os.path.join(ROOT, "docs", "previews"), exist_ok=True)
         shutil.copy(os.path.join(BUILD, "pid", "preview.png"), os.path.join(ROOT, "docs", "previews", "templates.png"))

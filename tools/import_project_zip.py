@@ -11,7 +11,7 @@ generator here, so build.py leaves them alone; they are still zipped by --dist a
 import argparse, datetime, json, os, shutil, sys, zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-GENERATED = {"EFC_Styles", "PID_Symbols", "EFC_PID_Library", "EFC_ProcessValues"}
+GENERATED = {"EFC_Styles", "PID_Symbols", "EFC_PID_Library", "EFC_ProcessValues", "PID_Loops", "PID_Compressor_Diaphragm"}
 
 def main():
     ap = argparse.ArgumentParser()

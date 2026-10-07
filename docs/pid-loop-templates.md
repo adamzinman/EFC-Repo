@@ -1,6 +1,12 @@
 # PID loop templates (PID_Loops)
 
-**Status:** designed and built 2026-10-05; the `xMidYMid` fix followed 2026-10-07. **The project and its generator (`generate_loops.py`) aren't in this repo yet.** The export `PID_Loops_PROJECT.zip` / `PID_Loop_Templates_Perspective81.zip` is in Downloads. Add it with `python3 tools/import_project_zip.py PID_Loops_PROJECT.zip`, and use the copy that has `preserveAspectRatio` = `xMidYMid` (the 2026-10-05 zips still have `xMidYMid meet`, which 8.1 rejects). It has not been test-imported on a gateway.
+**Status:** designed and built 2026-10-05; the `xMidYMid` fix followed 2026-10-07. **In the repo since v6.3:**
+- **Generator:** `generator/pid_loops/generate_loops.py`.
+- **Project:** `projects/PID_Loops/` (no parent; inline styles).
+- **Tags:** `tags/PID_Loops/PID_Loop_UDT.json` and `PID_Loop_Demo_Instances.json`.
+- **Mockups:** `mockups/pid-loop-options.html` and `pid-loop-option-b-variants.html`.
+
+It passes the 8.1 check but hasn't been test-imported on a gateway. Import `dist/PID_Loops_PROJECT.zip` from `python3 build.py --dist`; the 2026-10-05 zips have `xMidYMid meet`, which 8.1 rejects.
 
 The chosen design is Option B (a bar-graph card) plus three variations, in a modern flat ISA-101 style: grays, a blue SP, and color only for alarms.
 
@@ -26,6 +32,7 @@ The chosen design is Option B (a bar-graph card) plus three variations, in a mod
 - **History:** must be enabled on PV/SP/OUT for the B3 sparkline and the popup trend.
 
 ## Open items
+- **Demo tag folder:** the loop demo instances and the PID_Symbols demo instances both import into a folder named `PID_Demo`. Import with **Merge** (not Overwrite) so one set doesn't replace the other.
 - The card's alarm state is PV ≥ AlmHi or ≤ AlmLo, not the real alarm priority yet.
 - It uses inline styles, not EFC_Styles classes, so it doesn't follow the style-library standard yet.
 - The cards label the output "OUT"; relabel it to CV if wanted.

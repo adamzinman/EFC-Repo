@@ -8,7 +8,10 @@ Every EFC Ignition Perspective design (**Ignition 8.1**, ready for 8.3) in one r
 - **EFC_ProcessValues:** process-value cards `PV_StatusStrip` and `PV_RangeBar` with ISA-18.2 alarm letters.
 - **EFC_IOFaceplates:** Modicon x80 I/O card faceplates with a rack overview (imported export).
 - **EFC_StationFaceplates:** DDT_Station scale/fill faceplates (sidebar, fill, tile) with demo tags (imported export).
-- **Projects added from existing exports** (PID_Loops is still to come) go in with `tools/import_project_zip.py`. See the inventory.
+- **PID_Loops:** PID loop cards B1–B4, the LoopConfig popup and a `PID_Loop` UDT.
+- **Nav connector symbols** (options A–D) and the legacy diaphragm-compressor add-on, kept for reference.
+- **HTML mockups** in `mockups/` (open them in a browser).
+- **Projects added from existing exports** go in with `tools/import_project_zip.py`. See the inventory.
 
 Current version: see [`VERSION.json`](VERSION.json). What changed: see [`CHANGELOG.md`](CHANGELOG.md).
 
@@ -23,6 +26,9 @@ generator/               SOURCE OF TRUTH: Python that writes the projects
   build_styles.py          EFC_Styles classes + palette
   build_pid.py             PID_Symbols templates (one per symbol)
   build_pv.py, common.py   EFC_ProcessValues templates + PV demo tags
+  pid_loops/               PID_Loops templates, popup, UDT + demo tags
+  nav_connectors/          off-page connector SVG options + mockup
+  compressor_addon/        legacy diaphragm-compressor add-on (superseded)
   pid_common.py            shared layout, binding and SVG-export helpers
   active.py                geometry + state colors for the 16 active symbols
   v2/                      geometry for the 198 static symbols
@@ -33,10 +39,13 @@ projects/                GENERATED, committed so diffs are readable; gateway fol
   PID_Symbols/             templates (parent: EFC_Styles)
   EFC_PID_Library/         both merged into one project with no parent
   EFC_ProcessValues/       PV templates (parent: EFC_Styles)
+  PID_Loops/               loop cards + LoopConfig popup (no parent; inline styles)
+  PID_Compressor_Diaphragm/  legacy add-on, reference only
   <imported>/              projects added from existing exports (see projects/IMPORTED.md)
 tools/import_project_zip.py  add an existing project export to projects/
 tags/                    GENERATED: PID UDTs + demo instances, PV demo UDT + instances (Tag Browser import JSON)
 symbols/                 GENERATED: 214 plain SVGs (static set + symbols/Active)
+mockups/                 HTML design previews (style preview, loop options, nav connectors, compressor add-on)
 docs/                    inventory, design notes, briefs, standards, ISA-101 audit, references, style indexes, previews
 ```
 

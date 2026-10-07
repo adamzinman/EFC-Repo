@@ -2,6 +2,11 @@
 
 Newest first. Versions match `VERSION.json` and the git tags (`v5.1`, `v6.0`, ...).
 
+- **v6.3 (2026-10-07): merged in the other session's repo (`efc-ignition-library_3.zip`):**
+  - **Added** `generator/pid_loops/` (PID_Loops: B1–B4, LoopConfig, `PID_Loop` UDT + demo tags in `tags/PID_Loops/`), `generator/nav_connectors/` (`symbols/NavConnectors/`, options A–D) and `generator/compressor_addon/` (legacy `PID_Compressor_Diaphragm`, `symbols/legacy/`).
+  - **Added** `mockups/` (loop options, nav connectors, compressor add-on, style preview).
+  - Regenerated output is identical to that repo's committed files.
+  - That repo's EFC_Styles generator (reconstructed from older docs) and its older PV generator were **not** taken; this repo's are newer.
 - **v6.2 (2026-10-07):** imported **EFC_StationFaceplates** (Station_Sidebar, Station_Fill, Station_Tile, _Demo, plus 5 classes) from the 2026-10-06 export, with demo tags (`tags/DDT_Station_Demo_UDT.json`, `tags/Station_Demo_Instances.json`) and its README (`docs/station-faceplates.md`). `build.py` now keeps imported tag files when it regenerates `tags/`.
 - **v6.1 (2026-10-07):** imported **EFC_IOFaceplates** (8 Modicon x80 card faceplates, parts, RackOverview, _Demo) from the user's 2026-10-07 export. It passes the 8.1 check and uses only existing EFC_Styles classes. No tag/UDT files were included in the export.
 - **v6.0 (2026-10-07): every project design in one repo:**
