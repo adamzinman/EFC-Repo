@@ -2,6 +2,7 @@
 
 Newest first. Versions match `VERSION.json` and the git tags (`v5.1`, `v6.0`, ...).
 
+- **v6.2 (2026-10-07):** imported **EFC_StationFaceplates** (Station_Sidebar, Station_Fill, Station_Tile, _Demo, plus 5 classes) from the 2026-10-06 export, with demo tags (`tags/DDT_Station_Demo_UDT.json`, `tags/Station_Demo_Instances.json`) and its README (`docs/station-faceplates.md`). `build.py` now keeps imported tag files when it regenerates `tags/`.
 - **v6.1 (2026-10-07):** imported **EFC_IOFaceplates** (8 Modicon x80 card faceplates, parts, RackOverview, _Demo) from the user's 2026-10-07 export. It passes the 8.1 check and uses only existing EFC_Styles classes. No tag/UDT files were included in the export.
 - **v6.0 (2026-10-07): every project design in one repo:**
   - **Added EFC_ProcessValues** (PV design 1.3.0: `PV_StatusStrip`, `PV_RangeBar`, `_Demo`, 36 classes) with its generator (`generator/build_pv.py`, `common.py`) and `tags/PV_Demo_Tags.json`.

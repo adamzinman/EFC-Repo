@@ -90,7 +90,10 @@ def generate(preview):
         json.dump(project_json(COMBINED, f"EFC_Styles + PID controlled-device templates v{v} in one project (generated). "
                                          "Import standalone, or make it the parent of an HMI project."), f, indent=2); f.write("\n")
 
-    replace_tree(os.path.join(BUILD, "pid", "tags"), os.path.join(ROOT, "tags"))
+    # tags/: overwrite the generated PID files only; imported tag files (e.g. Station demo) are kept
+    os.makedirs(os.path.join(ROOT, "tags"), exist_ok=True)
+    for f in os.listdir(os.path.join(BUILD, "pid", "tags")):
+        shutil.copy(os.path.join(BUILD, "pid", "tags", f), os.path.join(ROOT, "tags", f))
     replace_tree(os.path.join(BUILD, "pid", "symbols"), os.path.join(ROOT, "symbols"))
     shutil.copy(os.path.join(BUILD, "styles", "style_index.md"), os.path.join(ROOT, "docs", "style-class-index.md"))
     run("build_pv.py")                    # EFC_ProcessValues -> projects/, tags/PV_Demo_Tags.json, docs/pv-style-index.md

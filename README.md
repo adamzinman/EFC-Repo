@@ -7,7 +7,8 @@ Every EFC Ignition Perspective design (**Ignition 8.1**, ready for 8.3) in one r
 - **EFC_PID_Library:** EFC_Styles and PID_Symbols merged into one project with no parent.
 - **EFC_ProcessValues:** process-value cards `PV_StatusStrip` and `PV_RangeBar` with ISA-18.2 alarm letters.
 - **EFC_IOFaceplates:** Modicon x80 I/O card faceplates with a rack overview (imported export).
-- **Projects added from existing exports** (PID_Loops and the station faceplates are still to come) go in with `tools/import_project_zip.py`. See the inventory.
+- **EFC_StationFaceplates:** DDT_Station scale/fill faceplates (sidebar, fill, tile) with demo tags (imported export).
+- **Projects added from existing exports** (PID_Loops is still to come) go in with `tools/import_project_zip.py`. See the inventory.
 
 Current version: see [`VERSION.json`](VERSION.json). What changed: see [`CHANGELOG.md`](CHANGELOG.md).
 
@@ -86,4 +87,5 @@ Imported projects have no generator here, so edit them in the Designer, export, 
 - [`docs/pv-display.md`](docs/pv-display.md) / [`docs/pv-style-index.md`](docs/pv-style-index.md): process-value templates.
 - [`docs/pid-loop-templates.md`](docs/pid-loop-templates.md): PID loop cards and popup.
 - [`docs/screen-layout-standard.md`](docs/screen-layout-standard.md): 16:9 screen layout and graphics conventions.
+- [`docs/station-faceplates.md`](docs/station-faceplates.md): station faceplates, member mapping, dock setup.
 - [`docs/design-briefs.md`](docs/design-briefs.md): I/O card and station faceplates, compressor screen, Haskel pump.

@@ -20,7 +20,7 @@ These designs were worked on in other sessions. Unless a section says it's in th
   1. **Sidebar faceplate** for the overview screen, 300×800 px at 1080p, based on the old Station popup.
   2. **Medium faceplate** for the filling screen: only the fill information needed, plus direct setpoint entry.
   3. **Compact tile** on the overview screen that opens the sidebar when clicked. The sidebar opening is wired up on site.
-- **Latest export:** `EFC_StationFaceplates.zip` (2026-10-06; `EFC_StationFaceplates_v1.zip` is the earlier one).
+- **In the repo (v6.2):** `projects/EFC_StationFaceplates/` with demo tags in `tags/`. Full reference: [`station-faceplates.md`](station-faceplates.md).
 
 ## Diaphragm compressor screen (PDC-style, two-stage)
 - A Perspective 8.1 HMI screen for a PDC-style two-stage diaphragm compressor. Several layout options are to be compared, in ISA-101 light gray using EFC_Styles and the PID_Symbols templates (`Templates/Rotating/Compressor_Diaphragm`).
