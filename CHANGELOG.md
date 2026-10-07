@@ -1,7 +1,13 @@
 # Changelog
 
-Newest first. Versions match `VERSION.json` and the git tags (`v5.1`, ...).
+Newest first. Versions match `VERSION.json` and the git tags (`v5.1`, `v6.0`, ...).
 
+- **v6.0 (2026-10-07): every project design in one repo:**
+  - **Added EFC_ProcessValues** (PV design 1.3.0: `PV_StatusStrip`, `PV_RangeBar`, `_Demo`, 36 classes) with its generator (`generator/build_pv.py`, `common.py`) and `tags/PV_Demo_Tags.json`.
+  - **Docs:** `inventory.md`, `pv-display.md`, `pid-loop-templates.md`, `screen-layout-standard.md`, `design-briefs.md` (I/O card and station faceplates, compressor screen, Haskel pump), and an updated `style-library.md`.
+  - **`tools/import_project_zip.py`** adds existing exports (PID_Loops, EFC_IOFaceplates, EFC_StationFaceplates) as projects.
+  - **`build.py --dist`** now zips every project and writes a single `EFC_Ignition_Library_v<ver>.zip` bundle.
+  - **Unchanged:** EFC_Styles, PID_Symbols and EFC_PID_Library are identical to v5.1 except the version in `project.json`.
 - **v5.1 (verified on the gateway with `[EFC]RGTCR/Valves/AV002`):**
   - **Symbols are embedded as Drawing elements** with state-bound fills, outlines and weights, replacing the Image / data-URI source that could show as a broken link.
   - The Drawing `preserveAspectRatio` is `xMidYMid`; 8.1 rejects `xMidYMid meet`. `check_81.py` now checks this enum.

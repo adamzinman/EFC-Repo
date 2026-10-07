@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-EFC Ignition library build.
+EFC Ignition library build (EFC_Styles, PID_Symbols, EFC_PID_Library, EFC_ProcessValues + any imported projects).
 
     python3 build.py              regenerate everything tracked in git (projects/, tags/, symbols/, docs/style-class-index.md)
     python3 build.py --preview    also render docs/previews/*.png (needs Playwright + Chromium)
@@ -93,6 +93,7 @@ def generate(preview):
     replace_tree(os.path.join(BUILD, "pid", "tags"), os.path.join(ROOT, "tags"))
     replace_tree(os.path.join(BUILD, "pid", "symbols"), os.path.join(ROOT, "symbols"))
     shutil.copy(os.path.join(BUILD, "styles", "style_index.md"), os.path.join(ROOT, "docs", "style-class-index.md"))
+    run("build_pv.py")                    # EFC_ProcessValues -> projects/, tags/PV_Demo_Tags.json, docs/pv-style-index.md
     if preview:
         os.makedirs(os.path.join(ROOT, "docs", "previews"), exist_ok=True)
         shutil.copy(os.path.join(BUILD, "pid", "preview.png"), os.path.join(ROOT, "docs", "previews", "templates.png"))
@@ -102,21 +103,23 @@ def make_dist():
     os.makedirs(DIST, exist_ok=True)
     v = VERSION["version"]
     out = []
-    for name, zname in (("EFC_Styles", "EFC_Styles_PROJECT.zip"), ("PID_Symbols", "PID_Symbols_PROJECT.zip"),
-                        (COMBINED, "EFC_PID_Library_PROJECT.zip")):
-        zp = os.path.join(DIST, zname)
+    for name in sorted(os.listdir(PROJECTS)):          # every project folder, generated or imported
+        if not os.path.isfile(os.path.join(PROJECTS, name, "project.json")):
+            continue
+        zp = os.path.join(DIST, f"{name}_PROJECT.zip")
         zip_dir(os.path.join(PROJECTS, name), zp)
         out.append(zp)
-    bundle = os.path.join(DIST, f"PID_Symbols_v{v}.zip")     # tags + symbols for people without git
+    bundle = os.path.join(DIST, f"EFC_Ignition_Library_v{v}.zip")     # everything in one download for people without git
     with zipfile.ZipFile(bundle, "w", zipfile.ZIP_DEFLATED) as z:
         for sub in ("tags", "symbols"):
             for d, _, fs in sorted(os.walk(os.path.join(ROOT, sub))):
                 for f in sorted(fs):
                     p = os.path.join(d, f)
-                    z.write(p, f"PID_Symbols_v{v}/" + os.path.relpath(p, ROOT))
+                    z.write(p, f"EFC_Ignition_Library_v{v}/" + os.path.relpath(p, ROOT))
         for zp in out:
-            z.write(zp, f"PID_Symbols_v{v}/" + os.path.basename(zp))
-        z.write(os.path.join(ROOT, "README.md"), f"PID_Symbols_v{v}/README.md")
+            z.write(zp, f"EFC_Ignition_Library_v{v}/" + os.path.basename(zp))
+        for f in ("README.md", "CHANGELOG.md"):
+            z.write(os.path.join(ROOT, f), f"EFC_Ignition_Library_v{v}/{f}")
     return out
 
 
