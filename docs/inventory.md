@@ -1,6 +1,6 @@
 # Design inventory
 
-This lists every design in the "Ignition SCADA Management" project and where it lives. Status as of v6.0 (2026-10-07).
+This lists every design in the "Ignition SCADA Management" project and where it lives. Status as of v6.1 (2026-10-07).
 
 ## In this repo (generated, checked by `check_81.py`)
 | Design | Version | Project / files | Generator | Docs |
@@ -11,13 +11,13 @@ This lists every design in the "Ignition SCADA Management" project and where it 
 | EFC_ProcessValues: PV_StatusStrip / PV_RangeBar | PV 1.3.0 (not re-tested on a gateway) | `projects/EFC_ProcessValues/`, `tags/PV_Demo_Tags.json` | `generator/build_pv.py`, `common.py` | [pv-display](pv-display.md), [pv-style-index](pv-style-index.md) |
 | Static P&ID symbols | v5.1 | `symbols/<Category>/` (198) + `symbols/Active/` (16) | `generator/v2/`, `pid_common.py` | [library-reference](library-reference.md) |
 | PID tags (UDTs + demo) | v5.1 | `tags/PID_*_UDT.json`, `Valve_Discrete_Demo_UDT.json`, `PID_Demo_Instances.json` | `build_pid.py` | [library-reference](library-reference.md) |
+| EFC_IOFaceplates: Modicon x80 I/O card faceplates | export of 2026-10-07 (imported) | `projects/EFC_IOFaceplates/`: 8 card faceplates (BMXAMI0810, BMXAMO0802, BMXART0814, BMXDDI1602, BMXDDI3202K, BMXDDO1602, BMXDDO3202K, BMXDDO6402K), parts, `RackOverview`, `_Demo` | none (imported; edit in Designer) | [design-briefs](design-briefs.md) |
 | Screen design standard | — | docs only | — | [screen-layout-standard](screen-layout-standard.md) |
 
 ## Designs not in this repo yet (exports exist; add with `tools/import_project_zip.py`)
 | Design | Latest export | Docs here |
 |---|---|---|
 | PID_Loops: loop cards B1–B4 + LoopConfig popup | `PID_Loops_PROJECT.zip` (needs the `xMidYMid` version) | [pid-loop-templates](pid-loop-templates.md) |
-| EFC_IOFaceplates: Modicon x80 card faceplates | `EFC_IOFaceplates.zip` (2026-10-07) | [design-briefs](design-briefs.md) |
 | EFC_StationFaceplates: DDT_Station sidebar / filling / tile | `EFC_StationFaceplates.zip` (2026-10-06) | [design-briefs](design-briefs.md) |
 | Diaphragm compressor screen | in progress | [design-briefs](design-briefs.md) |
 | Haskel pump faceplate | in progress, not built | [design-briefs](design-briefs.md) |

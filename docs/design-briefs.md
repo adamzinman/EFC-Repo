@@ -1,6 +1,6 @@
 # Design briefs: faceplates and screens
 
-These designs were worked on in other sessions. Their exports aren't in this repo yet. Add each with `python3 tools/import_project_zip.py <zip>` (the latest copies are in Downloads), then record it in [`inventory.md`](inventory.md).
+These designs were worked on in other sessions. Unless a section says it's in the repo, its export isn't here yet. Add each with `python3 tools/import_project_zip.py <zip>` (the latest copies are in Downloads), then record it in [`inventory.md`](inventory.md).
 
 ## EFC_IOFaceplates: Modicon x80 I/O card faceplates
 - A suite of Perspective 8.1 faceplates (it must survive the 8.3 upgrade) for Modicon x80 I/O cards read through the M580.
@@ -9,7 +9,10 @@ These designs were worked on in other sessions. Their exports aren't in this rep
   - **One UDT and one faceplate per card** (not per channel), tied directly to the cards' native **IODDTs**.
   - Popups open from a **rack/backplane overview**.
   - The card list comes from the Controls Standard hardware table.
-- **Latest export:** `EFC_IOFaceplates.zip` (2026-10-07).
+- **In the repo (v6.1):** `projects/EFC_IOFaceplates/` (parent EFC_Styles), imported from the 2026-10-07 export.
+  - **Views:** `IO/Faceplates/<card>` for BMXAMI0810, BMXAMO0802, BMXART0814, BMXDDI1602, BMXDDI3202K, BMXDDO1602, BMXDDO3202K and BMXDDO6402K; `IO/Parts/` (AnalogRow_AI/AO/TEMP, DiscreteTile, SlotTile); `IO/RackOverview`; `IO/_Demo`.
+  - **Checks:** uses 43 EFC_Styles classes (all present), no inline styles, and only 8.1 expression functions.
+  - **Missing:** the export has no UDT/tag JSON, so add the per-card UDTs to `tags/` when they're exported.
 
 ## EFC_StationFaceplates: scale/fill station (DDT_Station)
 - Redesign of the "Station faceplate", which collects and displays scale data and is backed by the `DDT_Station` UDT. The new design is ISA-101 light gray in EFC_Styles, with new classes only if needed.

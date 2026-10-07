@@ -1,6 +1,6 @@
 {
   "title": "EFC_ProcessValues",
-  "description": "EFC Process Value templates PV_StatusStrip / PV_RangeBar 1.3.0 (v6.0, generated)",
+  "description": "EFC Process Value templates PV_StatusStrip / PV_RangeBar 1.3.0 (v6.1, generated)",
   "parent": "EFC_Styles",
   "enabled": true,
   "inheritable": true

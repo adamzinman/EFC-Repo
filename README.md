@@ -6,7 +6,8 @@ Every EFC Ignition Perspective design (**Ignition 8.1**, ready for 8.3) in one r
 - **PID_Symbols:** templates for actively controlled devices (valves, pumps, compressors, motors and more). Each template is one symbol, embedded as a Drawing whose fills follow the device state.
 - **EFC_PID_Library:** EFC_Styles and PID_Symbols merged into one project with no parent.
 - **EFC_ProcessValues:** process-value cards `PV_StatusStrip` and `PV_RangeBar` with ISA-18.2 alarm letters.
-- **Projects added from existing exports** (PID_Loops, I/O card and station faceplates) go in with `tools/import_project_zip.py`. See the inventory.
+- **EFC_IOFaceplates:** Modicon x80 I/O card faceplates with a rack overview (imported export).
+- **Projects added from existing exports** (PID_Loops and the station faceplates are still to come) go in with `tools/import_project_zip.py`. See the inventory.
 
 Current version: see [`VERSION.json`](VERSION.json). What changed: see [`CHANGELOG.md`](CHANGELOG.md).
 
