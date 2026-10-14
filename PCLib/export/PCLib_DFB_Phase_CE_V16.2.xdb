@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <FBExchangeFile>
-<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-14-17:02:03" content="Function Block source file" DTDVersion="41"></fileHeader>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-14-17:06:46" content="Function Block source file" DTDVersion="41"></fileHeader>
 <contentHeader name="PCLib" version="1.00"></contentHeader>
-<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-14-17:06:46">
 	<comment>ISA-88 equipment phase: Part 1 state model, commands, modes, parameters, reports</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -134,7 +134,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_SeqBar" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+<DDTSource DDTName="T_SeqBar" version="1.00" dateTime="dt#2026-10-14-17:06:46">
 	<comment>Sequence bar for a T_Phase: segment labels and states for the HMI step bar</comment>
 	<structure>
 		<variables name="Cfg_Title" typeName="STRING[24]">
@@ -185,7 +185,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<FBSource nameOfFBType="FB_PhaseCore" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+<FBSource nameOfFBType="FB_PhaseCore" version="1.00" dateTime="dt#2026-10-14-17:06:46">
 	<comment>ISA-88 phase core for a T_Phase: state machine, commands, modes, ownership, step watchdog, alarms and T_SeqBar sequence bar. Called by every FB_Ph* phase after its sequence logic</comment>
 	<inputParameters>
 		<variables name="PermOK" typeName="BOOL">
@@ -739,7 +739,7 @@ Ph.Prog_Release := FALSE;
 xFirst := FALSE;</STSource>
 	</FBProgram>
 </FBSource>
-<FBSource nameOfFBType="FB_Phase" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+<FBSource nameOfFBType="FB_Phase" version="1.00" dateTime="dt#2026-10-14-17:06:46">
 	<comment>TEMPLATE ISA-88 equipment phase for a T_Phase + T_SeqBar. Copy, rename FB_Ph&lt;Name&gt;, add pins and write the sequence in the open area. FB_PhaseCore does states, modes, commands and the bar</comment>
 	<inputParameters>
 		<variables name="PermOK" typeName="BOOL">
@@ -949,7 +949,7 @@ Failed := fbCore.Failed;
 (* Equipment outputs, e.g. Out_A := xOutA; *)</STSource>
 	</FBProgram>
 </FBSource>
-<FBSource nameOfFBType="FB_PhFill" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+<FBSource nameOfFBType="FB_PhFill" version="1.00" dateTime="dt#2026-10-14-17:06:46">
 	<comment>EXAMPLE phase: fill one xenon cylinder by weight - check, heel recovery, evacuation, leak check, tare, fast / slow fill, settle and top-up, optional sample. One instance per fill station</comment>
 	<inputParameters>
 		<variables name="PermOK" typeName="BOOL">
@@ -1396,7 +1396,7 @@ Out_Tare := xTare;
 FeedReq := xFeedReq;</STSource>
 	</FBProgram>
 </FBSource>
-<FBSource nameOfFBType="FB_PhFeed" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+<FBSource nameOfFBType="FB_PhFeed" version="1.00" dateTime="dt#2026-10-14-17:06:46">
 	<comment>EXAMPLE phase: xenon feed - large source cylinder and diaphragm compressor pressurise the fill header and hold it at setpoint while stations request feed</comment>
 	<inputParameters>
 		<variables name="PermOK" typeName="BOOL">

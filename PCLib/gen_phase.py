@@ -1631,7 +1631,7 @@ def seqbar_view():
         ("msg", "Val_Msg"), ("stime", "Val_StepTime"), ("pct", "Val_StepPct"))}
     custom_pc["params.tagPath"] = {"paramDirection": "input", "persistent": True}
     return {"custom": {}, "params": {"tagPath": "[default]SeqBar_Demo/Stn1_Filling"}, "propConfig": custom_pc,
-            "props": {"defaultSize": {"width": 640, "height": 104}}, "root": root}
+            "props": {"defaultSize": {"width": 640, "height": 76}}, "root": root}
 
 
 def demo_view():
@@ -1642,10 +1642,11 @@ def demo_view():
     for name, *_ in DEMO:
         kids.append(comp("ia.display.view", name,
                          {"path": "Templates/Sequence/SequenceBar",
-                          "params": {"tagPath": f"[default]SeqBar_Demo/{name}"}, "useDefaultViewHeight": True},
+                          "params": {"tagPath": f"[default]SeqBar_Demo/{name}"}, "useDefaultViewHeight": True,
+                          "style": {"marginTop": "0.741vh"}},
                          {"basis": "auto", "grow": 0, "shrink": 0}))
     root = flex("root", "column", kids, "Container/Screen Util/Pad/L")
-    return {"custom": {}, "params": {}, "props": {"defaultSize": {"width": 700, "height": 620}}, "root": root}
+    return {"custom": {}, "params": {}, "props": {"defaultSize": {"width": 700, "height": 470}}, "root": root}
 
 
 VH = lambda px: f"{px * 100 / 1080:.3f}vh"          # 1080p pixels -> vh, as EFC_Styles does
