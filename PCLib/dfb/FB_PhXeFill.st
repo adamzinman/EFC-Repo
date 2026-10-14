@@ -36,6 +36,8 @@ VAR
     tStepMax : TIME;                        (* Watchdog for this step, T#0S = Ph.Cfg_StepTimeout *)
     xWdogOff : BOOL;                        (* No watchdog in this step *)
     xExec : BOOL;                           (* The procedure runs this scan *)
+    xPhActive : BOOL;                       (* Phase active (stations locked) *)
+    xFree : BOOL;                           (* Station free for faceplate commands *)
     i : INT;                                (* Station index *)
     iSt : INT;                              (* Station state being worked out *)
     nSel : INT;                             (* Stations selected *)
@@ -93,12 +95,14 @@ FOR i := 1 TO 6 DO
     U.Stn[i].Out_Recover := FALSE;
     U.Stn[i].Out_Vac := FALSE;
     U.Stn[i].Out_Tare := FALSE;
+    U.Stn[i].Out_Zero := FALSE;
 END_FOR;
 
 (* =====================================================================
    C. SEQUENCE LOGIC - xenon fill: ONE sequence for every selected station
    Large source cylinder -> diaphragm compressor -> fill header -> stations.
-   A station is selected by giving it a target weight (Prm_Real[n] > 0).
+   A station is filled when it is selected (U.Stn[n].Cfg_Sel, the faceplate
+   Select button) and has a target weight (Prm_Real[n] > 0).
    Common steps run all selected stations together; inside a step each
    station has its own state (U.Stn[n].Sts_State) and its valves close as
    soon as that station is finished. A station with a fault is dropped
@@ -158,7 +162,7 @@ CASE Ph.Sts_State OF
             U.Stn[i].Val_FinalWt := 0.0;
             U.Stn[i].Val_LeakRise := 0.0;
             tStn[i] := T#0S;
-            IF Ph.Prm_Real[i] > 0.0 THEN
+            IF (Ph.Prm_Real[i] > 0.0) AND U.Stn[i].Cfg_Sel THEN
                 U.Stn[i].Sts_State := 1;
                 nSel := nSel + 1;
                 xAllOK := xAllOK AND U.Stn[i].Inp_VesselOK AND U.Stn[i].Inp_WtStable AND U.Stn[i].Inp_IntlkOK;
@@ -481,6 +485,32 @@ CASE Ph.Sts_State OF
     xDone := TRUE;
 
 END_CASE;
+
+(* Station faceplate commands: only while the station is free (phase not running, or the
+   station not taking part / finished). Commands are one-shot and cleared here. *)
+xPhActive := (Ph.Sts_State = 1) OR ((Ph.Sts_State >= 3) AND (Ph.Sts_State <= 8)) OR (Ph.Sts_State = 10);
+FOR i := 1 TO 6 DO
+    xFree := NOT xPhActive OR (U.Stn[i].Sts_State = 0) OR (U.Stn[i].Sts_State >= 9);
+    IF xFree THEN
+        IF U.Stn[i].Cmd_Select THEN
+            U.Stn[i].Cfg_Sel := NOT U.Stn[i].Cfg_Sel;
+        END_IF;
+        IF U.Stn[i].Cmd_Tare THEN
+            U.Stn[i].Out_Tare := TRUE;
+        END_IF;
+        IF U.Stn[i].Cmd_Zero THEN
+            U.Stn[i].Out_Zero := TRUE;
+        END_IF;
+        IF U.Stn[i].Cmd_Reset AND (U.Stn[i].Sts_State >= 9) THEN
+            U.Stn[i].Sts_State := 0;
+            U.Stn[i].Sts_FailCode := 0;
+        END_IF;
+    END_IF;
+    U.Stn[i].Cmd_Select := FALSE;
+    U.Stn[i].Cmd_Tare := FALSE;
+    U.Stn[i].Cmd_Zero := FALSE;
+    U.Stn[i].Cmd_Reset := FALSE;
+END_FOR;
 
 (* Unit summary for the HMI *)
 U.Sts_NumSel := 0;

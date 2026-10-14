@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-14-17:15:53" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-14-17:38:13" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
 <contentHeader name="PCLib" version="1.00"></contentHeader>
-<DDTSource DDTName="T_SeqBar" version="1.00" dateTime="dt#2026-10-14-17:15:53">
+<DDTSource DDTName="T_SeqBar" version="1.00" dateTime="dt#2026-10-14-17:38:13">
 	<comment>Sequence bar for a T_Phase: segment labels and states for the HMI step bar</comment>
 	<structure>
 		<variables name="Cfg_Title" typeName="STRING[24]">

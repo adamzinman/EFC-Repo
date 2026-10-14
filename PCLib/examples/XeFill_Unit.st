@@ -27,6 +27,7 @@ END_VAR
    XE.Stn[1].Inp_NetWt := WT_111.Val_PV;   XE.Stn[1].Inp_PT := PT_111.Val_PV;   XE.Stn[1].Inp_VacPT := PT_112.Val_PV;
    XE.Stn[2].Inp_NetWt := WT_121.Val_PV;   XE.Stn[2].Inp_PT := PT_121.Val_PV;   XE.Stn[2].Inp_VacPT := PT_122.Val_PV;
    ... one line per station ...
+   XE.Stn[1].Inp_GrossWt := WT_111.Val_Gross;  XE.Stn[1].Inp_TareWt := WT_111.Val_Tare;  (display only)
    XE.Stn[1].Inp_IntlkOK := ILK_111.Sts_OK;   (station T_Intlk: PT-111 HH, scale fault ...)
    XE.Inp_SrcWt := WT_100.Val_PV;   XE.Inp_SuctPT := PT_101.Val_PV;   XE.Inp_HdrPT := PT_110.Val_PV;
    XE.Inp_CompRdy := K_100.Sts_Ready;   XE.Inp_CompRun := K_100.Sts_Running; *)
@@ -44,7 +45,10 @@ END_IF;
 (* ---- 4. Requests to the control modules, e.g. PCLib T_DValve / T_Motor in Auto ----
    XV_111.Prog_Open := XE.Stn[1].Out_Inlet;    (direction valve, header -> station 1)
    XV_112.Prog_Open := XE.Stn[1].Out_Recover;  XV_113.Prog_Open := XE.Stn[1].Out_Vac;
-   WT_111.Cmd_Tare  := XE.Stn[1].Out_Tare;     ... one block per station ...
+   WT_111.Cmd_Tare  := XE.Stn[1].Out_Tare;     WT_111.Cmd_Zero := XE.Stn[1].Out_Zero;
+   ... one block per station ...
+   The Station faceplates write XE.Stn[n].Cmd_Select / Cmd_Tare / Cmd_Zero / Cmd_Reset directly
+   (Ignition UDT PCLib/XeFill_Station); FB_PhXeFill acts on them and clears them.
    XV_100.Prog_Open := XE.Out_SrcVlv;          XV_105.Prog_Open := XE.Out_Recycle;
    K_100.Prog_Start := XE.Out_CompRun;         K_100.Prog_Load := XE.Out_CompLoad;
    Valve-to-valve interlocks (never vacuum and inlet open together, never recovery

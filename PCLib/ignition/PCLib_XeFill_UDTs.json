@@ -1,0 +1,922 @@
+{
+  "tags": [
+    {
+      "name": "_types_",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "name": "PCLib",
+          "tagType": "Folder",
+          "tags": [
+            {
+              "name": "T_SeqBar",
+              "tagType": "UdtType",
+              "documentation": "PCLib T_SeqBar sequence bar. Val_StepTime is the PLC TIME in ms. OPC item path = {NodePrefix}{Prefix}.<member>; Prefix is the PLC variable, e.g. BAR_Stn[1].",
+              "parameters": {
+                "OPCServer": {
+                  "dataType": "String",
+                  "value": "BMENUA0100"
+                },
+                "NodePrefix": {
+                  "dataType": "String",
+                  "value": "ns=2;s="
+                },
+                "Prefix": {
+                  "dataType": "String",
+                  "value": ""
+                }
+              },
+              "tags": [
+                {
+                  "name": "Cfg_Title",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "String",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Cfg_Title"
+                  }
+                },
+                {
+                  "name": "Cfg_NumSeg",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Int2",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Cfg_NumSeg"
+                  }
+                },
+                {
+                  "name": "Cfg_SegText",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "StringArray",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Cfg_SegText"
+                  }
+                },
+                {
+                  "name": "Sts_Seg",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Int2Array",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Sts_Seg"
+                  },
+                  "readOnly": true
+                },
+                {
+                  "name": "Sts_ActSeg",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Int2",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Sts_ActSeg"
+                  },
+                  "readOnly": true
+                },
+                {
+                  "name": "Sts_PhState",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Int2",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Sts_PhState"
+                  },
+                  "readOnly": true
+                },
+                {
+                  "name": "Sts_Mode",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Int2",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Sts_Mode"
+                  },
+                  "readOnly": true
+                },
+                {
+                  "name": "Sts_Owner",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Int2",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Sts_Owner"
+                  },
+                  "readOnly": true
+                },
+                {
+                  "name": "Sts_Step",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Int2",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Sts_Step"
+                  },
+                  "readOnly": true
+                },
+                {
+                  "name": "Sts_WaitAdv",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Boolean",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Sts_WaitAdv"
+                  },
+                  "readOnly": true
+                },
+                {
+                  "name": "Sts_Fail",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Boolean",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Sts_Fail"
+                  },
+                  "readOnly": true
+                },
+                {
+                  "name": "Val_Msg",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "String",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Val_Msg"
+                  },
+                  "readOnly": true
+                },
+                {
+                  "name": "Val_StepTime",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Int4",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Val_StepTime"
+                  },
+                  "readOnly": true
+                },
+                {
+                  "name": "Val_StepPct",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Int2",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Prefix}.Val_StepPct"
+                  },
+                  "readOnly": true
+                }
+              ]
+            },
+            {
+              "name": "XeFill_Station",
+              "tagType": "UdtType",
+              "documentation": "PCLib XeFill station for the EFC Station faceplates. Presents T_XeFill.Stn[{Stn}] and the FB_PhXeFill recipe under the DDT_Station member names the faceplates bind to. TargetWeight is Prm_Real[{Stn}]; Deadband (tolerance +) and Press_Max are shared by every station.",
+              "parameters": {
+                "OPCServer": {
+                  "dataType": "String",
+                  "value": "BMENUA0100"
+                },
+                "NodePrefix": {
+                  "dataType": "String",
+                  "value": "ns=2;s="
+                },
+                "Unit": {
+                  "dataType": "String",
+                  "value": "XE"
+                },
+                "Phase": {
+                  "dataType": "String",
+                  "value": "PH_XeFill"
+                },
+                "Stn": {
+                  "dataType": "Integer",
+                  "value": 1
+                },
+                "StationName": {
+                  "dataType": "String",
+                  "value": "Station 1"
+                },
+                "ScaleName": {
+                  "dataType": "String",
+                  "value": "WT-111"
+                }
+              },
+              "tags": [
+                {
+                  "name": "PLC",
+                  "tagType": "Folder",
+                  "tags": [
+                    {
+                      "name": "Sts_State",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Int2",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Sts_State"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Sts_FailCode",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Int2",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Sts_FailCode"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Sts_TopUps",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Int2",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Sts_TopUps"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Val_Pct",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Int2",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Val_Pct"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Val_FinalWt",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Float4",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Val_FinalWt"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Val_LeakRise",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Float4",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Val_LeakRise"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Cfg_Sel",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Boolean",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Cfg_Sel"
+                      }
+                    },
+                    {
+                      "name": "Inp_VesselOK",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Boolean",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Inp_VesselOK"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Inp_IntlkOK",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Boolean",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Inp_IntlkOK"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Inp_WtStable",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Boolean",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Inp_WtStable"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Inp_NetWt",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Float4",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Inp_NetWt"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Inp_GrossWt",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Float4",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Inp_GrossWt"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Inp_TareWt",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Float4",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Inp_TareWt"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Inp_PT",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Float4",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Inp_PT"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Inp_VacPT",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Float4",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Inp_VacPT"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Out_Inlet",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Boolean",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Out_Inlet"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Out_Recover",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Boolean",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Out_Recover"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Out_Vac",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Boolean",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Out_Vac"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Hdr_PT",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Float4",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Unit}.Inp_HdrPT"
+                      },
+                      "readOnly": true
+                    },
+                    {
+                      "name": "Ph_State",
+                      "tagType": "AtomicTag",
+                      "valueSource": "opc",
+                      "dataType": "Int2",
+                      "opcServer": {
+                        "bindType": "parameter",
+                        "binding": "{OPCServer}"
+                      },
+                      "opcItemPath": {
+                        "bindType": "parameter",
+                        "binding": "{NodePrefix}{Phase}.Sts_State"
+                      },
+                      "readOnly": true
+                    }
+                  ]
+                },
+                {
+                  "name": "StationName",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "String",
+                  "expression": "\"{StationName}\""
+                },
+                {
+                  "name": "ScaleName",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "String",
+                  "expression": "\"{ScaleName}\""
+                },
+                {
+                  "name": "Units",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "String",
+                  "value": "kg"
+                },
+                {
+                  "name": "NetWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Float4",
+                  "expression": "{[.]PLC/Inp_NetWt}"
+                },
+                {
+                  "name": "GrossWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Float4",
+                  "expression": "{[.]PLC/Inp_GrossWt}"
+                },
+                {
+                  "name": "TareWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Float4",
+                  "expression": "{[.]PLC/Inp_TareWt}"
+                },
+                {
+                  "name": "TotalWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Float4",
+                  "expression": "{[.]PLC/Val_FinalWt}"
+                },
+                {
+                  "name": "TargetWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Float4",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Phase}.Prm_Real[{Stn}]"
+                  }
+                },
+                {
+                  "name": "Deadband",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Float4",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Phase}.Prm_Real[7]"
+                  }
+                },
+                {
+                  "name": "Press_Max",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Float4",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Phase}.Prm_Real[14]"
+                  }
+                },
+                {
+                  "name": "SampleWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4",
+                  "value": 0.0
+                },
+                {
+                  "name": "SamplePress",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4",
+                  "value": 0.0
+                },
+                {
+                  "name": "PT",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Float4",
+                  "expression": "{[.]PLC/Inp_PT}"
+                },
+                {
+                  "name": "PT_Valid",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "isGood({[.]PLC/Inp_PT})"
+                },
+                {
+                  "name": "PT_Diff",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Float4",
+                  "expression": "{[.]PLC/Hdr_PT} - {[.]PLC/Inp_PT}"
+                },
+                {
+                  "name": "Vessel_Present",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Inp_VesselOK}"
+                },
+                {
+                  "name": "Selected",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Cfg_Sel} && {[.]TargetWeight} > 0"
+                },
+                {
+                  "name": "Disabled",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "false"
+                },
+                {
+                  "name": "Failed",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Sts_State} = 10"
+                },
+                {
+                  "name": "Complete",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Sts_State} = 9"
+                },
+                {
+                  "name": "Filling",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Sts_State} >= 6 && {[.]PLC/Sts_State} <= 8"
+                },
+                {
+                  "name": "Vacuuming",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Sts_State} = 3"
+                },
+                {
+                  "name": "Vacuumed",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Sts_State} >= 4 && {[.]PLC/Sts_State} <= 9"
+                },
+                {
+                  "name": "Recovering",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Sts_State} = 2"
+                },
+                {
+                  "name": "Venting",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "false"
+                },
+                {
+                  "name": "Active",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Sts_State} >= 1 && {[.]PLC/Sts_State} <= 8"
+                },
+                {
+                  "name": "ReadyToStart",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]Selected} && {[.]PLC/Sts_State} <= 1"
+                },
+                {
+                  "name": "ReadyToFill",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Sts_State} = 5"
+                },
+                {
+                  "name": "Press_Balanced",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Sts_State} >= 6 && {[.]PLC/Sts_State} <= 9"
+                },
+                {
+                  "name": "InletREQ",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Out_Inlet}"
+                },
+                {
+                  "name": "InletCMD",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Out_Inlet}"
+                },
+                {
+                  "name": "VacuumREQ",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Out_Vac}"
+                },
+                {
+                  "name": "VacuumCMD",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]PLC/Out_Vac}"
+                },
+                {
+                  "name": "SampleREQ",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "false"
+                },
+                {
+                  "name": "SampleCMD",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "false"
+                },
+                {
+                  "name": "Msg",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "String",
+                  "expression": "if({[.]PLC/Sts_State} = 10, case({[.]PLC/Sts_FailCode}, 101, \"Leak check failed\", 102, \"Over max fill pressure\", 103, \"Overfill - above tolerance\", 104, \"Under weight after top-ups\", 105, \"Station interlock\", \"Station fault\"), case({[.]PLC/Sts_State}, 0, \"Not selected\", 1, \"Waiting for line-up\", 2, \"Recovering heel\", 3, \"Evacuating\", 4, \"Evacuated - leak check\", 5, \"Ready to fill\", 6, \"Fast fill\", 7, \"Slow fill\", 8, \"Settling - checking weight\", 9, \"Filled\", \"\"))"
+                },
+                {
+                  "name": "StatusEnum",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Int2",
+                  "expression": "case({[.]PLC/Sts_State}, 0, 0, 1, 10, 2, 60, 3, 70, 4, 70, 5, 20, 6, 30, 7, 30, 8, 30, 9, 40, 10, 50, 0)"
+                },
+                {
+                  "name": "HMI_Select",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Boolean",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Cmd_Select"
+                  }
+                },
+                {
+                  "name": "TareCMD",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Boolean",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Cmd_Tare"
+                  }
+                },
+                {
+                  "name": "ZeroCMD",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Boolean",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Cmd_Zero"
+                  }
+                },
+                {
+                  "name": "HMI_Reset",
+                  "tagType": "AtomicTag",
+                  "valueSource": "opc",
+                  "dataType": "Boolean",
+                  "opcServer": {
+                    "bindType": "parameter",
+                    "binding": "{OPCServer}"
+                  },
+                  "opcItemPath": {
+                    "bindType": "parameter",
+                    "binding": "{NodePrefix}{Unit}.Stn[{Stn}].Cmd_Reset"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

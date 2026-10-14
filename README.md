@@ -6,5 +6,6 @@
 - `FB_Phase`: the template.
 - `FB_PhXeFill`: one xenon fill sequence for any number of stations (example).
 - `T_SeqBar`: the sequence-bar DDT.
+- `ignition/EFC_XeFill_HMI.zip`: the sequence bar, the EFC Station faceplates and the XeFill overview screen.
 
 Design a new phase with [`PCLib/Sequence_Template.md`](PCLib/Sequence_Template.md).

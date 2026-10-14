@@ -8,9 +8,10 @@ Produces:
   export/PCLib_DFB_Phase_CE_V16.2.xdb    Control Expert DFB import file (T_Phase, T_SeqBar, T_FillStn, T_XeFill, DFBs)
   export/T_SeqBar.xdd                    Control Expert DDT import file (T_SeqBar only)
   examples/XeFill_Unit.st                Example unit program: one fill sequence for 6 stations
-  ignition/PCLib_SeqBar_UDT.json         Ignition UDT _types_/PCLib/T_SeqBar (OPC tags)
-  ignition/PCLib_SeqBar_Demo_Tags.json   Memory-tag copy of the UDT plus three demo instances
-  ignition/EFC_SequenceBar.zip           Perspective project: Templates/Sequence/SequenceBar + _Demo
+  ignition/PCLib_XeFill_UDTs.json        Ignition UDTs _types_/PCLib/T_SeqBar and XeFill_Station (OPC tags)
+  ignition/PCLib_XeFill_Demo_Tags.json   Memory-tag demo: SeqBar_Demo and XeFill_Demo (bar + six stations)
+  ignition/EFC_XeFill_HMI.zip            Perspective project: SequenceBar, the EFC Station faceplates
+                                         (ignition/station_views, unchanged), Station_Tile, XeFill/Overview
 
 DFBs:
   FB_PhaseCore  ISA-88 Part 1 state machine, commands, modes, ownership, watchdog,
@@ -749,9 +750,16 @@ T_FILLSTN = dict(
     name="T_FillStn",
     comment="One xenon fill station inside a T_XeFill: I/O, station state and results",
     members=[
+        V("Cfg_Sel", "BOOL", "Station selected for the run (filled when selected and its target > 0)", "TRUE"),
+        V("Cmd_Select", "BOOL", "Operator: toggle Cfg_Sel (one-shot; only while the station is free)"),
+        V("Cmd_Tare", "BOOL", "Operator: tare the scale (one-shot; only while the station is free)"),
+        V("Cmd_Zero", "BOOL", "Operator: zero the scale (one-shot; only while the station is free)"),
+        V("Cmd_Reset", "BOOL", "Operator: clear a filled or faulted station (one-shot; only while free)"),
         V("Inp_VesselOK", "BOOL", "Cylinder connected and its valve confirmed open"),
         V("Inp_IntlkOK", "BOOL", "Station interlocks healthy; FALSE drops the station (fault 105)", "TRUE"),
         V("Inp_NetWt", "REAL", "Scale net weight (kg)"),
+        V("Inp_GrossWt", "REAL", "Scale gross weight (kg), display only"),
+        V("Inp_TareWt", "REAL", "Scale tare weight (kg), display only"),
         V("Inp_WtStable", "BOOL", "Scale motion-free"),
         V("Inp_PT", "REAL", "Station pressure (bar g)"),
         V("Inp_VacPT", "REAL", "Station vacuum gauge (mbar abs)"),
@@ -759,6 +767,7 @@ T_FILLSTN = dict(
         V("Out_Recover", "BOOL", "Request: recovery valve (heel to recovery header)"),
         V("Out_Vac", "BOOL", "Request: vacuum valve"),
         V("Out_Tare", "BOOL", "Request: tare the scale (pulse)"),
+        V("Out_Zero", "BOOL", "Request: zero the scale (pulse)"),
         V("Sts_State", "INT", STN_STATES),
         V("Sts_FailCode", "INT", "Station fault: 101 leak check, 102 over pressure, 103 overfill, "
                                  "104 under weight, 105 station interlock"),
@@ -794,7 +803,8 @@ XEFILL_SEQ = r"""
 (* =====================================================================
    C. SEQUENCE LOGIC - xenon fill: ONE sequence for every selected station
    Large source cylinder -> diaphragm compressor -> fill header -> stations.
-   A station is selected by giving it a target weight (Prm_Real[n] > 0).
+   A station is filled when it is selected (U.Stn[n].Cfg_Sel, the faceplate
+   Select button) and has a target weight (Prm_Real[n] > 0).
    Common steps run all selected stations together; inside a step each
    station has its own state (U.Stn[n].Sts_State) and its valves close as
    soon as that station is finished. A station with a fault is dropped
@@ -854,7 +864,7 @@ CASE Ph.Sts_State OF
             U.Stn[i].Val_FinalWt := 0.0;
             U.Stn[i].Val_LeakRise := 0.0;
             tStn[i] := T#0S;
-            IF Ph.Prm_Real[i] > 0.0 THEN
+            IF (Ph.Prm_Real[i] > 0.0) AND U.Stn[i].Cfg_Sel THEN
                 U.Stn[i].Sts_State := 1;
                 nSel := nSel + 1;
                 xAllOK := xAllOK AND U.Stn[i].Inp_VesselOK AND U.Stn[i].Inp_WtStable AND U.Stn[i].Inp_IntlkOK;
@@ -1178,6 +1188,32 @@ CASE Ph.Sts_State OF
 
 END_CASE;
 
+(* Station faceplate commands: only while the station is free (phase not running, or the
+   station not taking part / finished). Commands are one-shot and cleared here. *)
+xPhActive := (Ph.Sts_State = 1) OR ((Ph.Sts_State >= 3) AND (Ph.Sts_State <= 8)) OR (Ph.Sts_State = 10);
+FOR i := 1 TO NSTN DO
+    xFree := NOT xPhActive OR (U.Stn[i].Sts_State = 0) OR (U.Stn[i].Sts_State >= 9);
+    IF xFree THEN
+        IF U.Stn[i].Cmd_Select THEN
+            U.Stn[i].Cfg_Sel := NOT U.Stn[i].Cfg_Sel;
+        END_IF;
+        IF U.Stn[i].Cmd_Tare THEN
+            U.Stn[i].Out_Tare := TRUE;
+        END_IF;
+        IF U.Stn[i].Cmd_Zero THEN
+            U.Stn[i].Out_Zero := TRUE;
+        END_IF;
+        IF U.Stn[i].Cmd_Reset AND (U.Stn[i].Sts_State >= 9) THEN
+            U.Stn[i].Sts_State := 0;
+            U.Stn[i].Sts_FailCode := 0;
+        END_IF;
+    END_IF;
+    U.Stn[i].Cmd_Select := FALSE;
+    U.Stn[i].Cmd_Tare := FALSE;
+    U.Stn[i].Cmd_Zero := FALSE;
+    U.Stn[i].Cmd_Reset := FALSE;
+END_FOR;
+
 (* Unit summary for the HMI *)
 U.Sts_NumSel := 0;
 U.Sts_NumDone := 0;
@@ -1207,6 +1243,8 @@ XEFILL = dict(
     outputs=PH_OUTPUTS,
     private=PH_PRIVATE + [
         V("xExec", "BOOL", "The procedure runs this scan"),
+        V("xPhActive", "BOOL", "Phase active (stations locked)"),
+        V("xFree", "BOOL", "Station free for faceplate commands"),
         V("i", "INT", "Station index"),
         V("iSt", "INT", "Station state being worked out"),
         V("nSel", "INT", "Stations selected"),
@@ -1243,6 +1281,7 @@ FOR i := 1 TO {NSTN} DO
     U.Stn[i].Out_Recover := FALSE;
     U.Stn[i].Out_Vac := FALSE;
     U.Stn[i].Out_Tare := FALSE;
+    U.Stn[i].Out_Zero := FALSE;
 END_FOR;""",
         XEFILL_SEQ,
         "(* Equipment requests are written straight into U (T_XeFill); the unit program maps them to the control modules *)"))
@@ -1286,6 +1325,7 @@ END_VAR
 (* ---- 1. Inputs: map from the control modules, e.g. PCLib T_AI / T_DI ----
 {maps_in}
    ... one line per station ...
+   XE.Stn[1].Inp_GrossWt := WT_111.Val_Gross;  XE.Stn[1].Inp_TareWt := WT_111.Val_Tare;  (display only)
    XE.Stn[1].Inp_IntlkOK := ILK_111.Sts_OK;   (station T_Intlk: PT-111 HH, scale fault ...)
    XE.Inp_SrcWt := WT_100.Val_PV;   XE.Inp_SuctPT := PT_101.Val_PV;   XE.Inp_HdrPT := PT_110.Val_PV;
    XE.Inp_CompRdy := K_100.Sts_Ready;   XE.Inp_CompRun := K_100.Sts_Running; *)
@@ -1303,7 +1343,10 @@ END_IF;
 (* ---- 4. Requests to the control modules, e.g. PCLib T_DValve / T_Motor in Auto ----
    XV_111.Prog_Open := XE.Stn[1].Out_Inlet;    (direction valve, header -> station 1)
    XV_112.Prog_Open := XE.Stn[1].Out_Recover;  XV_113.Prog_Open := XE.Stn[1].Out_Vac;
-   WT_111.Cmd_Tare  := XE.Stn[1].Out_Tare;     ... one block per station ...
+   WT_111.Cmd_Tare  := XE.Stn[1].Out_Tare;     WT_111.Cmd_Zero := XE.Stn[1].Out_Zero;
+   ... one block per station ...
+   The Station faceplates write XE.Stn[n].Cmd_Select / Cmd_Tare / Cmd_Zero / Cmd_Reset directly
+   (Ignition UDT PCLib/XeFill_Station); FB_PhXeFill acts on them and clears them.
    XV_100.Prog_Open := XE.Out_SrcVlv;          XV_105.Prog_Open := XE.Out_Recycle;
    K_100.Prog_Start := XE.Out_CompRun;         K_100.Prog_Load := XE.Out_CompLoad;
    Valve-to-valve interlocks (never vacuum and inlet open together, never recovery
@@ -1489,7 +1532,10 @@ def demo_tags():
                 "Val_StepTime": ms, "Val_StepPct": pct}
         inst.append({"name": name, "tagType": "UdtInstance", "typeId": "PCLib_Demo/T_SeqBar",
                      "tags": [{"name": k, "tagType": "AtomicTag", "value": v} for k, v in vals.items()]})
-    return {"tags": [folder("_types_", [folder("PCLib_Demo", [dtype])]), folder("SeqBar_Demo", inst)]}
+    unit = [dict(json.loads(json.dumps(i)), name="SeqBar") for i in inst if i["name"] == "XeFill_Filling"]
+    unit += station_demo_instances()
+    return {"tags": [folder("_types_", [folder("PCLib_Demo", [dtype, station_demo_type()])]),
+                     folder("SeqBar_Demo", inst), folder("XeFill_Demo", unit)]}
 
 
 # --- Perspective (same helper style as build_io.py) ---
@@ -1614,6 +1660,236 @@ def demo_view():
     return {"custom": {}, "params": {}, "props": {"defaultSize": {"width": 700, "height": 470}}, "root": root}
 
 
+# ---------------------------------------------------------------------------------
+# Station faceplates (EFC_StationFaceplates, 2026-10-06 export v6.2) on the XeFill sequence
+# ---------------------------------------------------------------------------------
+# Station_Sidebar and Station_Fill are used exactly as exported (ignition/station_views/). They bind to
+# DDT_Station member names, so the UDT below presents T_XeFill.Stn[n] and the phase recipe under those names.
+STATION_VIEWS = {"Templates/Station/Station_Sidebar": "Station_Sidebar.view.json",
+                 "Templates/Station/Station_Fill": "Station_Fill.view.json"}
+STN_PLC = [  # T_FillStn members read over OPC into the PLC folder of each station
+    ("Sts_State", "Int2"), ("Sts_FailCode", "Int2"), ("Sts_TopUps", "Int2"), ("Val_Pct", "Int2"),
+    ("Val_FinalWt", "Float4"), ("Val_LeakRise", "Float4"), ("Cfg_Sel", "Boolean"), ("Inp_VesselOK", "Boolean"),
+    ("Inp_IntlkOK", "Boolean"), ("Inp_WtStable", "Boolean"), ("Inp_NetWt", "Float4"), ("Inp_GrossWt", "Float4"),
+    ("Inp_TareWt", "Float4"), ("Inp_PT", "Float4"), ("Inp_VacPT", "Float4"), ("Out_Inlet", "Boolean"),
+    ("Out_Recover", "Boolean"), ("Out_Vac", "Boolean")]
+STN_FAIL_TEXT = {101: "Leak check failed", 102: "Over max fill pressure", 103: "Overfill - above tolerance",
+                 104: "Under weight after top-ups", 105: "Station interlock"}
+STN_STATE_TEXT = {0: "Not selected", 1: "Waiting for line-up", 2: "Recovering heel", 3: "Evacuating",
+                  4: "Evacuated - leak check", 5: "Ready to fill", 6: "Fast fill", 7: "Slow fill",
+                  8: "Settling - checking weight", 9: "Filled", 10: "Station fault"}
+STATUS_ENUM = {0: 0, 1: 10, 2: 60, 3: 70, 4: 70, 5: 20, 6: 30, 7: 30, 8: 30, 9: 40, 10: 50}   # DFB_Station StatusEnum
+ST = "{[.]PLC/Sts_State}"
+# DDT_Station member -> (Ignition data type, how it is made). Kinds: ("expr", expression), ("opc", item path),
+# ("opcw", writable item path), ("mem", value). The rules are the same ones station_demo() applies.
+STATION_MEMBERS = {
+    "StationName": ("String", ("expr", '"{StationName}"')),
+    "ScaleName": ("String", ("expr", '"{ScaleName}"')),
+    "Units": ("String", ("mem", "kg")),
+    "NetWeight": ("Float4", ("expr", "{[.]PLC/Inp_NetWt}")),
+    "GrossWeight": ("Float4", ("expr", "{[.]PLC/Inp_GrossWt}")),
+    "TareWeight": ("Float4", ("expr", "{[.]PLC/Inp_TareWt}")),
+    "TotalWeight": ("Float4", ("expr", "{[.]PLC/Val_FinalWt}")),
+    "TargetWeight": ("Float4", ("opcw", "{NodePrefix}{Phase}.Prm_Real[{Stn}]")),
+    "Deadband": ("Float4", ("opcw", f"{{NodePrefix}}{{Phase}}.Prm_Real[{NSTN + 1}]")),
+    "Press_Max": ("Float4", ("opcw", f"{{NodePrefix}}{{Phase}}.Prm_Real[{NSTN + 8}]")),
+    "SampleWeight": ("Float4", ("mem", 0.0)),
+    "SamplePress": ("Float4", ("mem", 0.0)),
+    "PT": ("Float4", ("expr", "{[.]PLC/Inp_PT}")),
+    "PT_Valid": ("Boolean", ("expr", "isGood({[.]PLC/Inp_PT})")),
+    "PT_Diff": ("Float4", ("expr", "{[.]PLC/Hdr_PT} - {[.]PLC/Inp_PT}")),
+    "Vessel_Present": ("Boolean", ("expr", "{[.]PLC/Inp_VesselOK}")),
+    "Selected": ("Boolean", ("expr", "{[.]PLC/Cfg_Sel} && {[.]TargetWeight} > 0")),
+    "Disabled": ("Boolean", ("expr", "false")),
+    "Failed": ("Boolean", ("expr", f"{ST} = 10")),
+    "Complete": ("Boolean", ("expr", f"{ST} = 9")),
+    "Filling": ("Boolean", ("expr", f"{ST} >= 6 && {ST} <= 8")),
+    "Vacuuming": ("Boolean", ("expr", f"{ST} = 3")),
+    "Vacuumed": ("Boolean", ("expr", f"{ST} >= 4 && {ST} <= 9")),
+    "Recovering": ("Boolean", ("expr", f"{ST} = 2")),
+    "Venting": ("Boolean", ("expr", "false")),
+    "Active": ("Boolean", ("expr", f"{ST} >= 1 && {ST} <= 8")),
+    "ReadyToStart": ("Boolean", ("expr", f"{{[.]Selected}} && {ST} <= 1")),
+    "ReadyToFill": ("Boolean", ("expr", f"{ST} = 5")),
+    "Press_Balanced": ("Boolean", ("expr", f"{ST} >= 6 && {ST} <= 9")),
+    "InletREQ": ("Boolean", ("expr", "{[.]PLC/Out_Inlet}")),
+    "InletCMD": ("Boolean", ("expr", "{[.]PLC/Out_Inlet}")),
+    "VacuumREQ": ("Boolean", ("expr", "{[.]PLC/Out_Vac}")),
+    "VacuumCMD": ("Boolean", ("expr", "{[.]PLC/Out_Vac}")),
+    "SampleREQ": ("Boolean", ("expr", "false")),
+    "SampleCMD": ("Boolean", ("expr", "false")),
+    "Msg": ("String", ("expr", f"if({ST} = 10, case({{[.]PLC/Sts_FailCode}}, "
+                               + ", ".join(f'{k}, "{v}"' for k, v in STN_FAIL_TEXT.items()) + ', "Station fault"), '
+                               + f"case({ST}, " + ", ".join(f'{k}, "{v}"' for k, v in STN_STATE_TEXT.items() if k < 10)
+                               + ', ""))')),
+    "StatusEnum": ("Int2", ("expr", f"case({ST}, " + ", ".join(f"{k}, {v}" for k, v in STATUS_ENUM.items()) + ", 0)")),
+    "HMI_Select": ("Boolean", ("opcw", "{NodePrefix}{Unit}.Stn[{Stn}].Cmd_Select")),
+    "TareCMD": ("Boolean", ("opcw", "{NodePrefix}{Unit}.Stn[{Stn}].Cmd_Tare")),
+    "ZeroCMD": ("Boolean", ("opcw", "{NodePrefix}{Unit}.Stn[{Stn}].Cmd_Zero")),
+    "HMI_Reset": ("Boolean", ("opcw", "{NodePrefix}{Unit}.Stn[{Stn}].Cmd_Reset")),
+}
+STATION_DOC = ("PCLib XeFill station for the EFC Station faceplates. Presents T_XeFill.Stn[{Stn}] and the "
+               "FB_PhXeFill recipe under the DDT_Station member names the faceplates bind to. TargetWeight is "
+               "Prm_Real[{Stn}]; Deadband (tolerance +) and Press_Max are shared by every station.")
+
+
+def opc_tag(name, typ, path, writable):
+    t = {"name": name, "tagType": "AtomicTag", "valueSource": "opc", "dataType": typ,
+         "opcServer": {"bindType": "parameter", "binding": "{OPCServer}"},
+         "opcItemPath": {"bindType": "parameter", "binding": path}}
+    if not writable:
+        t["readOnly"] = True
+    return t
+
+
+def station_udt():
+    plc = [opc_tag(n, t, "{NodePrefix}{Unit}.Stn[{Stn}]." + n, n == "Cfg_Sel") for n, t in STN_PLC]
+    plc += [opc_tag("Hdr_PT", "Float4", "{NodePrefix}{Unit}.Inp_HdrPT", False),
+            opc_tag("Ph_State", "Int2", "{NodePrefix}{Phase}.Sts_State", False)]
+    tags = [folder("PLC", plc)]
+    for name, (typ, (kind, arg)) in STATION_MEMBERS.items():
+        if kind == "expr":
+            tags.append({"name": name, "tagType": "AtomicTag", "valueSource": "expr", "dataType": typ, "expression": arg})
+        elif kind in ("opc", "opcw"):
+            tags.append(opc_tag(name, typ, arg, kind == "opcw"))
+        else:
+            tags.append({"name": name, "tagType": "AtomicTag", "valueSource": "memory", "dataType": typ, "value": arg})
+    return {"name": "XeFill_Station", "tagType": "UdtType", "documentation": STATION_DOC,
+            "parameters": {"OPCServer": {"dataType": "String", "value": "BMENUA0100"},
+                           "NodePrefix": {"dataType": "String", "value": "ns=2;s="},
+                           "Unit": {"dataType": "String", "value": "XE"},
+                           "Phase": {"dataType": "String", "value": "PH_XeFill"},
+                           "Stn": {"dataType": "Integer", "value": 1},
+                           "StationName": {"dataType": "String", "value": "Station 1"},
+                           "ScaleName": {"dataType": "String", "value": "WT-111"}},
+            "tags": tags}
+
+
+def station_demo(n, st, tgt, net, fail=0, sel=True, pt=None, hdr=28.5):
+    """DDT_Station member values for a demo station, worked out with the same rules as station_udt()."""
+    sel_ = sel and tgt > 0
+    pt = (net - 1.013 if st >= 6 else (-1.012 if st >= 3 else 3.2)) if pt is None else pt
+    v = {"StationName": f"Station {n}", "ScaleName": f"WT-1{n}1", "Units": "kg", "NetWeight": net,
+         "GrossWeight": 50.0 + net, "TareWeight": 50.0, "TotalWeight": net if st == 9 else 0.0, "TargetWeight": tgt,
+         "Deadband": 0.2, "Press_Max": 60.0, "SampleWeight": 0.0, "SamplePress": 0.0, "PT": pt, "PT_Valid": True,
+         "PT_Diff": hdr - pt, "Vessel_Present": True, "Selected": sel_, "Disabled": False,
+         "Failed": st == 10, "Complete": st == 9, "Filling": 6 <= st <= 8, "Vacuuming": st == 3,
+         "Vacuumed": 4 <= st <= 9, "Recovering": st == 2, "Venting": False, "Active": 1 <= st <= 8,
+         "ReadyToStart": sel_ and st <= 1, "ReadyToFill": st == 5, "Press_Balanced": 6 <= st <= 9,
+         "InletREQ": st in (6, 7), "InletCMD": st in (6, 7), "VacuumREQ": st == 3, "VacuumCMD": st == 3,
+         "SampleREQ": False, "SampleCMD": False,
+         "Msg": STN_FAIL_TEXT.get(fail, "Station fault") if st == 10 else STN_STATE_TEXT[st],
+         "StatusEnum": STATUS_ENUM[st], "HMI_Select": False, "TareCMD": False, "ZeroCMD": False, "HMI_Reset": False}
+    return v
+
+
+XEFILL_DEMO_STATIONS = [  # station, state, target, net, fail, selected
+    (1, 6, 20.0, 12.8, 0, True), (2, 9, 10.0, 9.95, 0, True), (3, 0, 0.0, 0.0, 0, True),
+    (4, 10, 15.0, 0.0, 101, True), (5, 0, 18.0, 0.0, 0, False), (6, 8, 25.0, 24.88, 0, True)]
+
+
+def station_demo_type():
+    return {"name": "XeFill_Station", "tagType": "UdtType", "documentation": "Memory-tag copy of XeFill_Station",
+            "tags": [{"name": k, "tagType": "AtomicTag", "valueSource": "memory", "dataType": typ}
+                     for k, (typ, _) in STATION_MEMBERS.items()]}
+
+
+def station_demo_instances():
+    out = []
+    for n, st, tgt, net, fail, sel in XEFILL_DEMO_STATIONS:
+        vals = station_demo(n, st, tgt, net, fail, sel)
+        out.append({"name": f"Station_{n}", "tagType": "UdtInstance", "typeId": "PCLib_Demo/XeFill_Station",
+                    "tags": [{"name": k, "tagType": "AtomicTag", "value": v} for k, v in vals.items()]})
+    return out
+
+
+def b_tagp(ref, rel):
+    return {"binding": {"type": "tag", "config": {"mode": "indirect", "tagPath": "{0}/" + rel,
+                                                  "references": {"0": ref}, "fallbackDelay": 2.5}}}
+
+
+TILE_WORD = ('if({view.custom.failed}, "FAULT", if({view.custom.complete}, "COMPLETE", if({view.custom.filling}, '
+             '"FILLING", if({view.custom.vac}, "VACUUMING", if({view.custom.rec}, "RECOVERING", if({view.custom.active}, '
+             '"ACTIVE", if({view.custom.sel}, "READY", "IDLE")))))))')
+TILE_CHIP = ('if({view.custom.failed}, "State/Fault", if({view.custom.complete}, "State/Stopped", '
+             'if({view.custom.filling} || {view.custom.active}, if({view.custom.vac} || {view.custom.rec}, '
+             '"State/Transition", "State/Running"), "State/Stopped")))')
+
+
+def station_tile_view():
+    """Overview tile (220 x 96): click opens the Station_Sidebar dock."""
+    pct = 'if(coalesce({view.custom.tgt}, 0) > 0, min(1, coalesce({view.custom.net}, 0) / ({view.custom.tgt} * 1.08)), 0)'
+    over = 'coalesce({view.custom.tgt}, 0) > 0 && {view.custom.net} > {view.custom.tgt} + coalesce({view.custom.db}, 0)'
+    head = flex("Head", "row", [
+        label("Name", "Text/Subheader Text/Mod/Ellipsis", "", dict(GROW),
+              pc={"props.text": b_expr('coalesce({view.custom.name}, "Station")')}),
+        label("Chip", "State/Stopped", "IDLE", FIX("auto"),
+              pc={"props.text": b_expr(TILE_WORD), "props.style.classes": b_expr(TILE_CHIP)}),
+    ], "", FIX("auto"), align="center")
+    vals = flex("Vals", "row", [
+        label("Net", "Text/ValueLarge Text/Mod/Tabular", "", FIX("auto"),
+              pc={"props.text": b_expr('numberFormat(coalesce({view.custom.net}, 0), "0.000")')}),
+        label("Tgt", "Text/Caption Text/Mod/Tabular", "", dict(GROW),
+              pc={"props.text": b_expr('" / " + numberFormat(coalesce({view.custom.tgt}, 0), "0.000") + " kg"')},
+              style={"marginLeft": "0.37vh"}),
+    ], "", FIX("auto"), align="center")
+    bar = comp("ia.container.coord", "Bar", {"mode": "percent", "style": {"classes": "Bar/Track Util/Clip",
+                                                                         "marginTop": "0.278vh"}},
+               {"basis": "0.926vh", "grow": 0, "shrink": 0},
+               [label("Fill", "Bar/Fill", "", {"x": 0, "y": 0, "width": 0.5, "height": 1},
+                      pc={"position.width": b_expr(pct),
+                          "props.style.classes": b_expr(f'if({over}, "Bar/FillAlarm", "Bar/Fill")')})])
+    msg = label("Msg", "Text/Caption Text/Mod/Ellipsis", "", FIX("auto"),
+                pc={"props.text": b_expr('coalesce({view.custom.msg}, "")')}, style={"marginTop": "0.278vh"})
+    root = flex("root", "column", [head, vals, bar, msg], "Container/Card Util/Pad/S Util/Pointer")
+    root["events"] = {"dom": {"onClick": {"type": "script", "scope": "G", "config": {"script":
+        '\tsystem.perspective.openDock("StationSidebar", params={"tagPath": self.view.params.tagPath})'}}}}
+    custom_pc = {f"custom.{k}": b_tagp(TP, m) for k, m in (
+        ("name", "StationName"), ("net", "NetWeight"), ("tgt", "TargetWeight"), ("db", "Deadband"),
+        ("failed", "Failed"), ("complete", "Complete"), ("filling", "Filling"), ("vac", "Vacuuming"),
+        ("rec", "Recovering"), ("active", "Active"), ("sel", "Selected"), ("msg", "Msg"))}
+    custom_pc["params.tagPath"] = {"paramDirection": "input", "persistent": True}
+    return {"custom": {}, "params": {"tagPath": "[default]XeFill_Demo/Station_1"}, "propConfig": custom_pc,
+            "props": {"defaultSize": {"width": 220, "height": 96}}, "root": root}
+
+
+def xefill_overview_view():
+    """One screen for the fill: the sequence bar, then a Station_Fill faceplate per station."""
+    UP = "{view.params.unitPath}"
+    seq = comp("ia.display.view", "SequenceBar", {"path": "Templates/Sequence/SequenceBar", "params": {"tagPath": ""},
+                                                  "useDefaultViewHeight": True},
+               {"basis": "auto", "grow": 0, "shrink": 0}, pc={"props.params.tagPath": b_expr(f'{UP} + "/SeqBar"')})
+    stations = [comp("ia.display.view", f"Station_{n}",
+                     {"path": "Templates/Station/Station_Fill", "params": {"tagPath": ""},
+                      "useDefaultViewHeight": True, "useDefaultViewWidth": True,
+                      "style": {"marginRight": "0.741vh"}},
+                     {"basis": "auto", "grow": 0, "shrink": 0},
+                     pc={"props.params.tagPath": b_expr(f'{UP} + "/Station_{n}"')}) for n in range(1, NSTN + 1)]
+    root = flex("root", "column", [
+        label("Title", "Text/Title", "Xenon fill", FIX("auto")),
+        label("Hint", "Text/Caption", "", FIX("auto"),
+              pc={"props.text": b_expr(f'"Unit: " + {UP} + "   -   select stations and enter targets on the '
+                                       f'faceplates, then start the sequence"')}),
+        flex("SeqRow", "row", [dict(seq, position={"basis": "0", "grow": 1, "shrink": 1})], "", FIX("auto"),
+             style={"marginTop": "0.741vh", "marginBottom": "0.741vh"}),
+        flex("Stations", "row", stations, "", FIX("auto"), align="flex-start"),
+    ], "Container/Screen Util/Pad/L")
+    pc = {"params.unitPath": {"paramDirection": "input", "persistent": True}}
+    return {"custom": {}, "params": {"unitPath": "[default]XeFill_Demo"}, "propConfig": pc,
+            "props": {"defaultSize": {"width": 1880, "height": 600}}, "root": root}
+
+
+STATION_STYLE_CLASSES = {   # copied from EFC_StationFaceplates (style-classes/Station/Step/*, Bar/Band/Deadband)
+    "Station/Step/Done": {"backgroundColor": "#595959", "border": "0.093vh solid #595959", "borderRadius": "0.093vh"},
+    "Station/Step/Active": {"backgroundColor": "#FFFFFF", "border": "0.093vh solid #1F1F1F", "borderRadius": "0.093vh"},
+    "Station/Step/Pending": {"backgroundColor": "#CFCFCF", "border": "0.093vh solid #A6A6A6", "borderRadius": "0.093vh"},
+    "Station/Step/Fault": {"backgroundColor": "#3A3A3A",
+                           "backgroundImage": "repeating-linear-gradient(135deg, #3A3A3A 0 0.278vh, #FFFFFF 0.278vh 0.463vh)",
+                           "border": "0.093vh solid #000000", "borderRadius": "0.093vh"},
+    "Bar/Band/Deadband": {"backgroundColor": "rgba(31,78,153,0.18)"},
+}
+
+
 VH = lambda px: f"{px * 100 / 1080:.3f}vh"          # 1080p pixels -> vh, as EFC_Styles does
 FONT = "'Noto Sans', 'Segoe UI', Arial, sans-serif"
 SEG_BASE = {"fontFamily": FONT, "fontWeight": "600", "textAlign": "center", "justifyContent": "center",
@@ -1629,7 +1905,7 @@ STYLE_CLASSES = {   # ISA-101 greys (isa101-color-palette.md); fault is dark gre
     "Seq/Step/Skipped": {"backgroundColor": "#D9D9D9", "color": "#9A9A9A", "border": f"{VH(1)} dashed #A6A6A6",
                          "textDecoration": "line-through"},
 }
-PROJECT = "EFC_SequenceBar"
+PROJECT = "EFC_XeFill_HMI"
 PERSP = "com.inductiveautomation.perspective"
 
 
@@ -1642,15 +1918,21 @@ def resource_json(files, now):
 
 def write_project(path, now):
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
-        z.writestr("project.json", json.dumps({"title": PROJECT, "description": "PCLib T_Phase / T_SeqBar sequence bar",
+        z.writestr("project.json", json.dumps({"title": PROJECT, "description": "PCLib xenon fill: sequence bar, "
+                                               "station faceplates and overview",
                                                "parent": "EFC_Styles", "enabled": True, "inheritable": True}, indent=2))
-        for vpath, body in (("Templates/Sequence/SequenceBar", seqbar_view()),
-                            ("Templates/Sequence/_Demo", demo_view())):
-            z.writestr(f"{PERSP}/views/{vpath}/view.json", json.dumps(body, indent=2, ensure_ascii=False))
+        views = [("Templates/Sequence/SequenceBar", seqbar_view()), ("Templates/Sequence/_Demo", demo_view()),
+                 ("Templates/Station/Station_Tile", station_tile_view()),
+                 ("Templates/XeFill/Overview", xefill_overview_view())]
+        for vpath, src in STATION_VIEWS.items():               # the original faceplates, byte for byte
+            views.append((vpath, open(os.path.join(HERE, "ignition", "station_views", src), encoding="utf-8").read()))
+        for vpath, body in views:
+            text = body if isinstance(body, str) else json.dumps(body, indent=2, ensure_ascii=False)
+            z.writestr(f"{PERSP}/views/{vpath}/view.json", text)
             z.writestr(f"{PERSP}/views/{vpath}/resource.json", resource_json(["view.json"], now))
-        for cls, st in STYLE_CLASSES.items():
-            style = dict(SEG_BASE)
-            style.update(st)
+        classes = {k: dict(SEG_BASE, **v) for k, v in STYLE_CLASSES.items()}
+        classes.update(STATION_STYLE_CLASSES)
+        for cls, style in classes.items():
             z.writestr(f"{PERSP}/style-classes/{cls}/style.json",
                        json.dumps({"base": {"style": style}, "variants": []}, indent=2))
             z.writestr(f"{PERSP}/style-classes/{cls}/resource.json", resource_json(["style.json"], now))
@@ -1681,9 +1963,10 @@ def main():
     write(os.path.join(HERE, "export", "T_SeqBar.xdd"), xdd)
 
     ign = os.path.join(HERE, "ignition")
-    write(os.path.join(ign, "PCLib_SeqBar_UDT.json"),
-          json.dumps({"tags": [folder("_types_", [folder("PCLib", [seqbar_udt()])])]}, indent=2) + "\n", crlf=False)
-    write(os.path.join(ign, "PCLib_SeqBar_Demo_Tags.json"), json.dumps(demo_tags(), indent=2) + "\n", crlf=False)
+    write(os.path.join(ign, "PCLib_XeFill_UDTs.json"),
+          json.dumps({"tags": [folder("_types_", [folder("PCLib", [seqbar_udt(), station_udt()])])]}, indent=2) + "\n",
+          crlf=False)
+    write(os.path.join(ign, "PCLib_XeFill_Demo_Tags.json"), json.dumps(demo_tags(), indent=2) + "\n", crlf=False)
     write_project(os.path.join(ign, PROJECT + ".zip"), now)
     print(f"{len(DFBS)} DFBs -> dfb/*.st, export/PCLib_DFB_Phase_CE_V16.2.xdb"
           f"{' (with T_Alarm, FB_AlmCore, FB_Alarm)' if alarm else ''}, export/T_SeqBar.xdd, ignition/*")

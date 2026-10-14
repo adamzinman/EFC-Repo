@@ -1,12 +1,13 @@
 """
-Render the Perspective views in EFC_SequenceBar.zip to HTML, exactly as they are imported, for a preview PNG.
+Render the Perspective views in EFC_XeFill_HMI.zip to HTML, exactly as they are imported, for a preview PNG.
 
-It reads view.json from the project zip and evaluates every expression and tag binding against
-PCLib_SeqBar_Demo_Tags.json. Styles come from the project's own style classes and from the real
+It reads view.json from the project zip and evaluates every expression, tag and property binding (including
+the faceplates' Python script transforms) against PCLib_XeFill_Demo_Tags.json. Styles come from the project's own style classes and from the real
 EFC_Styles classes in efc-ignition-library_1.zip. Flex containers, labels and embedded views are laid
 out the way Perspective lays them out; vh units are converted to px for a 1920 x 1080 session.
 
-Usage:  python render_view.py <efc-ignition-library_1.zip> <out.html> [view path, default Templates/Sequence/_Demo]
+Usage:  python render_view.py <efc-ignition-library_1.zip> <out.html> [view path, default Templates/XeFill/Overview]
+                              [view params as JSON, e.g. '{"tagPath": "[default]XeFill_Demo/Station_4"}']
 Then:   chrome --headless --screenshot=SequenceBar.png --window-size=700,540 out.html
 """
 import html
@@ -25,7 +26,7 @@ VH_PX = 10.8                                    # 1 vh at 1080p
 # ------------------------------------------------------------------ Ignition expression subset
 class Expr:
     """Recursive-descent evaluator for the expression functions the views use."""
-    TOK = re.compile(r'\s*(?:(\d+\.\d*|\d+)|("(?:[^"\\]|\\.)*")|(\{[^}]+\})|([A-Za-z_]\w*)|(<=|>=|==|!=|&&|\|\||[-+*/<>(),\[\]!]))')
+    TOK = re.compile(r'\s*(?:(\d+\.\d*|\d+)|("(?:[^"\\]|\\.)*")|(\{[^}]+\})|([A-Za-z_]\w*)|(<=|>=|==|!=|&&|\|\||[-+*/<>(),\[\]!=%]))')
 
     def __init__(self, text, ref):
         self.t, self.ref, self.p = [], ref, 0
@@ -50,19 +51,28 @@ class Expr:
         return tok
 
     def run(self):
-        v = self.cmp()
+        v = self.logic()
         if self.p != len(self.t):
             raise SyntaxError("trailing tokens")
         return v
 
     # each level returns a thunk so try() can catch errors lazily
+    def logic(self):
+        a = self.cmp()
+        while self.peek()[1] in ("&&", "||"):
+            op = self.take()[1]
+            b, l = self.cmp(), a
+            a = (lambda l, b, op: lambda: (l() and b()) if op == "&&" else (l() or b()))(l, b, op)
+        return a
+
     def cmp(self):
         a = self.add()
-        while self.peek()[1] in ("<", ">", "<=", ">=", "==", "!="):
+        while self.peek()[1] in ("<", ">", "<=", ">=", "==", "!=", "="):
             op = self.take()[1]
             b, l = self.add(), a
             f = {"<": lambda x, y: x < y, ">": lambda x, y: x > y, "<=": lambda x, y: x <= y,
-                 ">=": lambda x, y: x >= y, "==": lambda x, y: x == y, "!=": lambda x, y: x != y}[op]
+                 ">=": lambda x, y: x >= y, "==": lambda x, y: x == y, "!=": lambda x, y: x != y,
+                 "=": lambda x, y: x == y}[op]
             a = (lambda l, b, f: lambda: f(l(), b()))(l, b, f)
         return a
 
@@ -92,7 +102,7 @@ class Expr:
         a = self.prim()
         while self.peek()[1] == "[":
             self.take("[")
-            i = self.cmp()
+            i = self.logic()
             self.take("]")
             a = (lambda a, i: lambda: a()[int(i())])(a, i)
         return a
@@ -104,7 +114,7 @@ class Expr:
         if kind == "ref":
             return lambda: self.ref(v)
         if kind == "op" and v == "(":
-            e = self.cmp()
+            e = self.logic()
             self.take(")")
             return e
         if kind == "op" and v == "-":
@@ -119,7 +129,7 @@ class Expr:
             self.take("(")
             args = []
             while self.peek()[1] != ")":
-                args.append(self.cmp())
+                args.append(self.logic())
                 if self.peek()[1] == ",":
                     self.take(",")
             self.take(")")
@@ -151,6 +161,7 @@ class Expr:
                                                                  str(int(x)) if isinstance(x, float) and x.is_integer() else str(x)))(a[0]()),
                "if": lambda: a[1]() if a[0]() else a[2](),
                "isNull": lambda: a[0]() is None,
+               "min": lambda: min(a[0](), a[1]()), "max": lambda: max(a[0](), a[1]()),
                "len": lambda: len(a[0]())}
         if name not in fns:
             raise NameError(f"expression function {name}() not supported by the renderer")
@@ -159,7 +170,7 @@ class Expr:
 
 # ------------------------------------------------------------------ project, styles, tags
 def load(efc_lib_zip):
-    proj = zipfile.ZipFile(os.path.join(IGN, "EFC_SequenceBar.zip"))
+    proj = zipfile.ZipFile(os.path.join(IGN, "EFC_XeFill_HMI.zip"))
     views = {n.split("/views/")[1].rsplit("/", 1)[0]: json.loads(proj.read(n))
              for n in proj.namelist() if n.endswith("view.json")}
     styles = {}
@@ -169,7 +180,7 @@ def load(efc_lib_zip):
             if n.endswith("/style.json") and "/style-classes/" in n and ("EFC_Styles" in n or z is proj):
                 styles[n.split("/style-classes/")[1].rsplit("/", 1)[0]] = json.loads(z.read(n))["base"]["style"]
     tags = {}
-    demo = json.load(open(os.path.join(IGN, "PCLib_SeqBar_Demo_Tags.json")))
+    demo = json.load(open(os.path.join(IGN, "PCLib_XeFill_Demo_Tags.json")))
     for folder in demo["tags"]:
         if folder["name"] == "_types_":
             continue
@@ -196,28 +207,45 @@ class View:
         self.v = views[path]
         self.params = dict(self.v.get("params", {}))
         self.params.update(params)
-        self.custom = {}
-        for key, cfg in self.v.get("propConfig", {}).items():
-            if key.startswith("custom."):
-                self.custom[key[7:]] = self.binding(cfg["binding"])
+        self.custom = json.loads(json.dumps(self.v.get("custom", {})))
+        items = [(k, c) for k, c in self.v.get("propConfig", {}).items() if k.startswith("custom.") and "binding" in c]
+        for key, cfg in sorted(items, key=lambda kc: kc[1]["binding"]["type"] == "property"):   # tags first
+            node, parts = self.custom, key.split(".")[1:]
+            for p in parts[:-1]:
+                node = node.setdefault(p, {})
+            node[parts[-1]] = self.binding(cfg["binding"])
 
     def ref(self, path):
-        if path.startswith("view.params."):
-            return self.params[path[12:]]
-        if path.startswith("view.custom."):
-            return self.custom.get(path[12:])
-        raise KeyError(path)
+        parts = [p for p in re.split(r"\.|\[(\d+)\]", path) if p]
+        if parts[:2] == ["view", "params"]:
+            node, parts = self.params, parts[2:]
+        elif parts[:2] == ["view", "custom"]:
+            node, parts = self.custom, parts[2:]
+        else:
+            raise KeyError(path)
+        for p in parts:
+            node = node[int(p)] if isinstance(node, list) else node.get(p) if isinstance(node, dict) else None
+        return node
 
     def binding(self, b):
         cfg = b["config"]
         if b["type"] == "expr":
-            return Expr(cfg["expression"], self.ref).run()()
-        if b["type"] == "tag":
+            val = Expr(cfg["expression"], self.ref).run()()
+        elif b["type"] == "tag":
             refs = {k: str(Expr(v, self.ref).run()()) for k, v in cfg["references"].items()}
             p = re.sub(r"\{(\w+)\}", lambda m: refs[m.group(1)], cfg["tagPath"])
             val = self.tags.get(p)
-            return float(val) if isinstance(val, int) and not isinstance(val, bool) else val
-        raise ValueError(b["type"])
+            val = float(val) if isinstance(val, int) and not isinstance(val, bool) else val
+        elif b["type"] == "property":
+            val = self.ref(cfg["path"])
+        else:
+            raise ValueError(b["type"])
+        for tr in b.get("transforms", []):                # Perspective script transform: Python body using `value`
+            if tr["type"] == "script":
+                ns = {}
+                exec("def _t(value):\n" + tr["code"].replace("\t", "    ", 1).replace("\n\t", "\n    "), ns)
+                val = ns["_t"](val)
+        return val
 
     def resolve(self, c):
         """Copy of the component with every bound property replaced by its value."""
@@ -261,12 +289,38 @@ class View:
             if "Ellipsis" in str(props.get("style", {}).get("classes", "")):
                 text = f'<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%;text-align:inherit">{text}</span>'
             return f'<div style="{css(lay)};{css(st)}"{title}>{text}</div>'
+        if t == "ia.container.coord":
+            lay.update({"position": "relative", "display": "block"})
+            kids = ""
+            for k in c.get("children", []):
+                k = self.resolve(k)
+                kp = k.get("position", {})
+                if kp.get("display") is False:
+                    continue
+                box = {"position": "absolute", "left": f"{kp.get('x', 0) * 100}%", "top": f"{kp.get('y', 0) * 100}%",
+                       "width": f"{kp.get('width', 0) * 100}%", "height": f"{kp.get('height', 0) * 100}%",
+                       "box-sizing": "border-box"}
+                kids += f'<div style="{css(box)};{css(self.style_of(k.get("props", {})))}"></div>'
+            return f'<div style="{css(lay)};{css(st)}">{kids}</div>'
+        if t in ("ia.input.button", "ia.input.numeric-entry-field", "ia.display.icon"):
+            lay.update({"display": "flex", "align-items": "center", "justify-content": "center"})
+            if props.get("enabled") is False:
+                lay["opacity"] = "0.45"
+            if t == "ia.input.numeric-entry-field":
+                fmt, val = props.get("format", "0.0"), props.get("value") or 0
+                dec = len(fmt.split(".")[1]) if "." in fmt else 0
+                text = f"{float(val):,.{dec}f}"
+                lay.update({"justify-content": "flex-end", "padding": "0 6px"})
+            else:
+                text = html.escape(str(props.get("text", "")))
+            return f'<div style="{css(lay)};{css(st)}"{title}>{text}</div>'
         if t == "ia.display.view":
             sub = View(self.views, self.styles, self.tags, props["path"], props.get("params", {}))
             size = sub.v["props"]["defaultSize"]
             if props.get("useDefaultViewHeight"):
                 lay["height"] = f"{size['height']}px"
-            lay["width"] = f"{size['width']}px"
+            if props.get("useDefaultViewWidth"):
+                lay["width"] = f"{size['width']}px"
             lay["display"] = "flex"
             return f'<div style="{css(lay)};{css(st)}">{sub.render_root()}</div>'
         return f'<div style="{css(lay)}">[{t}]</div>'
@@ -278,9 +332,10 @@ class View:
 
 def main():
     lib, out = sys.argv[1], sys.argv[2]
-    path = sys.argv[3] if len(sys.argv) > 3 else "Templates/Sequence/_Demo"
+    path = sys.argv[3] if len(sys.argv) > 3 else "Templates/XeFill/Overview"
     views, styles, tags = load(lib)
-    v = View(views, styles, tags, path, {})
+    params = json.loads(sys.argv[4]) if len(sys.argv) > 4 else {}
+    v = View(views, styles, tags, path, params)
     size = v.v["props"]["defaultSize"]
     page = (f'<!doctype html><html><head><meta charset="utf-8"><style>body{{margin:0;background:#D9D9D9;'
             f"font-family:'Noto Sans','Segoe UI',Arial,sans-serif;color:#1F1F1F}}</style></head><body>"

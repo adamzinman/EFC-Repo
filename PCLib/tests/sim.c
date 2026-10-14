@@ -238,6 +238,21 @@ int main(void) {
   while (tp.PH.value.STS_STATE.value != 2 && n < 200) { tick(); FB_PHASE_body__(&tp); n++; }
   CHECK(tp.PH.value.STS_STATE.value == 2 && n >= 50 && n <= 53, "Complete about 5 s after Start");
 
+  printf("\n== 12. Station faceplate commands: Select, Tare, Reset ==\n");
+  setup(sel4); scan();
+  S(1, CMD_SELECT) = 1; scan();
+  CHECK(!S(1, CFG_SEL) && !S(1, CMD_SELECT), "Select toggles station 2 off (and the command clears)");
+  S(0, CMD_TARE) = 1; scan();
+  CHECK(S(0, OUT_TARE), "Tare while idle -> tare request to the scale");
+  P(CMD_START) = 1; verbose = 0;
+  CHECK(run_until(c_fill, 900), "filling");
+  CHECK(S(1, STS_STATE) == 0 && !st[1].ever_open, "deselected station 2 is not filled");
+  S(0, CMD_SELECT) = 1; S(0, CMD_TARE) = 1; scan();
+  CHECK(S(0, CFG_SEL) && !S(0, OUT_TARE), "Select and Tare ignored on a station that is filling");
+  CHECK(run_until(c_done, 3000) && S(0, STS_STATE) == 9 && RPD(1) == 3, "Complete with 3 stations");
+  S(0, CMD_RESET) = 1; scan();
+  CHECK(S(0, STS_STATE) == 0 && S(3, STS_STATE) == 9, "Reset clears station 1 only");
+
   printf("\n%s: %d failure(s)\n", fails ? "FAILED" : "ALL PASSED", fails);
   return fails != 0;
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <FBExchangeFile>
-<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-14-17:15:53" content="Function Block source file" DTDVersion="41"></fileHeader>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-14-17:38:13" content="Function Block source file" DTDVersion="41"></fileHeader>
 <contentHeader name="PCLib" version="1.00"></contentHeader>
-<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-14-17:15:53">
+<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-14-17:38:13">
 	<comment>ISA-88 equipment phase: Part 1 state model, commands, modes, parameters, reports</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -134,7 +134,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_SeqBar" version="1.00" dateTime="dt#2026-10-14-17:15:53">
+<DDTSource DDTName="T_SeqBar" version="1.00" dateTime="dt#2026-10-14-17:38:13">
 	<comment>Sequence bar for a T_Phase: segment labels and states for the HMI step bar</comment>
 	<structure>
 		<variables name="Cfg_Title" typeName="STRING[24]">
@@ -185,9 +185,25 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_FillStn" version="1.00" dateTime="dt#2026-10-14-17:15:53">
+<DDTSource DDTName="T_FillStn" version="1.00" dateTime="dt#2026-10-14-17:38:13">
 	<comment>One xenon fill station inside a T_XeFill: I/O, station state and results</comment>
 	<structure>
+		<variables name="Cfg_Sel" typeName="BOOL">
+			<comment>Station selected for the run (filled when selected and its target &gt; 0)</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cmd_Select" typeName="BOOL">
+			<comment>Operator: toggle Cfg_Sel (one-shot; only while the station is free)</comment>
+		</variables>
+		<variables name="Cmd_Tare" typeName="BOOL">
+			<comment>Operator: tare the scale (one-shot; only while the station is free)</comment>
+		</variables>
+		<variables name="Cmd_Zero" typeName="BOOL">
+			<comment>Operator: zero the scale (one-shot; only while the station is free)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Operator: clear a filled or faulted station (one-shot; only while free)</comment>
+		</variables>
 		<variables name="Inp_VesselOK" typeName="BOOL">
 			<comment>Cylinder connected and its valve confirmed open</comment>
 		</variables>
@@ -197,6 +213,12 @@
 		</variables>
 		<variables name="Inp_NetWt" typeName="REAL">
 			<comment>Scale net weight (kg)</comment>
+		</variables>
+		<variables name="Inp_GrossWt" typeName="REAL">
+			<comment>Scale gross weight (kg), display only</comment>
+		</variables>
+		<variables name="Inp_TareWt" typeName="REAL">
+			<comment>Scale tare weight (kg), display only</comment>
 		</variables>
 		<variables name="Inp_WtStable" typeName="BOOL">
 			<comment>Scale motion-free</comment>
@@ -219,6 +241,9 @@
 		<variables name="Out_Tare" typeName="BOOL">
 			<comment>Request: tare the scale (pulse)</comment>
 		</variables>
+		<variables name="Out_Zero" typeName="BOOL">
+			<comment>Request: zero the scale (pulse)</comment>
+		</variables>
 		<variables name="Sts_State" typeName="INT">
 			<comment>Station state: 0=Not selected 1=Waiting 2=Recovering heel 3=Evacuating 4=Evacuated 5=Ready to fill 6=Fast fill 7=Slow fill 8=Settling 9=Filled 10=Fault</comment>
 		</variables>
@@ -239,7 +264,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_XeFill" version="1.00" dateTime="dt#2026-10-14-17:15:53">
+<DDTSource DDTName="T_XeFill" version="1.00" dateTime="dt#2026-10-14-17:38:13">
 	<comment>Xenon fill unit for FB_PhXeFill: source cylinder, compressor, fill header and the fill stations</comment>
 	<structure>
 		<variables name="Cfg_HdrMax" typeName="REAL">
@@ -295,7 +320,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<FBSource nameOfFBType="FB_PhaseCore" version="1.00" dateTime="dt#2026-10-14-17:15:53">
+<FBSource nameOfFBType="FB_PhaseCore" version="1.00" dateTime="dt#2026-10-14-17:38:13">
 	<comment>ISA-88 phase core for a T_Phase: state machine, commands, modes, ownership, step watchdog, alarms and T_SeqBar sequence bar. Called by every FB_Ph* phase after its sequence logic</comment>
 	<inputParameters>
 		<variables name="PermOK" typeName="BOOL">
@@ -854,7 +879,7 @@ Ph.Prog_Release := FALSE;
 xFirst := FALSE;</STSource>
 	</FBProgram>
 </FBSource>
-<FBSource nameOfFBType="FB_Phase" version="1.00" dateTime="dt#2026-10-14-17:15:53">
+<FBSource nameOfFBType="FB_Phase" version="1.00" dateTime="dt#2026-10-14-17:38:13">
 	<comment>TEMPLATE ISA-88 equipment phase for a T_Phase + T_SeqBar. Copy, rename FB_Ph&lt;Name&gt;, add pins and write the sequence in the open area. FB_PhaseCore does states, modes, commands and the bar</comment>
 	<inputParameters>
 		<variables name="PermOK" typeName="BOOL">
@@ -1065,7 +1090,7 @@ Failed := fbCore.Failed;
 (* Equipment outputs, e.g. Out_A := xOutA; *)</STSource>
 	</FBProgram>
 </FBSource>
-<FBSource nameOfFBType="FB_PhXeFill" version="1.00" dateTime="dt#2026-10-14-17:15:53">
+<FBSource nameOfFBType="FB_PhXeFill" version="1.00" dateTime="dt#2026-10-14-17:38:13">
 	<comment>EXAMPLE phase: one xenon fill sequence for any number of stations - line-up, heel recovery and evacuation, leak check, tare, source and compressor start, fill by weight (each station's inlet closes as it finishes), shutdown. One T_Phase, one T_SeqBar, one T_XeFill</comment>
 	<inputParameters>
 		<variables name="PermOK" typeName="BOOL">
@@ -1157,6 +1182,12 @@ Failed := fbCore.Failed;
 		</variables>
 		<variables name="xExec" typeName="BOOL">
 			<comment>The procedure runs this scan</comment>
+		</variables>
+		<variables name="xPhActive" typeName="BOOL">
+			<comment>Phase active (stations locked)</comment>
+		</variables>
+		<variables name="xFree" typeName="BOOL">
+			<comment>Station free for faceplate commands</comment>
 		</variables>
 		<variables name="i" typeName="INT">
 			<comment>Station index</comment>
@@ -1261,12 +1292,14 @@ FOR i := 1 TO 6 DO
     U.Stn[i].Out_Recover := FALSE;
     U.Stn[i].Out_Vac := FALSE;
     U.Stn[i].Out_Tare := FALSE;
+    U.Stn[i].Out_Zero := FALSE;
 END_FOR;
 
 (* =====================================================================
    C. SEQUENCE LOGIC - xenon fill: ONE sequence for every selected station
    Large source cylinder -&gt; diaphragm compressor -&gt; fill header -&gt; stations.
-   A station is selected by giving it a target weight (Prm_Real[n] &gt; 0).
+   A station is filled when it is selected (U.Stn[n].Cfg_Sel, the faceplate
+   Select button) and has a target weight (Prm_Real[n] &gt; 0).
    Common steps run all selected stations together; inside a step each
    station has its own state (U.Stn[n].Sts_State) and its valves close as
    soon as that station is finished. A station with a fault is dropped
@@ -1326,7 +1359,7 @@ CASE Ph.Sts_State OF
             U.Stn[i].Val_FinalWt := 0.0;
             U.Stn[i].Val_LeakRise := 0.0;
             tStn[i] := T#0S;
-            IF Ph.Prm_Real[i] &gt; 0.0 THEN
+            IF (Ph.Prm_Real[i] &gt; 0.0) AND U.Stn[i].Cfg_Sel THEN
                 U.Stn[i].Sts_State := 1;
                 nSel := nSel + 1;
                 xAllOK := xAllOK AND U.Stn[i].Inp_VesselOK AND U.Stn[i].Inp_WtStable AND U.Stn[i].Inp_IntlkOK;
@@ -1649,6 +1682,32 @@ CASE Ph.Sts_State OF
     xDone := TRUE;
 
 END_CASE;
+
+(* Station faceplate commands: only while the station is free (phase not running, or the
+   station not taking part / finished). Commands are one-shot and cleared here. *)
+xPhActive := (Ph.Sts_State = 1) OR ((Ph.Sts_State &gt;= 3) AND (Ph.Sts_State &lt;= 8)) OR (Ph.Sts_State = 10);
+FOR i := 1 TO 6 DO
+    xFree := NOT xPhActive OR (U.Stn[i].Sts_State = 0) OR (U.Stn[i].Sts_State &gt;= 9);
+    IF xFree THEN
+        IF U.Stn[i].Cmd_Select THEN
+            U.Stn[i].Cfg_Sel := NOT U.Stn[i].Cfg_Sel;
+        END_IF;
+        IF U.Stn[i].Cmd_Tare THEN
+            U.Stn[i].Out_Tare := TRUE;
+        END_IF;
+        IF U.Stn[i].Cmd_Zero THEN
+            U.Stn[i].Out_Zero := TRUE;
+        END_IF;
+        IF U.Stn[i].Cmd_Reset AND (U.Stn[i].Sts_State &gt;= 9) THEN
+            U.Stn[i].Sts_State := 0;
+            U.Stn[i].Sts_FailCode := 0;
+        END_IF;
+    END_IF;
+    U.Stn[i].Cmd_Select := FALSE;
+    U.Stn[i].Cmd_Tare := FALSE;
+    U.Stn[i].Cmd_Zero := FALSE;
+    U.Stn[i].Cmd_Reset := FALSE;
+END_FOR;
 
 (* Unit summary for the HMI *)
 U.Sts_NumSel := 0;
