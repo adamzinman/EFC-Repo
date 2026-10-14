@@ -1,0 +1,1759 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FBExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-14-17:02:03" content="Function Block source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+	<comment>ISA-88 equipment phase: Part 1 state model, commands, modes, parameters, reports</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_PhaseID" typeName="INT">
+			<comment>Phase ID (unique in the unit) for batch server / unit procedure</comment>
+		</variables>
+		<variables name="Cfg_UnitID" typeName="INT">
+			<comment>ID of the unit this phase belongs to</comment>
+		</variables>
+		<variables name="Cfg_StepTimeout" typeName="TIME">
+			<comment>Step watchdog, T#0S = off</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cmd_Auto" typeName="BOOL">
+			<comment>Operator request Automatic mode (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_SemiAuto" typeName="BOOL">
+			<comment>Operator request Semi-automatic mode (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Man" typeName="BOOL">
+			<comment>Operator request Manual mode (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Start" typeName="BOOL">
+			<comment>Operator Start (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Stop" typeName="BOOL">
+			<comment>Operator Stop (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Hold" typeName="BOOL">
+			<comment>Operator Hold (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Restart" typeName="BOOL">
+			<comment>Operator Restart from Held (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Abort" typeName="BOOL">
+			<comment>Operator Abort (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Operator Reset to Idle (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Pause" typeName="BOOL">
+			<comment>Operator Pause at next transition (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Resume" typeName="BOOL">
+			<comment>Operator Resume from Paused (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Advance" typeName="BOOL">
+			<comment>Advance to next step in Semi-automatic (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_TakeOwn" typeName="BOOL">
+			<comment>Operator takes control from the recipe (one-shot)</comment>
+		</variables>
+		<variables name="Prog_Cmd" typeName="INT">
+			<comment>Command from batch server / unit procedure: 1=Start 2=Stop 3=Hold 4=Restart 5=Abort 6=Reset 7=Pause 8=Resume</comment>
+		</variables>
+		<variables name="Prog_Acquire" typeName="BOOL">
+			<comment>Recipe (batch server / unit procedure) takes ownership</comment>
+		</variables>
+		<variables name="Prog_Release" typeName="BOOL">
+			<comment>Recipe releases ownership</comment>
+		</variables>
+		<variables name="Prog_ReqAck" typeName="BOOL">
+			<comment>Batch server acknowledges Sts_ReqCode</comment>
+		</variables>
+		<variables name="Prm_Real" typeName="ARRAY[1..16] OF REAL">
+			<comment>Recipe parameters (REAL) - control recipe formula</comment>
+		</variables>
+		<variables name="Prm_DInt" typeName="ARRAY[1..8] OF DINT">
+			<comment>Recipe parameters (DINT) - control recipe formula</comment>
+		</variables>
+		<variables name="Rpt_Real" typeName="ARRAY[1..16] OF REAL">
+			<comment>Report values (REAL) returned to batch record</comment>
+		</variables>
+		<variables name="Rpt_DInt" typeName="ARRAY[1..8] OF DINT">
+			<comment>Report values (DINT) returned to batch record</comment>
+		</variables>
+		<variables name="Val_BatchID" typeName="STRING[32]">
+			<comment>Batch ID of the control recipe running this phase</comment>
+		</variables>
+		<variables name="Val_StateTime" typeName="TIME">
+			<comment>Time in current state</comment>
+		</variables>
+		<variables name="Val_RunTime" typeName="TIME">
+			<comment>Running time excluding Held / Paused</comment>
+		</variables>
+		<variables name="Val_FailText" typeName="STRING[40]">
+			<comment>Failure description for HMI / batch record</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>ISA-88 state: 0=Idle 1=Running 2=Complete 3=Pausing 4=Paused 5=Holding 6=Held 7=Restarting 8=Stopping 9=Stopped 10=Aborting 11=Aborted</comment>
+		</variables>
+		<variables name="Sts_PrevState" typeName="INT">
+			<comment>Previous state (for Restart / diagnostics)</comment>
+		</variables>
+		<variables name="Sts_Mode" typeName="INT">
+			<comment>ISA-88 mode: 1=Manual 2=Semi-automatic 3=Automatic</comment>
+		</variables>
+		<variables name="Sts_Owner" typeName="INT">
+			<comment>0=Operator 1=Recipe (batch server / unit procedure)</comment>
+		</variables>
+		<variables name="Sts_CmdMask" typeName="WORD">
+			<comment>Commands valid in current state (bit n = command n of Prog_Cmd) - for HMI</comment>
+		</variables>
+		<variables name="Sts_CmdRejected" typeName="BOOL">
+			<comment>Last command was not valid in the current state</comment>
+		</variables>
+		<variables name="Sts_Step" typeName="INT">
+			<comment>Active step number within the state logic</comment>
+		</variables>
+		<variables name="Sts_WaitAdvance" typeName="BOOL">
+			<comment>Semi-automatic: waiting for Cmd_Advance</comment>
+		</variables>
+		<variables name="Sts_ReqCode" typeName="INT">
+			<comment>Request to batch server (e.g. download params, upload reports), 0 = none</comment>
+		</variables>
+		<variables name="Sts_FailCode" typeName="INT">
+			<comment>Failure code, 0 = none</comment>
+		</variables>
+		<variables name="Alm_Fail" typeName="T_Alarm">
+			<comment>Phase failure</comment>
+		</variables>
+		<variables name="Alm_StepTimeout" typeName="T_Alarm">
+			<comment>Step exceeded Cfg_StepTimeout</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_SeqBar" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+	<comment>Sequence bar for a T_Phase: segment labels and states for the HMI step bar</comment>
+	<structure>
+		<variables name="Cfg_Title" typeName="STRING[24]">
+			<comment>Title shown on the sequence bar</comment>
+		</variables>
+		<variables name="Cfg_NumSeg" typeName="INT">
+			<comment>Segments shown (1..10); 0 = labels not loaded yet</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_SegText" typeName="ARRAY[1..10] OF STRING[12]">
+			<comment>Segment labels</comment>
+		</variables>
+		<variables name="Sts_Seg" typeName="ARRAY[1..10] OF INT">
+			<comment>Segment state: 0=Pending 1=Active 2=Done 3=Fault 4=Held/Paused/Waiting 5=Skipped</comment>
+		</variables>
+		<variables name="Sts_Skip" typeName="ARRAY[1..10] OF BOOL">
+			<comment>Segment skipped this run (set by phase logic, cleared at Start)</comment>
+		</variables>
+		<variables name="Sts_ActSeg" typeName="INT">
+			<comment>Active segment, 0 = none</comment>
+		</variables>
+		<variables name="Sts_PhState" typeName="INT">
+			<comment>Copy of T_Phase.Sts_State</comment>
+		</variables>
+		<variables name="Sts_Mode" typeName="INT">
+			<comment>Copy of T_Phase.Sts_Mode</comment>
+		</variables>
+		<variables name="Sts_Owner" typeName="INT">
+			<comment>Copy of T_Phase.Sts_Owner</comment>
+		</variables>
+		<variables name="Sts_Step" typeName="INT">
+			<comment>Copy of T_Phase.Sts_Step</comment>
+		</variables>
+		<variables name="Sts_WaitAdv" typeName="BOOL">
+			<comment>Semi-automatic: waiting for Advance</comment>
+		</variables>
+		<variables name="Sts_Fail" typeName="BOOL">
+			<comment>Phase failure active</comment>
+		</variables>
+		<variables name="Val_Msg" typeName="STRING[40]">
+			<comment>Operator message: step text, state or failure text</comment>
+		</variables>
+		<variables name="Val_StepTime" typeName="TIME">
+			<comment>Time in the current step</comment>
+		</variables>
+		<variables name="Val_StepPct" typeName="INT">
+			<comment>Progress within the active segment, 0..100</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<FBSource nameOfFBType="FB_PhaseCore" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+	<comment>ISA-88 phase core for a T_Phase: state machine, commands, modes, ownership, step watchdog, alarms and T_SeqBar sequence bar. Called by every FB_Ph* phase after its sequence logic</comment>
+	<inputParameters>
+		<variables name="PermOK" typeName="BOOL">
+			<comment>Start permissives OK (blocks Start and Restart only)</comment>
+			<attribute name="PositionPin" value="1"></attribute>
+		</variables>
+		<variables name="IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy. FALSE while running -&gt; Holding (or Aborting)</comment>
+			<attribute name="PositionPin" value="2"></attribute>
+		</variables>
+		<variables name="IntlkAbort" typeName="BOOL">
+			<comment>TRUE = interlock trip aborts instead of holding</comment>
+			<attribute name="PositionPin" value="3"></attribute>
+		</variables>
+		<variables name="EStop" typeName="BOOL">
+			<comment>Emergency stop active -&gt; Aborting</comment>
+			<attribute name="PositionPin" value="4"></attribute>
+		</variables>
+		<variables name="Trans" typeName="BOOL">
+			<comment>Sequence: go to NextStep (Pause / Semi-auto applied here)</comment>
+			<attribute name="PositionPin" value="5"></attribute>
+		</variables>
+		<variables name="NextStep" typeName="INT">
+			<comment>Sequence: step to go to</comment>
+			<attribute name="PositionPin" value="6"></attribute>
+		</variables>
+		<variables name="StateDone" typeName="BOOL">
+			<comment>Sequence: logic of the current state finished</comment>
+			<attribute name="PositionPin" value="7"></attribute>
+		</variables>
+		<variables name="FailCode" typeName="INT">
+			<comment>Sequence: failure code, 0 = none (-&gt; Holding)</comment>
+			<attribute name="PositionPin" value="8"></attribute>
+		</variables>
+		<variables name="FailText" typeName="STRING[40]">
+			<comment>Sequence: failure text</comment>
+			<attribute name="PositionPin" value="9"></attribute>
+		</variables>
+		<variables name="Seg" typeName="INT">
+			<comment>Sequence: sequence-bar segment of the active step</comment>
+			<attribute name="PositionPin" value="10"></attribute>
+		</variables>
+		<variables name="Msg" typeName="STRING[40]">
+			<comment>Sequence: operator message for the active step</comment>
+			<attribute name="PositionPin" value="11"></attribute>
+		</variables>
+		<variables name="Pct" typeName="INT">
+			<comment>Sequence: progress within the segment, 0..100</comment>
+			<attribute name="PositionPin" value="12"></attribute>
+		</variables>
+		<variables name="StepTmo" typeName="TIME">
+			<comment>Sequence: watchdog for this step, T#0S = Ph.Cfg_StepTimeout</comment>
+			<attribute name="PositionPin" value="13"></attribute>
+		</variables>
+		<variables name="WdogOff" typeName="BOOL">
+			<comment>Sequence: no watchdog in this step</comment>
+			<attribute name="PositionPin" value="14"></attribute>
+		</variables>
+	</inputParameters>
+	<inOutParameters>
+		<variables name="Ph" typeName="T_Phase">
+			<comment>Phase object</comment>
+			<attribute name="PositionPin" value="15"></attribute>
+		</variables>
+		<variables name="Bar" typeName="T_SeqBar">
+			<comment>Sequence bar for the HMI</comment>
+			<attribute name="PositionPin" value="16"></attribute>
+		</variables>
+	</inOutParameters>
+	<outputParameters>
+		<variables name="StepEntry" typeName="BOOL">
+			<comment>TRUE for the first scan of a step (read by the sequence on the next call)</comment>
+			<attribute name="PositionPin" value="17"></attribute>
+		</variables>
+		<variables name="StepTime" typeName="TIME">
+			<comment>Time in the current step</comment>
+			<attribute name="PositionPin" value="18"></attribute>
+		</variables>
+		<variables name="RunStep" typeName="INT">
+			<comment>Running step the phase resumes at after Restart</comment>
+			<attribute name="PositionPin" value="19"></attribute>
+		</variables>
+		<variables name="Running" typeName="BOOL">
+			<comment>State Running or Pausing</comment>
+			<attribute name="PositionPin" value="20"></attribute>
+		</variables>
+		<variables name="Held" typeName="BOOL">
+			<comment>State Held</comment>
+			<attribute name="PositionPin" value="21"></attribute>
+		</variables>
+		<variables name="Complete" typeName="BOOL">
+			<comment>State Complete</comment>
+			<attribute name="PositionPin" value="22"></attribute>
+		</variables>
+		<variables name="Failed" typeName="BOOL">
+			<comment>Failure active (Ph.Sts_FailCode &lt;&gt; 0)</comment>
+			<attribute name="PositionPin" value="23"></attribute>
+		</variables>
+	</outputParameters>
+	<privateLocalVariables>
+		<variables name="xFirst" typeName="BOOL">
+			<comment>First scan after cold / warm start</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="tonClk" typeName="TON">
+			<comment>Free-running clock for elapsed time</comment>
+		</variables>
+		<variables name="xClkRst" typeName="BOOL">
+			<comment>Clock restart</comment>
+		</variables>
+		<variables name="tClkLast" typeName="TIME">
+			<comment>Clock value on previous scan</comment>
+		</variables>
+		<variables name="tDelta" typeName="TIME">
+			<comment>Time since previous scan</comment>
+		</variables>
+		<variables name="iSt" typeName="INT">
+			<comment>State at the start of the scan</comment>
+		</variables>
+		<variables name="iReq" typeName="INT">
+			<comment>Requested state</comment>
+		</variables>
+		<variables name="iCmd" typeName="INT">
+			<comment>Command this scan (Prog_Cmd numbering)</comment>
+		</variables>
+		<variables name="iCmdSt" typeName="INT">
+			<comment>State the command leads to</comment>
+		</variables>
+		<variables name="xValid" typeName="BOOL">
+			<comment>Command valid in the current state</comment>
+		</variables>
+		<variables name="xRej" typeName="BOOL">
+			<comment>Command rejected this scan</comment>
+		</variables>
+		<variables name="xAnyCmd" typeName="BOOL">
+			<comment>A command arrived this scan</comment>
+		</variables>
+		<variables name="xOkStart" typeName="BOOL">
+			<comment>Start valid</comment>
+		</variables>
+		<variables name="xOkStop" typeName="BOOL">
+			<comment>Stop valid</comment>
+		</variables>
+		<variables name="xOkHold" typeName="BOOL">
+			<comment>Hold valid</comment>
+		</variables>
+		<variables name="xOkRestart" typeName="BOOL">
+			<comment>Restart valid</comment>
+		</variables>
+		<variables name="xOkAbort" typeName="BOOL">
+			<comment>Abort valid</comment>
+		</variables>
+		<variables name="xOkReset" typeName="BOOL">
+			<comment>Reset valid</comment>
+		</variables>
+		<variables name="xOkPause" typeName="BOOL">
+			<comment>Pause valid</comment>
+		</variables>
+		<variables name="xOkResume" typeName="BOOL">
+			<comment>Resume valid</comment>
+		</variables>
+		<variables name="iMask" typeName="INT">
+			<comment>Command mask being built</comment>
+		</variables>
+		<variables name="xRunSt" typeName="BOOL">
+			<comment>Requested state executes the procedure (1, 3, 4, 7)</comment>
+		</variables>
+		<variables name="xWait" typeName="BOOL">
+			<comment>Semi-automatic: step waiting for Advance</comment>
+		</variables>
+		<variables name="xAdv" typeName="BOOL">
+			<comment>Advance given this scan: the waiting step starts</comment>
+		</variables>
+		<variables name="iRunStep" typeName="INT">
+			<comment>Running step saved on Hold / Stop / Abort</comment>
+		</variables>
+		<variables name="iLastState" typeName="INT">
+			<comment>State on previous scan</comment>
+			<variableInit value="-1"></variableInit>
+		</variables>
+		<variables name="iLastStep" typeName="INT">
+			<comment>Step on previous scan</comment>
+		</variables>
+		<variables name="tStep" typeName="TIME">
+			<comment>Time in step</comment>
+		</variables>
+		<variables name="tLimit" typeName="TIME">
+			<comment>Watchdog limit for the step</comment>
+		</variables>
+		<variables name="iSeg" typeName="INT">
+			<comment>Active sequence-bar segment</comment>
+		</variables>
+		<variables name="nSeg" typeName="INT">
+			<comment>Segments in use</comment>
+		</variables>
+		<variables name="iBar" typeName="INT">
+			<comment>Segment state being built</comment>
+		</variables>
+		<variables name="i" typeName="INT">
+			<comment>Loop index</comment>
+		</variables>
+		<variables name="fbFail" typeName="FB_Alarm">
+			<comment>Phase failure alarm</comment>
+		</variables>
+		<variables name="fbTmo" typeName="FB_Alarm">
+			<comment>Step timeout alarm</comment>
+		</variables>
+	</privateLocalVariables>
+	<FBProgram name="Main">
+		<STSource>(* ===== 1. Elapsed time since previous scan (free-running TON, restarts hourly) ===== *)
+tonClk(IN := NOT xClkRst, PT := T#1H);
+xClkRst := tonClk.Q;
+IF tonClk.ET &gt;= tClkLast THEN
+    tDelta := tonClk.ET - tClkLast;
+ELSE
+    tDelta := T#0S;
+END_IF;
+tClkLast := tonClk.ET;
+
+(* ===== 2. First scan: defaults ===== *)
+IF xFirst THEN
+    IF (Ph.Sts_State &lt; 0) OR (Ph.Sts_State &gt; 11) THEN
+        Ph.Sts_State := 0;
+    END_IF;
+    IF (Ph.Sts_Mode &lt; 1) OR (Ph.Sts_Mode &gt; 3) THEN
+        Ph.Sts_Mode := 3;
+    END_IF;
+END_IF;
+iSt := Ph.Sts_State;
+iReq := iSt;
+xRej := FALSE;
+xAnyCmd := FALSE;
+
+(* ===== 3. Ownership (ISA-88 arbitration) and mode ===== *)
+IF Ph.Prog_Acquire THEN
+    Ph.Sts_Owner := 1;
+END_IF;
+IF Ph.Prog_Release OR Ph.Cmd_TakeOwn THEN
+    Ph.Sts_Owner := 0;
+END_IF;
+IF Ph.Sts_Owner = 1 THEN
+    Ph.Sts_Mode := 3;                                   (* recipe control runs in Automatic *)
+    IF Ph.Cmd_Auto OR Ph.Cmd_SemiAuto OR Ph.Cmd_Man THEN
+        xRej := TRUE;
+        xAnyCmd := TRUE;
+    END_IF;
+ELSIF Ph.Cmd_Auto THEN
+    Ph.Sts_Mode := 3;
+ELSIF Ph.Cmd_SemiAuto THEN
+    Ph.Sts_Mode := 2;
+ELSIF Ph.Cmd_Man THEN
+    Ph.Sts_Mode := 1;
+END_IF;
+
+(* ===== 4. Commands valid in the current state (ISA-88 Part 1 state model) ===== *)
+xOkStart := (iSt = 0) AND PermOK AND IntlkOK AND NOT EStop AND (Ph.Sts_Mode &lt;&gt; 1);
+xOkStop := (iSt = 1) OR (iSt = 3) OR (iSt = 4) OR (iSt = 5) OR (iSt = 6) OR (iSt = 7);
+xOkHold := (iSt = 1) OR (iSt = 3) OR (iSt = 4) OR (iSt = 7);
+xOkRestart := (iSt = 6) AND PermOK AND IntlkOK AND NOT EStop AND (Ph.Sts_Mode &lt;&gt; 1);
+xOkAbort := xOkStop OR (iSt = 8);
+xOkReset := (iSt = 2) OR (iSt = 9) OR (iSt = 11);
+xOkPause := (iSt = 1);
+xOkResume := (iSt = 3) OR (iSt = 4);
+
+iMask := 0;                                             (* bit n = command n of Prog_Cmd *)
+IF xOkStart THEN iMask := iMask + 2; END_IF;
+IF xOkStop THEN iMask := iMask + 4; END_IF;
+IF xOkHold THEN iMask := iMask + 8; END_IF;
+IF xOkRestart THEN iMask := iMask + 16; END_IF;
+IF xOkAbort THEN iMask := iMask + 32; END_IF;
+IF xOkReset THEN iMask := iMask + 64; END_IF;
+IF xOkPause THEN iMask := iMask + 128; END_IF;
+IF xOkResume THEN iMask := iMask + 256; END_IF;
+Ph.Sts_CmdMask := INT_TO_WORD(iMask);
+
+(* ===== 5. Command source: recipe (Prog_Cmd) or operator (Cmd_) ===== *)
+(* The operator can always Hold, Stop or Abort. Start, Restart, Reset, Pause and
+   Resume need ownership (Sts_Owner = 0) while a recipe owns the phase. *)
+iCmd := 0;
+IF Ph.Prog_Cmd &lt;&gt; 0 THEN
+    xAnyCmd := TRUE;
+    IF (Ph.Sts_Owner = 1) AND (Ph.Prog_Cmd &gt;= 1) AND (Ph.Prog_Cmd &lt;= 8) THEN
+        iCmd := Ph.Prog_Cmd;
+    ELSE
+        xRej := TRUE;
+    END_IF;
+END_IF;
+IF Ph.Cmd_Abort THEN
+    iCmd := 5;
+ELSIF Ph.Cmd_Stop THEN
+    iCmd := 2;
+ELSIF Ph.Cmd_Hold THEN
+    iCmd := 3;
+ELSIF Ph.Cmd_Start OR Ph.Cmd_Restart OR Ph.Cmd_Reset OR Ph.Cmd_Pause OR Ph.Cmd_Resume THEN
+    IF Ph.Sts_Owner = 0 THEN
+        IF Ph.Cmd_Start THEN
+            iCmd := 1;
+        ELSIF Ph.Cmd_Restart THEN
+            iCmd := 4;
+        ELSIF Ph.Cmd_Reset THEN
+            iCmd := 6;
+        ELSIF Ph.Cmd_Pause THEN
+            iCmd := 7;
+        ELSE
+            iCmd := 8;
+        END_IF;
+    ELSE
+        xRej := TRUE;
+        xAnyCmd := TRUE;
+    END_IF;
+END_IF;
+
+CASE iCmd OF
+    1: xValid := xOkStart;   iCmdSt := 1;
+    2: xValid := xOkStop;    iCmdSt := 8;
+    3: xValid := xOkHold;    iCmdSt := 5;
+    4: xValid := xOkRestart; iCmdSt := 7;
+    5: xValid := xOkAbort;   iCmdSt := 10;
+    6: xValid := xOkReset;   iCmdSt := 0;
+    7: xValid := xOkPause;   iCmdSt := 3;
+    8: xValid := xOkResume;  iCmdSt := 1;
+ELSE
+    xValid := FALSE;
+    iCmdSt := iSt;
+END_CASE;
+IF iCmd &lt;&gt; 0 THEN
+    xAnyCmd := TRUE;
+    IF xValid THEN
+        iReq := iCmdSt;
+    ELSE
+        xRej := TRUE;
+    END_IF;
+END_IF;
+IF xAnyCmd THEN
+    Ph.Sts_CmdRejected := xRej;
+END_IF;
+
+(* ===== 6. Protective conditions override commands ===== *)
+xRunSt := (iReq = 1) OR (iReq = 3) OR (iReq = 4) OR (iReq = 7);
+IF EStop AND (xRunSt OR (iReq = 5) OR (iReq = 6) OR (iReq = 8)) THEN
+    iReq := 10;
+ELSIF NOT IntlkOK AND xRunSt THEN
+    IF IntlkAbort THEN
+        iReq := 10;
+    ELSE
+        iReq := 5;
+    END_IF;
+ELSIF (Ph.Sts_Mode = 1) AND xRunSt THEN
+    iReq := 5;                                          (* Manual mode: phase logic must not drive *)
+END_IF;
+
+(* ===== 7. Requests from the sequence (only when no state change is pending) ===== *)
+IF iReq = iSt THEN
+    IF (FailCode &lt;&gt; 0) AND (Ph.Sts_FailCode = 0) THEN
+        Ph.Sts_FailCode := FailCode;
+        Ph.Val_FailText := FailText;
+        IF (iSt = 1) OR (iSt = 3) OR (iSt = 4) OR (iSt = 7) THEN
+            iReq := 5;
+        END_IF;
+    ELSIF StateDone THEN
+        CASE iSt OF
+            1, 3: iReq := 2;
+            5: iReq := 6;
+            7: iReq := 1;
+            8: iReq := 9;
+            10: iReq := 11;
+        END_CASE;
+    ELSIF Trans THEN
+        Ph.Sts_Step := NextStep;
+        IF iSt = 3 THEN
+            iReq := 4;                                  (* Pausing: pause before the next step runs *)
+        ELSIF (iSt = 1) AND (Ph.Sts_Mode = 2) THEN
+            xWait := TRUE;                              (* Semi-automatic: next step waits for Advance *)
+        END_IF;
+    END_IF;
+END_IF;
+xAdv := FALSE;
+IF xWait AND (iReq = 1) AND (Ph.Cmd_Advance OR (Ph.Sts_Mode = 3)) THEN
+    xWait := FALSE;
+    xAdv := TRUE;                                       (* the waiting step starts now *)
+END_IF;
+IF xWait AND (iReq = 3) THEN
+    iReq := 4;                                          (* already at a step boundary *)
+END_IF;
+
+(* ===== 8. State change and entry actions ===== *)
+IF iReq &lt;&gt; iSt THEN
+    Ph.Sts_PrevState := iSt;
+    Ph.Sts_State := iReq;
+    Ph.Val_StateTime := T#0S;
+    CASE iReq OF
+        0:  (* Reset to Idle *)
+            Ph.Sts_Step := 0;
+            Ph.Sts_FailCode := 0;
+            Ph.Val_FailText := '';
+            iRunStep := 0;
+            iSeg := 0;
+        1:  IF iSt = 0 THEN                             (* Start *)
+                Ph.Sts_Step := 10;
+                Ph.Val_RunTime := T#0S;
+                Ph.Sts_FailCode := 0;
+                Ph.Val_FailText := '';
+                FOR i := 1 TO 16 DO
+                    Ph.Rpt_Real[i] := 0.0;
+                END_FOR;
+                FOR i := 1 TO 8 DO
+                    Ph.Rpt_DInt[i] := 0;
+                END_FOR;
+                FOR i := 1 TO 10 DO
+                    Bar.Sts_Skip[i] := FALSE;
+                END_FOR;
+                iRunStep := 0;
+                iSeg := 0;
+            ELSIF iSt = 7 THEN                          (* Restarting finished: resume *)
+                Ph.Sts_Step := iRunStep;
+            END_IF;                                     (* from Pausing / Paused: continue at Sts_Step *)
+        5, 8, 10:
+            IF (iSt = 1) OR (iSt = 3) OR (iSt = 4) THEN
+                iRunStep := Ph.Sts_Step;
+            END_IF;
+            Ph.Sts_Step := 10;
+        7:  (* Restart: failure is cleared; it is reported again if the cause persists *)
+            Ph.Sts_Step := 10;
+            Ph.Sts_FailCode := 0;
+            Ph.Val_FailText := '';
+    END_CASE;
+    xWait := FALSE;
+END_IF;
+Ph.Sts_WaitAdvance := xWait AND (Ph.Sts_State = 1);
+
+(* ===== 9. Step entry and times ===== *)
+StepEntry := xFirst OR xAdv OR (Ph.Sts_State &lt;&gt; iLastState) OR (Ph.Sts_Step &lt;&gt; iLastStep);
+IF StepEntry THEN
+    tStep := T#0S;
+ELSE
+    tStep := tStep + tDelta;
+END_IF;
+iLastState := Ph.Sts_State;
+iLastStep := Ph.Sts_Step;
+IF iReq = iSt THEN
+    Ph.Val_StateTime := Ph.Val_StateTime + tDelta;
+END_IF;
+IF (Ph.Sts_State = 1) OR (Ph.Sts_State = 3) THEN
+    Ph.Val_RunTime := Ph.Val_RunTime + tDelta;
+END_IF;
+
+(* ===== 10. Step watchdog and alarms (ISA-18.2 via FB_Alarm) ===== *)
+IF StepTmo &gt; T#0S THEN
+    tLimit := StepTmo;
+ELSE
+    tLimit := Ph.Cfg_StepTimeout;
+END_IF;
+Ph.Alm_StepTimeout.Inp_Cond := (tLimit &gt; T#0S) AND (tStep &gt; tLimit) AND NOT WdogOff
+                               AND NOT Ph.Sts_WaitAdvance
+                               AND ((Ph.Sts_State = 1) OR (Ph.Sts_State = 3) OR (Ph.Sts_State = 5)
+                                    OR (Ph.Sts_State = 7) OR (Ph.Sts_State = 8) OR (Ph.Sts_State = 10));
+fbTmo(SuppressIn := FALSE, Alm := Ph.Alm_StepTimeout);
+Ph.Alm_Fail.Inp_Cond := Ph.Sts_FailCode &lt;&gt; 0;
+fbFail(SuppressIn := FALSE, Alm := Ph.Alm_Fail);
+
+(* ===== 11. Batch server request handshake ===== *)
+IF Ph.Prog_ReqAck THEN
+    Ph.Sts_ReqCode := 0;
+    Ph.Prog_ReqAck := FALSE;
+END_IF;
+
+(* ===== 12. Sequence bar ===== *)
+IF ((iSt = 1) OR (iSt = 3)) AND (Seg &gt;= 1) AND (Seg &lt;= 10) AND (Ph.Sts_State &lt;&gt; 0) THEN
+    iSeg := Seg;                                        (* latched: kept while held / stopped *)
+END_IF;
+nSeg := LIMIT(0, Bar.Cfg_NumSeg, 10);
+FOR i := 1 TO 10 DO
+    IF (i &gt; nSeg) OR (Ph.Sts_State = 0) THEN
+        iBar := 0;
+    ELSIF Ph.Sts_State = 2 THEN
+        IF Bar.Sts_Skip[i] THEN iBar := 5; ELSE iBar := 2; END_IF;
+    ELSIF i &lt; iSeg THEN
+        IF Bar.Sts_Skip[i] THEN iBar := 5; ELSE iBar := 2; END_IF;
+    ELSIF i &gt; iSeg THEN
+        iBar := 0;
+    ELSIF (Ph.Sts_FailCode &lt;&gt; 0) OR (Ph.Sts_State = 10) OR (Ph.Sts_State = 11) THEN
+        iBar := 3;
+    ELSIF (Ph.Sts_State = 1) AND NOT Ph.Sts_WaitAdvance THEN
+        iBar := 1;
+    ELSIF Ph.Sts_State = 3 THEN
+        iBar := 1;
+    ELSE
+        iBar := 4;                                      (* paused, held, stopped or waiting *)
+    END_IF;
+    Bar.Sts_Seg[i] := iBar;
+END_FOR;
+Bar.Sts_ActSeg := iSeg;
+Bar.Sts_PhState := Ph.Sts_State;
+Bar.Sts_Mode := Ph.Sts_Mode;
+Bar.Sts_Owner := Ph.Sts_Owner;
+Bar.Sts_Step := Ph.Sts_Step;
+Bar.Sts_WaitAdv := Ph.Sts_WaitAdvance;
+Bar.Sts_Fail := Ph.Sts_FailCode &lt;&gt; 0;
+Bar.Val_StepTime := tStep;
+IF Ph.Sts_FailCode &lt;&gt; 0 THEN
+    Bar.Val_Msg := Ph.Val_FailText;
+ELSIF Ph.Sts_WaitAdvance THEN
+    Bar.Val_Msg := 'Waiting for Advance';
+ELSE
+    CASE Ph.Sts_State OF
+        0: Bar.Val_Msg := 'Idle';
+        1, 3: Bar.Val_Msg := Msg;
+        2: Bar.Val_Msg := 'Complete';
+        4: Bar.Val_Msg := 'Paused';
+        5: Bar.Val_Msg := 'Holding';
+        6: Bar.Val_Msg := 'Held';
+        7: Bar.Val_Msg := 'Restarting';
+        8: Bar.Val_Msg := 'Stopping';
+        9: Bar.Val_Msg := 'Stopped';
+        10: Bar.Val_Msg := 'Aborting';
+        11: Bar.Val_Msg := 'Aborted';
+    END_CASE;
+END_IF;
+IF Ph.Sts_State = 2 THEN
+    Bar.Val_StepPct := 100;
+ELSIF (Ph.Sts_State = 1) OR (Ph.Sts_State = 3) OR (Ph.Sts_State = 4) THEN
+    Bar.Val_StepPct := LIMIT(0, Pct, 100);
+ELSE
+    Bar.Val_StepPct := 0;
+END_IF;
+
+(* ===== 13. Pins; operator and recipe commands are one-shot: clear after use ===== *)
+StepTime := tStep;
+RunStep := iRunStep;
+Running := (Ph.Sts_State = 1) OR (Ph.Sts_State = 3);
+Held := Ph.Sts_State = 6;
+Complete := Ph.Sts_State = 2;
+Failed := Ph.Sts_FailCode &lt;&gt; 0;
+
+Ph.Cmd_Auto := FALSE;
+Ph.Cmd_SemiAuto := FALSE;
+Ph.Cmd_Man := FALSE;
+Ph.Cmd_Start := FALSE;
+Ph.Cmd_Stop := FALSE;
+Ph.Cmd_Hold := FALSE;
+Ph.Cmd_Restart := FALSE;
+Ph.Cmd_Abort := FALSE;
+Ph.Cmd_Reset := FALSE;
+Ph.Cmd_Pause := FALSE;
+Ph.Cmd_Resume := FALSE;
+Ph.Cmd_Advance := FALSE;
+Ph.Cmd_TakeOwn := FALSE;
+Ph.Prog_Cmd := 0;
+Ph.Prog_Acquire := FALSE;
+Ph.Prog_Release := FALSE;
+xFirst := FALSE;</STSource>
+	</FBProgram>
+</FBSource>
+<FBSource nameOfFBType="FB_Phase" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+	<comment>TEMPLATE ISA-88 equipment phase for a T_Phase + T_SeqBar. Copy, rename FB_Ph&lt;Name&gt;, add pins and write the sequence in the open area. FB_PhaseCore does states, modes, commands and the bar</comment>
+	<inputParameters>
+		<variables name="PermOK" typeName="BOOL">
+			<comment>Start permissives OK</comment>
+			<attribute name="PositionPin" value="1"></attribute>
+		</variables>
+		<variables name="IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (FALSE while running -&gt; Holding)</comment>
+			<attribute name="PositionPin" value="2"></attribute>
+		</variables>
+		<variables name="IntlkAbort" typeName="BOOL">
+			<comment>TRUE = interlock trip aborts instead of holding</comment>
+			<attribute name="PositionPin" value="3"></attribute>
+		</variables>
+		<variables name="EStop" typeName="BOOL">
+			<comment>Emergency stop active -&gt; Aborting</comment>
+			<attribute name="PositionPin" value="4"></attribute>
+		</variables>
+	</inputParameters>
+	<inOutParameters>
+		<variables name="Ph" typeName="T_Phase">
+			<comment>Phase object</comment>
+			<attribute name="PositionPin" value="5"></attribute>
+		</variables>
+		<variables name="Bar" typeName="T_SeqBar">
+			<comment>Sequence bar for the HMI</comment>
+			<attribute name="PositionPin" value="6"></attribute>
+		</variables>
+	</inOutParameters>
+	<outputParameters>
+		<variables name="Running" typeName="BOOL">
+			<comment>Phase Running or Pausing</comment>
+			<attribute name="PositionPin" value="7"></attribute>
+		</variables>
+		<variables name="Held" typeName="BOOL">
+			<comment>Phase Held</comment>
+			<attribute name="PositionPin" value="8"></attribute>
+		</variables>
+		<variables name="Complete" typeName="BOOL">
+			<comment>Phase Complete</comment>
+			<attribute name="PositionPin" value="9"></attribute>
+		</variables>
+		<variables name="Failed" typeName="BOOL">
+			<comment>Phase failure active</comment>
+			<attribute name="PositionPin" value="10"></attribute>
+		</variables>
+	</outputParameters>
+	<privateLocalVariables>
+		<variables name="xFirst" typeName="BOOL">
+			<comment>First scan: load sequence-bar labels</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="fbCore" typeName="FB_PhaseCore">
+			<comment>ISA-88 phase core</comment>
+		</variables>
+		<variables name="xTrans" typeName="BOOL">
+			<comment>Request: go to iNext</comment>
+		</variables>
+		<variables name="iNext" typeName="INT">
+			<comment>Request: next step</comment>
+		</variables>
+		<variables name="xDone" typeName="BOOL">
+			<comment>Request: current state logic finished</comment>
+		</variables>
+		<variables name="iFail" typeName="INT">
+			<comment>Request: failure code</comment>
+		</variables>
+		<variables name="sFail" typeName="STRING[40]">
+			<comment>Request: failure text</comment>
+		</variables>
+		<variables name="iSeg" typeName="INT">
+			<comment>Sequence-bar segment of the active step</comment>
+		</variables>
+		<variables name="sMsg" typeName="STRING[40]">
+			<comment>Operator message of the active step</comment>
+		</variables>
+		<variables name="iPct" typeName="INT">
+			<comment>Progress within the segment, 0..100</comment>
+		</variables>
+		<variables name="tStepMax" typeName="TIME">
+			<comment>Watchdog for this step, T#0S = Ph.Cfg_StepTimeout</comment>
+		</variables>
+		<variables name="xWdogOff" typeName="BOOL">
+			<comment>No watchdog in this step</comment>
+		</variables>
+	</privateLocalVariables>
+	<FBProgram name="Main">
+		<STSource>(* ---- A. Sequence-bar labels (first scan, or after the T_SeqBar is re-initialised) ---- *)
+IF xFirst OR (Bar.Cfg_NumSeg = 0) THEN
+    Bar.Cfg_Title := 'Phase';
+    Bar.Cfg_NumSeg := 3;
+    Bar.Cfg_SegText[1] := 'Prepare';
+    Bar.Cfg_SegText[2] := 'Run';
+    Bar.Cfg_SegText[3] := 'Done';
+    xFirst := FALSE;
+END_IF;
+
+(* ---- B. Requests to the core and equipment requests: cleared every scan, set by the active step ---- *)
+xTrans := FALSE;
+iNext := 0;
+xDone := FALSE;
+iFail := 0;
+sFail := '';
+sMsg := '';
+iPct := 0;
+tStepMax := T#0S;
+xWdogOff := FALSE;
+(* Equipment requests of this phase, e.g. xOutA := FALSE; *)
+
+(* =====================================================================
+   C. SEQUENCE LOGIC  &gt;&gt;&gt; OPEN AREA - write the phase logic here &lt;&lt;&lt;
+
+   Read:   Ph.Sts_State        1 Running, 3 Pausing, 5 Holding, 7 Restarting,
+                               8 Stopping, 10 Aborting. Nothing runs in Paused (4)
+                               or while Ph.Sts_WaitAdvance: outputs fall back to
+                               section B. Add a 4: branch only if equipment must
+                               keep running while the phase is paused.
+           Ph.Sts_Step         active step inside that state (starts at 10)
+           fbCore.StepEntry    TRUE on the first scan of a step
+           fbCore.StepTime     time in the active step
+           fbCore.RunStep      running step the phase resumes at after Restart
+           Ph.Prm_Real[] / Ph.Prm_DInt[]   recipe parameters
+   Write:  iSeg                sequence-bar segment of this step (1..Bar.Cfg_NumSeg)
+           sMsg                operator message for this step (40 characters)
+           iPct                progress within the segment, 0..100 (optional)
+           Bar.Sts_Skip[n]     segment n skipped this run (optional)
+           tStepMax            watchdog for this step, T#0S = Ph.Cfg_StepTimeout
+           xWdogOff            TRUE = no watchdog in this step (open-ended waits)
+           iNext + xTrans      go to step iNext. Pausing pauses here, and in
+                               Semi-automatic step iNext waits for Advance
+           xDone               this state's logic is finished:
+                               Running -&gt; Complete, Holding -&gt; Held,
+                               Restarting -&gt; Running at RunStep,
+                               Stopping -&gt; Stopped, Aborting -&gt; Aborted
+           iFail + sFail       failure code and text: the phase goes to Holding
+           Ph.Rpt_Real[] / Ph.Rpt_DInt[]   report values (cleared at Start)
+           Ph.Sts_ReqCode      request to the batch server (cleared by Prog_ReqAck)
+   Rules:  - Number steps 10, 20, 30 ... so steps can be inserted later.
+           - Set outputs in the active step only; section B clears them every scan.
+           - Do one-time work (counters, captured values) on fbCore.StepEntry,
+             not in the transition branch: a transition is dropped and asked
+             again when a command arrives in the same scan.
+           - Never write Ph.Sts_State or Ph.Sts_Step; use xTrans and xDone.
+           - Holding, Stopping and Aborting must leave the equipment safe.
+           - Timers: call them every scan they are used, and gate IN with
+             NOT fbCore.StepEntry so they restart in each step.
+   ===================================================================== *)
+CASE Ph.Sts_State OF
+
+1, 3:   (* ---------- RUNNING / PAUSING: the procedure ---------- *)
+    IF NOT Ph.Sts_WaitAdvance THEN                  (* Semi-automatic: the step waits for Advance *)
+    CASE Ph.Sts_Step OF
+    10: (* &lt;Step 10 description&gt; *)
+        iSeg := 1;
+        sMsg := 'Describe what step 10 is doing';
+        (* actions:     xOutA := TRUE;                                              *)
+        (* failure:     IF &lt;fault&gt; THEN iFail := 1; sFail := 'Fault text'; END_IF; *)
+        (* transition:  IF &lt;condition&gt; THEN iNext := 20; xTrans := TRUE; END_IF;   *)
+
+        (* PLACEHOLDER so the template runs in the simulator. Delete it.
+           Completes 5 s after Start. *)
+        IF fbCore.StepTime &gt;= T#5S THEN
+            xDone := TRUE;
+        END_IF;
+
+    (* Add the next steps here, for example:
+       20:  iSeg := 2;
+            sMsg := 'Describe what step 20 is doing';
+            ...
+       90:  iSeg := 3;
+            Ph.Rpt_Real[1] := ...;
+            xDone := TRUE;
+       Comments cannot be nested in Control Expert: keep step comments on one line. *)
+    END_CASE;
+    END_IF;
+
+5:  (* ---------- HOLDING: bring the equipment to a safe hold ---------- *)
+    (* Equipment requests are already off (section B).
+       Wait for confirmation if needed, e.g. xDone := &lt;valves closed&gt;; *)
+    xDone := TRUE;
+
+7:  (* ---------- RESTARTING: prepare to resume at fbCore.RunStep ---------- *)
+    xDone := TRUE;
+
+8:  (* ---------- STOPPING: controlled stop ---------- *)
+    xDone := TRUE;
+
+10: (* ---------- ABORTING: fastest safe shutdown ---------- *)
+    xDone := TRUE;
+
+END_CASE;
+(* ========================= END OF OPEN AREA ========================= *)
+
+(* ---- D. Core: ISA-88 states, commands, modes, ownership, watchdog, alarms, sequence bar ---- *)
+fbCore(PermOK := PermOK, IntlkOK := IntlkOK, IntlkAbort := IntlkAbort, EStop := EStop,
+       Trans := xTrans, NextStep := iNext, StateDone := xDone,
+       FailCode := iFail, FailText := sFail,
+       Seg := iSeg, Msg := sMsg, Pct := iPct,
+       StepTmo := tStepMax, WdogOff := xWdogOff,
+       Ph := Ph, Bar := Bar);
+
+(* ---- E. Outputs ---- *)
+Running := fbCore.Running;
+Held := fbCore.Held;
+Complete := fbCore.Complete;
+Failed := fbCore.Failed;
+(* Equipment outputs, e.g. Out_A := xOutA; *)</STSource>
+	</FBProgram>
+</FBSource>
+<FBSource nameOfFBType="FB_PhFill" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+	<comment>EXAMPLE phase: fill one xenon cylinder by weight - check, heel recovery, evacuation, leak check, tare, fast / slow fill, settle and top-up, optional sample. One instance per fill station</comment>
+	<inputParameters>
+		<variables name="PermOK" typeName="BOOL">
+			<comment>Start permissives OK</comment>
+			<attribute name="PositionPin" value="1"></attribute>
+		</variables>
+		<variables name="IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (FALSE while running -&gt; Holding)</comment>
+			<attribute name="PositionPin" value="2"></attribute>
+		</variables>
+		<variables name="IntlkAbort" typeName="BOOL">
+			<comment>TRUE = interlock trip aborts instead of holding</comment>
+			<attribute name="PositionPin" value="3"></attribute>
+		</variables>
+		<variables name="EStop" typeName="BOOL">
+			<comment>Emergency stop active -&gt; Aborting</comment>
+			<attribute name="PositionPin" value="4"></attribute>
+		</variables>
+		<variables name="VesselOK" typeName="BOOL">
+			<comment>Cylinder connected and its valve confirmed open</comment>
+			<attribute name="PositionPin" value="5"></attribute>
+		</variables>
+		<variables name="NetWt" typeName="REAL">
+			<comment>Scale net weight (kg)</comment>
+			<attribute name="PositionPin" value="6"></attribute>
+		</variables>
+		<variables name="WtStable" typeName="BOOL">
+			<comment>Scale motion-free</comment>
+			<attribute name="PositionPin" value="7"></attribute>
+		</variables>
+		<variables name="PT" typeName="REAL">
+			<comment>Station pressure (bar g)</comment>
+			<attribute name="PositionPin" value="8"></attribute>
+		</variables>
+		<variables name="VacPT" typeName="REAL">
+			<comment>Station vacuum gauge (mbar abs)</comment>
+			<attribute name="PositionPin" value="9"></attribute>
+		</variables>
+		<variables name="FeedReady" typeName="BOOL">
+			<comment>Fill header at pressure (FB_PhFeed.FeedReady)</comment>
+			<attribute name="PositionPin" value="10"></attribute>
+		</variables>
+	</inputParameters>
+	<inOutParameters>
+		<variables name="Ph" typeName="T_Phase">
+			<comment>Phase object</comment>
+			<attribute name="PositionPin" value="11"></attribute>
+		</variables>
+		<variables name="Bar" typeName="T_SeqBar">
+			<comment>Sequence bar for the HMI</comment>
+			<attribute name="PositionPin" value="12"></attribute>
+		</variables>
+	</inOutParameters>
+	<outputParameters>
+		<variables name="Running" typeName="BOOL">
+			<comment>Phase Running or Pausing</comment>
+			<attribute name="PositionPin" value="13"></attribute>
+		</variables>
+		<variables name="Held" typeName="BOOL">
+			<comment>Phase Held</comment>
+			<attribute name="PositionPin" value="14"></attribute>
+		</variables>
+		<variables name="Complete" typeName="BOOL">
+			<comment>Phase Complete</comment>
+			<attribute name="PositionPin" value="15"></attribute>
+		</variables>
+		<variables name="Failed" typeName="BOOL">
+			<comment>Phase failure active</comment>
+			<attribute name="PositionPin" value="16"></attribute>
+		</variables>
+		<variables name="Out_Inlet" typeName="BOOL">
+			<comment>Request: fill inlet valve open</comment>
+			<attribute name="PositionPin" value="17"></attribute>
+		</variables>
+		<variables name="Out_Recover" typeName="BOOL">
+			<comment>Request: recovery valve open (heel to recovery header)</comment>
+			<attribute name="PositionPin" value="18"></attribute>
+		</variables>
+		<variables name="Out_Vac" typeName="BOOL">
+			<comment>Request: vacuum valve open</comment>
+			<attribute name="PositionPin" value="19"></attribute>
+		</variables>
+		<variables name="Out_Sample" typeName="BOOL">
+			<comment>Request: sample valve open</comment>
+			<attribute name="PositionPin" value="20"></attribute>
+		</variables>
+		<variables name="Out_Tare" typeName="BOOL">
+			<comment>Request: tare the scale (pulse)</comment>
+			<attribute name="PositionPin" value="21"></attribute>
+		</variables>
+		<variables name="FeedReq" typeName="BOOL">
+			<comment>This station needs feed pressure</comment>
+			<attribute name="PositionPin" value="22"></attribute>
+		</variables>
+	</outputParameters>
+	<privateLocalVariables>
+		<variables name="xFirst" typeName="BOOL">
+			<comment>First scan: load sequence-bar labels</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="fbCore" typeName="FB_PhaseCore">
+			<comment>ISA-88 phase core</comment>
+		</variables>
+		<variables name="xTrans" typeName="BOOL">
+			<comment>Request: go to iNext</comment>
+		</variables>
+		<variables name="iNext" typeName="INT">
+			<comment>Request: next step</comment>
+		</variables>
+		<variables name="xDone" typeName="BOOL">
+			<comment>Request: current state logic finished</comment>
+		</variables>
+		<variables name="iFail" typeName="INT">
+			<comment>Request: failure code</comment>
+		</variables>
+		<variables name="sFail" typeName="STRING[40]">
+			<comment>Request: failure text</comment>
+		</variables>
+		<variables name="iSeg" typeName="INT">
+			<comment>Sequence-bar segment of the active step</comment>
+		</variables>
+		<variables name="sMsg" typeName="STRING[40]">
+			<comment>Operator message of the active step</comment>
+		</variables>
+		<variables name="iPct" typeName="INT">
+			<comment>Progress within the segment, 0..100</comment>
+		</variables>
+		<variables name="tStepMax" typeName="TIME">
+			<comment>Watchdog for this step, T#0S = Ph.Cfg_StepTimeout</comment>
+		</variables>
+		<variables name="xWdogOff" typeName="BOOL">
+			<comment>No watchdog in this step</comment>
+		</variables>
+		<variables name="xInlet" typeName="BOOL">
+			<comment>Inlet request</comment>
+		</variables>
+		<variables name="xRecover" typeName="BOOL">
+			<comment>Recovery request</comment>
+		</variables>
+		<variables name="xVac" typeName="BOOL">
+			<comment>Vacuum request</comment>
+		</variables>
+		<variables name="xSample" typeName="BOOL">
+			<comment>Sample request</comment>
+		</variables>
+		<variables name="xTare" typeName="BOOL">
+			<comment>Tare request</comment>
+		</variables>
+		<variables name="xFeedReq" typeName="BOOL">
+			<comment>Feed request</comment>
+		</variables>
+		<variables name="rTarget" typeName="REAL">
+			<comment>Target net weight (kg)</comment>
+		</variables>
+		<variables name="rPct" typeName="REAL">
+			<comment>Fill progress (% of target)</comment>
+		</variables>
+		<variables name="rVacRef" typeName="REAL">
+			<comment>Vacuum at start of leak check (mbar abs)</comment>
+		</variables>
+		<variables name="tHold" typeName="TIME">
+			<comment>Leak check time</comment>
+		</variables>
+		<variables name="iTopUp" typeName="INT">
+			<comment>Top-ups done</comment>
+		</variables>
+		<variables name="xTopUp" typeName="BOOL">
+			<comment>Top-up requested by step 90</comment>
+		</variables>
+		<variables name="tPulseOn" typeName="TIME">
+			<comment>Slow fill pulse on</comment>
+		</variables>
+		<variables name="tPulseOff" typeName="TIME">
+			<comment>Slow fill pulse off</comment>
+		</variables>
+		<variables name="dCyc" typeName="DINT">
+			<comment>Slow fill pulse cycle (ms)</comment>
+		</variables>
+		<variables name="tonOk" typeName="TON">
+			<comment>Condition-stable timer</comment>
+		</variables>
+	</privateLocalVariables>
+	<FBProgram name="Main">
+		<STSource>(* ---- A. Sequence-bar labels (first scan, or after the T_SeqBar is re-initialised) ---- *)
+IF xFirst OR (Bar.Cfg_NumSeg = 0) THEN
+    Bar.Cfg_Title := 'Cylinder fill';
+    Bar.Cfg_NumSeg := 6;
+    Bar.Cfg_SegText[1] := 'Vessel';
+    Bar.Cfg_SegText[2] := 'Vac';
+    Bar.Cfg_SegText[3] := 'Prefill';
+    Bar.Cfg_SegText[4] := 'Fill';
+    Bar.Cfg_SegText[5] := 'Sample';
+    Bar.Cfg_SegText[6] := 'Done';
+    xFirst := FALSE;
+END_IF;
+
+(* ---- B. Requests to the core and equipment requests: cleared every scan, set by the active step ---- *)
+xTrans := FALSE;
+iNext := 0;
+xDone := FALSE;
+iFail := 0;
+sFail := '';
+sMsg := '';
+iPct := 0;
+tStepMax := T#0S;
+xWdogOff := FALSE;
+xInlet := FALSE;
+xRecover := FALSE;
+xVac := FALSE;
+xSample := FALSE;
+xTare := FALSE;
+xFeedReq := FALSE;
+
+(* =====================================================================
+   C. SEQUENCE LOGIC - xenon cylinder fill by weight (one station)
+   Parameters (Ph.Prm_Real):  1 target net weight (kg)   2 tolerance + (kg)
+       3 tolerance - (kg)     4 fast -&gt; slow change-over before target (kg)
+       5 preact / in-flight (kg)   6 heel recovered down to (bar g)
+       7 evacuation target (mbar abs)   8 leak check max rise (mbar)
+       9 maximum cylinder fill pressure (bar g)
+   Parameters (Ph.Prm_DInt):  1 sample required (0/1)   2 max top-ups
+       3 leak check time (s)   4 settle time (s)   5 slow fill pulse on (ms)
+       6 slow fill pulse off (ms)   7 sample fill time (s)
+   Reports:  Rpt_Real 1 final net weight (kg)  2 final pressure (bar g)
+             3 run time (s)  4 leak check rise (mbar);  Rpt_DInt 1 top-ups
+   Xenon is never vented to atmosphere: the heel goes to the recovery header,
+   and Hold / Stop / Abort isolate the cylinder.
+   ===================================================================== *)
+rTarget := Ph.Prm_Real[1];
+IF rTarget &gt; 0.0 THEN
+    rPct := NetWt * 100.0 / rTarget;
+ELSE
+    rPct := 0.0;
+END_IF;
+
+CASE Ph.Sts_State OF
+
+1, 3:   (* ---------- RUNNING / PAUSING: the procedure ---------- *)
+    IF NOT Ph.Sts_WaitAdvance THEN                  (* Semi-automatic: the step waits for Advance *)
+    CASE Ph.Sts_Step OF
+    10: (* Check the recipe and the cylinder *)
+        iSeg := 1;
+        sMsg := 'Checking cylinder and recipe';
+        iTopUp := 0;
+        xTopUp := FALSE;
+        tonOk(IN := VesselOK AND WtStable AND NOT fbCore.StepEntry, PT := T#3S);
+        IF (rTarget &lt;= 0.0) OR (Ph.Prm_Real[9] &lt;= 0.0) OR (Ph.Prm_Real[5] &lt; 0.0)
+           OR (Ph.Prm_Real[4] &lt; Ph.Prm_Real[5]) THEN
+            iFail := 100;
+            sFail := 'Invalid recipe parameters';
+        ELSIF tonOk.Q THEN
+            iNext := 20;
+            xTrans := TRUE;
+        END_IF;
+
+    20: (* Recover the heel to the recovery header *)
+        iSeg := 2;
+        sMsg := 'Recovering heel';
+        xRecover := TRUE;
+        IF PT &lt;= Ph.Prm_Real[6] THEN
+            iNext := 30;
+            xTrans := TRUE;
+        END_IF;
+
+    30: (* Evacuate *)
+        iSeg := 2;
+        sMsg := 'Evacuating cylinder';
+        xVac := TRUE;
+        IF VacPT &lt;= Ph.Prm_Real[7] THEN
+            iNext := 40;
+            xTrans := TRUE;
+        END_IF;
+
+    40: (* Vacuum hold: leak check *)
+        iSeg := 2;
+        sMsg := 'Vacuum hold - leak check';
+        IF fbCore.StepEntry THEN
+            rVacRef := VacPT;
+        END_IF;
+        tHold := DINT_TO_TIME(Ph.Prm_DInt[3] * 1000);
+        tStepMax := tHold + T#60S;
+        Ph.Rpt_Real[4] := VacPT - rVacRef;
+        IF fbCore.StepTime &gt;= tHold THEN
+            IF VacPT - rVacRef &gt; Ph.Prm_Real[8] THEN
+                iFail := 101;
+                sFail := 'Leak check failed';
+            ELSE
+                iNext := 50;
+                xTrans := TRUE;
+            END_IF;
+        END_IF;
+
+    50: (* Tare the evacuated cylinder *)
+        iSeg := 3;
+        sMsg := 'Taring scale';
+        xTare := fbCore.StepTime &lt; T#1S;                (* 1 s tare pulse to the scale *)
+        tonOk(IN := WtStable AND (fbCore.StepTime &gt;= T#2S) AND NOT fbCore.StepEntry, PT := T#2S);
+        IF tonOk.Q THEN
+            iNext := 60;
+            xTrans := TRUE;
+        END_IF;
+
+    60: (* Wait for feed pressure from the compressor *)
+        iSeg := 3;
+        sMsg := 'Waiting for feed pressure';
+        xFeedReq := TRUE;
+        xWdogOff := TRUE;                               (* may wait for other stations *)
+        IF FeedReady THEN
+            iNext := 70;
+            xTrans := TRUE;
+        END_IF;
+
+    70: (* Fast fill *)
+        iSeg := 4;
+        sMsg := 'Fast fill';
+        xFeedReq := TRUE;
+        xInlet := FeedReady;                            (* inlet closes if feed pressure is lost *)
+        iPct := REAL_TO_INT(LIMIT(0.0, rPct, 100.0));
+        IF PT &gt;= Ph.Prm_Real[9] THEN
+            iFail := 102;
+            sFail := 'Cylinder above max fill pressure';
+        ELSIF NetWt &gt;= rTarget - Ph.Prm_Real[4] THEN
+            iNext := 80;
+            xTrans := TRUE;
+        END_IF;
+
+    80: (* Slow fill: pulsed inlet *)
+        iSeg := 4;
+        sMsg := 'Slow fill';
+        IF fbCore.StepEntry AND xTopUp THEN             (* entered from 90 for a top-up *)
+            iTopUp := iTopUp + 1;
+            xTopUp := FALSE;
+        END_IF;
+        xFeedReq := TRUE;
+        tPulseOn := DINT_TO_TIME(Ph.Prm_DInt[5]);
+        tPulseOff := DINT_TO_TIME(Ph.Prm_DInt[6]);
+        dCyc := TIME_TO_DINT(tPulseOn + tPulseOff);
+        IF (dCyc &gt; 0) AND (tPulseOff &gt; T#0S) THEN
+            xInlet := FeedReady AND ((TIME_TO_DINT(fbCore.StepTime) MOD dCyc) &lt; TIME_TO_DINT(tPulseOn));
+        ELSE
+            xInlet := FeedReady;
+        END_IF;
+        iPct := REAL_TO_INT(LIMIT(0.0, rPct, 100.0));
+        IF PT &gt;= Ph.Prm_Real[9] THEN
+            iFail := 102;
+            sFail := 'Cylinder above max fill pressure';
+        ELSIF NetWt &gt;= rTarget - Ph.Prm_Real[5] THEN
+            iNext := 90;
+            xTrans := TRUE;
+        END_IF;
+
+    90: (* Settle, then check the weight *)
+        iSeg := 4;
+        sMsg := 'Settling - checking weight';
+        xFeedReq := TRUE;                               (* keep feed for a top-up *)
+        iPct := REAL_TO_INT(LIMIT(0.0, rPct, 100.0));
+        tonOk(IN := WtStable AND (fbCore.StepTime &gt;= DINT_TO_TIME(Ph.Prm_DInt[4] * 1000))
+                    AND NOT fbCore.StepEntry, PT := T#1S);
+        IF tonOk.Q THEN
+            IF NetWt &gt; rTarget + Ph.Prm_Real[2] THEN
+                iFail := 103;
+                sFail := 'Overfill - above tolerance';
+            ELSIF NetWt &lt; rTarget - Ph.Prm_Real[3] THEN
+                IF iTopUp &lt; DINT_TO_INT(Ph.Prm_DInt[2]) THEN
+                    xTopUp := TRUE;                     (* counted on entry to step 80 *)
+                    iNext := 80;
+                    xTrans := TRUE;
+                ELSE
+                    iFail := 104;
+                    sFail := 'Under weight after max top-ups';
+                END_IF;
+            ELSE
+                iNext := 100;
+                xTrans := TRUE;
+            END_IF;
+        END_IF;
+
+    100: (* Sample (optional) *)
+        iSeg := 5;
+        IF Ph.Prm_DInt[1] = 0 THEN
+            Bar.Sts_Skip[5] := TRUE;
+            sMsg := 'No sample required';
+            iNext := 110;
+            xTrans := TRUE;
+        ELSE
+            sMsg := 'Filling sample cylinder';
+            xSample := TRUE;
+            IF fbCore.StepTime &gt;= DINT_TO_TIME(Ph.Prm_DInt[7] * 1000) THEN
+                iNext := 110;
+                xTrans := TRUE;
+            END_IF;
+        END_IF;
+
+    110: (* Fill complete: reports *)
+        iSeg := 6;
+        sMsg := 'Fill complete';
+        Ph.Rpt_Real[1] := NetWt;
+        Ph.Rpt_Real[2] := PT;
+        Ph.Rpt_Real[3] := DINT_TO_REAL(TIME_TO_DINT(Ph.Val_RunTime)) / 1000.0;
+        Ph.Rpt_DInt[1] := INT_TO_DINT(iTopUp);
+        xDone := TRUE;
+    END_CASE;
+    END_IF;
+
+5:  (* ---------- HOLDING: all station valves closed, feed released (section B) ---------- *)
+    xDone := TRUE;
+
+7:  (* ---------- RESTARTING: re-establish feed before resuming a fill step ---------- *)
+    IF (fbCore.RunStep &gt;= 60) AND (fbCore.RunStep &lt;= 90) THEN
+        xFeedReq := TRUE;
+        IF FeedReady THEN
+            xDone := TRUE;
+        END_IF;
+    ELSE
+        xDone := TRUE;
+    END_IF;
+
+8:  (* ---------- STOPPING: isolate the cylinder ---------- *)
+    xDone := TRUE;
+
+10: (* ---------- ABORTING: isolate the cylinder ---------- *)
+    xDone := TRUE;
+
+END_CASE;
+
+(* ---- D. Core: ISA-88 states, commands, modes, ownership, watchdog, alarms, sequence bar ---- *)
+fbCore(PermOK := PermOK, IntlkOK := IntlkOK, IntlkAbort := IntlkAbort, EStop := EStop,
+       Trans := xTrans, NextStep := iNext, StateDone := xDone,
+       FailCode := iFail, FailText := sFail,
+       Seg := iSeg, Msg := sMsg, Pct := iPct,
+       StepTmo := tStepMax, WdogOff := xWdogOff,
+       Ph := Ph, Bar := Bar);
+
+(* ---- E. Outputs ---- *)
+Running := fbCore.Running;
+Held := fbCore.Held;
+Complete := fbCore.Complete;
+Failed := fbCore.Failed;
+Out_Inlet := xInlet;
+Out_Recover := xRecover;
+Out_Vac := xVac;
+Out_Sample := xSample;
+Out_Tare := xTare;
+FeedReq := xFeedReq;</STSource>
+	</FBProgram>
+</FBSource>
+<FBSource nameOfFBType="FB_PhFeed" version="1.00" dateTime="dt#2026-10-14-17:02:03">
+	<comment>EXAMPLE phase: xenon feed - large source cylinder and diaphragm compressor pressurise the fill header and hold it at setpoint while stations request feed</comment>
+	<inputParameters>
+		<variables name="PermOK" typeName="BOOL">
+			<comment>Start permissives OK</comment>
+			<attribute name="PositionPin" value="1"></attribute>
+		</variables>
+		<variables name="IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (FALSE while running -&gt; Holding)</comment>
+			<attribute name="PositionPin" value="2"></attribute>
+		</variables>
+		<variables name="IntlkAbort" typeName="BOOL">
+			<comment>TRUE = interlock trip aborts instead of holding</comment>
+			<attribute name="PositionPin" value="3"></attribute>
+		</variables>
+		<variables name="EStop" typeName="BOOL">
+			<comment>Emergency stop active -&gt; Aborting</comment>
+			<attribute name="PositionPin" value="4"></attribute>
+		</variables>
+		<variables name="SrcWt" typeName="REAL">
+			<comment>Source cylinder net weight (kg)</comment>
+			<attribute name="PositionPin" value="5"></attribute>
+		</variables>
+		<variables name="SuctPT" typeName="REAL">
+			<comment>Compressor suction pressure (bar g)</comment>
+			<attribute name="PositionPin" value="6"></attribute>
+		</variables>
+		<variables name="HdrPT" typeName="REAL">
+			<comment>Fill header pressure (bar g)</comment>
+			<attribute name="PositionPin" value="7"></attribute>
+		</variables>
+		<variables name="CompRdy" typeName="BOOL">
+			<comment>Compressor ready to start (no trip, in Auto)</comment>
+			<attribute name="PositionPin" value="8"></attribute>
+		</variables>
+		<variables name="CompRun" typeName="BOOL">
+			<comment>Compressor running feedback</comment>
+			<attribute name="PositionPin" value="9"></attribute>
+		</variables>
+		<variables name="FeedReqs" typeName="INT">
+			<comment>Number of stations requesting feed</comment>
+			<attribute name="PositionPin" value="10"></attribute>
+		</variables>
+	</inputParameters>
+	<inOutParameters>
+		<variables name="Ph" typeName="T_Phase">
+			<comment>Phase object</comment>
+			<attribute name="PositionPin" value="11"></attribute>
+		</variables>
+		<variables name="Bar" typeName="T_SeqBar">
+			<comment>Sequence bar for the HMI</comment>
+			<attribute name="PositionPin" value="12"></attribute>
+		</variables>
+	</inOutParameters>
+	<outputParameters>
+		<variables name="Running" typeName="BOOL">
+			<comment>Phase Running or Pausing</comment>
+			<attribute name="PositionPin" value="13"></attribute>
+		</variables>
+		<variables name="Held" typeName="BOOL">
+			<comment>Phase Held</comment>
+			<attribute name="PositionPin" value="14"></attribute>
+		</variables>
+		<variables name="Complete" typeName="BOOL">
+			<comment>Phase Complete</comment>
+			<attribute name="PositionPin" value="15"></attribute>
+		</variables>
+		<variables name="Failed" typeName="BOOL">
+			<comment>Phase failure active</comment>
+			<attribute name="PositionPin" value="16"></attribute>
+		</variables>
+		<variables name="Out_SrcVlv" typeName="BOOL">
+			<comment>Request: source cylinder valve open</comment>
+			<attribute name="PositionPin" value="17"></attribute>
+		</variables>
+		<variables name="Out_CompRun" typeName="BOOL">
+			<comment>Request: compressor run</comment>
+			<attribute name="PositionPin" value="18"></attribute>
+		</variables>
+		<variables name="Out_CompLoad" typeName="BOOL">
+			<comment>Request: compressor loaded</comment>
+			<attribute name="PositionPin" value="19"></attribute>
+		</variables>
+		<variables name="Out_Recycle" typeName="BOOL">
+			<comment>Request: recycle / bypass valve open</comment>
+			<attribute name="PositionPin" value="20"></attribute>
+		</variables>
+		<variables name="FeedReady" typeName="BOOL">
+			<comment>Fill header at pressure: stations may fill</comment>
+			<attribute name="PositionPin" value="21"></attribute>
+		</variables>
+	</outputParameters>
+	<privateLocalVariables>
+		<variables name="xFirst" typeName="BOOL">
+			<comment>First scan: load sequence-bar labels</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="fbCore" typeName="FB_PhaseCore">
+			<comment>ISA-88 phase core</comment>
+		</variables>
+		<variables name="xTrans" typeName="BOOL">
+			<comment>Request: go to iNext</comment>
+		</variables>
+		<variables name="iNext" typeName="INT">
+			<comment>Request: next step</comment>
+		</variables>
+		<variables name="xDone" typeName="BOOL">
+			<comment>Request: current state logic finished</comment>
+		</variables>
+		<variables name="iFail" typeName="INT">
+			<comment>Request: failure code</comment>
+		</variables>
+		<variables name="sFail" typeName="STRING[40]">
+			<comment>Request: failure text</comment>
+		</variables>
+		<variables name="iSeg" typeName="INT">
+			<comment>Sequence-bar segment of the active step</comment>
+		</variables>
+		<variables name="sMsg" typeName="STRING[40]">
+			<comment>Operator message of the active step</comment>
+		</variables>
+		<variables name="iPct" typeName="INT">
+			<comment>Progress within the segment, 0..100</comment>
+		</variables>
+		<variables name="tStepMax" typeName="TIME">
+			<comment>Watchdog for this step, T#0S = Ph.Cfg_StepTimeout</comment>
+		</variables>
+		<variables name="xWdogOff" typeName="BOOL">
+			<comment>No watchdog in this step</comment>
+		</variables>
+		<variables name="xSrc" typeName="BOOL">
+			<comment>Source valve request</comment>
+		</variables>
+		<variables name="xRun" typeName="BOOL">
+			<comment>Compressor run request</comment>
+		</variables>
+		<variables name="xLoad" typeName="BOOL">
+			<comment>Compressor load request</comment>
+		</variables>
+		<variables name="xRecyc" typeName="BOOL">
+			<comment>Recycle valve request</comment>
+		</variables>
+		<variables name="xReady" typeName="BOOL">
+			<comment>Header ready</comment>
+		</variables>
+		<variables name="xLoadMem" typeName="BOOL">
+			<comment>Load / unload hysteresis memory</comment>
+		</variables>
+		<variables name="rSP" typeName="REAL">
+			<comment>Header pressure setpoint (bar g)</comment>
+		</variables>
+		<variables name="rBand" typeName="REAL">
+			<comment>Load band (bar)</comment>
+		</variables>
+		<variables name="tonOk" typeName="TON">
+			<comment>Condition-stable timer</comment>
+		</variables>
+		<variables name="tonIdle" typeName="TON">
+			<comment>No-demand timer</comment>
+		</variables>
+	</privateLocalVariables>
+	<FBProgram name="Main">
+		<STSource>(* ---- A. Sequence-bar labels (first scan, or after the T_SeqBar is re-initialised) ---- *)
+IF xFirst OR (Bar.Cfg_NumSeg = 0) THEN
+    Bar.Cfg_Title := 'Xenon feed';
+    Bar.Cfg_NumSeg := 6;
+    Bar.Cfg_SegText[1] := 'Lineup';
+    Bar.Cfg_SegText[2] := 'Source';
+    Bar.Cfg_SegText[3] := 'Start';
+    Bar.Cfg_SegText[4] := 'Pressurise';
+    Bar.Cfg_SegText[5] := 'Supply';
+    Bar.Cfg_SegText[6] := 'Done';
+    xFirst := FALSE;
+END_IF;
+
+(* ---- B. Requests to the core and equipment requests: cleared every scan, set by the active step ---- *)
+xTrans := FALSE;
+iNext := 0;
+xDone := FALSE;
+iFail := 0;
+sFail := '';
+sMsg := '';
+iPct := 0;
+tStepMax := T#0S;
+xWdogOff := FALSE;
+xSrc := FALSE;
+xRun := FALSE;
+xLoad := FALSE;
+xRecyc := FALSE;
+xReady := FALSE;
+
+(* =====================================================================
+   C. SEQUENCE LOGIC - xenon feed: large source cylinder -&gt; diaphragm
+   compressor -&gt; fill header for the six stations
+   Parameters (Ph.Prm_Real):  1 header pressure setpoint (bar g)
+       2 load band below setpoint (bar)   3 header maximum, unload above (bar g)
+       4 minimum suction pressure (bar g)  5 source cylinder minimum heel (kg)
+   Parameters (Ph.Prm_DInt):  1 idle time with no requests before shutdown (s)
+       2 unloaded cool-down before stop (s)
+   Reports:  Rpt_Real 1 source weight at start (kg)  2 source weight at end (kg)
+             3 xenon delivered (kg)  4 run time (s)
+   ===================================================================== *)
+rSP := Ph.Prm_Real[1];
+rBand := Ph.Prm_Real[2];
+
+CASE Ph.Sts_State OF
+
+1, 3:   (* ---------- RUNNING / PAUSING: the procedure ---------- *)
+    IF NOT Ph.Sts_WaitAdvance THEN                  (* Semi-automatic: the step waits for Advance *)
+    CASE Ph.Sts_Step OF
+    10: (* Line-up check *)
+        iSeg := 1;
+        sMsg := 'Checking line-up';
+        IF (rSP &lt;= 0.0) OR (rBand &lt;= 0.0) OR (Ph.Prm_Real[3] &lt;= rSP) THEN
+            iFail := 200;
+            sFail := 'Invalid recipe parameters';
+        ELSIF SrcWt &lt;= Ph.Prm_Real[5] THEN
+            iFail := 201;
+            sFail := 'Source cylinder at minimum heel';
+        ELSIF CompRdy THEN
+            Ph.Rpt_Real[1] := SrcWt;                    (* source weight at start *)
+            iNext := 20;
+            xTrans := TRUE;
+        END_IF;
+
+    20: (* Open the source cylinder *)
+        iSeg := 2;
+        sMsg := 'Opening source cylinder';
+        xSrc := TRUE;
+        tonOk(IN := (SuctPT &gt;= Ph.Prm_Real[4]) AND NOT fbCore.StepEntry, PT := T#2S);
+        IF tonOk.Q THEN
+            iNext := 30;
+            xTrans := TRUE;
+        END_IF;
+
+    30: (* Start the compressor unloaded *)
+        iSeg := 3;
+        sMsg := 'Starting compressor';
+        xSrc := TRUE;
+        xRun := TRUE;
+        xRecyc := TRUE;
+        tonOk(IN := CompRun AND NOT fbCore.StepEntry, PT := T#5S);
+        IF tonOk.Q THEN
+            iNext := 40;
+            xTrans := TRUE;
+        END_IF;
+
+    40: (* Pressurise the fill header *)
+        iSeg := 4;
+        sMsg := 'Pressurising fill header';
+        xSrc := TRUE;
+        xRun := TRUE;
+        xLoad := HdrPT &lt; Ph.Prm_Real[3];
+        xRecyc := NOT xLoad;
+        iPct := REAL_TO_INT(LIMIT(0.0, HdrPT * 100.0 / rSP, 100.0));
+        IF NOT CompRun THEN
+            iFail := 202;
+            sFail := 'Compressor stopped';
+        ELSIF HdrPT &gt;= rSP THEN
+            iNext := 50;
+            xTrans := TRUE;
+        END_IF;
+
+    50: (* Supply: hold header pressure while stations request feed *)
+        iSeg := 5;
+        xWdogOff := TRUE;                               (* runs as long as there is demand *)
+        xSrc := TRUE;
+        xRun := TRUE;
+        IF HdrPT &gt;= rSP THEN
+            xLoadMem := FALSE;
+        ELSIF HdrPT &lt;= rSP - rBand THEN
+            xLoadMem := TRUE;
+        END_IF;
+        xLoad := xLoadMem AND (HdrPT &lt; Ph.Prm_Real[3]);
+        xRecyc := NOT xLoad;
+        xReady := HdrPT &gt;= rSP - rBand;
+        IF FeedReqs &gt; 0 THEN
+            sMsg := 'Supplying stations';
+        ELSE
+            sMsg := 'Supply - no requests';
+        END_IF;
+        tonIdle(IN := (FeedReqs &lt;= 0) AND NOT fbCore.StepEntry, PT := DINT_TO_TIME(Ph.Prm_DInt[1] * 1000));
+        IF NOT CompRun THEN
+            iFail := 202;
+            sFail := 'Compressor stopped';
+        ELSIF SrcWt &lt;= Ph.Prm_Real[5] THEN
+            iFail := 201;
+            sFail := 'Source cylinder at minimum heel';
+        ELSIF tonIdle.Q THEN
+            iNext := 60;
+            xTrans := TRUE;
+        END_IF;
+
+    60: (* Shut down: cool down unloaded, then stop *)
+        iSeg := 6;
+        sMsg := 'Compressor cool-down';
+        xRun := fbCore.StepTime &lt; DINT_TO_TIME(Ph.Prm_DInt[2] * 1000);
+        xRecyc := xRun;
+        IF NOT xRun AND NOT CompRun THEN
+            Ph.Rpt_Real[2] := SrcWt;
+            Ph.Rpt_Real[3] := Ph.Rpt_Real[1] - SrcWt;
+            Ph.Rpt_Real[4] := DINT_TO_REAL(TIME_TO_DINT(Ph.Val_RunTime)) / 1000.0;
+            xDone := TRUE;
+        END_IF;
+    END_CASE;
+    END_IF;
+
+4:  (* ---------- PAUSED: keep the compressor running unloaded; stations do not fill ---------- *)
+    xSrc := CompRun;
+    xRun := CompRun;
+    xRecyc := CompRun;
+
+5:  (* ---------- HOLDING: stop the compressor, isolate the source (section B) ---------- *)
+    xDone := NOT CompRun;
+
+7:  (* ---------- RESTARTING: open the source and start unloaded, then resume ---------- *)
+    CASE Ph.Sts_Step OF
+    10: xSrc := TRUE;
+        tonOk(IN := (SuctPT &gt;= Ph.Prm_Real[4]) AND NOT fbCore.StepEntry, PT := T#2S);
+        IF tonOk.Q THEN
+            iNext := 20;
+            xTrans := TRUE;
+        END_IF;
+    20: xSrc := TRUE;
+        xRun := TRUE;
+        xRecyc := TRUE;
+        tonOk(IN := CompRun AND NOT fbCore.StepEntry, PT := T#5S);
+        IF tonOk.Q THEN
+            xDone := TRUE;
+        END_IF;
+    END_CASE;
+
+8:  (* ---------- STOPPING: stop the compressor, isolate the source ---------- *)
+    xDone := NOT CompRun;
+
+10: (* ---------- ABORTING: everything off at once ---------- *)
+    xDone := TRUE;
+
+END_CASE;
+
+(* ---- D. Core: ISA-88 states, commands, modes, ownership, watchdog, alarms, sequence bar ---- *)
+fbCore(PermOK := PermOK, IntlkOK := IntlkOK, IntlkAbort := IntlkAbort, EStop := EStop,
+       Trans := xTrans, NextStep := iNext, StateDone := xDone,
+       FailCode := iFail, FailText := sFail,
+       Seg := iSeg, Msg := sMsg, Pct := iPct,
+       StepTmo := tStepMax, WdogOff := xWdogOff,
+       Ph := Ph, Bar := Bar);
+
+(* ---- E. Outputs ---- *)
+Running := fbCore.Running;
+Held := fbCore.Held;
+Complete := fbCore.Complete;
+Failed := fbCore.Failed;
+Out_SrcVlv := xSrc;
+Out_CompRun := xRun;
+Out_CompLoad := xLoad;
+Out_Recycle := xRecyc;
+FeedReady := xReady AND fbCore.Running;</STSource>
+	</FBProgram>
+</FBSource>
+</FBExchangeFile>
