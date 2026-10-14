@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Compile the PCLib phase DFBs and the example unit program with MatIEC (an open-source
 # IEC 61131-3 compiler), then run sim.c: a scan-by-scan process simulation of the xenon
-# feed and one fill station that checks the ISA-88 behaviour (56 checks).
+# fill sequence with six stations that checks the ISA-88 behaviour (about 40 checks).
 # Needs git, gcc, make, autoconf, automake, flex and bison. Not a substitute for
 # Analyze Project and simulator tests in Control Expert.
 set -euo pipefail

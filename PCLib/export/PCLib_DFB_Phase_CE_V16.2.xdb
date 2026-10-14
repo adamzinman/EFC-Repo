@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <FBExchangeFile>
-<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-14-17:06:46" content="Function Block source file" DTDVersion="41"></fileHeader>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-14-17:15:53" content="Function Block source file" DTDVersion="41"></fileHeader>
 <contentHeader name="PCLib" version="1.00"></contentHeader>
-<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-14-17:06:46">
+<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-14-17:15:53">
 	<comment>ISA-88 equipment phase: Part 1 state model, commands, modes, parameters, reports</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -134,7 +134,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_SeqBar" version="1.00" dateTime="dt#2026-10-14-17:06:46">
+<DDTSource DDTName="T_SeqBar" version="1.00" dateTime="dt#2026-10-14-17:15:53">
 	<comment>Sequence bar for a T_Phase: segment labels and states for the HMI step bar</comment>
 	<structure>
 		<variables name="Cfg_Title" typeName="STRING[24]">
@@ -185,7 +185,117 @@
 		</variables>
 	</structure>
 </DDTSource>
-<FBSource nameOfFBType="FB_PhaseCore" version="1.00" dateTime="dt#2026-10-14-17:06:46">
+<DDTSource DDTName="T_FillStn" version="1.00" dateTime="dt#2026-10-14-17:15:53">
+	<comment>One xenon fill station inside a T_XeFill: I/O, station state and results</comment>
+	<structure>
+		<variables name="Inp_VesselOK" typeName="BOOL">
+			<comment>Cylinder connected and its valve confirmed open</comment>
+		</variables>
+		<variables name="Inp_IntlkOK" typeName="BOOL">
+			<comment>Station interlocks healthy; FALSE drops the station (fault 105)</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Inp_NetWt" typeName="REAL">
+			<comment>Scale net weight (kg)</comment>
+		</variables>
+		<variables name="Inp_WtStable" typeName="BOOL">
+			<comment>Scale motion-free</comment>
+		</variables>
+		<variables name="Inp_PT" typeName="REAL">
+			<comment>Station pressure (bar g)</comment>
+		</variables>
+		<variables name="Inp_VacPT" typeName="REAL">
+			<comment>Station vacuum gauge (mbar abs)</comment>
+		</variables>
+		<variables name="Out_Inlet" typeName="BOOL">
+			<comment>Request: fill inlet (direction valve from the header to this station)</comment>
+		</variables>
+		<variables name="Out_Recover" typeName="BOOL">
+			<comment>Request: recovery valve (heel to recovery header)</comment>
+		</variables>
+		<variables name="Out_Vac" typeName="BOOL">
+			<comment>Request: vacuum valve</comment>
+		</variables>
+		<variables name="Out_Tare" typeName="BOOL">
+			<comment>Request: tare the scale (pulse)</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>Station state: 0=Not selected 1=Waiting 2=Recovering heel 3=Evacuating 4=Evacuated 5=Ready to fill 6=Fast fill 7=Slow fill 8=Settling 9=Filled 10=Fault</comment>
+		</variables>
+		<variables name="Sts_FailCode" typeName="INT">
+			<comment>Station fault: 101 leak check, 102 over pressure, 103 overfill, 104 under weight, 105 station interlock</comment>
+		</variables>
+		<variables name="Sts_TopUps" typeName="INT">
+			<comment>Top-ups used</comment>
+		</variables>
+		<variables name="Val_Pct" typeName="INT">
+			<comment>Fill progress, % of target</comment>
+		</variables>
+		<variables name="Val_FinalWt" typeName="REAL">
+			<comment>Final net weight (kg)</comment>
+		</variables>
+		<variables name="Val_LeakRise" typeName="REAL">
+			<comment>Leak check pressure rise (mbar)</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_XeFill" version="1.00" dateTime="dt#2026-10-14-17:15:53">
+	<comment>Xenon fill unit for FB_PhXeFill: source cylinder, compressor, fill header and the fill stations</comment>
+	<structure>
+		<variables name="Cfg_HdrMax" typeName="REAL">
+			<comment>Header maximum: compressor unloads above (bar g)</comment>
+			<variableInit value="40.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SuctMin" typeName="REAL">
+			<comment>Minimum compressor suction (bar g)</comment>
+			<variableInit value="2.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SrcHeel" typeName="REAL">
+			<comment>Source cylinder minimum heel (kg)</comment>
+			<variableInit value="5.0"></variableInit>
+		</variables>
+		<variables name="Inp_SrcWt" typeName="REAL">
+			<comment>Source cylinder net weight (kg)</comment>
+		</variables>
+		<variables name="Inp_SuctPT" typeName="REAL">
+			<comment>Compressor suction pressure (bar g)</comment>
+		</variables>
+		<variables name="Inp_HdrPT" typeName="REAL">
+			<comment>Fill header pressure (bar g)</comment>
+		</variables>
+		<variables name="Inp_CompRdy" typeName="BOOL">
+			<comment>Compressor ready to start (no trip, in Auto)</comment>
+		</variables>
+		<variables name="Inp_CompRun" typeName="BOOL">
+			<comment>Compressor running feedback</comment>
+		</variables>
+		<variables name="Out_SrcVlv" typeName="BOOL">
+			<comment>Request: source cylinder valve</comment>
+		</variables>
+		<variables name="Out_CompRun" typeName="BOOL">
+			<comment>Request: compressor run</comment>
+		</variables>
+		<variables name="Out_CompLoad" typeName="BOOL">
+			<comment>Request: compressor loaded</comment>
+		</variables>
+		<variables name="Out_Recycle" typeName="BOOL">
+			<comment>Request: recycle / bypass valve</comment>
+		</variables>
+		<variables name="Sts_NumSel" typeName="INT">
+			<comment>Stations selected this run</comment>
+		</variables>
+		<variables name="Sts_NumDone" typeName="INT">
+			<comment>Stations filled</comment>
+		</variables>
+		<variables name="Sts_NumFault" typeName="INT">
+			<comment>Stations dropped with a fault</comment>
+		</variables>
+		<variables name="Stn" typeName="ARRAY[1..6] OF T_FillStn">
+			<comment>Fill stations</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<FBSource nameOfFBType="FB_PhaseCore" version="1.00" dateTime="dt#2026-10-14-17:15:53">
 	<comment>ISA-88 phase core for a T_Phase: state machine, commands, modes, ownership, step watchdog, alarms and T_SeqBar sequence bar. Called by every FB_Ph* phase after its sequence logic</comment>
 	<inputParameters>
 		<variables name="PermOK" typeName="BOOL">
@@ -264,25 +374,29 @@
 			<comment>Time in the current step</comment>
 			<attribute name="PositionPin" value="18"></attribute>
 		</variables>
+		<variables name="ScanTime" typeName="TIME">
+			<comment>Time since the previous call (for timers kept in arrays)</comment>
+			<attribute name="PositionPin" value="19"></attribute>
+		</variables>
 		<variables name="RunStep" typeName="INT">
 			<comment>Running step the phase resumes at after Restart</comment>
-			<attribute name="PositionPin" value="19"></attribute>
+			<attribute name="PositionPin" value="20"></attribute>
 		</variables>
 		<variables name="Running" typeName="BOOL">
 			<comment>State Running or Pausing</comment>
-			<attribute name="PositionPin" value="20"></attribute>
+			<attribute name="PositionPin" value="21"></attribute>
 		</variables>
 		<variables name="Held" typeName="BOOL">
 			<comment>State Held</comment>
-			<attribute name="PositionPin" value="21"></attribute>
+			<attribute name="PositionPin" value="22"></attribute>
 		</variables>
 		<variables name="Complete" typeName="BOOL">
 			<comment>State Complete</comment>
-			<attribute name="PositionPin" value="22"></attribute>
+			<attribute name="PositionPin" value="23"></attribute>
 		</variables>
 		<variables name="Failed" typeName="BOOL">
 			<comment>Failure active (Ph.Sts_FailCode &lt;&gt; 0)</comment>
-			<attribute name="PositionPin" value="23"></attribute>
+			<attribute name="PositionPin" value="24"></attribute>
 		</variables>
 	</outputParameters>
 	<privateLocalVariables>
@@ -714,6 +828,7 @@ END_IF;
 
 (* ===== 13. Pins; operator and recipe commands are one-shot: clear after use ===== *)
 StepTime := tStep;
+ScanTime := tDelta;
 RunStep := iRunStep;
 Running := (Ph.Sts_State = 1) OR (Ph.Sts_State = 3);
 Held := Ph.Sts_State = 6;
@@ -739,7 +854,7 @@ Ph.Prog_Release := FALSE;
 xFirst := FALSE;</STSource>
 	</FBProgram>
 </FBSource>
-<FBSource nameOfFBType="FB_Phase" version="1.00" dateTime="dt#2026-10-14-17:06:46">
+<FBSource nameOfFBType="FB_Phase" version="1.00" dateTime="dt#2026-10-14-17:15:53">
 	<comment>TEMPLATE ISA-88 equipment phase for a T_Phase + T_SeqBar. Copy, rename FB_Ph&lt;Name&gt;, add pins and write the sequence in the open area. FB_PhaseCore does states, modes, commands and the bar</comment>
 	<inputParameters>
 		<variables name="PermOK" typeName="BOOL">
@@ -855,8 +970,9 @@ xWdogOff := FALSE;
    Read:   Ph.Sts_State        1 Running, 3 Pausing, 5 Holding, 7 Restarting,
                                8 Stopping, 10 Aborting. Nothing runs in Paused (4)
                                or while Ph.Sts_WaitAdvance: outputs fall back to
-                               section B. Add a 4: branch only if equipment must
-                               keep running while the phase is paused.
+                               section B. If equipment must keep running between
+                               steps (a compressor), keep it on in a 4: branch and
+                               in an ELSE of the IF NOT Ph.Sts_WaitAdvance.
            Ph.Sts_Step         active step inside that state (starts at 10)
            fbCore.StepEntry    TRUE on the first scan of a step
            fbCore.StepTime     time in the active step
@@ -949,8 +1065,8 @@ Failed := fbCore.Failed;
 (* Equipment outputs, e.g. Out_A := xOutA; *)</STSource>
 	</FBProgram>
 </FBSource>
-<FBSource nameOfFBType="FB_PhFill" version="1.00" dateTime="dt#2026-10-14-17:06:46">
-	<comment>EXAMPLE phase: fill one xenon cylinder by weight - check, heel recovery, evacuation, leak check, tare, fast / slow fill, settle and top-up, optional sample. One instance per fill station</comment>
+<FBSource nameOfFBType="FB_PhXeFill" version="1.00" dateTime="dt#2026-10-14-17:15:53">
+	<comment>EXAMPLE phase: one xenon fill sequence for any number of stations - line-up, heel recovery and evacuation, leak check, tare, source and compressor start, fill by weight (each station's inlet closes as it finishes), shutdown. One T_Phase, one T_SeqBar, one T_XeFill</comment>
 	<inputParameters>
 		<variables name="PermOK" typeName="BOOL">
 			<comment>Start permissives OK</comment>
@@ -968,81 +1084,37 @@ Failed := fbCore.Failed;
 			<comment>Emergency stop active -&gt; Aborting</comment>
 			<attribute name="PositionPin" value="4"></attribute>
 		</variables>
-		<variables name="VesselOK" typeName="BOOL">
-			<comment>Cylinder connected and its valve confirmed open</comment>
-			<attribute name="PositionPin" value="5"></attribute>
-		</variables>
-		<variables name="NetWt" typeName="REAL">
-			<comment>Scale net weight (kg)</comment>
-			<attribute name="PositionPin" value="6"></attribute>
-		</variables>
-		<variables name="WtStable" typeName="BOOL">
-			<comment>Scale motion-free</comment>
-			<attribute name="PositionPin" value="7"></attribute>
-		</variables>
-		<variables name="PT" typeName="REAL">
-			<comment>Station pressure (bar g)</comment>
-			<attribute name="PositionPin" value="8"></attribute>
-		</variables>
-		<variables name="VacPT" typeName="REAL">
-			<comment>Station vacuum gauge (mbar abs)</comment>
-			<attribute name="PositionPin" value="9"></attribute>
-		</variables>
-		<variables name="FeedReady" typeName="BOOL">
-			<comment>Fill header at pressure (FB_PhFeed.FeedReady)</comment>
-			<attribute name="PositionPin" value="10"></attribute>
-		</variables>
 	</inputParameters>
 	<inOutParameters>
 		<variables name="Ph" typeName="T_Phase">
 			<comment>Phase object</comment>
-			<attribute name="PositionPin" value="11"></attribute>
+			<attribute name="PositionPin" value="5"></attribute>
 		</variables>
 		<variables name="Bar" typeName="T_SeqBar">
 			<comment>Sequence bar for the HMI</comment>
-			<attribute name="PositionPin" value="12"></attribute>
+			<attribute name="PositionPin" value="6"></attribute>
+		</variables>
+		<variables name="U" typeName="T_XeFill">
+			<comment>Xenon fill unit: source, compressor, header and stations</comment>
+			<attribute name="PositionPin" value="7"></attribute>
 		</variables>
 	</inOutParameters>
 	<outputParameters>
 		<variables name="Running" typeName="BOOL">
 			<comment>Phase Running or Pausing</comment>
-			<attribute name="PositionPin" value="13"></attribute>
+			<attribute name="PositionPin" value="8"></attribute>
 		</variables>
 		<variables name="Held" typeName="BOOL">
 			<comment>Phase Held</comment>
-			<attribute name="PositionPin" value="14"></attribute>
+			<attribute name="PositionPin" value="9"></attribute>
 		</variables>
 		<variables name="Complete" typeName="BOOL">
 			<comment>Phase Complete</comment>
-			<attribute name="PositionPin" value="15"></attribute>
+			<attribute name="PositionPin" value="10"></attribute>
 		</variables>
 		<variables name="Failed" typeName="BOOL">
 			<comment>Phase failure active</comment>
-			<attribute name="PositionPin" value="16"></attribute>
-		</variables>
-		<variables name="Out_Inlet" typeName="BOOL">
-			<comment>Request: fill inlet valve open</comment>
-			<attribute name="PositionPin" value="17"></attribute>
-		</variables>
-		<variables name="Out_Recover" typeName="BOOL">
-			<comment>Request: recovery valve open (heel to recovery header)</comment>
-			<attribute name="PositionPin" value="18"></attribute>
-		</variables>
-		<variables name="Out_Vac" typeName="BOOL">
-			<comment>Request: vacuum valve open</comment>
-			<attribute name="PositionPin" value="19"></attribute>
-		</variables>
-		<variables name="Out_Sample" typeName="BOOL">
-			<comment>Request: sample valve open</comment>
-			<attribute name="PositionPin" value="20"></attribute>
-		</variables>
-		<variables name="Out_Tare" typeName="BOOL">
-			<comment>Request: tare the scale (pulse)</comment>
-			<attribute name="PositionPin" value="21"></attribute>
-		</variables>
-		<variables name="FeedReq" typeName="BOOL">
-			<comment>This station needs feed pressure</comment>
-			<attribute name="PositionPin" value="22"></attribute>
+			<attribute name="PositionPin" value="11"></attribute>
 		</variables>
 	</outputParameters>
 	<privateLocalVariables>
@@ -1083,41 +1155,59 @@ Failed := fbCore.Failed;
 		<variables name="xWdogOff" typeName="BOOL">
 			<comment>No watchdog in this step</comment>
 		</variables>
-		<variables name="xInlet" typeName="BOOL">
-			<comment>Inlet request</comment>
+		<variables name="xExec" typeName="BOOL">
+			<comment>The procedure runs this scan</comment>
 		</variables>
-		<variables name="xRecover" typeName="BOOL">
-			<comment>Recovery request</comment>
+		<variables name="i" typeName="INT">
+			<comment>Station index</comment>
 		</variables>
-		<variables name="xVac" typeName="BOOL">
-			<comment>Vacuum request</comment>
+		<variables name="iSt" typeName="INT">
+			<comment>Station state being worked out</comment>
 		</variables>
-		<variables name="xSample" typeName="BOOL">
-			<comment>Sample request</comment>
+		<variables name="nSel" typeName="INT">
+			<comment>Stations selected</comment>
 		</variables>
-		<variables name="xTare" typeName="BOOL">
-			<comment>Tare request</comment>
+		<variables name="nBusy" typeName="INT">
+			<comment>Stations still working in the step</comment>
 		</variables>
-		<variables name="xFeedReq" typeName="BOOL">
-			<comment>Feed request</comment>
+		<variables name="nGood" typeName="INT">
+			<comment>Stations ready / filled</comment>
 		</variables>
-		<variables name="rTarget" typeName="REAL">
-			<comment>Target net weight (kg)</comment>
+		<variables name="nBad" typeName="INT">
+			<comment>Stations faulted</comment>
 		</variables>
-		<variables name="rPct" typeName="REAL">
-			<comment>Fill progress (% of target)</comment>
+		<variables name="nPct" typeName="INT">
+			<comment>Stations counted in the progress</comment>
 		</variables>
-		<variables name="rVacRef" typeName="REAL">
-			<comment>Vacuum at start of leak check (mbar abs)</comment>
+		<variables name="rPctSum" typeName="REAL">
+			<comment>Sum of station progress (%)</comment>
+		</variables>
+		<variables name="rSum" typeName="REAL">
+			<comment>Total filled (kg)</comment>
+		</variables>
+		<variables name="rTgt" typeName="REAL">
+			<comment>Station target (kg)</comment>
+		</variables>
+		<variables name="rNet" typeName="REAL">
+			<comment>Station net weight (kg)</comment>
+		</variables>
+		<variables name="rSP" typeName="REAL">
+			<comment>Header setpoint (bar g)</comment>
+		</variables>
+		<variables name="rBand" typeName="REAL">
+			<comment>Header band (bar)</comment>
+		</variables>
+		<variables name="xAllOK" typeName="BOOL">
+			<comment>Every selected station ready</comment>
+		</variables>
+		<variables name="xLoadMem" typeName="BOOL">
+			<comment>Compressor load / unload memory</comment>
+		</variables>
+		<variables name="xHdrOK" typeName="BOOL">
+			<comment>Header pressurised: inlets may open</comment>
 		</variables>
 		<variables name="tHold" typeName="TIME">
 			<comment>Leak check time</comment>
-		</variables>
-		<variables name="iTopUp" typeName="INT">
-			<comment>Top-ups done</comment>
-		</variables>
-		<variables name="xTopUp" typeName="BOOL">
-			<comment>Top-up requested by step 90</comment>
 		</variables>
 		<variables name="tPulseOn" typeName="TIME">
 			<comment>Slow fill pulse on</comment>
@@ -1128,6 +1218,12 @@ Failed := fbCore.Failed;
 		<variables name="dCyc" typeName="DINT">
 			<comment>Slow fill pulse cycle (ms)</comment>
 		</variables>
+		<variables name="tStn" typeName="ARRAY[1..6] OF TIME">
+			<comment>Time in station state</comment>
+		</variables>
+		<variables name="rVacRef" typeName="ARRAY[1..6] OF REAL">
+			<comment>Vacuum at start of leak check (mbar abs)</comment>
+		</variables>
 		<variables name="tonOk" typeName="TON">
 			<comment>Condition-stable timer</comment>
 		</variables>
@@ -1135,438 +1231,13 @@ Failed := fbCore.Failed;
 	<FBProgram name="Main">
 		<STSource>(* ---- A. Sequence-bar labels (first scan, or after the T_SeqBar is re-initialised) ---- *)
 IF xFirst OR (Bar.Cfg_NumSeg = 0) THEN
-    Bar.Cfg_Title := 'Cylinder fill';
-    Bar.Cfg_NumSeg := 6;
-    Bar.Cfg_SegText[1] := 'Vessel';
-    Bar.Cfg_SegText[2] := 'Vac';
-    Bar.Cfg_SegText[3] := 'Prefill';
-    Bar.Cfg_SegText[4] := 'Fill';
-    Bar.Cfg_SegText[5] := 'Sample';
-    Bar.Cfg_SegText[6] := 'Done';
-    xFirst := FALSE;
-END_IF;
-
-(* ---- B. Requests to the core and equipment requests: cleared every scan, set by the active step ---- *)
-xTrans := FALSE;
-iNext := 0;
-xDone := FALSE;
-iFail := 0;
-sFail := '';
-sMsg := '';
-iPct := 0;
-tStepMax := T#0S;
-xWdogOff := FALSE;
-xInlet := FALSE;
-xRecover := FALSE;
-xVac := FALSE;
-xSample := FALSE;
-xTare := FALSE;
-xFeedReq := FALSE;
-
-(* =====================================================================
-   C. SEQUENCE LOGIC - xenon cylinder fill by weight (one station)
-   Parameters (Ph.Prm_Real):  1 target net weight (kg)   2 tolerance + (kg)
-       3 tolerance - (kg)     4 fast -&gt; slow change-over before target (kg)
-       5 preact / in-flight (kg)   6 heel recovered down to (bar g)
-       7 evacuation target (mbar abs)   8 leak check max rise (mbar)
-       9 maximum cylinder fill pressure (bar g)
-   Parameters (Ph.Prm_DInt):  1 sample required (0/1)   2 max top-ups
-       3 leak check time (s)   4 settle time (s)   5 slow fill pulse on (ms)
-       6 slow fill pulse off (ms)   7 sample fill time (s)
-   Reports:  Rpt_Real 1 final net weight (kg)  2 final pressure (bar g)
-             3 run time (s)  4 leak check rise (mbar);  Rpt_DInt 1 top-ups
-   Xenon is never vented to atmosphere: the heel goes to the recovery header,
-   and Hold / Stop / Abort isolate the cylinder.
-   ===================================================================== *)
-rTarget := Ph.Prm_Real[1];
-IF rTarget &gt; 0.0 THEN
-    rPct := NetWt * 100.0 / rTarget;
-ELSE
-    rPct := 0.0;
-END_IF;
-
-CASE Ph.Sts_State OF
-
-1, 3:   (* ---------- RUNNING / PAUSING: the procedure ---------- *)
-    IF NOT Ph.Sts_WaitAdvance THEN                  (* Semi-automatic: the step waits for Advance *)
-    CASE Ph.Sts_Step OF
-    10: (* Check the recipe and the cylinder *)
-        iSeg := 1;
-        sMsg := 'Checking cylinder and recipe';
-        iTopUp := 0;
-        xTopUp := FALSE;
-        tonOk(IN := VesselOK AND WtStable AND NOT fbCore.StepEntry, PT := T#3S);
-        IF (rTarget &lt;= 0.0) OR (Ph.Prm_Real[9] &lt;= 0.0) OR (Ph.Prm_Real[5] &lt; 0.0)
-           OR (Ph.Prm_Real[4] &lt; Ph.Prm_Real[5]) THEN
-            iFail := 100;
-            sFail := 'Invalid recipe parameters';
-        ELSIF tonOk.Q THEN
-            iNext := 20;
-            xTrans := TRUE;
-        END_IF;
-
-    20: (* Recover the heel to the recovery header *)
-        iSeg := 2;
-        sMsg := 'Recovering heel';
-        xRecover := TRUE;
-        IF PT &lt;= Ph.Prm_Real[6] THEN
-            iNext := 30;
-            xTrans := TRUE;
-        END_IF;
-
-    30: (* Evacuate *)
-        iSeg := 2;
-        sMsg := 'Evacuating cylinder';
-        xVac := TRUE;
-        IF VacPT &lt;= Ph.Prm_Real[7] THEN
-            iNext := 40;
-            xTrans := TRUE;
-        END_IF;
-
-    40: (* Vacuum hold: leak check *)
-        iSeg := 2;
-        sMsg := 'Vacuum hold - leak check';
-        IF fbCore.StepEntry THEN
-            rVacRef := VacPT;
-        END_IF;
-        tHold := DINT_TO_TIME(Ph.Prm_DInt[3] * 1000);
-        tStepMax := tHold + T#60S;
-        Ph.Rpt_Real[4] := VacPT - rVacRef;
-        IF fbCore.StepTime &gt;= tHold THEN
-            IF VacPT - rVacRef &gt; Ph.Prm_Real[8] THEN
-                iFail := 101;
-                sFail := 'Leak check failed';
-            ELSE
-                iNext := 50;
-                xTrans := TRUE;
-            END_IF;
-        END_IF;
-
-    50: (* Tare the evacuated cylinder *)
-        iSeg := 3;
-        sMsg := 'Taring scale';
-        xTare := fbCore.StepTime &lt; T#1S;                (* 1 s tare pulse to the scale *)
-        tonOk(IN := WtStable AND (fbCore.StepTime &gt;= T#2S) AND NOT fbCore.StepEntry, PT := T#2S);
-        IF tonOk.Q THEN
-            iNext := 60;
-            xTrans := TRUE;
-        END_IF;
-
-    60: (* Wait for feed pressure from the compressor *)
-        iSeg := 3;
-        sMsg := 'Waiting for feed pressure';
-        xFeedReq := TRUE;
-        xWdogOff := TRUE;                               (* may wait for other stations *)
-        IF FeedReady THEN
-            iNext := 70;
-            xTrans := TRUE;
-        END_IF;
-
-    70: (* Fast fill *)
-        iSeg := 4;
-        sMsg := 'Fast fill';
-        xFeedReq := TRUE;
-        xInlet := FeedReady;                            (* inlet closes if feed pressure is lost *)
-        iPct := REAL_TO_INT(LIMIT(0.0, rPct, 100.0));
-        IF PT &gt;= Ph.Prm_Real[9] THEN
-            iFail := 102;
-            sFail := 'Cylinder above max fill pressure';
-        ELSIF NetWt &gt;= rTarget - Ph.Prm_Real[4] THEN
-            iNext := 80;
-            xTrans := TRUE;
-        END_IF;
-
-    80: (* Slow fill: pulsed inlet *)
-        iSeg := 4;
-        sMsg := 'Slow fill';
-        IF fbCore.StepEntry AND xTopUp THEN             (* entered from 90 for a top-up *)
-            iTopUp := iTopUp + 1;
-            xTopUp := FALSE;
-        END_IF;
-        xFeedReq := TRUE;
-        tPulseOn := DINT_TO_TIME(Ph.Prm_DInt[5]);
-        tPulseOff := DINT_TO_TIME(Ph.Prm_DInt[6]);
-        dCyc := TIME_TO_DINT(tPulseOn + tPulseOff);
-        IF (dCyc &gt; 0) AND (tPulseOff &gt; T#0S) THEN
-            xInlet := FeedReady AND ((TIME_TO_DINT(fbCore.StepTime) MOD dCyc) &lt; TIME_TO_DINT(tPulseOn));
-        ELSE
-            xInlet := FeedReady;
-        END_IF;
-        iPct := REAL_TO_INT(LIMIT(0.0, rPct, 100.0));
-        IF PT &gt;= Ph.Prm_Real[9] THEN
-            iFail := 102;
-            sFail := 'Cylinder above max fill pressure';
-        ELSIF NetWt &gt;= rTarget - Ph.Prm_Real[5] THEN
-            iNext := 90;
-            xTrans := TRUE;
-        END_IF;
-
-    90: (* Settle, then check the weight *)
-        iSeg := 4;
-        sMsg := 'Settling - checking weight';
-        xFeedReq := TRUE;                               (* keep feed for a top-up *)
-        iPct := REAL_TO_INT(LIMIT(0.0, rPct, 100.0));
-        tonOk(IN := WtStable AND (fbCore.StepTime &gt;= DINT_TO_TIME(Ph.Prm_DInt[4] * 1000))
-                    AND NOT fbCore.StepEntry, PT := T#1S);
-        IF tonOk.Q THEN
-            IF NetWt &gt; rTarget + Ph.Prm_Real[2] THEN
-                iFail := 103;
-                sFail := 'Overfill - above tolerance';
-            ELSIF NetWt &lt; rTarget - Ph.Prm_Real[3] THEN
-                IF iTopUp &lt; DINT_TO_INT(Ph.Prm_DInt[2]) THEN
-                    xTopUp := TRUE;                     (* counted on entry to step 80 *)
-                    iNext := 80;
-                    xTrans := TRUE;
-                ELSE
-                    iFail := 104;
-                    sFail := 'Under weight after max top-ups';
-                END_IF;
-            ELSE
-                iNext := 100;
-                xTrans := TRUE;
-            END_IF;
-        END_IF;
-
-    100: (* Sample (optional) *)
-        iSeg := 5;
-        IF Ph.Prm_DInt[1] = 0 THEN
-            Bar.Sts_Skip[5] := TRUE;
-            sMsg := 'No sample required';
-            iNext := 110;
-            xTrans := TRUE;
-        ELSE
-            sMsg := 'Filling sample cylinder';
-            xSample := TRUE;
-            IF fbCore.StepTime &gt;= DINT_TO_TIME(Ph.Prm_DInt[7] * 1000) THEN
-                iNext := 110;
-                xTrans := TRUE;
-            END_IF;
-        END_IF;
-
-    110: (* Fill complete: reports *)
-        iSeg := 6;
-        sMsg := 'Fill complete';
-        Ph.Rpt_Real[1] := NetWt;
-        Ph.Rpt_Real[2] := PT;
-        Ph.Rpt_Real[3] := DINT_TO_REAL(TIME_TO_DINT(Ph.Val_RunTime)) / 1000.0;
-        Ph.Rpt_DInt[1] := INT_TO_DINT(iTopUp);
-        xDone := TRUE;
-    END_CASE;
-    END_IF;
-
-5:  (* ---------- HOLDING: all station valves closed, feed released (section B) ---------- *)
-    xDone := TRUE;
-
-7:  (* ---------- RESTARTING: re-establish feed before resuming a fill step ---------- *)
-    IF (fbCore.RunStep &gt;= 60) AND (fbCore.RunStep &lt;= 90) THEN
-        xFeedReq := TRUE;
-        IF FeedReady THEN
-            xDone := TRUE;
-        END_IF;
-    ELSE
-        xDone := TRUE;
-    END_IF;
-
-8:  (* ---------- STOPPING: isolate the cylinder ---------- *)
-    xDone := TRUE;
-
-10: (* ---------- ABORTING: isolate the cylinder ---------- *)
-    xDone := TRUE;
-
-END_CASE;
-
-(* ---- D. Core: ISA-88 states, commands, modes, ownership, watchdog, alarms, sequence bar ---- *)
-fbCore(PermOK := PermOK, IntlkOK := IntlkOK, IntlkAbort := IntlkAbort, EStop := EStop,
-       Trans := xTrans, NextStep := iNext, StateDone := xDone,
-       FailCode := iFail, FailText := sFail,
-       Seg := iSeg, Msg := sMsg, Pct := iPct,
-       StepTmo := tStepMax, WdogOff := xWdogOff,
-       Ph := Ph, Bar := Bar);
-
-(* ---- E. Outputs ---- *)
-Running := fbCore.Running;
-Held := fbCore.Held;
-Complete := fbCore.Complete;
-Failed := fbCore.Failed;
-Out_Inlet := xInlet;
-Out_Recover := xRecover;
-Out_Vac := xVac;
-Out_Sample := xSample;
-Out_Tare := xTare;
-FeedReq := xFeedReq;</STSource>
-	</FBProgram>
-</FBSource>
-<FBSource nameOfFBType="FB_PhFeed" version="1.00" dateTime="dt#2026-10-14-17:06:46">
-	<comment>EXAMPLE phase: xenon feed - large source cylinder and diaphragm compressor pressurise the fill header and hold it at setpoint while stations request feed</comment>
-	<inputParameters>
-		<variables name="PermOK" typeName="BOOL">
-			<comment>Start permissives OK</comment>
-			<attribute name="PositionPin" value="1"></attribute>
-		</variables>
-		<variables name="IntlkOK" typeName="BOOL">
-			<comment>Interlocks healthy (FALSE while running -&gt; Holding)</comment>
-			<attribute name="PositionPin" value="2"></attribute>
-		</variables>
-		<variables name="IntlkAbort" typeName="BOOL">
-			<comment>TRUE = interlock trip aborts instead of holding</comment>
-			<attribute name="PositionPin" value="3"></attribute>
-		</variables>
-		<variables name="EStop" typeName="BOOL">
-			<comment>Emergency stop active -&gt; Aborting</comment>
-			<attribute name="PositionPin" value="4"></attribute>
-		</variables>
-		<variables name="SrcWt" typeName="REAL">
-			<comment>Source cylinder net weight (kg)</comment>
-			<attribute name="PositionPin" value="5"></attribute>
-		</variables>
-		<variables name="SuctPT" typeName="REAL">
-			<comment>Compressor suction pressure (bar g)</comment>
-			<attribute name="PositionPin" value="6"></attribute>
-		</variables>
-		<variables name="HdrPT" typeName="REAL">
-			<comment>Fill header pressure (bar g)</comment>
-			<attribute name="PositionPin" value="7"></attribute>
-		</variables>
-		<variables name="CompRdy" typeName="BOOL">
-			<comment>Compressor ready to start (no trip, in Auto)</comment>
-			<attribute name="PositionPin" value="8"></attribute>
-		</variables>
-		<variables name="CompRun" typeName="BOOL">
-			<comment>Compressor running feedback</comment>
-			<attribute name="PositionPin" value="9"></attribute>
-		</variables>
-		<variables name="FeedReqs" typeName="INT">
-			<comment>Number of stations requesting feed</comment>
-			<attribute name="PositionPin" value="10"></attribute>
-		</variables>
-	</inputParameters>
-	<inOutParameters>
-		<variables name="Ph" typeName="T_Phase">
-			<comment>Phase object</comment>
-			<attribute name="PositionPin" value="11"></attribute>
-		</variables>
-		<variables name="Bar" typeName="T_SeqBar">
-			<comment>Sequence bar for the HMI</comment>
-			<attribute name="PositionPin" value="12"></attribute>
-		</variables>
-	</inOutParameters>
-	<outputParameters>
-		<variables name="Running" typeName="BOOL">
-			<comment>Phase Running or Pausing</comment>
-			<attribute name="PositionPin" value="13"></attribute>
-		</variables>
-		<variables name="Held" typeName="BOOL">
-			<comment>Phase Held</comment>
-			<attribute name="PositionPin" value="14"></attribute>
-		</variables>
-		<variables name="Complete" typeName="BOOL">
-			<comment>Phase Complete</comment>
-			<attribute name="PositionPin" value="15"></attribute>
-		</variables>
-		<variables name="Failed" typeName="BOOL">
-			<comment>Phase failure active</comment>
-			<attribute name="PositionPin" value="16"></attribute>
-		</variables>
-		<variables name="Out_SrcVlv" typeName="BOOL">
-			<comment>Request: source cylinder valve open</comment>
-			<attribute name="PositionPin" value="17"></attribute>
-		</variables>
-		<variables name="Out_CompRun" typeName="BOOL">
-			<comment>Request: compressor run</comment>
-			<attribute name="PositionPin" value="18"></attribute>
-		</variables>
-		<variables name="Out_CompLoad" typeName="BOOL">
-			<comment>Request: compressor loaded</comment>
-			<attribute name="PositionPin" value="19"></attribute>
-		</variables>
-		<variables name="Out_Recycle" typeName="BOOL">
-			<comment>Request: recycle / bypass valve open</comment>
-			<attribute name="PositionPin" value="20"></attribute>
-		</variables>
-		<variables name="FeedReady" typeName="BOOL">
-			<comment>Fill header at pressure: stations may fill</comment>
-			<attribute name="PositionPin" value="21"></attribute>
-		</variables>
-	</outputParameters>
-	<privateLocalVariables>
-		<variables name="xFirst" typeName="BOOL">
-			<comment>First scan: load sequence-bar labels</comment>
-			<variableInit value="TRUE"></variableInit>
-		</variables>
-		<variables name="fbCore" typeName="FB_PhaseCore">
-			<comment>ISA-88 phase core</comment>
-		</variables>
-		<variables name="xTrans" typeName="BOOL">
-			<comment>Request: go to iNext</comment>
-		</variables>
-		<variables name="iNext" typeName="INT">
-			<comment>Request: next step</comment>
-		</variables>
-		<variables name="xDone" typeName="BOOL">
-			<comment>Request: current state logic finished</comment>
-		</variables>
-		<variables name="iFail" typeName="INT">
-			<comment>Request: failure code</comment>
-		</variables>
-		<variables name="sFail" typeName="STRING[40]">
-			<comment>Request: failure text</comment>
-		</variables>
-		<variables name="iSeg" typeName="INT">
-			<comment>Sequence-bar segment of the active step</comment>
-		</variables>
-		<variables name="sMsg" typeName="STRING[40]">
-			<comment>Operator message of the active step</comment>
-		</variables>
-		<variables name="iPct" typeName="INT">
-			<comment>Progress within the segment, 0..100</comment>
-		</variables>
-		<variables name="tStepMax" typeName="TIME">
-			<comment>Watchdog for this step, T#0S = Ph.Cfg_StepTimeout</comment>
-		</variables>
-		<variables name="xWdogOff" typeName="BOOL">
-			<comment>No watchdog in this step</comment>
-		</variables>
-		<variables name="xSrc" typeName="BOOL">
-			<comment>Source valve request</comment>
-		</variables>
-		<variables name="xRun" typeName="BOOL">
-			<comment>Compressor run request</comment>
-		</variables>
-		<variables name="xLoad" typeName="BOOL">
-			<comment>Compressor load request</comment>
-		</variables>
-		<variables name="xRecyc" typeName="BOOL">
-			<comment>Recycle valve request</comment>
-		</variables>
-		<variables name="xReady" typeName="BOOL">
-			<comment>Header ready</comment>
-		</variables>
-		<variables name="xLoadMem" typeName="BOOL">
-			<comment>Load / unload hysteresis memory</comment>
-		</variables>
-		<variables name="rSP" typeName="REAL">
-			<comment>Header pressure setpoint (bar g)</comment>
-		</variables>
-		<variables name="rBand" typeName="REAL">
-			<comment>Load band (bar)</comment>
-		</variables>
-		<variables name="tonOk" typeName="TON">
-			<comment>Condition-stable timer</comment>
-		</variables>
-		<variables name="tonIdle" typeName="TON">
-			<comment>No-demand timer</comment>
-		</variables>
-	</privateLocalVariables>
-	<FBProgram name="Main">
-		<STSource>(* ---- A. Sequence-bar labels (first scan, or after the T_SeqBar is re-initialised) ---- *)
-IF xFirst OR (Bar.Cfg_NumSeg = 0) THEN
-    Bar.Cfg_Title := 'Xenon feed';
+    Bar.Cfg_Title := 'Xenon fill';
     Bar.Cfg_NumSeg := 6;
     Bar.Cfg_SegText[1] := 'Lineup';
-    Bar.Cfg_SegText[2] := 'Source';
-    Bar.Cfg_SegText[3] := 'Start';
+    Bar.Cfg_SegText[2] := 'Evacuate';
+    Bar.Cfg_SegText[3] := 'Leak check';
     Bar.Cfg_SegText[4] := 'Pressurise';
-    Bar.Cfg_SegText[5] := 'Supply';
+    Bar.Cfg_SegText[5] := 'Fill';
     Bar.Cfg_SegText[6] := 'Done';
     xFirst := FALSE;
 END_IF;
@@ -1581,161 +1252,419 @@ sMsg := '';
 iPct := 0;
 tStepMax := T#0S;
 xWdogOff := FALSE;
-xSrc := FALSE;
-xRun := FALSE;
-xLoad := FALSE;
-xRecyc := FALSE;
-xReady := FALSE;
+U.Out_SrcVlv := FALSE;
+U.Out_CompRun := FALSE;
+U.Out_CompLoad := FALSE;
+U.Out_Recycle := FALSE;
+FOR i := 1 TO 6 DO
+    U.Stn[i].Out_Inlet := FALSE;
+    U.Stn[i].Out_Recover := FALSE;
+    U.Stn[i].Out_Vac := FALSE;
+    U.Stn[i].Out_Tare := FALSE;
+END_FOR;
 
 (* =====================================================================
-   C. SEQUENCE LOGIC - xenon feed: large source cylinder -&gt; diaphragm
-   compressor -&gt; fill header for the six stations
-   Parameters (Ph.Prm_Real):  1 header pressure setpoint (bar g)
-       2 load band below setpoint (bar)   3 header maximum, unload above (bar g)
-       4 minimum suction pressure (bar g)  5 source cylinder minimum heel (kg)
-   Parameters (Ph.Prm_DInt):  1 idle time with no requests before shutdown (s)
-       2 unloaded cool-down before stop (s)
-   Reports:  Rpt_Real 1 source weight at start (kg)  2 source weight at end (kg)
-             3 xenon delivered (kg)  4 run time (s)
+   C. SEQUENCE LOGIC - xenon fill: ONE sequence for every selected station
+   Large source cylinder -&gt; diaphragm compressor -&gt; fill header -&gt; stations.
+   A station is selected by giving it a target weight (Prm_Real[n] &gt; 0).
+   Common steps run all selected stations together; inside a step each
+   station has its own state (U.Stn[n].Sts_State) and its valves close as
+   soon as that station is finished. A station with a fault is dropped
+   (valves closed, Sts_FailCode set) and the others carry on.
+
+   Ph.Prm_Real  1..6 target net weight per station (kg), 0 = not filled
+       7 tolerance + (kg)            8 tolerance - (kg)
+       9 fast -&gt; slow change-over (kg before target)
+       10 preact / in-flight (kg)     11 heel recovered to (bar g)
+       12 evacuation target (mbar abs) 13 leak check max rise (mbar)
+       14 max cylinder pressure (bar g) 15 header setpoint (bar g)
+       16 header band (bar)
+   Ph.Prm_DInt  1 max top-ups  2 leak check time (s)  3 settle time (s)
+       4 slow fill pulse on (ms)  5 pulse off (ms)  6 compressor cool-down (s)
+   Reports  Rpt_Real 1..6 final net weight per station (kg),
+       7 total filled (kg), 8 / 9 source weight start / end (kg),
+       10 run time (s);  Rpt_DInt 1 stations filled, 2 stations faulted
+   Xenon is never vented to atmosphere: heels go to the recovery header.
    ===================================================================== *)
-rSP := Ph.Prm_Real[1];
-rBand := Ph.Prm_Real[2];
+rSP := Ph.Prm_Real[15];
+rBand := Ph.Prm_Real[16];
+xExec := ((Ph.Sts_State = 1) OR (Ph.Sts_State = 3)) AND NOT Ph.Sts_WaitAdvance;
+
+(* Every scan the procedure runs: station timers, station interlocks, fill progress *)
+nPct := 0;
+rPctSum := 0.0;
+FOR i := 1 TO 6 DO
+    IF xExec THEN
+        tStn[i] := tStn[i] + fbCore.ScanTime;
+        IF (U.Stn[i].Sts_State &gt;= 2) AND (U.Stn[i].Sts_State &lt;= 8) AND NOT U.Stn[i].Inp_IntlkOK THEN
+            U.Stn[i].Sts_State := 10;                   (* drop this station only *)
+            U.Stn[i].Sts_FailCode := 105;
+        END_IF;
+    END_IF;
+    IF (U.Stn[i].Sts_State &gt;= 6) AND (U.Stn[i].Sts_State &lt;= 9) AND (Ph.Prm_Real[i] &gt; 0.0) THEN
+        U.Stn[i].Val_Pct := REAL_TO_INT(LIMIT(0.0, U.Stn[i].Inp_NetWt * 100.0 / Ph.Prm_Real[i], 100.0));
+        rPctSum := rPctSum + INT_TO_REAL(U.Stn[i].Val_Pct);
+        nPct := nPct + 1;
+    ELSIF U.Stn[i].Sts_State &lt; 6 THEN
+        U.Stn[i].Val_Pct := 0;
+    END_IF;
+END_FOR;
 
 CASE Ph.Sts_State OF
 
-1, 3:   (* ---------- RUNNING / PAUSING: the procedure ---------- *)
+1, 3:   (* ---------- RUNNING / PAUSING ---------- *)
     IF NOT Ph.Sts_WaitAdvance THEN                  (* Semi-automatic: the step waits for Advance *)
     CASE Ph.Sts_Step OF
-    10: (* Line-up check *)
+    10: (* Line-up: select stations, check cylinders, recipe, source and compressor *)
         iSeg := 1;
         sMsg := 'Checking line-up';
-        IF (rSP &lt;= 0.0) OR (rBand &lt;= 0.0) OR (Ph.Prm_Real[3] &lt;= rSP) THEN
+        nSel := 0;
+        xAllOK := TRUE;
+        FOR i := 1 TO 6 DO
+            U.Stn[i].Sts_FailCode := 0;
+            U.Stn[i].Sts_TopUps := 0;
+            U.Stn[i].Val_FinalWt := 0.0;
+            U.Stn[i].Val_LeakRise := 0.0;
+            tStn[i] := T#0S;
+            IF Ph.Prm_Real[i] &gt; 0.0 THEN
+                U.Stn[i].Sts_State := 1;
+                nSel := nSel + 1;
+                xAllOK := xAllOK AND U.Stn[i].Inp_VesselOK AND U.Stn[i].Inp_WtStable AND U.Stn[i].Inp_IntlkOK;
+            ELSE
+                U.Stn[i].Sts_State := 0;
+            END_IF;
+        END_FOR;
+        tonOk(IN := xAllOK AND U.Inp_CompRdy AND NOT fbCore.StepEntry, PT := T#3S);
+        IF nSel = 0 THEN
+            iFail := 300;
+            sFail := 'No station selected';
+        ELSIF (Ph.Prm_Real[7] &lt; 0.0) OR (Ph.Prm_Real[8] &lt; 0.0) OR (Ph.Prm_Real[10] &lt; 0.0)
+              OR (Ph.Prm_Real[9] &lt; Ph.Prm_Real[10]) OR (Ph.Prm_Real[14] &lt;= 0.0)
+              OR (rSP &lt;= 0.0) OR (rBand &lt;= 0.0) OR (U.Cfg_HdrMax &lt;= rSP) THEN
             iFail := 200;
             sFail := 'Invalid recipe parameters';
-        ELSIF SrcWt &lt;= Ph.Prm_Real[5] THEN
+        ELSIF U.Inp_SrcWt &lt;= U.Cfg_SrcHeel THEN
             iFail := 201;
             sFail := 'Source cylinder at minimum heel';
-        ELSIF CompRdy THEN
-            Ph.Rpt_Real[1] := SrcWt;                    (* source weight at start *)
+        ELSIF tonOk.Q THEN
+            Ph.Rpt_Real[8] := U.Inp_SrcWt;         (* source weight at start *)
             iNext := 20;
             xTrans := TRUE;
         END_IF;
 
-    20: (* Open the source cylinder *)
+    20: (* Recover each heel, then evacuate: per station, its valves close as it finishes *)
         iSeg := 2;
-        sMsg := 'Opening source cylinder';
-        xSrc := TRUE;
-        tonOk(IN := (SuctPT &gt;= Ph.Prm_Real[4]) AND NOT fbCore.StepEntry, PT := T#2S);
-        IF tonOk.Q THEN
+        sMsg := 'Recovering heels and evacuating';
+        nBusy := 0;
+        FOR i := 1 TO 6 DO
+            iSt := U.Stn[i].Sts_State;
+            IF iSt = 1 THEN
+                iSt := 2;
+            END_IF;
+            IF iSt = 2 THEN
+                IF U.Stn[i].Inp_PT &lt;= Ph.Prm_Real[11] THEN
+                    iSt := 3;
+                ELSE
+                    U.Stn[i].Out_Recover := TRUE;
+                END_IF;
+            END_IF;
+            IF iSt = 3 THEN
+                IF U.Stn[i].Inp_VacPT &lt;= Ph.Prm_Real[12] THEN
+                    iSt := 4;
+                ELSE
+                    U.Stn[i].Out_Vac := TRUE;
+                END_IF;
+            END_IF;
+            IF iSt &lt;&gt; U.Stn[i].Sts_State THEN
+                U.Stn[i].Sts_State := iSt;
+                tStn[i] := T#0S;
+            END_IF;
+            IF (iSt &gt;= 1) AND (iSt &lt;= 3) THEN
+                nBusy := nBusy + 1;
+            END_IF;
+        END_FOR;
+        IF nBusy = 0 THEN
             iNext := 30;
             xTrans := TRUE;
         END_IF;
 
-    30: (* Start the compressor unloaded *)
+    30: (* Leak check: every evacuated station isolated and watched together *)
         iSeg := 3;
-        sMsg := 'Starting compressor';
-        xSrc := TRUE;
-        xRun := TRUE;
-        xRecyc := TRUE;
-        tonOk(IN := CompRun AND NOT fbCore.StepEntry, PT := T#5S);
-        IF tonOk.Q THEN
-            iNext := 40;
-            xTrans := TRUE;
+        sMsg := 'Vacuum hold - leak check';
+        tHold := DINT_TO_TIME(Ph.Prm_DInt[2] * 1000);
+        tStepMax := tHold + T#60S;
+        nGood := 0;
+        FOR i := 1 TO 6 DO
+            IF U.Stn[i].Sts_State = 4 THEN
+                IF fbCore.StepEntry THEN
+                    rVacRef[i] := U.Stn[i].Inp_VacPT;
+                END_IF;
+                U.Stn[i].Val_LeakRise := U.Stn[i].Inp_VacPT - rVacRef[i];
+                IF fbCore.StepTime &gt;= tHold THEN
+                    IF U.Stn[i].Val_LeakRise &gt; Ph.Prm_Real[13] THEN
+                        U.Stn[i].Sts_State := 10;       (* drop this station *)
+                        U.Stn[i].Sts_FailCode := 101;
+                    ELSE
+                        U.Stn[i].Sts_State := 5;
+                    END_IF;
+                END_IF;
+            END_IF;
+            IF U.Stn[i].Sts_State = 5 THEN
+                nGood := nGood + 1;
+            END_IF;
+        END_FOR;
+        IF fbCore.StepTime &gt;= tHold THEN
+            IF nGood = 0 THEN
+                iFail := 301;
+                sFail := 'No station left to fill';
+            ELSE
+                iNext := 40;
+                xTrans := TRUE;
+            END_IF;
         END_IF;
 
-    40: (* Pressurise the fill header *)
+    40: (* Tare the evacuated cylinders *)
         iSeg := 4;
-        sMsg := 'Pressurising fill header';
-        xSrc := TRUE;
-        xRun := TRUE;
-        xLoad := HdrPT &lt; Ph.Prm_Real[3];
-        xRecyc := NOT xLoad;
-        iPct := REAL_TO_INT(LIMIT(0.0, HdrPT * 100.0 / rSP, 100.0));
-        IF NOT CompRun THEN
-            iFail := 202;
-            sFail := 'Compressor stopped';
-        ELSIF HdrPT &gt;= rSP THEN
+        sMsg := 'Taring scales';
+        xAllOK := TRUE;
+        FOR i := 1 TO 6 DO
+            IF U.Stn[i].Sts_State = 5 THEN
+                U.Stn[i].Out_Tare := fbCore.StepTime &lt; T#1S;
+                xAllOK := xAllOK AND U.Stn[i].Inp_WtStable;
+            END_IF;
+        END_FOR;
+        tonOk(IN := xAllOK AND (fbCore.StepTime &gt;= T#2S) AND NOT fbCore.StepEntry, PT := T#2S);
+        IF tonOk.Q THEN
             iNext := 50;
             xTrans := TRUE;
         END_IF;
 
-    50: (* Supply: hold header pressure while stations request feed *)
-        iSeg := 5;
-        xWdogOff := TRUE;                               (* runs as long as there is demand *)
-        xSrc := TRUE;
-        xRun := TRUE;
-        IF HdrPT &gt;= rSP THEN
-            xLoadMem := FALSE;
-        ELSIF HdrPT &lt;= rSP - rBand THEN
-            xLoadMem := TRUE;
-        END_IF;
-        xLoad := xLoadMem AND (HdrPT &lt; Ph.Prm_Real[3]);
-        xRecyc := NOT xLoad;
-        xReady := HdrPT &gt;= rSP - rBand;
-        IF FeedReqs &gt; 0 THEN
-            sMsg := 'Supplying stations';
-        ELSE
-            sMsg := 'Supply - no requests';
-        END_IF;
-        tonIdle(IN := (FeedReqs &lt;= 0) AND NOT fbCore.StepEntry, PT := DINT_TO_TIME(Ph.Prm_DInt[1] * 1000));
-        IF NOT CompRun THEN
-            iFail := 202;
-            sFail := 'Compressor stopped';
-        ELSIF SrcWt &lt;= Ph.Prm_Real[5] THEN
-            iFail := 201;
-            sFail := 'Source cylinder at minimum heel';
-        ELSIF tonIdle.Q THEN
+    50: (* Open the source cylinder *)
+        iSeg := 4;
+        sMsg := 'Opening source cylinder';
+        U.Out_SrcVlv := TRUE;
+        tonOk(IN := (U.Inp_SuctPT &gt;= U.Cfg_SuctMin) AND NOT fbCore.StepEntry, PT := T#2S);
+        IF tonOk.Q THEN
             iNext := 60;
             xTrans := TRUE;
         END_IF;
 
-    60: (* Shut down: cool down unloaded, then stop *)
-        iSeg := 6;
-        sMsg := 'Compressor cool-down';
-        xRun := fbCore.StepTime &lt; DINT_TO_TIME(Ph.Prm_DInt[2] * 1000);
-        xRecyc := xRun;
-        IF NOT xRun AND NOT CompRun THEN
-            Ph.Rpt_Real[2] := SrcWt;
-            Ph.Rpt_Real[3] := Ph.Rpt_Real[1] - SrcWt;
-            Ph.Rpt_Real[4] := DINT_TO_REAL(TIME_TO_DINT(Ph.Val_RunTime)) / 1000.0;
-            xDone := TRUE;
-        END_IF;
-    END_CASE;
-    END_IF;
-
-4:  (* ---------- PAUSED: keep the compressor running unloaded; stations do not fill ---------- *)
-    xSrc := CompRun;
-    xRun := CompRun;
-    xRecyc := CompRun;
-
-5:  (* ---------- HOLDING: stop the compressor, isolate the source (section B) ---------- *)
-    xDone := NOT CompRun;
-
-7:  (* ---------- RESTARTING: open the source and start unloaded, then resume ---------- *)
-    CASE Ph.Sts_Step OF
-    10: xSrc := TRUE;
-        tonOk(IN := (SuctPT &gt;= Ph.Prm_Real[4]) AND NOT fbCore.StepEntry, PT := T#2S);
+    60: (* Start the compressor unloaded *)
+        iSeg := 4;
+        sMsg := 'Starting compressor';
+        U.Out_SrcVlv := TRUE;
+        U.Out_CompRun := TRUE;
+        U.Out_Recycle := TRUE;
+        tonOk(IN := U.Inp_CompRun AND NOT fbCore.StepEntry, PT := T#5S);
         IF tonOk.Q THEN
-            iNext := 20;
+            iNext := 70;
             xTrans := TRUE;
         END_IF;
-    20: xSrc := TRUE;
-        xRun := TRUE;
-        xRecyc := TRUE;
-        tonOk(IN := CompRun AND NOT fbCore.StepEntry, PT := T#5S);
-        IF tonOk.Q THEN
+
+    70: (* Pressurise the fill header *)
+        iSeg := 4;
+        sMsg := 'Pressurising fill header';
+        U.Out_SrcVlv := TRUE;
+        U.Out_CompRun := TRUE;
+        U.Out_CompLoad := U.Inp_HdrPT &lt; U.Cfg_HdrMax;
+        U.Out_Recycle := NOT U.Out_CompLoad;
+        iPct := REAL_TO_INT(LIMIT(0.0, U.Inp_HdrPT * 100.0 / rSP, 100.0));
+        IF NOT U.Inp_CompRun THEN
+            iFail := 202;
+            sFail := 'Compressor stopped';
+        ELSIF U.Inp_HdrPT &gt;= rSP THEN
+            xLoadMem := FALSE;
+            xHdrOK := TRUE;
+            iNext := 80;
+            xTrans := TRUE;
+        END_IF;
+
+    80: (* Fill: every station fills to its own target; its inlet closes as it finishes *)
+        iSeg := 5;
+        sMsg := 'Filling stations';
+        xWdogOff := TRUE;                               (* stations are guarded one by one *)
+        U.Out_SrcVlv := TRUE;
+        U.Out_CompRun := TRUE;
+        IF U.Inp_HdrPT &gt;= rSP THEN                      (* compressor load / unload *)
+            xLoadMem := FALSE;
+        ELSIF U.Inp_HdrPT &lt;= rSP - rBand THEN
+            xLoadMem := TRUE;
+        END_IF;
+        U.Out_CompLoad := xLoadMem AND (U.Inp_HdrPT &lt; U.Cfg_HdrMax);
+        U.Out_Recycle := NOT U.Out_CompLoad;
+        IF U.Inp_HdrPT &gt;= rSP - rBand THEN              (* inlets only open on a pressurised header *)
+            xHdrOK := TRUE;
+        ELSIF U.Inp_HdrPT &lt; rSP - 2.0 * rBand THEN
+            xHdrOK := FALSE;
+        END_IF;
+        IF nPct &gt; 0 THEN
+            iPct := REAL_TO_INT(rPctSum / INT_TO_REAL(nPct));
+        END_IF;
+        tPulseOn := DINT_TO_TIME(Ph.Prm_DInt[4]);
+        tPulseOff := DINT_TO_TIME(Ph.Prm_DInt[5]);
+        dCyc := TIME_TO_DINT(tPulseOn + tPulseOff);
+        nBusy := 0;
+        nGood := 0;
+        FOR i := 1 TO 6 DO
+            iSt := U.Stn[i].Sts_State;
+            rTgt := Ph.Prm_Real[i];
+            rNet := U.Stn[i].Inp_NetWt;
+            IF iSt = 5 THEN
+                iSt := 6;
+            END_IF;
+            IF (iSt &gt;= 6) AND (iSt &lt;= 8) AND (U.Stn[i].Inp_PT &gt;= Ph.Prm_Real[14]) THEN
+                iSt := 10;
+                U.Stn[i].Sts_FailCode := 102;
+            END_IF;
+            IF iSt = 6 THEN                             (* fast fill *)
+                IF rNet &gt;= rTgt - Ph.Prm_Real[9] THEN
+                    iSt := 7;
+                ELSE
+                    U.Stn[i].Out_Inlet := xHdrOK;
+                END_IF;
+            END_IF;
+            IF iSt = 7 THEN                             (* slow fill, pulsed inlet *)
+                IF rNet &gt;= rTgt - Ph.Prm_Real[10] THEN
+                    iSt := 8;
+                ELSIF (dCyc &gt; 0) AND (tPulseOff &gt; T#0S) THEN
+                    U.Stn[i].Out_Inlet := xHdrOK AND ((TIME_TO_DINT(tStn[i]) MOD dCyc) &lt; TIME_TO_DINT(tPulseOn));
+                ELSE
+                    U.Stn[i].Out_Inlet := xHdrOK;
+                END_IF;
+            END_IF;
+            IF (iSt = 8) AND U.Stn[i].Inp_WtStable                  (* settle, then check *)
+               AND (tStn[i] &gt;= DINT_TO_TIME(Ph.Prm_DInt[3] * 1000)) THEN
+                IF rNet &gt; rTgt + Ph.Prm_Real[7] THEN
+                    iSt := 10;
+                    U.Stn[i].Sts_FailCode := 103;
+                ELSIF rNet &lt; rTgt - Ph.Prm_Real[8] THEN
+                    IF U.Stn[i].Sts_TopUps &lt; DINT_TO_INT(Ph.Prm_DInt[1]) THEN
+                        U.Stn[i].Sts_TopUps := U.Stn[i].Sts_TopUps + 1;
+                        iSt := 7;
+                    ELSE
+                        iSt := 10;
+                        U.Stn[i].Sts_FailCode := 104;
+                    END_IF;
+                ELSE
+                    iSt := 9;                           (* filled: this station's inlet stays closed *)
+                    U.Stn[i].Val_FinalWt := rNet;
+                END_IF;
+            END_IF;
+            IF iSt &lt;&gt; U.Stn[i].Sts_State THEN
+                U.Stn[i].Sts_State := iSt;
+                tStn[i] := T#0S;
+            END_IF;
+            IF (iSt &gt;= 6) AND (iSt &lt;= 8) THEN
+                nBusy := nBusy + 1;
+            ELSIF iSt = 9 THEN
+                nGood := nGood + 1;
+            END_IF;
+        END_FOR;
+        IF NOT U.Inp_CompRun THEN
+            iFail := 202;
+            sFail := 'Compressor stopped';
+        ELSIF U.Inp_SrcWt &lt;= U.Cfg_SrcHeel THEN
+            iFail := 201;
+            sFail := 'Source cylinder at minimum heel';
+        ELSIF nBusy = 0 THEN
+            IF nGood = 0 THEN
+                iFail := 301;
+                sFail := 'No station left to fill';
+            ELSE
+                iNext := 90;
+                xTrans := TRUE;
+            END_IF;
+        END_IF;
+
+    90: (* Shut down: source closed, compressor cools down unloaded, then stops; reports *)
+        iSeg := 6;
+        sMsg := 'Compressor cool-down';
+        U.Out_CompRun := fbCore.StepTime &lt; DINT_TO_TIME(Ph.Prm_DInt[6] * 1000);
+        U.Out_Recycle := U.Out_CompRun;
+        IF NOT U.Out_CompRun AND NOT U.Inp_CompRun THEN
+            rSum := 0.0;
+            nGood := 0;
+            nBad := 0;
+            FOR i := 1 TO 6 DO
+                Ph.Rpt_Real[i] := U.Stn[i].Val_FinalWt;
+                rSum := rSum + U.Stn[i].Val_FinalWt;
+                IF U.Stn[i].Sts_State = 9 THEN
+                    nGood := nGood + 1;
+                ELSIF U.Stn[i].Sts_State = 10 THEN
+                    nBad := nBad + 1;
+                END_IF;
+            END_FOR;
+            Ph.Rpt_Real[7] := rSum;
+            Ph.Rpt_Real[9] := U.Inp_SrcWt;
+            Ph.Rpt_Real[10] := DINT_TO_REAL(TIME_TO_DINT(Ph.Val_RunTime)) / 1000.0;
+            Ph.Rpt_DInt[1] := INT_TO_DINT(nGood);
+            Ph.Rpt_DInt[2] := INT_TO_DINT(nBad);
             xDone := TRUE;
         END_IF;
     END_CASE;
+    ELSE                                            (* waiting for Advance: like Paused *)
+        U.Out_SrcVlv := U.Inp_CompRun;
+        U.Out_CompRun := U.Inp_CompRun;
+        U.Out_Recycle := U.Inp_CompRun;
+    END_IF;
 
-8:  (* ---------- STOPPING: stop the compressor, isolate the source ---------- *)
-    xDone := NOT CompRun;
+4:  (* ---------- PAUSED: stations isolated; compressor kept running unloaded ---------- *)
+    U.Out_SrcVlv := U.Inp_CompRun;
+    U.Out_CompRun := U.Inp_CompRun;
+    U.Out_Recycle := U.Inp_CompRun;
+
+5:  (* ---------- HOLDING: every station valve and the source closed, compressor stopped (section B) ---------- *)
+    xDone := NOT U.Inp_CompRun;
+
+7:  (* ---------- RESTARTING: restart the feed if it was running, then resume ---------- *)
+    FOR i := 1 TO 6 DO
+        tStn[i] := T#0S;                                (* settling stations settle again *)
+    END_FOR;
+    IF fbCore.RunStep &gt;= 60 THEN
+        CASE Ph.Sts_Step OF
+        10: U.Out_SrcVlv := TRUE;
+            tonOk(IN := (U.Inp_SuctPT &gt;= U.Cfg_SuctMin) AND NOT fbCore.StepEntry, PT := T#2S);
+            IF tonOk.Q THEN
+                iNext := 20;
+                xTrans := TRUE;
+            END_IF;
+        20: U.Out_SrcVlv := TRUE;
+            U.Out_CompRun := TRUE;
+            U.Out_Recycle := TRUE;
+            tonOk(IN := U.Inp_CompRun AND NOT fbCore.StepEntry, PT := T#5S);
+            IF tonOk.Q THEN
+                xLoadMem := TRUE;
+                xHdrOK := FALSE;
+                xDone := TRUE;
+            END_IF;
+        END_CASE;
+    ELSE
+        xDone := TRUE;
+    END_IF;
+
+8:  (* ---------- STOPPING: everything closed, compressor stopped ---------- *)
+    xDone := NOT U.Inp_CompRun;
 
 10: (* ---------- ABORTING: everything off at once ---------- *)
     xDone := TRUE;
 
 END_CASE;
 
+(* Unit summary for the HMI *)
+U.Sts_NumSel := 0;
+U.Sts_NumDone := 0;
+U.Sts_NumFault := 0;
+FOR i := 1 TO 6 DO
+    IF U.Stn[i].Sts_State &gt; 0 THEN
+        U.Sts_NumSel := U.Sts_NumSel + 1;
+    END_IF;
+    IF U.Stn[i].Sts_State = 9 THEN
+        U.Sts_NumDone := U.Sts_NumDone + 1;
+    ELSIF U.Stn[i].Sts_State = 10 THEN
+        U.Sts_NumFault := U.Sts_NumFault + 1;
+    END_IF;
+END_FOR;
+
 (* ---- D. Core: ISA-88 states, commands, modes, ownership, watchdog, alarms, sequence bar ---- *)
 fbCore(PermOK := PermOK, IntlkOK := IntlkOK, IntlkAbort := IntlkAbort, EStop := EStop,
        Trans := xTrans, NextStep := iNext, StateDone := xDone,
@@ -1749,11 +1678,7 @@ Running := fbCore.Running;
 Held := fbCore.Held;
 Complete := fbCore.Complete;
 Failed := fbCore.Failed;
-Out_SrcVlv := xSrc;
-Out_CompRun := xRun;
-Out_CompLoad := xLoad;
-Out_Recycle := xRecyc;
-FeedReady := xReady AND fbCore.Running;</STSource>
+(* Equipment requests are written straight into U (T_XeFill); the unit program maps them to the control modules *)</STSource>
 	</FBProgram>
 </FBSource>
 </FBExchangeFile>

@@ -27,6 +27,7 @@ END_VAR
 VAR_OUTPUT
     StepEntry : BOOL;                       (* TRUE for the first scan of a step (read by the sequence on the next call) *)
     StepTime : TIME;                        (* Time in the current step *)
+    ScanTime : TIME;                        (* Time since the previous call (for timers kept in arrays) *)
     RunStep : INT;                          (* Running step the phase resumes at after Restart *)
     Running : BOOL;                         (* State Running or Pausing *)
     Held : BOOL;                            (* State Held *)
@@ -391,6 +392,7 @@ END_IF;
 
 (* ===== 13. Pins; operator and recipe commands are one-shot: clear after use ===== *)
 StepTime := tStep;
+ScanTime := tDelta;
 RunStep := iRunStep;
 Running := (Ph.Sts_State = 1) OR (Ph.Sts_State = 3);
 Held := Ph.Sts_State = 6;

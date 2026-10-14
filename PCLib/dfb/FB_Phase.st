@@ -64,8 +64,9 @@ xWdogOff := FALSE;
    Read:   Ph.Sts_State        1 Running, 3 Pausing, 5 Holding, 7 Restarting,
                                8 Stopping, 10 Aborting. Nothing runs in Paused (4)
                                or while Ph.Sts_WaitAdvance: outputs fall back to
-                               section B. Add a 4: branch only if equipment must
-                               keep running while the phase is paused.
+                               section B. If equipment must keep running between
+                               steps (a compressor), keep it on in a 4: branch and
+                               in an ELSE of the IF NOT Ph.Sts_WaitAdvance.
            Ph.Sts_Step         active step inside that state (starts at 10)
            fbCore.StepEntry    TRUE on the first scan of a step
            fbCore.StepTime     time in the active step

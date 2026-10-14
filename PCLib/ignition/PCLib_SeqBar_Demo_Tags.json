@@ -132,14 +132,14 @@
       "tagType": "Folder",
       "tags": [
         {
-          "name": "Stn1_Filling",
+          "name": "XeFill_Filling",
           "tagType": "UdtInstance",
           "typeId": "PCLib_Demo/T_SeqBar",
           "tags": [
             {
               "name": "Cfg_Title",
               "tagType": "AtomicTag",
-              "value": "Station 1 fill"
+              "value": "Xenon fill"
             },
             {
               "name": "Cfg_NumSeg",
@@ -150,11 +150,11 @@
               "name": "Cfg_SegText",
               "tagType": "AtomicTag",
               "value": [
-                "Vessel",
-                "Vac",
-                "Prefill",
+                "Lineup",
+                "Evacuate",
+                "Leak check",
+                "Pressurise",
                 "Fill",
-                "Sample",
                 "Done",
                 "",
                 "",
@@ -169,8 +169,8 @@
                 2,
                 2,
                 2,
+                2,
                 1,
-                0,
                 0,
                 0,
                 0,
@@ -181,7 +181,7 @@
             {
               "name": "Sts_ActSeg",
               "tagType": "AtomicTag",
-              "value": 4
+              "value": 5
             },
             {
               "name": "Sts_PhState",
@@ -201,7 +201,7 @@
             {
               "name": "Sts_Step",
               "tagType": "AtomicTag",
-              "value": 70
+              "value": 80
             },
             {
               "name": "Sts_WaitAdv",
@@ -216,29 +216,29 @@
             {
               "name": "Val_Msg",
               "tagType": "AtomicTag",
-              "value": "Fast fill"
+              "value": "Filling stations"
             },
             {
               "name": "Val_StepTime",
               "tagType": "AtomicTag",
-              "value": 84000
+              "value": 42000
             },
             {
               "name": "Val_StepPct",
               "tagType": "AtomicTag",
-              "value": 62
+              "value": 64
             }
           ]
         },
         {
-          "name": "Stn2_Fault",
+          "name": "XeFill_Held",
           "tagType": "UdtInstance",
           "typeId": "PCLib_Demo/T_SeqBar",
           "tags": [
             {
               "name": "Cfg_Title",
               "tagType": "AtomicTag",
-              "value": "Station 2 fill"
+              "value": "Xenon fill"
             },
             {
               "name": "Cfg_NumSeg",
@@ -249,11 +249,11 @@
               "name": "Cfg_SegText",
               "tagType": "AtomicTag",
               "value": [
-                "Vessel",
-                "Vac",
-                "Prefill",
+                "Lineup",
+                "Evacuate",
+                "Leak check",
+                "Pressurise",
                 "Fill",
-                "Sample",
                 "Done",
                 "",
                 "",
@@ -266,10 +266,10 @@
               "tagType": "AtomicTag",
               "value": [
                 2,
+                2,
+                2,
+                2,
                 3,
-                0,
-                0,
-                0,
                 0,
                 0,
                 0,
@@ -280,7 +280,7 @@
             {
               "name": "Sts_ActSeg",
               "tagType": "AtomicTag",
-              "value": 2
+              "value": 5
             },
             {
               "name": "Sts_PhState",
@@ -315,12 +315,12 @@
             {
               "name": "Val_Msg",
               "tagType": "AtomicTag",
-              "value": "Leak check failed"
+              "value": "Compressor stopped"
             },
             {
               "name": "Val_StepTime",
               "tagType": "AtomicTag",
-              "value": 12000
+              "value": 9000
             },
             {
               "name": "Val_StepPct",
@@ -330,14 +330,14 @@
           ]
         },
         {
-          "name": "Stn3_Complete",
+          "name": "XeFill_Complete",
           "tagType": "UdtInstance",
           "typeId": "PCLib_Demo/T_SeqBar",
           "tags": [
             {
               "name": "Cfg_Title",
               "tagType": "AtomicTag",
-              "value": "Station 3 fill"
+              "value": "Xenon fill"
             },
             {
               "name": "Cfg_NumSeg",
@@ -348,11 +348,11 @@
               "name": "Cfg_SegText",
               "tagType": "AtomicTag",
               "value": [
-                "Vessel",
-                "Vac",
-                "Prefill",
+                "Lineup",
+                "Evacuate",
+                "Leak check",
+                "Pressurise",
                 "Fill",
-                "Sample",
                 "Done",
                 "",
                 "",
@@ -368,7 +368,7 @@
                 2,
                 2,
                 2,
-                5,
+                2,
                 2,
                 0,
                 0,
@@ -399,7 +399,7 @@
             {
               "name": "Sts_Step",
               "tagType": "AtomicTag",
-              "value": 110
+              "value": 90
             },
             {
               "name": "Sts_WaitAdv",
@@ -419,7 +419,7 @@
             {
               "name": "Val_StepTime",
               "tagType": "AtomicTag",
-              "value": 3000
+              "value": 5000
             },
             {
               "name": "Val_StepPct",
@@ -429,14 +429,14 @@
           ]
         },
         {
-          "name": "Feed_SemiAuto",
+          "name": "XeFill_SemiAuto",
           "tagType": "UdtInstance",
           "typeId": "PCLib_Demo/T_SeqBar",
           "tags": [
             {
               "name": "Cfg_Title",
               "tagType": "AtomicTag",
-              "value": "Xenon feed"
+              "value": "Xenon fill"
             },
             {
               "name": "Cfg_NumSeg",
@@ -448,10 +448,10 @@
               "tagType": "AtomicTag",
               "value": [
                 "Lineup",
-                "Source",
-                "Start",
+                "Evacuate",
+                "Leak check",
                 "Pressurise",
-                "Supply",
+                "Fill",
                 "Done",
                 "",
                 "",
@@ -465,8 +465,8 @@
               "value": [
                 2,
                 2,
+                2,
                 4,
-                0,
                 0,
                 0,
                 0,
@@ -478,7 +478,7 @@
             {
               "name": "Sts_ActSeg",
               "tagType": "AtomicTag",
-              "value": 3
+              "value": 4
             },
             {
               "name": "Sts_PhState",
@@ -498,7 +498,7 @@
             {
               "name": "Sts_Step",
               "tagType": "AtomicTag",
-              "value": 30
+              "value": 60
             },
             {
               "name": "Sts_WaitAdv",
@@ -518,7 +518,7 @@
             {
               "name": "Val_StepTime",
               "tagType": "AtomicTag",
-              "value": 6000
+              "value": 4000
             },
             {
               "name": "Val_StepPct",
