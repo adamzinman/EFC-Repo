@@ -2,6 +2,13 @@
 
 Newest first. Versions match `VERSION.json` and the git tags (`v5.1`, `v6.0`, ...).
 
+- **v7.0 (2026-10-19): one project, one Templates tree:**
+  - **EFC_Library** replaces the seven separate projects (EFC_Styles, PID_Symbols, EFC_PID_Library, EFC_ProcessValues, PID_Loops, EFC_IOFaceplates, EFC_StationFaceplates). `build.py --dist` now writes one project zip.
+  - **Moved views:** `IO/…` → `Templates/IO/…`; `PID/Templates/…` → `Templates/Loops/…`; `PID/Popups/LoopConfig` → `Templates/Loops/Popups/LoopConfig`; `PID/_Demo_Loops` → `Templates/Loops/_Demo`. Every embedded-view, repeater and `openPopup` path was rewritten to match, and the build now fails on any unresolved view reference.
+  - **Imported parts** moved from `projects/` to `imported/` (EFC_IOFaceplates, EFC_StationFaceplates); `tools/import_project_zip.py` writes there.
+  - **Added** `generator/render_views.py` and one review image per view in `docs/previews/templates/` (`build.py --preview`); findings in `docs/template-review.md`.
+  - **Archived** (in `archive/`, see `ARCHIVED.md`): the legacy PID_Compressor_Diaphragm add-on, the stale `generators/` copy and its old `tools/` pipeline, an older PV demo tag file and three superseded note files. The separate v6.3 projects remain at tag `v6.3`.
+  - No template, style or tag content changed apart from the view paths above.
 - **v6.3 (2026-10-07): merged in the other session's repo (`efc-ignition-library_3.zip`):**
   - **Added** `generator/pid_loops/` (PID_Loops: B1–B4, LoopConfig, `PID_Loop` UDT + demo tags in `tags/PID_Loops/`), `generator/nav_connectors/` (`symbols/NavConnectors/`, options A–D) and `generator/compressor_addon/` (legacy `PID_Compressor_Diaphragm`, `symbols/legacy/`).
   - **Added** `mockups/` (loop options, nav connectors, compressor add-on, style preview).

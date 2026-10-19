@@ -9,7 +9,7 @@ These designs were worked on in other sessions. Unless a section says it's in th
   - **One UDT and one faceplate per card** (not per channel), tied directly to the cards' native **IODDTs**.
   - Popups open from a **rack/backplane overview**.
   - The card list comes from the Controls Standard hardware table.
-- **In the repo (v6.1):** `projects/EFC_IOFaceplates/` (parent EFC_Styles), imported from the 2026-10-07 export.
+- **In the repo (v6.1):** source in `imported/EFC_IOFaceplates/`, imported from the 2026-10-07 export. Since v7.0 the views ship inside EFC_Library at `Templates/IO/` (they were at `IO/`).
   - **Views:** `IO/Faceplates/<card>` for BMXAMI0810, BMXAMO0802, BMXART0814, BMXDDI1602, BMXDDI3202K, BMXDDO1602, BMXDDO3202K and BMXDDO6402K; `IO/Parts/` (AnalogRow_AI/AO/TEMP, DiscreteTile, SlotTile); `IO/RackOverview`; `IO/_Demo`.
   - **Checks:** uses 43 EFC_Styles classes (all present), no inline styles, and only 8.1 expression functions.
   - **Missing:** the export has no UDT/tag JSON, so add the per-card UDTs to `tags/` when they're exported.
@@ -20,7 +20,7 @@ These designs were worked on in other sessions. Unless a section says it's in th
   1. **Sidebar faceplate** for the overview screen, 300×800 px at 1080p, based on the old Station popup.
   2. **Medium faceplate** for the filling screen: only the fill information needed, plus direct setpoint entry.
   3. **Compact tile** on the overview screen that opens the sidebar when clicked. The sidebar opening is wired up on site.
-- **In the repo (v6.2):** `projects/EFC_StationFaceplates/` with demo tags in `tags/`. Full reference: [`station-faceplates.md`](station-faceplates.md).
+- **In the repo (v6.2):** source in `imported/EFC_StationFaceplates/`, shipped in EFC_Library at `Templates/Station/`, with demo tags in `tags/`. Full reference: [`station-faceplates.md`](station-faceplates.md).
 
 ## Diaphragm compressor screen (PDC-style, two-stage)
 - A Perspective 8.1 HMI screen for a PDC-style two-stage diaphragm compressor. Several layout options are to be compared, in ISA-101 light gray using EFC_Styles and the PID_Symbols templates (`Templates/Rotating/Compressor_Diaphragm`).

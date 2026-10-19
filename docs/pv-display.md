@@ -1,6 +1,6 @@
 # Process Value display templates (EFC_ProcessValues)
 
-PV design **1.3.0**. Generator: `generator/build_pv.py`. Project: `projects/EFC_ProcessValues/` (parent `EFC_Styles`). Demo tags: `tags/PV_Demo_Tags.json`. Class list: [`pv-style-index.md`](pv-style-index.md).
+PV design **1.3.0**. Generator: `generator/build_pv.py`. Ships inside `projects/EFC_Library/` (`Templates/ProcessValues/`). Demo tags: `tags/PV_Demo_Tags.json`. Class list: [`pv-style-index.md`](pv-style-index.md).
 
 **History:**
 - v1.0 was imported on the gateway.

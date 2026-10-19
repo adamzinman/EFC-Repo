@@ -3,12 +3,12 @@
 A library of templates for actively controlled devices, in a modern ISA-inspired style. It is built from the design notes in [`design-notes.md`](design-notes.md). Shapes come from the reference library; colors and text come from EFC_Styles, revised to match ISA-101, ISA-18.2, NFPA 79 and ANSI Z535.
 
 ## Contents
-The zips are built with `python3 build.py --dist` (written to `dist/`, not committed) or attached to a release. In the repo, the same projects sit unzipped under `projects/`.
+Since v7.0 everything ships as one project, **EFC_Library** (`dist/EFC_Library_PROJECT.zip`, built with `python3 build.py --dist`; unzipped in the repo at `projects/EFC_Library/`). The rows below describe the parts that are merged into it.
 
 | Item | What it is |
 |---|---|
-| `PID_Symbols_PROJECT.zip` | Perspective project (parent `EFC_Styles`): 16 templates (one per controlled-device symbol) + `Templates/_Demo` |
-| `EFC_Styles_PROJECT.zip` | Updated style library (166 classes, ISA-101 audit fixes applied). Import this first. |
+| PID_Symbols part | 16 templates (one per controlled-device symbol) + `Templates/_Demo`, inside EFC_Library |
+| EFC_Styles part | Style library (166 classes, ISA-101 audit fixes applied), inside EFC_Library |
 | `tags/` (repo root) | UDTs `PID_Motor`, `PID_ControlValve`, the demo stand-in `Valve_Discrete_Demo` (same members as the plant discrete-valve UDT) and 13 demo instances (`PID_Demo` folder) |
 | `symbols/` (repo root) | 214 plain SVGs to import as needed: all 198 static symbols from v2, recolored to the standards palette, plus the 16 active symbols in `symbols/Active/` |
 | `docs/previews/` | Rendered previews of the demo templates (`python3 build.py --preview`) |

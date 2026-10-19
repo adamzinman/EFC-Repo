@@ -72,7 +72,7 @@ The only parameter on each view is **`tagPath`**: the DDT_Station instance, e.g.
 `Station/Step/Done`, `Station/Step/Active`, `Station/Step/Pending`, `Station/Step/Fault`, `Bar/Band/Deadband`
 
 ## In this repo
-- **Project:** `projects/EFC_StationFaceplates/`, imported from the 2026-10-06 export (v6.2). Edit it in the Designer and re-import; its generator (`build_station.py`) is not in the repo.
+- **Project:** source in `imported/EFC_StationFaceplates/` (imported from the 2026-10-06 export, v6.2); ships inside `projects/EFC_Library/` at `Templates/Station/`. Edit it in the Designer and re-import; its generator (`build_station.py`) is not in the repo.
 - **Demo tags:** `tags/DDT_Station_Demo_UDT.json`, `tags/Station_Demo_Instances.json`.
 - **Checks:** passes the 8.1 import check. It uses 44 EFC_Styles classes, all present, and its own 5 classes don't clash with EFC_Styles, EFC_ProcessValues or EFC_IOFaceplates.
 - **Inline styles:** mostly layout spacing (`gap`, `height`, `padding`, margins). A few typography values (`fontSize`, `lineHeight`) are inline too; move those to classes when the station classes are folded into EFC_Styles.
