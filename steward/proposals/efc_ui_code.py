@@ -1,60 +1,71 @@
 # Proposed project-library script: efc.ui  (ignition/script-python/efc/ui/code.py)
-# Ignition 8.1 (Jython 2.7), 8.3 compatible. Views call it from one-line event scripts:
+# Ignition 8.1 (Jython 2.7), 8.3 compatible. Embedded-view strategy (decision 24):
+# the screen shell's right region is an Embedded View whose props.path and props.params
+# are bound to session.custom.efcDw[<pageId>]; these functions only write that value.
+# Views call them from one-line event scripts:
 #   symbol onClick:        efc.ui.openDynamic(self)
 #   symbol onDoubleClick:  efc.ui.dblCmd(self)
-#   dock close button:     efc.ui.closeDynamic(self)
+#   window close button:   efc.ui.closeDynamic(self)
+#   graph expand button:   efc.ui.expandTrend(self, True / False)
 #   screen view onStartup: efc.ui.setDefaultDock(self, self.view.params.defaultDock)
 
-# Every library dynamic window. All are right-side docks configured in the HMI project's
-# page configuration; only one is open at a time.
-DOCKS = ['dw_ValveDiscrete', 'dw_ValveAnalog', 'dw_Rotating', 'dw_VFD', 'dw_HeatTransfer', 'dw_Heater',
-         'dw_ProcessValue', 'dw_Loop', 'dw_Station', 'dw_IOCard']
+# Dynamic-window id -> view path. Ids keep the dw_ names used in the templates' dockId param.
+WINDOWS = {
+    'dw_ValveDiscrete': 'Docks/ValveDiscrete', 'dw_ValveAnalog': 'Docks/ValveAnalog',
+    'dw_Rotating': 'Docks/Rotating', 'dw_VFD': 'Docks/VFD', 'dw_Heater': 'Docks/Heater',
+    'dw_HeatTransfer': 'Docks/HeatTransfer', 'dw_ProcessValue': 'Docks/ProcessValue',
+    'dw_Loop': 'Docks/Loop', 'dw_Station': 'Docks/Station', 'dw_IOCard': 'Docks/IOCard',
+}
 
 # Two-state devices that accept a double-tap command: type -> (state member, cmd if on, cmd if off)
 DBL_CMD = {
     'T_DValve': ('Sts_Opened', 'Cmd_Close', 'Cmd_Open'),
     'T_Motor':  ('Sts_Running', 'Cmd_Stop', 'Cmd_Start'),
 }
-# All must be true / false for a double-tap command to be sent.
 READY_TRUE = ['Mode/Sts_Man', 'Sts_Avail']
 READY_FALSE = ['Sts_Intlk', 'Sts_NotPerm', 'Sts_Local', 'Sts_Fault']
 
 
-def _store(session):
-    if not hasattr(session.custom, 'efcDefaultDock') or session.custom.efcDefaultDock is None:
-        session.custom.efcDefaultDock = {}
-    return session.custom.efcDefaultDock
+def _state(component):
+    """This page's dynamic-window state: {'path', 'params', 'default', 'wide'}."""
+    s = component.session.custom
+    if getattr(s, 'efcDw', None) is None:
+        s.efcDw = {}
+    pid = component.page.props.pageId
+    st = dict(s.efcDw.get(pid) or {})
+    return s, pid, st
 
 
-def _open(component, dockId, params=None):
-    for d in DOCKS:
-        if d != dockId:
-            system.perspective.closeDock(d)
-    system.perspective.openDock(dockId, params=params or {})
+def _write(component, **changes):
+    s, pid, st = _state(component)
+    st.update(changes)
+    d = dict(s.efcDw)
+    d[pid] = st
+    s.efcDw = d
 
 
 def openDynamic(component):
-    """Single click on a template's symbol: open its dynamic window for this tag."""
+    """Single click on a template's symbol: show its dynamic window for this tag."""
     p = component.view.params
-    _open(component, p.dockId, {'tagPath': p.tagPath})
+    _write(component, path=WINDOWS[p.dockId], params={'tagPath': p.tagPath}, wide=False)
 
 
-def setDefaultDock(component, dockId):
-    """Screen onStartup: remember and open the screen's default right dock."""
-    if not dockId:
-        return
-    _store(component.session)[component.page.props.pageId] = dockId
-    _open(component, dockId)
+def setDefaultDock(component, viewPath, params=None):
+    """Screen onStartup: remember and show the screen's default right-region view."""
+    if viewPath:
+        _write(component, default={'path': viewPath, 'params': params or {}}, path=viewPath, params=params or {}, wide=False)
 
 
 def closeDynamic(component):
-    """Dock close button: return the right dock to the screen's default view."""
-    default = _store(component.session).get(component.page.props.pageId)
-    if default:
-        _open(component, default)
-    else:
-        for d in DOCKS:
-            system.perspective.closeDock(d)
+    """Dynamic-window close button: return the right region to the screen's default view."""
+    s, pid, st = _state(component)
+    d = st.get('default') or {}
+    _write(component, path=d.get('path'), params=d.get('params', {}), wide=False)
+
+
+def expandTrend(component, wide):
+    """Graph expand / collapse: the shell widens the right region to about 50 % when wide."""
+    _write(component, wide=bool(wide))
 
 
 def dblCmd(component):

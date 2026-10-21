@@ -191,8 +191,6 @@ META = {
     "Analyzer":   ("Control module", "AnaMon", DEVICE),
     "GasDet":     ("Control module", "AnaMon", DEVICE + [NE43, S84]),
     "Station":    ("Equipment module", "-", [S88, S182, S101, NE107]),
-    "IOCard":     ("Support (diagnostics)", "-", [NE107, S182, S101]),
-    "IORack":     ("Support (diagnostics)", "-", [NE107, S182, S101]),
     "Intlk":      ("Support (interlock group)", "LockView16", [S84, S182, S101, MTP]),
     "ESD":        ("Support (shutdown group)", "-", [S84, S182, S101]),
     "Phase":      ("Equipment phase (procedural)", "Service (state machine)", [S88 + " Part 1 state model", MTP]),
@@ -1048,52 +1046,6 @@ T("Station", "Weigh-fill station: vessel on a scale, inlet / sample / vacuum val
     A("Alm_ScaleFault", "Scale fault"),
 ], "Process")
 
-T("IOCard", "Modicon x80 I/O module diagnostics: module and channel health, field power", HDR + [
-    M("Cfg_Model", "STRING[16]", "Module reference, e.g. BMXDDI1602"),
-    M("Cfg_Kind", "INT", "0=DI 1=DO 2=AI 3=AO 4=TC/RTD 5=Counter 6=Other", "0"),
-    M("Cfg_Rack", "INT", "Rack number", "0"),
-    M("Cfg_Slot", "INT", "Slot number", "0"),
-    M("Cfg_Drop", "STRING[20]", "Drop / station name (main rack or eRIO drop)"),
-    M("Cfg_NumCh", "INT", "Channels on the module", "16"),
-    M("Cfg_ChUsed", "ARRAY[0..63] OF BOOL", "Channel n is wired (spares FALSE)"),
-    M("Inp_ModHealth", "BOOL", "Module health bit from the module device DDT / IODDT (TRUE = healthy)"),
-    M("Inp_ModFltWord", "WORD", "Module fault byte(s) from the device DDT, for diagnosis"),
-    M("Inp_ChHealth", "ARRAY[0..63] OF BOOL", "Channel n healthy (no wire break, short, out of range)"),
-    M("Inp_FieldPwrOK", "BOOL", "External field power supply present", "TRUE"),
-    M("Inp_Missing", "BOOL", "Module missing or wrong type in the slot"),
-    M("Sts_OK", "BOOL", "Module healthy and all used channels healthy"),
-    M("Sts_ChFault", "ARRAY[0..63] OF BOOL", "Used channel n faulted"),
-    M("Sts_NumChFault", "INT", "Number of faulted used channels"),
-    M("Sts_FirstChFault", "INT", "Lowest faulted channel (-1 = none)"),
-    M("Sts_ChWord", "ARRAY[0..3] OF WORD", "Sts_ChFault packed, 16 channels per word, for SCADA"),
-] + NE107_STS + [
-    A("Alm_ModFault", "Module fault"),
-    A("Alm_ChFault", "One or more channels faulted"),
-    A("Alm_FieldPwr", "Field power lost"),
-    A("Alm_Missing", "Module missing or wrong type"),
-], "IO")
-
-T("IORack", "Modicon x80 rack / drop diagnostics: power supply, slot health, communications", HDR + [
-    M("Cfg_Rack", "INT", "Rack number", "0"),
-    M("Cfg_Drop", "STRING[20]", "Drop / station name"),
-    M("Cfg_Remote", "BOOL", "Remote drop (eRIO / DIO): communications monitored"),
-    M("Cfg_NumSlots", "INT", "Slots on the backplane (4, 6, 8 or 12)", "12"),
-    M("Cfg_PSModel", "STRING[16]", "Power supply reference, e.g. BMXCPS3500"),
-    M("Cfg_SlotUsed", "ARRAY[0..11] OF BOOL", "Slot n holds a configured module"),
-    M("Inp_PSOK", "BOOL", "Power supply healthy", "TRUE"),
-    M("Inp_PSRedOK", "BOOL", "Redundant power supply healthy (if fitted)", "TRUE"),
-    M("Inp_CommOK", "BOOL", "Drop communications healthy (remote drops)", "TRUE"),
-    M("Inp_SlotOK", "ARRAY[0..11] OF BOOL", "Module in slot n healthy (from T_IOCard Sts_OK)"),
-    M("Sts_OK", "BOOL", "Power, communications and every used slot healthy"),
-    M("Sts_NumFaulted", "INT", "Number of used slots not healthy"),
-    M("Sts_SlotWord", "WORD", "Faulted used slots packed (bit n = slot n), for SCADA"),
-] + NE107_STS + [
-    A("Alm_PSFault", "Power supply fault"),
-    A("Alm_PSRedFault", "Redundant power supply fault"),
-    A("Alm_CommLoss", "Drop communications lost"),
-    A("Alm_SlotFault", "One or more modules faulted"),
-], "IO")
-
 T("Phase", "ISA-88 equipment phase: Part 1 state model, commands, modes, parameters, reports", HDR + [
     M("Cfg_PhaseID", "INT", "Phase ID (unique in the unit) for batch server / unit procedure"),
     M("Cfg_UnitID", "INT", "ID of the unit this phase belongs to"),
@@ -1278,7 +1230,6 @@ GROUP_TITLES = {
     "Process": "Process equipment",
     "Safety": "Analyzers and safety",
     "Batch": "ISA-88 batch and procedural",
-    "IO": "I/O and system diagnostics",
 }
 
 STANDARDS = [

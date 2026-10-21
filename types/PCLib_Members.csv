@@ -923,50 +923,6 @@ T_Station,Equipment module,-,Alm_Failed,T_Alarm,,Fill failed
 T_Station,Equipment module,-,Alm_OverFill,T_Alarm,,Net weight above target plus deadband
 T_Station,Equipment module,-,Alm_PressHi,T_AlmLim,,Vessel pressure high (uses Prm_MaxPress)
 T_Station,Equipment module,-,Alm_ScaleFault,T_Alarm,,Scale fault
-T_IOCard,Support (diagnostics),-,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
-T_IOCard,Support (diagnostics),-,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
-T_IOCard,Support (diagnostics),-,Cfg_Model,STRING[16],,"Module reference, e.g. BMXDDI1602"
-T_IOCard,Support (diagnostics),-,Cfg_Kind,INT,0,0=DI 1=DO 2=AI 3=AO 4=TC/RTD 5=Counter 6=Other
-T_IOCard,Support (diagnostics),-,Cfg_Rack,INT,0,Rack number
-T_IOCard,Support (diagnostics),-,Cfg_Slot,INT,0,Slot number
-T_IOCard,Support (diagnostics),-,Cfg_Drop,STRING[20],,Drop / station name (main rack or eRIO drop)
-T_IOCard,Support (diagnostics),-,Cfg_NumCh,INT,16,Channels on the module
-T_IOCard,Support (diagnostics),-,Cfg_ChUsed,ARRAY[0..63] OF BOOL,,Channel n is wired (spares FALSE)
-T_IOCard,Support (diagnostics),-,Inp_ModHealth,BOOL,,Module health bit from the module device DDT / IODDT (TRUE = healthy)
-T_IOCard,Support (diagnostics),-,Inp_ModFltWord,WORD,,"Module fault byte(s) from the device DDT, for diagnosis"
-T_IOCard,Support (diagnostics),-,Inp_ChHealth,ARRAY[0..63] OF BOOL,,"Channel n healthy (no wire break, short, out of range)"
-T_IOCard,Support (diagnostics),-,Inp_FieldPwrOK,BOOL,TRUE,External field power supply present
-T_IOCard,Support (diagnostics),-,Inp_Missing,BOOL,,Module missing or wrong type in the slot
-T_IOCard,Support (diagnostics),-,Sts_OK,BOOL,,Module healthy and all used channels healthy
-T_IOCard,Support (diagnostics),-,Sts_ChFault,ARRAY[0..63] OF BOOL,,Used channel n faulted
-T_IOCard,Support (diagnostics),-,Sts_NumChFault,INT,,Number of faulted used channels
-T_IOCard,Support (diagnostics),-,Sts_FirstChFault,INT,,Lowest faulted channel (-1 = none)
-T_IOCard,Support (diagnostics),-,Sts_ChWord,ARRAY[0..3] OF WORD,,"Sts_ChFault packed, 16 channels per word, for SCADA"
-T_IOCard,Support (diagnostics),-,Sts_NE107,INT,,NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)
-T_IOCard,Support (diagnostics),-,Alm_ModFault,T_Alarm,,Module fault
-T_IOCard,Support (diagnostics),-,Alm_ChFault,T_Alarm,,One or more channels faulted
-T_IOCard,Support (diagnostics),-,Alm_FieldPwr,T_Alarm,,Field power lost
-T_IOCard,Support (diagnostics),-,Alm_Missing,T_Alarm,,Module missing or wrong type
-T_IORack,Support (diagnostics),-,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
-T_IORack,Support (diagnostics),-,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
-T_IORack,Support (diagnostics),-,Cfg_Rack,INT,0,Rack number
-T_IORack,Support (diagnostics),-,Cfg_Drop,STRING[20],,Drop / station name
-T_IORack,Support (diagnostics),-,Cfg_Remote,BOOL,,Remote drop (eRIO / DIO): communications monitored
-T_IORack,Support (diagnostics),-,Cfg_NumSlots,INT,12,"Slots on the backplane (4, 6, 8 or 12)"
-T_IORack,Support (diagnostics),-,Cfg_PSModel,STRING[16],,"Power supply reference, e.g. BMXCPS3500"
-T_IORack,Support (diagnostics),-,Cfg_SlotUsed,ARRAY[0..11] OF BOOL,,Slot n holds a configured module
-T_IORack,Support (diagnostics),-,Inp_PSOK,BOOL,TRUE,Power supply healthy
-T_IORack,Support (diagnostics),-,Inp_PSRedOK,BOOL,TRUE,Redundant power supply healthy (if fitted)
-T_IORack,Support (diagnostics),-,Inp_CommOK,BOOL,TRUE,Drop communications healthy (remote drops)
-T_IORack,Support (diagnostics),-,Inp_SlotOK,ARRAY[0..11] OF BOOL,,Module in slot n healthy (from T_IOCard Sts_OK)
-T_IORack,Support (diagnostics),-,Sts_OK,BOOL,,"Power, communications and every used slot healthy"
-T_IORack,Support (diagnostics),-,Sts_NumFaulted,INT,,Number of used slots not healthy
-T_IORack,Support (diagnostics),-,Sts_SlotWord,WORD,,"Faulted used slots packed (bit n = slot n), for SCADA"
-T_IORack,Support (diagnostics),-,Sts_NE107,INT,,NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)
-T_IORack,Support (diagnostics),-,Alm_PSFault,T_Alarm,,Power supply fault
-T_IORack,Support (diagnostics),-,Alm_PSRedFault,T_Alarm,,Redundant power supply fault
-T_IORack,Support (diagnostics),-,Alm_CommLoss,T_Alarm,,Drop communications lost
-T_IORack,Support (diagnostics),-,Alm_SlotFault,T_Alarm,,One or more modules faulted
 T_Phase,Equipment phase (procedural),Service (state machine),Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
 T_Phase,Equipment phase (procedural),Service (state machine),Cfg_Desc,STRING[40],,Description shown on HMI faceplate
 T_Phase,Equipment phase (procedural),Service (state machine),Cfg_PhaseID,INT,,Phase ID (unique in the unit) for batch server / unit procedure

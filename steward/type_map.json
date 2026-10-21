@@ -1,5 +1,5 @@
 {
-  "_doc": "Item -> EFCLib v1 T_ type and dynamic-window dock. Read by steward/tools/*.py. 'gap:' = type not in types/.",
+  "_doc": "Item -> EFCLib v1 T_ type and dynamic window. 'gap:' = type not in types/. 'native:' = binds to the PLC's own (Control Expert) data type, imported directly into Ignition.",
   "docks": {
     "dw_ValveDiscrete": "Docks/ValveDiscrete",
     "dw_ValveAnalog": "Docks/ValveAnalog",
@@ -42,14 +42,14 @@
     "Templates/Loops/Loop_B4_Column": "T_PID",
     "Templates/Station/Station_Fill": "T_Station",
     "Templates/Station/Station_Tile": "T_Station",
-    "Templates/IO/RackOverview": "T_IORack",
-    "Templates/IO/Faceplates/BMXAMI0810": "T_IOCard",
-    "Templates/IO/Faceplates/BMXAMO0802": "T_IOCard",
-    "Templates/IO/Faceplates/BMXART0814": "T_IOCard",
-    "Templates/IO/Faceplates/BMXDDI1602": "T_IOCard",
-    "Templates/IO/Faceplates/BMXDDI3202K": "T_IOCard",
-    "Templates/IO/Faceplates/BMXDDO1602": "T_IOCard",
-    "Templates/IO/Faceplates/BMXDDO3202K": "T_IOCard",
-    "Templates/IO/Faceplates/BMXDDO6402K": "T_IOCard"
+    "Templates/IO/RackOverview": "native:x80 device DDT",
+    "Templates/IO/Faceplates/BMXAMI0810": "native:x80 device DDT",
+    "Templates/IO/Faceplates/BMXAMO0802": "native:x80 device DDT",
+    "Templates/IO/Faceplates/BMXART0814": "native:x80 device DDT",
+    "Templates/IO/Faceplates/BMXDDI1602": "native:x80 device DDT",
+    "Templates/IO/Faceplates/BMXDDI3202K": "native:x80 device DDT",
+    "Templates/IO/Faceplates/BMXDDO1602": "native:x80 device DDT",
+    "Templates/IO/Faceplates/BMXDDO3202K": "native:x80 device DDT",
+    "Templates/IO/Faceplates/BMXDDO6402K": "native:x80 device DDT"
   }
 }

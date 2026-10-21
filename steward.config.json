@@ -22,10 +22,8 @@
     "Templates/HeatTransfer/Heater_Electric": "dw_Heater"
   },
   "rules": {
-    "require_dock": true,
-    "dock_events": [
-      "dom.onClick"
-    ],
+    "require_dock": false,
+    "dock_events": [],
     "require_pclib": true,
     "max_inline_styles": 0,
     "check_palette": true,
@@ -64,5 +62,6 @@
     "Templates/Station/_Demo",
     "Templates/_Demo"
   ],
-  "upstream_check_days": 30
+  "upstream_check_days": 30,
+  "_note": "require_dock off: dynamic windows are an embedded view switched by efc.ui.openDynamic (decision 24); wiring is checked by steward/tools/gaps.py."
 }

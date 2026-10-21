@@ -26,3 +26,5 @@ Approved items from the design review. Phase 3 builds from this list.
 | 20 | 2026-10-21 | Station setpoints (dw_Station): Operator+, audit-logged. |
 | 21 | 2026-10-21 | Propose PCLib types T_Station, T_IOCard, T_IORack (last type gaps). |
 | 22 | 2026-10-21 | HTML mockup work (steward/previews) is delegated to a Sonnet subagent: `.claude/agents/mockup-builder.md`. |
+| 23 | 2026-10-21 | No PCLib type for I/O cards or racks (T_IOCard / T_IORack removed). I/O card, rack and power-supply faceplates bind to the PLC's standard Modicon x80 device DDTs from Control Expert, imported directly into Ignition. |
+| 24 | 2026-10-21 | Dynamic windows use the embedded-view strategy, not Perspective docks: the screen shell's right region is an Embedded View whose path and params are bound to a per-page session value set by `efc.ui.openDynamic` (dynamic-window id + tagPath); close returns it to the screen's `defaultDock` view. Sized in vh (37.04 vh at 1080p), expands to about 50 % for the expanded trend. Ids keep the `dw_` names. Matches the Controls Standard screen design appendix. |

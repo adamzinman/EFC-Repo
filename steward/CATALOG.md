@@ -1,6 +1,6 @@
-# Library catalog (2026-10-21 00:41)
+# Library catalog (2026-10-21 03:09)
 
-51 views, 0 script modules, 221 style classes, 27 UDTs
+51 views, 0 script modules, 221 style classes, 29 UDTs
 
 ## Views
 
@@ -74,6 +74,7 @@
 - PCLib/T_ESD (34 members, params: BaseTag,OPCServer,PathPrefix)
 - PCLib/T_GasDet (39 members, params: BaseTag,OPCServer,PathPrefix)
 - PCLib/T_HeatEx (31 members, params: BaseTag,OPCServer,PathPrefix)
+- PCLib/T_Heater (64 members, params: BaseTag,OPCServer,PathPrefix)
 - PCLib/T_Intlk (26 members, params: BaseTag,OPCServer,PathPrefix)
 - PCLib/T_KPI (24 members, params: BaseTag,OPCServer,PathPrefix)
 - PCLib/T_Mode (20 members, params: BaseTag,OPCServer,PathPrefix)
@@ -83,6 +84,7 @@
 - PCLib/T_PumpDS (26 members, params: BaseTag,OPCServer,PathPrefix)
 - PCLib/T_PumpProt (28 members, params: BaseTag,OPCServer,PathPrefix)
 - PCLib/T_RunTime (11 members, params: BaseTag,OPCServer,PathPrefix)
+- PCLib/T_Station (56 members, params: BaseTag,OPCServer,PathPrefix)
 - PCLib/T_Tank (41 members, params: BaseTag,OPCServer,PathPrefix)
 - PCLib/T_Totalizer (41 members, params: BaseTag,OPCServer,PathPrefix)
 - PCLib/T_Unit (26 members, params: BaseTag,OPCServer,PathPrefix)

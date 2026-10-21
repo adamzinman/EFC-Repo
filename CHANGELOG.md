@@ -4,7 +4,7 @@ Newest first. Versions match `VERSION.json` and the git tags (`v5.1`, `v6.0`, ..
 
 - **Unreleased:**
   - **Types:** new `T_Heater` (electric heater: on/off contactor, time-proportioned SSR, or SCR power controller) in `types/gen_pclib.py`; regenerated `types/xdd/`, `types/export/`, `PCLib_Members.csv` and `types/README.md` (27 types).
-  - **Types:** new `T_Station` (weigh-fill station, embeds a `Perm : T_Intlk` group), `T_IOCard` and `T_IORack` (Modicon x80 module and rack diagnostics) in a new "I/O and system diagnostics" group (30 types).
+  - **Types:** new `T_Station` (weigh-fill station, embeds a `Perm : T_Intlk` group) (28 types). I/O card and rack faceplates bind to the Modicon x80 device DDTs from Control Expert, imported directly; no PCLib type.
 - **v7.0 (2026-10-19): one project, one Templates tree:**
   - **EFC_Library** replaces the seven separate projects (EFC_Styles, PID_Symbols, EFC_PID_Library, EFC_ProcessValues, PID_Loops, EFC_IOFaceplates, EFC_StationFaceplates). `build.py --dist` now writes one project zip.
   - **Moved views:** `IO/…` → `Templates/IO/…`; `PID/Templates/…` → `Templates/Loops/…`; `PID/Popups/LoopConfig` → `Templates/Loops/Popups/LoopConfig`; `PID/_Demo_Loops` → `Templates/Loops/_Demo`. Every embedded-view, repeater and `openPopup` path was rewritten to match, and the build now fails on any unresolved view reference.

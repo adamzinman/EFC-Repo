@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:2:44" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:8:45" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
 <contentHeader name="PCLib" version="1.00"></contentHeader>
-<DDTSource DDTName="T_Alarm" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Alarm" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Discrete alarm, ISA-18.2 / IEC 62682 state model, shelving, suppression, out-of-service</comment>
 	<structure>
 		<variables name="Inp_Cond" typeName="BOOL">
@@ -91,7 +91,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_AlmLim" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_AlmLim" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Analog limit alarm: limit + deadband + ISA-18.2 / IEC 62682 alarm</comment>
 	<structure>
 		<variables name="Cfg_Lim" typeName="REAL">
@@ -187,7 +187,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Mode" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Mode" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Control-module mode and ISA-88 ownership (arbitration); maps to MTP OpMode</comment>
 	<structure>
 		<variables name="Cmd_Auto" typeName="BOOL">
@@ -253,7 +253,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_RunTime" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_RunTime" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Run-hours, starts and maintenance counters</comment>
 	<structure>
 		<variables name="Inp_Running" typeName="BOOL">
@@ -292,7 +292,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_AI" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_AI" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Analog input: scaling, filtering, NE43 range check, alarms, sim</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -414,7 +414,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_DI" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_DI" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Digital input: invert, debounce, sim, optional state alarm</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -479,7 +479,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_DValve" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_DValve" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>On/off valve: single or dual solenoid, limit switches, travel alarms</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -610,7 +610,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_CValve" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_CValve" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Modulating control valve: limits, rate limit, positioner feedback</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -755,7 +755,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Motor" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Motor" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Direct-on-line / star-delta / soft-start motor</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -920,7 +920,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_VFD" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_VFD" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Variable speed drive (fieldbus or hardwired)</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1183,7 +1183,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Heater" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Heater" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Electric heater: on/off contactor, time-proportioned SSR, or SCR power controller</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1392,7 +1392,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_PID" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_PID" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>PID loop wrapper (maps onto PIDFF EFB), Man/Auto/Cas, tracking</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1568,7 +1568,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_PumpProt" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_PumpProt" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Pump protection layer: dry run, low flow, deadhead, seal, bearing</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1663,7 +1663,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_PumpDS" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_PumpDS" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Duty/standby/lead-lag coordinator for up to 4 pumps</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1754,7 +1754,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Agitator" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Agitator" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Agitator / mixer: VFD + submergence, seal and gearbox protection</comment>
 	<structure>
 		<variables name="Drv" typeName="T_VFD">
@@ -1807,7 +1807,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Compressor" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Compressor" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Compressor / blower: load-unload, anti-cycle, lube and thermal protection</comment>
 	<structure>
 		<variables name="Drv" typeName="T_VFD">
@@ -1905,7 +1905,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Conveyor" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Conveyor" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Belt / screw conveyor: start warning, zero-speed, pull-cord, alignment</comment>
 	<structure>
 		<variables name="Mtr" typeName="T_Motor">
@@ -1997,7 +1997,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Tank" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Tank" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Tank / vessel: level-to-volume, inventory, fill/drain permissives, alarms</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2132,7 +2132,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Totalizer" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Totalizer" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Flow totalizer + batch delivery: analog or pulse, day/hour totals</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2269,7 +2269,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_HeatEx" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_HeatEx" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Heat exchanger performance monitor: duty, LMTD, UA, fouling, DP</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2373,7 +2373,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_DosePump" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_DosePump" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Chemical dosing / metering pump: manual, flow-paced, trim, batch</comment>
 	<structure>
 		<variables name="Mtr" typeName="T_Motor">
@@ -2481,7 +2481,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Analyzer" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Analyzer" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Process analyzer (pH, ORP, conductivity, DO, turbidity, Cl2 ...)</comment>
 	<structure>
 		<variables name="AI" typeName="T_AI">
@@ -2576,7 +2576,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_GasDet" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_GasDet" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Fixed gas detector (4-20mA): latching A1/A2/A3, inhibit, fault</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2708,7 +2708,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Intlk" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Intlk" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Interlock / permissive group: 16 conditions, first-out, timed bypass</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2792,7 +2792,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_ESD" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_ESD" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Emergency shutdown group (BPCS layer): de-energise-to-trip, MOS, first-out</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2903,7 +2903,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Station" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Station" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>Weigh-fill station: vessel on a scale, inlet / sample / vacuum valves, net-weight fill to target</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -3077,159 +3077,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_IOCard" version="1.00" dateTime="dt#2026-10-21-03:02:44">
-	<comment>Modicon x80 I/O module diagnostics: module and channel health, field power</comment>
-	<structure>
-		<variables name="Cfg_Tag" typeName="STRING[20]">
-			<comment>Equipment / instrument tag, e.g. FT-101</comment>
-		</variables>
-		<variables name="Cfg_Desc" typeName="STRING[40]">
-			<comment>Description shown on HMI faceplate</comment>
-		</variables>
-		<variables name="Cfg_Model" typeName="STRING[16]">
-			<comment>Module reference, e.g. BMXDDI1602</comment>
-		</variables>
-		<variables name="Cfg_Kind" typeName="INT">
-			<comment>0=DI 1=DO 2=AI 3=AO 4=TC/RTD 5=Counter 6=Other</comment>
-			<variableInit value="0"></variableInit>
-		</variables>
-		<variables name="Cfg_Rack" typeName="INT">
-			<comment>Rack number</comment>
-			<variableInit value="0"></variableInit>
-		</variables>
-		<variables name="Cfg_Slot" typeName="INT">
-			<comment>Slot number</comment>
-			<variableInit value="0"></variableInit>
-		</variables>
-		<variables name="Cfg_Drop" typeName="STRING[20]">
-			<comment>Drop / station name (main rack or eRIO drop)</comment>
-		</variables>
-		<variables name="Cfg_NumCh" typeName="INT">
-			<comment>Channels on the module</comment>
-			<variableInit value="16"></variableInit>
-		</variables>
-		<variables name="Cfg_ChUsed" typeName="ARRAY[0..63] OF BOOL">
-			<comment>Channel n is wired (spares FALSE)</comment>
-		</variables>
-		<variables name="Inp_ModHealth" typeName="BOOL">
-			<comment>Module health bit from the module device DDT / IODDT (TRUE = healthy)</comment>
-		</variables>
-		<variables name="Inp_ModFltWord" typeName="WORD">
-			<comment>Module fault byte(s) from the device DDT, for diagnosis</comment>
-		</variables>
-		<variables name="Inp_ChHealth" typeName="ARRAY[0..63] OF BOOL">
-			<comment>Channel n healthy (no wire break, short, out of range)</comment>
-		</variables>
-		<variables name="Inp_FieldPwrOK" typeName="BOOL">
-			<comment>External field power supply present</comment>
-			<variableInit value="TRUE"></variableInit>
-		</variables>
-		<variables name="Inp_Missing" typeName="BOOL">
-			<comment>Module missing or wrong type in the slot</comment>
-		</variables>
-		<variables name="Sts_OK" typeName="BOOL">
-			<comment>Module healthy and all used channels healthy</comment>
-		</variables>
-		<variables name="Sts_ChFault" typeName="ARRAY[0..63] OF BOOL">
-			<comment>Used channel n faulted</comment>
-		</variables>
-		<variables name="Sts_NumChFault" typeName="INT">
-			<comment>Number of faulted used channels</comment>
-		</variables>
-		<variables name="Sts_FirstChFault" typeName="INT">
-			<comment>Lowest faulted channel (-1 = none)</comment>
-		</variables>
-		<variables name="Sts_ChWord" typeName="ARRAY[0..3] OF WORD">
-			<comment>Sts_ChFault packed, 16 channels per word, for SCADA</comment>
-		</variables>
-		<variables name="Sts_NE107" typeName="INT">
-			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
-		</variables>
-		<variables name="Alm_ModFault" typeName="T_Alarm">
-			<comment>Module fault</comment>
-		</variables>
-		<variables name="Alm_ChFault" typeName="T_Alarm">
-			<comment>One or more channels faulted</comment>
-		</variables>
-		<variables name="Alm_FieldPwr" typeName="T_Alarm">
-			<comment>Field power lost</comment>
-		</variables>
-		<variables name="Alm_Missing" typeName="T_Alarm">
-			<comment>Module missing or wrong type</comment>
-		</variables>
-	</structure>
-</DDTSource>
-<DDTSource DDTName="T_IORack" version="1.00" dateTime="dt#2026-10-21-03:02:44">
-	<comment>Modicon x80 rack / drop diagnostics: power supply, slot health, communications</comment>
-	<structure>
-		<variables name="Cfg_Tag" typeName="STRING[20]">
-			<comment>Equipment / instrument tag, e.g. FT-101</comment>
-		</variables>
-		<variables name="Cfg_Desc" typeName="STRING[40]">
-			<comment>Description shown on HMI faceplate</comment>
-		</variables>
-		<variables name="Cfg_Rack" typeName="INT">
-			<comment>Rack number</comment>
-			<variableInit value="0"></variableInit>
-		</variables>
-		<variables name="Cfg_Drop" typeName="STRING[20]">
-			<comment>Drop / station name</comment>
-		</variables>
-		<variables name="Cfg_Remote" typeName="BOOL">
-			<comment>Remote drop (eRIO / DIO): communications monitored</comment>
-		</variables>
-		<variables name="Cfg_NumSlots" typeName="INT">
-			<comment>Slots on the backplane (4, 6, 8 or 12)</comment>
-			<variableInit value="12"></variableInit>
-		</variables>
-		<variables name="Cfg_PSModel" typeName="STRING[16]">
-			<comment>Power supply reference, e.g. BMXCPS3500</comment>
-		</variables>
-		<variables name="Cfg_SlotUsed" typeName="ARRAY[0..11] OF BOOL">
-			<comment>Slot n holds a configured module</comment>
-		</variables>
-		<variables name="Inp_PSOK" typeName="BOOL">
-			<comment>Power supply healthy</comment>
-			<variableInit value="TRUE"></variableInit>
-		</variables>
-		<variables name="Inp_PSRedOK" typeName="BOOL">
-			<comment>Redundant power supply healthy (if fitted)</comment>
-			<variableInit value="TRUE"></variableInit>
-		</variables>
-		<variables name="Inp_CommOK" typeName="BOOL">
-			<comment>Drop communications healthy (remote drops)</comment>
-			<variableInit value="TRUE"></variableInit>
-		</variables>
-		<variables name="Inp_SlotOK" typeName="ARRAY[0..11] OF BOOL">
-			<comment>Module in slot n healthy (from T_IOCard Sts_OK)</comment>
-		</variables>
-		<variables name="Sts_OK" typeName="BOOL">
-			<comment>Power, communications and every used slot healthy</comment>
-		</variables>
-		<variables name="Sts_NumFaulted" typeName="INT">
-			<comment>Number of used slots not healthy</comment>
-		</variables>
-		<variables name="Sts_SlotWord" typeName="WORD">
-			<comment>Faulted used slots packed (bit n = slot n), for SCADA</comment>
-		</variables>
-		<variables name="Sts_NE107" typeName="INT">
-			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
-		</variables>
-		<variables name="Alm_PSFault" typeName="T_Alarm">
-			<comment>Power supply fault</comment>
-		</variables>
-		<variables name="Alm_PSRedFault" typeName="T_Alarm">
-			<comment>Redundant power supply fault</comment>
-		</variables>
-		<variables name="Alm_CommLoss" typeName="T_Alarm">
-			<comment>Drop communications lost</comment>
-		</variables>
-		<variables name="Alm_SlotFault" typeName="T_Alarm">
-			<comment>One or more modules faulted</comment>
-		</variables>
-	</structure>
-</DDTSource>
-<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>ISA-88 equipment phase: Part 1 state model, commands, modes, parameters, reports</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -3361,7 +3209,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Unit" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+<DDTSource DDTName="T_Unit" version="1.00" dateTime="dt#2026-10-21-03:08:45">
 	<comment>ISA-88 unit: allocation, batch identity, procedural and equipment state</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
