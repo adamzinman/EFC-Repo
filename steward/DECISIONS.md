@@ -25,3 +25,4 @@ Approved items from the design review. Phase 3 builds from this list.
 | 19 | 2026-10-21 | Bypass from the HMI by one Supervisor+ with a mandatory reason (BypassConfirm) is the rule; the Controls Standard "Online Changes and Forces" two-person / MOC requirement is amended to exempt HMI bypasses made this way (forces and logic changes keep MOC). |
 | 20 | 2026-10-21 | Station setpoints (dw_Station): Operator+, audit-logged. |
 | 21 | 2026-10-21 | Propose PCLib types T_Station, T_IOCard, T_IORack (last type gaps). |
+| 22 | 2026-10-21 | HTML mockup work (steward/previews) is delegated to a Sonnet subagent: `.claude/agents/mockup-builder.md`. |
