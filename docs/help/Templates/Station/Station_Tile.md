@@ -2,7 +2,7 @@
 
 Covers `Templates/Station/Station_Tile`.
 Source: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/Station_Tile/view.json` (same content as the copy in `imported/EFC_StationFaceplates/`).
-Dynamic window it opens: `Docks/Station` (see [Docks/Station](../../Docks/Station.md); that page is not yet in `docs/help`).
+Dynamic window it opens: `Docks/Station` (see [Docks/Station](../../Docks/Station.md)).
 Related template: [Station_Fill](Station_Fill.md).
 
 ## Overview
@@ -337,4 +337,3 @@ All members are read by the view. Each is relative to `tagPath`. Types and comme
 - **Target of 0 or less.** The bar scale falls back to 1.0 (`scale = tgt * 1.08 if tgt > 0 else 1.0`). So any net of 1.0 or more fills the bar, whatever the units. Whether the bar should be hidden in that case is not defined in the repo.
 - **Fixed units text.** The pressure unit `psig` is fixed in the view. The weight fallback `kg` is used when `Cfg_EU` is empty, even though the PCLib comment lists `kg, lb`.
 - **Naming.** `docs/station-faceplates.md` calls the instance type `DDT_Station`. The PCLib type and the `efc.ui` mapping use `T_Station`.
-- **Dock page.** The link to `Docks/Station` points to a page that is not yet in `docs/help/Docks/`.

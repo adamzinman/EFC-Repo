@@ -735,4 +735,3 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **Drive fault code depends on `Sts_Fault`.** The fault code row is shown only when `Sts_Fault` is true. PCLib defines `Sts_Fault` as "any fault present" and `Sts_Tripped` as "tripped - reset required", but does not say whether a trip also sets `Sts_Fault`. If it does not, the code row is hidden while the banner shows TRIPPED. Open question.
 - **Parameter and style class names** (`Alarm/Critical/Unacked` and similar, `Button/Toggle/On`, `Button/Momentary`, etc.) are style classes defined elsewhere. Their appearance was not checked.
 - **Level thresholds** come from the constants in `efc.ui` (`OPERATOR=1`, `MAINT=2`, `SUPERVISOR=3`, `ENGINEER=4`). The dock uses 4 for Configuration editing, which matches `ENGINEER`.
-- **Template page not yet written.** The link to `../Templates/Rotating/VFD.md` points to a page that is not yet present under `docs/help/Templates/Rotating/`.

@@ -688,4 +688,3 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **Priority names differ from PCLib.** The dock maps `Cfg_Priority` 1 to `Critical`. The PCLib `T_Alarm` comment says 1 = Emergency. Both use the same style-class name pattern, so the displayed name may be wrong if the comment is the intent.
 - **Parameter and style class names** (`Alarm/Critical/Unacked` and similar, `Button/Toggle/On`, `Button/Momentary`, etc.) are style classes defined elsewhere. Their appearance was not checked.
 - **Level thresholds** come from the constants in `efc.ui` (`OPERATOR=1`, `MAINT=2`, `SUPERVISOR=3`, `ENGINEER=4`). The dock uses 4 for Configuration editing, which matches `ENGINEER`.
-- **Template page not yet written.** The link to `../Templates/HeatTransfer/Heater_Electric.md` points to a page that is not yet present under `docs/help/Templates/`.
