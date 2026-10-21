@@ -364,6 +364,7 @@ def heater():
     vw = View(); m = vw.m
     rd = ready_expr(vw)
     pwr = f"{m('Cfg_CtrlType')} > 0"
+    amps = f"{m('Cfg_RatedAmps')} > 0"                 # Cfg_RatedAmps = 0 means no current monitoring
     ctype = f"case(toInt({m('Cfg_CtrlType')}), 0, 'On/off', 1, 'Time-proportioned (SSR)', 2, 'SCR phase angle', '?')"
     return window("Docks/Heater", "T_Heater", vw, [
         header(vw),
@@ -374,10 +375,12 @@ def heater():
         mode_section(vw),
         commands(vw, [("ON", "Cmd_On", "Button/Start", OP, rd), ("OFF", "Cmd_Off", "Button/Stop", OP, None),
                       ("RESET", "Cmd_Reset", "Button/Default", OP, None)],
-                 extra=[entry(vw, "Pwr", "Power demand", "Cmd_Pwr", OP, "%", enabled=rd, show=pwr)]),
+                 extra=[label("ResetHint", "High-limit trip resets at the limit device.", "Text/Micro Text/Color/Muted"),
+                        entry(vw, "Pwr", "Power demand", "Cmd_Pwr", OP, "%", enabled=rd, show=pwr)]),
         section("Values", "Values", [row("Type", "Control", ctype), row("Dem", "Power demand", fmt(m("Val_PwrDemand")), "'%'", show=pwr),
                                      row("Duty", "Duty", fmt(m("Val_Duty")), "'%'", show=pwr), row("Pwr", "Power", fmt(m("Val_Power")), "'kW'"),
-                                     row("Cur", "Current", fmt(m("Val_Current")), "'A'"), row("Load", "Load", fmt(m("Val_LoadPct"), "0"), "'%'"),
+                                     row("Cur", "Current", fmt(m("Val_Current")), "'A'", show=amps), row("Load", "Load", fmt(m("Val_LoadPct"), "0"), "'%'", show=amps),
+                                     row("HiLim", "High limit OK", f"if({m('Inp_HiLimitOK')}, 'Yes', 'No')"),
                                      row("NE107", "Diagnostics", ne107(vw))]),
         intlk("Perm", "Permissives", "Perm"), intlk("Intlk", "Interlocks", "Intlk"),
         alarms(vw, [("Alm_HiLimit", "High-limit trip"), ("Alm_Shorted", "Shorted SSR/SCR"), ("Alm_LoadFail", "Element load failure"),

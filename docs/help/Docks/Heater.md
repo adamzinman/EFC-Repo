@@ -21,16 +21,17 @@ The operator and maintenance dynamic window for an electric heater (T_Heater). I
 
 **Mode.** The mode text shows the highest of OOS, MAINT, MAN, else AUTO. The four toggle buttons highlight the active mode. AUTO and MAN are visible at level 1 and above, and MAINT and OOS at level 2 and above. None of the four has an `enabled` binding, so they are always clickable when visible. Each writes a one-shot `Mode/Cmd_*`. MAINT and OOS are audited.
 
-**Commands** (level 1 and above). Three buttons and one power-demand entry:
+**Commands** (level 1 and above). Three buttons, a static line and one power-demand entry:
 
 - `ON` (`B0`) writes `Cmd_On`. Enabled only when all of these are true: `Mode/Sts_Man`, `Sts_Avail`, not `Sts_Intlk`, not `Sts_Local`, not `Sts_NotPerm`. It does not check `Sts_On`, `Sts_Tripped`, `Sts_Fault`, `Sts_HiLimit` or `Mode/Sts_OOS`.
 - `OFF` (`B1`) writes `Cmd_Off`. It has **no enable condition**.
 - `RESET` (`B2`) writes `Cmd_Reset`. It has **no enable condition**, so it is clickable outside MAN.
+- A static line under the buttons (`ResetHint`) reads "High-limit trip resets at the limit device." It has no binding.
 - **Power demand** (`Cmd_Pwr`, REAL, %) is a bidirectional entry. It is visible at level 1 and above only when `Cfg_CtrlType` is greater than 0 (types 1 and 2). It uses the same enable as ON.
 
 A hint line states "Enabled in MAN, available, permitted, not interlocked, not LOCAL". This is true for ON and the power-demand entry only. See Notes.
 
-**Values** (all levels). Control (`Cfg_CtrlType` as text: `On/off`, `Time-proportioned (SSR)`, `SCR phase angle`, else `?`), Power demand (`Val_PwrDemand`, %, only when `Cfg_CtrlType` > 0), Duty (`Val_Duty`, %, only when `Cfg_CtrlType` > 0), Power (`Val_Power`, kW), Current (`Val_Current`, A), Load (`Val_LoadPct`, %), Diagnostics (NE107 text for `Sts_NE107`: 0 `NE107 OK`, 1 `NE107 F`, 2 `NE107 C`, 3 `NE107 S`, 4 `NE107 M`).
+**Values** (all levels). Control (`Cfg_CtrlType` as text: `On/off`, `Time-proportioned (SSR)`, `SCR phase angle`, else `?`), Power demand (`Val_PwrDemand`, %, only when `Cfg_CtrlType` > 0), Duty (`Val_Duty`, %, only when `Cfg_CtrlType` > 0), Power (`Val_Power`, kW), Current (`Val_Current`, A, only when `Cfg_RatedAmps` > 0), Load (`Val_LoadPct`, %, only when `Cfg_RatedAmps` > 0), High limit OK (`Inp_HiLimitOK`, `Yes` or `No`), Diagnostics (NE107 text for `Sts_NE107`: 0 `NE107 OK`, 1 `NE107 F`, 2 `NE107 C`, 3 `NE107 S`, 4 `NE107 M`).
 
 **Permissives and interlocks.** Two embedded `Docks/Parts/IntlkList` views get `tagPath + '/Perm'` and `tagPath + '/Intlk'`, with titles "Permissives" and "Interlocks". Their content is described in [Parts/IntlkList.md](Parts/IntlkList.md).
 
@@ -66,13 +67,14 @@ Both have `paramDirection: input` and `persistent: true`. No output parameters.
 
 #### Tag mirrors (`custom.m_*`)
 
-There are 61 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The display bindings read tag values through these mirrors. The setpoint and configuration entries bind their tags directly (see Bindings reference).
+There are 62 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The display bindings read tag values through these mirrors. The setpoint and configuration entries bind their tags directly (see Bindings reference).
 
 | Group | Members |
 |---|---|
 | Mode | `Mode/Sts_Man`, `Mode/Sts_OOS`, `Mode/Sts_Maint`, `Mode/Sts_Auto` |
 | Status / other | `Sts_Avail`, `Sts_Intlk`, `Sts_Local`, `Sts_NotPerm`, `Sts_HiLimit`, `Sts_Tripped`, `Sts_Fault`, `Sts_Heating`, `Sts_On`, `Sts_Off`, `Sts_Sim`, `Sts_NE107` |
 | Values | `Val_PwrDemand`, `Val_Duty`, `Val_Power`, `Val_Current`, `Val_LoadPct` |
+| Inputs | `Inp_HiLimitOK` |
 | Config | `Cfg_CtrlType`, `Cfg_Tag`, `Cfg_Desc`, `Cfg_CycleTime`, `Cfg_MinPulse`, `Cfg_PwrMin`, `Cfg_PwrMax`, `Cfg_PwrRate`, `Cfg_RatedKW`, `Cfg_RatedAmps`, `Cfg_LoadFailPct`, `Cfg_LeakAmps`, `Cfg_FbkTime` |
 | Alarms | `Alm_HiLimit/Sts_Active`, `Alm_HiLimit/Sts_Unack`, `Alm_HiLimit/Cfg_Priority`, `Alm_Shorted/Sts_Active`, `Alm_Shorted/Sts_Unack`, `Alm_Shorted/Cfg_Priority`, `Alm_LoadFail/Sts_Active`, `Alm_LoadFail/Sts_Unack`, `Alm_LoadFail/Cfg_Priority`, `Alm_FailOn/Sts_Active`, `Alm_FailOn/Sts_Unack`, `Alm_FailOn/Cfg_Priority`, `Alm_FailOff/Sts_Active`, `Alm_FailOff/Sts_Unack`, `Alm_FailOff/Cfg_Priority`, `Alm_ScrFault/Sts_Active`, `Alm_ScrFault/Sts_Unack`, `Alm_ScrFault/Cfg_Priority`, `Alm_IntlkTrip/Sts_Active`, `Alm_IntlkTrip/Sts_Unack`, `Alm_IntlkTrip/Cfg_Priority` |
 | Runtime | `Run/Val_RunHrs`, `Run/Val_Starts`, `Run/Val_StartsLastHr`, `Run/Val_HrsSinceMaint`, `Run/Sts_MaintDue` |
@@ -93,7 +95,7 @@ None.
 
 ## Bindings reference
 
-Total: **182 bindings**: 62 at view root (all `custom.*`, including 1 `property` binding with a transform) and 120 on components. Types: 112 `expr`, 69 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 120.
+Total: **186 bindings**: 63 at view root (all `custom.*`, including 1 `property` binding with a transform) and 123 on components. Types: 115 `expr`, 70 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 123.
 
 ### View root
 
@@ -157,10 +159,13 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Values/Body/Duty/EU | `props.text` | expr | `'%'` | Text content |
 | root/Values/Body/Pwr/Val | `props.text` | expr | `numberFormat({view.custom.m_Val_Power}, '#,##0.0')` | Text content |
 | root/Values/Body/Pwr/EU | `props.text` | expr | `'kW'` | Text content |
+| root/Values/Body/Cur | `position.display` | expr | `{view.custom.m_Cfg_RatedAmps} > 0` | Shown while expression is true |
 | root/Values/Body/Cur/Val | `props.text` | expr | `numberFormat({view.custom.m_Val_Current}, '#,##0.0')` | Text content |
 | root/Values/Body/Cur/EU | `props.text` | expr | `'A'` | Text content |
+| root/Values/Body/Load | `position.display` | expr | `{view.custom.m_Cfg_RatedAmps} > 0` | Shown while expression is true |
 | root/Values/Body/Load/Val | `props.text` | expr | `numberFormat({view.custom.m_Val_LoadPct}, '0')` | Text content |
 | root/Values/Body/Load/EU | `props.text` | expr | `'%'` | Text content |
+| root/Values/Body/HiLim/Val | `props.text` | expr | `if({view.custom.m_Inp_HiLimitOK}, 'Yes', 'No')` | Text content |
 | root/Values/Body/NE107/Val | `props.text` | expr | `case(toInt({view.custom.m_Sts_NE107}), 0, 'NE107 OK', 1, 'NE107 F', 2, 'NE107 C', 3, 'NE107 S', 4, 'NE107 M', '')` | Text content |
 
 ### `root/Perm`
@@ -443,6 +448,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Val_Power` | read | REAL | Estimated power (kW) = Val_Duty x Cfg_RatedKW, or from current |
 | `Val_Current` | read | REAL | Heater current (A) |
 | `Val_LoadPct` | read | REAL | Measured current as % of expected at the present duty |
+| `Inp_HiLimitOK` | read | BOOL | Independent excess-temperature limit healthy (hardwired, latching; PLC monitors only) |
 | `Sts_NE107` | read | INT | NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M) |
 | `Alm_HiLimit/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_HiLimit/Sts_Unack` | read | BOOL | Alarm unacknowledged |
@@ -536,6 +542,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
         - `B0` (ia.input.button)
         - `B1` (ia.input.button)
         - `B2` (ia.input.button)
+      - `ResetHint` (ia.display.label)
       - `Pwr` (ia.container.flex)
         - `Lbl` (ia.display.label)
         - `Entry` (ia.input.numeric-entry-field)
@@ -568,6 +575,9 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
         - `Lbl` (ia.display.label)
         - `Val` (ia.display.label)
         - `EU` (ia.display.label)
+      - `HiLim` (ia.container.flex)
+        - `Lbl` (ia.display.label)
+        - `Val` (ia.display.label)
       - `NE107` (ia.container.flex)
         - `Lbl` (ia.display.label)
         - `Val` (ia.display.label)
@@ -699,9 +709,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 
 ## Notes and open questions
 
-- **RESET does not say that a high limit resets at the device.** `Sts_HiLimit` is defined in PCLib as "excess-temperature limit tripped (reset at the limit device)". The banner shows HIGH LIMIT, and RESET (`Cmd_Reset`, level 1 and above, no enable) is always clickable. The view gives no indication that the limit device must be reset first. Whether the PLC's `Cmd_Reset` clears `Sts_HiLimit` is not in this file. Open question.
-- **The hardwired limit's health is not displayed.** `Inp_HiLimitOK` ("independent excess-temperature limit healthy, hardwired, latching") is not bound. The dock shows the limit only after it has tripped (`Sts_HiLimit`).
-- **Current and Load rows are always shown.** PCLib defines `Cfg_RatedAmps` = 0 as "no current monitoring". The Current row, the Load row and the element-load and shorted alarms are still shown for such a heater, with values that cannot be measured. Consider hiding them when `Cfg_RatedAmps` is 0. Open question.
+- **Element-load and shorted alarms are still listed when `Cfg_RatedAmps` is 0.** The Current and Load rows are hidden for a heater with no current monitoring, but the alarm list still shows the element-load and shorted alarms, which cannot trip without a current measurement. Open question.
 - **The hint line is not accurate.** It says the commands are "Enabled in MAN, available, permitted, not interlocked, not LOCAL". That is true for ON and the power-demand entry only. OFF and RESET have no enable.
 - **ON does not check the heater state.** ON is enabled while the heater is on, tripped, faulted or at high limit, so it can write `Cmd_On` in those states. OFF and RESET are clickable at all times at level 1 and above.
 - **Control-type rows.** The power-demand entry, Power demand row and Duty row are shown only when `Cfg_CtrlType` > 0. For an on/off heater (type 0) the dock shows ON, OFF and RESET only. The entry's writes are hidden, not blocked, for type 0.
