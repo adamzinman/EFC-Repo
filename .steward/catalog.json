@@ -1,0 +1,6612 @@
+{
+ "items": {
+  "EFC_AnalogIndicators:project:project.json": {
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "has_project_json": true,
+   "hash": "96b5d2354a2d",
+   "kind": "project",
+   "meta": {
+    "description": "Analog indicator templates A-D + Indicator/Analog style classes. Merge into EFC_Styles / EFC_ProcessValues via Designer File > Import.",
+    "enabled": true,
+    "inheritable": true,
+    "parent": "EFC_Styles",
+    "title": "EFC_AnalogIndicators"
+   }
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/Card": {
+   "bytes": 332,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#bdbdbd",
+    "#f4f4f4"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "01d6852d0ca6",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/CardCompact": {
+   "bytes": 332,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#bdbdbd",
+    "#f4f4f4"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d1db95d1e53c",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/Chip": {
+   "bytes": 408,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "rgba(0,0,0,0.25)"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a60a1cbc632c",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/ChipBad": {
+   "bytes": 157,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#b000b0",
+    "#ededed"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a2ddace13d43",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/Desc": {
+   "bytes": 270,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#5a5a5a"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "3b2837ab499d",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/DescTitle": {
+   "bytes": 297,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "fb0d3c04a0ca",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/Header": {
+   "bytes": 359,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "1ed7bf4b53da",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/Scale": {
+   "bytes": 283,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#4d4d4d"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "fa12e5cd0552",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/Track": {
+   "bytes": 209,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#c4c4c4",
+    "rgba(0,0,0,0.18)"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e994acbbfe01",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/ValueBox": {
+   "bytes": 397,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#bdbdbd",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e7f42a80723e",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/ZoneIdeal": {
+   "bytes": 93,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#9db4d0"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a01bfad6b402",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/ZoneL": {
+   "bytes": 93,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#c4c4c4"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ad02647d83ee",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/ZoneLL": {
+   "bytes": 93,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#a6a6a6"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ad8b64703a74",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:style:Indicator/Analog/ZoneNormal": {
+   "bytes": 93,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "1ef47cb0be59",
+   "kind": "style"
+  },
+  "EFC_AnalogIndicators:view:EFC/AnalogIndicator/A_RangeBar": {
+   "bound_classes": 7,
+   "bytes": 35322,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Indicator/Analog/Card",
+    "Indicator/Analog/Chip",
+    "Indicator/Analog/Desc",
+    "Indicator/Analog/Scale",
+    "Indicator/Analog/Track",
+    "Indicator/Analog/ValueBox",
+    "Indicator/Analog/ZoneIdeal",
+    "Indicator/Analog/ZoneNormal",
+    "Text/Mod/Right",
+    "Text/TagName",
+    "Text/Units"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f",
+    "#6e6e6e",
+    "#d50000",
+    "#ff7a00",
+    "#ffd200"
+   ],
+   "default_size": {
+    "height": 120,
+    "width": 256
+   },
+   "doc_hash": "2a2986079d71",
+   "docks": [],
+   "file": "projects/EFC_AnalogIndicators/com.inductiveautomation.perspective/views/EFC/AnalogIndicator/A_RangeBar/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2a2986079d71",
+   "inline_styles": 3,
+   "inline_where": [
+    "root",
+    "ValueRow",
+    "Pointer"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-13T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "Format": {
+     "default": "#,##0.0",
+     "dir": "input"
+    },
+    "LabelMode": {
+     "default": "Both",
+     "dir": "input"
+    },
+    "ShowMinMax": {
+     "default": true,
+     "dir": "input"
+    },
+    "TagPath": {
+     "default": "[default]KPI/KPI_101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_AnalogIndicators:view:EFC/AnalogIndicator/B_PointerScale": {
+   "bound_classes": 6,
+   "bytes": 41738,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Indicator/Analog/Card",
+    "Indicator/Analog/Chip",
+    "Indicator/Analog/Desc",
+    "Indicator/Analog/Scale",
+    "Indicator/Analog/Track",
+    "Indicator/Analog/ValueBox",
+    "Indicator/Analog/ZoneIdeal",
+    "Indicator/Analog/ZoneNormal",
+    "Text/Mod/Center",
+    "Text/Mod/Right",
+    "Text/TagName",
+    "Text/Units"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f",
+    "#6e6e6e",
+    "#d50000",
+    "#ff7a00",
+    "#ffd200"
+   ],
+   "default_size": {
+    "height": 330,
+    "width": 128
+   },
+   "doc_hash": "84e3af0dc0b2",
+   "docks": [],
+   "file": "projects/EFC_AnalogIndicators/com.inductiveautomation.perspective/views/EFC/AnalogIndicator/B_PointerScale/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "84e3af0dc0b2",
+   "inline_styles": 5,
+   "inline_where": [
+    "root",
+    "Scale",
+    "Pointer",
+    "ValueRow"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-13T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "Format": {
+     "default": "#,##0.0",
+     "dir": "input"
+    },
+    "ShowLimitType": {
+     "default": true,
+     "dir": "input"
+    },
+    "ShowLimitValue": {
+     "default": true,
+     "dir": "input"
+    },
+    "TagPath": {
+     "default": "[default]KPI/KPI_101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_AnalogIndicators:view:EFC/AnalogIndicator/C_CompactRow": {
+   "bound_classes": 6,
+   "bytes": 31587,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Indicator/Analog/CardCompact",
+    "Indicator/Analog/Chip",
+    "Indicator/Analog/Track",
+    "Indicator/Analog/ValueBox",
+    "Indicator/Analog/ZoneIdeal",
+    "Indicator/Analog/ZoneNormal",
+    "Text/TagName",
+    "Text/Units"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f",
+    "#6e6e6e",
+    "#d50000",
+    "#ff7a00",
+    "#ffd200"
+   ],
+   "default_size": {
+    "height": 46,
+    "width": 200
+   },
+   "doc_hash": "3ce32d145bae",
+   "docks": [],
+   "file": "projects/EFC_AnalogIndicators/com.inductiveautomation.perspective/views/EFC/AnalogIndicator/C_CompactRow/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "3ce32d145bae",
+   "inline_styles": 4,
+   "inline_where": [
+    "root",
+    "Top",
+    "ValueRow",
+    "Pointer"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-13T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "Format": {
+     "default": "#,##0.0",
+     "dir": "input"
+    },
+    "Header": {
+     "default": "Tag",
+     "dir": "input"
+    },
+    "TagPath": {
+     "default": "[default]KPI/KPI_101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_AnalogIndicators:view:EFC/AnalogIndicator/D_MiniColumn": {
+   "bound_classes": 6,
+   "bytes": 32003,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Indicator/Analog/Card",
+    "Indicator/Analog/Chip",
+    "Indicator/Analog/Header",
+    "Indicator/Analog/Track",
+    "Indicator/Analog/ValueBox",
+    "Indicator/Analog/ZoneIdeal",
+    "Indicator/Analog/ZoneNormal",
+    "Text/Mod/Center",
+    "Text/Size/M",
+    "Text/Units"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f",
+    "#6e6e6e",
+    "#d50000",
+    "#ff7a00",
+    "#ffd200"
+   ],
+   "default_size": {
+    "height": 200,
+    "width": 64
+   },
+   "doc_hash": "39b30d94ea1f",
+   "docks": [],
+   "file": "projects/EFC_AnalogIndicators/com.inductiveautomation.perspective/views/EFC/AnalogIndicator/D_MiniColumn/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "39b30d94ea1f",
+   "inline_styles": 4,
+   "inline_where": [
+    "root",
+    "Bar",
+    "Pointer"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-13T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "Format": {
+     "default": "#,##0.0",
+     "dir": "input"
+    },
+    "Header": {
+     "default": "Tag",
+     "dir": "input"
+    },
+    "TagPath": {
+     "default": "[default]KPI/KPI_101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_AnalogIndicators:view:EFC/AnalogIndicator/_Examples": {
+   "bound_classes": 0,
+   "bytes": 5274,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Container/Screen"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 420,
+    "width": 900
+   },
+   "doc_hash": "261aaa9ff873",
+   "docks": [],
+   "file": "projects/EFC_AnalogIndicators/com.inductiveautomation.perspective/views/EFC/AnalogIndicator/_Examples/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "261aaa9ff873",
+   "inline_styles": 4,
+   "inline_where": [
+    "root",
+    "C",
+    "D"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-13T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {},
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:project:project.json": {
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "has_project_json": true,
+   "hash": "a61be3cf0090",
+   "kind": "project",
+   "meta": {
+    "description": "EFC Ignition library v7.0 (generated): ISA-101 styles, P&ID device templates, process values, PID loops, x80 I/O card and station faceplates in one project. Import standalone, or make it the parent of an HMI project.",
+    "enabled": true,
+    "inheritable": true,
+    "parent": "",
+    "title": "EFC_Library"
+   }
+  },
+  "EFC_Library:style:Alarm/Banner": {
+   "bytes": 319,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#7f7f7f",
+    "#f0f0f0"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "542ae7509c7d",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Critical/Fill": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#d50000",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "129937e6385d",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Critical/Outline": {
+   "bytes": 134,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#d50000"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "c784efc96027",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Critical/Text": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#ff4d4d"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "012d7a71ca73",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Critical/Unacked": {
+   "bytes": 268,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#d50000",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5c1759fd375c",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Diagnostic/Fill": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#6e6e6e",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "70344ec9ece2",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Diagnostic/Outline": {
+   "bytes": 134,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#6e6e6e"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "70362bc1300e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Diagnostic/Text": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#9a9a9a"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "7fecd1954f6c",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Diagnostic/Unacked": {
+   "bytes": 268,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#6e6e6e",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "c078a8b7a137",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/High/Fill": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#ff7a00"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "3d5c9a504131",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/High/Outline": {
+   "bytes": 134,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#ff7a00"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "64f86ffcc814",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/High/Text": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#ff7a00"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "62d2124a904c",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/High/Unacked": {
+   "bytes": 268,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#ff7a00"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a3b153bcbe43",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Low/Fill": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "386f281d23ad",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Low/Outline": {
+   "bytes": 134,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#00a3e0"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "491e271a2fe5",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Low/Text": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a4a0887d9246",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Low/Unacked": {
+   "bytes": 268,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "cf20b8291688",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Medium/Fill": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#ffd200"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "80a998e6ea52",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Medium/Outline": {
+   "bytes": 134,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#ffd200"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "08a517533f46",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Medium/Text": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#ffd200"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "f12519b51e6e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Medium/Unacked": {
+   "bytes": 268,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#ffd200"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5947a689f3b5",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Mod/Blink": {
+   "bytes": 116,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8ae078716b77",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Mod/ClearedUnacked": {
+   "bytes": 83,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "803b80c4292e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Status/ClearedUnacked": {
+   "bytes": 186,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#595959",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "aa8d37a82e4f",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Status/Shelved": {
+   "bytes": 191,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#5a5a5a",
+    "#7f7f7f",
+    "#ededed"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "40e83b814274",
+   "kind": "style"
+  },
+  "EFC_Library:style:Alarm/Status/Suppressed": {
+   "bytes": 124,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#9a9a9a"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "f309bb9f0e63",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Band/Alarm": {
+   "bytes": 139,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#c9c9c9"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "35e2009138bf",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Band/Critical": {
+   "bytes": 139,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#d50000"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ec4c7482e2f7",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Band/Deadband": {
+   "bytes": 107,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "rgba(31,78,153,0.18)"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "09d10f0571e5",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Band/Diagnostic": {
+   "bytes": 139,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7a7a7a",
+    "#7f7f7f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ec21b28f4560",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Band/Extreme": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#a6a6a6"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a5561fff1b11",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Band/High": {
+   "bytes": 139,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#ff7a00"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "1540a3447236",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Band/Low": {
+   "bytes": 139,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#00a3e0",
+    "#7f7f7f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8bd0ff6b6937",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Band/Medium": {
+   "bytes": 139,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#ffd200"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "66ec8d28d6ce",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Band/Normal": {
+   "bytes": 139,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2503f86f19df",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Fill": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#8c8c8c"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "89b63829d49a",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/FillAlarm": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#ff7a00"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ed56b89baa9d",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Frame": {
+   "bytes": 236,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "dbde65905c7b",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Marker": {
+   "bytes": 124,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f4e99"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "22d5a850f566",
+   "kind": "style"
+  },
+  "EFC_Library:style:Bar/Track": {
+   "bytes": 135,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "036d104b6161",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Command": {
+   "bytes": 1007,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#595959",
+    "#7a7a7a",
+    "#c8c8c8",
+    "#d6d6d6",
+    "#e3e3e3",
+    "#e4e4e4",
+    "#eaeaea",
+    "#ececec",
+    "#f4f4f4",
+    "#fafafa",
+    "rgba(0,0,0,0.22)",
+    "rgba(0,0,0,0.35)"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "4153d44a2c5e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Danger": {
+   "bytes": 1040,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#e6e6e6",
+    "#ededed",
+    "#f5f5f5"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8d627a499ea8",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Default": {
+   "bytes": 976,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#e6e6e6",
+    "#ededed",
+    "#f5f5f5"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "f3f686c02694",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Icon": {
+   "bytes": 1043,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#ededed",
+    "#f5f5f5"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b3bdc5543cc0",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Large": {
+   "bytes": 977,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#e6e6e6",
+    "#ededed",
+    "#f5f5f5"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "14c90dbd242a",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Momentary": {
+   "bytes": 1016,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#ededed",
+    "#f5f5f5",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "975b938d2bd3",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Nav": {
+   "bytes": 1072,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#ededed",
+    "#f5f5f5"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e9784e7b011c",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/NavActive": {
+   "bytes": 1064,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#4d4d4d",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#ededed",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a45cbadac594",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Primary": {
+   "bytes": 1008,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f4e99",
+    "#333333",
+    "#4d4d4d",
+    "#595959",
+    "#666666",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#ededed",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "222d905229b6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Small": {
+   "bytes": 976,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#e6e6e6",
+    "#ededed",
+    "#f5f5f5"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ae37db7db651",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Start": {
+   "bytes": 976,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#ededed",
+    "#f5f5f5",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ef487eaee8eb",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Stop": {
+   "bytes": 976,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#9e9e9e",
+    "#a6a6a6",
+    "#b0b0b0",
+    "#bfbfbf",
+    "#ededed"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "0d4a9d2b0f9e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Subtle": {
+   "bytes": 1050,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#ededed",
+    "#f5f5f5"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "088050205173",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Tab": {
+   "bytes": 1018,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#cfcfcf",
+    "#ededed",
+    "#f5f5f5"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "6e76ff2b7f98",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/TabActive": {
+   "bytes": 1035,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#e6e6e6",
+    "#ededed"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "38f1790ac351",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Toggle/Off": {
+   "bytes": 976,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#9e9e9e",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#ededed",
+    "#f5f5f5"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2bf48a557622",
+   "kind": "style"
+  },
+  "EFC_Library:style:Button/Toggle/On": {
+   "bytes": 1040,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#595959",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#bfbfbf",
+    "#ededed",
+    "#f5f5f5",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8894c6fba748",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/AlarmBar": {
+   "bytes": 138,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#bdbdbd"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "4e934afe59dd",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Card": {
+   "bytes": 196,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#a6a6a6",
+    "#f0f0f0"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b03dea75996d",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Divider/Horizontal": {
+   "bytes": 155,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "4f0531605dc4",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Divider/Vertical": {
+   "bytes": 155,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "adc27bbd3234",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Faceplate": {
+   "bytes": 163,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#a6a6a6",
+    "#f0f0f0"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "4f6136ff70e3",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/GroupBox": {
+   "bytes": 160,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5af2f1e98bdf",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Header": {
+   "bytes": 171,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#c4c4c4"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "3ec46ab69281",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Inset": {
+   "bytes": 303,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#cfcfcf",
+    "#f0f0f0"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5d54b932659a",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Menu": {
+   "bytes": 140,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#cccccc"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "9dc0b6e72d02",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Panel": {
+   "bytes": 196,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#a6a6a6",
+    "#e6e6e6"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "0fa536708c1e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Popup": {
+   "bytes": 188,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#595959",
+    "#e6e6e6",
+    "rgba(0,0,0,0.35)"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "7b49f9d0664e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/PopupHeader": {
+   "bytes": 211,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#595959",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "c08e6d96900f",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/ProcessArea": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#d9d9d9"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "378e4d3100d1",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Screen": {
+   "bytes": 186,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#d9d9d9"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "1c54591b1641",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Scroll": {
+   "bytes": 114,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b459c46d0092",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/Toolbar": {
+   "bytes": 168,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#a6a6a6",
+    "#e6e6e6"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "f5ccda02f3ab",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/TrendPanel": {
+   "bytes": 139,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#e0e0e0"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2157800491df",
+   "kind": "style"
+  },
+  "EFC_Library:style:Container/ValueBox": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#a6a6a6",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "0203cfc25232",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Badge": {
+   "bytes": 302,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#595959",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "9497a60b3c77",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Interlock": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#c00000"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d8ab2885543a",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/InterlockBadge": {
+   "bytes": 434,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#c00000",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "407a9749332f",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/LED/Fault": {
+   "bytes": 223,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#3a3a3a",
+    "#595959"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5f9f55e1e645",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/LED/Off": {
+   "bytes": 223,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#595959",
+    "#9e9e9e"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "aeab2ff7784f",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/LED/On": {
+   "bytes": 223,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#595959",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "12947985d100",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/LED/Unknown": {
+   "bytes": 224,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#b000b0",
+    "#ededed"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ba1de8828137",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Permissive": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#8f4500"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "bbc3cff94994",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/PermissiveBadge": {
+   "bytes": 434,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#000000",
+    "#1f1f1f",
+    "#f08000"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "354fe7d6ed20",
+   "kind": "style"
+  },
+  "EFC_Library:style:Input/Check": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "6b45b4fc47e6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Input/Dropdown": {
+   "bytes": 798,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#595959",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#ededed",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b9881f3da399",
+   "kind": "style"
+  },
+  "EFC_Library:style:Input/Field": {
+   "bytes": 798,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f4e99",
+    "#595959",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#ededed",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a7f732ad73ec",
+   "kind": "style"
+  },
+  "EFC_Library:style:Input/Invalid": {
+   "bytes": 862,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f4e99",
+    "#3a3a3a",
+    "#595959",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#ededed",
+    "#fff3f3"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "bea05f3deed6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Input/Pending": {
+   "bytes": 890,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f4e99",
+    "#595959",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#ededed",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5ed1707ad04b",
+   "kind": "style"
+  },
+  "EFC_Library:style:Input/ReadOnly": {
+   "bytes": 734,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#ededed"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ea7c6d32539b",
+   "kind": "style"
+  },
+  "EFC_Library:style:Input/Setpoint": {
+   "bytes": 826,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f4e99",
+    "#595959",
+    "#7f7f7f",
+    "#9a9a9a",
+    "#a6a6a6",
+    "#ededed",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "6f2aae6e9976",
+   "kind": "style"
+  },
+  "EFC_Library:style:Mode/Auto": {
+   "bytes": 483,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#7f7f7f",
+    "#e6e6e6"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e6707c130e07",
+   "kind": "style"
+  },
+  "EFC_Library:style:Mode/Cascade": {
+   "bytes": 483,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#7f7f7f",
+    "#e6e6e6"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e6707c130e07",
+   "kind": "style"
+  },
+  "EFC_Library:style:Mode/Local": {
+   "bytes": 544,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#595959",
+    "#7f7f7f",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8ea15b8196bf",
+   "kind": "style"
+  },
+  "EFC_Library:style:Mode/Manual": {
+   "bytes": 515,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#595959",
+    "#7f7f7f",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b855524e7451",
+   "kind": "style"
+  },
+  "EFC_Library:style:Mode/ManualJoined": {
+   "bytes": 103,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a6ac1f9fe6af",
+   "kind": "style"
+  },
+  "EFC_Library:style:Mode/ManualSplit": {
+   "bytes": 519,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#3a3a3a",
+    "#ffd200"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b91f479c8855",
+   "kind": "style"
+  },
+  "EFC_Library:style:Mode/ManualSplitStatus": {
+   "bytes": 274,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "daf39c0e7742",
+   "kind": "style"
+  },
+  "EFC_Library:style:Mode/Simulated": {
+   "bytes": 515,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#00695c",
+    "#7f7f7f",
+    "#d7eeeb"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "1fe3c44ac8ca",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Body": {
+   "bytes": 135,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "6e2b4620c00c",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/BodyBar": {
+   "bytes": 109,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "1bbcaa2312b8",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Card": {
+   "bytes": 390,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#8c8c8c",
+    "#b3b3b3",
+    "#ffffff",
+    "rgba(0,0,0,0.22)"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "6451a8d78c83",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Chip/Critical": {
+   "bytes": 581,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#d50000",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "87d783608eab",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Chip/Diagnostic": {
+   "bytes": 581,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7a7a7a",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "6881c1ff6c96",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Chip/Fault": {
+   "bytes": 622,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#000000",
+    "#3a3a3a",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "473a56e152c6",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Chip/High": {
+   "bytes": 581,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#ff7a00"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "56dfea34a275",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Chip/Inhibit": {
+   "bytes": 652,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#5a5a5a",
+    "#7f7f7f",
+    "#ededed"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "861feeee09bd",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Chip/Low": {
+   "bytes": 581,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d678d8c095fc",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Chip/Medium": {
+   "bytes": 581,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#ffd200"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "70e3409de8cc",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Chip/More": {
+   "bytes": 581,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#595959",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "7e070e11d560",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/ChipRow": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8c177bd6c47e",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/HeaderRow": {
+   "bytes": 164,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "82b0603b21e7",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Shell": {
+   "bytes": 212,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "9672a388bf19",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Strip/Critical": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#d50000"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "51f5610182fc",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Strip/Diagnostic": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7a7a7a"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "26e6658f4da0",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Strip/Fault": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#3a3a3a"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e1e8d275677f",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Strip/High": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#ff7a00"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ed56b89baa9d",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Strip/Low": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#00a3e0"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "557a4ec948da",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Strip/Medium": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#ffd200"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e52d830d6291",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Strip/Normal": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#a6a6a6"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a5561fff1b11",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Tag": {
+   "bytes": 387,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "177de82ed5b6",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Units": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#4d4d4d"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "36851155ee49",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/Value": {
+   "bytes": 275,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "4fc3253f2c32",
+   "kind": "style"
+  },
+  "EFC_Library:style:PV/ValueSmall": {
+   "bytes": 275,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d9382c256de9",
+   "kind": "style"
+  },
+  "EFC_Library:style:State/Fault": {
+   "bytes": 515,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#000000",
+    "#3a3a3a",
+    "#7f7f7f",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "73fa27040989",
+   "kind": "style"
+  },
+  "EFC_Library:style:State/OutOfService": {
+   "bytes": 546,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#5e5e5e",
+    "#7f7f7f",
+    "#ededed"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "1dece23880c1",
+   "kind": "style"
+  },
+  "EFC_Library:style:State/Running": {
+   "bytes": 483,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#7f7f7f",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "659b20a5fa89",
+   "kind": "style"
+  },
+  "EFC_Library:style:State/Stopped": {
+   "bytes": 483,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#7f7f7f",
+    "#9e9e9e"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "9eca992e07fe",
+   "kind": "style"
+  },
+  "EFC_Library:style:State/Transition": {
+   "bytes": 514,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#7f7f7f",
+    "#c4c4c4"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ef2b52285e41",
+   "kind": "style"
+  },
+  "EFC_Library:style:State/Unknown": {
+   "bytes": 546,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f",
+    "#b000b0",
+    "#ededed"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "02d506c315bd",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Step/Active": {
+   "bytes": 168,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "546d44065806",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Step/Done": {
+   "bytes": 168,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#595959"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "54f95a49285e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Step/Fault": {
+   "bytes": 274,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#000000",
+    "#3a3a3a",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "23ce8c55a6ea",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Step/Pending": {
+   "bytes": 168,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#a6a6a6",
+    "#cfcfcf"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "bf39514b5f16",
+   "kind": "style"
+  },
+  "EFC_Library:style:Table/Cell": {
+   "bytes": 122,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "bdc00cb0bb8c",
+   "kind": "style"
+  },
+  "EFC_Library:style:Table/CellNumeric": {
+   "bytes": 194,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d3237ccefde1",
+   "kind": "style"
+  },
+  "EFC_Library:style:Table/Header": {
+   "bytes": 324,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#7f7f7f",
+    "#cfcfcf"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5e4363c4cc2f",
+   "kind": "style"
+  },
+  "EFC_Library:style:Table/Row": {
+   "bytes": 391,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#a6a6a6",
+    "#f0f0f0",
+    "#f5f5f5"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "91aef7e536e1",
+   "kind": "style"
+  },
+  "EFC_Library:style:Table/RowAlt": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#e6e6e6"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b52c59c64cc6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Table/Selected": {
+   "bytes": 120,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f",
+    "#c9d6ea"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "9dbbd7ace2a7",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Body": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "6b45b4fc47e6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Caption": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#5a5a5a"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "4f476bebb143",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Code": {
+   "bytes": 189,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "0f0e2f717905",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Color/Default": {
+   "bytes": 84,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "bb4eeb8338d2",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Color/Disabled": {
+   "bytes": 84,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#9a9a9a"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "00b421bbdf91",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Color/Editable": {
+   "bytes": 84,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f4e99"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2bb4c5758acc",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Color/Faint": {
+   "bytes": 84,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#5a5a5a"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a1c37e482f81",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Color/Fault": {
+   "bytes": 84,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#3a3a3a"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e45b5ffb62a6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Color/Inverse": {
+   "bytes": 84,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "0398c4243631",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Color/Muted": {
+   "bytes": 84,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#4d4d4d"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "55b7b353eecc",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Header": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2c5a3e5d7657",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Label": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#4d4d4d"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8b63ecf47862",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Link": {
+   "bytes": 362,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#0f2e66",
+    "#1f4e99"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "f1fe8a22d022",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/MenuItem": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "037f8156c57c",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Micro": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#5a5a5a"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2549d31d4229",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Mod/Center": {
+   "bytes": 121,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8e11fafb6cf4",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Mod/Ellipsis": {
+   "bytes": 150,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "636970dbb844",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Mod/Italic": {
+   "bytes": 87,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2350291a72e8",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Mod/Left": {
+   "bytes": 123,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "924e95ff6574",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Mod/NoSelect": {
+   "bytes": 86,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "db9df568ebdd",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Mod/NoWrap": {
+   "bytes": 88,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "557d2667a00a",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Mod/Right": {
+   "bytes": 122,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2f2aee4b855b",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Mod/Tabular": {
+   "bytes": 102,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "0d5af23d32f4",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Mod/Underline": {
+   "bytes": 95,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ac8ffac45bf8",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Mod/Upper": {
+   "bytes": 127,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "ad1175c92dce",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Mod/Wrap": {
+   "bytes": 122,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "21c17208be80",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Size/L": {
+   "bytes": 87,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e641a444d03b",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Size/M": {
+   "bytes": 87,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "18b7db9aa97e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Size/S": {
+   "bytes": 87,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2ba7726f9305",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Size/XL": {
+   "bytes": 87,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5102f72ad3c2",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Size/XS": {
+   "bytes": 87,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8590590f7328",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Size/XXL": {
+   "bytes": 87,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "de32a918b76f",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Size/XXS": {
+   "bytes": 87,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "3566ec74f716",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Size/XXXL": {
+   "bytes": 87,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "f3f72c60dfa7",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Status": {
+   "bytes": 275,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a206a39797c6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Subheader": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "50574cf67604",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/TagName": {
+   "bytes": 239,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "697ede197370",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Title": {
+   "bytes": 206,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "7b02221a6ee9",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Units": {
+   "bytes": 237,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#4d4d4d"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "12cbabfaa5bc",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Value": {
+   "bytes": 250,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "04409896b2ee",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/ValueHero": {
+   "bytes": 250,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "c17a2d9b6f09",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/ValueLarge": {
+   "bytes": 250,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "72ed52bc3aa9",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Weight/Bold": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2f2d4cf364da",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Weight/Light": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "6eda201e0639",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Weight/Regular": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e015bda9486f",
+   "kind": "style"
+  },
+  "EFC_Library:style:Text/Weight/Semibold": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "71117941cc93",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Border": {
+   "bytes": 99,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5716718b13f1",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/BorderDashed": {
+   "bytes": 100,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#7f7f7f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "62056709de83",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Clip": {
+   "bytes": 86,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "f9d5c5449571",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Collapsed": {
+   "bytes": 339,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "58a725ff6883",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Disabled": {
+   "bytes": 145,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d1e8c2eea9f5",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Highlight": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#dce3ec"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "3507201530ed",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Pad/L": {
+   "bytes": 86,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "916c45a364cb",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Pad/M": {
+   "bytes": 86,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "3e83ba3d16b5",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Pad/None": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "51258c848b47",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Pad/S": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e0550c7ad3ab",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Pointer": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d546943a9134",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Rounded": {
+   "bytes": 91,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "9b9bb433a547",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Shadow": {
+   "bytes": 110,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "rgba(0,0,0,0.3)"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "40be68af7079",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Transparent": {
+   "bytes": 98,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8f9345a1728a",
+   "kind": "style"
+  },
+  "EFC_Library:style:Value/BadQuality": {
+   "bytes": 227,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#5a5a5a",
+    "#b000b0",
+    "#ededed"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8f41d985e8e8",
+   "kind": "style"
+  },
+  "EFC_Library:style:Value/Forced": {
+   "bytes": 161,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#00695c",
+    "#d7eeeb"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "43c6f2b5a633",
+   "kind": "style"
+  },
+  "EFC_Library:style:Value/Normal": {
+   "bytes": 250,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "04409896b2ee",
+   "kind": "style"
+  },
+  "EFC_Library:style:Value/Output": {
+   "bytes": 250,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#4d4d4d"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "39f87834451a",
+   "kind": "style"
+  },
+  "EFC_Library:style:Value/Setpoint": {
+   "bytes": 250,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#1f4e99"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "176bc5009df6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Value/Simulated": {
+   "bytes": 149,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#00695c",
+    "#d7eeeb"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "950435496600",
+   "kind": "style"
+  },
+  "EFC_Library:style:Value/Stale": {
+   "bytes": 113,
+   "changed_at": "2026-10-21 00:35",
+   "colors": [
+    "#5a5a5a"
+   ],
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a8c462118b94",
+   "kind": "style"
+  },
+  "EFC_Library:view:Styles/_Catalog": {
+   "bound_classes": 0,
+   "bytes": 126476,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Alarm/Banner",
+    "Alarm/Critical/Fill",
+    "Alarm/Critical/Outline",
+    "Alarm/Critical/Text",
+    "Alarm/Critical/Unacked",
+    "Alarm/Diagnostic/Fill",
+    "Alarm/Diagnostic/Outline",
+    "Alarm/Diagnostic/Text",
+    "Alarm/Diagnostic/Unacked",
+    "Alarm/High/Fill",
+    "Alarm/High/Outline",
+    "Alarm/High/Text",
+    "Alarm/High/Unacked",
+    "Alarm/Low/Fill",
+    "Alarm/Low/Outline",
+    "Alarm/Low/Text",
+    "Alarm/Low/Unacked",
+    "Alarm/Medium/Fill",
+    "Alarm/Medium/Outline",
+    "Alarm/Medium/Text",
+    "Alarm/Medium/Unacked",
+    "Alarm/Status/ClearedUnacked",
+    "Alarm/Status/Shelved",
+    "Alarm/Status/Suppressed",
+    "Bar/Fill",
+    "Bar/FillAlarm",
+    "Bar/Marker",
+    "Bar/Track",
+    "Button/Command",
+    "Button/Danger",
+    "Button/Default",
+    "Button/Icon",
+    "Button/Large",
+    "Button/Momentary",
+    "Button/Nav",
+    "Button/NavActive",
+    "Button/Primary",
+    "Button/Small",
+    "Button/Start",
+    "Button/Stop",
+    "Button/Subtle",
+    "Button/Tab",
+    "Button/TabActive",
+    "Button/Toggle/Off",
+    "Button/Toggle/On",
+    "Container/AlarmBar",
+    "Container/Card",
+    "Container/Divider/Horizontal",
+    "Container/Divider/Vertical",
+    "Container/Faceplate",
+    "Container/GroupBox",
+    "Container/Header",
+    "Container/Inset",
+    "Container/Menu",
+    "Container/Panel",
+    "Container/Popup",
+    "Container/PopupHeader",
+    "Container/ProcessArea",
+    "Container/Screen",
+    "Container/Scroll",
+    "Container/Toolbar",
+    "Container/TrendPanel",
+    "Container/ValueBox",
+    "Indicator/Badge",
+    "Indicator/Interlock",
+    "Indicator/InterlockBadge",
+    "Indicator/LED/Fault",
+    "Indicator/LED/Off",
+    "Indicator/LED/On",
+    "Indicator/LED/Unknown",
+    "Indicator/Permissive",
+    "Indicator/PermissiveBadge",
+    "Input/Check",
+    "Input/Dropdown",
+    "Input/Field",
+    "Input/Invalid",
+    "Input/Pending",
+    "Input/ReadOnly",
+    "Input/Setpoint",
+    "Mode/Auto",
+    "Mode/Cascade",
+    "Mode/Local",
+    "Mode/Manual",
+    "Mode/ManualJoined",
+    "Mode/ManualSplit",
+    "Mode/ManualSplitStatus",
+    "Mode/Simulated",
+    "State/Fault",
+    "State/OutOfService",
+    "State/Running",
+    "State/Stopped",
+    "State/Transition",
+    "State/Unknown",
+    "Table/Cell",
+    "Table/CellNumeric",
+    "Table/Header",
+    "Table/Row",
+    "Table/RowAlt",
+    "Table/Selected",
+    "Text/Body",
+    "Text/Caption",
+    "Text/Code",
+    "Text/Color/Default",
+    "Text/Color/Disabled",
+    "Text/Color/Editable",
+    "Text/Color/Faint",
+    "Text/Color/Fault",
+    "Text/Color/Inverse",
+    "Text/Color/Muted",
+    "Text/Header",
+    "Text/Label",
+    "Text/Link",
+    "Text/MenuItem",
+    "Text/Micro",
+    "Text/Mod/Center",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Italic",
+    "Text/Mod/Left",
+    "Text/Mod/NoSelect",
+    "Text/Mod/NoWrap",
+    "Text/Mod/Right",
+    "Text/Mod/Tabular",
+    "Text/Mod/Underline",
+    "Text/Mod/Upper",
+    "Text/Mod/Wrap",
+    "Text/Size/L",
+    "Text/Size/M",
+    "Text/Size/S",
+    "Text/Size/XL",
+    "Text/Size/XS",
+    "Text/Size/XXL",
+    "Text/Size/XXS",
+    "Text/Size/XXXL",
+    "Text/Status",
+    "Text/Subheader",
+    "Text/TagName",
+    "Text/Title",
+    "Text/Units",
+    "Text/Value",
+    "Text/ValueHero",
+    "Text/ValueLarge",
+    "Text/Weight/Bold",
+    "Text/Weight/Light",
+    "Text/Weight/Regular",
+    "Text/Weight/Semibold",
+    "Util/Border",
+    "Util/BorderDashed",
+    "Util/Clip",
+    "Util/Collapsed",
+    "Util/Disabled",
+    "Util/Highlight",
+    "Util/Pad/L",
+    "Util/Pad/M",
+    "Util/Pad/None",
+    "Util/Pad/S",
+    "Util/Pointer",
+    "Util/Rounded",
+    "Util/Shadow",
+    "Util/Transparent",
+    "Value/BadQuality",
+    "Value/Forced",
+    "Value/Normal",
+    "Value/Output",
+    "Value/Setpoint",
+    "Value/Simulated",
+    "Value/Stale"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 1080,
+    "width": 1920
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Styles/_Catalog/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e5df02b9ef3a",
+   "inline_styles": 144,
+   "inline_where": [
+    "root",
+    "Lbl_EFC_Style_Library",
+    "Sec_Text",
+    "Row_Text",
+    "Lbl_Text_1"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {},
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/HeatTransfer/HX_AirCooled": {
+   "bound_classes": 3,
+   "bytes": 20352,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#ebebeb",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "b7d72413541d",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/HeatTransfer/HX_AirCooled/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b7d72413541d",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/P101",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/HeatTransfer/Heater_Electric": {
+   "bound_classes": 3,
+   "bytes": 19361,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#ebebeb",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "5643c089dad3",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/HeatTransfer/Heater_Electric/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5643c089dad3",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/E401",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/IO/Faceplates/BMXAMI0810": {
+   "bound_classes": 1,
+   "bytes": 15287,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Icon",
+    "Container/Popup",
+    "Container/PopupHeader",
+    "Container/Toolbar",
+    "State/Running",
+    "Table/Header",
+    "Text/Caption",
+    "Text/Label",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Size/L",
+    "Text/Size/S",
+    "Text/Weight/Bold",
+    "Util/Pad/M"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 442,
+    "width": 1040
+   },
+   "doc_hash": "294899ae13f6",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Faceplates/BMXAMI0810/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "294899ae13f6",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "cardPath": {
+     "default": "[default]IO_Demo/Rack0/R0S5",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.closePopup"
+   ]
+  },
+  "EFC_Library:view:Templates/IO/Faceplates/BMXAMO0802": {
+   "bound_classes": 1,
+   "bytes": 15228,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Icon",
+    "Container/Popup",
+    "Container/PopupHeader",
+    "Container/Toolbar",
+    "State/Running",
+    "Table/Header",
+    "Text/Caption",
+    "Text/Label",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Size/L",
+    "Text/Size/S",
+    "Text/Weight/Bold",
+    "Util/Pad/M"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 442,
+    "width": 1040
+   },
+   "doc_hash": "5e507ff44fe4",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Faceplates/BMXAMO0802/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5e507ff44fe4",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "cardPath": {
+     "default": "[default]IO_Demo/Rack0/R0S5",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.closePopup"
+   ]
+  },
+  "EFC_Library:view:Templates/IO/Faceplates/BMXART0814": {
+   "bound_classes": 1,
+   "bytes": 14773,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Icon",
+    "Container/Popup",
+    "Container/PopupHeader",
+    "Container/Toolbar",
+    "State/Running",
+    "Table/Header",
+    "Text/Caption",
+    "Text/Label",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Size/L",
+    "Text/Size/S",
+    "Text/Weight/Bold",
+    "Util/Pad/M"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 442,
+    "width": 920
+   },
+   "doc_hash": "0bbb8a672322",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Faceplates/BMXART0814/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "0bbb8a672322",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "cardPath": {
+     "default": "[default]IO_Demo/Rack0/R0S5",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.closePopup"
+   ]
+  },
+  "EFC_Library:view:Templates/IO/Faceplates/BMXDDI1602": {
+   "bound_classes": 1,
+   "bytes": 11386,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Icon",
+    "Container/Popup",
+    "Container/PopupHeader",
+    "Container/Toolbar",
+    "State/Running",
+    "Text/Caption",
+    "Text/Label",
+    "Text/Mod/Ellipsis",
+    "Text/Size/L",
+    "Text/Size/S",
+    "Text/Subheader",
+    "Text/Weight/Bold",
+    "Util/Pad/S"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 302,
+    "width": 810
+   },
+   "doc_hash": "b09f5485d539",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Faceplates/BMXDDI1602/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b09f5485d539",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "cardPath": {
+     "default": "[default]IO_Demo/Rack0/R0S2",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.closePopup"
+   ]
+  },
+  "EFC_Library:view:Templates/IO/Faceplates/BMXDDI3202K": {
+   "bound_classes": 1,
+   "bytes": 14222,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Icon",
+    "Container/Popup",
+    "Container/PopupHeader",
+    "Container/Toolbar",
+    "State/Running",
+    "Text/Caption",
+    "Text/Label",
+    "Text/Mod/Ellipsis",
+    "Text/Size/L",
+    "Text/Size/S",
+    "Text/Subheader",
+    "Text/Weight/Bold",
+    "Util/Pad/S"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 492,
+    "width": 810
+   },
+   "doc_hash": "3c621fb4b94e",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Faceplates/BMXDDI3202K/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "3c621fb4b94e",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "cardPath": {
+     "default": "[default]IO_Demo/Rack0/R0S2",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.closePopup"
+   ]
+  },
+  "EFC_Library:view:Templates/IO/Faceplates/BMXDDO1602": {
+   "bound_classes": 1,
+   "bytes": 11861,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Icon",
+    "Container/Popup",
+    "Container/PopupHeader",
+    "Container/Toolbar",
+    "State/Running",
+    "Text/Caption",
+    "Text/Label",
+    "Text/Mod/Ellipsis",
+    "Text/Size/L",
+    "Text/Size/S",
+    "Text/Subheader",
+    "Text/Weight/Bold",
+    "Util/Pad/S"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 302,
+    "width": 810
+   },
+   "doc_hash": "4e1ca4d2d3f1",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Faceplates/BMXDDO1602/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "4e1ca4d2d3f1",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "cardPath": {
+     "default": "[default]IO_Demo/Rack0/R0S2",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.closePopup"
+   ]
+  },
+  "EFC_Library:view:Templates/IO/Faceplates/BMXDDO3202K": {
+   "bound_classes": 1,
+   "bytes": 14683,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Icon",
+    "Container/Popup",
+    "Container/PopupHeader",
+    "Container/Toolbar",
+    "State/Running",
+    "Text/Caption",
+    "Text/Label",
+    "Text/Mod/Ellipsis",
+    "Text/Size/L",
+    "Text/Size/S",
+    "Text/Subheader",
+    "Text/Weight/Bold",
+    "Util/Pad/S"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 492,
+    "width": 810
+   },
+   "doc_hash": "074c81c6cdb2",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Faceplates/BMXDDO3202K/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "074c81c6cdb2",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "cardPath": {
+     "default": "[default]IO_Demo/Rack0/R0S2",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.closePopup"
+   ]
+  },
+  "EFC_Library:view:Templates/IO/Faceplates/BMXDDO6402K": {
+   "bound_classes": 1,
+   "bytes": 20322,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Icon",
+    "Container/Popup",
+    "Container/PopupHeader",
+    "Container/Toolbar",
+    "State/Running",
+    "Text/Caption",
+    "Text/Label",
+    "Text/Mod/Ellipsis",
+    "Text/Size/L",
+    "Text/Size/S",
+    "Text/Subheader",
+    "Text/Weight/Bold",
+    "Util/Pad/S"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 492,
+    "width": 1620
+   },
+   "doc_hash": "9037a53ab010",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Faceplates/BMXDDO6402K/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "9037a53ab010",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "cardPath": {
+     "default": "[default]IO_Demo/Rack0/R0S2",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.closePopup"
+   ]
+  },
+  "EFC_Library:view:Templates/IO/Parts/AnalogRow_AI": {
+   "bound_classes": 3,
+   "bytes": 14920,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Bar/Fill",
+    "Bar/Track",
+    "State/Running",
+    "Table/Cell",
+    "Table/CellNumeric",
+    "Table/Row",
+    "Text/Code",
+    "Text/Mod/Ellipsis",
+    "Text/Size/M",
+    "Text/Status",
+    "Text/Units",
+    "Text/Weight/Bold"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 34,
+    "width": 1000
+   },
+   "doc_hash": "69a2ba0b2ce2",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Parts/AnalogRow_AI/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "69a2ba0b2ce2",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "alt": {
+     "default": false,
+     "dir": "input"
+    },
+    "cardPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "ch": {
+     "default": 0,
+     "dir": "input"
+    },
+    "chFolder": {
+     "default": "CH00",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/IO/Parts/AnalogRow_AO": {
+   "bound_classes": 3,
+   "bytes": 13514,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Bar/Fill",
+    "Bar/Track",
+    "State/Running",
+    "Table/Cell",
+    "Table/CellNumeric",
+    "Table/Row",
+    "Text/Code",
+    "Text/Mod/Ellipsis",
+    "Text/Size/M",
+    "Text/Units",
+    "Text/Weight/Bold"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 34,
+    "width": 1000
+   },
+   "doc_hash": "304c9085a4b1",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Parts/AnalogRow_AO/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "304c9085a4b1",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "alt": {
+     "default": false,
+     "dir": "input"
+    },
+    "cardPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "ch": {
+     "default": 0,
+     "dir": "input"
+    },
+    "chFolder": {
+     "default": "CH00",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/IO/Parts/AnalogRow_TEMP": {
+   "bound_classes": 3,
+   "bytes": 12358,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "State/Running",
+    "Table/Cell",
+    "Table/CellNumeric",
+    "Table/Row",
+    "Text/Code",
+    "Text/Mod/Ellipsis",
+    "Text/Size/M",
+    "Text/Status",
+    "Text/Units",
+    "Text/Weight/Bold"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 34,
+    "width": 1000
+   },
+   "doc_hash": "4a0ee5f6e52c",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Parts/AnalogRow_TEMP/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "4a0ee5f6e52c",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "alt": {
+     "default": false,
+     "dir": "input"
+    },
+    "cardPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "ch": {
+     "default": 0,
+     "dir": "input"
+    },
+    "chFolder": {
+     "default": "CH00",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/IO/Parts/DiscreteTile": {
+   "bound_classes": 2,
+   "bytes": 8695,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Container/Card",
+    "Indicator/LED/Off",
+    "Text/Mod/Ellipsis",
+    "Text/Size/S",
+    "Text/Size/XS",
+    "Text/Size/XXS",
+    "Text/Weight/Bold",
+    "Util/Pad/S",
+    "Util/Transparent"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 70,
+    "width": 96
+   },
+   "doc_hash": "cae352fc1a01",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Parts/DiscreteTile/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "cae352fc1a01",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "alt": {
+     "default": false,
+     "dir": "input"
+    },
+    "cardPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "ch": {
+     "default": 0,
+     "dir": "input"
+    },
+    "chFolder": {
+     "default": "CH00",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/IO/Parts/SlotTile": {
+   "bound_classes": 2,
+   "bytes": 7613,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Container/Card",
+    "State/Running",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Wrap",
+    "Text/Size/S",
+    "Text/Size/XS",
+    "Text/Size/XXS",
+    "Text/Weight/Bold",
+    "Util/Pad/S",
+    "Util/Pointer",
+    "Util/Transparent"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 150,
+    "width": 132
+   },
+   "doc_hash": "209f09e84905",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Parts/SlotTile/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "209f09e84905",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "cardPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "model": {
+     "default": "",
+     "dir": "input"
+    },
+    "slot": {
+     "default": 0,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 1,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.openPopup"
+   ]
+  },
+  "EFC_Library:view:Templates/IO/RackOverview": {
+   "bound_classes": 0,
+   "bytes": 4412,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Container/Panel",
+    "Text/Caption",
+    "Text/Header",
+    "Util/Pad/S"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 220,
+    "width": 1200
+   },
+   "doc_hash": "66b7fa9e5c67",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/RackOverview/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "66b7fa9e5c67",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {
+    "rackPath": {
+     "default": "[default]IO_Demo/Rack0",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.browse",
+    "system.tag.readBlocking",
+    "system.util.getLogger"
+   ]
+  },
+  "EFC_Library:view:Templates/IO/_Demo": {
+   "bound_classes": 0,
+   "bytes": 1828,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Container/Screen",
+    "Text/Caption",
+    "Text/Mod/Wrap",
+    "Text/Title",
+    "Util/Pad/L"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 400,
+    "width": 1400
+   },
+   "doc_hash": "7fe42c716e0e",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/_Demo/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "7fe42c716e0e",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-06T22:29:13Z",
+   "modified_by": "build_io.py",
+   "params": {},
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/Loops/Loop_B1_Bar": {
+   "bound_classes": 0,
+   "bytes": 25327,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [],
+   "colors": [
+    "#1e2329",
+    "#1f4e99",
+    "#222222",
+    "#2b3138",
+    "#2f6fd6",
+    "#454d55",
+    "#6b737c",
+    "#7c858f",
+    "#c3c8ce",
+    "#dce6f7",
+    "#e6e9ec",
+    "#e9ecef",
+    "#f7f8f9",
+    "#ff8c00",
+    "#ffffff",
+    "rgba(20,30,40,0.08)"
+   ],
+   "default_size": {
+    "height": 156,
+    "width": 150
+   },
+   "doc_hash": "887050027d90",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B1_Bar/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "887050027d90",
+   "inline_styles": 65,
+   "inline_where": [
+    "root",
+    "header",
+    "title",
+    "tag",
+    "mode"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-05T12:00:00Z",
+   "modified_by": "admin",
+   "params": {
+    "label": {
+     "default": "",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "[default]PID_Demo/TIC101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 1,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.openPopup"
+   ]
+  },
+  "EFC_Library:view:Templates/Loops/Loop_B2_Horizontal": {
+   "bound_classes": 0,
+   "bytes": 27104,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [],
+   "colors": [
+    "#1e2329",
+    "#1f4e99",
+    "#222222",
+    "#2b3138",
+    "#2f6fd6",
+    "#454d55",
+    "#6b737c",
+    "#7c858f",
+    "#c3c8ce",
+    "#cbd2d9",
+    "#dce6f7",
+    "#e6e9ec",
+    "#e9ecef",
+    "#f7f8f9",
+    "#ff8c00",
+    "#ffffff",
+    "rgba(20,30,40,0.08)"
+   ],
+   "default_size": {
+    "height": 92,
+    "width": 260
+   },
+   "doc_hash": "a26904439afc",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B2_Horizontal/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a26904439afc",
+   "inline_styles": 67,
+   "inline_where": [
+    "root",
+    "header",
+    "title",
+    "tag",
+    "mode"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-05T12:00:00Z",
+   "modified_by": "admin",
+   "params": {
+    "label": {
+     "default": "",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "[default]PID_Demo/TIC101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 1,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.openPopup"
+   ]
+  },
+  "EFC_Library:view:Templates/Loops/Loop_B3_Sparkline": {
+   "bound_classes": 0,
+   "bytes": 31649,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [],
+   "colors": [
+    "#1e2329",
+    "#1f4e99",
+    "#222222",
+    "#2b3138",
+    "#2f6fd6",
+    "#454d55",
+    "#6b737c",
+    "#7c858f",
+    "#8a4a00",
+    "#c3c8ce",
+    "#dce6f7",
+    "#e3e6e9",
+    "#e6e9ec",
+    "#e9ecef",
+    "#f7f8f9",
+    "#ff8c00",
+    "#ffe7cc",
+    "#ffffff",
+    "rgba(20,30,40,0.08)"
+   ],
+   "default_size": {
+    "height": 184,
+    "width": 172
+   },
+   "doc_hash": "0b6cf8db13bf",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B3_Sparkline/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "0b6cf8db13bf",
+   "inline_styles": 76,
+   "inline_where": [
+    "root",
+    "header",
+    "title",
+    "tag",
+    "mode"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-05T12:00:00Z",
+   "modified_by": "admin",
+   "params": {
+    "label": {
+     "default": "",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "[default]PID_Demo/TIC101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 1,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.openPopup",
+    "system.tag.queryTagHistory"
+   ]
+  },
+  "EFC_Library:view:Templates/Loops/Loop_B4_Column": {
+   "bound_classes": 0,
+   "bytes": 23334,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [],
+   "colors": [
+    "#1e2329",
+    "#1f4e99",
+    "#222222",
+    "#2b3138",
+    "#2f6fd6",
+    "#454d55",
+    "#6b737c",
+    "#7c858f",
+    "#a9b0b8",
+    "#c3c8ce",
+    "#dce6f7",
+    "#e6e9ec",
+    "#e9ecef",
+    "#f7f8f9",
+    "#ff8c00",
+    "#ffffff",
+    "rgba(20,30,40,0.08)"
+   ],
+   "default_size": {
+    "height": 196,
+    "width": 104
+   },
+   "doc_hash": "56c824edbe82",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B4_Column/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "56c824edbe82",
+   "inline_styles": 57,
+   "inline_where": [
+    "root",
+    "title",
+    "tag",
+    "chipRow",
+    "mode"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-05T12:00:00Z",
+   "modified_by": "admin",
+   "params": {
+    "label": {
+     "default": "",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "[default]PID_Demo/TIC101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 1,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.openPopup"
+   ]
+  },
+  "EFC_Library:view:Templates/Loops/Popups/LoopConfig": {
+   "bound_classes": 0,
+   "bytes": 84969,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [],
+   "colors": [
+    "#1e2329",
+    "#2b3138",
+    "#2f6fd6",
+    "#3a424a",
+    "#454d55",
+    "#4a535c",
+    "#6a5300",
+    "#6b737c",
+    "#a9b0b8",
+    "#c3c8ce",
+    "#e3e6e9",
+    "#e9ecef",
+    "#f7f8f9",
+    "#fff7e0",
+    "#ffffff",
+    "rgba(20,30,40,0.18)"
+   ],
+   "default_size": {
+    "height": 480,
+    "width": 440
+   },
+   "doc_hash": "b3d50c5445fc",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Popups/LoopConfig/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b3d50c5445fc",
+   "inline_styles": 316,
+   "inline_where": [
+    "root",
+    "header",
+    "tag",
+    "desc",
+    "close"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-05T12:00:00Z",
+   "modified_by": "admin",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/TIC101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.closePopup",
+    "system.tag.queryTagHistory",
+    "system.tag.readBlocking",
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Loops/_Demo": {
+   "bound_classes": 0,
+   "bytes": 7556,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [],
+   "colors": [
+    "#3a424a",
+    "#dadde1"
+   ],
+   "default_size": {
+    "height": 858,
+    "width": 1000
+   },
+   "doc_hash": "632b481be30f",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/_Demo/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "632b481be30f",
+   "inline_styles": 17,
+   "inline_where": [
+    "root",
+    "title_B1_Bar",
+    "title_B2_Horizontal",
+    "title_B3_Sparkline",
+    "title_B4_Column"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-05T12:00:00Z",
+   "modified_by": "admin",
+   "params": {},
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/ProcessValues/PV_RangeBar": {
+   "bound_classes": 13,
+   "bytes": 55385,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Bar/Band/Alarm",
+    "Bar/Band/Extreme",
+    "Bar/Band/Normal",
+    "Bar/Frame",
+    "PV/BodyBar",
+    "PV/Card",
+    "PV/Chip/Inhibit",
+    "PV/Chip/More",
+    "PV/ChipRow",
+    "PV/HeaderRow",
+    "PV/Shell",
+    "PV/Tag",
+    "PV/Units",
+    "PV/ValueSmall",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/NoWrap"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 54,
+    "width": 104
+   },
+   "doc_hash": "335540806ec6",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/ProcessValues/PV_RangeBar/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "335540806ec6",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.alarm.queryStatus"
+   ]
+  },
+  "EFC_Library:view:Templates/ProcessValues/PV_StatusStrip": {
+   "bound_classes": 10,
+   "bytes": 39423,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "PV/Body",
+    "PV/Card",
+    "PV/Chip/Inhibit",
+    "PV/Chip/More",
+    "PV/ChipRow",
+    "PV/HeaderRow",
+    "PV/Shell",
+    "PV/Strip/Normal",
+    "PV/Tag",
+    "PV/Units",
+    "PV/Value",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/NoWrap"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 54,
+    "width": 104
+   },
+   "doc_hash": "5f08403bea03",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/ProcessValues/PV_StatusStrip/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5f08403bea03",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.alarm.queryStatus"
+   ]
+  },
+  "EFC_Library:view:Templates/ProcessValues/_Demo": {
+   "bound_classes": 0,
+   "bytes": 27304,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Container/Screen",
+    "Input/Check",
+    "Input/Setpoint",
+    "Text/Caption",
+    "Text/Label",
+    "Text/Mod/Wrap",
+    "Text/Title",
+    "Util/Pad/L",
+    "Util/Pad/S"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 700,
+    "width": 1200
+   },
+   "doc_hash": "52fc065347fd",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/ProcessValues/_Demo/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "52fc065347fd",
+   "inline_styles": 16,
+   "inline_where": [
+    "root",
+    "Row_PT001",
+    "PV_StatusStrip_PT001",
+    "PV_RangeBar_PT001",
+    "Row_PT002"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {},
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/Rotating/Agitator": {
+   "bound_classes": 3,
+   "bytes": 19040,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "1056e2a8744e",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Agitator/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "1056e2a8744e",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/P101",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Rotating/Blower": {
+   "bound_classes": 3,
+   "bytes": 18896,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "36a82dcab0a7",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Blower/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "36a82dcab0a7",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/B301",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Rotating/Compressor_Centrifugal": {
+   "bound_classes": 3,
+   "bytes": 18280,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "7e7b9e9b85c6",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Compressor_Centrifugal/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "7e7b9e9b85c6",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/K202",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Rotating/Compressor_Diaphragm": {
+   "bound_classes": 3,
+   "bytes": 18680,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#333333",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "e54f068a042b",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Compressor_Diaphragm/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "e54f068a042b",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/K201",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Rotating/Motor": {
+   "bound_classes": 3,
+   "bytes": 18326,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "7d49e229c3f6",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Motor/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "7d49e229c3f6",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/P101",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Rotating/Pump_Centrifugal": {
+   "bound_classes": 3,
+   "bytes": 19462,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#333333",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#ebebeb",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "d95bbcd61685",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Pump_Centrifugal/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d95bbcd61685",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/P101",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Rotating/Pump_Diaphragm": {
+   "bound_classes": 3,
+   "bytes": 21838,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#ebebeb",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "22f60aeba7f7",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Pump_Diaphragm/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "22f60aeba7f7",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/P101",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Rotating/Pump_PD_Rotary": {
+   "bound_classes": 3,
+   "bytes": 21897,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#ebebeb",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "aa43baea8644",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Pump_PD_Rotary/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "aa43baea8644",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/P102",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Rotating/Pump_Reciprocating": {
+   "bound_classes": 3,
+   "bytes": 20317,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#ebebeb",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "87e8325f81dd",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Pump_Reciprocating/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "87e8325f81dd",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/P101",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Rotating/Pump_Vacuum": {
+   "bound_classes": 3,
+   "bytes": 19292,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#333333",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "78450ab22f82",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Pump_Vacuum/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "78450ab22f82",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/PV501",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Station/Station_Fill": {
+   "bound_classes": 5,
+   "bytes": 91126,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Bar/Band/Deadband",
+    "Bar/Fill",
+    "Bar/Marker",
+    "Bar/Track",
+    "Button/Default",
+    "Button/Primary",
+    "Button/Toggle/Off",
+    "Container/Card",
+    "Container/Panel",
+    "Container/ValueBox",
+    "Input/Setpoint",
+    "State/Stopped",
+    "Text/Body",
+    "Text/Caption",
+    "Text/Label",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/NoWrap",
+    "Text/Mod/Right",
+    "Text/Mod/Upper",
+    "Text/Subheader",
+    "Text/Units",
+    "Text/Value",
+    "Text/ValueHero",
+    "Text/Weight/Semibold",
+    "Util/Clip",
+    "Value/Setpoint"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 400,
+    "width": 300
+   },
+   "doc_hash": "37c6fd4aa709",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/Station_Fill/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "37c6fd4aa709",
+   "inline_styles": 33,
+   "inline_where": [
+    "root",
+    "Header",
+    "Chip",
+    "Body",
+    "Target"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-06T20:37:54Z",
+   "modified_by": "build_station.py",
+   "params": {
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking",
+    "system.util.invokeAsynchronous"
+   ]
+  },
+  "EFC_Library:view:Templates/Station/Station_Sidebar": {
+   "bound_classes": 33,
+   "bytes": 178480,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Bar/Band/Deadband",
+    "Bar/Fill",
+    "Bar/Marker",
+    "Bar/Track",
+    "Button/Default",
+    "Button/Primary",
+    "Button/Toggle/Off",
+    "Container/Faceplate",
+    "Container/Popup",
+    "Container/PopupHeader",
+    "Container/ValueBox",
+    "Indicator/InterlockBadge",
+    "Indicator/LED/Off",
+    "Input/Setpoint",
+    "State/Stopped",
+    "Station/Step/Pending",
+    "Text/Body",
+    "Text/Caption",
+    "Text/Color/Default",
+    "Text/Color/Editable",
+    "Text/Color/Inverse",
+    "Text/Label",
+    "Text/Mod/Center",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Italic",
+    "Text/Mod/NoWrap",
+    "Text/Mod/Right",
+    "Text/Mod/Upper",
+    "Text/Subheader",
+    "Text/Units",
+    "Text/Value",
+    "Text/ValueHero",
+    "Text/ValueLarge",
+    "Text/Weight/Bold",
+    "Text/Weight/Semibold",
+    "Util/Clip",
+    "Util/Pointer",
+    "Value/Setpoint"
+   ],
+   "colors": [
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 800,
+    "width": 300
+   },
+   "doc_hash": "77cdbfa09987",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/Station_Sidebar/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "77cdbfa09987",
+   "inline_styles": 78,
+   "inline_where": [
+    "Header",
+    "Body",
+    "Status",
+    "Chip",
+    "Msg"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-06T20:37:54Z",
+   "modified_by": "build_station.py",
+   "params": {
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.closeDock",
+    "system.tag.writeBlocking",
+    "system.util.invokeAsynchronous"
+   ]
+  },
+  "EFC_Library:view:Templates/Station/Station_Tile": {
+   "bound_classes": 3,
+   "bytes": 28348,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Bar/Fill",
+    "Bar/Marker",
+    "Bar/Track",
+    "Container/Card",
+    "State/Stopped",
+    "Text/Caption",
+    "Text/Color/Default",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Text/Units",
+    "Text/ValueLarge",
+    "Text/Weight/Semibold",
+    "Util/Clip",
+    "Util/Pointer",
+    "Value/Setpoint"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 96,
+    "width": 220
+   },
+   "doc_hash": "2c36169e52d8",
+   "docks": [
+    {
+     "dock": "StationSidebar",
+     "event": "dom.onClick"
+    }
+   ],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/Station_Tile/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2c36169e52d8",
+   "inline_styles": 8,
+   "inline_where": [
+    "root",
+    "Scale",
+    "Chip",
+    "Target",
+    "Pt"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-06T20:37:54Z",
+   "modified_by": "build_station.py",
+   "params": {
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.openDock"
+   ]
+  },
+  "EFC_Library:view:Templates/Station/_Demo": {
+   "bound_classes": 0,
+   "bytes": 10562,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Container/Screen",
+    "Text/Subheader",
+    "Text/Title",
+    "Util/Pad/L"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 1080,
+    "width": 1920
+   },
+   "doc_hash": "67d317e5d2fd",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/_Demo/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "67d317e5d2fd",
+   "inline_styles": 15,
+   "inline_where": [
+    "root",
+    "Left",
+    "Tiles",
+    "Station_Tile_Station_1",
+    "Station_Tile_Station_2"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-06T20:37:54Z",
+   "modified_by": "build_station.py",
+   "params": {},
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/Valves/Valve_Control": {
+   "bound_classes": 1,
+   "bytes": 16202,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#1f4e99",
+    "#262626",
+    "#3a3a3a",
+    "#4d4d4d",
+    "#595959",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 100,
+    "width": 120
+   },
+   "doc_hash": "33b272d9d389",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Valves/Valve_Control/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "33b272d9d389",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/FV101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/Valves/Valve_MOV": {
+   "bound_classes": 3,
+   "bytes": 19567,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 100,
+    "width": 120
+   },
+   "doc_hash": "00c0decbee89",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Valves/Valve_MOV/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "00c0decbee89",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/XV103",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Valves/Valve_OnOff_Pneumatic": {
+   "bound_classes": 3,
+   "bytes": 19209,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 100,
+    "width": 120
+   },
+   "doc_hash": "39387f972800",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Valves/Valve_OnOff_Pneumatic/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "39387f972800",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/XV101",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/Valves/Valve_Solenoid": {
+   "bound_classes": 3,
+   "bytes": 19613,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 100,
+    "width": 120
+   },
+   "doc_hash": "25f1bb7771fc",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Valves/Valve_Solenoid/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "25f1bb7771fc",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "[default]PID_Demo/XV102",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Templates/_Demo": {
+   "bound_classes": 0,
+   "bytes": 29594,
+   "changed_at": "2026-10-21 00:35",
+   "classes": [
+    "Container/Panel",
+    "Container/Screen",
+    "Text/Caption",
+    "Text/Header",
+    "Text/Mod/Center"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 1080,
+    "width": 1920
+   },
+   "doc_hash": "2db0baca5495",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/_Demo/view.json",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "2db0baca5495",
+   "inline_styles": 47,
+   "inline_where": [
+    "root",
+    "Sec",
+    "Grid",
+    "Item",
+    "V"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {},
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "pclib:udt:PCLib/T_AI": {
+   "bytes": 13404,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "8f163a2c155e",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Cfg_EU",
+    "Inp_Raw",
+    "Inp_ChFault",
+    "Cfg_RawMin",
+    "Cfg_RawMax",
+    "Cfg_EUMin",
+    "Cfg_EUMax",
+    "Cfg_FiltTC",
+    "Cfg_SqrtExtract",
+    "Cfg_LoCutoff",
+    "Cfg_BadLoPct",
+    "Cfg_BadHiPct",
+    "Cfg_BadAction",
+    "Cfg_SubstPV",
+    "Sim_En",
+    "Sim_PV",
+    "Val_PV",
+    "Val_PVPct",
+    "Val_ROC",
+    "Sts_Bad",
+    "Sts_URng",
+    "Sts_ORng",
+    "Sts_Sim",
+    "Sts_Subst",
+    "Sts_Quality",
+    "Inp_NE107",
+    "Sts_NE107",
+    "Alm_HH",
+    "Alm_H",
+    "Alm_L",
+    "Alm_LL",
+    "Alm_ROC",
+    "Alm_Bad"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Agitator": {
+   "bytes": 6019,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a53e0048791e",
+   "kind": "udt",
+   "members": [
+    "Drv",
+    "Inp_Level",
+    "Inp_SealOK",
+    "Inp_GbxTemp",
+    "Inp_Vib",
+    "Cfg_MinLevel",
+    "Cfg_LvlHyst",
+    "Cfg_TripLowLvl",
+    "Out_IntlkOK",
+    "Out_PermOK",
+    "Sts_LvlOK",
+    "Alm_LowLvlRun",
+    "Alm_Seal",
+    "Alm_GbxTemp",
+    "Alm_Vib"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Alarm": {
+   "bytes": 10861,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d6f402f15509",
+   "kind": "udt",
+   "members": [
+    "Inp_Cond",
+    "Inp_Suppress",
+    "Cfg_En",
+    "Cfg_Latch",
+    "Cfg_NoAck",
+    "Cfg_OnDly",
+    "Cfg_OffDly",
+    "Cfg_Priority",
+    "Cfg_Class",
+    "Cfg_MaxShelf",
+    "Cmd_Ack",
+    "Cmd_Reset",
+    "Cmd_Shelve",
+    "Cmd_Unshelve",
+    "Cmd_RemoveSvc",
+    "Cmd_ReturnSvc",
+    "Sts_Active",
+    "Sts_Unack",
+    "Sts_Shelved",
+    "Sts_Suppressed",
+    "Sts_OOS",
+    "Sts_State",
+    "Sts_ShelfLeft",
+    "Val_Count",
+    "Val_LastActive",
+    "Val_LastRTN"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_AlmLim": {
+   "bytes": 11616,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d7f89854cae2",
+   "kind": "udt",
+   "members": [
+    "Cfg_Lim",
+    "Cfg_DB",
+    "Inp_Cond",
+    "Inp_Suppress",
+    "Cfg_En",
+    "Cfg_Latch",
+    "Cfg_NoAck",
+    "Cfg_OnDly",
+    "Cfg_OffDly",
+    "Cfg_Priority",
+    "Cfg_Class",
+    "Cfg_MaxShelf",
+    "Cmd_Ack",
+    "Cmd_Reset",
+    "Cmd_Shelve",
+    "Cmd_Unshelve",
+    "Cmd_RemoveSvc",
+    "Cmd_ReturnSvc",
+    "Sts_Active",
+    "Sts_Unack",
+    "Sts_Shelved",
+    "Sts_Suppressed",
+    "Sts_OOS",
+    "Sts_State",
+    "Sts_ShelfLeft",
+    "Val_Count",
+    "Val_LastActive",
+    "Val_LastRTN"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Analyzer": {
+   "bytes": 11273,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "40604249fdcb",
+   "kind": "udt",
+   "members": [
+    "AI",
+    "Cfg_AnType",
+    "Inp_Temp",
+    "Inp_DevFault",
+    "Inp_DevMaint",
+    "Inp_DevWarn",
+    "Inp_NE107",
+    "Sts_NE107",
+    "Inp_SampleOK",
+    "Inp_Slope",
+    "Cfg_HoldMax",
+    "Cfg_CalDays",
+    "Cfg_FrozenTime",
+    "Cfg_FrozenBand",
+    "Cmd_Hold",
+    "Cmd_Release",
+    "Cmd_CalDone",
+    "Val_PV",
+    "Val_HeldPV",
+    "Val_LastCal",
+    "Val_DaysSinceCal",
+    "Sts_Hold",
+    "Sts_CalDue",
+    "Alm_DevFault",
+    "Alm_NoSample",
+    "Alm_Frozen",
+    "Alm_CalDue",
+    "Alm_HoldLong"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_CValve": {
+   "bytes": 15792,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b2f999d06a5b",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Mode",
+    "Inp_PosFbk",
+    "Inp_FbkBad",
+    "Inp_ZSC",
+    "Inp_IntlkOK",
+    "Inp_IOFault",
+    "Cfg_HasFbk",
+    "Cfg_FailPos",
+    "Cfg_IntlkPos",
+    "Cfg_OutMin",
+    "Cfg_OutMax",
+    "Cfg_RateUp",
+    "Cfg_RateDn",
+    "Cfg_TightShut",
+    "Cfg_ReverseAct",
+    "Cfg_RawMin",
+    "Cfg_RawMax",
+    "Cfg_DevLim",
+    "Cfg_DevTime",
+    "Cmd_ManPos",
+    "Cmd_Reset",
+    "Prog_Pos",
+    "Out_CV",
+    "Out_CVRaw",
+    "Sim_En",
+    "Val_Demand",
+    "Val_Pos",
+    "Val_Dev",
+    "Val_Travel",
+    "Val_Reversals",
+    "Sts_Closed",
+    "Sts_Intlk",
+    "Sts_RateLim",
+    "Sts_Fault",
+    "Sts_Sim",
+    "Inp_NE107",
+    "Sts_NE107",
+    "Alm_PosDev",
+    "Alm_FbkBad",
+    "Alm_IntlkTrip"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Compressor": {
+   "bytes": 11297,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "419971ece0e8",
+   "kind": "udt",
+   "members": [
+    "Drv",
+    "Inp_SuctPress",
+    "Inp_DischPress",
+    "Inp_DischTemp",
+    "Inp_OilPress",
+    "Inp_OilTemp",
+    "Inp_Vib",
+    "Inp_LoadFbk",
+    "Cfg_LoadPress",
+    "Cfg_UnloadPress",
+    "Cfg_MinRun",
+    "Cfg_MinStop",
+    "Cfg_IdleTime",
+    "Cfg_OilBypass",
+    "Out_Load",
+    "Out_BlowOff",
+    "Out_IntlkOK",
+    "Sts_Loaded",
+    "Sts_Idle",
+    "Sts_AntiCycle",
+    "Sts_State",
+    "Val_TimeToStart",
+    "Val_PressRatio",
+    "Alm_HiDischPress",
+    "Alm_HiDischTemp",
+    "Alm_LoOilPress",
+    "Alm_HiOilTemp",
+    "Alm_Vib",
+    "Alm_LoSuct"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Conveyor": {
+   "bytes": 11000,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "564b1f99feeb",
+   "kind": "udt",
+   "members": [
+    "Mtr",
+    "Inp_MotionOK",
+    "Inp_PullCordOK",
+    "Inp_AlignLOK",
+    "Inp_AlignROK",
+    "Inp_ChuteOK",
+    "Inp_BeltRipOK",
+    "Inp_DownstrRun",
+    "Inp_Rate",
+    "Cfg_UseDownstr",
+    "Cfg_WarnTime",
+    "Cfg_MotionDly",
+    "Cfg_PurgeTime",
+    "Out_Horn",
+    "Out_Beacon",
+    "Out_IntlkOK",
+    "Out_PermOK",
+    "Out_StartReq",
+    "Sts_Warning",
+    "Sts_Purging",
+    "Sts_State",
+    "Val_Total",
+    "Alm_ZeroSpd",
+    "Alm_PullCord",
+    "Alm_Misalign",
+    "Alm_Chute",
+    "Alm_BeltRip",
+    "Alm_DownstrStop"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_DI": {
+   "bytes": 7247,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "1a0cdeab0e1d",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Inp_Raw",
+    "Inp_ChFault",
+    "Cfg_Invert",
+    "Cfg_OnDly",
+    "Cfg_OffDly",
+    "Cfg_AlmMode",
+    "Cfg_TrueText",
+    "Cfg_FalseText",
+    "Sim_En",
+    "Sim_Val",
+    "Val",
+    "Sts_Bad",
+    "Sts_Sim",
+    "Sts_NE107",
+    "Val_Transitions",
+    "Alm",
+    "Alm_Bad"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_DValve": {
+   "bytes": 15756,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "c9321c9c1f49",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Mode",
+    "Inp_ZSO",
+    "Inp_ZSC",
+    "Inp_Remote",
+    "Inp_IntlkOK",
+    "Inp_PermOK",
+    "Inp_IOFault",
+    "Cfg_HasZSO",
+    "Cfg_HasZSC",
+    "Cfg_FailOpen",
+    "Cfg_IntlkOpen",
+    "Cfg_DualCoil",
+    "Cfg_TravelTime",
+    "Cmd_Open",
+    "Cmd_Close",
+    "Cmd_Reset",
+    "Prog_Open",
+    "Prog_Close",
+    "Out_Open",
+    "Out_Close",
+    "Sim_En",
+    "Sts_Opened",
+    "Sts_Closed",
+    "Sts_Opening",
+    "Sts_Closing",
+    "Sts_Avail",
+    "Sts_Intlk",
+    "Sts_NotPerm",
+    "Sts_Local",
+    "Sts_Fault",
+    "Sts_Sim",
+    "Sts_State",
+    "Sts_NE107",
+    "Alm_FailOpen",
+    "Alm_FailClose",
+    "Alm_PosConflict",
+    "Alm_Uncmd",
+    "Alm_IntlkTrip",
+    "Run"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_DosePump": {
+   "bytes": 11845,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "3444a1b94a56",
+   "kind": "udt",
+   "members": [
+    "Mtr",
+    "Cfg_RateEU",
+    "Cfg_DoseMode",
+    "Cfg_MaxRate",
+    "Cfg_CalFactor",
+    "Cfg_DoseConc",
+    "Cfg_ChemConc",
+    "Cfg_ChemSG",
+    "Cfg_TankCap",
+    "Cfg_NoFlowDly",
+    "Inp_PaceFlow",
+    "Inp_TrimPct",
+    "Inp_FlowOK",
+    "Inp_ChemLvl",
+    "Inp_Leak",
+    "Cmd_Rate",
+    "Prog_Rate",
+    "Cmd_CalDone",
+    "Out_Rate",
+    "Out_IntlkOK",
+    "Val_RateSP",
+    "Val_Total",
+    "Val_Today",
+    "Val_DaysLeft",
+    "Val_LastCal",
+    "Sts_RateLimited",
+    "Alm_NoFlow",
+    "Alm_LoChem",
+    "Alm_LoLoChem",
+    "Alm_Leak",
+    "Alm_RateLim"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_ESD": {
+   "bytes": 49556,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "aedddddb6d59",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Cfg_Level",
+    "Inp_OK",
+    "Inp_UpstrOK",
+    "Inp_ManTripOK",
+    "Inp_ResetPB",
+    "Inp_MOSKey",
+    "Inp_FinalSafe",
+    "Cfg_Used",
+    "Cfg_InDesc",
+    "Cfg_MOSAllowed",
+    "Cfg_MOSMax",
+    "Cfg_FieldReset",
+    "Cfg_SafeTime",
+    "Cmd_ManTrip",
+    "Cmd_Reset",
+    "Cmd_MOS",
+    "Cmd_MOSOff",
+    "Out_Healthy",
+    "Sts_Tripped",
+    "Sts_ResetReady",
+    "Sts_FirstOut",
+    "Sts_MOS",
+    "Sts_NumMOS",
+    "Sts_InWord",
+    "Sts_LatchWord",
+    "Sts_MOSWord",
+    "Val_TripTime",
+    "Val_TripCount",
+    "Alm_Trip",
+    "Alm_FailSafe",
+    "Alm_MOS",
+    "Alm_MOSLong"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_GasDet": {
+   "bytes": 14821,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "29c4525be6a3",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Cfg_Gas",
+    "Cfg_EU",
+    "Inp_Raw",
+    "Inp_ChFault",
+    "Cfg_RawMin",
+    "Cfg_RawMax",
+    "Cfg_RangeMax",
+    "Cfg_O2Mode",
+    "Cfg_FaultmA",
+    "Cfg_MaintLomA",
+    "Cfg_MaintHimA",
+    "Cfg_OverRngmA",
+    "Cfg_InhibitMax",
+    "Cmd_Inhibit",
+    "Cmd_Uninhibit",
+    "Cmd_Reset",
+    "Sim_En",
+    "Sim_mA",
+    "Out_A1",
+    "Out_A2",
+    "Out_A3",
+    "Out_Fault",
+    "Val_mA",
+    "Val_Conc",
+    "Val_Peak",
+    "Sts_Inhibit",
+    "Sts_DetMaint",
+    "Sts_InhibitLeft",
+    "Sts_Sim",
+    "Inp_NE107",
+    "Sts_NE107",
+    "Alm_A1",
+    "Alm_A2",
+    "Alm_A3",
+    "Alm_Fault",
+    "Alm_OverRng",
+    "Alm_InhibitLong"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_HeatEx": {
+   "bytes": 11909,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "05ae732aa212",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Inp_HotInT",
+    "Inp_HotOutT",
+    "Inp_ColdInT",
+    "Inp_ColdOutT",
+    "Inp_HotFlow",
+    "Inp_ColdFlow",
+    "Inp_HotDP",
+    "Inp_ColdDP",
+    "Cfg_HotCp",
+    "Cfg_ColdCp",
+    "Cfg_CounterFlow",
+    "Cfg_DesignUA",
+    "Cfg_MinFlow",
+    "Cfg_CalcFilt",
+    "Val_DutyHot",
+    "Val_DutyCold",
+    "Val_Duty",
+    "Val_HeatBal",
+    "Val_LMTD",
+    "Val_UA",
+    "Val_Clean",
+    "Val_Approach",
+    "Val_Effect",
+    "Sts_CalcValid",
+    "Alm_Fouling",
+    "Alm_HotDP",
+    "Alm_ColdDP",
+    "Alm_HeatBal",
+    "Alm_HiOutT"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Intlk": {
+   "bytes": 52799,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "0562b4bda83a",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Inp_Cond",
+    "Cfg_Used",
+    "Cfg_CondDesc",
+    "Cfg_Bypassable",
+    "Cfg_Latch",
+    "Cfg_BypassMax",
+    "Cmd_Bypass",
+    "Cmd_Unbypass",
+    "Cmd_UnbypassAll",
+    "Inp_BypassPerm",
+    "Cmd_Reset",
+    "Out_OK",
+    "Sts_OKNoByp",
+    "Sts_Bypassed",
+    "Sts_Latched",
+    "Sts_FirstOut",
+    "Sts_NumBypassed",
+    "Sts_BypassLeft",
+    "Sts_ResetReq",
+    "Sts_CondWord",
+    "Sts_BypWord",
+    "Sts_LatchWord",
+    "Alm_Trip",
+    "Alm_Bypass"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_KPI": {
+   "bytes": 9308,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "286ae7116823",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Cfg_ShortDesc",
+    "Cfg_EU",
+    "Inp_Value",
+    "Inp_Bad",
+    "Cfg_EUMin",
+    "Cfg_EUMax",
+    "Cfg_IdealLo",
+    "Cfg_IdealHi",
+    "Cfg_FiltTC",
+    "Sim_En",
+    "Sim_Value",
+    "Val_PV",
+    "Val_PVPct",
+    "Sts_Bad",
+    "Sts_Sim",
+    "Sts_Quality",
+    "Sts_InIdeal",
+    "Sts_Zone",
+    "Alm_HH",
+    "Alm_H",
+    "Alm_L",
+    "Alm_LL"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Mode": {
+   "bytes": 7732,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "b8f0b0654a82",
+   "kind": "udt",
+   "members": [
+    "Cmd_Auto",
+    "Cmd_Man",
+    "Cmd_Maint",
+    "Cmd_OOS",
+    "Prog_Auto",
+    "Prog_Man",
+    "Prog_Lock",
+    "Prog_Acquire",
+    "Prog_Release",
+    "Inp_ReqOwnerID",
+    "Cmd_ForceRelease",
+    "Cfg_PowerUpMode",
+    "Cfg_NoMaint",
+    "Sts_Auto",
+    "Sts_Man",
+    "Sts_Maint",
+    "Sts_OOS",
+    "Sts_Mode",
+    "Sts_Owned",
+    "Val_OwnerID"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Motor": {
+   "bytes": 20252,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a2526931690b",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Mode",
+    "Inp_RunFbk",
+    "Inp_Remote",
+    "Inp_AvailOK",
+    "Inp_EStopOK",
+    "Inp_IntlkOK",
+    "Inp_PermOK",
+    "Inp_IOFault",
+    "Inp_OL",
+    "Inp_Current",
+    "Cfg_FbkTime",
+    "Cfg_RestartDly",
+    "Cfg_NoFbk",
+    "Cfg_AutoRestart",
+    "Cfg_RatedAmps",
+    "Cfg_MaxStartsHr",
+    "Cmd_Start",
+    "Cmd_Stop",
+    "Cmd_Reset",
+    "Cmd_Jog",
+    "Prog_Start",
+    "Prog_Stop",
+    "Out_Run",
+    "Sim_En",
+    "Sts_Running",
+    "Sts_Stopped",
+    "Sts_Starting",
+    "Sts_Stopping",
+    "Sts_Avail",
+    "Sts_Ready",
+    "Sts_Intlk",
+    "Sts_NotPerm",
+    "Sts_Local",
+    "Sts_Tripped",
+    "Sts_Fault",
+    "Sts_Sim",
+    "Sts_State",
+    "Sts_RestartLeft",
+    "Sts_NE107",
+    "Val_Current",
+    "Val_LoadPct",
+    "Alm_FailStart",
+    "Alm_FailStop",
+    "Alm_Uncmd",
+    "Alm_EStop",
+    "Alm_IntlkTrip",
+    "Alm_ExcessStarts",
+    "Alm_OL",
+    "Alm_HiCurrent",
+    "Run"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_PID": {
+   "bytes": 18059,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a121e851dda8",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Cfg_PVEU",
+    "Inp_PV",
+    "Inp_PVBad",
+    "Inp_CasSP",
+    "Inp_FF",
+    "Inp_TrackEn",
+    "Inp_TrackVal",
+    "Inp_IntlkOK",
+    "Cmd_Man",
+    "Cmd_Auto",
+    "Cmd_Cas",
+    "Cmd_SP",
+    "Cmd_CV",
+    "Prog_SP",
+    "Cfg_ProgSP",
+    "Cfg_Kp",
+    "Cfg_Ti",
+    "Cfg_Td",
+    "Cfg_DirectAct",
+    "Cfg_PVMin",
+    "Cfg_PVMax",
+    "Cfg_SPMin",
+    "Cfg_SPMax",
+    "Cfg_CVMin",
+    "Cfg_CVMax",
+    "Cfg_SPRate",
+    "Cfg_CVRate",
+    "Cfg_DB",
+    "Cfg_FFGain",
+    "Cfg_PVTrack",
+    "Cfg_IntlkCV",
+    "Cfg_BadPVAction",
+    "Out_CV",
+    "Val_SP",
+    "Val_SPTarget",
+    "Val_PV",
+    "Val_Err",
+    "Sts_Man",
+    "Sts_Auto",
+    "Sts_Cas",
+    "Sts_Track",
+    "Sts_Intlk",
+    "Sts_WindupHi",
+    "Sts_WindupLo",
+    "Sts_SPRamping",
+    "Sts_Mode",
+    "Alm_DevH",
+    "Alm_DevL",
+    "Alm_PVBad"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Phase": {
+   "bytes": 33782,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5fa4224debb3",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Cfg_PhaseID",
+    "Cfg_UnitID",
+    "Cfg_StepTimeout",
+    "Cmd_Auto",
+    "Cmd_SemiAuto",
+    "Cmd_Man",
+    "Cmd_Start",
+    "Cmd_Stop",
+    "Cmd_Hold",
+    "Cmd_Restart",
+    "Cmd_Abort",
+    "Cmd_Reset",
+    "Cmd_Pause",
+    "Cmd_Resume",
+    "Cmd_Advance",
+    "Cmd_TakeOwn",
+    "Prog_Cmd",
+    "Prog_Acquire",
+    "Prog_Release",
+    "Prog_ReqAck",
+    "Prm_Real",
+    "Prm_DInt",
+    "Rpt_Real",
+    "Rpt_DInt",
+    "Val_BatchID",
+    "Val_StateTime",
+    "Val_RunTime",
+    "Val_FailText",
+    "Sts_State",
+    "Sts_PrevState",
+    "Sts_Mode",
+    "Sts_Owner",
+    "Sts_CmdMask",
+    "Sts_CmdRejected",
+    "Sts_Step",
+    "Sts_WaitAdvance",
+    "Sts_ReqCode",
+    "Sts_FailCode",
+    "Alm_Fail",
+    "Alm_StepTimeout"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_PumpDS": {
+   "bytes": 16797,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "5e621bc6497b",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Mode",
+    "Inp_Avail",
+    "Inp_Running",
+    "Inp_Fault",
+    "Inp_RunHrs",
+    "Cfg_NumPumps",
+    "Cfg_Strategy",
+    "Cfg_RotateHrs",
+    "Cfg_StageDly",
+    "Cfg_ChgOnFault",
+    "Cmd_NumReq",
+    "Cmd_Lead",
+    "Cmd_Rotate",
+    "Prog_NumReq",
+    "Out_RunReq",
+    "Sts_Order",
+    "Sts_Lead",
+    "Sts_NumRunning",
+    "Sts_NumAvail",
+    "Val_HrsToRotate",
+    "Alm_NoStandby",
+    "Alm_NoneAvail",
+    "Sts_ChgOver",
+    "Val_ChgOverCount"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_PumpProt": {
+   "bytes": 10727,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "32a050e59649",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Inp_Running",
+    "Inp_SuctPress",
+    "Inp_DischPress",
+    "Inp_Flow",
+    "Inp_DryRun",
+    "Inp_SealLeak",
+    "Inp_BrgTemp",
+    "Inp_Vib",
+    "Cfg_MinFlow",
+    "Cfg_MinFlowDly",
+    "Cfg_DeadheadDP",
+    "Cfg_DryRunDly",
+    "Cfg_TripDryRun",
+    "Cfg_TripLowFlow",
+    "Cfg_TripDeadhead",
+    "Cfg_TripSeal",
+    "Cmd_Reset",
+    "Out_IntlkOK",
+    "Val_DP",
+    "Alm_DryRun",
+    "Alm_LowFlow",
+    "Alm_Deadhead",
+    "Alm_SealLeak",
+    "Alm_BrgTemp",
+    "Alm_Vib",
+    "Alm_LoSuct"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_RunTime": {
+   "bytes": 4299,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "a856e8879d0e",
+   "kind": "udt",
+   "members": [
+    "Inp_Running",
+    "Cfg_MaintHrs",
+    "Cmd_ResetMaint",
+    "Cmd_ResetAll",
+    "Val_RunSecs",
+    "Val_RunHrs",
+    "Val_Starts",
+    "Val_StartsLastHr",
+    "Val_LastRun",
+    "Val_HrsSinceMaint",
+    "Sts_MaintDue"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Tank": {
+   "bytes": 19512,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d68af5fa69a8",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Cfg_Product",
+    "Cfg_LvlEU",
+    "Cfg_VolEU",
+    "Inp_Level",
+    "Inp_LevelBad",
+    "Inp_LSHH",
+    "Inp_LSLL",
+    "Inp_Temp",
+    "Inp_Press",
+    "Cfg_MaxLevel",
+    "Cfg_Capacity",
+    "Cfg_Shape",
+    "Cfg_Strap",
+    "Cfg_SG",
+    "Cfg_FillStop",
+    "Cfg_DrainStop",
+    "Cfg_RateWindow",
+    "Prog_EqState",
+    "Out_FillPerm",
+    "Out_DrainPerm",
+    "Val_Volume",
+    "Val_PctFull",
+    "Val_Ullage",
+    "Val_Mass",
+    "Val_NetFlow",
+    "Val_MinToFull",
+    "Val_MinToEmpty",
+    "Sts_Filling",
+    "Sts_Draining",
+    "Sts_EqState",
+    "Alm_HH",
+    "Alm_H",
+    "Alm_L",
+    "Alm_LL",
+    "Alm_LSHH",
+    "Alm_LSLL",
+    "Alm_LvlDisc",
+    "Alm_HiTemp",
+    "Alm_HiPress"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Totalizer": {
+   "bytes": 14826,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "d31d51f7390e",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Cfg_RateEU",
+    "Cfg_TotEU",
+    "Inp_Rate",
+    "Inp_RateBad",
+    "Inp_Pulses",
+    "Cfg_UsePulses",
+    "Cfg_PulseWt",
+    "Cfg_TimeBase",
+    "Cfg_Conv",
+    "Cfg_LoCutoff",
+    "Cfg_BadAction",
+    "Cfg_DayStartHr",
+    "Cfg_BatchSP",
+    "Cfg_PreAct",
+    "Cfg_AutoPreAct",
+    "Cfg_SlowPct",
+    "Cmd_Start",
+    "Cmd_Hold",
+    "Cmd_Reset",
+    "Prog_Start",
+    "Prog_Hold",
+    "Prog_Reset",
+    "Out_Slow",
+    "Out_BatchDone",
+    "Val_Batch",
+    "Val_Remaining",
+    "Val_Overrun",
+    "Val_GrandTotal",
+    "Val_ThisHr",
+    "Val_LastHr",
+    "Val_Today",
+    "Val_Yday",
+    "Sts_Running",
+    "Sts_Hold",
+    "Sts_Done",
+    "Alm_HiRate",
+    "Alm_LoRate",
+    "Alm_Overrun",
+    "Alm_RateBad"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_Unit": {
+   "bytes": 10322,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "1f0674a34230",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Cfg_UnitID",
+    "Cfg_UnitClass",
+    "Cfg_CleanHold",
+    "Inp_ReqOwnerID",
+    "Prog_Acquire",
+    "Prog_Release",
+    "Cmd_ForceRelease",
+    "Prog_EqState",
+    "Cmd_EqState",
+    "Val_OwnerID",
+    "Val_BatchID",
+    "Val_RecipeName",
+    "Val_RecipeVer",
+    "Val_ProductCode",
+    "Val_BatchSize",
+    "Val_BatchStart",
+    "Val_LastClean",
+    "Sts_Allocated",
+    "Sts_ProcState",
+    "Sts_Mode",
+    "Sts_ActivePhase",
+    "Sts_EqState",
+    "Sts_CleanExpired",
+    "Alm_CleanExpired"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  },
+  "pclib:udt:PCLib/T_VFD": {
+   "bytes": 30722,
+   "changed_at": "2026-10-21 00:35",
+   "first_seen": "2026-10-21 00:35",
+   "hash": "6cbb783ab2ef",
+   "kind": "udt",
+   "members": [
+    "Cfg_Tag",
+    "Cfg_Desc",
+    "Mode",
+    "Inp_RunFbk",
+    "Inp_Remote",
+    "Inp_AvailOK",
+    "Inp_EStopOK",
+    "Inp_IntlkOK",
+    "Inp_PermOK",
+    "Inp_IOFault",
+    "Inp_DrvReady",
+    "Inp_DrvFault",
+    "Inp_DrvWarn",
+    "Inp_FaultCode",
+    "Inp_CommOK",
+    "Inp_NE107",
+    "Inp_SpdFbk",
+    "Inp_Current",
+    "Inp_Torque",
+    "Inp_Power",
+    "Cfg_FbkTime",
+    "Cfg_RestartDly",
+    "Cfg_NoFbk",
+    "Cfg_AutoRestart",
+    "Cfg_RatedAmps",
+    "Cfg_MaxStartsHr",
+    "Cfg_SpdEU",
+    "Cfg_SpdMin",
+    "Cfg_SpdMax",
+    "Cfg_SpdDevLim",
+    "Cfg_SpdDevTime",
+    "Cfg_Reversible",
+    "Cmd_Start",
+    "Cmd_Stop",
+    "Cmd_Reset",
+    "Cmd_Jog",
+    "Prog_Start",
+    "Prog_Stop",
+    "Cmd_Spd",
+    "Cmd_Rev",
+    "Prog_Spd",
+    "Prog_Rev",
+    "Out_Run",
+    "Out_Rev",
+    "Out_SpdRef",
+    "Out_FltReset",
+    "Sim_En",
+    "Sts_Running",
+    "Sts_Stopped",
+    "Sts_Starting",
+    "Sts_Stopping",
+    "Sts_Avail",
+    "Sts_Ready",
+    "Sts_Intlk",
+    "Sts_NotPerm",
+    "Sts_Local",
+    "Sts_Tripped",
+    "Sts_Fault",
+    "Sts_Sim",
+    "Sts_State",
+    "Sts_RestartLeft",
+    "Sts_NE107",
+    "Sts_AtSpd",
+    "Sts_Rev",
+    "Sts_CommFail",
+    "Val_SpdRef",
+    "Val_Spd",
+    "Val_Current",
+    "Val_Torque",
+    "Val_Power",
+    "Val_Energy",
+    "Alm_FailStart",
+    "Alm_FailStop",
+    "Alm_Uncmd",
+    "Alm_EStop",
+    "Alm_IntlkTrip",
+    "Alm_ExcessStarts",
+    "Alm_DrvFault",
+    "Alm_DrvWarn",
+    "Alm_CommFail",
+    "Alm_SpdDev",
+    "Run"
+   ],
+   "parameters": [
+    "BaseTag",
+    "OPCServer",
+    "PathPrefix"
+   ]
+  }
+ },
+ "last_audit_fp": "50bdfc6d01b6",
+ "last_delta": 0,
+ "projects": [
+  "EFC_AnalogIndicators",
+  "EFC_Library"
+ ],
+ "scanned_at": "2026-10-21 00:41",
+ "upstream": {}
+}
