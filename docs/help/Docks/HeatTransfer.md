@@ -20,7 +20,7 @@ The monitoring window for a heat exchanger (T_HeatEx). It is read-only: it has n
 
 **Banner.** `Sts_CalcValid` selects the state text: `CALC VALID` (style `State/Running`) when true, otherwise `CALC INVALID` (style `State/Unknown`). The banner has no SIM, LOCAL, INTLK or NOT PERM badges.
 
-**Values** (all levels). Twelve read-only rows, all formatted `#,##0.0`: hot in and hot out (`Inp_HotInT`, `Inp_HotOutT`, unit °C), cold in and cold out (`Inp_ColdInT`, `Inp_ColdOutT`, °C), hot flow and cold flow (`Inp_HotFlow`, `Inp_ColdFlow`, no unit shown), duty (`Val_Duty`, kW), LMTD (`Val_LMTD`, K), UA (`Val_UA`, kW/K), cleanliness (`Val_Clean`, %), approach (`Val_Approach`, K) and effectiveness (`Val_Effect`, shown with %). The values are not gated by `Sts_CalcValid`, so the banner and the values can disagree (see the notes).
+**Values** (all levels). Twelve read-only rows, all formatted `#,##0.0` (effectiveness is multiplied by 100 first): hot in and hot out (`Inp_HotInT`, `Inp_HotOutT`, unit °C), cold in and cold out (`Inp_ColdInT`, `Inp_ColdOutT`, °C), hot flow and cold flow (`Inp_HotFlow`, `Inp_ColdFlow`, no unit shown), duty (`Val_Duty`, kW), LMTD (`Val_LMTD`, K), UA (`Val_UA`, kW/K), cleanliness (`Val_Clean`, %), approach (`Val_Approach`, K) and effectiveness (`Val_Effect`, a 0-1 fraction shown as a percentage: value x 100, unit %). The values are not gated by `Sts_CalcValid`, so the banner and the values can disagree (see the notes).
 
 **Alarms** (all levels). Five rows: Fouling (`Alm_Fouling`), Hot side dP high (`Alm_HotDP`), Cold side dP high (`Alm_ColdDP`), Heat balance error (`Alm_HeatBal`) and Outlet temperature high (`Alm_HiOutT`). A row is coloured when its alarm is active, using the alarm's `Cfg_Priority`: 1 `Critical`, 2 `High`, 3 `Medium`, 4 `Low`, anything else `Medium`. The class adds `/Unacked` or `/Fill`. An inactive but unacknowledged alarm uses `Alarm/Status/ClearedUnacked`. An inactive, acknowledged alarm uses `Text/Caption Text/Color/Muted`. "No active alarms" is shown when none is active. **ACK** (level 1 and above) calls `efc.ui.ackAll`, which writes `Cmd_Ack` only for the alarms whose `Sts_Unack` is true.
 
@@ -123,7 +123,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Values/Body/Clean/EU | `props.text` | expr | `'%'` | Text content |
 | root/Values/Body/App/Val | `props.text` | expr | `numberFormat({view.custom.m_Val_Approach}, '#,##0.0')` | Text content |
 | root/Values/Body/App/EU | `props.text` | expr | `'K'` | Text content |
-| root/Values/Body/Eff/Val | `props.text` | expr | `numberFormat({view.custom.m_Val_Effect}, '#,##0.0')` | Text content |
+| root/Values/Body/Eff/Val | `props.text` | expr | `numberFormat({view.custom.m_Val_Effect} * 100, '#,##0.0')` | Text content |
 | root/Values/Body/Eff/EU | `props.text` | expr | `'%'` | Text content |
 
 ### `root/Alarms`
@@ -262,7 +262,7 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
 | `Val_Approach` | read | REAL | Approach temperature (K) |
 | `Val_Clean` | read; also read by trend pens | REAL | Cleanliness: UA as % of design |
 | `Val_Duty` | read | REAL | Average duty (kW) |
-| `Val_Effect` | read | REAL | Thermal effectiveness (0-1) |
+| `Val_Effect` | read | REAL | Thermal effectiveness (0-1); displayed x 100 as % |
 | `Val_LMTD` | read | REAL | Log mean temperature difference (K) |
 | `Val_UA` | read; also read by trend pens | REAL | Actual UA (kW/K) |
 | `Alm_ColdDP/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
@@ -433,7 +433,6 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
 ## Notes and open questions
 
 - **Not reachable from the shipped templates.** The window is generated and bound to `T_HeatEx`, but no template in the library sets `tType` to `T_HeatEx`, and no template sets `dockId` to `dw_HeatTransfer`. The only heat exchanger template, `HX_AirCooled`, has `tType` `T_Motor` and opens `Docks/Rotating`. Confirm whether `HX_AirCooled` should be switched to `T_HeatEx`, or whether a separate heat exchanger template is planned.
-- **Effectiveness unit.** `Val_Effect` is documented in PCLib as thermal effectiveness, 0-1. The Values row formats it with one decimal and appends `%` (`numberFormat(...) + '%'`), so a value of 0.85 displays as "0.9 %". This looks like a defect. Either scale the value by 100 for display or drop the `%` unit.
 - **Shared trend scale.** `efc.ui.trend` computes one low and one high limit over all pens. `Val_Clean` (%) and `Val_UA` (kW/K) therefore share one axis, and the axis labels apply to both. The two pens have different units and may differ greatly in magnitude, so one can look flat. Consider one trend per pen, or confirm that the magnitudes are comparable.
 - **Flow units.** `Inp_HotFlow` and `Inp_ColdFlow` are documented as kg/s in PCLib, but they are shown with no unit. `Cfg_MinFlow` is also shown with no unit, although PCLib gives it as kg/s.
 - **Values are not gated by CALC VALID.** When `Sts_CalcValid` is false the banner reads CALC INVALID, but the calculated rows still show their values. This view does not show whether the PLC holds the last valid results. Confirm the intended behaviour.

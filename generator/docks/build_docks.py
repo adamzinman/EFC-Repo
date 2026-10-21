@@ -380,7 +380,7 @@ def heat_transfer():
                                      t("HF", "Hot flow", "Inp_HotFlow", ""), t("CF", "Cold flow", "Inp_ColdFlow", ""),
                                      t("Duty", "Duty", "Val_Duty", "kW"), t("LMTD", "LMTD", "Val_LMTD", "K"), t("UA", "UA", "Val_UA", "kW/K"),
                                      t("Clean", "Cleanliness", "Val_Clean", "%"), t("App", "Approach", "Val_Approach", "K"),
-                                     t("Eff", "Effectiveness", "Val_Effect", "%")]),
+                                     row("Eff", "Effectiveness", fmt(m("Val_Effect") + " * 100"), repr("%"))]),   # PCLib Val_Effect is 0-1: show as %
         alarms(vw, [("Alm_Fouling", "Fouling"), ("Alm_HotDP", "Hot side dP high"), ("Alm_ColdDP", "Cold side dP high"),
                     ("Alm_HeatBal", "Heat balance error"), ("Alm_HiOutT", "Outlet temperature high")]),
         trend(["Val_Clean", "Val_UA"]),

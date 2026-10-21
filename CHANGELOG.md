@@ -15,6 +15,7 @@ Newest first. Versions match `VERSION.json` and the git tags (`v5.1`, `v6.0`, ..
   - **Fix #3:** the `PB` command button on the discrete valve, Rotating (incl. HX_AirCooled), VFD and Heater_Electric templates now calls `efc.ui.cmd(self, m, True, 1)` (Operator re-check) instead of writing the tag directly.
   - **Fix #21:** `Docks/IOCard` and `Docks/ValveAnalog` banners now reach UNKNOWN: IOCard when `Module/MOD_ERROR` is null or bad quality, ValveAnalog when `Val_Pos` or `Sts_Closed` is null or bad quality (`isNull() || !isGood()`, tested first).
   - **Fix #22:** `efc.ui.trend` converts each value with a guarded `float()` (non-numeric values are skipped, not raised) and logs history query failures with `_log().warn` instead of returning silently.
+  - **Fix #18:** `Docks/HeatTransfer` shows `Val_Effect` (PCLib 0-1) as a percentage (value x 100, `%` label).
 - **v7.0 (2026-10-19): one project, one Templates tree:**
   - **EFC_Library** replaces the seven separate projects (EFC_Styles, PID_Symbols, EFC_PID_Library, EFC_ProcessValues, PID_Loops, EFC_IOFaceplates, EFC_StationFaceplates). `build.py --dist` now writes one project zip.
   - **Moved views:** `IO/…` → `Templates/IO/…`; `PID/Templates/…` → `Templates/Loops/…`; `PID/Popups/LoopConfig` → `Templates/Loops/Popups/LoopConfig`; `PID/_Demo_Loops` → `Templates/Loops/_Demo`. Every embedded-view, repeater and `openPopup` path was rewritten to match, and the build now fails on any unresolved view reference.
