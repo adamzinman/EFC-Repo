@@ -271,5 +271,7 @@ if __name__ == "__main__":
             f'<title>EFC Library Previews</title><style>{PAGE_CSS}\n/* EFC_Styles */\n{css_block()}</style></head><body>'
             f'<h1>EFC Library - review contact sheet</h1><p class="legend">Dashed blue = click target (opens dock). Red type = gap (no EFCLib v1 type). '
             f'Templates are drawn from slim output (layout approximate); docks and VFD are new design proposals.</p>{body}</body></html>')
+    import base64  # inline the renders so index.html is self-contained
+    page = re.sub(r'src="([^"]+\.png)"', lambda m: 'src="data:image/png;base64,' + base64.b64encode(open(os.path.normpath(f"{OUT}/{m.group(1)}"), "rb").read()).decode() + '"', page)
     open(f"{OUT}/index.html", "w").write(page)
     print(f"fragments {sum(len(v) for v in groups.values())} -> {OUT}/index.html ({os.path.getsize(OUT + '/index.html') // 1024} KB)")
