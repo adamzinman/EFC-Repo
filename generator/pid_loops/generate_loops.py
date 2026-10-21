@@ -110,29 +110,31 @@ def pct(x):
 
 
 FMT = '"#,##0.0"'
-TEMPLATE_CUSTOM_PC = {
-    "custom.pv": tag("PV"), "custom.sp": tag("SP"), "custom.out": tag("OUT"), "custom.mode": tag("Mode"),
-    "custom.almHi": tag("AlmHi"), "custom.almLo": tag("AlmLo"),
-    "custom.pvLo": tag("PV.engLow"), "custom.pvHi": tag("PV.engHigh"), "custom.units": tag("PV.engUnit"),
+TEMPLATE_CUSTOM_PC = {   # EFCLib v1 T_PID members
+    "custom.pv": tag("Val_PV"), "custom.sp": tag("Val_SP"), "custom.out": tag("Out_CV"), "custom.mode": tag("Sts_Mode"),
+    "custom.devH": tag("Alm_DevH/Cfg_Lim"), "custom.devL": tag("Alm_DevL/Cfg_Lim"),
+    "custom.devHAct": tag("Alm_DevH/Sts_Active"), "custom.devLAct": tag("Alm_DevL/Sts_Active"),
+    "custom.almHi": expr("{view.custom.sp} + {view.custom.devH}"), "custom.almLo": expr("{view.custom.sp} - {view.custom.devL}"),
+    "custom.pvLo": tag("Cfg_PVMin"), "custom.pvHi": tag("Cfg_PVMax"), "custom.units": tag("Cfg_PVEU"),
     "custom.pvPct": expr(pct("view.custom.pv")), "custom.spPct": expr(pct("view.custom.sp")),
     "custom.hiPct": expr(pct("view.custom.almHi")), "custom.loPct": expr(pct("view.custom.almLo")),
     "custom.outPct": expr("min(100, max(0, {view.custom.out}))"),
-    "custom.alarm": expr("{view.custom.pv} >= {view.custom.almHi} || {view.custom.pv} <= {view.custom.almLo}"),
+    "custom.alarm": expr("{view.custom.devHAct} || {view.custom.devLAct}"),
     "custom.modeText": expr('case({view.custom.mode}, 0, "MAN", 1, "AUTO", 2, "CAS", "---")'),
     "custom.name": expr('if(len({view.params.label}) > 0, {view.params.label}, '
                         'substring({view.params.tagPath}, lastIndexOf({view.params.tagPath}, "/") + 1))'),
     "params.tagPath": {"paramDirection": "input", "persistent": True},
     "params.label": {"paramDirection": "input", "persistent": True},
+    "params.tType": {"paramDirection": "input", "persistent": True},
+    "params.dockId": {"paramDirection": "input", "persistent": True},
+    "params.dwTagPath": {"paramDirection": "input", "persistent": True},
 }
 TEMPLATE_CUSTOM = {k.split(".", 1)[1]: 0 for k in TEMPLATE_CUSTOM_PC if k.startswith("custom.")}
-TEMPLATE_CUSTOM.update(units="", modeText="", name="", alarm=False)
+TEMPLATE_CUSTOM.update(units="", modeText="", name="", alarm=False, devHAct=False, devLAct=False)
 
 OPEN_POPUP = '''
-tp = self.view.params.tagPath
-system.perspective.openPopup("loopcfg_" + tp, "PID/Popups/LoopConfig", params={"tagPath": tp},
-	title=self.view.custom.name, showCloseIcon=True, draggable=True, resizable=False, modal=False,
-	overlayDismiss=True)
-'''
+efc.ui.openDynamic(self)
+'''   # click opens the dw_Loop dynamic window (decision 15: LoopConfig popup retired)
 
 
 def card_root(children, pad, extra_style=None, direction="column", align=None):
@@ -231,7 +233,7 @@ def template(root, size, extra_custom=None, extra_pc=None):
     custom.update(extra_custom or {})
     pc = dict(TEMPLATE_CUSTOM_PC)
     pc.update(extra_pc or {})
-    return view_json(root, size, custom, pc, {"tagPath": "[default]PID_Demo/TIC101", "label": ""})
+    return view_json(root, size, custom, pc, {"tagPath": "[default]PID_Demo/TIC101", "label": "", "tType": "T_PID", "dockId": "", "dwTagPath": ""})
 
 
 # ================================================================= B1 – original bar card (150x156)
@@ -344,7 +346,7 @@ def b3():
     root = card_root([header(), body, sparkWrap, outrow, outbar], "%s %s %s %s" % (v(8), v(10), v(10), v(10)))
     spark_b = with_script(expr("now(5000)"), SPARK)
     return template(root, (172, 184), {"devAlm": 10, "spark": {"pv": "", "sp": ""}},
-                    {"custom.devAlm": tag("AlmDev"), "custom.spark": spark_b})
+                    {"custom.devAlm": tag("Alm_DevH/Cfg_Lim"), "custom.spark": spark_b})
 
 
 # ================================================================= B4 – slim twin-bar column (104x196)
@@ -579,9 +581,8 @@ write_view("PID/Templates/Loop_B1_Bar", b1())
 write_view("PID/Templates/Loop_B2_Horizontal", b2())
 write_view("PID/Templates/Loop_B3_Sparkline", b3())
 write_view("PID/Templates/Loop_B4_Column", b4())
-write_view("PID/Popups/LoopConfig", popup())
 write_view("PID/_Demo_Loops", demo())
-json.dump({"title": "PID_Loops", "description": "PID loop templates B1-B4 + LoopConfig popup", "parent": "",
+json.dump({"title": "PID_Loops", "description": "PID loop templates B1-B4 (EFCLib v1 T_PID)", "parent": "",
            "enabled": True, "inheritable": True}, open(os.path.join(PROJ, "project.json"), "w"), indent=2)
 
 # ================================================================= tags
@@ -591,36 +592,35 @@ def mem(name, dt, value, **kw):
     return t
 
 
-udt = {"name": "PID_Loop", "tagType": "UdtType", "tags": [
-    mem("PV", "Float4", 0.0, engUnit="EU", engLow=0.0, engHigh=100.0, formatString="#,##0.0",
-        alarms=[{"name": "PV_High", "mode": "AboveValue", "priority": "High", "setpointA": {"bindType": "Tag", "value": "[.]AlmHi"}},
-                {"name": "PV_Low", "mode": "BelowValue", "priority": "High", "setpointA": {"bindType": "Tag", "value": "[.]AlmLo"}}]),
-    mem("SP", "Float4", 0.0), mem("OUT", "Float4", 0.0, engUnit="%", engLow=0.0, engHigh=100.0),
-    mem("Mode", "Int2", 1, documentation="0 = MAN, 1 = AUTO, 2 = CAS"),
-    mem("Kp", "Float4", 1.0), mem("Ti", "Float4", 30.0, engUnit="s"), mem("Td", "Float4", 0.0, engUnit="s"),
-    mem("Action", "Int2", 0, documentation="0 = Reverse, 1 = Direct"),
-    mem("SP_Lo", "Float4", 0.0), mem("SP_Hi", "Float4", 100.0), mem("OUT_Lo", "Float4", 0.0), mem("OUT_Hi", "Float4", 100.0),
-    mem("AlmHi", "Float4", 90.0), mem("AlmLo", "Float4", 10.0), mem("AlmDev", "Float4", 10.0),
-    mem("Description", "String", ""),
-]}
+def grp(name, *members):
+    return {"name": name, "tagType": "Folder", "tags": list(members)}
 
 
-def inst(name, desc, unit, lo, hi, pv, sp, out, mode, ah, al, splo, sphi):
-    return {"name": name, "tagType": "UdtInstance", "typeId": "PID_Loop", "tags": [
-        {"name": "PV", "tagType": "AtomicTag", "value": pv, "engUnit": unit, "engLow": lo, "engHigh": hi},
-        {"name": "SP", "tagType": "AtomicTag", "value": sp}, {"name": "OUT", "tagType": "AtomicTag", "value": out},
-        {"name": "Mode", "tagType": "AtomicTag", "value": mode},
-        {"name": "AlmHi", "tagType": "AtomicTag", "value": ah}, {"name": "AlmLo", "tagType": "AtomicTag", "value": al},
-        {"name": "SP_Lo", "tagType": "AtomicTag", "value": splo}, {"name": "SP_Hi", "tagType": "AtomicTag", "value": sphi},
-        {"name": "Description", "tagType": "AtomicTag", "value": desc}]}
+udt = {"name": "T_PID_Demo", "tagType": "UdtType",   # memory stand-in with the EFCLib v1 T_PID member names
+       "tags": [mem("Cfg_Tag", "String", ""), mem("Cfg_Desc", "String", ""), mem("Cfg_PVEU", "String", "EU"),
+                mem("Cfg_PVMin", "Float4", 0.0), mem("Cfg_PVMax", "Float4", 100.0),
+                mem("Val_PV", "Float4", 0.0), mem("Val_SP", "Float4", 0.0), mem("Out_CV", "Float4", 0.0),
+                mem("Cmd_SP", "Float4", 0.0), mem("Cmd_CV", "Float4", 0.0),
+                mem("Sts_Mode", "Int2", 1, documentation="0=Man 1=Auto 2=Cas 3=Track 4=Intlk"), mem("Sts_Intlk", "Boolean", False),
+                grp("Alm_DevH", mem("Cfg_Lim", "Float4", 10.0), mem("Sts_Active", "Boolean", False)),
+                grp("Alm_DevL", mem("Cfg_Lim", "Float4", 10.0), mem("Sts_Active", "Boolean", False))]}
+
+
+def inst(name, desc, unit, lo, hi, pv, sp, out, mode, dev_hi, dev_lo):
+    a = lambda n, v: {"name": n, "tagType": "AtomicTag", "value": v}
+    return {"name": name, "tagType": "UdtInstance", "typeId": "T_PID_Demo", "tags": [
+        a("Cfg_Tag", name), a("Cfg_Desc", desc), a("Cfg_PVEU", unit), a("Cfg_PVMin", lo), a("Cfg_PVMax", hi),
+        a("Val_PV", pv), a("Val_SP", sp), a("Cmd_SP", sp), a("Out_CV", out), a("Cmd_CV", out), a("Sts_Mode", mode),
+        {"name": "Alm_DevH", "tagType": "Folder", "tags": [a("Cfg_Lim", dev_hi), a("Sts_Active", pv - sp > dev_hi)]},
+        {"name": "Alm_DevL", "tagType": "Folder", "tags": [a("Cfg_Lim", dev_lo), a("Sts_Active", sp - pv > dev_lo)]}]}
 
 
 instances = {"name": "PID_Demo", "tagType": "Folder", "tags": [
-    inst("TIC101", "Reactor jacket temperature", "°F", 0.0, 200.0, 118.4, 120.0, 46.0, 1, 130.0, 40.0, 20.0, 150.0),
-    inst("PIC205", "Compressor discharge pressure", "PSIG", 0.0, 300.0, 262.0, 210.0, 88.0, 0, 250.0, 150.0, 100.0, 260.0),
-    inst("FIC310", "N2 feed flow", "SCFM", 0.0, 500.0, 296.0, 300.0, 63.0, 2, 350.0, 50.0, 0.0, 450.0)]}
+    inst("TIC101", "Reactor jacket temperature", "°F", 0.0, 200.0, 118.4, 120.0, 46.0, 1, 10.0, 10.0),
+    inst("PIC205", "Compressor discharge pressure", "PSIG", 0.0, 300.0, 262.0, 210.0, 88.0, 0, 40.0, 40.0),
+    inst("FIC310", "N2 feed flow", "SCFM", 0.0, 500.0, 296.0, 300.0, 63.0, 2, 50.0, 50.0)]}
 os.makedirs(TAGS, exist_ok=True)
-json.dump(udt, open(os.path.join(TAGS, "PID_Loop_UDT.json"), "w"), indent=2, ensure_ascii=False)
-json.dump(instances, open(os.path.join(TAGS, "PID_Loop_Demo_Instances.json"), "w"), indent=2, ensure_ascii=False)
+json.dump(udt, open(os.path.join(TAGS, "T_PID_Demo_UDT.json"), "w"), indent=2, ensure_ascii=False)
+json.dump(instances, open(os.path.join(TAGS, "T_PID_Demo_Instances.json"), "w"), indent=2, ensure_ascii=False)
 
 print("PID_Loops written to", PROJ)

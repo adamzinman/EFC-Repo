@@ -4,6 +4,10 @@
     "sp": 0,
     "out": 0,
     "mode": 0,
+    "devH": 0,
+    "devL": 0,
+    "devHAct": false,
+    "devLAct": false,
     "almHi": 0,
     "almLo": 0,
     "pvLo": 0,
@@ -20,7 +24,10 @@
   },
   "params": {
     "tagPath": "[default]PID_Demo/TIC101",
-    "label": ""
+    "label": "",
+    "tType": "T_PID",
+    "dockId": "",
+    "dwTagPath": ""
   },
   "propConfig": {
     "custom.pv": {
@@ -32,7 +39,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV"
+          "tagPath": "{1}/Val_PV"
         }
       }
     },
@@ -45,7 +52,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/SP"
+          "tagPath": "{1}/Val_SP"
         }
       }
     },
@@ -58,7 +65,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/OUT"
+          "tagPath": "{1}/Out_CV"
         }
       }
     },
@@ -71,33 +78,75 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Mode"
+          "tagPath": "{1}/Sts_Mode"
+        }
+      }
+    },
+    "custom.devH": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevH/Cfg_Lim"
+        }
+      }
+    },
+    "custom.devL": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevL/Cfg_Lim"
+        }
+      }
+    },
+    "custom.devHAct": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevH/Sts_Active"
+        }
+      }
+    },
+    "custom.devLAct": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevL/Sts_Active"
         }
       }
     },
     "custom.almHi": {
       "binding": {
-        "type": "tag",
+        "type": "expr",
         "config": {
-          "fallbackDelay": 2.5,
-          "mode": "indirect",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "tagPath": "{1}/AlmHi"
+          "expression": "{view.custom.sp} + {view.custom.devH}"
         }
       }
     },
     "custom.almLo": {
       "binding": {
-        "type": "tag",
+        "type": "expr",
         "config": {
-          "fallbackDelay": 2.5,
-          "mode": "indirect",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "tagPath": "{1}/AlmLo"
+          "expression": "{view.custom.sp} - {view.custom.devL}"
         }
       }
     },
@@ -110,7 +159,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV.engLow"
+          "tagPath": "{1}/Cfg_PVMin"
         }
       }
     },
@@ -123,7 +172,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV.engHigh"
+          "tagPath": "{1}/Cfg_PVMax"
         }
       }
     },
@@ -136,7 +185,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV.engUnit"
+          "tagPath": "{1}/Cfg_PVEU"
         }
       }
     },
@@ -184,7 +233,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "{view.custom.pv} >= {view.custom.almHi} || {view.custom.pv} <= {view.custom.almLo}"
+          "expression": "{view.custom.devHAct} || {view.custom.devLAct}"
         }
       }
     },
@@ -209,6 +258,18 @@
       "persistent": true
     },
     "params.label": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.tType": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dockId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dwTagPath": {
       "paramDirection": "input",
       "persistent": true
     }
@@ -906,7 +967,7 @@
           "type": "script",
           "scope": "G",
           "config": {
-            "script": "\ttp = self.view.params.tagPath\n\tsystem.perspective.openPopup(\"loopcfg_\" + tp, \"Templates/Loops/Popups/LoopConfig\", params={\"tagPath\": tp},\n\t\ttitle=self.view.custom.name, showCloseIcon=True, draggable=True, resizable=False, modal=False,\n\t\toverlayDismiss=True)"
+            "script": "\tefc.ui.openDynamic(self)"
           }
         }
       }

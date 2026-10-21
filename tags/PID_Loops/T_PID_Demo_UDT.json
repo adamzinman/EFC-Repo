@@ -1,0 +1,131 @@
+{
+  "name": "T_PID_Demo",
+  "tagType": "UdtType",
+  "tags": [
+    {
+      "name": "Cfg_Tag",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "String",
+      "value": ""
+    },
+    {
+      "name": "Cfg_Desc",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "String",
+      "value": ""
+    },
+    {
+      "name": "Cfg_PVEU",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "String",
+      "value": "EU"
+    },
+    {
+      "name": "Cfg_PVMin",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Cfg_PVMax",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 100.0
+    },
+    {
+      "name": "Val_PV",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Val_SP",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Out_CV",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Cmd_SP",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Cmd_CV",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Sts_Mode",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Int2",
+      "value": 1,
+      "documentation": "0=Man 1=Auto 2=Cas 3=Track 4=Intlk"
+    },
+    {
+      "name": "Sts_Intlk",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "Alm_DevH",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "name": "Cfg_Lim",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 10.0
+        },
+        {
+          "name": "Sts_Active",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "Alm_DevL",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "name": "Cfg_Lim",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 10.0
+        },
+        {
+          "name": "Sts_Active",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        }
+      ]
+    }
+  ]
+}

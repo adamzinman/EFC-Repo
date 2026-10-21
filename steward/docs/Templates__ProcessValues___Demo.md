@@ -9,11 +9,11 @@
 <!-- keep:end -->
 
 <!-- auto:start -->
-_Auto-generated 2026-10-21 00:35 from EFC_Library:view:Templates/ProcessValues/_Demo. Do not edit this section._
+_Auto-generated 2026-10-21 03:43 from EFC_Library:view:Templates/ProcessValues/_Demo. Do not edit this section._
 
 No params.
 
-- PCLib types: none
+- PCLib types: T_AI_Demo
 - Dynamic window: none
 - Style classes: Container/Screen, Input/Check, Input/Setpoint, Text/Caption, Text/Label, Text/Mod/Wrap, Text/Title, Util/Pad/L, Util/Pad/S
 - Inline style props: 16

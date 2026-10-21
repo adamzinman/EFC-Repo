@@ -1,6 +1,6 @@
-# Library catalog (2026-10-21 03:38)
+# Library catalog (2026-10-21 03:43)
 
-51 views, 0 script modules, 221 style classes, 29 UDTs
+50 views, 0 script modules, 221 style classes, 29 UDTs
 
 ## Views
 
@@ -11,6 +11,7 @@
 | EFC_AnalogIndicators:EFC/AnalogIndicator/C_CompactRow | TagPath,Header,Format | - | - | 8 | 4 | 2026-10-21 |
 | EFC_AnalogIndicators:EFC/AnalogIndicator/D_MiniColumn | TagPath,Header,Format | - | - | 10 | 4 | 2026-10-21 |
 | EFC_AnalogIndicators:EFC/AnalogIndicator/_Examples | - | - | - | 1 | 4 | 2026-10-21 |
+| EFC_Library:Docks/Station | tagPath | - | - | 38 | 78 | 2026-10-21 |
 | EFC_Library:Styles/_Catalog | - | - | - | 166 | 144 | 2026-10-21 |
 | EFC_Library:Templates/HeatTransfer/HX_AirCooled | tagPath,useButton,tType,dockId,dwTagPath,dblCmd | T_Motor | - | 9 | 0 | 2026-10-21 |
 | EFC_Library:Templates/HeatTransfer/Heater_Electric | tagPath,useButton,tType,dockId,dwTagPath | T_Heater | - | 9 | 0 | 2026-10-21 |
@@ -29,15 +30,14 @@
 | EFC_Library:Templates/IO/Parts/SlotTile | cardPath,model,slot | - | - | 11 | 0 | 2026-10-21 |
 | EFC_Library:Templates/IO/RackOverview | rackPath | - | - | 4 | 0 | 2026-10-21 |
 | EFC_Library:Templates/IO/_Demo | - | - | - | 5 | 0 | 2026-10-21 |
-| EFC_Library:Templates/Loops/Loop_B1_Bar | tagPath,label | - | - | 0 | 65 | 2026-10-21 |
-| EFC_Library:Templates/Loops/Loop_B2_Horizontal | tagPath,label | - | - | 0 | 67 | 2026-10-21 |
-| EFC_Library:Templates/Loops/Loop_B3_Sparkline | tagPath,label | - | - | 0 | 76 | 2026-10-21 |
-| EFC_Library:Templates/Loops/Loop_B4_Column | tagPath,label | - | - | 0 | 57 | 2026-10-21 |
-| EFC_Library:Templates/Loops/Popups/LoopConfig | tagPath | - | - | 0 | 316 | 2026-10-21 |
+| EFC_Library:Templates/Loops/Loop_B1_Bar | tagPath,label,tType,dockId,dwTagPath | T_PID | - | 0 | 65 | 2026-10-21 |
+| EFC_Library:Templates/Loops/Loop_B2_Horizontal | tagPath,label,tType,dockId,dwTagPath | T_PID | - | 0 | 67 | 2026-10-21 |
+| EFC_Library:Templates/Loops/Loop_B3_Sparkline | tagPath,label,tType,dockId,dwTagPath | T_PID | - | 0 | 76 | 2026-10-21 |
+| EFC_Library:Templates/Loops/Loop_B4_Column | tagPath,label,tType,dockId,dwTagPath | T_PID | - | 0 | 57 | 2026-10-21 |
 | EFC_Library:Templates/Loops/_Demo | - | - | - | 0 | 17 | 2026-10-21 |
-| EFC_Library:Templates/ProcessValues/PV_RangeBar | tagPath | - | - | 16 | 0 | 2026-10-21 |
-| EFC_Library:Templates/ProcessValues/PV_StatusStrip | tagPath | - | - | 13 | 0 | 2026-10-21 |
-| EFC_Library:Templates/ProcessValues/_Demo | - | - | - | 9 | 16 | 2026-10-21 |
+| EFC_Library:Templates/ProcessValues/PV_RangeBar | tagPath,tType,dockId,dwTagPath | T_AI | - | 17 | 0 | 2026-10-21 |
+| EFC_Library:Templates/ProcessValues/PV_StatusStrip | tagPath,tType,dockId,dwTagPath | T_AI | - | 14 | 0 | 2026-10-21 |
+| EFC_Library:Templates/ProcessValues/_Demo | - | T_AI_Demo | - | 9 | 16 | 2026-10-21 |
 | EFC_Library:Templates/Rotating/Agitator | tagPath,useButton,tType,dockId,dwTagPath,dblCmd | T_Motor | - | 9 | 0 | 2026-10-21 |
 | EFC_Library:Templates/Rotating/Blower | tagPath,useButton,tType,dockId,dwTagPath,dblCmd | T_Motor | - | 9 | 0 | 2026-10-21 |
 | EFC_Library:Templates/Rotating/Compressor_Centrifugal | tagPath,useButton,tType,dockId,dwTagPath,dblCmd | T_Motor | - | 9 | 0 | 2026-10-21 |
@@ -49,8 +49,7 @@
 | EFC_Library:Templates/Rotating/Pump_Reciprocating | tagPath,useButton,tType,dockId,dwTagPath,dblCmd | T_Motor | - | 9 | 0 | 2026-10-21 |
 | EFC_Library:Templates/Rotating/Pump_Vacuum | tagPath,useButton,tType,dockId,dwTagPath,dblCmd | T_Motor | - | 9 | 0 | 2026-10-21 |
 | EFC_Library:Templates/Station/Station_Fill | tagPath | - | - | 26 | 33 | 2026-10-21 |
-| EFC_Library:Templates/Station/Station_Sidebar | tagPath | - | - | 38 | 78 | 2026-10-21 |
-| EFC_Library:Templates/Station/Station_Tile | tagPath | - | StationSidebar | 16 | 8 | 2026-10-21 |
+| EFC_Library:Templates/Station/Station_Tile | tagPath,tType,dockId,dwTagPath | T_Station | - | 16 | 8 | 2026-10-21 |
 | EFC_Library:Templates/Station/_Demo | - | - | - | 4 | 15 | 2026-10-21 |
 | EFC_Library:Templates/Valves/Valve_Control | tagPath,tType,dockId,dwTagPath | T_CValve | - | 8 | 0 | 2026-10-21 |
 | EFC_Library:Templates/Valves/Valve_MOV | tagPath,useButton,tType,dockId,dwTagPath,dblCmd | T_DValve | - | 9 | 0 | 2026-10-21 |

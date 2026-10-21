@@ -1,6 +1,6 @@
-# Audit (2026-10-21 03:38)
+# Audit (2026-10-21 03:43)
 
-88 findings: ERROR 0, WARN 51, INFO 37
+82 findings: ERROR 0, WARN 45, INFO 37
 Upstream check: DUE (last: never)
 
 ## WARN
@@ -12,6 +12,7 @@ Upstream check: DUE (last: never)
 - EFC/AnalogIndicator/C_CompactRow [inline-style] - 4 inline style props (use style classes) e.g. ['root', 'Top', 'ValueRow']
 - EFC/AnalogIndicator/D_MiniColumn [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - EFC/AnalogIndicator/D_MiniColumn [inline-style] - 4 inline style props (use style classes) e.g. ['root', 'Bar', 'Pointer']
+- Docks/Station [inline-style] - 78 inline style props (use style classes) e.g. ['Header', 'Body', 'Status']
 - Templates/HeatTransfer/HX_AirCooled [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
 - Templates/HeatTransfer/Heater_Electric [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
 - Templates/IO/Faceplates/BMXAMI0810 [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
@@ -23,20 +24,14 @@ Upstream check: DUE (last: never)
 - Templates/IO/Faceplates/BMXDDO3202K [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/IO/Faceplates/BMXDDO6402K [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/IO/RackOverview [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
-- Templates/Loops/Loop_B1_Bar [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Loops/Loop_B1_Bar [inline-style] - 65 inline style props (use style classes) e.g. ['root', 'header', 'title']
 - Templates/Loops/Loop_B1_Bar [off-palette] - colors outside palette: ['#1e2329', '#222222', '#2b3138', '#2f6fd6', '#454d55', '#6b737c']
-- Templates/Loops/Loop_B2_Horizontal [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Loops/Loop_B2_Horizontal [inline-style] - 67 inline style props (use style classes) e.g. ['root', 'header', 'title']
 - Templates/Loops/Loop_B2_Horizontal [off-palette] - colors outside palette: ['#1e2329', '#222222', '#2b3138', '#2f6fd6', '#454d55', '#6b737c']
-- Templates/Loops/Loop_B3_Sparkline [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Loops/Loop_B3_Sparkline [inline-style] - 76 inline style props (use style classes) e.g. ['root', 'header', 'title']
 - Templates/Loops/Loop_B3_Sparkline [off-palette] - colors outside palette: ['#1e2329', '#222222', '#2b3138', '#2f6fd6', '#454d55', '#6b737c']
-- Templates/Loops/Loop_B4_Column [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Loops/Loop_B4_Column [inline-style] - 57 inline style props (use style classes) e.g. ['root', 'title', 'tag']
 - Templates/Loops/Loop_B4_Column [off-palette] - colors outside palette: ['#1e2329', '#222222', '#2b3138', '#2f6fd6', '#454d55', '#6b737c']
-- Templates/ProcessValues/PV_RangeBar [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
-- Templates/ProcessValues/PV_StatusStrip [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Rotating/Agitator [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
 - Templates/Rotating/Blower [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
 - Templates/Rotating/Compressor_Centrifugal [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
@@ -49,7 +44,6 @@ Upstream check: DUE (last: never)
 - Templates/Rotating/Pump_Vacuum [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
 - Templates/Station/Station_Fill [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Station/Station_Fill [inline-style] - 33 inline style props (use style classes) e.g. ['root', 'Header', 'Chip']
-- Templates/Station/Station_Tile [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Station/Station_Tile [inline-style] - 8 inline style props (use style classes) e.g. ['root', 'Scale', 'Chip']
 - Templates/Valves/Valve_Control [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
 - Templates/Valves/Valve_MOV [off-palette] - colors outside palette: ['#262626', '#f2f2f2']

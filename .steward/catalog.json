@@ -2726,6 +2726,86 @@
    "hash": "a8c462118b94",
    "kind": "style"
   },
+  "EFC_Library:view:Docks/Station": {
+   "bound_classes": 33,
+   "bytes": 178564,
+   "changed_at": "2026-10-21 03:43",
+   "classes": [
+    "Bar/Band/Deadband",
+    "Bar/Fill",
+    "Bar/Marker",
+    "Bar/Track",
+    "Button/Default",
+    "Button/Primary",
+    "Button/Toggle/Off",
+    "Container/Faceplate",
+    "Container/Popup",
+    "Container/PopupHeader",
+    "Container/ValueBox",
+    "Indicator/InterlockBadge",
+    "Indicator/LED/Off",
+    "Input/Setpoint",
+    "State/Stopped",
+    "Station/Step/Pending",
+    "Text/Body",
+    "Text/Caption",
+    "Text/Color/Default",
+    "Text/Color/Editable",
+    "Text/Color/Inverse",
+    "Text/Label",
+    "Text/Mod/Center",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Italic",
+    "Text/Mod/NoWrap",
+    "Text/Mod/Right",
+    "Text/Mod/Upper",
+    "Text/Subheader",
+    "Text/Units",
+    "Text/Value",
+    "Text/ValueHero",
+    "Text/ValueLarge",
+    "Text/Weight/Bold",
+    "Text/Weight/Semibold",
+    "Util/Clip",
+    "Util/Pointer",
+    "Value/Setpoint"
+   ],
+   "colors": [
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 860,
+    "width": 400
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/Station/view.json",
+   "first_seen": "2026-10-21 03:43",
+   "hash": "c33ad96f1483",
+   "inline_styles": 78,
+   "inline_where": [
+    "Header",
+    "Body",
+    "Status",
+    "Chip",
+    "Msg"
+   ],
+   "kind": "view",
+   "last_modified": "2026-10-06T20:37:54Z",
+   "modified_by": "build_station.py",
+   "params": {
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking",
+    "system.util.invokeAsynchronous"
+   ]
+  },
   "EFC_Library:view:Styles/_Catalog": {
    "bound_classes": 0,
    "bytes": 126476,
@@ -2925,9 +3005,9 @@
    "system_calls": []
   },
   "EFC_Library:view:Templates/HeatTransfer/HX_AirCooled": {
-   "bound_classes": 3,
-   "bytes": 20352,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 21095,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -2936,7 +3016,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -2955,17 +3036,33 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "b7d72413541d",
+   "doc_hash": "85d7a2e010de",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/HeatTransfer/HX_AirCooled/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "b7d72413541d",
+   "hash": "85d7a2e010de",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/P101",
      "dir": "input"
@@ -2975,7 +3072,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Motor"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -2983,9 +3082,9 @@
    ]
   },
   "EFC_Library:view:Templates/HeatTransfer/Heater_Electric": {
-   "bound_classes": 3,
-   "bytes": 19361,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 19776,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -2994,7 +3093,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -3013,17 +3113,29 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "5643c089dad3",
+   "doc_hash": "9904045c5155",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/HeatTransfer/Heater_Electric/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "5643c089dad3",
+   "hash": "9904045c5155",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Heater",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/E401",
      "dir": "input"
@@ -3033,7 +3145,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Heater"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -3764,8 +3878,8 @@
   },
   "EFC_Library:view:Templates/Loops/Loop_B1_Bar": {
    "bound_classes": 0,
-   "bytes": 25327,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 26425,
+   "changed_at": "2026-10-21 03:43",
    "classes": [],
    "colors": [
     "#1e2329",
@@ -3789,11 +3903,11 @@
     "height": 156,
     "width": 150
    },
-   "doc_hash": "887050027d90",
+   "doc_hash": "ee7e8e05d7b3",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B1_Bar/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "887050027d90",
+   "hash": "ee7e8e05d7b3",
    "inline_styles": 65,
    "inline_where": [
     "root",
@@ -3806,8 +3920,20 @@
    "last_modified": "2026-10-05T12:00:00Z",
    "modified_by": "admin",
    "params": {
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
     "label": {
      "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_PID",
      "dir": "input"
     },
     "tagPath": {
@@ -3815,17 +3941,17 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
-   "popups": 1,
+   "pclib_types": [
+    "T_PID"
+   ],
+   "popups": 0,
    "resource_version": 1,
-   "system_calls": [
-    "system.perspective.openPopup"
-   ]
+   "system_calls": []
   },
   "EFC_Library:view:Templates/Loops/Loop_B2_Horizontal": {
    "bound_classes": 0,
-   "bytes": 27104,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 28202,
+   "changed_at": "2026-10-21 03:43",
    "classes": [],
    "colors": [
     "#1e2329",
@@ -3850,11 +3976,11 @@
     "height": 92,
     "width": 260
    },
-   "doc_hash": "a26904439afc",
+   "doc_hash": "99ec158220b7",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B2_Horizontal/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "a26904439afc",
+   "hash": "99ec158220b7",
    "inline_styles": 67,
    "inline_where": [
     "root",
@@ -3867,8 +3993,20 @@
    "last_modified": "2026-10-05T12:00:00Z",
    "modified_by": "admin",
    "params": {
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
     "label": {
      "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_PID",
      "dir": "input"
     },
     "tagPath": {
@@ -3876,17 +4014,17 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
-   "popups": 1,
+   "pclib_types": [
+    "T_PID"
+   ],
+   "popups": 0,
    "resource_version": 1,
-   "system_calls": [
-    "system.perspective.openPopup"
-   ]
+   "system_calls": []
   },
   "EFC_Library:view:Templates/Loops/Loop_B3_Sparkline": {
    "bound_classes": 0,
-   "bytes": 31649,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 32757,
+   "changed_at": "2026-10-21 03:43",
    "classes": [],
    "colors": [
     "#1e2329",
@@ -3913,11 +4051,11 @@
     "height": 184,
     "width": 172
    },
-   "doc_hash": "0b6cf8db13bf",
+   "doc_hash": "efcbbd9c8e48",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B3_Sparkline/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "0b6cf8db13bf",
+   "hash": "efcbbd9c8e48",
    "inline_styles": 76,
    "inline_where": [
     "root",
@@ -3930,8 +4068,20 @@
    "last_modified": "2026-10-05T12:00:00Z",
    "modified_by": "admin",
    "params": {
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
     "label": {
      "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_PID",
      "dir": "input"
     },
     "tagPath": {
@@ -3939,18 +4089,19 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
-   "popups": 1,
+   "pclib_types": [
+    "T_PID"
+   ],
+   "popups": 0,
    "resource_version": 1,
    "system_calls": [
-    "system.perspective.openPopup",
     "system.tag.queryTagHistory"
    ]
   },
   "EFC_Library:view:Templates/Loops/Loop_B4_Column": {
    "bound_classes": 0,
-   "bytes": 23334,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 24432,
+   "changed_at": "2026-10-21 03:43",
    "classes": [],
    "colors": [
     "#1e2329",
@@ -3975,11 +4126,11 @@
     "height": 196,
     "width": 104
    },
-   "doc_hash": "56c824edbe82",
+   "doc_hash": "5d415e64a96c",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B4_Column/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "56c824edbe82",
+   "hash": "5d415e64a96c",
    "inline_styles": 57,
    "inline_where": [
     "root",
@@ -3992,8 +4143,20 @@
    "last_modified": "2026-10-05T12:00:00Z",
    "modified_by": "admin",
    "params": {
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
     "label": {
      "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_PID",
      "dir": "input"
     },
     "tagPath": {
@@ -4001,71 +4164,12 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
-   "popups": 1,
-   "resource_version": 1,
-   "system_calls": [
-    "system.perspective.openPopup"
-   ]
-  },
-  "EFC_Library:view:Templates/Loops/Popups/LoopConfig": {
-   "bound_classes": 0,
-   "bytes": 84969,
-   "changed_at": "2026-10-21 00:35",
-   "classes": [],
-   "colors": [
-    "#1e2329",
-    "#2b3138",
-    "#2f6fd6",
-    "#3a424a",
-    "#454d55",
-    "#4a535c",
-    "#6a5300",
-    "#6b737c",
-    "#a9b0b8",
-    "#c3c8ce",
-    "#e3e6e9",
-    "#e9ecef",
-    "#f7f8f9",
-    "#fff7e0",
-    "#ffffff",
-    "rgba(20,30,40,0.18)"
+   "pclib_types": [
+    "T_PID"
    ],
-   "default_size": {
-    "height": 480,
-    "width": 440
-   },
-   "doc_hash": "b3d50c5445fc",
-   "docks": [],
-   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Popups/LoopConfig/view.json",
-   "first_seen": "2026-10-21 00:35",
-   "hash": "b3d50c5445fc",
-   "inline_styles": 316,
-   "inline_where": [
-    "root",
-    "header",
-    "tag",
-    "desc",
-    "close"
-   ],
-   "kind": "view",
-   "last_modified": "2026-10-05T12:00:00Z",
-   "modified_by": "admin",
-   "params": {
-    "tagPath": {
-     "default": "[default]PID_Demo/TIC101",
-     "dir": "input"
-    }
-   },
-   "pclib_types": [],
    "popups": 0,
    "resource_version": 1,
-   "system_calls": [
-    "system.perspective.closePopup",
-    "system.tag.queryTagHistory",
-    "system.tag.readBlocking",
-    "system.tag.writeBlocking"
-   ]
+   "system_calls": []
   },
   "EFC_Library:view:Templates/Loops/_Demo": {
    "bound_classes": 0,
@@ -4104,8 +4208,8 @@
   },
   "EFC_Library:view:Templates/ProcessValues/PV_RangeBar": {
    "bound_classes": 13,
-   "bytes": 55385,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 59755,
+   "changed_at": "2026-10-21 03:43",
    "classes": [
     "Bar/Band/Alarm",
     "Bar/Band/Extreme",
@@ -4122,40 +4226,53 @@
     "PV/Units",
     "PV/ValueSmall",
     "Text/Mod/Ellipsis",
-    "Text/Mod/NoWrap"
+    "Text/Mod/NoWrap",
+    "Util/Pointer"
    ],
    "colors": [],
    "default_size": {
     "height": 54,
     "width": 104
    },
-   "doc_hash": "335540806ec6",
+   "doc_hash": "f63e073a4151",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/ProcessValues/PV_RangeBar/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "335540806ec6",
+   "hash": "f63e073a4151",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_AI",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "",
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_AI"
+   ],
    "popups": 0,
    "resource_version": 1,
-   "system_calls": [
-    "system.alarm.queryStatus"
-   ]
+   "system_calls": []
   },
   "EFC_Library:view:Templates/ProcessValues/PV_StatusStrip": {
    "bound_classes": 10,
-   "bytes": 39423,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 43753,
+   "changed_at": "2026-10-21 03:43",
    "classes": [
     "PV/Body",
     "PV/Card",
@@ -4169,40 +4286,53 @@
     "PV/Units",
     "PV/Value",
     "Text/Mod/Ellipsis",
-    "Text/Mod/NoWrap"
+    "Text/Mod/NoWrap",
+    "Util/Pointer"
    ],
    "colors": [],
    "default_size": {
     "height": 54,
     "width": 104
    },
-   "doc_hash": "5f08403bea03",
+   "doc_hash": "731932f5e9d7",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/ProcessValues/PV_StatusStrip/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "5f08403bea03",
+   "hash": "731932f5e9d7",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_AI",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "",
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_AI"
+   ],
    "popups": 0,
    "resource_version": 1,
-   "system_calls": [
-    "system.alarm.queryStatus"
-   ]
+   "system_calls": []
   },
   "EFC_Library:view:Templates/ProcessValues/_Demo": {
    "bound_classes": 0,
-   "bytes": 27304,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 27301,
+   "changed_at": "2026-10-21 03:43",
    "classes": [
     "Container/Screen",
     "Input/Check",
@@ -4219,11 +4349,11 @@
     "height": 700,
     "width": 1200
    },
-   "doc_hash": "52fc065347fd",
+   "doc_hash": "3062112c7a57",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/ProcessValues/_Demo/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "52fc065347fd",
+   "hash": "3062112c7a57",
    "inline_styles": 16,
    "inline_where": [
     "root",
@@ -4236,15 +4366,17 @@
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {},
-   "pclib_types": [],
+   "pclib_types": [
+    "T_AI_Demo"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": []
   },
   "EFC_Library:view:Templates/Rotating/Agitator": {
-   "bound_classes": 3,
-   "bytes": 19040,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 19783,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -4253,7 +4385,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -4271,17 +4404,33 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "1056e2a8744e",
+   "doc_hash": "25e9c6bf50d0",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Agitator/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "1056e2a8744e",
+   "hash": "25e9c6bf50d0",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/P101",
      "dir": "input"
@@ -4291,7 +4440,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Motor"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -4299,9 +4450,9 @@
    ]
   },
   "EFC_Library:view:Templates/Rotating/Blower": {
-   "bound_classes": 3,
-   "bytes": 18896,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 19639,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -4310,7 +4461,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -4328,17 +4480,33 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "36a82dcab0a7",
+   "doc_hash": "cd1386997db4",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Blower/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "36a82dcab0a7",
+   "hash": "cd1386997db4",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/B301",
      "dir": "input"
@@ -4348,7 +4516,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Motor"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -4356,9 +4526,9 @@
    ]
   },
   "EFC_Library:view:Templates/Rotating/Compressor_Centrifugal": {
-   "bound_classes": 3,
-   "bytes": 18280,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 19023,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -4367,7 +4537,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -4385,17 +4556,33 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "7e7b9e9b85c6",
+   "doc_hash": "248bf915fdd1",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Compressor_Centrifugal/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "7e7b9e9b85c6",
+   "hash": "248bf915fdd1",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/K202",
      "dir": "input"
@@ -4405,7 +4592,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Motor"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -4413,9 +4602,9 @@
    ]
   },
   "EFC_Library:view:Templates/Rotating/Compressor_Diaphragm": {
-   "bound_classes": 3,
-   "bytes": 18680,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 19423,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -4424,7 +4613,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -4443,17 +4633,33 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "e54f068a042b",
+   "doc_hash": "6f721e0ac7ef",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Compressor_Diaphragm/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "e54f068a042b",
+   "hash": "6f721e0ac7ef",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/K201",
      "dir": "input"
@@ -4463,7 +4669,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Motor"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -4471,9 +4679,9 @@
    ]
   },
   "EFC_Library:view:Templates/Rotating/Motor": {
-   "bound_classes": 3,
-   "bytes": 18326,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 19069,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -4482,7 +4690,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -4500,17 +4709,33 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "7d49e229c3f6",
+   "doc_hash": "7c040b17e6c4",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Motor/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "7d49e229c3f6",
+   "hash": "7c040b17e6c4",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/P101",
      "dir": "input"
@@ -4520,7 +4745,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Motor"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -4528,9 +4755,9 @@
    ]
   },
   "EFC_Library:view:Templates/Rotating/Pump_Centrifugal": {
-   "bound_classes": 3,
-   "bytes": 19462,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 20205,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -4539,7 +4766,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -4559,17 +4787,33 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "d95bbcd61685",
+   "doc_hash": "d4a97d0bd1b0",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Pump_Centrifugal/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "d95bbcd61685",
+   "hash": "d4a97d0bd1b0",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/P101",
      "dir": "input"
@@ -4579,7 +4823,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Motor"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -4587,9 +4833,9 @@
    ]
   },
   "EFC_Library:view:Templates/Rotating/Pump_Diaphragm": {
-   "bound_classes": 3,
-   "bytes": 21838,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 22581,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -4598,7 +4844,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -4617,17 +4864,33 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "22f60aeba7f7",
+   "doc_hash": "6e03e33f24f1",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Pump_Diaphragm/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "22f60aeba7f7",
+   "hash": "6e03e33f24f1",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/P101",
      "dir": "input"
@@ -4637,7 +4900,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Motor"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -4645,9 +4910,9 @@
    ]
   },
   "EFC_Library:view:Templates/Rotating/Pump_PD_Rotary": {
-   "bound_classes": 3,
-   "bytes": 21897,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 22640,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -4656,7 +4921,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -4675,17 +4941,33 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "aa43baea8644",
+   "doc_hash": "bf055c2a96e4",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Pump_PD_Rotary/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "aa43baea8644",
+   "hash": "bf055c2a96e4",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/P102",
      "dir": "input"
@@ -4695,7 +4977,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Motor"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -4703,9 +4987,9 @@
    ]
   },
   "EFC_Library:view:Templates/Rotating/Pump_Reciprocating": {
-   "bound_classes": 3,
-   "bytes": 20317,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 21060,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -4714,7 +4998,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -4733,17 +5018,33 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "87e8325f81dd",
+   "doc_hash": "ceeee8e869ae",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Pump_Reciprocating/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "87e8325f81dd",
+   "hash": "ceeee8e869ae",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/P101",
      "dir": "input"
@@ -4753,7 +5054,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Motor"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -4761,9 +5064,9 @@
    ]
   },
   "EFC_Library:view:Templates/Rotating/Pump_Vacuum": {
-   "bound_classes": 3,
-   "bytes": 19292,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 20035,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -4772,7 +5075,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -4791,17 +5095,33 @@
     "height": 116,
     "width": 120
    },
-   "doc_hash": "78450ab22f82",
+   "doc_hash": "c7ce7cc3615b",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/Pump_Vacuum/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "78450ab22f82",
+   "hash": "c7ce7cc3615b",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/PV501",
      "dir": "input"
@@ -4811,7 +5131,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Motor"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -4820,8 +5142,8 @@
   },
   "EFC_Library:view:Templates/Station/Station_Fill": {
    "bound_classes": 5,
-   "bytes": 91126,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 91234,
+   "changed_at": "2026-10-21 03:43",
    "classes": [
     "Bar/Band/Deadband",
     "Bar/Fill",
@@ -4855,11 +5177,11 @@
     "height": 400,
     "width": 300
    },
-   "doc_hash": "37c6fd4aa709",
+   "doc_hash": "f4fdd97f86bb",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/Station_Fill/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "37c6fd4aa709",
+   "hash": "f4fdd97f86bb",
    "inline_styles": 33,
    "inline_where": [
     "root",
@@ -4885,92 +5207,10 @@
     "system.util.invokeAsynchronous"
    ]
   },
-  "EFC_Library:view:Templates/Station/Station_Sidebar": {
-   "bound_classes": 33,
-   "bytes": 178480,
-   "changed_at": "2026-10-21 00:35",
-   "classes": [
-    "Bar/Band/Deadband",
-    "Bar/Fill",
-    "Bar/Marker",
-    "Bar/Track",
-    "Button/Default",
-    "Button/Primary",
-    "Button/Toggle/Off",
-    "Container/Faceplate",
-    "Container/Popup",
-    "Container/PopupHeader",
-    "Container/ValueBox",
-    "Indicator/InterlockBadge",
-    "Indicator/LED/Off",
-    "Input/Setpoint",
-    "State/Stopped",
-    "Station/Step/Pending",
-    "Text/Body",
-    "Text/Caption",
-    "Text/Color/Default",
-    "Text/Color/Editable",
-    "Text/Color/Inverse",
-    "Text/Label",
-    "Text/Mod/Center",
-    "Text/Mod/Ellipsis",
-    "Text/Mod/Italic",
-    "Text/Mod/NoWrap",
-    "Text/Mod/Right",
-    "Text/Mod/Upper",
-    "Text/Subheader",
-    "Text/Units",
-    "Text/Value",
-    "Text/ValueHero",
-    "Text/ValueLarge",
-    "Text/Weight/Bold",
-    "Text/Weight/Semibold",
-    "Util/Clip",
-    "Util/Pointer",
-    "Value/Setpoint"
-   ],
-   "colors": [
-    "#ffffff"
-   ],
-   "default_size": {
-    "height": 800,
-    "width": 300
-   },
-   "doc_hash": "77cdbfa09987",
-   "docks": [],
-   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/Station_Sidebar/view.json",
-   "first_seen": "2026-10-21 00:35",
-   "hash": "77cdbfa09987",
-   "inline_styles": 78,
-   "inline_where": [
-    "Header",
-    "Body",
-    "Status",
-    "Chip",
-    "Msg"
-   ],
-   "kind": "view",
-   "last_modified": "2026-10-06T20:37:54Z",
-   "modified_by": "build_station.py",
-   "params": {
-    "tagPath": {
-     "default": "",
-     "dir": "input"
-    }
-   },
-   "pclib_types": [],
-   "popups": 0,
-   "resource_version": 1,
-   "system_calls": [
-    "system.perspective.closeDock",
-    "system.tag.writeBlocking",
-    "system.util.invokeAsynchronous"
-   ]
-  },
   "EFC_Library:view:Templates/Station/Station_Tile": {
    "bound_classes": 3,
-   "bytes": 28348,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 28667,
+   "changed_at": "2026-10-21 03:43",
    "classes": [
     "Bar/Fill",
     "Bar/Marker",
@@ -4994,16 +5234,11 @@
     "height": 96,
     "width": 220
    },
-   "doc_hash": "2c36169e52d8",
-   "docks": [
-    {
-     "dock": "StationSidebar",
-     "event": "dom.onClick"
-    }
-   ],
+   "doc_hash": "94bc13f6c878",
+   "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/Station_Tile/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "2c36169e52d8",
+   "hash": "94bc13f6c878",
    "inline_styles": 8,
    "inline_where": [
     "root",
@@ -5016,22 +5251,34 @@
    "last_modified": "2026-10-06T20:37:54Z",
    "modified_by": "build_station.py",
    "params": {
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_Station",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "",
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_Station"
+   ],
    "popups": 0,
    "resource_version": 1,
-   "system_calls": [
-    "system.perspective.openDock"
-   ]
+   "system_calls": []
   },
   "EFC_Library:view:Templates/Station/_Demo": {
    "bound_classes": 0,
-   "bytes": 10562,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 10542,
+   "changed_at": "2026-10-21 03:43",
    "classes": [
     "Container/Screen",
     "Text/Subheader",
@@ -5043,11 +5290,11 @@
     "height": 1080,
     "width": 1920
    },
-   "doc_hash": "67d317e5d2fd",
+   "doc_hash": "18348ae95adc",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/_Demo/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "67d317e5d2fd",
+   "hash": "18348ae95adc",
    "inline_styles": 15,
    "inline_where": [
     "root",
@@ -5066,16 +5313,18 @@
    "system_calls": []
   },
   "EFC_Library:view:Templates/Valves/Valve_Control": {
-   "bound_classes": 1,
-   "bytes": 16202,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 19968,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Indicator/InterlockBadge",
     "Indicator/PermissiveBadge",
     "State/Stopped",
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
-    "Text/TagName"
+    "Text/TagName",
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -5096,31 +5345,45 @@
     "height": 100,
     "width": 120
    },
-   "doc_hash": "33b272d9d389",
+   "doc_hash": "947debeaa3af",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Valves/Valve_Control/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "33b272d9d389",
+   "hash": "947debeaa3af",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_CValve",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/FV101",
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_CValve"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": []
   },
   "EFC_Library:view:Templates/Valves/Valve_MOV": {
-   "bound_classes": 3,
-   "bytes": 19567,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 20915,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -5129,7 +5392,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -5147,17 +5411,33 @@
     "height": 100,
     "width": 120
    },
-   "doc_hash": "00c0decbee89",
+   "doc_hash": "7906d7566a59",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Valves/Valve_MOV/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "00c0decbee89",
+   "hash": "7906d7566a59",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_DValve",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/XV103",
      "dir": "input"
@@ -5167,7 +5447,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_DValve"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -5175,9 +5457,9 @@
    ]
   },
   "EFC_Library:view:Templates/Valves/Valve_OnOff_Pneumatic": {
-   "bound_classes": 3,
-   "bytes": 19209,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 20557,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -5186,7 +5468,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -5204,17 +5487,33 @@
     "height": 100,
     "width": 120
    },
-   "doc_hash": "39387f972800",
+   "doc_hash": "f3fda748c88e",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Valves/Valve_OnOff_Pneumatic/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "39387f972800",
+   "hash": "f3fda748c88e",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_DValve",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/XV101",
      "dir": "input"
@@ -5224,7 +5523,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_DValve"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -5232,9 +5533,9 @@
    ]
   },
   "EFC_Library:view:Templates/Valves/Valve_Solenoid": {
-   "bound_classes": 3,
-   "bytes": 19613,
-   "changed_at": "2026-10-21 00:35",
+   "bound_classes": 2,
+   "bytes": 20961,
+   "changed_at": "2026-10-21 03:38",
    "classes": [
     "Button/Command",
     "Indicator/InterlockBadge",
@@ -5243,7 +5544,8 @@
     "Text/Mod/Center",
     "Text/Mod/NoWrap",
     "Text/TagName",
-    "Util/Collapsed"
+    "Util/Collapsed",
+    "Util/Pointer"
    ],
    "colors": [
     "#00a3e0",
@@ -5261,17 +5563,33 @@
     "height": 100,
     "width": 120
    },
-   "doc_hash": "25f1bb7771fc",
+   "doc_hash": "b22e38dfd276",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Valves/Valve_Solenoid/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "25f1bb7771fc",
+   "hash": "b22e38dfd276",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {
+    "dblCmd": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_DValve",
+     "dir": "input"
+    },
     "tagPath": {
      "default": "[default]PID_Demo/XV102",
      "dir": "input"
@@ -5281,7 +5599,9 @@
      "dir": "input"
     }
    },
-   "pclib_types": [],
+   "pclib_types": [
+    "T_DValve"
+   ],
    "popups": 0,
    "resource_version": 1,
    "system_calls": [
@@ -5376,13 +5696,14 @@
    ]
   },
   "pclib:udt:PCLib/T_Agitator": {
-   "bytes": 6019,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 6514,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 00:35",
-   "hash": "a53e0048791e",
+   "hash": "1791031680d6",
    "kind": "udt",
    "members": [
     "Drv",
+    "Prot",
     "Inp_Level",
     "Inp_SealOK",
     "Inp_GbxTemp",
@@ -5529,15 +5850,16 @@
    ]
   },
   "pclib:udt:PCLib/T_CValve": {
-   "bytes": 15792,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 16292,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 00:35",
-   "hash": "b2f999d06a5b",
+   "hash": "4881dc0f0ef6",
    "kind": "udt",
    "members": [
     "Cfg_Tag",
     "Cfg_Desc",
     "Mode",
+    "Intlk",
     "Inp_PosFbk",
     "Inp_FbkBad",
     "Inp_ZSC",
@@ -5585,13 +5907,14 @@
    ]
   },
   "pclib:udt:PCLib/T_Compressor": {
-   "bytes": 11297,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 11792,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 00:35",
-   "hash": "419971ece0e8",
+   "hash": "fad92db88489",
    "kind": "udt",
    "members": [
     "Drv",
+    "Prot",
     "Inp_SuctPress",
     "Inp_DischPress",
     "Inp_DischTemp",
@@ -5628,12 +5951,13 @@
    ]
   },
   "pclib:udt:PCLib/T_Conveyor": {
-   "bytes": 11000,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 11495,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 00:35",
-   "hash": "564b1f99feeb",
+   "hash": "9231563e8d00",
    "kind": "udt",
    "members": [
+    "Prot",
     "Mtr",
     "Inp_MotionOK",
     "Inp_PullCordOK",
@@ -5703,15 +6027,17 @@
    ]
   },
   "pclib:udt:PCLib/T_DValve": {
-   "bytes": 15756,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 16747,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 00:35",
-   "hash": "c9321c9c1f49",
+   "hash": "72dc78da6c88",
    "kind": "udt",
    "members": [
     "Cfg_Tag",
     "Cfg_Desc",
     "Mode",
+    "Perm",
+    "Intlk",
     "Inp_ZSO",
     "Inp_ZSC",
     "Inp_Remote",
@@ -5758,12 +6084,13 @@
    ]
   },
   "pclib:udt:PCLib/T_DosePump": {
-   "bytes": 11845,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 12340,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 00:35",
-   "hash": "3444a1b94a56",
+   "hash": "01dc56627569",
    "kind": "udt",
    "members": [
+    "Prot",
     "Mtr",
     "Cfg_RateEU",
     "Cfg_DoseMode",
@@ -5949,15 +6276,17 @@
    ]
   },
   "pclib:udt:PCLib/T_Heater": {
-   "bytes": 26016,
-   "changed_at": "2026-10-21 03:09",
+   "bytes": 27007,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 03:09",
-   "hash": "759ae86c7d9a",
+   "hash": "297479e7d2b3",
    "kind": "udt",
    "members": [
     "Cfg_Tag",
     "Cfg_Desc",
     "Mode",
+    "Perm",
+    "Intlk",
     "Inp_ContactorFbk",
     "Inp_Remote",
     "Inp_AvailOK",
@@ -6027,10 +6356,10 @@
    ]
   },
   "pclib:udt:PCLib/T_Intlk": {
-   "bytes": 52799,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 59775,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 00:35",
-   "hash": "0562b4bda83a",
+   "hash": "3d0720be866a",
    "kind": "udt",
    "members": [
     "Cfg_Tag",
@@ -6052,6 +6381,7 @@
     "Sts_Latched",
     "Sts_FirstOut",
     "Sts_NumBypassed",
+    "Sts_BypLeft",
     "Sts_BypassLeft",
     "Sts_ResetReq",
     "Sts_CondWord",
@@ -6139,15 +6469,17 @@
    ]
   },
   "pclib:udt:PCLib/T_Motor": {
-   "bytes": 20252,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 21243,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 00:35",
-   "hash": "a2526931690b",
+   "hash": "508bc2b566c6",
    "kind": "udt",
    "members": [
     "Cfg_Tag",
     "Cfg_Desc",
     "Mode",
+    "Perm",
+    "Intlk",
     "Inp_RunFbk",
     "Inp_Remote",
     "Inp_AvailOK",
@@ -6205,14 +6537,15 @@
    ]
   },
   "pclib:udt:PCLib/T_PID": {
-   "bytes": 18059,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 18559,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 00:35",
-   "hash": "a121e851dda8",
+   "hash": "7878db0dd22b",
    "kind": "udt",
    "members": [
     "Cfg_Tag",
     "Cfg_Desc",
+    "Intlk",
     "Cfg_PVEU",
     "Inp_PV",
     "Inp_PVBad",
@@ -6366,14 +6699,15 @@
    ]
   },
   "pclib:udt:PCLib/T_PumpProt": {
-   "bytes": 10727,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 11222,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 00:35",
-   "hash": "32a050e59649",
+   "hash": "18ccb16231c7",
    "kind": "udt",
    "members": [
     "Cfg_Tag",
     "Cfg_Desc",
+    "Prot",
     "Inp_Running",
     "Inp_SuctPress",
     "Inp_DischPress",
@@ -6653,15 +6987,17 @@
    ]
   },
   "pclib:udt:PCLib/T_VFD": {
-   "bytes": 30722,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 31713,
+   "changed_at": "2026-10-21 03:38",
    "first_seen": "2026-10-21 00:35",
-   "hash": "6cbb783ab2ef",
+   "hash": "ba5fae6e1904",
    "kind": "udt",
    "members": [
     "Cfg_Tag",
     "Cfg_Desc",
     "Mode",
+    "Perm",
+    "Intlk",
     "Inp_RunFbk",
     "Inp_Remote",
     "Inp_AvailOK",
@@ -6749,12 +7085,12 @@
    ]
   }
  },
- "last_audit_fp": "eee5fb4493e8",
- "last_delta": 2,
+ "last_audit_fp": "95e140df57fb",
+ "last_delta": 13,
  "projects": [
   "EFC_AnalogIndicators",
   "EFC_Library"
  ],
- "scanned_at": "2026-10-21 03:09",
+ "scanned_at": "2026-10-21 03:43",
  "upstream": {}
 }

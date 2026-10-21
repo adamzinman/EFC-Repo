@@ -1,38 +1,21 @@
-# Changes since last scan (2026-10-21 03:09 -> 2026-10-21 03:38)
+# Changes since last scan (2026-10-21 03:38 -> 2026-10-21 03:43)
 
-## Added (0)
-- none
+## Added (1)
+- EFC_Library:view:Docks/Station
 
-## Changed (28)
-- EFC_Library:view:Templates/HeatTransfer/HX_AirCooled
-- EFC_Library:view:Templates/HeatTransfer/Heater_Electric
-- EFC_Library:view:Templates/Rotating/Agitator
-- EFC_Library:view:Templates/Rotating/Blower
-- EFC_Library:view:Templates/Rotating/Compressor_Centrifugal
-- EFC_Library:view:Templates/Rotating/Compressor_Diaphragm
-- EFC_Library:view:Templates/Rotating/Motor
-- EFC_Library:view:Templates/Rotating/Pump_Centrifugal
-- EFC_Library:view:Templates/Rotating/Pump_Diaphragm
-- EFC_Library:view:Templates/Rotating/Pump_PD_Rotary
-- EFC_Library:view:Templates/Rotating/Pump_Reciprocating
-- EFC_Library:view:Templates/Rotating/Pump_Vacuum
-- EFC_Library:view:Templates/Valves/Valve_Control
-- EFC_Library:view:Templates/Valves/Valve_MOV
-- EFC_Library:view:Templates/Valves/Valve_OnOff_Pneumatic
-- EFC_Library:view:Templates/Valves/Valve_Solenoid
-- pclib:udt:PCLib/T_Agitator
-- pclib:udt:PCLib/T_CValve
-- pclib:udt:PCLib/T_Compressor
-- pclib:udt:PCLib/T_Conveyor
-- pclib:udt:PCLib/T_DValve
-- pclib:udt:PCLib/T_DosePump
-- pclib:udt:PCLib/T_Heater
-- pclib:udt:PCLib/T_Intlk
-- pclib:udt:PCLib/T_Motor
-- pclib:udt:PCLib/T_PID
-- pclib:udt:PCLib/T_PumpProt
-- pclib:udt:PCLib/T_VFD
+## Changed (10)
+- EFC_Library:view:Templates/Loops/Loop_B1_Bar
+- EFC_Library:view:Templates/Loops/Loop_B2_Horizontal
+- EFC_Library:view:Templates/Loops/Loop_B3_Sparkline
+- EFC_Library:view:Templates/Loops/Loop_B4_Column
+- EFC_Library:view:Templates/ProcessValues/PV_RangeBar
+- EFC_Library:view:Templates/ProcessValues/PV_StatusStrip
+- EFC_Library:view:Templates/ProcessValues/_Demo
+- EFC_Library:view:Templates/Station/Station_Fill
+- EFC_Library:view:Templates/Station/Station_Tile
+- EFC_Library:view:Templates/Station/_Demo
 
-## Removed (0)
-- none
+## Removed (2)
+- EFC_Library:view:Templates/Loops/Popups/LoopConfig
+- EFC_Library:view:Templates/Station/Station_Sidebar
 
