@@ -1,10 +1,10 @@
 # Controls Standard rev I: add HMI role, dynamic window, bypass and trend rules
 
-Instructions for an agent working on the EFC Controls Standard (LaTeX, Google Drive folder `Claude/Controls Standard`, **revision I**). Apply exactly these six edits, then stop and report. Do not change anything else, do not bump the revision letter, and do not regenerate whole files.
+Instructions for an agent working on the EFC Controls Standard (LaTeX, Google Drive folder `Claude/Controls Standard`, **revision I**). Apply exactly these seven edits, then stop and report. Do not change anything else, do not bump the revision letter, and do not regenerate whole files.
 
 **Why:** the EFCLib design review (steward/DECISIONS.md rows 1-16) fixed how users, dynamic windows (docks), touch commands, bypasses and dock trends work on Perspective screens. The standard needs (1) the role hierarchy and a table of minimum roles in Chapter 11 Security and Audit, (2) a new Chapter 11 section on dynamic windows, (3) a pointer from Alarms to the role table and (4) a cross-reference from the Perspective Screen Design appendix.
 
-**Source of the content:** EFC-Repo branch `steward/finish-library` (`steward/DECISIONS.md` rows 1-6, 8, 10, 12-16; row 7 only where it affects the HMI). Electric heater text (row 17) is in `CS-REV-I-heaters-instructions.md` and is not repeated here. Anchors below were taken from the rev I files in Drive (`sections/11-scada-standards.tex`, `appendices/perspective-screen-design.tex`, `appendices/data-types-future.tex`).
+**Source of the content:** EFC-Repo branch `steward/finish-library` (`steward/DECISIONS.md` rows 1-6, 8, 10, 12-16, 19; row 7 only where it affects the HMI). Electric heater text (row 17) is in `CS-REV-I-heaters-instructions.md` and is not repeated here. Anchors below were taken from the rev I files in Drive (`sections/11-scada-standards.tex`, `appendices/perspective-screen-design.tex`, `appendices/data-types-future.tex`).
 
 ---
 
@@ -79,9 +79,9 @@ The Permissives and Interlocks sections list each condition by name (\texttt{Cfg
   \item \textbf{Confirmation.} BYPASS opens a confirmation (\texttt{Docks/Parts/BypassConfirm}). The user picks a duration from the presets 1~h, 2~h, 4~h and 8~h, limited to the group's maximum (\texttt{Cfg\_BypassMax}), and must enter a reason. The bypass is not applied without a reason.
   \item \textbf{Indication.} Each bypassed condition shows its own time left and an audit line: who bypassed it, their role, when, and the reason.
   \item \textbf{Logging.} Bypass and unbypass are written to the Ignition audit log (Section~\ref{sec:ignition-roles}).
+  \item \textbf{Rule.} A bypass made this way from the HMI is the rule, and it is exempt from the second-person and approved MOC requirement for a force or bypass in Section~\ref{sec:online-changes}. PLC forces and logic changes are not exempt.
 \end{itemize}
 \future{Named permissive and interlock groups are to be embedded in the device types: \texttt{Perm : T\_Intlk} and \texttt{Intlk : T\_Intlk} in \texttt{T\_DValve}, \texttt{T\_Motor} and \texttt{T\_VFD}, \texttt{Intlk : T\_Intlk} in \texttt{T\_CValve} and \texttt{T\_PID}, and \texttt{Prot : T\_Intlk} in equipment modules. The existing \texttt{Inp\_IntlkOK} and \texttt{Inp\_PermOK} are kept and ANDed with the group. \texttt{T\_Intlk} gains \texttt{Sts\_BypLeft : ARRAY[0..15] OF TIME} so the time left can be shown per condition; until then only the time left on the oldest bypass (\texttt{Sts\_BypassLeft}) is available.}
-\note{Open: the single-Supervisor HMI bypass must be reconciled with Section ``Online Changes and Forces'' (a second person and an approved MOC for a force or bypass on an interlock or safety-related signal). Confirm whether that rule applies to HMI bypasses of \texttt{T\_Intlk} conditions: \tbd.}
 
 \subsection[Trends]{Trends \newmark}\label{sec:hmi-trends}
 Trends in a dynamic window show the last 30~minutes by default. Every graph has an expand button that opens it at about half the screen (960 $\times$ 540 design px, \texttt{Docks/Parts/TrendExpanded}) with range buttons 5~m, 30~m, 1~h, 8~h and 24~h, and pause /\allowbreak{} live.
@@ -178,7 +178,7 @@ Then insert this line on its own, immediately after that paragraph and before th
 Append this item to the numbered list of applied changes (use the next free number in place of N):
 
 ```
-N. Ch11 SCADA: Roles and audit rewritten (label sec:ignition-roles): role hierarchy Guest < Operator < Maintenance < Supervisor < Engineer < Admin, one session level at login, controls hidden below the required level, Table tab:hmi-roles (MAINT/OOS, JOG, simulation, maintenance resets = Maintenance; bypass and shelving = Supervisor; alarm limits, configuration and tuning = Engineer), audit-log content. New section Dynamic Windows (sections/hmi-dynamic-windows.tex, \input before Alarms): dock ids (Table tab:hmi-docks), size, open/close and defaultDock, section order, button tiers, touch double-tap (dblCmd), named permissives/interlocks and bypass (BypassConfirm, presets 1/2/4/8 h up to Cfg_BypassMax, mandatory reason, time left and audit line per condition; T_Intlk embedding as \future), trends (30 min default, expand 960 x 540, ranges 5 m to 24 h). Alarms: shelving/limit roles sentence. Appendix Perspective Screen Design: cross-reference from Trends / dynamic window and open note on dock vs embedded view.
+N. Ch11 SCADA: Roles and audit rewritten (label sec:ignition-roles): role hierarchy Guest < Operator < Maintenance < Supervisor < Engineer < Admin, one session level at login, controls hidden below the required level, Table tab:hmi-roles (MAINT/OOS, JOG, simulation, maintenance resets = Maintenance; bypass and shelving = Supervisor; alarm limits, configuration and tuning = Engineer), audit-log content. New section Dynamic Windows (sections/hmi-dynamic-windows.tex, \input before Alarms): dock ids (Table tab:hmi-docks), size, open/close and defaultDock, section order, button tiers, touch double-tap (dblCmd), named permissives/interlocks and bypass (BypassConfirm, presets 1/2/4/8 h up to Cfg_BypassMax, mandatory reason, time left and audit line per condition; T_Intlk embedding as \future), trends (30 min default, expand 960 x 540, ranges 5 m to 24 h). Alarms: shelving/limit roles sentence. Appendix Perspective Screen Design: cross-reference from Trends / dynamic window and open note on dock vs embedded view. Section Online Changes and Forces (sec:online-changes): HMI bypass by one Supervisor-or-higher user with a mandatory reason, up to the configured maximum, audit-logged, is exempt from the second-person and MOC requirement; PLC forces and logic changes keep it (Edit 7, cross-ref sec:hmi-bypass).
 ```
 
 Add to its "Still open (need Adam)" list:
@@ -186,9 +186,26 @@ Add to its "Still open (need Adam)" list:
 ```
 - Minimum role for alarm acknowledge, setpoint changes and reset of latched interlocks (tab:hmi-roles).
 - Which actions are Admin-only, e.g. user and role administration (tab:hmi-roles).
-- Single-Supervisor HMI bypass vs the "Online Changes and Forces" rule (second person + MOC for a bypass on an interlock or safety-related signal) (sec:hmi-bypass).
 - Dynamic window as a Perspective right dock (EFCLib) vs the appendix's embedded view and "docks are not used" (app:screen-design, Navigation and Dynamic Content).
 ```
+
+## Edit 7: `sections/07-software.tex`, Online Changes and Forces
+
+Anchor (quoted from the rev H copy of `sections/07-software.tex`, section at `\label{sec:online-changes}`; the bullet is the third item of the `itemize`). Re-check it verbatim against rev I before applying; see Background.
+
+```latex
+  \item A force or bypass on an interlock or safety-related signal needs a second person to check it and an approved MOC (Section~\ref{sec:review-release}).
+```
+
+Replace that line with exactly this:
+
+```latex
+  \item A force or bypass on an interlock or safety-related signal needs a second person to check it and an approved MOC (Section~\ref{sec:review-release}), except an HMI bypass of a permissive or interlock condition. An HMI bypass is the rule when one user with the Supervisor role or higher sets it from the dynamic window through the bypass confirmation, with a mandatory reason, a duration up to the configured maximum (\texttt{Cfg\_BypassMax}), and an entry in the audit log (Section~\ref{sec:hmi-bypass}). It needs no second person and no MOC. PLC forces and logic changes on an interlock or safety-related signal keep the second-person and MOC requirement.
+```
+
+Checks for this edit: `sec:online-changes` and `sec:review-release` exist in rev I (grep `sections/`); `sec:hmi-bypass` is created by Edit 1 of this file, so Edit 1 must be applied first. Leave the existing `\note` at the top of the section (it says the policy is not yet enforced) unchanged; that is a separate decision.
+
+Background: the rev H copy is the only copy available to the documentation subagent (`revision.tex` = H, file dated 2026-10-08). The Google Drive rev I copy could not be read from this session, so the anchor and the line number are unverified against rev I. The section is in `07-software.tex`, not `10-plc-standards.tex`.
 
 ---
 
@@ -201,7 +218,7 @@ Add to its "Still open (need Adam)" list:
 
 ## Background (for the reviewer; do not paste into the standard)
 
-- Rows used: 1 (click/double-tap, dblCmd, 44 px target), 2 (defaultDock, close), 3 (right dock 800 px at 4K, 37.04 vh), 4 (dw_Station), 5 (roles, MAINT/OOS, bypass), 6 (8 h history), 7 (Perm/Intlk embedding, Sts_BypLeft: \future only), 8 (dw_ValveDiscrete layout), 10 (BypassConfirm, Inp_BypassPerm, per-condition time left and audit line), 12 (presets, JOG Maintenance+), 13 (button tiers), 14 (limits, shelving, configuration roles and audit), 15 (LoopConfig retired: tuning in dw_Loop), 16 (trend expand and ranges). Rows 9 and 11 are library-only; 17 is in the heaters file; 18 is process.
+- Rows used: 1 (click/double-tap, dblCmd, 44 px target), 2 (defaultDock, close), 3 (right dock 800 px at 4K, 37.04 vh), 4 (dw_Station), 5 (roles, MAINT/OOS, bypass), 6 (8 h history), 7 (Perm/Intlk embedding, Sts_BypLeft: \future only), 8 (dw_ValveDiscrete layout), 10 (BypassConfirm, Inp_BypassPerm, per-condition time left and audit line), 12 (presets, JOG Maintenance+), 13 (button tiers), 14 (limits, shelving, configuration roles and audit), 15 (LoopConfig retired: tuning in dw_Loop), 16 (trend expand and ranges), 19 (HMI bypass exemption from the Online Changes and Forces rule, Edit 7). Rows 9 and 11 are library-only; 17 is in the heaters file; 18 is process.
 - Chapter 10 mode transitions (sec:pclib-modes) already name the Operator role for Auto/Manual and the Maintenance role for MAINT/OOS, so Table tab:hmi-roles is consistent with it; Chapter 10 is not edited.
 - `T_Intlk` in rev I Appendix I has `Cfg_Bypassable`, `Cfg_BypassMax` (default T#8H), `Inp_BypassPerm` and `Sts_BypassLeft` (oldest bypass only); `Sts_BypLeft[n]` is planned, hence the \future.
 - Sizes are in design px (1080p pixels), as in the Perspective Screen Design appendix: 400 dp = 37.04 vh = 800 px at 4K; the dock height between header (80 dp) and alarm bar (140 dp) is 860 dp.
