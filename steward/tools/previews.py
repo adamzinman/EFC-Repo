@@ -158,7 +158,7 @@ def frame(item, inner, dw, dh, ttype, dock, extra="", cw=None, maxh=320):
     tt = f'<b class="{"gap" if gap else "ok"}">{esc(ttype.replace("gap:", "GAP "))}</b>'
     return (f'<figure class="card" id="{slug(item)}"><div class="view" style="width:{cw}px;height:{round(dh * sc)}px">'
             f'<div class="stage" style="width:{dw}px;height:{dh}px;transform:scale({sc:.4f})">{inner}</div></div>'
-            f'<figcaption><code>{esc(item)}</code><br>{tt} &middot; dock <code>{esc(dock)}</code>{extra}</figcaption></figure>')
+            f'<figcaption><code>{esc(item)}</code><br>{tt} &middot; dynamic window <code>{esc(dock)}</code>{extra}</figcaption></figure>')
 
 
 def template_card(item, ttype, new_note=""):
@@ -189,11 +189,11 @@ def template_card(item, ttype, new_note=""):
         inner = (f'<div style="position:relative;width:100%;height:{dh - 14}px">{inner}</div>'
                  '<div style="display:flex;flex:none;gap:4px;align-items:center;height:14px"><div data-c="Bar/Track" style="flex:1;height:5px"><div data-c="Bar/Fill" style="width:62%;height:100%"></div></div><span data-c="Text/Caption">48.2 Hz</span></div>')
     dbl = ttype in ("T_DValve", "T_Motor")
-    extra = "<br>click symbol: open dock" + (" &middot; dbl-tap (touch, Manual, canCmd): toggle" if dbl else "") + new_note
+    extra = "<br>click symbol: open dynamic window" + (" &middot; dbl-tap (touch, Manual, canCmd): toggle" if dbl else "") + new_note
     return frame(item, inner, dw, dh, ttype, dock_for(item), extra)
 
 
-# ---------- new dock proposals ----------
+# ---------- new dynamic-window proposals ----------
 SECTIONS = {
     "mode": '<div class="row"><span data-c="Text/Label">MODE</span><button data-c="Mode/Auto">AUTO</button><button data-c="Mode/Manual">MAN</button><button data-c="Button/Subtle">MAINT</button><button data-c="Button/Subtle">OOS</button></div>',
     "perm": '<div data-c="Container/GroupBox"><span data-c="Text/Subheader">PERMISSIVES / INTERLOCKS</span><div class="row"><span data-c="Indicator/LED/On"></span><span data-c="Text/Body">Perm 1 - Seal water OK</span></div><div class="row"><span data-c="Indicator/LED/Fault"></span><span data-c="Text/Body">Intlk 2 - Tank LL</span></div></div>',
@@ -252,7 +252,7 @@ def history_strip():
 
 def valve_discrete():
     head = ('<div data-c="Container/PopupHeader" class="hdr"><div style="flex:1;min-width:0"><div data-c="Text/TagName Text/Color/Inverse">XV-101</div>'
-            '<div data-c="Text/Caption Text/Color/Inverse">Feed tank inlet valve</div></div><button data-c="Button/Icon" class="x" title="close: back to the screen default dock">&#x2715;</button></div>')
+            '<div data-c="Text/Caption Text/Color/Inverse">Feed tank inlet valve</div></div><button data-c="Button/Icon" class="x" title="close returns the right region to the screen&#39;s default view">&#x2715;</button></div>')
     state = ('<div class="row st"><span data-c="State/Stopped" class="big">CLOSED</span><span data-c="Indicator/Badge">NE107 OK</span>'
              '<span data-c="Mode/Simulated" class="dim">SIM</span><span data-c="Mode/Local" class="dim">LOCAL</span></div>'
              '<div class="row"><span data-c="Indicator/LED/Off" class="led"></span><span data-c="Text/Label">ZSO open</span>'
@@ -284,7 +284,7 @@ def valve_discrete():
 def hdr(tag, desc):
     return ('<div data-c="Container/PopupHeader" class="hdr"><div style="flex:1;min-width:0">'
             f'<div data-c="Text/TagName Text/Color/Inverse">{tag}</div><div data-c="Text/Caption Text/Color/Inverse">{desc}</div></div>'
-            '<button data-c="Button/Icon" class="x" title="close: back to the screen default dock">&#x2715;</button></div>')
+            '<button data-c="Button/Icon" class="x" title="close returns the right region to the screen&#39;s default view">&#x2715;</button></div>')
 
 
 def mode_row():
@@ -566,7 +566,7 @@ def trend_expanded():
         return f'<path d="{d}" fill="none" stroke="{c}" stroke-width="2"{" stroke-dasharray=\"6 4\"" if dash else ""}/>'
     grid = "".join(f'<line x1="0" x2="{W}" y1="{y}" y2="{y}" stroke="#D0D0D0"/>' for y in range(45, H, 45)) + "".join(f'<line y1="0" y2="{H}" x1="{x}" x2="{x}" stroke="#E0E0E0"/>' for x in range(150, W, 150))
     rng = "".join(f'<button data-c="Button/Small{" Button/Toggle/On" if t == "30 m" else ""}">{t}</button>' for t in ("5 m", "30 m", "1 h", "8 h", "24 h"))
-    return (hdr("TIC-101 &middot; HISTORY", "Reactor jacket temperature").replace("&#x2715;", "&#x2921;").replace("close: back to the screen default dock", "collapse back into the dock")
+    return (hdr("TIC-101 &middot; HISTORY", "Reactor jacket temperature").replace("&#x2715;", "&#x2921;").replace("close returns the right region to the screen&#39;s default view", "collapse back to the dynamic window")
             + f'<div class="body"><div class="row"><span data-c="Text/Label">RANGE</span>{rng}<span style="flex:1"></span><button data-c="Button/Small">&#x23F8; PAUSE</button>'
             '<button data-c="Button/Small">&#x21BB; LIVE</button></div>'
             f'<svg viewBox="0 0 {W} {H}" width="100%" height="{H}" style="border:1px solid #9E9E9E;background:#FAFAFA">{grid}{path(pv, "#262626")}{path([60] * 90, "#1F4E99", True)}{path(cv, "#8D6E63")}</svg>'
@@ -618,23 +618,85 @@ DOCKS = {
     "dw_HeatTransfer": ("T_HeatEx", "heat_exchanger"),
     "dw_ProcessValue": ("T_AI / T_KPI", "process_value"),
     "dw_Loop": ("T_PID", "loop"),
-    "dw_IOCard": ("GAP T_IOCard", "io_card"),
+    "dw_IOCard": ("native: x80 device DDT", "io_card"),
 }
 
 
+def gate(h):
+    return re.sub(r'<button ([^>]*)>([^<]*)</button><span class="role" title="([^"]*)">[^<]*</span>', r'<button \1 class="gated" title="\3">\2</button>', h)
+
+
 def dock_card(did, path, ttype, parts):
-    import re as _re
-    gate = lambda h: _re.sub(r'<button ([^>]*)>([^<]*)</button><span class="role" title="([^"]*)">[^<]*</span>', r'<button \1 class="gated" title="\3">\2</button>', h)
     REV2 = {"valve_discrete": valve_discrete, "valve_analog": valve_analog, "motor": motor_body, "vfd": lambda: motor_body(True), "heat_exchanger": heat_exchanger, "process_value": process_value, "loop": loop, "heater": heater, "io_card": io_card}
     if isinstance(parts, str) and parts in REV2:  # rev 2 designs
         inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(REV2[parts]())}</div>'
-        return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 - design proposal</b> &middot; dashed purple outline = role-gated (hover for role)", maxh=600)
+        return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 - design proposal</b> &middot; dashed purple outline = role-gated (hover for role)" + ("<br>binds to the Modicon x80 device DDT imported from Control Expert" if parts == "io_card" else ""), maxh=600)
     body = "".join(SECTIONS.get(p, p) for p in parts)
     head = (f'<div data-c="Container/PopupHeader" class="row"><span data-c="Text/TagName">XV-101</span>'
-            f'<span data-c="Text/Caption" style="flex:1">Description</span><button data-c="Button/Icon" title="close: back to screen default dock">&#x2715;</button></div>'
+            f'<span data-c="Text/Caption" style="flex:1">Description</span><button data-c="Button/Icon" title="close returns the right region to the screen&#39;s default view">&#x2715;</button></div>'
             f'<div class="row"><span data-c="State/Stopped">CLOSED</span><span data-c="Text/Caption">NE107: OK</span></div>')
     inner = f'<div data-c="Container/Faceplate" class="dock">{head}{body}</div>'
-    return frame(path, inner, DOCK_DW, DOCK_DH, ttype.replace("GAP ", "gap:"), did, "<br><b>NEW - design proposal</b> &middot; close &#x2715; reopens the screen's defaultDock", maxh=600)
+    return frame(path, inner, DOCK_DW, DOCK_DH, ttype.replace("GAP ", "gap:"), did, "<br><b>NEW - design proposal</b> &middot; close &#x2715; returns the right region to the screen's default view", maxh=600)
+
+
+# ---------- screen layout (decision 24: embedded-view strategy) ----------
+EV_LABEL = "Embedded View: path/params from session.custom.efcDw[pageId] (efc.ui)"
+SYMS = [("Rotating/Pump_Centrifugal", 40, 120, True), ("Valves/Valve_OnOff_Pneumatic", 360, 120, False), ("Valves/Valve_Control", 640, 120, False),
+        ("Rotating/Blower", 40, 480, False), ("Rotating/Motor", 360, 480, False)]
+
+
+def layout_card(expanded):
+    W, H, HEAD, MENU, ALARM = 1920, 1080, 60, 60, 70
+    RW = 960 if expanded else 400
+    PW, MH = W - MENU - RW, H - HEAD - ALARM
+    lab = lambda t, pos="": f'<div class="rl" style="{pos}">{t}</div>'
+    pipes = f'<svg width="{PW}" height="{MH}" style="position:absolute;inset:0" fill="none" stroke="#7F7F7F" stroke-width="6">'
+    pipes += '<path d="M160,170 H360 M440,170 H640 M720,170 H' + str(min(PW - 20, 1000)) + '"/><path d="M160,530 H360"/></svg>'
+    syms = ""
+    for rel, x, y, sel in SYMS:
+        if x + 160 > PW:
+            continue
+        syms += (f'<img src="../../docs/previews/templates/{rel}.png" style="position:absolute;left:{x}px;top:{y}px;width:160px;height:auto"'
+                 f'{" class=hit" if sel else ""}>')
+    sel_note = '<div class="rl" style="left:20px;top:300px;color:#00A3E0">click symbol: efc.ui.openDynamic writes the page\'s dynamic-window path + tagPath</div>' if not expanded else \
+               '<div class="rl" style="left:20px;top:300px;color:#00A3E0">graph expand button: efc.ui.expandTrend(self, True) widens the right region</div>'
+    proc = (f'<div data-c="Container/ProcessArea" class="reg" style="left:{MENU}px;top:{HEAD}px;width:{PW}px;height:{MH}px">{pipes}{syms}{sel_note}'
+            + lab(f"Process area &middot; {PW} x {MH} px at 1080p &middot; {2 * PW} x {2 * MH} px at 4K", "left:20px;bottom:10px"))
+    proc += "</div>"
+    if expanded:
+        inner = f'<div data-c="Container/Popup" class="dock2" style="height:540px">{trend_expanded()}</div>'
+        win = f'<div style="width:{RW}px;height:540px;position:absolute;left:0;top:56px">{inner}</div>'
+        note = "Docks/Parts/TrendExpanded (960 x 540 at 1080p)"
+    else:
+        sc = (MH - 56 - 70) / DOCK_DH
+        inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(motor_body())}</div>'
+        win = (f'<div style="position:absolute;left:0;top:56px;width:{RW}px;height:{DOCK_DH}px;transform:scale({sc:.4f});transform-origin:0 0">{inner}</div>')
+        note = "dw_Rotating (Docks/Rotating)"
+    wtxt = "about 50 % of the width" if expanded else "37.04 vh"
+    right = (f'<div data-c="Container/TrendPanel" class="reg ev" style="left:{W - RW}px;top:{HEAD}px;width:{RW}px;height:{MH}px">'
+             f'<div class="rl evl">{EV_LABEL}</div>{win}'
+             + lab(f"Right region &middot; {RW} x {MH} px at 1080p ({wtxt}) &middot; {2 * RW} x {2 * MH} px at 4K &middot; {note}", f"left:0;right:0;bottom:0;border:none;border-top:1px solid #7F7F7F;font-size:19px;height:66px"))
+    right += "</div>"
+    head = (f'<div data-c="Container/Header" class="reg" style="left:0;top:0;width:{W}px;height:{HEAD}px;display:flex;align-items:center;gap:20px;padding:0 20px;box-sizing:border-box">'
+            '<span data-c="Text/TagName">EFC &middot; Reactor area</span><span data-c="Text/Caption" style="flex:1">Screen header</span>'
+            '<span data-c="Text/Caption">jsmith &middot; Supervisor</span>'
+            + lab(f"Header &middot; {W} x {HEAD} px at 1080p &middot; 3840 x 120 px at 4K", "position:static;margin-left:auto") + "</div>")
+    menu = (f'<div data-c="Container/Menu" class="reg" style="left:0;top:{HEAD}px;width:{MENU}px;height:{MH}px;display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:12px;box-sizing:border-box">'
+            + "".join('<button data-c="Button/Icon" style="width:40px;height:40px">&#x25A3;</button>' for _ in range(5))
+            + f'<div class="rl" style="writing-mode:vertical-rl;left:8px;bottom:10px;top:auto;white-space:nowrap;font-size:19px">Menu {MENU} x {MH} px &middot; 4K: 120 px</div></div>')
+    alarm = (f'<div data-c="Container/AlarmBar" class="reg" style="left:0;top:{H - ALARM}px;width:{W}px;height:{ALARM}px;display:flex;align-items:center;gap:20px;padding:0 20px;box-sizing:border-box">'
+             '<span data-c="Alarm/High/Fill" style="padding:4px 12px">HIGH</span><span data-c="Text/Body" style="flex:1">10:42:07 &middot; TIC-101 Reactor jacket temperature high &middot; unacked</span>'
+             '<button data-c="Button/Default">ACK</button>'
+             + lab(f"Alarm bar &middot; {W} x {ALARM} px at 1080p &middot; 3840 x 140 px at 4K", "position:static;margin-left:auto") + "</div>")
+    shell = f'<div style="position:relative;width:{W}px;height:{H}px;background:#fff">{head}{menu}{proc}{right}{alarm}</div>'
+    name = "Screen_Layout_expanded" if expanded else "Screen_Layout_normal"
+    cap = ("Same shell; the right region widens to about 50 % (960 px) for Docks/Parts/TrendExpanded and the process area shrinks to match. "
+           "The collapse button calls efc.ui.expandTrend(self, False)." if expanded else
+           "Normal: 400 px (37.04 vh) right region shows the open dynamic window (here dw_Rotating); close returns the right region to the screen's default view. "
+           "Dynamic windows are an Embedded View, not a Perspective dock (decision 24). Menu and alarm bar sizes double at 4K.")
+    fig = (f'<figure class="card wide" id="{name}"><div class="view" style="width:960px;height:540px"><div class="stage" style="width:{W}px;height:{H}px;transform:scale(0.5)">{shell}</div></div>'
+           f'<figcaption><code>{name.replace("_", " ")}</code><br><b class="ok">1920 x 1080 shell</b> &middot; {"expanded graph" if expanded else "normal"}<br>{cap}</figcaption></figure>')
+    return name, fig
 
 
 PAGE_CSS = """body{margin:0;padding:16px;background:#E6E6E6;font:12px 'Noto Sans','Segoe UI',Arial,sans-serif;color:#1F1F1F}
@@ -646,7 +708,7 @@ h1{font-size:16px;margin:0 0 4px}h2{font-size:13px;margin:18px 0 6px;border-bott
 .kv{display:grid;grid-template-columns:auto 1fr;gap:2px 6px;margin:3px 0}.sym{height:150px;display:flex;flex:none}.sym svg,.sym2 svg{width:100%;height:100%}.sym2{height:28px;display:flex}
 .hit{outline:1.5px dashed #00A3E0;outline-offset:-1px;cursor:pointer}.badge{position:absolute;top:2px}.bP{left:2px}.bI{right:2px}.view>.box:first-child{padding:0 22px}
 .inp{background:#fff;border:1px solid #BDBDBD;padding:0 3px}.ph{border:1px dashed #9E9E9E;color:#616161;font-size:10px;box-sizing:border-box;padding:2px;margin:1px;text-align:center;flex:1}
-.dock{height:100%;box-sizing:border-box;overflow:hidden;padding:6px}.legend{font-size:11px;color:#424242}
+.dock{height:100%;box-sizing:border-box;overflow:hidden;padding:6px}.card.wide figcaption{width:auto;font-size:11px}.reg{position:absolute;box-sizing:border-box;overflow:hidden}.rl{position:absolute;font-size:22px;line-height:1.2;background:rgba(255,255,255,.85);color:#1F1F1F;padding:2px 8px;border:1px solid #7F7F7F;z-index:5}.reg.ev{outline:3px dashed #00A3E0;outline-offset:-3px}.evl{left:0;top:0;right:0;background:#E0F4FC;border:none;border-bottom:1px solid #00A3E0;color:#005A7D;font-size:15px;line-height:1.25;padding:3px 6px;box-sizing:border-box;height:56px}.legend{font-size:11px;color:#424242}
 @media(max-width:600px){body{padding:16px}.card{width:100%}}"""
 
 if __name__ == "__main__":
@@ -662,9 +724,9 @@ if __name__ == "__main__":
             t, parts = DOCKS[did]
             frag = dock_card(did, path, t, parts)
         else:  # existing dock view: draw it like a template
-            frag = template_card(path, "gap:T_Station").replace("click symbol: open dock", "existing dock view; planned: move to <code>Docks/Station</code>, resize 300 to 400 px wide")
+            frag = template_card(path, "gap:T_Station").replace("click symbol: open dynamic window", "existing dock view; planned: move to <code>Docks/Station</code>, resize 300 to 400 px wide")
         open(f"{OUT}/{slug(path)}.html", "w").write(frag)
-        groups.setdefault("Docks (dynamic windows)", []).append(frag)
+        groups.setdefault("Dynamic windows", []).append(frag)
     for path, (title, rows) in CFG.items():
         body = f'<div class="body">{grp(title + " (expanded)", cfg_form(rows))}</div>'
         f2 = frame(path + " - " + title.lower() + " expanded", f'<div data-c="Container/Faceplate" class="dock2">{body}</div>', 400, 110 + 27 * len(rows) + 22 * sum(isinstance(r[1], list) for r in rows), "review", path.split("/")[1],
@@ -672,18 +734,22 @@ if __name__ == "__main__":
         open(f"{OUT}/{slug(path)}_{title.lower()}_expanded.html", "w").write(f2)
         groups.setdefault("Expanded sections", []).append(f2)
     f3 = frame("Docks/Parts/TrendExpanded", f'<div data-c="Container/Popup" class="dock2">{trend_expanded()}</div>', 960, 540, "any", "popup",
-               "<br><b>NEW</b> &middot; &#x2922; on any dock graph; about half the screen (960 x 540 at 1080p); default range 30 min", cw=480, maxh=600)
+               "<br><b>NEW</b> &middot; &#x2922; on any dynamic-window graph; about half the screen (960 x 540 at 1080p); default range 30 min", cw=480, maxh=600)
     open(f"{OUT}/Docks_Parts_TrendExpanded.html", "w").write(f3)
     groups.setdefault("Expanded sections", []).append(f3)
     fr = frame("Docks/Parts/BypassConfirm", f'<div data-c="Container/Popup" class="dock2">{bypass_popup()}</div>', 400, 330, "T_Intlk", "popup",
                "<br><b>NEW - design proposal</b> &middot; opened by every Bypass button (Supervisor+)", maxh=600)
     open(f"{OUT}/Docks_Parts_BypassConfirm.html", "w").write(fr)
-    groups.setdefault("Docks (dynamic windows)", []).append(fr)
+    groups.setdefault("Dynamic windows", []).append(fr)
+    for ex in (False, True):
+        nm, fg = layout_card(ex)
+        open(f"{OUT}/{nm}.html", "w").write(fg)
+        groups.setdefault("Screen layout", []).append(fg)
     body = "".join(f'<h2>{esc(g)}</h2><div class="grid">{"".join(fr)}</div>' for g, fr in groups.items())
     page = (f'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>EFC Library Previews</title><style>{PAGE_CSS}\n{DOCK_CSS}\n/* EFC_Styles */\n{css_block()}</style></head><body>'
-            f'<h1>EFC Library - review contact sheet</h1><p class="legend">Dashed blue = click target (opens dock). Red type = gap (no EFCLib v1 type). '
-            f'Templates are drawn from slim output (layout approximate); docks and VFD are new design proposals.</p>{body}</body></html>')
+            f'<h1>EFC Library - review contact sheet</h1><p class="legend">Dashed blue = click target (opens the dynamic window). Red type = gap (no EFCLib v1 type). '
+            f'Templates are drawn from slim output (layout approximate); dynamic windows and VFD are new design proposals.</p>{body}</body></html>')
     import base64  # inline the renders so index.html is self-contained
     page = re.sub(r'src="([^"]+\.png)"', lambda m: 'src="data:image/png;base64,' + base64.b64encode(open(os.path.normpath(f"{OUT}/{m.group(1)}"), "rb").read()).decode() + '"', page)
     open(f"{OUT}/index.html", "w").write(page)
