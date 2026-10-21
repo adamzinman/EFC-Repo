@@ -40,6 +40,7 @@ mockups/                 HTML design previews
 docs/                    inventory, reference docs, template-review.md, previews/
 archive/                 retired files, kept for reference (not built)
 tools/import_project_zip.py  add or refresh a Designer-built part in imported/
+scripts/ddtsync.py       gateway script: PLC DDTs (M580 via BMENUA0100 OPC UA) -> UDTs, add-only
 ```
 
 `build.py` builds the generated parts in `build/components/`, merges them with `imported/` into `projects/EFC_Library`, and fails if any embedded view, repeater or popup path doesn't resolve. `build/` and `dist/` are ignored by git.
@@ -91,4 +92,5 @@ Parts in `imported/` have no generator here, so edit them in the Designer, expor
 - [`docs/pid-loop-templates.md`](docs/pid-loop-templates.md): PID loop cards and popup.
 - [`docs/screen-layout-standard.md`](docs/screen-layout-standard.md): 16:9 screen layout and graphics conventions.
 - [`docs/station-faceplates.md`](docs/station-faceplates.md): station faceplates, member mapping, dock setup.
+- [`docs/ddt-udt-sync.md`](docs/ddt-udt-sync.md): gateway script that builds or extends UDTs from the DDTs in an M580 over its BMENUA0100 OPC UA card (`scripts/ddtsync.py`).
 - [`docs/design-briefs.md`](docs/design-briefs.md): I/O card and station faceplates, compressor screen, Haskel pump.
