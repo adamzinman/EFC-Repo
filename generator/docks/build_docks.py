@@ -486,7 +486,7 @@ def intlk_list():
                                                                       "props.style.classes": expr(f"if({m('Out_OK')}, 'Indicator/Permissive', 'Indicator/Interlock')")})],
              extra={"alignItems": "center"}),
         *rows,
-        button("Reset", "RESET", "system.tag.writeBlocking([self.view.params.tagPath + '/Cmd_Reset'], [True])", cls="Button/Default",
+        button("Reset", "RESET", "efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)", cls="Button/Default",
                show=f"{lvl(MAINT)} && {m('Sts_ResetReq')}", grow=0),
     ], extra={"style": {"classes": "Container/GroupBox", "gap": v(2)}})
     params = {"tagPath": "", "title": ""}

@@ -131,7 +131,7 @@ The popup reads no tag. It does not read `Cfg_Bypassable`, `Cfg_BypassMax` or `I
 
 1. **No check on the index.** The popup does not check `Cfg_Bypassable[idx]`. Only the IntlkList row visibility does. A call with another `idx` would still write `Cmd_Bypass`. Whether the PLC refuses it is not visible here.
 2. **Silent failure.** If `efc.ui.bypass` returns False (for example, the user's level changed while the popup was open), the popup stays open with no message. The enable expression prevents this in normal use.
-3. **Bypass authorisation not used.** `Inp_BypassPerm` (the key switch or HMI permit in `T_Intlk`) is not read here or in `efc.ui.bypass`. See [IntlkList](./IntlkList.md), note 3.
+3. **Bypass authorisation not used.** `Inp_BypassPerm` (the key switch or HMI permit in `T_Intlk`) is not read here or in `efc.ui.bypass`. See [IntlkList](./IntlkList.md), note 2.
 4. **Duration is not set here.** The note says the bypass times out at `Cfg_BypassMax`. This popup sends no duration, and the timeout is not implemented in this repository. Confirm it in the PLC program.
 5. **Reason is not stored in the PLC.** It appears only in the audit log.
 6. **No free-text rules.** The reason field has no minimum length and no list of approved reasons.

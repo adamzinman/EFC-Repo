@@ -26,7 +26,7 @@ One interlock or permissive group (`T_Intlk`) with up to 16 conditions. It shows
 - a **BYPASS** button, shown to level 3 and above when `Cfg_Bypassable[n]` is TRUE and the condition is not bypassed;
 - an **UNBYP** button, shown to level 3 and above while the condition is bypassed.
 
-**RESET.** One button under the rows, shown to level 2 and above while `Sts_ResetReq` is TRUE (conditions healthy, reset required). It writes `Cmd_Reset` directly from the script (see the Notes).
+**RESET.** One button under the rows, shown to level 2 and above while `Sts_ResetReq` is TRUE (conditions healthy, reset required). It calls `efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)`, which re-checks the role level (Maintenance, 2) and writes an `EFC write` audit record.
 
 **Role levels** come from `efc.ui.level` on `session.props.auth.user.roles`: 0 Guest, 1 Operator, 2 Maintenance, 3 Supervisor, 4 Engineer, 5 Admin. The rows use `custom.level` only for the button visibility. BYPASS and UNBYP are Supervisor (3) and above. RESET is Maintenance (2) and above, per the generator docstring.
 
@@ -43,7 +43,7 @@ If `efc.ui.bypass` returns False, the popup stays open with no message. The popu
 
 **Unbypass.** UNBYP on row n runs `efc.ui.unbypass(self, tagPath, n)` directly, with no popup and no reason. It returns unless the user is at level 3 or above. Otherwise it writes `TRUE` to `Cmd_Unbypass[n]` (one-shot) and writes an audit record `EFC unbypass`, target `<tagPath>/n`, with no value.
 
-**Reset.** RESET writes `TRUE` to `Cmd_Reset` (one-shot). No `efc.ui` function is used, so no role check and no audit happen in the script.
+**Reset.** RESET calls `efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)`. The function returns without writing if the user is below Maintenance (2). Otherwise it writes `TRUE` to `<tagPath>/Cmd_Reset` (one-shot) and writes an `EFC write` audit record (target `<tagPath>/Cmd_Reset`, value `True`).
 
 ## Properties reference
 
@@ -79,7 +79,7 @@ None. The components carry no `custom` properties.
 
 - Reads `session.props.auth.user.roles` (`level`) and `session.props.auth.user.userName` (audit actor, in `efc.ui`).
 - Opens the popup `efcBypass` (`Docks/Parts/BypassConfirm`).
-- Writes tags: `Cmd_Reset` (script, via `system.tag.writeBlocking`); `Cmd_Bypass/n` and `Cmd_Unbypass/n` (through `efc.ui.bypass` and `efc.ui.unbypass`).
+- Writes tags: `Cmd_Reset` (through `efc.ui.cmd`, with audit); `Cmd_Bypass/n` and `Cmd_Unbypass/n` (through `efc.ui.bypass` and `efc.ui.unbypass`).
 - No `session.custom`, `page` or message handler is used.
 
 ## Bindings reference
@@ -334,7 +334,7 @@ Total: **33 event scripts** (all `onActionPerformed`) and **1 transform script**
 | 30 | `root/C14/Unbyp` | onActionPerformed | `efc.ui.unbypass(self, self.view.params.tagPath, 14)` |
 | 31 | `root/C15/Byp` | onActionPerformed | `system.perspective.openPopup('efcBypass', 'Docks/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 15, 'desc': self.view.custom.m_Cfg_CondDesc_15}, modal=True, showCloseIcon=False)` |
 | 32 | `root/C15/Unbyp` | onActionPerformed | `efc.ui.unbypass(self, self.view.params.tagPath, 15)` |
-| 33 | `root/Reset` | onActionPerformed | `system.tag.writeBlocking([self.view.params.tagPath + '/Cmd_Reset'], [True])` |
+| 33 | `root/Reset` | onActionPerformed | `efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)` |
 
 | # | Location | Trigger | Code |
 |---|---|---|---|
@@ -344,7 +344,7 @@ Plain-language explanation of each kind:
 
 - **BYPASS (16 scripts, one per row):** opens `efcBypass` (`Docks/Parts/BypassConfirm`) as a modal popup with `tagPath`, `idx` = n and the condition text. It writes nothing to the PLC itself. The write happens in the popup (see [BypassConfirm](./BypassConfirm.md)).
 - **UNBYP (16 scripts):** calls `efc.ui.unbypass(self, tagPath, n)`. That function checks level 3 and above, writes `Cmd_Unbypass[n]` TRUE, and writes an `EFC unbypass` audit record.
-- **RESET (1 script):** writes `TRUE` to `<tagPath>/Cmd_Reset`, with no role check and no audit in the script. The visibility rule (level 2 and above, `Sts_ResetReq`) is the only guard.
+- **RESET (1 script):** calls `efc.ui.cmd`, which re-checks level 2 and above, writes `TRUE` to `<tagPath>/Cmd_Reset` and writes an `EFC write` audit record. The visibility rule (level 2 and above, `Sts_ResetReq`) is a second guard.
 - **Transform (T1):** `efc.ui.level(value)` turns the role list into level 0 to 5.
 
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
@@ -352,7 +352,7 @@ Plain-language explanation of each kind:
 - **`efc.ui.level(roles)`**: returns the highest index in `ROLES` (Guest 0 to Admin 5) among the user's roles.
 - **`efc.ui.bypass(component, intlkPath, idx, reason)`**: level 3 and above and a non-blank reason required; writes `Cmd_Bypass[idx]` TRUE and an `EFC bypass` audit record with the reason. Returns True or False. It does not check `Cfg_Bypassable`, `Inp_BypassPerm` or `Cfg_BypassMax`.
 - **`efc.ui.unbypass(component, intlkPath, idx)`**: level 3 and above; writes `Cmd_Unbypass[idx]` TRUE and an `EFC unbypass` audit record. No reason is taken.
-- **`efc.ui.cmd`** is not used by this view. The RESET path does not call it.
+- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an `EFC write` audit record. RESET calls it with `Cmd_Reset`, `True`, 2, `audit=True`.
 
 ## Tag members used
 
@@ -368,7 +368,7 @@ Paths are relative to `tagPath`. Types and comments come from `types/PCLib_Membe
 | `Sts_BypLeft/n` | read | ARRAY[0..15] OF TIME | Bypass time remaining for condition n (0 = not bypassed) |
 | `Out_OK` | read | BOOL | All used conditions healthy or bypassed (header badge) |
 | `Sts_ResetReq` | read | BOOL | Conditions healthy, reset required (RESET visibility) |
-| `Cmd_Reset` | write (RESET script) | BOOL | Reset latched conditions (one-shot) |
+| `Cmd_Reset` | write (RESET, through `efc.ui.cmd`) | BOOL | Reset latched conditions (one-shot) |
 | `Cmd_Bypass/n` | write (`efc.ui.bypass`) | ARRAY[0..15] OF BOOL | Bypass condition n (one-shot) |
 | `Cmd_Unbypass/n` | write (`efc.ui.unbypass`) | ARRAY[0..15] OF BOOL | Remove bypass on condition n (one-shot) |
 
@@ -392,17 +392,16 @@ Members of `T_Intlk` that this view does not use: `Cfg_Latch`, `Cfg_BypassMax`, 
 
 ## Notes and open questions
 
-These are the findings from reading the view and `efc/ui/code.py`. Items 1 to 4 are the ones most likely to matter.
+These are the findings from reading the view and `efc/ui/code.py`. Items 1 to 3 are the ones most likely to matter.
 
-1. **RESET has no role check or audit in the script.** The only guard is its visibility (`level >= 2 && Sts_ResetReq`). The script writes `Cmd_Reset` directly rather than calling `efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)`. The same pattern appears in the valve PB button (see [ValveDiscrete](../ValveDiscrete.md)).
-2. **Bypass and unbypass have different audit content.** A bypass needs a reason, which goes into the audit record. An unbypass needs no reason and its audit record has none.
-3. **`Inp_BypassPerm` is not checked.** `T_Intlk` describes it as the bypass authorisation (key switch or HMI permit, IEC 61511). Neither this view nor `efc.ui.bypass` reads it. Whether the PLC enforces it is not visible in this repository.
-4. **`efc.ui.bypass` does not check `Cfg_Bypassable`.** Only the BYPASS visibility rule checks it, so a call with another index would still write `Cmd_Bypass`. The PLC may refuse it; that is not visible here.
-5. **Embedded height may clip the list.** The view's own default height is 120 px, and the hosts use `useDefaultViewHeight: true`. Sixteen rows at a 2.222 vh basis plus the header are well over 120 px. The root has no scroll class. Check in a browser how the list renders in a host window.
-6. **`Sts_BypLeft` units are assumed to be milliseconds.** The minutes badge divides by 60000. This is a TIME value; confirm that the gateway delivers it in milliseconds.
-7. **Bypass count is not shown.** The header shows only `Out_OK`. `Sts_NumBypassed` and `Sts_OKNoByp` are not used, so an OK group with several bypasses looks the same as one with none, apart from the rows.
-8. **Alarms are not shown.** `Alm_Trip` and `Alm_Bypass` (`T_Alarm`) are not referenced here.
-9. **One-shot commands are never cleared by the view.** `Cmd_Bypass`, `Cmd_Unbypass` and `Cmd_Reset` are written TRUE and not reset. The T_Intlk comments say they are one-shot, so the PLC must clear them. This is the same assumption as the valve PB note.
-10. **The popup description is a snapshot.** `desc` is copied from the row text when BYPASS is pressed, so later changes to `Cfg_CondDesc` are not seen while the popup is open.
-11. **Reason text is not stored in the PLC.** It appears only in the audit log (`system.util.audit`). If the audit profile is missing, the record goes to the logger only.
+1. **Bypass and unbypass have different audit content.** A bypass needs a reason, which goes into the audit record. An unbypass needs no reason and its audit record has none.
+2. **`Inp_BypassPerm` is not checked.** `T_Intlk` describes it as the bypass authorisation (key switch or HMI permit, IEC 61511). Neither this view nor `efc.ui.bypass` reads it. Whether the PLC enforces it is not visible in this repository.
+3. **`efc.ui.bypass` does not check `Cfg_Bypassable`.** Only the BYPASS visibility rule checks it, so a call with another index would still write `Cmd_Bypass`. The PLC may refuse it; that is not visible here.
+4. **Embedded height may clip the list.** The view's own default height is 120 px, and the hosts use `useDefaultViewHeight: true`. Sixteen rows at a 2.222 vh basis plus the header are well over 120 px. The root has no scroll class. Check in a browser how the list renders in a host window.
+5. **`Sts_BypLeft` units are assumed to be milliseconds.** The minutes badge divides by 60000. This is a TIME value; confirm that the gateway delivers it in milliseconds.
+6. **Bypass count is not shown.** The header shows only `Out_OK`. `Sts_NumBypassed` and `Sts_OKNoByp` are not used, so an OK group with several bypasses looks the same as one with none, apart from the rows.
+7. **Alarms are not shown.** `Alm_Trip` and `Alm_Bypass` (`T_Alarm`) are not referenced here.
+8. **One-shot commands are never cleared by the view.** `Cmd_Bypass`, `Cmd_Unbypass` and `Cmd_Reset` are written TRUE and not reset. The T_Intlk comments say they are one-shot, so the PLC must clear them. This is the same assumption as the valve PB note.
+9. **The popup description is a snapshot.** `desc` is copied from the row text when BYPASS is pressed, so later changes to `Cfg_CondDesc` are not seen while the popup is open.
+10. **Reason text is not stored in the PLC.** It appears only in the audit log (`system.util.audit`). If the audit profile is missing, the record goes to the logger only.
 

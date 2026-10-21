@@ -4807,7 +4807,7 @@
               "type": "script",
               "scope": "G",
               "config": {
-                "script": "\tsystem.tag.writeBlocking([self.view.params.tagPath + '/Cmd_Reset'], [True])"
+                "script": "\tefc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)"
               }
             }
           }
