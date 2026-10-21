@@ -2,11 +2,12 @@
 # Ignition 8.1 (Jython 2.7), 8.3 compatible. Embedded-view strategy (decision 24):
 # the screen shell's right region is an Embedded View whose props.path and props.params
 # are bound to session.custom.efcDw[<pageId>]; these functions only write that value.
+# Graph expand (decision 26) is local to each dynamic-window view (custom.trendExpanded); it never
+# changes the region width, so it is not handled here.
 # Views call them from one-line event scripts:
 #   symbol onClick:        efc.ui.openDynamic(self)
 #   symbol onDoubleClick:  efc.ui.dblCmd(self)
 #   window close button:   efc.ui.closeDynamic(self)
-#   graph expand button:   efc.ui.expandTrend(self, True / False)
 #   screen view onStartup: efc.ui.setDefaultDock(self, self.view.params.defaultDock)
 
 # Dynamic-window id -> view path. Ids keep the dw_ names used in the templates' dockId param.
@@ -27,7 +28,7 @@ READY_FALSE = ['Sts_Intlk', 'Sts_NotPerm', 'Sts_Local', 'Sts_Fault']
 
 
 def _state(component):
-    """This page's dynamic-window state: {'path', 'params', 'default', 'wide'}."""
+    """This page's dynamic-window state: {'path', 'params', 'default'}."""
     s = component.session.custom
     if getattr(s, 'efcDw', None) is None:
         s.efcDw = {}
@@ -47,25 +48,20 @@ def _write(component, **changes):
 def openDynamic(component):
     """Single click on a template's symbol: show its dynamic window for this tag."""
     p = component.view.params
-    _write(component, path=WINDOWS[p.dockId], params={'tagPath': p.tagPath}, wide=False)
+    _write(component, path=WINDOWS[p.dockId], params={'tagPath': p.tagPath})
 
 
 def setDefaultDock(component, viewPath, params=None):
     """Screen onStartup: remember and show the screen's default right-region view."""
     if viewPath:
-        _write(component, default={'path': viewPath, 'params': params or {}}, path=viewPath, params=params or {}, wide=False)
+        _write(component, default={'path': viewPath, 'params': params or {}}, path=viewPath, params=params or {})
 
 
 def closeDynamic(component):
     """Dynamic-window close button: return the right region to the screen's default view."""
     s, pid, st = _state(component)
     d = st.get('default') or {}
-    _write(component, path=d.get('path'), params=d.get('params', {}), wide=False)
-
-
-def expandTrend(component, wide):
-    """Graph expand / collapse: the shell widens the right region to about 50 % when wide."""
-    _write(component, wide=bool(wide))
+    _write(component, path=d.get('path'), params=d.get('params', {}))
 
 
 def dblCmd(component):
