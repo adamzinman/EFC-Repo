@@ -14,7 +14,7 @@ Tiles: [SlotTile](Parts/SlotTile.md). Dock opened by a tile: [IOCard](../../Dock
 ## How it operates
 
 - **Title.** "I/O Rack" plus the rack name, from the last segment of `rackPath`.
-- **Hint.** Static text: "Click a card to open its faceplate".
+- **Hint.** Static text: "Click a card to open its window".
 - **Cards.** The `custom.cards` transform browses the rack for UDT instances and reads each card model and slot. Cards without a model are left out. The result is sorted by slot, and a missing slot counts as 99.
 - **Slots.** The `Slots` repeater builds one SlotTile per card. Each tile is set up with `cardPath`, `model` and `slot`.
 - **Clicks.** Clicking a tile opens the IOCard dock for that card (see SlotTile). The faceplate itself opens from the dock.
@@ -124,7 +124,6 @@ No PCLib entry exists for these members (see the discrete faceplate doc). `CardM
 
 ## Notes and open questions
 
-- **Hint text is wrong.** "Click a card to open its faceplate" does not match behaviour. A click opens the IOCard dock (see SlotTile).
 - **Refresh.** The transform depends on `rackPath` only. The rack is browsed when the binding runs, so cards added later may not appear until the view is reloaded. Not tested at runtime. Open question.
 - **Silent empty list.** A failed browse or an empty rack returns an empty list. The only trace is a warning in the `EFC_IO` log.
 - **Spare slots are hidden.** A card with no `CardModel` is not shown, so an empty slot leaves no tile.

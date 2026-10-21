@@ -67,7 +67,7 @@ The view-root bindings are the three `custom.*` tag mirrors listed in View-level
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | `root/Tile` | `props.style.classes` | expr | `if(isGood({view.custom.modErr}) && {view.custom.modErr}, "State/Fault", "Container/Card") + " Util/Pad/S Util/Pointer"` | Card outline: `State/Fault` when the module error is true with good quality, otherwise `Container/Card`. Adds `Util/Pad/S` and `Util/Pointer`. |
-| `root/Tile` | `meta.tooltip.text` | expr | `"Open faceplate" + if(len(if(isNull({view.custom.diag}), "", toStr({view.custom.diag}))) > 0, "\nModule: " + {view.custom.diag}, "")` | "Open faceplate", plus a "Module:" line with the diagnostic text when there is any. |
+| `root/Tile` | `meta.tooltip.text` | expr | `"Open card window" + if(len(if(isNull({view.custom.diag}), "", toStr({view.custom.diag}))) > 0, "\nModule: " + {view.custom.diag}, "")` | "Open card window", plus a "Module:" line with the diagnostic text when there is any. |
 | `root/Tile/Slot` | `props.text` | expr | `"Slot " + toStr({view.params.slot})` | "Slot " plus the slot number (`slot` param). |
 | `root/Tile/Model` | `props.text` | property | property `view.params.model` | Card model from the `model` param (a property binding, no fallback). Blank until RackOverview sets it. |
 | `root/Tile/Desc` | `props.text` | expr | `if(isNull({view.custom.desc}), "", toStr({view.custom.desc}))` | `CardDesc`, or blank when null. |
@@ -116,7 +116,6 @@ Read only, relative to `cardPath`. The model and slot come from RackOverview (`C
 
 ## Notes and open questions
 
-- **Click opens the dock, not the faceplate.** The tile tooltip says "Open faceplate" and the RackOverview hint says "Click a card to open its faceplate". The click actually opens `Docks/IOCard`. The faceplate opens from the dock `FULL FACEPLATE` button. Either the text or the behaviour should change.
 - **Model with no faceplate.** The dock opens `Templates/IO/Faceplates/<model>`. Models other than the eight faceplate views would fail to open (not checked at runtime).
 - **Outline and health differ.** When `MOD_ERROR` quality is bad, the health word shows COMMS? (unknown), but the outline stays `Container/Card` (only a true value gives the `State/Fault` outline). Consistent with the rule, but worth knowing.
 - **Model binding has no fallback.** `root/Tile/Model` is a property binding to `view.params.model` with no default. Blank model shows blank text. Intentional? Open question.

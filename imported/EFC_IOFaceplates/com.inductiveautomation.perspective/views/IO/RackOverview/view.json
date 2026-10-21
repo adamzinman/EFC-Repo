@@ -109,7 +109,7 @@
               "shrink": 1
             },
             "props": {
-              "text": "Click a card to open its faceplate",
+              "text": "Click a card to open its window",
               "style": {
                 "classes": "Text/Caption"
               }
