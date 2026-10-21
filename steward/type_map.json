@@ -40,16 +40,16 @@
     "Templates/Loops/Loop_B2_Horizontal": "T_PID",
     "Templates/Loops/Loop_B3_Sparkline": "T_PID",
     "Templates/Loops/Loop_B4_Column": "T_PID",
-    "Templates/Station/Station_Fill": "gap:T_Station",
-    "Templates/Station/Station_Tile": "gap:T_Station",
-    "Templates/IO/RackOverview": "gap:T_IORack",
-    "Templates/IO/Faceplates/BMXAMI0810": "gap:T_IOCard",
-    "Templates/IO/Faceplates/BMXAMO0802": "gap:T_IOCard",
-    "Templates/IO/Faceplates/BMXART0814": "gap:T_IOCard",
-    "Templates/IO/Faceplates/BMXDDI1602": "gap:T_IOCard",
-    "Templates/IO/Faceplates/BMXDDI3202K": "gap:T_IOCard",
-    "Templates/IO/Faceplates/BMXDDO1602": "gap:T_IOCard",
-    "Templates/IO/Faceplates/BMXDDO3202K": "gap:T_IOCard",
-    "Templates/IO/Faceplates/BMXDDO6402K": "gap:T_IOCard"
+    "Templates/Station/Station_Fill": "T_Station",
+    "Templates/Station/Station_Tile": "T_Station",
+    "Templates/IO/RackOverview": "T_IORack",
+    "Templates/IO/Faceplates/BMXAMI0810": "T_IOCard",
+    "Templates/IO/Faceplates/BMXAMO0802": "T_IOCard",
+    "Templates/IO/Faceplates/BMXART0814": "T_IOCard",
+    "Templates/IO/Faceplates/BMXDDI1602": "T_IOCard",
+    "Templates/IO/Faceplates/BMXDDI3202K": "T_IOCard",
+    "Templates/IO/Faceplates/BMXDDO1602": "T_IOCard",
+    "Templates/IO/Faceplates/BMXDDO3202K": "T_IOCard",
+    "Templates/IO/Faceplates/BMXDDO6402K": "T_IOCard"
   }
 }

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:2:44" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Station" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+	<comment>Weigh-fill station: vessel on a scale, inlet / sample / vacuum valves, net-weight fill to target</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_ScaleName" typeName="STRING[20]">
+			<comment>Scale tag shown on the HMI, e.g. WT-101</comment>
+		</variables>
+		<variables name="Cfg_EU" typeName="STRING[8]">
+			<comment>Weight units text (kg, lb)</comment>
+		</variables>
+		<variables name="Mode" typeName="T_Mode">
+			<comment>Mode block</comment>
+		</variables>
+		<variables name="Perm" typeName="T_Intlk">
+			<comment>Fill permissives (vessel present, PT valid, pressure balanced, ...)</comment>
+		</variables>
+		<variables name="Inp_Gross" typeName="REAL">
+			<comment>Gross weight from the scale (Cfg_EU)</comment>
+		</variables>
+		<variables name="Inp_ScaleOK" typeName="BOOL">
+			<comment>Scale healthy (no overload / comms fault)</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Inp_PT" typeName="REAL">
+			<comment>Vessel pressure</comment>
+		</variables>
+		<variables name="Inp_PTValid" typeName="BOOL">
+			<comment>Pressure reading valid</comment>
+		</variables>
+		<variables name="Inp_VesselPresent" typeName="BOOL">
+			<comment>Vessel detected on the station</comment>
+		</variables>
+		<variables name="Prm_TargetWt" typeName="REAL">
+			<comment>Fill target, net weight (operator setpoint)</comment>
+		</variables>
+		<variables name="Prm_SampleWt" typeName="REAL">
+			<comment>Sample draw weight (operator setpoint)</comment>
+		</variables>
+		<variables name="Prm_MaxPress" typeName="REAL">
+			<comment>Maximum vessel pressure during fill (operator setpoint)</comment>
+		</variables>
+		<variables name="Prm_PrefillPress" typeName="REAL">
+			<comment>Prefill pressure (operator setpoint)</comment>
+		</variables>
+		<variables name="Prm_Deadband" typeName="REAL">
+			<comment>Fill deadband, net weight (operator setpoint)</comment>
+		</variables>
+		<variables name="Cmd_Select" typeName="BOOL">
+			<comment>Select this station (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Tare" typeName="BOOL">
+			<comment>Tare the scale (one-shot; blocked while active)</comment>
+		</variables>
+		<variables name="Cmd_Zero" typeName="BOOL">
+			<comment>Zero the scale (one-shot; blocked while active)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Reset a failed / complete station (one-shot)</comment>
+		</variables>
+		<variables name="Out_InletCmd" typeName="BOOL">
+			<comment>Inlet valve command</comment>
+		</variables>
+		<variables name="Out_SampleCmd" typeName="BOOL">
+			<comment>Sample valve command</comment>
+		</variables>
+		<variables name="Out_VacuumCmd" typeName="BOOL">
+			<comment>Vacuum valve command</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation: ignore field I/O, logic generates feedback</comment>
+		</variables>
+		<variables name="Sts_Selected" typeName="BOOL">
+			<comment>Station selected</comment>
+		</variables>
+		<variables name="Sts_Active" typeName="BOOL">
+			<comment>Station in a fill cycle</comment>
+		</variables>
+		<variables name="Sts_Disabled" typeName="BOOL">
+			<comment>Station disabled</comment>
+		</variables>
+		<variables name="Sts_InletReq" typeName="BOOL">
+			<comment>Sequence requests the inlet valve open</comment>
+		</variables>
+		<variables name="Sts_SampleReq" typeName="BOOL">
+			<comment>Sequence requests the sample valve open</comment>
+		</variables>
+		<variables name="Sts_VacuumReq" typeName="BOOL">
+			<comment>Sequence requests the vacuum valve open</comment>
+		</variables>
+		<variables name="Sts_Vacuuming" typeName="BOOL">
+			<comment>Evacuating the vessel</comment>
+		</variables>
+		<variables name="Sts_Vacuumed" typeName="BOOL">
+			<comment>Vessel evacuated</comment>
+		</variables>
+		<variables name="Sts_Filling" typeName="BOOL">
+			<comment>Filling</comment>
+		</variables>
+		<variables name="Sts_Venting" typeName="BOOL">
+			<comment>Venting</comment>
+		</variables>
+		<variables name="Sts_Recovering" typeName="BOOL">
+			<comment>Recovering</comment>
+		</variables>
+		<variables name="Sts_Complete" typeName="BOOL">
+			<comment>Fill complete</comment>
+		</variables>
+		<variables name="Sts_Failed" typeName="BOOL">
+			<comment>Fill failed - reset required</comment>
+		</variables>
+		<variables name="Sts_ReadyToStart" typeName="BOOL">
+			<comment>Ready to start (all start permissives)</comment>
+		</variables>
+		<variables name="Sts_ReadyToFill" typeName="BOOL">
+			<comment>Ready to fill</comment>
+		</variables>
+		<variables name="Sts_PressBalanced" typeName="BOOL">
+			<comment>Vessel and header pressures balanced</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=Idle 1=Selected 2=Vacuum 3=Prefill 4=Fill 5=Sample 6=Complete 7=Failed 8=Disabled</comment>
+		</variables>
+		<variables name="Sts_Msg" typeName="STRING[40]">
+			<comment>Status message for the HMI</comment>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Val_Net" typeName="REAL">
+			<comment>Net weight (Cfg_EU)</comment>
+		</variables>
+		<variables name="Val_Gross" typeName="REAL">
+			<comment>Gross weight (Cfg_EU)</comment>
+		</variables>
+		<variables name="Val_Tare" typeName="REAL">
+			<comment>Tare weight (Cfg_EU)</comment>
+		</variables>
+		<variables name="Val_Total" typeName="REAL">
+			<comment>Total filled this cycle (Cfg_EU)</comment>
+		</variables>
+		<variables name="Val_Remaining" typeName="REAL">
+			<comment>Target minus net (Cfg_EU)</comment>
+		</variables>
+		<variables name="Val_PctDone" typeName="REAL">
+			<comment>Net as % of target</comment>
+		</variables>
+		<variables name="Val_PT" typeName="REAL">
+			<comment>Vessel pressure</comment>
+		</variables>
+		<variables name="Val_PTDiff" typeName="REAL">
+			<comment>Vessel minus header pressure</comment>
+		</variables>
+		<variables name="Alm_Failed" typeName="T_Alarm">
+			<comment>Fill failed</comment>
+		</variables>
+		<variables name="Alm_OverFill" typeName="T_Alarm">
+			<comment>Net weight above target plus deadband</comment>
+		</variables>
+		<variables name="Alm_PressHi" typeName="T_AlmLim">
+			<comment>Vessel pressure high (uses Prm_MaxPress)</comment>
+		</variables>
+		<variables name="Alm_ScaleFault" typeName="T_Alarm">
+			<comment>Scale fault</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

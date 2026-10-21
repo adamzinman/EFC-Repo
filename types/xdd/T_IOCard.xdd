@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:2:44" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_IOCard" version="1.00" dateTime="dt#2026-10-21-03:02:44">
+	<comment>Modicon x80 I/O module diagnostics: module and channel health, field power</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_Model" typeName="STRING[16]">
+			<comment>Module reference, e.g. BMXDDI1602</comment>
+		</variables>
+		<variables name="Cfg_Kind" typeName="INT">
+			<comment>0=DI 1=DO 2=AI 3=AO 4=TC/RTD 5=Counter 6=Other</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_Rack" typeName="INT">
+			<comment>Rack number</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_Slot" typeName="INT">
+			<comment>Slot number</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_Drop" typeName="STRING[20]">
+			<comment>Drop / station name (main rack or eRIO drop)</comment>
+		</variables>
+		<variables name="Cfg_NumCh" typeName="INT">
+			<comment>Channels on the module</comment>
+			<variableInit value="16"></variableInit>
+		</variables>
+		<variables name="Cfg_ChUsed" typeName="ARRAY[0..63] OF BOOL">
+			<comment>Channel n is wired (spares FALSE)</comment>
+		</variables>
+		<variables name="Inp_ModHealth" typeName="BOOL">
+			<comment>Module health bit from the module device DDT / IODDT (TRUE = healthy)</comment>
+		</variables>
+		<variables name="Inp_ModFltWord" typeName="WORD">
+			<comment>Module fault byte(s) from the device DDT, for diagnosis</comment>
+		</variables>
+		<variables name="Inp_ChHealth" typeName="ARRAY[0..63] OF BOOL">
+			<comment>Channel n healthy (no wire break, short, out of range)</comment>
+		</variables>
+		<variables name="Inp_FieldPwrOK" typeName="BOOL">
+			<comment>External field power supply present</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Inp_Missing" typeName="BOOL">
+			<comment>Module missing or wrong type in the slot</comment>
+		</variables>
+		<variables name="Sts_OK" typeName="BOOL">
+			<comment>Module healthy and all used channels healthy</comment>
+		</variables>
+		<variables name="Sts_ChFault" typeName="ARRAY[0..63] OF BOOL">
+			<comment>Used channel n faulted</comment>
+		</variables>
+		<variables name="Sts_NumChFault" typeName="INT">
+			<comment>Number of faulted used channels</comment>
+		</variables>
+		<variables name="Sts_FirstChFault" typeName="INT">
+			<comment>Lowest faulted channel (-1 = none)</comment>
+		</variables>
+		<variables name="Sts_ChWord" typeName="ARRAY[0..3] OF WORD">
+			<comment>Sts_ChFault packed, 16 channels per word, for SCADA</comment>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Alm_ModFault" typeName="T_Alarm">
+			<comment>Module fault</comment>
+		</variables>
+		<variables name="Alm_ChFault" typeName="T_Alarm">
+			<comment>One or more channels faulted</comment>
+		</variables>
+		<variables name="Alm_FieldPwr" typeName="T_Alarm">
+			<comment>Field power lost</comment>
+		</variables>
+		<variables name="Alm_Missing" typeName="T_Alarm">
+			<comment>Module missing or wrong type</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

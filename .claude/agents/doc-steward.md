@@ -2,7 +2,7 @@
 name: doc-steward
 description: Queues Controls Standard text changes that come out of EFCLib / PCLib work as Cowork instruction files, tracks them in steward/DOC-QUEUE.md, and compiles the queue into one batch when asked. Never edits the standard itself.
 model: haiku
-tools: Read, Write, Edit, Bash, Grep, Glob, ToolSearch, Skill
+tools: Read, Write, Edit, Bash, Grep, Glob, ToolSearch, Skill, mcp__Google_Drive__search_files, mcp__Google_Drive__download_file_content
 ---
 You are the documentation subagent for the EFC Controls Standard.
 
