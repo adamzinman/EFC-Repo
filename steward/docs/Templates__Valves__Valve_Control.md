@@ -9,15 +9,18 @@
 <!-- keep:end -->
 
 <!-- auto:start -->
-_Auto-generated 2026-10-21 00:35 from EFC_Library:view:Templates/Valves/Valve_Control. Do not edit this section._
+_Auto-generated 2026-10-21 03:38 from EFC_Library:view:Templates/Valves/Valve_Control. Do not edit this section._
 
 | Param | Direction | Default |
 |---|---|---|
+| dockId | input | "" |
+| dwTagPath | input | "" |
+| tType | input | "T_CValve" |
 | tagPath | input | "[default]PID_Demo/FV101" |
 
-- PCLib types: none
+- PCLib types: T_CValve
 - Dynamic window: none
-- Style classes: Indicator/InterlockBadge, Indicator/PermissiveBadge, State/Stopped, Text/Mod/Center, Text/Mod/NoWrap, Text/TagName (+1 bound)
+- Style classes: Indicator/InterlockBadge, Indicator/PermissiveBadge, State/Stopped, Text/Mod/Center, Text/Mod/NoWrap, Text/TagName, Util/Collapsed, Util/Pointer (+2 bound)
 - Inline style props: 0
 - Popups opened: 0
 - system.* calls: none

@@ -1,291 +1,291 @@
 {
   "tags": [
     {
-      "name": "DDT_Station_Demo",
+      "name": "T_Station_Demo",
       "tagType": "UdtType",
       "tags": [
         {
-          "name": "Active",
+          "name": "Sts_Active",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Complete",
+          "name": "Sts_Complete",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Deadband",
+          "name": "Prm_Deadband",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Float4",
           "value": 0.0
         },
         {
-          "name": "Disabled",
+          "name": "Sts_Disabled",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Failed",
+          "name": "Sts_Failed",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Filling",
+          "name": "Sts_Filling",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "GrossWeight",
+          "name": "Val_Gross",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Float4",
           "value": 0.0
         },
         {
-          "name": "HMI_Reset",
+          "name": "Cmd_Reset",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "HMI_Select",
+          "name": "Cmd_Select",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "InletCMD",
+          "name": "Out_InletCmd",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "InletREQ",
+          "name": "Sts_InletReq",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Msg",
+          "name": "Sts_Msg",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "String",
           "value": ""
         },
         {
-          "name": "NetWeight",
+          "name": "Val_Net",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Float4",
           "value": 0.0
         },
         {
-          "name": "PT",
+          "name": "Val_PT",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Float4",
           "value": 0.0
         },
         {
-          "name": "PT_Diff",
+          "name": "Val_PTDiff",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Float4",
           "value": 0.0
         },
         {
-          "name": "PT_Valid",
+          "name": "Inp_PTValid",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Press_Balanced",
+          "name": "Sts_PressBalanced",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Press_Max",
+          "name": "Prm_MaxPress",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Float4",
           "value": 0.0
         },
         {
-          "name": "ReadyToFill",
+          "name": "Sts_ReadyToFill",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "ReadyToStart",
+          "name": "Sts_ReadyToStart",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Recovering",
+          "name": "Sts_Recovering",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "SampleCMD",
+          "name": "Out_SampleCmd",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "SamplePress",
+          "name": "Prm_PrefillPress",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Float4",
           "value": 0.0
         },
         {
-          "name": "SampleREQ",
+          "name": "Sts_SampleReq",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "SampleWeight",
+          "name": "Prm_SampleWt",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Float4",
           "value": 0.0
         },
         {
-          "name": "ScaleName",
+          "name": "Cfg_ScaleName",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "String",
           "value": "WT000"
         },
         {
-          "name": "Selected",
+          "name": "Sts_Selected",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "StationName",
+          "name": "Cfg_Desc",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "String",
           "value": "Station 00"
         },
         {
-          "name": "StatusEnum",
+          "name": "Sts_State",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Int2",
           "value": 0
         },
         {
-          "name": "TareCMD",
+          "name": "Cmd_Tare",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "TareWeight",
+          "name": "Val_Tare",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Float4",
           "value": 0.0
         },
         {
-          "name": "TargetWeight",
+          "name": "Prm_TargetWt",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Float4",
           "value": 0.0
         },
         {
-          "name": "TotalWeight",
+          "name": "Val_Total",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Float4",
           "value": 0.0
         },
         {
-          "name": "Units",
+          "name": "Cfg_EU",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "String",
           "value": "kg"
         },
         {
-          "name": "VacuumCMD",
+          "name": "Out_VacuumCmd",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "VacuumREQ",
+          "name": "Sts_VacuumReq",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Vacuumed",
+          "name": "Sts_Vacuumed",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Vacuuming",
+          "name": "Sts_Vacuuming",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Venting",
+          "name": "Sts_Venting",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "Vessel_Present",
+          "name": "Inp_VesselPresent",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",
           "value": false
         },
         {
-          "name": "ZeroCMD",
+          "name": "Cmd_Zero",
           "tagType": "AtomicTag",
           "valueSource": "memory",
           "dataType": "Boolean",

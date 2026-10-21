@@ -376,7 +376,7 @@
               "shrink": 0
             },
             "props": {
-              "path": "Templates/Station/Station_Sidebar",
+              "path": "Docks/Station",
               "params": {
                 "tagPath": "[default]Station_Demo/Station_1"
               },

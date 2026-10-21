@@ -1,11 +1,12 @@
 """
 PID_Symbols: one template per controlled-device symbol (design notes 20-21; see docs/design-notes.md).
-  - Only parameter: tagPath (UDT instance)
+  - Parameters: tagPath (type instance), tType, dockId / dwTagPath (window override), useButton, dblCmd
   - The symbol is a Perspective Drawing (ia.shapes.svg) embedded in the template; element paints bound to state (v5.1)
   - Kept from notes 1-19: tag above / status below (centered), bottom-left actuation button, P left / I right clear of the
     process line, yellow mode letter, actuator head = command / body = feedback, EFC_Styles colors
   - Alarm outline: highest active alarm (priority 1-4) on any member of the UDT instance (isAlarmActiveFiltered)
-  - Click on the symbol: nothing yet (faceplates to follow); control valve: no actuation button
+  - Bound to EFCLib v1 types (T_DValve, T_CValve, T_Motor / T_VFD, T_Heater); click on the symbol opens the dynamic window
+    (efc.ui.openDynamic); double-tap in touch mode commands two-state devices (efc.ui.dblCmd); control valve: no actuation button
   Normally run from the repo root:  python3 build.py
 """
 import json, os, shutil, zipfile
@@ -141,124 +142,187 @@ def view(path_default, custom, cfg, kids, size, use_button=False):
             "props": {"defaultSize": {"width": size[0], "height": size[1]}},
             "root": {"type": "ia.container.coord", "version": 0, "meta": {"name": "root"}, "props": {"mode": "percent"}, "children": kids}}
 
-# ---------------------------------------------------------------- discrete valve (plant discrete-valve UDT)
-ILIST_TIP = '\t# InterlockList is a document: {Status, Description[], InterlockName[], Used[]}\n\thead = "Interlock active - open blocked"\n\ttry:\n\t\tnames = list(value["InterlockName"] or [])\n\t\tused = list(value["Used"] or [])\n\t\tdesc = list(value["Description"] or [])\n\t\titems = []\n\t\tfor i in range(len(names)):\n\t\t\tif i < len(used) and used[i] and names[i]:\n\t\t\t\td = desc[i] if i < len(desc) and desc[i] else ""\n\t\t\t\titems.append(str(names[i]) + (" - " + str(d) if d else ""))\n\t\treturn head + (":\\n" + "\\n".join(items) if items else "")\n\texcept:\n\t\treturn head'
+# ---------------------------------------------------------------- EFCLib v1 (PCLib T_ types) bindings
+# Click on the symbol opens the dynamic window (efc.ui.openDynamic); double-click / double-tap in touch mode
+# (useButton = false) toggles two-state devices through efc.ui.dblCmd. Commands write the type's one-shot Cmd_ members.
+OPEN_DW = script("\tefc.ui.openDynamic(self)")
+DBL_CMD = script("\tefc.ui.dblCmd(self)")
+def ftag(m):   # tag member of the instance, or of an embedded group / mode block ("Mode/Sts_Man")
+    return tag(m)
+def first_out(group):
+    """Description of the group's first-out condition (empty when none)."""
+    return {"binding": {"type": "tag", "config": {"mode": "indirect", "fallbackDelay": 2.5,
+            "references": {"0": "{view.params.tagPath}", "1": "{view.custom.firstOut}"}, "tagPath": "{0}/" + group + "/Cfg_CondDesc/{1}"}}}
+I_TIP = ('"Interlock active - " + {view.custom.blockVerb} + " blocked" + '
+         'if({view.custom.firstOut} >= 0 && len(coalesce({view.custom.firstDesc}, "")) > 0, ": " + {view.custom.firstDesc}, "")')
 
+def common_cfg(custom, cfg, perm=True):
+    """Members every bound device template reads: identity, mode, availability, permissive / interlock."""
+    custom.update({"name": "", "desc": "", "man": False, "oos": False, "avail": True, "local": False, "intlk": False,
+                   "permMissing": False, "firstOut": -1, "firstDesc": "", "mode": 0})
+    cfg.update({"custom.name": ftag("Cfg_Tag"), "custom.desc": ftag("Cfg_Desc"), "custom.man": ftag("Mode/Sts_Man"),
+                "custom.oos": ftag("Mode/Sts_OOS"), "custom.avail": ftag("Sts_Avail"), "custom.local": ftag("Sts_Local"),
+                "custom.intlk": ftag("Sts_Intlk"), "custom.firstOut": ftag("Intlk/Sts_FirstOut"), "custom.firstDesc": first_out("Intlk"),
+                "custom.mode": expr("if({view.custom.man}, 1, 0)")})
+    if perm: cfg["custom.permMissing"] = ftag("Sts_NotPerm")
+
+def dw_params(params, ttype, dbl):
+    """Dynamic-window parameters: tType picks the window (efc.ui), dockId / dwTagPath override it; dblCmd enables double-tap."""
+    params.update({"tType": ttype, "dockId": "", "dwTagPath": ""})
+    if dbl: params["dblCmd"] = True
+
+def symbol(s, L, custom, dbl):
+    img = image(s, L, custom)
+    img["props"]["style"] = {"classes": "Util/Pointer"}
+    img["meta"]["tooltip"] = {"enabled": True, "text": "Open dynamic window" + (" (double-tap: command, touch mode)" if dbl else "")}
+    img["events"] = {"dom": {"onClick": OPEN_DW, **({"onDoubleClick": DBL_CMD} if dbl else {})}}
+    return img
+
+def i_badge_tip(kids, verb):
+    for k in kids:
+        if k["meta"]["name"] == "I":
+            k["propConfig"]["meta.tooltip.text"] = expr(I_TIP.replace("{view.custom.blockVerb}", f'"{verb}"'))
+
+# ---------------------------------------------------------------- discrete valve: T_DValve
 def onoff_template(s, demo_path):
     L = valve_layout(s, LAYOUT["AutoValve"])
-    custom = {"cmd": False, "zso": False, "zsc": True, "fb": True, "permMissing": False, "intlk": False, "ilist": None,
-              "manual": False, "off": False, "locked": False, "name": "", "desc": "", "state": 0, "command": 0}
-    cfg = {"custom.cmd": tag("CMD"), "custom.zso": tag("ZSO"), "custom.zsc": tag("ZSC"), "custom.fb": tag("Feedback_Enabled"),
-           "custom.permMissing": tag("Permissive"), "custom.intlk": tag("Interlock"), "custom.ilist": tag("InterlockList"),
-           "custom.manual": tag("Manual"), "custom.off": tag("Off"), "custom.locked": tag("LockedOut"),
-           "custom.name": tag("Name"), "custom.desc": tag("Description"),
-           "custom.state": expr("if({view.custom.zso} && {view.custom.zsc}, 3, if(!{view.custom.fb}, if({view.custom.cmd}, 1, 0), "
-                                "if({view.custom.zso}, 1, if({view.custom.zsc}, 0, 2))))"),
-           "custom.command": expr("if({view.custom.fb}, if({view.custom.cmd}, 1, 0), -1)")}
+    custom = {"cmd": False, "opened": False, "closed": True, "fault": False, "hasZso": True, "hasZsc": True, "state": 0, "command": 0}
+    cfg = {"custom.cmd": ftag("Out_Open"), "custom.opened": ftag("Sts_Opened"), "custom.closed": ftag("Sts_Closed"),
+           "custom.fault": ftag("Sts_Fault"), "custom.hasZso": ftag("Cfg_HasZSO"), "custom.hasZsc": ftag("Cfg_HasZSC"),
+           "custom.state": expr("if({view.custom.fault}, 3, if({view.custom.opened}, 1, if({view.custom.closed}, 0, 2)))"),
+           "custom.command": expr("if({view.custom.hasZso} || {view.custom.hasZsc}, if({view.custom.cmd}, 1, 0), -1)")}
+    common_cfg(custom, cfg)
     color_props(s, custom, cfg)
     status = 'case({view.custom.state}, 0, "CLOSED", 1, "OPEN", 2, if({view.custom.cmd}, "OPENING", "CLOSING"), 3, "FAULT", "???")'
-    cls = 'case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown")'   # bordered state chip, same as running equipment
-    click = script("\tcmd = bool(self.view.custom.cmd)\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/HMI_CMD'], [not cmd])")
+    cls = 'case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown")'
+    click = script("\tm = 'Cmd_Close' if self.view.custom.cmd else 'Cmd_Open'\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/' + m], [True])")
     custom["canCmd"] = False
-    cfg["custom.canCmd"] = expr("{view.custom.manual} && !{view.custom.locked} && !{view.custom.off} && "
+    cfg["custom.canCmd"] = expr("{view.custom.man} && {view.custom.avail} && !{view.custom.local} && !{view.custom.oos} && "
                                 "({view.custom.cmd} || (!{view.custom.permMissing} && !{view.custom.intlk}))")
     btn = {"type": "ia.input.button", "version": 0, "meta": {"name": "PB", "tooltip": {"enabled": True, "text": "Open"}},
            "position": frac(L["pb"], L["size"]), "props": {"text": "", "enabled": False, "style": {"classes": "Button/Command"}},
-           "propConfig": {"meta.visible": expr("{view.params.useButton} && {view.custom.manual}"),   # shown only in Manual, when useButton
+           "propConfig": {"meta.visible": expr("{view.params.useButton} && {view.custom.man}"),
                           "props.enabled": expr("{view.custom.canCmd}"),
-                          "meta.tooltip.text": expr('if({view.custom.locked}, "Locked out", if(!{view.custom.manual}, "Manual mode required", '
+                          "meta.tooltip.text": expr('if({view.custom.local}, "Local control", if(!{view.custom.man}, "Manual mode required", '
                                                     'if({view.custom.cmd}, "Close", "Open")))')},
            "events": {"component": {"onActionPerformed": click}}}
-    i_tip = '"Interlock active - open blocked" + if(len(coalesce(toStr({view.custom.ilist}), "")) > 0, ": " + toStr({view.custom.ilist}), "")'
-    img = image(s, L, custom)                                   # useButton = false: click the symbol (same rules as the button)
-    img["propConfig"]["props.style.classes"] = expr('if(!{view.params.useButton} && {view.custom.canCmd}, "Util/Pointer", "")')
-    img["events"] = {"dom": {"onClick": script(
-        "\tif self.view.params.useButton or not self.view.custom.canCmd:\n\t\treturn\n"
-        "\tcmd = bool(self.view.custom.cmd)\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/HMI_CMD'], [not cmd])")}}
-    kids = [tag_label(L), img] + badges(L, p_vis="{view.custom.permMissing}", i_vis="{view.custom.intlk}", i_tip=i_tip) + \
-           [status_label(L, status, cls, m_vis="!{view.params.useButton} && {view.custom.manual}"), btn]
-    for k in kids:                                              # I tooltip from the InterlockList document (names of used interlocks)
-        if k["meta"]["name"] == "I":
-            k["propConfig"]["meta.tooltip.text"] = {"binding": {"type": "property", "config": {"path": "view.custom.ilist"},
-                                                                 "transforms": [{"type": "script", "code": ILIST_TIP}]}}
-    return view(demo_path, custom, cfg, kids, L["size"], use_button=True)
+    kids = [tag_label(L), symbol(s, L, custom, True)] + badges(L, p_vis="{view.custom.permMissing}", i_vis="{view.custom.intlk}") + \
+           [status_label(L, status, cls, m_vis="!{view.params.useButton} && {view.custom.man}"), btn]
+    i_badge_tip(kids, "open")
+    v = view(demo_path, custom, cfg, kids, L["size"], use_button=True)
+    dw_params(v["params"], "T_DValve", True); v["propConfig"].update({f"params.{k}": pin() for k in v["params"]})
+    return v
 
-# ---------------------------------------------------------------- control valve (PID_ControlValve UDT); no actuation button
+# ---------------------------------------------------------------- control valve: T_CValve (interlocks only); no actuation button
 def control_template(s, demo_path):
     L = valve_layout(s, LAYOUT["ControlValve"])
-    custom = {"out": 0.0, "pos": 0.0, "fb": True, "perm": True, "intlk": False, "fault": False, "mode": 0, "name": "", "desc": "",
-              "state": 0, "command": 0}
-    cfg = {"custom.out": tag("Out"), "custom.pos": tag("Pos"), "custom.fb": tag("Feedback_Enabled"), "custom.perm": tag("PermOK"),
-           "custom.intlk": tag("Intlk"), "custom.fault": tag("Fault"), "custom.mode": tag("Mode"),
-           "custom.name": tag("Name"), "custom.desc": tag("Description"),
+    custom = {"out": 0.0, "pos": 0.0, "fb": True, "fault": False, "state": 0, "command": 0}
+    cfg = {"custom.out": ftag("Val_Demand"), "custom.pos": ftag("Val_Pos"), "custom.fb": ftag("Cfg_HasFbk"), "custom.fault": ftag("Sts_Fault"),
            "custom.state": expr("if({view.custom.fault}, 3, if((if({view.custom.fb}, {view.custom.pos}, {view.custom.out})) > 1, 1, 0))"),
            "custom.command": expr("if({view.custom.fb}, if({view.custom.out} > 1, 1, 0), -1)")}
+    common_cfg(custom, cfg, perm=False)
     color_props(s, custom, cfg)
     status = 'if({view.custom.state} = 3, "FAULT", numberFormat(if({view.custom.fb}, {view.custom.pos}, {view.custom.out}), "0") + " %")'
     cls = 'case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown") + " Text/Mod/Tabular"'
     custom.update({"posC": 0.0, "outC": 0.0})
     cfg.update({"custom.posC": expr("max(0, min(100, coalesce({view.custom.pos}, 0)))"),
                 "custom.outC": expr("max(0, min(100, coalesce({view.custom.out}, 0)))")})
-    kids = [tag_label(L), image(s, L, custom)] + badges(L) + [status_label(L, status, cls), position_bar(L)]
-    return view(demo_path, custom, cfg, kids, L["size"])
+    kids = [tag_label(L), symbol(s, L, custom, False)] + badges(L, p_vis="false", i_vis="{view.custom.intlk}") + \
+           [status_label(L, status, cls, m_vis="{view.custom.man}"), position_bar(L)]
+    i_badge_tip(kids, "control")
+    v = view(demo_path, custom, cfg, kids, L["size"])
+    dw_params(v["params"], "T_CValve", False); v["propConfig"].update({f"params.{k}": pin() for k in v["params"]})
+    return v
 
-# ---------------------------------------------------------------- running equipment (PID_Motor UDT)
+# ---------------------------------------------------------------- running equipment: T_Motor (or T_VFD), T_Heater
+RUN_MEMBERS = {
+    "T_Motor":  {"cmd": "Out_Run", "on": "Sts_Running", "off": "Sts_Stopped", "trip": "Sts_Tripped", "nofb": "Cfg_NoFbk",
+                 "start": "Cmd_Start", "stop": "Cmd_Stop", "words": ("STOPPED", "RUNNING", "STARTING", "STOPPING"), "verbs": ("Start", "Stop")},
+    "T_Heater": {"cmd": "Out_Contactor", "on": "Sts_On", "off": "Sts_Off", "trip": "Sts_Tripped", "nofb": None,
+                 "start": "Cmd_On", "stop": "Cmd_Off", "words": ("OFF", "ON", "SWITCHING ON", "SWITCHING OFF"), "verbs": ("Switch on", "Switch off")},
+}
+def ttype_for(s):
+    return "T_Heater" if s.name == "Heater_Electric" else "T_Motor"
+
 def motor_template(s, demo_path):
+    tt = ttype_for(s); M = RUN_MEMBERS[tt]
     L = dict(LAYOUT["Motor"])
-    if s.badge_i == "low": L["I"] = L["I_low"]          # clear of a top-right discharge
-    custom = {"cmd": False, "run": False, "fb": True, "perm": True, "intlk": False, "fault": False, "mode": 0, "name": "", "desc": "",
-              "state": 0, "command": -1}
-    cfg = {"custom.cmd": tag("Cmd"), "custom.run": tag("Run"), "custom.fb": tag("Feedback_Enabled"), "custom.perm": tag("PermOK"),
-           "custom.intlk": tag("Intlk"), "custom.fault": tag("Fault"), "custom.mode": tag("Mode"),
-           "custom.name": tag("Name"), "custom.desc": tag("Description"),
-           "custom.state": expr("if({view.custom.fault}, 3, if(!{view.custom.fb}, if({view.custom.cmd}, 1, 0), "
-                                "if({view.custom.run} && {view.custom.cmd}, 1, if(!{view.custom.run} && !{view.custom.cmd}, 0, 2))))")}
+    if s.badge_i == "low": L["I"] = L["I_low"]
+    custom = {"cmd": False, "on": False, "off": True, "fault": False, "trip": False, "state": 0, "command": -1}
+    cfg = {"custom.cmd": ftag(M["cmd"]), "custom.on": ftag(M["on"]), "custom.off": ftag(M["off"]),
+           "custom.fault": ftag("Sts_Fault"), "custom.trip": ftag(M["trip"]),
+           "custom.state": expr("if({view.custom.fault} || {view.custom.trip}, 3, if({view.custom.on}, 1, if({view.custom.off}, 0, 2)))")}
+    common_cfg(custom, cfg)
     color_props(s, custom, cfg)
-    status = 'case({view.custom.state}, 0, "STOPPED", 1, "RUNNING", 2, if({view.custom.cmd}, "STARTING", "STOPPING"), 3, "FAULT", "???")'
+    w = M["words"]
+    status = f'case({{view.custom.state}}, 0, "{w[0]}", 1, "{w[1]}", 2, if({{view.custom.cmd}}, "{w[2]}", "{w[3]}"), 3, "FAULT", "???")'
     cls = 'case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown")'
-    pb = v3.pb_button(L, "Stop", "Start")
-    pb["props"]["style"]["classes"] = "Button/Command"
-    pb["propConfig"]["meta.visible"] = expr("{view.params.useButton} && {view.custom.mode} = 1")      # shown only in Manual, when useButton
     custom["canCmd"] = False
-    cfg["custom.canCmd"] = expr("{view.custom.mode} = 1 && ({view.custom.cmd} || ({view.custom.perm} && !{view.custom.intlk}))")
-    img = image(s, L, custom)                                   # useButton = false: press/release on the symbol drives PB
-    img["propConfig"]["props.style.classes"] = expr('if(!{view.params.useButton} && {view.custom.canCmd}, "Util/Pointer", "")')
-    press = script("\tif self.view.params.useButton or not self.view.custom.canCmd:\n\t\treturn\n"
-                   "\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [True])")
-    release = script("\tif self.view.params.useButton:\n\t\treturn\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [False])")
-    img["events"] = {"dom": {"onMouseDown": press, "onTouchStart": press, "onMouseUp": release, "onTouchEnd": release, "onMouseLeave": release}}
-    kids = [tag_label(L), img] + badges(L) + [status_label(L, status, cls, m_vis="!{view.params.useButton} && {view.custom.mode} = 1"), pb]
-    return view(demo_path, custom, cfg, kids, L["size"], use_button=True)
+    cfg["custom.canCmd"] = expr("{view.custom.man} && {view.custom.avail} && !{view.custom.local} && !{view.custom.oos} && "
+                                "({view.custom.cmd} || (!{view.custom.permMissing} && !{view.custom.intlk}))")
+    click = script(f"\tm = '{M['stop']}' if self.view.custom.cmd else '{M['start']}'\n"
+                   "\tsystem.tag.writeBlocking([self.view.params.tagPath + '/' + m], [True])")
+    pb = {"type": "ia.input.button", "version": 0, "meta": {"name": "PB", "tooltip": {"enabled": True, "text": M["verbs"][0]}},
+          "position": frac(L["pb"], L["size"]), "props": {"text": "", "enabled": False, "style": {"classes": "Button/Command"}},
+          "propConfig": {"meta.visible": expr("{view.params.useButton} && {view.custom.man}"),
+                         "props.enabled": expr("{view.custom.canCmd}"),
+                         "meta.tooltip.text": expr(f'if({{view.custom.cmd}}, "{M["verbs"][1]}", "{M["verbs"][0]}")')},
+          "events": {"component": {"onActionPerformed": click}}}
+    dbl = tt == "T_Motor"   # decision 1: double-tap command on two-state T_DValve / T_Motor only
+    kids = [tag_label(L), symbol(s, L, custom, dbl)] + badges(L) + \
+           [status_label(L, status, cls, m_vis="!{view.params.useButton} && {view.custom.man}"), pb]
+    for k in kids:   # P badge reads the type's NotPerm status
+        if k["meta"]["name"] == "P": k["propConfig"]["meta.visible"] = expr("{view.custom.permMissing}")
+    i_badge_tip(kids, "start" if tt == "T_Motor" else "switch-on")
+    v = view(demo_path, custom, cfg, kids, L["size"], use_button=True)
+    dw_params(v["params"], tt, dbl); v["propConfig"].update({f"params.{k}": pin() for k in v["params"]})
+    return v
 
 def template_for(s):
     if s.kind == "onoff":   return onoff_template
     if s.kind == "control": return control_template
     return motor_template
 
-# ---------------------------------------------------------------- tags (PID_Motor / PID_ControlValve gain Name, Description, Feedback_Enabled)
-EXTRA = [atom("Name", "String", ""), atom("Description", "String", ""), atom("Feedback_Enabled", "Boolean", True)]
-UDTS = dict(v3.UDTS)
-UDTS["PID_Motor"] = UDTS["PID_Motor"] + EXTRA
-UDTS["PID_ControlValve"] = UDTS["PID_ControlValve"] + EXTRA
-# demo alarm so the outline can be seen: Fault = 1 raises a High alarm on PID_Motor
-for m in UDTS["PID_Motor"]:
-    if m["name"] == "Fault": m["alarms"] = [{"name": "Fault", "mode": "Equality", "setpointA": 1.0, "priority": "High"}]
+# ---------------------------------------------------------------- demo tags: memory stand-ins with the EFCLib v1 member names
+# (the real types are in types/export/PCLib_Ignition81.json; point templates at real instances instead)
+def _grp():
+    return {"name": "Intlk", "tagType": "Folder", "tags": [atom("Sts_FirstOut", "Int2", -1), atom("Out_OK", "Boolean", True),
+            {"name": "Cfg_CondDesc", "tagType": "Folder", "tags": [atom(str(i), "String", "") for i in range(16)]}]}
+def _mode():
+    return {"name": "Mode", "tagType": "Folder", "tags": [atom(n, "Boolean", n == "Sts_Auto") for n in ("Sts_Auto", "Sts_Man", "Sts_Maint", "Sts_OOS")]}
+def _demo_udt(atoms, perm=True):
+    base = [atom("Cfg_Tag", "String", ""), atom("Cfg_Desc", "String", ""), atom("Sts_Avail", "Boolean", True), atom("Sts_Local", "Boolean", False),
+            atom("Sts_Intlk", "Boolean", False), atom("Sts_Fault", "Boolean", False)] + ([atom("Sts_NotPerm", "Boolean", False)] if perm else [])
+    return base + atoms + [_mode(), _grp()]
+UDTS = {
+    "T_DValve_Demo": _demo_udt([atom("Out_Open", "Boolean", False), atom("Sts_Opened", "Boolean", False), atom("Sts_Closed", "Boolean", True),
+                                atom("Cfg_HasZSO", "Boolean", True), atom("Cfg_HasZSC", "Boolean", True)]),
+    "T_CValve_Demo": _demo_udt([atom("Val_Demand", "Float4", 0.0), atom("Val_Pos", "Float4", 0.0), atom("Cfg_HasFbk", "Boolean", True)], perm=False),
+    "T_Motor_Demo":  _demo_udt([atom("Out_Run", "Boolean", False), atom("Sts_Running", "Boolean", False), atom("Sts_Stopped", "Boolean", True),
+                                atom("Sts_Tripped", "Boolean", False)]),
+    "T_Heater_Demo": _demo_udt([atom("Out_Contactor", "Boolean", False), atom("Sts_On", "Boolean", False), atom("Sts_Off", "Boolean", True),
+                                atom("Sts_Tripped", "Boolean", False)]),
+}
+for m in UDTS["T_Motor_Demo"]:   # demo alarm so the outline can be seen: Sts_Fault = 1 raises a High alarm
+    if m["name"] == "Sts_Fault": m["alarms"] = [{"name": "Fault", "mode": "Equality", "setpointA": 1.0, "priority": "High"}]
 
-DEMO = [  # instance, UDT, member overrides, template symbol
-    ("XV101", "Valve_Discrete_Demo", {"Auto": True, "CMD": True, "ZSO": True, "ZSC": False, "Name": "XV-101", "Description": "N2 supply isolation"}, "Valve_OnOff_Pneumatic"),
-    ("XV102", "Valve_Discrete_Demo", {"Manual": True, "Permissive": True, "Name": "XV-102"}, "Valve_Solenoid"),
-    ("XV103", "Valve_Discrete_Demo", {"Manual": True, "CMD": True, "ZSC": False, "Name": "XV-103"}, "Valve_MOV"),
-    ("XV104", "Valve_Discrete_Demo", {"Off": True, "Interlock": True, "InterlockList": "PSH-201 high pressure", "Name": "XV-104"}, "Valve_OnOff_Pneumatic"),
-    ("XV105", "Valve_Discrete_Demo", {"LockedOut": True, "ZSO": True, "ZSC": True, "Name": "XV-105"}, "Valve_OnOff_Pneumatic"),
-    ("FV101", "PID_ControlValve", {"Out": 45.0, "Pos": 43.0, "Name": "FV-101"}, "Valve_Control"),
-    ("FV102", "PID_ControlValve", {"Out": 20.0, "Pos": 20.0, "Mode": 1, "Name": "FV-102"}, "Valve_Control"),
-    ("P101", "PID_Motor", {"Cmd": True, "Run": True, "Name": "P-101"}, "Pump_Centrifugal"),
-    ("P102", "PID_Motor", {"PermOK": False, "Intlk": True, "Name": "P-102"}, "Pump_PD_Rotary"),
-    ("K201", "PID_Motor", {"Cmd": True, "Run": True, "Mode": 1, "Name": "K-201"}, "Compressor_Diaphragm"),
-    ("K202", "PID_Motor", {"Fault": True, "Name": "K-202"}, "Compressor_Centrifugal"),
-    ("B301", "PID_Motor", {"Cmd": True, "Name": "B-301"}, "Blower"),
-    ("PV501", "PID_Motor", {"Cmd": True, "Run": True, "Mode": 1, "Name": "PV-501"}, "Pump_Vacuum"),
-    ("E401", "PID_Motor", {"Cmd": True, "Run": True, "Name": "E-401"}, "Heater_Electric"),
+def _man(on=True): return {"Mode/Sts_Man": on, "Mode/Sts_Auto": not on}
+DEMO = [  # instance, UDT, member overrides ("Group/Member" for nested), template symbol
+    ("XV101", "T_DValve_Demo", {"Out_Open": True, "Sts_Opened": True, "Sts_Closed": False, "Cfg_Tag": "XV-101", "Cfg_Desc": "N2 supply isolation"}, "Valve_OnOff_Pneumatic"),
+    ("XV102", "T_DValve_Demo", {**_man(), "Sts_NotPerm": True, "Cfg_Tag": "XV-102"}, "Valve_Solenoid"),
+    ("XV103", "T_DValve_Demo", {**_man(), "Out_Open": True, "Sts_Closed": False, "Cfg_Tag": "XV-103"}, "Valve_MOV"),
+    ("XV104", "T_DValve_Demo", {"Mode/Sts_OOS": True, "Mode/Sts_Auto": False, "Sts_Intlk": True, "Intlk/Sts_FirstOut": 0,
+                                "Intlk/Cfg_CondDesc/0": "PSH-201 high pressure", "Cfg_Tag": "XV-104"}, "Valve_OnOff_Pneumatic"),
+    ("XV105", "T_DValve_Demo", {"Sts_Local": True, "Sts_Fault": True, "Sts_Closed": False, "Cfg_Tag": "XV-105"}, "Valve_OnOff_Pneumatic"),
+    ("FV101", "T_CValve_Demo", {"Val_Demand": 45.0, "Val_Pos": 43.0, "Cfg_Tag": "FV-101"}, "Valve_Control"),
+    ("FV102", "T_CValve_Demo", {"Val_Demand": 20.0, "Val_Pos": 20.0, **_man(), "Cfg_Tag": "FV-102"}, "Valve_Control"),
+    ("P101", "T_Motor_Demo", {"Out_Run": True, "Sts_Running": True, "Sts_Stopped": False, "Cfg_Tag": "P-101"}, "Pump_Centrifugal"),
+    ("P102", "T_Motor_Demo", {"Sts_NotPerm": True, "Sts_Intlk": True, "Cfg_Tag": "P-102"}, "Pump_PD_Rotary"),
+    ("K201", "T_Motor_Demo", {"Out_Run": True, "Sts_Running": True, "Sts_Stopped": False, **_man(), "Cfg_Tag": "K-201"}, "Compressor_Diaphragm"),
+    ("K202", "T_Motor_Demo", {"Sts_Fault": True, "Cfg_Tag": "K-202"}, "Compressor_Centrifugal"),
+    ("B301", "T_Motor_Demo", {"Out_Run": True, "Sts_Stopped": False, "Cfg_Tag": "B-301"}, "Blower"),
+    ("PV501", "T_Motor_Demo", {"Out_Run": True, "Sts_Running": True, "Sts_Stopped": False, **_man(), "Cfg_Tag": "PV-501"}, "Pump_Vacuum"),
+    ("E401", "T_Heater_Demo", {"Out_Contactor": True, "Sts_On": True, "Sts_Off": False, "Cfg_Tag": "E-401"}, "Heater_Electric"),
 ]
 NO_BUTTON = {"XV103", "PV501"}   # demo instances shown with useButton = false
 def tpl_path(s): return f"Templates/{s.cat}/{s.name}"   # imports straight into Views/Templates
@@ -267,8 +331,17 @@ def tags_files():
     d = os.path.join(OUT, "tags"); os.makedirs(d, exist_ok=True)
     for n, members in UDTS.items():
         json.dump({"name": n, "tagType": "UdtType", "tags": members}, open(os.path.join(d, f"{n}_UDT.json"), "w"), indent=2)
-    inst = [{"name": n, "tagType": "UdtInstance", "typeId": u, "tags": [{"name": k, "tagType": "AtomicTag", "value": v} for k, v in ov.items()]}
-            for n, u, ov, _ in DEMO]
+    def nest(ov):
+        root = {}
+        for k, v in ov.items():
+            parts = k.split("/"); d = root
+            for p_ in parts[:-1]: d = d.setdefault(p_, {})
+            d[parts[-1]] = v
+        def emit(d):
+            return [{"name": k, "tagType": "Folder", "tags": emit(v)} if isinstance(v, dict) else {"name": k, "tagType": "AtomicTag", "value": v}
+                    for k, v in d.items()]
+        return emit(root)
+    inst = [{"name": n, "tagType": "UdtInstance", "typeId": u, "tags": nest(ov)} for n, u, ov, _ in DEMO]
     json.dump({"name": "PID_Demo", "tagType": "Folder", "tags": inst}, open(os.path.join(d, "PID_Demo_Instances.json"), "w"), indent=2)
 
 def demo_view():
@@ -288,9 +361,9 @@ def demo_view():
 # ---------------------------------------------------------------- null-safety (live-gateway fix 2026-10-06)
 # Tag-bound customs read null while a member is missing, bad or still loading (e.g. the new Permissive member);
 # null inside && / || / if() puts the dependent bindings in error. Wrap every read of a tag-bound custom in coalesce().
-NULL_DEFAULTS = {"cmd": "false", "zso": "false", "zsc": "false", "fb": "true", "permMissing": "false", "intlk": "false",
-                 "manual": "false", "off": "false", "locked": "false", "run": "false", "perm": "true", "fault": "false",
-                 "mode": "0", "out": "0", "pos": "0"}
+NULL_DEFAULTS = {"cmd": "false", "opened": "false", "closed": "false", "hasZso": "false", "hasZsc": "false", "fb": "true",
+                 "permMissing": "false", "intlk": "false", "man": "false", "oos": "false", "avail": "true", "local": "false",
+                 "on": "false", "off": "false", "trip": "false", "fault": "false", "mode": "0", "out": "0", "pos": "0", "firstOut": "-1"}
 def _harden_expr(e):
     import re as _re
     e = _re.sub(r"\{view\.custom\.(\w+)\}", lambda m: f"coalesce({{view.custom.{m.group(1)}}}, {NULL_DEFAULTS[m.group(1)]})"

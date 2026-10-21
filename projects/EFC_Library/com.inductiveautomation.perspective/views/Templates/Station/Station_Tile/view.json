@@ -104,7 +104,10 @@
     "pendingCmd": ""
   },
   "params": {
-    "tagPath": ""
+    "tagPath": "",
+    "tType": "T_Station",
+    "dockId": "",
+    "dwTagPath": ""
   },
   "propConfig": {
     "params.tagPath": {
@@ -130,7 +133,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Active",
+          "tagPath": "{0}/Sts_Active",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -143,7 +146,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Complete",
+          "tagPath": "{0}/Sts_Complete",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -156,7 +159,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Deadband",
+          "tagPath": "{0}/Prm_Deadband",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -169,7 +172,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Disabled",
+          "tagPath": "{0}/Sts_Disabled",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -182,7 +185,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Failed",
+          "tagPath": "{0}/Sts_Failed",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -195,7 +198,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Filling",
+          "tagPath": "{0}/Sts_Filling",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -208,7 +211,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/NetWeight",
+          "tagPath": "{0}/Val_Net",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -221,7 +224,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/PT",
+          "tagPath": "{0}/Val_PT",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -234,7 +237,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/PT_Valid",
+          "tagPath": "{0}/Inp_PTValid",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -247,7 +250,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/ReadyToFill",
+          "tagPath": "{0}/Sts_ReadyToFill",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -260,7 +263,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/ReadyToStart",
+          "tagPath": "{0}/Sts_ReadyToStart",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -273,7 +276,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Recovering",
+          "tagPath": "{0}/Sts_Recovering",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -286,7 +289,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/SampleCMD",
+          "tagPath": "{0}/Out_SampleCmd",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -299,7 +302,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/ScaleName",
+          "tagPath": "{0}/Cfg_ScaleName",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -312,7 +315,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Selected",
+          "tagPath": "{0}/Sts_Selected",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -325,7 +328,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/StationName",
+          "tagPath": "{0}/Cfg_Desc",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -338,7 +341,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/TargetWeight",
+          "tagPath": "{0}/Prm_TargetWt",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -351,7 +354,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Units",
+          "tagPath": "{0}/Cfg_EU",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -364,7 +367,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Vacuuming",
+          "tagPath": "{0}/Sts_Vacuuming",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -377,13 +380,25 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Venting",
+          "tagPath": "{0}/Sts_Venting",
           "references": {
             "0": "{view.params.tagPath}"
           },
           "fallbackDelay": 2.5
         }
       }
+    },
+    "params.tType": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dockId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dwTagPath": {
+      "paramDirection": "input",
+      "persistent": true
     }
   },
   "props": {
@@ -432,7 +447,7 @@
       "dom": {
         "onClick": {
           "config": {
-            "script": "\t# Opens the Type 1 sidebar. Create a right-side dock in Page Configuration with id \"StationSidebar\",\n\t# view Templates/Station/Station_Sidebar, size 300 x 800, display \"onDemand\".\n\tsystem.perspective.openDock(\"StationSidebar\", params={\"tagPath\": self.view.params.tagPath})"
+            "script": "\t# Opens the Type 1 sidebar. Create a right-side dock in Page Configuration with id \"StationSidebar\",\n\t# view Templates/Station/Station_Sidebar, size 300 x 800, display \"onDemand\".\n\tefc.ui.openDynamic(self)"
           },
           "scope": "G",
           "type": "script"

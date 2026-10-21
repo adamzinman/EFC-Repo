@@ -1,16 +1,23 @@
 {
   "custom": {
     "cmd": false,
-    "run": false,
-    "fb": true,
-    "perm": true,
-    "intlk": false,
+    "on": false,
+    "off": true,
     "fault": false,
-    "mode": 0,
-    "name": "",
-    "desc": "",
+    "trip": false,
     "state": 0,
     "command": -1,
+    "name": "",
+    "desc": "",
+    "man": false,
+    "oos": false,
+    "avail": true,
+    "local": false,
+    "intlk": false,
+    "permMissing": false,
+    "firstOut": -1,
+    "firstDesc": "",
+    "mode": 0,
     "alarm": 0,
     "fill": "#9E9E9E",
     "head": "#9E9E9E",
@@ -21,7 +28,11 @@
   },
   "params": {
     "tagPath": "[default]PID_Demo/P101",
-    "useButton": true
+    "useButton": true,
+    "tType": "T_Motor",
+    "dockId": "",
+    "dwTagPath": "",
+    "dblCmd": true
   },
   "propConfig": {
     "params.tagPath": {
@@ -41,11 +52,11 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Cmd"
+          "tagPath": "{0}/Out_Run"
         }
       }
     },
-    "custom.run": {
+    "custom.on": {
       "binding": {
         "type": "tag",
         "config": {
@@ -54,11 +65,11 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Run"
+          "tagPath": "{0}/Sts_Running"
         }
       }
     },
-    "custom.fb": {
+    "custom.off": {
       "binding": {
         "type": "tag",
         "config": {
@@ -67,33 +78,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Feedback_Enabled"
-        }
-      }
-    },
-    "custom.perm": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/PermOK"
-        }
-      }
-    },
-    "custom.intlk": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Intlk"
+          "tagPath": "{0}/Sts_Stopped"
         }
       }
     },
@@ -106,11 +91,11 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Fault"
+          "tagPath": "{0}/Sts_Fault"
         }
       }
     },
-    "custom.mode": {
+    "custom.trip": {
       "binding": {
         "type": "tag",
         "config": {
@@ -119,7 +104,15 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Mode"
+          "tagPath": "{0}/Sts_Tripped"
+        }
+      }
+    },
+    "custom.state": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "if(coalesce({view.custom.fault}, false) || coalesce({view.custom.trip}, false), 3, if(coalesce({view.custom.on}, false), 1, if(coalesce({view.custom.off}, false), 0, 2)))"
         }
       }
     },
@@ -132,7 +125,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Name"
+          "tagPath": "{0}/Cfg_Tag"
         }
       }
     },
@@ -145,15 +138,120 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Description"
+          "tagPath": "{0}/Cfg_Desc"
         }
       }
     },
-    "custom.state": {
+    "custom.man": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Mode/Sts_Man"
+        }
+      }
+    },
+    "custom.oos": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Mode/Sts_OOS"
+        }
+      }
+    },
+    "custom.avail": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Sts_Avail"
+        }
+      }
+    },
+    "custom.local": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Sts_Local"
+        }
+      }
+    },
+    "custom.intlk": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Sts_Intlk"
+        }
+      }
+    },
+    "custom.firstOut": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Intlk/Sts_FirstOut"
+        }
+      }
+    },
+    "custom.firstDesc": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}",
+            "1": "{view.custom.firstOut}"
+          },
+          "tagPath": "{0}/Intlk/Cfg_CondDesc/{1}"
+        }
+      }
+    },
+    "custom.mode": {
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "if(coalesce({view.custom.fault}, false), 3, if(!coalesce({view.custom.fb}, true), if(coalesce({view.custom.cmd}, false), 1, 0), if(coalesce({view.custom.run}, false) && coalesce({view.custom.cmd}, false), 1, if(!coalesce({view.custom.run}, false) && !coalesce({view.custom.cmd}, false), 0, 2))))"
+          "expression": "if(coalesce({view.custom.man}, false), 1, 0)"
+        }
+      }
+    },
+    "custom.permMissing": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Sts_NotPerm"
         }
       }
     },
@@ -209,9 +307,25 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "coalesce({view.custom.mode}, 0) = 1 && (coalesce({view.custom.cmd}, false) || (coalesce({view.custom.perm}, true) && !coalesce({view.custom.intlk}, false)))"
+          "expression": "coalesce({view.custom.man}, false) && coalesce({view.custom.avail}, true) && !coalesce({view.custom.local}, false) && !coalesce({view.custom.oos}, false) && (coalesce({view.custom.cmd}, false) || (!coalesce({view.custom.permMissing}, false) && !coalesce({view.custom.intlk}, false)))"
         }
       }
+    },
+    "params.tType": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dockId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dwTagPath": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dblCmd": {
+      "paramDirection": "input",
+      "persistent": true
     }
   },
   "props": {
@@ -283,7 +397,11 @@
         "type": "ia.shapes.svg",
         "version": 0,
         "meta": {
-          "name": "Symbol"
+          "name": "Symbol",
+          "tooltip": {
+            "enabled": true,
+            "text": "Open dynamic window (double-tap: command, touch mode)"
+          }
         },
         "position": {
           "x": 0.225,
@@ -381,7 +499,10 @@
                 "linejoin": "round"
               }
             }
-          ]
+          ],
+          "style": {
+            "classes": "Util/Pointer"
+          }
         },
         "propConfig": {
           "props.elements[0].fill.paint": {
@@ -487,51 +608,22 @@
                 "expression": "{view.custom.lw}"
               }
             }
-          },
-          "props.style.classes": {
-            "binding": {
-              "type": "expr",
-              "config": {
-                "expression": "if(!{view.params.useButton} && {view.custom.canCmd}, \"Util/Pointer\", \"\")"
-              }
-            }
           }
         },
         "events": {
           "dom": {
-            "onMouseDown": {
+            "onClick": {
               "type": "script",
               "scope": "G",
               "config": {
-                "script": "\tif self.view.params.useButton or not self.view.custom.canCmd:\n\t\treturn\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [True])"
+                "script": "\tefc.ui.openDynamic(self)"
               }
             },
-            "onTouchStart": {
+            "onDoubleClick": {
               "type": "script",
               "scope": "G",
               "config": {
-                "script": "\tif self.view.params.useButton or not self.view.custom.canCmd:\n\t\treturn\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [True])"
-              }
-            },
-            "onMouseUp": {
-              "type": "script",
-              "scope": "G",
-              "config": {
-                "script": "\tif self.view.params.useButton:\n\t\treturn\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [False])"
-              }
-            },
-            "onTouchEnd": {
-              "type": "script",
-              "scope": "G",
-              "config": {
-                "script": "\tif self.view.params.useButton:\n\t\treturn\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [False])"
-              }
-            },
-            "onMouseLeave": {
-              "type": "script",
-              "scope": "G",
-              "config": {
-                "script": "\tif self.view.params.useButton:\n\t\treturn\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [False])"
+                "script": "\tefc.ui.dblCmd(self)"
               }
             }
           }
@@ -564,7 +656,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "!coalesce({view.custom.perm}, true)"
+                "expression": "coalesce({view.custom.permMissing}, false)"
               }
             }
           }
@@ -598,6 +690,14 @@
               "type": "expr",
               "config": {
                 "expression": "coalesce({view.custom.intlk}, false)"
+              }
+            }
+          },
+          "meta.tooltip.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "\"Interlock active - \" + \"start\" + \" blocked\" + if(coalesce({view.custom.firstOut}, -1) >= 0 && len(coalesce({view.custom.firstDesc}, \"\")) > 0, \": \" + {view.custom.firstDesc}, \"\")"
               }
             }
           }
@@ -646,7 +746,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "!{view.params.useButton} && coalesce({view.custom.mode}, 0) = 1"
+                    "expression": "!{view.params.useButton} && coalesce({view.custom.man}, false)"
                   }
                 }
               },
@@ -654,7 +754,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if(!{view.params.useButton} && coalesce({view.custom.mode}, 0) = 1, \"Mode/ManualSplit\", \"Util/Collapsed\")"
+                    "expression": "if(!{view.params.useButton} && coalesce({view.custom.man}, false), \"Mode/ManualSplit\", \"Util/Collapsed\")"
                   }
                 }
               }
@@ -689,7 +789,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "case({view.custom.state}, 0, \"State/Stopped\", 1, \"State/Running\", 2, \"State/Transition\", 3, \"State/Fault\", \"State/Unknown\") + if(!{view.params.useButton} && coalesce({view.custom.mode}, 0) = 1, \" Mode/ManualJoined\", \"\")"
+                    "expression": "case({view.custom.state}, 0, \"State/Stopped\", 1, \"State/Running\", 2, \"State/Transition\", 3, \"State/Fault\", \"State/Unknown\") + if(!{view.params.useButton} && coalesce({view.custom.man}, false), \" Mode/ManualJoined\", \"\")"
                   }
                 }
               }
@@ -715,17 +815,25 @@
         },
         "props": {
           "text": "",
-          "enabled": true,
+          "enabled": false,
           "style": {
             "classes": "Button/Command"
           }
         },
         "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "{view.params.useButton} && coalesce({view.custom.man}, false)"
+              }
+            }
+          },
           "props.enabled": {
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "coalesce({view.custom.cmd}, false) || (coalesce({view.custom.perm}, true) && !coalesce({view.custom.intlk}, false))"
+                "expression": "{view.custom.canCmd}"
               }
             }
           },
@@ -736,51 +844,15 @@
                 "expression": "if(coalesce({view.custom.cmd}, false), \"Stop\", \"Start\")"
               }
             }
-          },
-          "meta.visible": {
-            "binding": {
-              "type": "expr",
-              "config": {
-                "expression": "{view.params.useButton} && coalesce({view.custom.mode}, 0) = 1"
-              }
-            }
           }
         },
         "events": {
-          "dom": {
-            "onMouseDown": {
+          "component": {
+            "onActionPerformed": {
               "type": "script",
               "scope": "G",
               "config": {
-                "script": "\tif self.props.enabled:\n\t\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [True])"
-              }
-            },
-            "onTouchStart": {
-              "type": "script",
-              "scope": "G",
-              "config": {
-                "script": "\tif self.props.enabled:\n\t\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [True])"
-              }
-            },
-            "onMouseUp": {
-              "type": "script",
-              "scope": "G",
-              "config": {
-                "script": "\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [False])"
-              }
-            },
-            "onTouchEnd": {
-              "type": "script",
-              "scope": "G",
-              "config": {
-                "script": "\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [False])"
-              }
-            },
-            "onMouseLeave": {
-              "type": "script",
-              "scope": "G",
-              "config": {
-                "script": "\tsystem.tag.writeBlocking([self.view.params.tagPath + '/PB'], [False])"
+                "script": "\tm = 'Cmd_Stop' if self.view.custom.cmd else 'Cmd_Start'\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/' + m], [True])"
               }
             }
           }

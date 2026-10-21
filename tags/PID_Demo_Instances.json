@@ -5,35 +5,30 @@
     {
       "name": "XV101",
       "tagType": "UdtInstance",
-      "typeId": "Valve_Discrete_Demo",
+      "typeId": "T_DValve_Demo",
       "tags": [
         {
-          "name": "Auto",
+          "name": "Out_Open",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "CMD",
+          "name": "Sts_Opened",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "ZSO",
-          "tagType": "AtomicTag",
-          "value": true
-        },
-        {
-          "name": "ZSC",
+          "name": "Sts_Closed",
           "tagType": "AtomicTag",
           "value": false
         },
         {
-          "name": "Name",
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "XV-101"
         },
         {
-          "name": "Description",
+          "name": "Cfg_Desc",
           "tagType": "AtomicTag",
           "value": "N2 supply isolation"
         }
@@ -42,20 +37,31 @@
     {
       "name": "XV102",
       "tagType": "UdtInstance",
-      "typeId": "Valve_Discrete_Demo",
+      "typeId": "T_DValve_Demo",
       "tags": [
         {
-          "name": "Manual",
+          "name": "Mode",
+          "tagType": "Folder",
+          "tags": [
+            {
+              "name": "Sts_Man",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Sts_Auto",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
+        },
+        {
+          "name": "Sts_NotPerm",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "Permissive",
-          "tagType": "AtomicTag",
-          "value": true
-        },
-        {
-          "name": "Name",
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "XV-102"
         }
@@ -64,25 +70,36 @@
     {
       "name": "XV103",
       "tagType": "UdtInstance",
-      "typeId": "Valve_Discrete_Demo",
+      "typeId": "T_DValve_Demo",
       "tags": [
         {
-          "name": "Manual",
+          "name": "Mode",
+          "tagType": "Folder",
+          "tags": [
+            {
+              "name": "Sts_Man",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Sts_Auto",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
+        },
+        {
+          "name": "Out_Open",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "CMD",
-          "tagType": "AtomicTag",
-          "value": true
-        },
-        {
-          "name": "ZSC",
+          "name": "Sts_Closed",
           "tagType": "AtomicTag",
           "value": false
         },
         {
-          "name": "Name",
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "XV-103"
         }
@@ -91,25 +108,53 @@
     {
       "name": "XV104",
       "tagType": "UdtInstance",
-      "typeId": "Valve_Discrete_Demo",
+      "typeId": "T_DValve_Demo",
       "tags": [
         {
-          "name": "Off",
+          "name": "Mode",
+          "tagType": "Folder",
+          "tags": [
+            {
+              "name": "Sts_OOS",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Sts_Auto",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
+        },
+        {
+          "name": "Sts_Intlk",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "Interlock",
-          "tagType": "AtomicTag",
-          "value": true
+          "name": "Intlk",
+          "tagType": "Folder",
+          "tags": [
+            {
+              "name": "Sts_FirstOut",
+              "tagType": "AtomicTag",
+              "value": 0
+            },
+            {
+              "name": "Cfg_CondDesc",
+              "tagType": "Folder",
+              "tags": [
+                {
+                  "name": "0",
+                  "tagType": "AtomicTag",
+                  "value": "PSH-201 high pressure"
+                }
+              ]
+            }
+          ]
         },
         {
-          "name": "InterlockList",
-          "tagType": "AtomicTag",
-          "value": "PSH-201 high pressure"
-        },
-        {
-          "name": "Name",
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "XV-104"
         }
@@ -118,25 +163,25 @@
     {
       "name": "XV105",
       "tagType": "UdtInstance",
-      "typeId": "Valve_Discrete_Demo",
+      "typeId": "T_DValve_Demo",
       "tags": [
         {
-          "name": "LockedOut",
+          "name": "Sts_Local",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "ZSO",
+          "name": "Sts_Fault",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "ZSC",
+          "name": "Sts_Closed",
           "tagType": "AtomicTag",
-          "value": true
+          "value": false
         },
         {
-          "name": "Name",
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "XV-105"
         }
@@ -145,20 +190,20 @@
     {
       "name": "FV101",
       "tagType": "UdtInstance",
-      "typeId": "PID_ControlValve",
+      "typeId": "T_CValve_Demo",
       "tags": [
         {
-          "name": "Out",
+          "name": "Val_Demand",
           "tagType": "AtomicTag",
           "value": 45.0
         },
         {
-          "name": "Pos",
+          "name": "Val_Pos",
           "tagType": "AtomicTag",
           "value": 43.0
         },
         {
-          "name": "Name",
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "FV-101"
         }
@@ -167,25 +212,36 @@
     {
       "name": "FV102",
       "tagType": "UdtInstance",
-      "typeId": "PID_ControlValve",
+      "typeId": "T_CValve_Demo",
       "tags": [
         {
-          "name": "Out",
+          "name": "Val_Demand",
           "tagType": "AtomicTag",
           "value": 20.0
         },
         {
-          "name": "Pos",
+          "name": "Val_Pos",
           "tagType": "AtomicTag",
           "value": 20.0
         },
         {
           "name": "Mode",
-          "tagType": "AtomicTag",
-          "value": 1
+          "tagType": "Folder",
+          "tags": [
+            {
+              "name": "Sts_Man",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Sts_Auto",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
         },
         {
-          "name": "Name",
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "FV-102"
         }
@@ -194,20 +250,25 @@
     {
       "name": "P101",
       "tagType": "UdtInstance",
-      "typeId": "PID_Motor",
+      "typeId": "T_Motor_Demo",
       "tags": [
         {
-          "name": "Cmd",
+          "name": "Out_Run",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "Run",
+          "name": "Sts_Running",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "Name",
+          "name": "Sts_Stopped",
+          "tagType": "AtomicTag",
+          "value": false
+        },
+        {
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "P-101"
         }
@@ -216,20 +277,20 @@
     {
       "name": "P102",
       "tagType": "UdtInstance",
-      "typeId": "PID_Motor",
+      "typeId": "T_Motor_Demo",
       "tags": [
         {
-          "name": "PermOK",
-          "tagType": "AtomicTag",
-          "value": false
-        },
-        {
-          "name": "Intlk",
+          "name": "Sts_NotPerm",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "Name",
+          "name": "Sts_Intlk",
+          "tagType": "AtomicTag",
+          "value": true
+        },
+        {
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "P-102"
         }
@@ -238,25 +299,41 @@
     {
       "name": "K201",
       "tagType": "UdtInstance",
-      "typeId": "PID_Motor",
+      "typeId": "T_Motor_Demo",
       "tags": [
         {
-          "name": "Cmd",
+          "name": "Out_Run",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "Run",
+          "name": "Sts_Running",
           "tagType": "AtomicTag",
           "value": true
+        },
+        {
+          "name": "Sts_Stopped",
+          "tagType": "AtomicTag",
+          "value": false
         },
         {
           "name": "Mode",
-          "tagType": "AtomicTag",
-          "value": 1
+          "tagType": "Folder",
+          "tags": [
+            {
+              "name": "Sts_Man",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Sts_Auto",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
         },
         {
-          "name": "Name",
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "K-201"
         }
@@ -265,15 +342,15 @@
     {
       "name": "K202",
       "tagType": "UdtInstance",
-      "typeId": "PID_Motor",
+      "typeId": "T_Motor_Demo",
       "tags": [
         {
-          "name": "Fault",
+          "name": "Sts_Fault",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "Name",
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "K-202"
         }
@@ -282,15 +359,20 @@
     {
       "name": "B301",
       "tagType": "UdtInstance",
-      "typeId": "PID_Motor",
+      "typeId": "T_Motor_Demo",
       "tags": [
         {
-          "name": "Cmd",
+          "name": "Out_Run",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "Name",
+          "name": "Sts_Stopped",
+          "tagType": "AtomicTag",
+          "value": false
+        },
+        {
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "B-301"
         }
@@ -299,25 +381,41 @@
     {
       "name": "PV501",
       "tagType": "UdtInstance",
-      "typeId": "PID_Motor",
+      "typeId": "T_Motor_Demo",
       "tags": [
         {
-          "name": "Cmd",
+          "name": "Out_Run",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "Run",
+          "name": "Sts_Running",
           "tagType": "AtomicTag",
           "value": true
+        },
+        {
+          "name": "Sts_Stopped",
+          "tagType": "AtomicTag",
+          "value": false
         },
         {
           "name": "Mode",
-          "tagType": "AtomicTag",
-          "value": 1
+          "tagType": "Folder",
+          "tags": [
+            {
+              "name": "Sts_Man",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Sts_Auto",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
         },
         {
-          "name": "Name",
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "PV-501"
         }
@@ -326,20 +424,25 @@
     {
       "name": "E401",
       "tagType": "UdtInstance",
-      "typeId": "PID_Motor",
+      "typeId": "T_Heater_Demo",
       "tags": [
         {
-          "name": "Cmd",
+          "name": "Out_Contactor",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "Run",
+          "name": "Sts_On",
           "tagType": "AtomicTag",
           "value": true
         },
         {
-          "name": "Name",
+          "name": "Sts_Off",
+          "tagType": "AtomicTag",
+          "value": false
+        },
+        {
+          "name": "Cfg_Tag",
           "tagType": "AtomicTag",
           "value": "E-401"
         }

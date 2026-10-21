@@ -1,6 +1,6 @@
-# Audit (2026-10-21 03:09)
+# Audit (2026-10-21 03:38)
 
-104 findings: ERROR 0, WARN 67, INFO 37
+88 findings: ERROR 0, WARN 51, INFO 37
 Upstream check: DUE (last: never)
 
 ## WARN
@@ -12,9 +12,7 @@ Upstream check: DUE (last: never)
 - EFC/AnalogIndicator/C_CompactRow [inline-style] - 4 inline style props (use style classes) e.g. ['root', 'Top', 'ValueRow']
 - EFC/AnalogIndicator/D_MiniColumn [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - EFC/AnalogIndicator/D_MiniColumn [inline-style] - 4 inline style props (use style classes) e.g. ['root', 'Bar', 'Pointer']
-- Templates/HeatTransfer/HX_AirCooled [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/HeatTransfer/HX_AirCooled [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
-- Templates/HeatTransfer/Heater_Electric [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/HeatTransfer/Heater_Electric [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
 - Templates/IO/Faceplates/BMXAMI0810 [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/IO/Faceplates/BMXAMO0802 [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
@@ -39,37 +37,23 @@ Upstream check: DUE (last: never)
 - Templates/Loops/Loop_B4_Column [off-palette] - colors outside palette: ['#1e2329', '#222222', '#2b3138', '#2f6fd6', '#454d55', '#6b737c']
 - Templates/ProcessValues/PV_RangeBar [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/ProcessValues/PV_StatusStrip [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
-- Templates/Rotating/Agitator [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Rotating/Agitator [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Rotating/Blower [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Rotating/Blower [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Rotating/Compressor_Centrifugal [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Rotating/Compressor_Centrifugal [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Rotating/Compressor_Diaphragm [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Rotating/Compressor_Diaphragm [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Rotating/Motor [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Rotating/Motor [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Rotating/Pump_Centrifugal [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Rotating/Pump_Centrifugal [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
-- Templates/Rotating/Pump_Diaphragm [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Rotating/Pump_Diaphragm [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
-- Templates/Rotating/Pump_PD_Rotary [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Rotating/Pump_PD_Rotary [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
-- Templates/Rotating/Pump_Reciprocating [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Rotating/Pump_Reciprocating [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
-- Templates/Rotating/Pump_Vacuum [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Rotating/Pump_Vacuum [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
 - Templates/Station/Station_Fill [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Station/Station_Fill [inline-style] - 33 inline style props (use style classes) e.g. ['root', 'Header', 'Chip']
 - Templates/Station/Station_Tile [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Station/Station_Tile [inline-style] - 8 inline style props (use style classes) e.g. ['root', 'Scale', 'Chip']
-- Templates/Valves/Valve_Control [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Valves/Valve_Control [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Valves/Valve_MOV [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Valves/Valve_MOV [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Valves/Valve_OnOff_Pneumatic [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Valves/Valve_OnOff_Pneumatic [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Valves/Valve_Solenoid [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/Valves/Valve_Solenoid [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
 
 ## INFO

@@ -35,6 +35,7 @@ RELOCATE = {
     "PID_Loops": [("PID/Templates/", "Templates/Loops/"), ("PID/Popups/", "Templates/Loops/Popups/"),
                   ("PID/_Demo_Loops", "Templates/Loops/_Demo")],
     "EFC_IOFaceplates": [("IO/", "Templates/IO/")],
+    "EFC_StationFaceplates": [("Templates/Station/Station_Sidebar", "Docks/Station")],   # dw_Station dynamic window (decision 4)
 }
 
 

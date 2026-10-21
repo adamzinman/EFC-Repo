@@ -146,7 +146,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Active",
+          "tagPath": "{0}/Sts_Active",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -159,7 +159,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Complete",
+          "tagPath": "{0}/Sts_Complete",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -172,7 +172,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Deadband",
+          "tagPath": "{0}/Prm_Deadband",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -185,7 +185,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Disabled",
+          "tagPath": "{0}/Sts_Disabled",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -198,7 +198,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Failed",
+          "tagPath": "{0}/Sts_Failed",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -211,7 +211,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Filling",
+          "tagPath": "{0}/Sts_Filling",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -224,7 +224,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/GrossWeight",
+          "tagPath": "{0}/Val_Gross",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -237,7 +237,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/InletCMD",
+          "tagPath": "{0}/Out_InletCmd",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -250,7 +250,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/InletREQ",
+          "tagPath": "{0}/Sts_InletReq",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -263,7 +263,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Msg",
+          "tagPath": "{0}/Sts_Msg",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -276,7 +276,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/NetWeight",
+          "tagPath": "{0}/Val_Net",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -289,7 +289,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Press_Balanced",
+          "tagPath": "{0}/Sts_PressBalanced",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -302,7 +302,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Press_Max",
+          "tagPath": "{0}/Prm_MaxPress",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -315,7 +315,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/PT",
+          "tagPath": "{0}/Val_PT",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -328,7 +328,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/PT_Diff",
+          "tagPath": "{0}/Val_PTDiff",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -341,7 +341,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/PT_Valid",
+          "tagPath": "{0}/Inp_PTValid",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -354,7 +354,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/ReadyToFill",
+          "tagPath": "{0}/Sts_ReadyToFill",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -367,7 +367,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/ReadyToStart",
+          "tagPath": "{0}/Sts_ReadyToStart",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -380,7 +380,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Recovering",
+          "tagPath": "{0}/Sts_Recovering",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -393,7 +393,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/SampleCMD",
+          "tagPath": "{0}/Out_SampleCmd",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -406,7 +406,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/SamplePress",
+          "tagPath": "{0}/Prm_PrefillPress",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -419,7 +419,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/SampleREQ",
+          "tagPath": "{0}/Sts_SampleReq",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -432,7 +432,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/SampleWeight",
+          "tagPath": "{0}/Prm_SampleWt",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -445,7 +445,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/ScaleName",
+          "tagPath": "{0}/Cfg_ScaleName",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -458,7 +458,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Selected",
+          "tagPath": "{0}/Sts_Selected",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -471,7 +471,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/StationName",
+          "tagPath": "{0}/Cfg_Desc",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -484,7 +484,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/TareWeight",
+          "tagPath": "{0}/Val_Tare",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -497,7 +497,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/TargetWeight",
+          "tagPath": "{0}/Prm_TargetWt",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -510,7 +510,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/TotalWeight",
+          "tagPath": "{0}/Val_Total",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -523,7 +523,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Units",
+          "tagPath": "{0}/Cfg_EU",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -536,7 +536,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/VacuumCMD",
+          "tagPath": "{0}/Out_VacuumCmd",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -549,7 +549,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Vacuumed",
+          "tagPath": "{0}/Sts_Vacuumed",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -562,7 +562,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Vacuuming",
+          "tagPath": "{0}/Sts_Vacuuming",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -575,7 +575,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/VacuumREQ",
+          "tagPath": "{0}/Sts_VacuumReq",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -588,7 +588,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Venting",
+          "tagPath": "{0}/Sts_Venting",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -601,7 +601,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Vessel_Present",
+          "tagPath": "{0}/Inp_VesselPresent",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -612,8 +612,8 @@
   },
   "props": {
     "defaultSize": {
-      "width": 300,
-      "height": 800
+      "width": 400,
+      "height": 860
     }
   },
   "root": {
@@ -764,7 +764,7 @@
               "dom": {
                 "onClick": {
                   "config": {
-                    "script": "\tsystem.perspective.closeDock(\"StationSidebar\")"
+                    "script": "\tefc.ui.closeDynamic(self)"
                   },
                   "scope": "G",
                   "type": "script"
@@ -952,7 +952,7 @@
                       "component": {
                         "onActionPerformed": {
                           "config": {
-                            "script": "\t# Momentary pulse: set the PLC bit, release it 1 s later (harmless if the PLC clears it first).\n\tpath = self.view.params.tagPath + \"/HMI_Select\"\n\tsystem.tag.writeBlocking([path], [True])\n\tdef _release(p=path):\n\t\timport time\n\t\ttime.sleep(1.0)\n\t\tsystem.tag.writeBlocking([p], [False])\n\tsystem.util.invokeAsynchronous(_release)"
+                            "script": "\t# Momentary pulse: set the PLC bit, release it 1 s later (harmless if the PLC clears it first).\n\tpath = self.view.params.tagPath + \"/Cmd_Select\"\n\tsystem.tag.writeBlocking([path], [True])\n\tdef _release(p=path):\n\t\timport time\n\t\ttime.sleep(1.0)\n\t\tsystem.tag.writeBlocking([p], [False])\n\tsystem.util.invokeAsynchronous(_release)"
                           },
                           "scope": "G",
                           "type": "script"
@@ -1986,7 +1986,7 @@
                       "shrink": 0
                     },
                     "props": {
-                      "text": "Deadband \u00b1",
+                      "text": "Deadband ±",
                       "style": {
                         "classes": "Text/Caption"
                       }
@@ -4135,7 +4135,7 @@
                                   "type": "tag",
                                   "config": {
                                     "mode": "indirect",
-                                    "tagPath": "{0}/TargetWeight",
+                                    "tagPath": "{0}/Prm_TargetWt",
                                     "references": {
                                       "0": "{view.params.tagPath}"
                                     },
@@ -4272,7 +4272,7 @@
                                   "type": "tag",
                                   "config": {
                                     "mode": "indirect",
-                                    "tagPath": "{0}/SampleWeight",
+                                    "tagPath": "{0}/Prm_SampleWt",
                                     "references": {
                                       "0": "{view.params.tagPath}"
                                     },
@@ -4433,7 +4433,7 @@
                                   "type": "tag",
                                   "config": {
                                     "mode": "indirect",
-                                    "tagPath": "{0}/Press_Max",
+                                    "tagPath": "{0}/Prm_MaxPress",
                                     "references": {
                                       "0": "{view.params.tagPath}"
                                     },
@@ -4560,7 +4560,7 @@
                                   "type": "tag",
                                   "config": {
                                     "mode": "indirect",
-                                    "tagPath": "{0}/SamplePress",
+                                    "tagPath": "{0}/Prm_PrefillPress",
                                     "references": {
                                       "0": "{view.params.tagPath}"
                                     },
@@ -4711,7 +4711,7 @@
                                   "type": "tag",
                                   "config": {
                                     "mode": "indirect",
-                                    "tagPath": "{0}/Deadband",
+                                    "tagPath": "{0}/Prm_Deadband",
                                     "references": {
                                       "0": "{view.params.tagPath}"
                                     },
@@ -5069,7 +5069,7 @@
                       "component": {
                         "onActionPerformed": {
                           "config": {
-                            "script": "\tcmd = self.view.custom.pendingCmd\n\tself.view.custom.pendingCmd = \"\"\n\tmember = {\"Tare\": \"TareCMD\", \"Zero\": \"ZeroCMD\", \"Reset\": \"HMI_Reset\"}.get(cmd)\n\tif member:\n\t\tpath = self.view.params.tagPath + \"/\" + member\n\t\tsystem.tag.writeBlocking([path], [True])\n\t\tdef _release(p=path):\n\t\t\timport time\n\t\t\ttime.sleep(1.0)\n\t\t\tsystem.tag.writeBlocking([p], [False])\n\t\tsystem.util.invokeAsynchronous(_release)"
+                            "script": "\tcmd = self.view.custom.pendingCmd\n\tself.view.custom.pendingCmd = \"\"\n\tmember = {\"Tare\": \"Cmd_Tare\", \"Zero\": \"Cmd_Zero\", \"Reset\": \"Cmd_Reset\"}.get(cmd)\n\tif member:\n\t\tpath = self.view.params.tagPath + \"/\" + member\n\t\tsystem.tag.writeBlocking([path], [True])\n\t\tdef _release(p=path):\n\t\t\timport time\n\t\t\ttime.sleep(1.0)\n\t\t\tsystem.tag.writeBlocking([p], [False])\n\t\tsystem.util.invokeAsynchronous(_release)"
                           },
                           "scope": "G",
                           "type": "script"
