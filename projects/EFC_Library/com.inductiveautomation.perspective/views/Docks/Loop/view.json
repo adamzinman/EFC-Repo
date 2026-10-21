@@ -2108,7 +2108,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if({this.props.params.expanded}, '39.815vh', '15.741vh')"
+                "expression": "if({this.props.params.expanded}, '70.370vh', '15.741vh')"
               }
             }
           }

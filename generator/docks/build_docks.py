@@ -181,11 +181,12 @@ def alarms(vw, items):
         button("Ack", "ACK", f"efc.ui.ackAll(self, {names!r})", cls="Button/Default", show=lvl(OP), grow=0)])
 
 def trend(pens, title="History"):
-    """Embedded Docks/Parts/Trend; its expanded param (in/out) grows the graph inside the window (decision 26)."""
+    """Embedded Docks/Parts/Trend; its expanded param (in/out) grows the graph to about 400 x 760 inside the window
+    (decision 26: never wider; the window scrolls to the sections below)."""
     return comp("ia.display.view", "Trend", {"path": "Docks/Parts/Trend", "params": {"tagPath": "", "pens": pens, "expanded": False}},
                 {"shrink": 0, "basis": v(170)},
                 {"props.params.tagPath": expr("{view.params.tagPath}"),
-                 "position.basis": expr(f"if({{this.props.params.expanded}}, '{v(430)}', '{v(170)}')")})
+                 "position.basis": expr(f"if({{this.props.params.expanded}}, '{v(760)}', '{v(170)}')")})
 
 def maint(vw, extra=()):
     r = lambda n, t, mem, f="#,##0": row(n, t, fmt(vw.m(mem), f))
