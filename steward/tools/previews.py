@@ -221,7 +221,7 @@ def role(lbl):
     return f'<span class="role" title="visible to {lbl} and higher">{lbl}+</span>'
 
 
-EXPAND = '<button data-c="Button/Icon" class="xp" title="expand graph (about half the screen)">&#x2922;</button>'
+EXPAND = '<button data-c="Button/Icon" class="xp" title="expand graph within the window">&#x2922;</button>'
 
 
 def grp(title, body, note=""):
@@ -559,20 +559,21 @@ def heater():
 
 def trend_expanded():
     pv, cv = wave(90, 58, 6, 0.4), wave(90, 46, 9, 2.2)
-    W, H = 900, 360
+    W, H = 384, 600
     def path(pts, c, dash=False):
         n = len(pts) - 1
         d = " ".join(f"{'M' if i == 0 else 'L'}{i * W / n:.1f},{H - p * H / 100:.1f}" for i, p in enumerate(pts))
         return f'<path d="{d}" fill="none" stroke="{c}" stroke-width="2"{" stroke-dasharray=\"6 4\"" if dash else ""}/>'
-    grid = "".join(f'<line x1="0" x2="{W}" y1="{y}" y2="{y}" stroke="#D0D0D0"/>' for y in range(45, H, 45)) + "".join(f'<line y1="0" y2="{H}" x1="{x}" x2="{x}" stroke="#E0E0E0"/>' for x in range(150, W, 150))
+    grid = "".join(f'<line x1="0" x2="{W}" y1="{y}" y2="{y}" stroke="#D0D0D0"/>' for y in range(60, H, 60)) + "".join(f'<line y1="0" y2="{H}" x1="{x}" x2="{x}" stroke="#E0E0E0"/>' for x in range(64, W, 64))
     rng = "".join(f'<button data-c="Button/Small{" Button/Toggle/On" if t == "30 m" else ""}">{t}</button>' for t in ("5 m", "30 m", "1 h", "8 h", "24 h"))
-    return (hdr("TIC-101 &middot; HISTORY", "Reactor jacket temperature").replace("&#x2715;", "&#x2921;").replace("close returns the right region to the screen&#39;s default view", "collapse back to the dynamic window")
-            + f'<div class="body"><div class="row"><span data-c="Text/Label">RANGE</span>{rng}<span style="flex:1"></span><button data-c="Button/Small">&#x23F8; PAUSE</button>'
-            '<button data-c="Button/Small">&#x21BB; LIVE</button></div>'
+    pens = "".join(f'<div class="row"><i style="display:inline-block;width:14px;height:4px;background:{c}"></i><span data-c="Text/Label">{n}</span><span data-c="Text/Body">{v}</span></div>'
+                   for n, c, v in (("PV", "#262626", "118.4 &#176;F"), ("SP", "#1F4E99", "120.0 &#176;F"), ("CV", "#8D6E63", "46.0 %")))
+    return (hdr("dw_Loop &middot; TIC-101", "Reactor jacket temperature").replace("close returns the right region to the screen&#39;s default view", "close returns the right region to the screen&#39;s default view")
+            + f'<div class="body"><div class="row">{rng}<span style="flex:1"></span><button data-c="Button/Icon" class="xp" title="collapse graph">&#x2921;</button></div>'
+            '<div class="row"><button data-c="Button/Small">&#x23F8; PAUSE</button><button data-c="Button/Small">&#x21BB; LIVE</button></div>'
             f'<svg viewBox="0 0 {W} {H}" width="100%" height="{H}" style="border:1px solid #9E9E9E;background:#FAFAFA">{grid}{path(pv, "#262626")}{path([60] * 90, "#1F4E99", True)}{path(cv, "#8D6E63")}</svg>'
             '<div class="axis"><span>10:12</span><span>10:17</span><span>10:22</span><span>10:27</span><span>10:32</span><span>10:37</span><span>10:42</span></div>'
-            '<div class="legend2"><i style="background:#262626"></i>PV 118.4 &#176;F <i style="background:#1F4E99"></i>SP 120.0 &#176;F <i style="background:#8D6E63"></i>CV 46.0 %'
-            ' &nbsp; &middot; hover for values, drag to zoom, double-click to reset</div></div>')
+            + pens + '</div>')
 
 
 def io_card():
@@ -645,9 +646,9 @@ SYMS = [("Rotating/Pump_Centrifugal", 40, 120, True), ("Valves/Valve_OnOff_Pneum
         ("Rotating/Blower", 40, 480, False), ("Rotating/Motor", 360, 480, False)]
 
 
-def layout_card(expanded):
+def layout_card():
     W, H, HEAD, MENU, ALARM = 1920, 1080, 80, 120, 140
-    RW = 960 if expanded else 400
+    RW = 400
     PW, MH = W - MENU - RW, H - HEAD - ALARM
     lab = lambda t, pos="": f'<div class="rl" style="{pos}">{t}</div>'
     pipes = f'<svg width="{PW}" height="{MH}" style="position:absolute;inset:0" fill="none" stroke="#7F7F7F" stroke-width="6">'
@@ -658,21 +659,16 @@ def layout_card(expanded):
             continue
         syms += (f'<img src="../../docs/previews/templates/{rel}.png" style="position:absolute;left:{x}px;top:{y}px;width:160px;height:auto"'
                  f'{" class=hit" if sel else ""}>')
-    sel_note = '<div class="rl" style="left:20px;top:300px;color:#00A3E0">click symbol: efc.ui.openDynamic writes the page\'s dynamic-window path + tagPath</div>' if not expanded else \
-               '<div class="rl" style="left:20px;top:300px;color:#00A3E0">graph expand button: efc.ui.expandTrend(self, True) widens the right region</div>'
+    sel_note = '<div class="rl" style="left:20px;top:300px;color:#00A3E0">click symbol: efc.ui.openDynamic writes the page\'s dynamic-window path + tagPath</div>'
     proc = (f'<div data-c="Container/ProcessArea" class="reg" style="left:{MENU}px;top:{HEAD}px;width:{PW}px;height:{MH}px">{pipes}{syms}{sel_note}'
             + lab(f"Process area &middot; {PW} x {MH} px at 1080p &middot; {2 * PW} x {2 * MH} px at 4K", "left:20px;bottom:10px"))
     proc += "</div>"
-    if expanded:
-        inner = f'<div data-c="Container/Popup" class="dock2" style="height:540px">{trend_expanded()}</div>'
-        win = f'<div style="width:{RW}px;height:540px;position:absolute;left:0;top:56px">{inner}</div>'
-        note = "Docks/Parts/TrendExpanded (960 x 540 at 1080p)"
-    else:
+    if True:
         sc = (MH - 56 - 66) / DOCK_DH
         inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(motor_body())}</div>'
         win = (f'<div style="position:absolute;left:0;top:56px;width:{RW}px;height:{DOCK_DH}px;transform:scale({sc:.4f});transform-origin:0 0">{inner}</div>')
         note = "dw_Rotating (Docks/Rotating)"
-    wtxt = "about 50 % of the width" if expanded else "37.04 vh"
+    wtxt = "37.04 vh"
     right = (f'<div data-c="Container/TrendPanel" class="reg ev" style="left:{W - RW}px;top:{HEAD}px;width:{RW}px;height:{MH}px">'
              f'<div class="rl evl">{EV_LABEL}</div>{win}'
              + lab(f"Dynamic window region &middot; {RW} x {MH} px at 1080p ({wtxt}) &middot; {2 * RW} x {2 * MH} px at 4K &middot; {note}", f"left:0;right:0;bottom:0;border:none;border-top:1px solid #7F7F7F;font-size:19px;height:66px"))
@@ -689,13 +685,11 @@ def layout_card(expanded):
              '<button data-c="Button/Default">ACK</button>'
              + lab(f"Alarm bar &middot; {W} x {ALARM} px at 1080p &middot; 3840 x 280 px at 4K", "position:static;margin-left:auto") + "</div>")
     shell = f'<div style="position:relative;width:{W}px;height:{H}px;background:#fff">{head}{menu}{proc}{right}{alarm}</div>'
-    name = "Screen_Layout_expanded" if expanded else "Screen_Layout_normal"
-    cap = ("Same shell; the right region widens to about 50 % (960 px) for Docks/Parts/TrendExpanded and the process area shrinks to fill the rest (1920 - 120 - 960 = 840 px). "
-           "The collapse button calls efc.ui.expandTrend(self, False)." if expanded else
-           "Normal: 400 x 860 right region (37.04 vh x 79.63 vh; 800 x 1720 at 4K) shows the open dynamic window (here dw_Rotating, drawn scaled to leave room for the labels); close returns the right region to the screen's default view. "
-           "Dynamic windows are an Embedded View, not a Perspective dock (decision 24). All shell sizes double at 4K.")
+    name = "Screen_Layout_normal"
+    cap = ("Normal: 400 x 860 right region (37.04 vh x 79.63 vh; 800 x 1720 at 4K) shows the open dynamic window (here dw_Rotating, drawn scaled to leave room for the labels); close returns the right region to the screen's default view. "
+           "Dynamic windows are an Embedded View, not a Perspective dock (decision 24). The region never changes width; an expanded graph fills the window (decision 26). All shell sizes double at 4K.")
     fig = (f'<figure class="card wide" id="{name}"><div class="view" style="width:960px;height:540px"><div class="stage" style="width:{W}px;height:{H}px;transform:scale(0.5)">{shell}</div></div>'
-           f'<figcaption><code>{name.replace("_", " ")}</code><br><b class="ok">1920 x 1080 shell</b> &middot; {"expanded graph" if expanded else "normal"}<br>{cap}</figcaption></figure>')
+           f'<figcaption><code>{name.replace("_", " ")}</code><br><b class="ok">1920 x 1080 shell</b> &middot; normal<br>{cap}</figcaption></figure>')
     return name, fig
 
 
@@ -733,16 +727,16 @@ if __name__ == "__main__":
                    "<br>section shown open; collapsed by default", maxh=600)
         open(f"{OUT}/{slug(path)}_{title.lower()}_expanded.html", "w").write(f2)
         groups.setdefault("Expanded sections", []).append(f2)
-    f3 = frame("Docks/Parts/TrendExpanded", f'<div data-c="Container/Popup" class="dock2">{trend_expanded()}</div>', 960, 540, "any", "popup",
-               "<br><b>NEW</b> &middot; &#x2922; on any dynamic-window graph; about half the screen (960 x 540 at 1080p); default range 30 min", cw=480, maxh=600)
+    f3 = frame("Docks/Parts/TrendExpanded", f'<div data-c="Container/Popup" class="dock2">{trend_expanded()}</div>', 400, 860, "any", "popup",
+               "<br><b>NEW</b> &middot; expanded graph: fills the dynamic window; window stays 400 x 860; other sections hidden until collapsed (decision 26)", cw=400, maxh=860)
     open(f"{OUT}/Docks_Parts_TrendExpanded.html", "w").write(f3)
     groups.setdefault("Expanded sections", []).append(f3)
     fr = frame("Docks/Parts/BypassConfirm", f'<div data-c="Container/Popup" class="dock2">{bypass_popup()}</div>', 400, 330, "T_Intlk", "popup",
                "<br><b>NEW - design proposal</b> &middot; opened by every Bypass button (Supervisor+)", maxh=600)
     open(f"{OUT}/Docks_Parts_BypassConfirm.html", "w").write(fr)
     groups.setdefault("Dynamic windows", []).append(fr)
-    for ex in (False, True):
-        nm, fg = layout_card(ex)
+    for _ in (0,):
+        nm, fg = layout_card()
         open(f"{OUT}/{nm}.html", "w").write(fg)
         groups.setdefault("Screen layout", []).append(fg)
     body = "".join(f'<h2>{esc(g)}</h2><div class="grid">{"".join(fr)}</div>' for g, fr in groups.items())
