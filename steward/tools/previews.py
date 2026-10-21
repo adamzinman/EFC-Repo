@@ -12,7 +12,7 @@ OUT = f"{R}/steward/previews"
 tm = json.load(open(f"{R}/steward/type_map.json"))
 cfg = json.load(open(f"{R}/steward.config.json"))
 CARD_W = 240  # px, width of a template card; docks use DOCK_W
-DOCK_DW, DOCK_DH = 400, 940  # right dock at 1080p: 400 wide (800 @ 4K, screen-layout-standard); height pending header size
+DOCK_DW, DOCK_DH = 400, 860  # dynamic window per decision 25: 400 x 860 at 1080p = 37.04 vh x 79.63 vh (800 x 1720 at 4K)
 slug = lambda p: p.replace("/", "_")
 esc = html.escape
 
@@ -596,10 +596,10 @@ def io_card():
     ) + "</div>"
 
 
-DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:border-box}.dock2 .hdr{display:flex;align-items:center;gap:6px;padding:6px 8px}
-.dock2 .x{width:28px;height:28px}.dock2 .body{flex:1;overflow:hidden;padding:4px 8px;display:flex;flex-direction:column;gap:5px}
-.dock2 .row{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.dock2 .lbl{width:40px}.dock2 .big{font-size:16px;padding:2px 10px}
-.dock2 .dim{opacity:.35}.dock2 .hint{margin-top:-3px}.dock2 .grp{padding:4px 6px}.dock2 .gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:border-box}.dock2 .hdr{display:flex;align-items:center;gap:6px;padding:4px 8px}
+.dock2 .x{width:28px;height:28px}.dock2 .body{flex:1;overflow:hidden;padding:2px 8px;display:flex;flex-direction:column;gap:3px}
+.dock2 .row{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin:1px 0}.dock2 .lbl{width:40px}.dock2 .big{font-size:16px;padding:2px 10px}
+.dock2 .dim{opacity:.35}.dock2 .hint{margin-top:-3px}.dock2 .grp{padding:3px 6px}.dock2 .gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
 .dock2 .cond{display:flex;gap:5px;align-items:center;min-height:20px}.dock2 .led{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
 .dock2 .audit{margin:-2px 0 2px 15px;font-style:italic}.dock2 .mini{width:14px;height:14px;font-size:10px;display:inline-flex;align-items:center;justify-content:center}
 .role{font-size:9px;color:#5E35B1;border:1px dashed #5E35B1;border-radius:3px;padding:0 2px}
@@ -630,13 +630,13 @@ def dock_card(did, path, ttype, parts):
     REV2 = {"valve_discrete": valve_discrete, "valve_analog": valve_analog, "motor": motor_body, "vfd": lambda: motor_body(True), "heat_exchanger": heat_exchanger, "process_value": process_value, "loop": loop, "heater": heater, "io_card": io_card}
     if isinstance(parts, str) and parts in REV2:  # rev 2 designs
         inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(REV2[parts]())}</div>'
-        return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 - design proposal</b> &middot; dashed purple outline = role-gated (hover for role)" + ("<br>binds to the Modicon x80 device DDT imported from Control Expert" if parts == "io_card" else ""), maxh=600)
+        return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 - design proposal</b> &middot; 400 x 860 at 1080p (37.04 vh x 79.63 vh; 800 x 1720 at 4K) &middot; dashed purple outline = role-gated (hover for role)" + ("<br>binds to the Modicon x80 device DDT imported from Control Expert" if parts == "io_card" else ""), maxh=600)
     body = "".join(SECTIONS.get(p, p) for p in parts)
     head = (f'<div data-c="Container/PopupHeader" class="row"><span data-c="Text/TagName">XV-101</span>'
             f'<span data-c="Text/Caption" style="flex:1">Description</span><button data-c="Button/Icon" title="close returns the right region to the screen&#39;s default view">&#x2715;</button></div>'
             f'<div class="row"><span data-c="State/Stopped">CLOSED</span><span data-c="Text/Caption">NE107: OK</span></div>')
     inner = f'<div data-c="Container/Faceplate" class="dock">{head}{body}</div>'
-    return frame(path, inner, DOCK_DW, DOCK_DH, ttype.replace("GAP ", "gap:"), did, "<br><b>NEW - design proposal</b> &middot; close &#x2715; returns the right region to the screen's default view", maxh=600)
+    return frame(path, inner, DOCK_DW, DOCK_DH, ttype.replace("GAP ", "gap:"), did, "<br><b>NEW - design proposal</b> &middot; 400 x 860 at 1080p (800 x 1720 at 4K) &middot; close &#x2715; returns the right region to the screen's default view", maxh=600)
 
 
 # ---------- screen layout (decision 24: embedded-view strategy) ----------
@@ -646,7 +646,7 @@ SYMS = [("Rotating/Pump_Centrifugal", 40, 120, True), ("Valves/Valve_OnOff_Pneum
 
 
 def layout_card(expanded):
-    W, H, HEAD, MENU, ALARM = 1920, 1080, 60, 60, 70
+    W, H, HEAD, MENU, ALARM = 1920, 1080, 80, 120, 140
     RW = 960 if expanded else 400
     PW, MH = W - MENU - RW, H - HEAD - ALARM
     lab = lambda t, pos="": f'<div class="rl" style="{pos}">{t}</div>'
@@ -668,32 +668,32 @@ def layout_card(expanded):
         win = f'<div style="width:{RW}px;height:540px;position:absolute;left:0;top:56px">{inner}</div>'
         note = "Docks/Parts/TrendExpanded (960 x 540 at 1080p)"
     else:
-        sc = (MH - 56 - 70) / DOCK_DH
+        sc = (MH - 56 - 66) / DOCK_DH
         inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(motor_body())}</div>'
         win = (f'<div style="position:absolute;left:0;top:56px;width:{RW}px;height:{DOCK_DH}px;transform:scale({sc:.4f});transform-origin:0 0">{inner}</div>')
         note = "dw_Rotating (Docks/Rotating)"
     wtxt = "about 50 % of the width" if expanded else "37.04 vh"
     right = (f'<div data-c="Container/TrendPanel" class="reg ev" style="left:{W - RW}px;top:{HEAD}px;width:{RW}px;height:{MH}px">'
              f'<div class="rl evl">{EV_LABEL}</div>{win}'
-             + lab(f"Right region &middot; {RW} x {MH} px at 1080p ({wtxt}) &middot; {2 * RW} x {2 * MH} px at 4K &middot; {note}", f"left:0;right:0;bottom:0;border:none;border-top:1px solid #7F7F7F;font-size:19px;height:66px"))
+             + lab(f"Dynamic window region &middot; {RW} x {MH} px at 1080p ({wtxt}) &middot; {2 * RW} x {2 * MH} px at 4K &middot; {note}", f"left:0;right:0;bottom:0;border:none;border-top:1px solid #7F7F7F;font-size:19px;height:66px"))
     right += "</div>"
     head = (f'<div data-c="Container/Header" class="reg" style="left:0;top:0;width:{W}px;height:{HEAD}px;display:flex;align-items:center;gap:20px;padding:0 20px;box-sizing:border-box">'
             '<span data-c="Text/TagName">EFC &middot; Reactor area</span><span data-c="Text/Caption" style="flex:1">Screen header</span>'
             '<span data-c="Text/Caption">jsmith &middot; Supervisor</span>'
-            + lab(f"Header &middot; {W} x {HEAD} px at 1080p &middot; 3840 x 120 px at 4K", "position:static;margin-left:auto") + "</div>")
+            + lab(f"Header &middot; {W} x {HEAD} px at 1080p &middot; 3840 x 160 px at 4K", "position:static;margin-left:auto") + "</div>")
     menu = (f'<div data-c="Container/Menu" class="reg" style="left:0;top:{HEAD}px;width:{MENU}px;height:{MH}px;display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:12px;box-sizing:border-box">'
             + "".join('<button data-c="Button/Icon" style="width:40px;height:40px">&#x25A3;</button>' for _ in range(5))
-            + f'<div class="rl" style="writing-mode:vertical-rl;left:8px;bottom:10px;top:auto;white-space:nowrap;font-size:19px">Menu {MENU} x {MH} px &middot; 4K: 120 px</div></div>')
+            + f'<div class="rl" style="writing-mode:vertical-rl;left:8px;bottom:10px;top:auto;white-space:nowrap;font-size:19px">Menu {MENU} x {MH} px at 1080p &middot; {2*MENU} x {2*MH} px at 4K</div></div>')
     alarm = (f'<div data-c="Container/AlarmBar" class="reg" style="left:0;top:{H - ALARM}px;width:{W}px;height:{ALARM}px;display:flex;align-items:center;gap:20px;padding:0 20px;box-sizing:border-box">'
              '<span data-c="Alarm/High/Fill" style="padding:4px 12px">HIGH</span><span data-c="Text/Body" style="flex:1">10:42:07 &middot; TIC-101 Reactor jacket temperature high &middot; unacked</span>'
              '<button data-c="Button/Default">ACK</button>'
-             + lab(f"Alarm bar &middot; {W} x {ALARM} px at 1080p &middot; 3840 x 140 px at 4K", "position:static;margin-left:auto") + "</div>")
+             + lab(f"Alarm bar &middot; {W} x {ALARM} px at 1080p &middot; 3840 x 280 px at 4K", "position:static;margin-left:auto") + "</div>")
     shell = f'<div style="position:relative;width:{W}px;height:{H}px;background:#fff">{head}{menu}{proc}{right}{alarm}</div>'
     name = "Screen_Layout_expanded" if expanded else "Screen_Layout_normal"
-    cap = ("Same shell; the right region widens to about 50 % (960 px) for Docks/Parts/TrendExpanded and the process area shrinks to match. "
+    cap = ("Same shell; the right region widens to about 50 % (960 px) for Docks/Parts/TrendExpanded and the process area shrinks to fill the rest (1920 - 120 - 960 = 840 px). "
            "The collapse button calls efc.ui.expandTrend(self, False)." if expanded else
-           "Normal: 400 px (37.04 vh) right region shows the open dynamic window (here dw_Rotating); close returns the right region to the screen's default view. "
-           "Dynamic windows are an Embedded View, not a Perspective dock (decision 24). Menu and alarm bar sizes double at 4K.")
+           "Normal: 400 x 860 right region (37.04 vh x 79.63 vh; 800 x 1720 at 4K) shows the open dynamic window (here dw_Rotating, drawn scaled to leave room for the labels); close returns the right region to the screen's default view. "
+           "Dynamic windows are an Embedded View, not a Perspective dock (decision 24). All shell sizes double at 4K.")
     fig = (f'<figure class="card wide" id="{name}"><div class="view" style="width:960px;height:540px"><div class="stage" style="width:{W}px;height:{H}px;transform:scale(0.5)">{shell}</div></div>'
            f'<figcaption><code>{name.replace("_", " ")}</code><br><b class="ok">1920 x 1080 shell</b> &middot; {"expanded graph" if expanded else "normal"}<br>{cap}</figcaption></figure>')
     return name, fig
@@ -724,7 +724,7 @@ if __name__ == "__main__":
             t, parts = DOCKS[did]
             frag = dock_card(did, path, t, parts)
         else:  # existing dock view: draw it like a template
-            frag = template_card(path, "gap:T_Station").replace("click symbol: open dynamic window", "existing dock view; planned: move to <code>Docks/Station</code>, resize 300 to 400 px wide")
+            frag = template_card(path, "gap:T_Station").replace("click symbol: open dynamic window", "existing dock view; planned: move to <code>Docks/Station</code>, resize 300 x 800 to 400 x 860 (decision 25)")
         open(f"{OUT}/{slug(path)}.html", "w").write(frag)
         groups.setdefault("Dynamic windows", []).append(frag)
     for path, (title, rows) in CFG.items():
