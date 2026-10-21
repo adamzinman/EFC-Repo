@@ -575,6 +575,27 @@ def trend_expanded():
             ' &nbsp; &middot; hover for values, drag to zoom, double-click to reset</div></div>')
 
 
+def io_card():
+    chans = [("00", "XV-101 ZSO", "ON", ""), ("01", "XV-101 ZSC", "OFF", ""), ("02", "P-101 RUN", "ON", ""), ("03", "P-101 OL", "OFF", ""),
+             ("04", "LSH-200", "OFF", ""), ("05", "FS-301", "ON", ""), ("06", "spare", "-", ""), ("07", "PS-410", "OFF", "WIRE BREAK")]
+    rows = "".join(f'<div data-c="Table/{"Row" if i % 2 else "RowAlt"}" class="ch"><span>{c}</span><span>{t}</span><span>{v}</span>'
+                   f'<span data-c="{"Text/Color/Fault" if e else "Text/Caption"}">{e or "OK"}</span></div>' for i, (c, t, v, e) in enumerate(chans))
+    return hdr("R0-S3 BMXDDI1602", "Discrete input, 16 ch, 24 VDC sink") + '<div class="body">' + (
+        '<div class="row st"><span data-c="State/Running" class="big">RUNNING</span><span data-c="Indicator/Badge">NE107 MAINT</span>'
+        '<span data-c="Indicator/Badge">1 CH FAULT</span><span data-c="Indicator/Badge" class="dim">MODULE FAULT</span></div>'
+        + grp("MODULE", kv(("RACK / SLOT", "0 / 3"), ("DROP", "Main rack (CPU)"), ("FIRMWARE", "V2.4"), ("FIELD POWER", "OK"),
+                           ("I/O ERROR", "1 channel"), ("BUS", "OK")).replace('class="kv"', 'class="kv kv4"')
+              + leds(("On", "Module OK"), ("On", "Field supply"), ("Fault", "Channel error"), ("On", "Bus comm")))
+        + grp("CHANNELS 0-7", '<div class="ch chh"><span>CH</span><span>TAG</span><span>VALUE</span><span>STATUS</span></div>' + rows
+              + '<div class="row"><button data-c="Button/Small">CH 0-7</button><button data-c="Button/Small">CH 8-15</button></div>')
+        + alarm_grp([("Alarm/Low/Fill", "Channel 07 wire break", "active, unacked"), ("Indicator/LED/Off", "Module fault", ""),
+                     ("Indicator/LED/Off", "Field power lost", ""), ("Indicator/LED/Off", "Module missing / wrong type", "")])
+        + '<div class="row"><span data-c="Text/Label" style="width:auto">RELATED</span><button data-c="Button/Default" style="width:auto;padding:0 8px">RACK 0 &#x25B8;</button>'
+          '<button data-c="Button/Default" style="width:auto;padding:0 8px">PS-410 &#x25B8;</button></div>'
+        + details("CONFIGURATION", "card type BMXDDI1602 &middot; rack 0 slot 3 &middot; channel tags from the I/O list &middot; diagnostics from the module status words")
+    ) + "</div>"
+
+
 DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:border-box}.dock2 .hdr{display:flex;align-items:center;gap:6px;padding:6px 8px}
 .dock2 .x{width:28px;height:28px}.dock2 .body{flex:1;overflow:hidden;padding:4px 8px;display:flex;flex-direction:column;gap:5px}
 .dock2 .row{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.dock2 .lbl{width:40px}.dock2 .big{font-size:16px;padding:2px 10px}
@@ -585,7 +606,7 @@ DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:b
 .strip{display:flex;height:12px;border:1px solid #7F7F7F}.axis{display:flex;justify-content:space-between;font-size:9px;color:#616161}
 .legend2{font-size:9px;color:#424242}.legend2 i{display:inline-block;width:8px;height:8px;margin:0 2px 0 6px}.ev{display:flex;justify-content:space-between;font-size:11px;padding:1px 3px}
 .dock2 details summary{cursor:pointer}.dock2 button[data-c~="Button/Default"]{width:72px;height:30px;padding:0;justify-content:center;text-align:center}.dock2 button[data-c~="Button/Small"]{min-width:64px;height:22px;padding:0 6px;justify-content:center}.dock2 button.preset{min-width:0;width:38px}.dock2 button.gated{outline:1.5px dashed #5E35B1;outline-offset:1px}.barrow{display:flex;align-items:center;gap:5px;margin:2px 0}.bl{width:64px}
-.kv4{grid-template-columns:auto 1fr auto 1fr}.xp{width:22px;height:22px;padding:0;margin-left:4px}.cf{display:grid;grid-template-columns:1.3fr 1.3fr .7fr;gap:4px 6px;align-items:center}.cf .num{min-width:0;text-align:right}.dd{border:1px solid #9E9E9E;background:#fff;padding:1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chk{font-size:16px}.pvbig{font-size:26px !important;font-weight:700 !important;margin:0 4px;line-height:1.1}.lt{display:grid;grid-template-columns:1.4fr 1fr .4fr .8fr .8fr;gap:2px 6px;align-items:center}.lt .num{min-width:0}.rb{margin:16px 0 4px}.rbt{position:relative;height:14px}.mk{position:absolute;top:-4px;bottom:-4px;width:2px;background:#E68A00}.mk span{position:absolute;top:-12px;left:-6px;font-size:9px;color:#595959}.pvsp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}.pvsp>div{display:flex;flex-direction:column;align-items:flex-start}.trk{flex:1;height:10px;position:relative}.num{min-width:62px;text-align:right}"""
+.kv4{grid-template-columns:auto 1fr auto 1fr}.ch{display:grid;grid-template-columns:.4fr 1.6fr .7fr 1.1fr;gap:4px;font-size:12px;padding:1px 3px}.chh{font-weight:700;color:#595959}.xp{width:22px;height:22px;padding:0;margin-left:4px}.cf{display:grid;grid-template-columns:1.3fr 1.3fr .7fr;gap:4px 6px;align-items:center}.cf .num{min-width:0;text-align:right}.dd{border:1px solid #9E9E9E;background:#fff;padding:1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chk{font-size:16px}.pvbig{font-size:26px !important;font-weight:700 !important;margin:0 4px;line-height:1.1}.lt{display:grid;grid-template-columns:1.4fr 1fr .4fr .8fr .8fr;gap:2px 6px;align-items:center}.lt .num{min-width:0}.rb{margin:16px 0 4px}.rbt{position:relative;height:14px}.mk{position:absolute;top:-4px;bottom:-4px;width:2px;background:#E68A00}.mk span{position:absolute;top:-12px;left:-6px;font-size:9px;color:#595959}.pvsp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}.pvsp>div{display:flex;flex-direction:column;align-items:flex-start}.trk{flex:1;height:10px;position:relative}.num{min-width:62px;text-align:right}"""
 
 
 DOCKS = {
@@ -597,14 +618,14 @@ DOCKS = {
     "dw_HeatTransfer": ("T_HeatEx", "heat_exchanger"),
     "dw_ProcessValue": ("T_AI / T_KPI", "process_value"),
     "dw_Loop": ("T_PID", "loop"),
-    "dw_IOCard": ("GAP T_IOCard", ['<div class="kv"><span data-c="Text/Label">CARD</span><span data-c="Text/Value">BMXDDI1602 &middot; rack 0 slot 3</span></div>', '<div data-c="Container/GroupBox"><span data-c="Text/Subheader">CHANNELS</span>' + "".join(f'<div data-c="Table/{"Row" if i % 2 else "RowAlt"}">Ch {i:02d} &middot; {"ON" if i % 3 else "OFF"}</div>' for i in range(6)) + "</div>", '<div data-c="Container/GroupBox"><span data-c="Text/Subheader">DIAGNOSTICS</span><div class="row"><span data-c="Indicator/LED/On"></span><span data-c="Text/Body">Module OK</span></div></div>']),
+    "dw_IOCard": ("GAP T_IOCard", "io_card"),
 }
 
 
 def dock_card(did, path, ttype, parts):
     import re as _re
     gate = lambda h: _re.sub(r'<button ([^>]*)>([^<]*)</button><span class="role" title="([^"]*)">[^<]*</span>', r'<button \1 class="gated" title="\3">\2</button>', h)
-    REV2 = {"valve_discrete": valve_discrete, "valve_analog": valve_analog, "motor": motor_body, "vfd": lambda: motor_body(True), "heat_exchanger": heat_exchanger, "process_value": process_value, "loop": loop, "heater": heater}
+    REV2 = {"valve_discrete": valve_discrete, "valve_analog": valve_analog, "motor": motor_body, "vfd": lambda: motor_body(True), "heat_exchanger": heat_exchanger, "process_value": process_value, "loop": loop, "heater": heater, "io_card": io_card}
     if isinstance(parts, str) and parts in REV2:  # rev 2 designs
         inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(REV2[parts]())}</div>'
         return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 - design proposal</b> &middot; dashed purple outline = role-gated (hover for role)", maxh=600)
