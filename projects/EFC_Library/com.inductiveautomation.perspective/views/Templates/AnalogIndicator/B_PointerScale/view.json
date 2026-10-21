@@ -750,8 +750,7 @@
       "direction": "column",
       "alignItems": "center",
       "style": {
-        "classes": "Indicator/Analog/Card",
-        "gap": "0.556vh"
+        "classes": "Indicator/Analog/Card Indicator/Analog/A/root"
       }
     },
     "children": [
@@ -824,9 +823,7 @@
           "direction": "row",
           "alignItems": "stretch",
           "style": {
-            "classes": "",
-            "gap": "0.370vh",
-            "padding": "0.278vh 0"
+            "classes": "Indicator/Analog/B/Scale"
           }
         },
         "children": [
@@ -1418,8 +1415,7 @@
                     }
                   ],
                   "style": {
-                    "classes": "",
-                    "marginBottom": "-0.648vh"
+                    "classes": "Indicator/Analog/B/Pointer"
                   }
                 },
                 "propConfig": {
@@ -1459,8 +1455,7 @@
           "direction": "row",
           "alignItems": "baseline",
           "style": {
-            "classes": "",
-            "gap": "0.278vh"
+            "classes": "Indicator/Analog/A/ValueRow"
           }
         },
         "children": [

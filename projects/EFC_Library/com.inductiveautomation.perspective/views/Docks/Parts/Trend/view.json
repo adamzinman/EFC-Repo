@@ -64,8 +64,7 @@
       "direction": "column",
       "alignItems": "stretch",
       "style": {
-        "classes": "Container/TrendPanel",
-        "gap": "0.185vh"
+        "classes": "Container/TrendPanel Util/Gap/XS"
       }
     },
     "children": [
@@ -84,8 +83,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "children": [
@@ -130,8 +128,7 @@
               "direction": "row",
               "alignItems": "stretch",
               "style": {
-                "classes": "",
-                "gap": "0.185vh"
+                "classes": "Util/Gap/XS"
               }
             },
             "propConfig": {
@@ -408,7 +405,7 @@
                 "paint": "transparent"
               },
               "stroke": {
-                "paint": "#3A6EA5",
+                "paint": "#1F4E99",
                 "width": 1.5
               }
             },
@@ -420,7 +417,7 @@
                 "paint": "transparent"
               },
               "stroke": {
-                "paint": "#7A7A7A",
+                "paint": "#7F7F7F",
                 "width": 1.5
               }
             }

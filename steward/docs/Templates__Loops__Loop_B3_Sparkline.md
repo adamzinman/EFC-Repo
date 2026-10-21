@@ -9,7 +9,7 @@
 <!-- keep:end -->
 
 <!-- auto:start -->
-_Auto-generated 2026-10-21 03:43 from EFC_Library:view:Templates/Loops/Loop_B3_Sparkline. Do not edit this section._
+_Auto-generated 2026-10-21 03:56 from EFC_Library:view:Templates/Loops/Loop_B3_Sparkline. Do not edit this section._
 
 | Param | Direction | Default |
 |---|---|---|
@@ -21,8 +21,8 @@ _Auto-generated 2026-10-21 03:43 from EFC_Library:view:Templates/Loops/Loop_B3_S
 
 - PCLib types: T_PID
 - Dynamic window: none
-- Style classes: none
-- Inline style props: 76
+- Style classes: Loop/B1/header, Loop/B1/mode, Loop/B1/outLbl, Loop/B1/pv, Loop/B1/root, Loop/B1/spLbl, Loop/B1/tag, Loop/B1/title, Loop/B2/ob, Loop/B2/sp, Loop/B2/units, Loop/B3/body, Loop/B3/dev, Loop/B3/out, Loop/B3/outRow, Loop/B3/sparkWrap, Loop/B3/vals
+- Inline style props: 0
 - Popups opened: 0
 - system.* calls: system.tag.queryTagHistory
 - Last modified: 2026-10-05T12:00:00Z by admin

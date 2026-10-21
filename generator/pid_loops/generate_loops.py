@@ -1,7 +1,9 @@
 """Generate Perspective 8.1 PID loop templates (B1-B4), config popup, demo view, UDT + demo tags.
 
 Writes projects/PID_Loops (project source) and tags/PID_Loops. Run tools/package.py to build the import zip."""
-import json, os, shutil, zipfile
+import json, os, shutil, sys, zipfile
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+from common import extract_inline, write_classes
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 PROJ = os.path.join(ROOT, "projects", "PID_Loops")
@@ -10,10 +12,10 @@ shutil.rmtree(PROJ, ignore_errors=True)
 VIEWS = os.path.join(PROJ, "com.inductiveautomation.perspective", "views")
 
 # ---------------------------------------------------------------- palette (ISA-101, matches the mockup)
-C = dict(card="#F7F8F9", line="#C3C8CE", line2="#9AA1A9", txt="#1E2329", muted="#6B737C", sp="#2F6FD6",
-         bar="#7C858F", bar2="#A9B0B8", track="#E6E9EC", band="#CBD2D9", chip="#E9ECEF", chipTxt="#454D55",
-         dark="#2B3138", casBg="#DCE6F7", casTxt="#1F4E99", alH="#FF8C00", warnBg="#FFE7CC", warnTxt="#8A4A00",
-         white="#FFFFFF", lockBg="#FFF7E0", lockTxt="#6A5300")
+C = dict(card="#F0F0F0", line="#A6A6A6", line2="#7F7F7F", txt="#1F1F1F", muted="#5A5A5A", sp="#1F4E99",   # EFC_Styles palette
+         bar="#7F7F7F", bar2="#A6A6A6", track="#E6E6E6", band="#CFCFCF", chip="#EDEDED", chipTxt="#4D4D4D",
+         dark="#3A3A3A", casBg="#E6E6E6", casTxt="#1F4E99", alH="#FF7A00", warnBg="#FFFFFF", warnTxt="#8F4500",
+         white="#FFFFFF", lockBg="#EDEDED", lockTxt="#4D4D4D")
 FONT = "Inter, 'Segoe UI', Roboto, Arial, sans-serif"
 NUM = "tabular-nums"
 
@@ -148,7 +150,7 @@ def card_root(children, pad, extra_style=None, direction="column", align=None):
 
 
 def diamond(size=11):
-    return drawing("alarmIcon", "0 0 12 12", [path("d", "M6,0.8 L11.2,6 L6,11.2 L0.8,6 Z", C["alH"], "#222222", 0.8)],
+    return drawing("alarmIcon", "0 0 12 12", [path("d", "M6,0.8 L11.2,6 L6,11.2 L0.8,6 Z", C["alH"], "#1F1F1F", 0.8)],
                    {"shrink": 0, "basis": v(size)}, pc={"position.display": prop("view.custom.alarm")})
 
 
@@ -569,7 +571,10 @@ def demo():
 
 
 # ================================================================= write project
+LOOP_CLASSES = {}
 def write_view(rel, data):
+    if "/Templates/" in rel:                     # EFC_Styles classes only: inline styles -> Loop/<card>/<component>
+        extract_inline(data, "Loop/" + rel.rsplit("_", 1)[0].rsplit("/", 1)[1].replace("Loop_", ""), LOOP_CLASSES)
     d = os.path.join(VIEWS, *rel.split("/"))
     os.makedirs(d, exist_ok=True)
     json.dump(data, open(os.path.join(d, "view.json"), "w"), indent=2, ensure_ascii=False)
@@ -582,6 +587,7 @@ write_view("PID/Templates/Loop_B2_Horizontal", b2())
 write_view("PID/Templates/Loop_B3_Sparkline", b3())
 write_view("PID/Templates/Loop_B4_Column", b4())
 write_view("PID/_Demo_Loops", demo())
+write_classes(PROJ, LOOP_CLASSES, "generate_loops.py")
 json.dump({"title": "PID_Loops", "description": "PID loop templates B1-B4 (EFCLib v1 T_PID)", "parent": "",
            "enabled": True, "inheritable": True}, open(os.path.join(PROJ, "project.json"), "w"), indent=2)
 

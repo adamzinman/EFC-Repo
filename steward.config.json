@@ -40,7 +40,12 @@
       "EFC_Library"
     ],
     "palette_from_style_classes": true,
-    "palette": []
+    "palette": [
+      "#262626",
+      "#EBEBEB",
+      "#F2F2F2",
+      "#333333"
+    ]
   },
   "deprecated_calls": {},
   "exempt": [

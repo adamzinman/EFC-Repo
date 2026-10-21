@@ -288,13 +288,7 @@
     "props": {
       "direction": "column",
       "style": {
-        "backgroundColor": "#F7F8F9",
-        "borderRadius": "0.741vh",
-        "boxShadow": "0 1px 2px rgba(20,30,40,0.08)",
-        "padding": "0.741vh 1.111vh 0.926vh 1.111vh",
-        "cursor": "pointer",
-        "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-        "overflow": "hidden"
+        "classes": "Loop/B2/root"
       }
     },
     "position": {
@@ -309,7 +303,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "marginBottom": "0.741vh"
+            "classes": "Loop/B1/header"
           },
           "justify": "space-between",
           "alignItems": "center"
@@ -326,8 +320,7 @@
             "props": {
               "direction": "row",
               "style": {
-                "gap": "0.463vh",
-                "height": "1.481vh"
+                "classes": "Loop/B1/title"
               },
               "alignItems": "center"
             },
@@ -343,11 +336,7 @@
                 "props": {
                   "text": "",
                   "style": {
-                    "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                    "color": "#1E2329",
-                    "fontWeight": 600,
-                    "fontSize": "1.157vh",
-                    "whiteSpace": "nowrap"
+                    "classes": "Loop/B1/tag"
                   }
                 },
                 "position": {
@@ -378,10 +367,10 @@
                       "name": "d",
                       "d": "M6,0.8 L11.2,6 L6,11.2 L0.8,6 Z",
                       "fill": {
-                        "paint": "#FF8C00"
+                        "paint": "#FF7A00"
                       },
                       "stroke": {
-                        "paint": "#222222",
+                        "paint": "#1F1F1F",
                         "width": 0.8
                       }
                     }
@@ -412,14 +401,7 @@
             "props": {
               "text": "",
               "style": {
-                "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                "color": "#1E2329",
-                "fontSize": "0.926vh",
-                "fontWeight": 600,
-                "letterSpacing": "0.04em",
-                "padding": "0.185vh 0.648vh",
-                "borderRadius": "999px",
-                "lineHeight": 1.2
+                "classes": "Loop/B1/mode"
               }
             },
             "position": {
@@ -438,7 +420,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "case({view.custom.mode}, 0, \"#2B3138\", 2, \"#DCE6F7\", \"#E9ECEF\")"
+                    "expression": "case({view.custom.mode}, 0, \"#3A3A3A\", 2, \"#E6E6E6\", \"#EDEDED\")"
                   }
                 }
               },
@@ -446,7 +428,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "case({view.custom.mode}, 0, \"#FFFFFF\", 2, \"#1F4E99\", \"#454D55\")"
+                    "expression": "case({view.custom.mode}, 0, \"#FFFFFF\", 2, \"#1F4E99\", \"#4D4D4D\")"
                   }
                 }
               }
@@ -462,7 +444,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "gap": "0.926vh"
+            "classes": "Loop/B2/mid"
           },
           "alignItems": "center"
         },
@@ -507,12 +489,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                        "color": "#1E2329",
-                        "fontSize": "1.852vh",
-                        "fontWeight": 600,
-                        "fontVariantNumeric": "tabular-nums",
-                        "lineHeight": 1
+                        "classes": "Loop/B1/pv"
                       }
                     },
                     "position": {
@@ -537,10 +514,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                        "color": "#6B737C",
-                        "fontSize": "0.926vh",
-                        "marginLeft": "0.278vh"
+                        "classes": "Loop/B2/units"
                       }
                     },
                     "position": {
@@ -567,7 +541,7 @@
                 "props": {
                   "direction": "row",
                   "style": {
-                    "marginTop": "0.463vh"
+                    "classes": "Loop/B2/spRow"
                   },
                   "alignItems": "baseline"
                 },
@@ -583,12 +557,7 @@
                     "props": {
                       "text": "SP",
                       "style": {
-                        "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                        "color": "#2F6FD6",
-                        "fontSize": "0.926vh",
-                        "fontWeight": 600,
-                        "letterSpacing": "0.05em",
-                        "marginRight": "0.37vh"
+                        "classes": "Loop/B1/spLbl"
                       }
                     },
                     "position": {
@@ -603,12 +572,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                        "color": "#2F6FD6",
-                        "fontSize": "1.204vh",
-                        "fontWeight": 600,
-                        "fontVariantNumeric": "tabular-nums",
-                        "lineHeight": 1
+                        "classes": "Loop/B2/sp"
                       }
                     },
                     "position": {
@@ -637,7 +601,7 @@
             "props": {
               "direction": "row",
               "style": {
-                "height": "2.593vh"
+                "classes": "Loop/B2/barWrap"
               },
               "alignItems": "center"
             },
@@ -665,7 +629,7 @@
                       "rx": 5,
                       "ry": 5,
                       "fill": {
-                        "paint": "#E6E9EC"
+                        "paint": "#E6E6E6"
                       },
                       "stroke": {
                         "paint": "none",
@@ -682,7 +646,7 @@
                       "rx": 0,
                       "ry": 0,
                       "fill": {
-                        "paint": "#CBD2D9"
+                        "paint": "#CFCFCF"
                       },
                       "stroke": {
                         "paint": "none",
@@ -699,7 +663,7 @@
                       "rx": 5,
                       "ry": 5,
                       "fill": {
-                        "paint": "#7C858F"
+                        "paint": "#7F7F7F"
                       },
                       "stroke": {
                         "paint": "none",
@@ -716,7 +680,7 @@
                       "rx": 1,
                       "ry": 1,
                       "fill": {
-                        "paint": "#FF8C00"
+                        "paint": "#FF7A00"
                       },
                       "stroke": {
                         "paint": "none",
@@ -733,7 +697,7 @@
                       "rx": 1,
                       "ry": 1,
                       "fill": {
-                        "paint": "#FF8C00"
+                        "paint": "#FF7A00"
                       },
                       "stroke": {
                         "paint": "none",
@@ -745,7 +709,7 @@
                       "name": "sp",
                       "d": "",
                       "fill": {
-                        "paint": "#2F6FD6"
+                        "paint": "#1F4E99"
                       },
                       "stroke": {
                         "paint": "none",
@@ -822,8 +786,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "gap": "0.741vh",
-            "marginTop": "0.556vh"
+            "classes": "Loop/B2/outRow"
           },
           "alignItems": "center"
         },
@@ -839,11 +802,7 @@
             "props": {
               "text": "OUT",
               "style": {
-                "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                "color": "#6B737C",
-                "fontSize": "0.926vh",
-                "fontWeight": 600,
-                "letterSpacing": "0.05em"
+                "classes": "Loop/B1/outLbl"
               }
             },
             "position": {
@@ -858,7 +817,7 @@
             "props": {
               "direction": "row",
               "style": {
-                "height": "0.463vh"
+                "classes": "Loop/B2/ob"
               }
             },
             "position": {
@@ -885,7 +844,7 @@
                       "rx": 2.5,
                       "ry": 2.5,
                       "fill": {
-                        "paint": "#E6E9EC"
+                        "paint": "#E6E6E6"
                       },
                       "stroke": {
                         "paint": "none",
@@ -902,7 +861,7 @@
                       "rx": 2.5,
                       "ry": 2.5,
                       "fill": {
-                        "paint": "#7C858F"
+                        "paint": "#7F7F7F"
                       },
                       "stroke": {
                         "paint": "none",
@@ -937,14 +896,7 @@
             "props": {
               "text": "",
               "style": {
-                "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                "color": "#1E2329",
-                "fontSize": "1.111vh",
-                "fontWeight": 600,
-                "fontVariantNumeric": "tabular-nums",
-                "lineHeight": 1,
-                "minWidth": "4.259vh",
-                "textAlign": "right"
+                "classes": "Loop/B2/out"
               }
             },
             "position": {
@@ -969,9 +921,7 @@
             "props": {
               "text": "%",
               "style": {
-                "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                "color": "#6B737C",
-                "fontSize": "0.972vh"
+                "classes": "Loop/B2/pctU"
               }
             },
             "position": {
@@ -986,7 +936,7 @@
         "binding": {
           "type": "expr",
           "config": {
-            "expression": "if({view.custom.alarm}, \"2px solid #FF8C00\", \"1px solid #C3C8CE\")"
+            "expression": "if({view.custom.alarm}, \"2px solid #FF7A00\", \"1px solid #A6A6A6\")"
           }
         }
       }

@@ -1,454 +1,5 @@
 {
  "items": {
-  "EFC_AnalogIndicators:project:project.json": {
-   "changed_at": "2026-10-21 00:35",
-   "first_seen": "2026-10-21 00:35",
-   "has_project_json": true,
-   "hash": "96b5d2354a2d",
-   "kind": "project",
-   "meta": {
-    "description": "Analog indicator templates A-D + Indicator/Analog style classes. Merge into EFC_Styles / EFC_ProcessValues via Designer File > Import.",
-    "enabled": true,
-    "inheritable": true,
-    "parent": "EFC_Styles",
-    "title": "EFC_AnalogIndicators"
-   }
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/Card": {
-   "bytes": 332,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#1f1f1f",
-    "#bdbdbd",
-    "#f4f4f4"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "01d6852d0ca6",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/CardCompact": {
-   "bytes": 332,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#1f1f1f",
-    "#bdbdbd",
-    "#f4f4f4"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "d1db95d1e53c",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/Chip": {
-   "bytes": 408,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#1f1f1f",
-    "rgba(0,0,0,0.25)"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "a60a1cbc632c",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/ChipBad": {
-   "bytes": 157,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#b000b0",
-    "#ededed"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "a2ddace13d43",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/Desc": {
-   "bytes": 270,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#5a5a5a"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "3b2837ab499d",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/DescTitle": {
-   "bytes": 297,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#1f1f1f"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "fb0d3c04a0ca",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/Header": {
-   "bytes": 359,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#1f1f1f"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "1ed7bf4b53da",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/Scale": {
-   "bytes": 283,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#4d4d4d"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "fa12e5cd0552",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/Track": {
-   "bytes": 209,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#c4c4c4",
-    "rgba(0,0,0,0.18)"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "e994acbbfe01",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/ValueBox": {
-   "bytes": 397,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#bdbdbd",
-    "#ffffff"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "e7f42a80723e",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/ZoneIdeal": {
-   "bytes": 93,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#9db4d0"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "a01bfad6b402",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/ZoneL": {
-   "bytes": 93,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#c4c4c4"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "ad02647d83ee",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/ZoneLL": {
-   "bytes": 93,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#a6a6a6"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "ad8b64703a74",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:style:Indicator/Analog/ZoneNormal": {
-   "bytes": 93,
-   "changed_at": "2026-10-21 00:35",
-   "colors": [
-    "#ffffff"
-   ],
-   "first_seen": "2026-10-21 00:35",
-   "hash": "1ef47cb0be59",
-   "kind": "style"
-  },
-  "EFC_AnalogIndicators:view:EFC/AnalogIndicator/A_RangeBar": {
-   "bound_classes": 7,
-   "bytes": 35322,
-   "changed_at": "2026-10-21 00:35",
-   "classes": [
-    "Indicator/Analog/Card",
-    "Indicator/Analog/Chip",
-    "Indicator/Analog/Desc",
-    "Indicator/Analog/Scale",
-    "Indicator/Analog/Track",
-    "Indicator/Analog/ValueBox",
-    "Indicator/Analog/ZoneIdeal",
-    "Indicator/Analog/ZoneNormal",
-    "Text/Mod/Right",
-    "Text/TagName",
-    "Text/Units"
-   ],
-   "colors": [
-    "#00a3e0",
-    "#1f1f1f",
-    "#6e6e6e",
-    "#d50000",
-    "#ff7a00",
-    "#ffd200"
-   ],
-   "default_size": {
-    "height": 120,
-    "width": 256
-   },
-   "doc_hash": "2a2986079d71",
-   "docks": [],
-   "file": "projects/EFC_AnalogIndicators/com.inductiveautomation.perspective/views/EFC/AnalogIndicator/A_RangeBar/view.json",
-   "first_seen": "2026-10-21 00:35",
-   "hash": "2a2986079d71",
-   "inline_styles": 3,
-   "inline_where": [
-    "root",
-    "ValueRow",
-    "Pointer"
-   ],
-   "kind": "view",
-   "last_modified": "2026-10-13T00:00:00Z",
-   "modified_by": "efc-ignition-library",
-   "params": {
-    "Format": {
-     "default": "#,##0.0",
-     "dir": "input"
-    },
-    "LabelMode": {
-     "default": "Both",
-     "dir": "input"
-    },
-    "ShowMinMax": {
-     "default": true,
-     "dir": "input"
-    },
-    "TagPath": {
-     "default": "[default]KPI/KPI_101",
-     "dir": "input"
-    }
-   },
-   "pclib_types": [],
-   "popups": 0,
-   "resource_version": 1,
-   "system_calls": []
-  },
-  "EFC_AnalogIndicators:view:EFC/AnalogIndicator/B_PointerScale": {
-   "bound_classes": 6,
-   "bytes": 41738,
-   "changed_at": "2026-10-21 00:35",
-   "classes": [
-    "Indicator/Analog/Card",
-    "Indicator/Analog/Chip",
-    "Indicator/Analog/Desc",
-    "Indicator/Analog/Scale",
-    "Indicator/Analog/Track",
-    "Indicator/Analog/ValueBox",
-    "Indicator/Analog/ZoneIdeal",
-    "Indicator/Analog/ZoneNormal",
-    "Text/Mod/Center",
-    "Text/Mod/Right",
-    "Text/TagName",
-    "Text/Units"
-   ],
-   "colors": [
-    "#00a3e0",
-    "#1f1f1f",
-    "#6e6e6e",
-    "#d50000",
-    "#ff7a00",
-    "#ffd200"
-   ],
-   "default_size": {
-    "height": 330,
-    "width": 128
-   },
-   "doc_hash": "84e3af0dc0b2",
-   "docks": [],
-   "file": "projects/EFC_AnalogIndicators/com.inductiveautomation.perspective/views/EFC/AnalogIndicator/B_PointerScale/view.json",
-   "first_seen": "2026-10-21 00:35",
-   "hash": "84e3af0dc0b2",
-   "inline_styles": 5,
-   "inline_where": [
-    "root",
-    "Scale",
-    "Pointer",
-    "ValueRow"
-   ],
-   "kind": "view",
-   "last_modified": "2026-10-13T00:00:00Z",
-   "modified_by": "efc-ignition-library",
-   "params": {
-    "Format": {
-     "default": "#,##0.0",
-     "dir": "input"
-    },
-    "ShowLimitType": {
-     "default": true,
-     "dir": "input"
-    },
-    "ShowLimitValue": {
-     "default": true,
-     "dir": "input"
-    },
-    "TagPath": {
-     "default": "[default]KPI/KPI_101",
-     "dir": "input"
-    }
-   },
-   "pclib_types": [],
-   "popups": 0,
-   "resource_version": 1,
-   "system_calls": []
-  },
-  "EFC_AnalogIndicators:view:EFC/AnalogIndicator/C_CompactRow": {
-   "bound_classes": 6,
-   "bytes": 31587,
-   "changed_at": "2026-10-21 00:35",
-   "classes": [
-    "Indicator/Analog/CardCompact",
-    "Indicator/Analog/Chip",
-    "Indicator/Analog/Track",
-    "Indicator/Analog/ValueBox",
-    "Indicator/Analog/ZoneIdeal",
-    "Indicator/Analog/ZoneNormal",
-    "Text/TagName",
-    "Text/Units"
-   ],
-   "colors": [
-    "#00a3e0",
-    "#1f1f1f",
-    "#6e6e6e",
-    "#d50000",
-    "#ff7a00",
-    "#ffd200"
-   ],
-   "default_size": {
-    "height": 46,
-    "width": 200
-   },
-   "doc_hash": "3ce32d145bae",
-   "docks": [],
-   "file": "projects/EFC_AnalogIndicators/com.inductiveautomation.perspective/views/EFC/AnalogIndicator/C_CompactRow/view.json",
-   "first_seen": "2026-10-21 00:35",
-   "hash": "3ce32d145bae",
-   "inline_styles": 4,
-   "inline_where": [
-    "root",
-    "Top",
-    "ValueRow",
-    "Pointer"
-   ],
-   "kind": "view",
-   "last_modified": "2026-10-13T00:00:00Z",
-   "modified_by": "efc-ignition-library",
-   "params": {
-    "Format": {
-     "default": "#,##0.0",
-     "dir": "input"
-    },
-    "Header": {
-     "default": "Tag",
-     "dir": "input"
-    },
-    "TagPath": {
-     "default": "[default]KPI/KPI_101",
-     "dir": "input"
-    }
-   },
-   "pclib_types": [],
-   "popups": 0,
-   "resource_version": 1,
-   "system_calls": []
-  },
-  "EFC_AnalogIndicators:view:EFC/AnalogIndicator/D_MiniColumn": {
-   "bound_classes": 6,
-   "bytes": 32003,
-   "changed_at": "2026-10-21 00:35",
-   "classes": [
-    "Indicator/Analog/Card",
-    "Indicator/Analog/Chip",
-    "Indicator/Analog/Header",
-    "Indicator/Analog/Track",
-    "Indicator/Analog/ValueBox",
-    "Indicator/Analog/ZoneIdeal",
-    "Indicator/Analog/ZoneNormal",
-    "Text/Mod/Center",
-    "Text/Size/M",
-    "Text/Units"
-   ],
-   "colors": [
-    "#00a3e0",
-    "#1f1f1f",
-    "#6e6e6e",
-    "#d50000",
-    "#ff7a00",
-    "#ffd200"
-   ],
-   "default_size": {
-    "height": 200,
-    "width": 64
-   },
-   "doc_hash": "39b30d94ea1f",
-   "docks": [],
-   "file": "projects/EFC_AnalogIndicators/com.inductiveautomation.perspective/views/EFC/AnalogIndicator/D_MiniColumn/view.json",
-   "first_seen": "2026-10-21 00:35",
-   "hash": "39b30d94ea1f",
-   "inline_styles": 4,
-   "inline_where": [
-    "root",
-    "Bar",
-    "Pointer"
-   ],
-   "kind": "view",
-   "last_modified": "2026-10-13T00:00:00Z",
-   "modified_by": "efc-ignition-library",
-   "params": {
-    "Format": {
-     "default": "#,##0.0",
-     "dir": "input"
-    },
-    "Header": {
-     "default": "Tag",
-     "dir": "input"
-    },
-    "TagPath": {
-     "default": "[default]KPI/KPI_101",
-     "dir": "input"
-    }
-   },
-   "pclib_types": [],
-   "popups": 0,
-   "resource_version": 1,
-   "system_calls": []
-  },
-  "EFC_AnalogIndicators:view:EFC/AnalogIndicator/_Examples": {
-   "bound_classes": 0,
-   "bytes": 5274,
-   "changed_at": "2026-10-21 00:35",
-   "classes": [
-    "Container/Screen"
-   ],
-   "colors": [],
-   "default_size": {
-    "height": 420,
-    "width": 900
-   },
-   "doc_hash": "261aaa9ff873",
-   "docks": [],
-   "file": "projects/EFC_AnalogIndicators/com.inductiveautomation.perspective/views/EFC/AnalogIndicator/_Examples/view.json",
-   "first_seen": "2026-10-21 00:35",
-   "hash": "261aaa9ff873",
-   "inline_styles": 4,
-   "inline_where": [
-    "root",
-    "C",
-    "D"
-   ],
-   "kind": "view",
-   "last_modified": "2026-10-13T00:00:00Z",
-   "modified_by": "efc-ignition-library",
-   "params": {},
-   "pclib_types": [],
-   "popups": 0,
-   "resource_version": 1,
-   "system_calls": []
-  },
   "EFC_Library:project:project.json": {
    "changed_at": "2026-10-21 00:35",
    "first_seen": "2026-10-21 00:35",
@@ -462,6 +13,39 @@
     "parent": "",
     "title": "EFC_Library"
    }
+  },
+  "EFC_Library:script:efc/ui": {
+   "bytes": 8599,
+   "changed_at": "2026-10-21 03:53",
+   "first_seen": "2026-10-21 03:53",
+   "functions": [
+    "_log()",
+    "_p(params, name, default=None)",
+    "level(roles)",
+    "userLevel(component)",
+    "_state(component)",
+    "_write(component, **changes)",
+    "region(value, pageId)",
+    "openDynamic(component)",
+    "setDefaultDock(component, viewPath, params=None)",
+    "closeDynamic(component)",
+    "_audit(component, action, target, value='')",
+    "cmd(component, member, value=True, minLevel=OPERATOR, audit=False)",
+    "bypass(component, intlkPath, idx, reason)",
+    "unbypass(component, intlkPath, idx)",
+    "ackAll(component, alarms)",
+    "trend(base, pens, minutes, w, h)",
+    "dblCmd(component)"
+   ],
+   "hash": "aec1f0ad260e",
+   "kind": "script",
+   "system_calls": [
+    "system.tag.queryTagHistory",
+    "system.tag.readBlocking",
+    "system.tag.writeBlocking",
+    "system.util.audit",
+    "system.util.getLogger"
+   ]
   },
   "EFC_Library:style:Alarm/Banner": {
    "bytes": 319,
@@ -1386,6 +970,258 @@
    "hash": "0203cfc25232",
    "kind": "style"
   },
+  "EFC_Library:style:Indicator/Analog/A/Pointer": {
+   "bytes": 90,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "8255114682d4",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/A/ValueRow": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "6b6240ced9c5",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/A/root": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "eb7d14aad8d6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/B/Pointer": {
+   "bytes": 92,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "0eb330a4754b",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/B/Scale": {
+   "bytes": 112,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "f42bc3cc1bca",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/C": {
+   "bytes": 78,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "630e01999e9d",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/C/Pointer": {
+   "bytes": 90,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "6c7f4a18a0d3",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/C/root": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "2ec8b3db36f6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/Card": {
+   "bytes": 333,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#1f1f1f",
+    "#bdbdbd",
+    "#f4f4f4"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "ac97875fda43",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/CardCompact": {
+   "bytes": 333,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#1f1f1f",
+    "#bdbdbd",
+    "#f4f4f4"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "21f916c38972",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/Chip": {
+   "bytes": 409,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#1f1f1f",
+    "rgba(0,0,0,0.25)"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "3bde2268d5f8",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/ChipBad": {
+   "bytes": 158,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#b000b0",
+    "#ededed"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "7e9c507c5354",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/D": {
+   "bytes": 78,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "470eee07d854",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/D/Bar": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "8c177bd6c47e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/D/Pointer": {
+   "bytes": 92,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "185ac53d2629",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/D/root": {
+   "bytes": 118,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "c0e3a3403c68",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/Desc": {
+   "bytes": 271,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#5a5a5a"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "3ea9a6b5ebcd",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/DescTitle": {
+   "bytes": 298,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "50e76a5ab2be",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/Header": {
+   "bytes": 360,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "7f3007813fd4",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/Scale": {
+   "bytes": 284,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#4d4d4d"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "5350709dd61b",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/Track": {
+   "bytes": 210,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#c4c4c4",
+    "rgba(0,0,0,0.18)"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "f1d4ae06426e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/ValueBox": {
+   "bytes": 398,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#bdbdbd",
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "e3c04e66e693",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/ZoneIdeal": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#9db4d0"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "483c1f5bef8e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/ZoneL": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#c4c4c4"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "0de8c0124bb6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/ZoneLL": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#a6a6a6"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "a5561fff1b11",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/ZoneNormal": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 03:53",
+   "colors": [
+    "#ffffff"
+   ],
+   "first_seen": "2026-10-21 03:53",
+   "hash": "cb7f229a24d8",
+   "kind": "style"
+  },
+  "EFC_Library:style:Indicator/Analog/root": {
+   "bytes": 104,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "a5b7f81e5df7",
+   "kind": "style"
+  },
   "EFC_Library:style:Indicator/Badge": {
    "bytes": 302,
    "changed_at": "2026-10-21 00:35",
@@ -1590,6 +1426,383 @@
    ],
    "first_seen": "2026-10-21 00:35",
    "hash": "6f2aae6e9976",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/body": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "cd54d22cdc97",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/header": {
+   "bytes": 91,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "7048e6f0e524",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/mode": {
+   "bytes": 331,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "6ad1d5dbc974",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/out": {
+   "bytes": 273,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "4dadd7c1cdc6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/outBarRow": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "2aefbcb537ad",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/outLbl": {
+   "bytes": 239,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#5a5a5a"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "9cb481fd720d",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/outRow": {
+   "bytes": 96,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "1073201eab1a",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/pctU": {
+   "bytes": 237,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "ddff6700276e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/pv": {
+   "bytes": 273,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "a7916938bf05",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/root": {
+   "bytes": 354,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [
+    "#f0f0f0",
+    "rgba(20,30,40,0.08)"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "c62de5e61e1e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/sp": {
+   "bytes": 273,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f4e99"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "26979c0189d1",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/spLbl": {
+   "bytes": 270,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f4e99"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "bf610e20254d",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/tag": {
+   "bytes": 236,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "7e106e82dd92",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/title": {
+   "bytes": 109,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "8105891b984b",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/units": {
+   "bytes": 211,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#5a5a5a"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "d10d16002eec",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B1/vals": {
+   "bytes": 86,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "a9c2925e2a6a",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B2/barWrap": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "1f2b16dcd5c1",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B2/mid": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "7cefe23e1de2",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B2/ob": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "36e07fb7be12",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B2/out": {
+   "bytes": 330,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "2138016fe650",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B2/outRow": {
+   "bytes": 112,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "ff19e6c6a705",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B2/pctU": {
+   "bytes": 181,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#5a5a5a"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "5f9e3fbafa2f",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B2/root": {
+   "bytes": 354,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [
+    "#f0f0f0",
+    "rgba(20,30,40,0.08)"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "567af15385c1",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B2/sp": {
+   "bytes": 273,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f4e99"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "99195a592b78",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B2/spRow": {
+   "bytes": 88,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "c5818bdec91b",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B2/units": {
+   "bytes": 212,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#5a5a5a"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "a170262d22bb",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B3/body": {
+   "bytes": 109,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "05269801a5e3",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B3/dev": {
+   "bytes": 317,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "34b2bb4e8d8d",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B3/out": {
+   "bytes": 273,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "521276691042",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B3/outRow": {
+   "bytes": 96,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "13aa21a5a7f2",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B3/sparkWrap": {
+   "bytes": 186,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#e3e6e9"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "05a07e0908f8",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B3/vals": {
+   "bytes": 81,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "4d16dafd2c79",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B4/bars": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "6a09f3771aed",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B4/chipRow": {
+   "bytes": 97,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "1b6e5efb0a66",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B4/labs": {
+   "bytes": 88,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "50e3094cb80a",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B4/out": {
+   "bytes": 250,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#4d4d4d"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "636a9782461e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B4/pv": {
+   "bytes": 273,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f1f1f"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "fa820921cbdb",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B4/root": {
+   "bytes": 383,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [
+    "#f0f0f0",
+    "rgba(20,30,40,0.08)"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "3c4dfd90a958",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B4/sp": {
+   "bytes": 273,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#1f4e99"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "b46ec7274b00",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B4/spRow": {
+   "bytes": 97,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "a60564dcd248",
+   "kind": "style"
+  },
+  "EFC_Library:style:Loop/B4/units": {
+   "bytes": 181,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [
+    "#5a5a5a"
+   ],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "d3b6efb88ab6",
    "kind": "style"
   },
   "EFC_Library:style:Mode/Auto": {
@@ -2011,6 +2224,222 @@
    "hash": "02d506c315bd",
    "kind": "style"
   },
+  "EFC_Library:style:Station/Fill/Body": {
+   "bytes": 110,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "c7c3d2de959a",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/Boxes": {
+   "bytes": 81,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "4d16dafd2c79",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/Buttons": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "eb7d14aad8d6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/Chip": {
+   "bytes": 87,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "ffecfa3acd8b",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/Commands": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "b0cf35bc43e9",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/Header": {
+   "bytes": 179,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "1e1aae000f33",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/Net": {
+   "bytes": 89,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "0067b7725273",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/NetBar": {
+   "bytes": 87,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "45b33297fb12",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/NetCap": {
+   "bytes": 88,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "7bedab220214",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/NetRow": {
+   "bytes": 88,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "a91f6f95a9fd",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/SpRow0": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "cd54d22cdc97",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/SpTarget": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "8c177bd6c47e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/SpTargetRow": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "6b6240ced9c5",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/Tare": {
+   "bytes": 93,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "ef283f732d14",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/Target": {
+   "bytes": 89,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "39771f2241c5",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Fill/root": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "51258c848b47",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Sidebar/Body": {
+   "bytes": 109,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "692ab0392b4e",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Sidebar/Boxes": {
+   "bytes": 111,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "75d932e2891d",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Sidebar/Commands": {
+   "bytes": 144,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "2789bd4a9a0c",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Sidebar/Header": {
+   "bytes": 97,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "20a0e4a23835",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Sidebar/Ilk": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "edceae3899ea",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Sidebar/Led": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "c14fd972081c",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Sidebar/Perm0": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "5b1b83ffbc42",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Sidebar/PermIO": {
+   "bytes": 118,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "76f3ac900d62",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Sidebar/Setpoints": {
+   "bytes": 117,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "13ecd9ef61ea",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Sidebar/Status": {
+   "bytes": 94,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "cba1f9c7fe21",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Sidebar/Steps": {
+   "bytes": 112,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "8904bf23bf40",
+   "kind": "style"
+  },
   "EFC_Library:style:Station/Step/Active": {
    "bytes": 168,
    "changed_at": "2026-10-21 00:35",
@@ -2053,6 +2482,70 @@
    ],
    "first_seen": "2026-10-21 00:35",
    "hash": "bf39514b5f16",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Tile/Scale": {
+   "bytes": 89,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "de7bb45c1012",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/Tile/Target": {
+   "bytes": 118,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "bbaf2cd2d4d5",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/_Demo/Left": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "7cefe23e1de2",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/_Demo/Station_Fill_Station_1": {
+   "bytes": 86,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "8fccf9298680",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/_Demo/Station_Sidebar_Station_1": {
+   "bytes": 86,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "dcac5e285d63",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/_Demo/Station_Tile_Station_1": {
+   "bytes": 85,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "ad311bb690c6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/_Demo/Tiles": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "82ad6e312a45",
+   "kind": "style"
+  },
+  "EFC_Library:style:Station/_Demo/root": {
+   "bytes": 108,
+   "changed_at": "2026-10-21 03:56",
+   "colors": [],
+   "first_seen": "2026-10-21 03:56",
+   "hash": "c9985c552f4d",
    "kind": "style"
   },
   "EFC_Library:style:Table/Cell": {
@@ -2576,6 +3069,38 @@
    "hash": "d1e8c2eea9f5",
    "kind": "style"
   },
+  "EFC_Library:style:Util/Gap/L": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "cd54d22cdc97",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Gap/M": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "eb7d14aad8d6",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Gap/S": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "90679a46f822",
+   "kind": "style"
+  },
+  "EFC_Library:style:Util/Gap/XS": {
+   "bytes": 82,
+   "changed_at": "2026-10-21 03:55",
+   "colors": [],
+   "first_seen": "2026-10-21 03:55",
+   "hash": "8c177bd6c47e",
+   "kind": "style"
+  },
   "EFC_Library:style:Util/Highlight": {
    "bytes": 94,
    "changed_at": "2026-10-21 00:35",
@@ -2726,10 +3251,570 @@
    "hash": "a8c462118b94",
    "kind": "style"
   },
+  "EFC_Library:view:Docks/HeatTransfer": {
+   "bound_classes": 6,
+   "bytes": 120951,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Button/Default",
+    "Button/Icon",
+    "Container/Faceplate",
+    "Container/GroupBox",
+    "Container/PopupHeader",
+    "Container/Scroll",
+    "Input/Setpoint",
+    "Text/Caption",
+    "Text/Color/Muted",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Mod/Tabular",
+    "Text/Mod/Upper",
+    "Text/Size/L",
+    "Text/Status",
+    "Text/Subheader",
+    "Text/TagName",
+    "Text/Units",
+    "Text/Value",
+    "Util/Gap/M",
+    "Util/Gap/S",
+    "Util/Gap/XS"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 860,
+    "width": 400
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/HeatTransfer/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "a78ea842eb22",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tType": {
+     "default": "T_HeatEx",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_HeatEx"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Docks/Heater": {
+   "bound_classes": 12,
+   "bytes": 179834,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Button/Default",
+    "Button/Icon",
+    "Button/Start",
+    "Button/Stop",
+    "Button/Toggle/Off",
+    "Container/Faceplate",
+    "Container/GroupBox",
+    "Container/PopupHeader",
+    "Container/Scroll",
+    "Indicator/Badge",
+    "Input/Setpoint",
+    "Text/Caption",
+    "Text/Color/Muted",
+    "Text/Micro",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Mod/Tabular",
+    "Text/Mod/Upper",
+    "Text/Size/L",
+    "Text/Status",
+    "Text/Subheader",
+    "Text/TagName",
+    "Text/Units",
+    "Text/Value",
+    "Util/Gap/M",
+    "Util/Gap/S",
+    "Util/Gap/XS"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 860,
+    "width": 400
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/Heater/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "4acd4e3980a8",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tType": {
+     "default": "T_Heater",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_Heater"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Docks/IOCard": {
+   "bound_classes": 1,
+   "bytes": 21716,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Button/Icon",
+    "Button/Primary",
+    "Container/Faceplate",
+    "Container/GroupBox",
+    "Container/PopupHeader",
+    "Container/Scroll",
+    "Text/Caption",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Mod/Tabular",
+    "Text/Mod/Upper",
+    "Text/Size/L",
+    "Text/Status",
+    "Text/Subheader",
+    "Text/TagName",
+    "Text/Value",
+    "Util/Gap/M",
+    "Util/Gap/S"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 860,
+    "width": 400
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/IOCard/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "74a10cf9740b",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "model": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "native",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 1,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.openPopup"
+   ]
+  },
+  "EFC_Library:view:Docks/Loop": {
+   "bound_classes": 7,
+   "bytes": 164795,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Button/Default",
+    "Button/Icon",
+    "Button/Toggle/Off",
+    "Container/Faceplate",
+    "Container/GroupBox",
+    "Container/PopupHeader",
+    "Container/Scroll",
+    "Indicator/Badge",
+    "Input/Check",
+    "Input/Setpoint",
+    "Text/Caption",
+    "Text/Color/Muted",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Mod/Tabular",
+    "Text/Mod/Upper",
+    "Text/Size/L",
+    "Text/Status",
+    "Text/Subheader",
+    "Text/TagName",
+    "Text/Units",
+    "Text/Value",
+    "Util/Gap/M",
+    "Util/Gap/S",
+    "Util/Gap/XS"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 860,
+    "width": 400
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/Loop/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "17ac24c388d7",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tType": {
+     "default": "T_PID",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_PID"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Docks/Parts/BypassConfirm": {
+   "bound_classes": 0,
+   "bytes": 5544,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Button/Danger",
+    "Button/Default",
+    "Container/Popup",
+    "Input/Field",
+    "Text/Body",
+    "Text/Caption",
+    "Text/Mod/Wrap",
+    "Text/Title",
+    "Util/Gap/L",
+    "Util/Gap/M"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 260,
+    "width": 360
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/Parts/BypassConfirm/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "736d169e93ae",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "desc": {
+     "default": "",
+     "dir": "input"
+    },
+    "idx": {
+     "default": 0,
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.closePopup"
+   ]
+  },
+  "EFC_Library:view:Docks/Parts/IntlkList": {
+   "bound_classes": 17,
+   "bytes": 128659,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Button/Default",
+    "Button/Small",
+    "Container/GroupBox",
+    "Indicator/Badge",
+    "Indicator/LED/Off",
+    "Text/Caption",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Upper",
+    "Text/Subheader",
+    "Util/Gap/S",
+    "Util/Gap/XS"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 120,
+    "width": 384
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/Parts/IntlkList/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "6f820f5be9e1",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "title": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 16,
+   "resource_version": 1,
+   "system_calls": [
+    "system.perspective.openPopup",
+    "system.tag.writeBlocking"
+   ]
+  },
+  "EFC_Library:view:Docks/Parts/Trend": {
+   "bound_classes": 5,
+   "bytes": 14893,
+   "changed_at": "2026-10-21 03:56",
+   "classes": [
+    "Button/Icon",
+    "Button/Small",
+    "Container/Inset",
+    "Container/TrendPanel",
+    "Text/Micro",
+    "Text/Mod/Center",
+    "Text/Mod/Upper",
+    "Text/Subheader",
+    "Util/Gap/S",
+    "Util/Gap/XS"
+   ],
+   "colors": [
+    "#1f1f1f",
+    "#1f4e99",
+    "#7f7f7f"
+   ],
+   "default_size": {
+    "height": 170,
+    "width": 384
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/Parts/Trend/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "b936187889a9",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "expanded": {
+     "default": false,
+     "dir": "inout"
+    },
+    "pens": {
+     "default": "list",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Docks/ProcessValue": {
+   "bound_classes": 7,
+   "bytes": 143567,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Button/Default",
+    "Button/Icon",
+    "Container/Faceplate",
+    "Container/GroupBox",
+    "Container/PopupHeader",
+    "Container/Scroll",
+    "Indicator/Badge",
+    "Input/Check",
+    "Input/Setpoint",
+    "Text/Caption",
+    "Text/Color/Muted",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Mod/Tabular",
+    "Text/Mod/Upper",
+    "Text/Size/L",
+    "Text/Status",
+    "Text/Subheader",
+    "Text/TagName",
+    "Text/Units",
+    "Text/Value",
+    "Util/Gap/M",
+    "Util/Gap/S",
+    "Util/Gap/XS"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 860,
+    "width": 400
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/ProcessValue/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "296f7eef0c5c",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tType": {
+     "default": "T_AI",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_AI"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Docks/Region": {
+   "bound_classes": 0,
+   "bytes": 2573,
+   "changed_at": "2026-10-21 03:53",
+   "classes": [
+    "Container/Panel"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 860,
+    "width": 400
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/Region/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "25879969e3cb",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "defaultDock": {
+     "default": "",
+     "dir": "input"
+    },
+    "defaultParams": {
+     "default": "dict",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Docks/Rotating": {
+   "bound_classes": 13,
+   "bytes": 135379,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Button/Default",
+    "Button/Icon",
+    "Button/Momentary",
+    "Button/Start",
+    "Button/Stop",
+    "Button/Toggle/Off",
+    "Container/Faceplate",
+    "Container/GroupBox",
+    "Container/PopupHeader",
+    "Container/Scroll",
+    "Indicator/Badge",
+    "Input/Check",
+    "Input/Setpoint",
+    "Text/Caption",
+    "Text/Color/Muted",
+    "Text/Micro",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Mod/Tabular",
+    "Text/Mod/Upper",
+    "Text/Size/L",
+    "Text/Status",
+    "Text/Subheader",
+    "Text/TagName",
+    "Text/Units",
+    "Text/Value",
+    "Util/Gap/M",
+    "Util/Gap/S",
+    "Util/Gap/XS"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 860,
+    "width": 400
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/Rotating/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "3cd061682732",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tType": {
+     "default": "T_Motor",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_Motor"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
   "EFC_Library:view:Docks/Station": {
    "bound_classes": 33,
-   "bytes": 178564,
-   "changed_at": "2026-10-21 03:43",
+   "bytes": 178358,
+   "changed_at": "2026-10-21 03:56",
    "classes": [
     "Bar/Band/Deadband",
     "Bar/Fill",
@@ -2746,6 +3831,29 @@
     "Indicator/LED/Off",
     "Input/Setpoint",
     "State/Stopped",
+    "Station/Fill/Boxes",
+    "Station/Fill/Buttons",
+    "Station/Fill/Chip",
+    "Station/Fill/Net",
+    "Station/Fill/NetBar",
+    "Station/Fill/NetCap",
+    "Station/Fill/NetRow",
+    "Station/Fill/SpRow0",
+    "Station/Fill/SpTarget",
+    "Station/Fill/SpTargetRow",
+    "Station/Fill/Tare",
+    "Station/Fill/Target",
+    "Station/Sidebar/Body",
+    "Station/Sidebar/Boxes",
+    "Station/Sidebar/Commands",
+    "Station/Sidebar/Header",
+    "Station/Sidebar/Ilk",
+    "Station/Sidebar/Led",
+    "Station/Sidebar/Perm0",
+    "Station/Sidebar/PermIO",
+    "Station/Sidebar/Setpoints",
+    "Station/Sidebar/Status",
+    "Station/Sidebar/Steps",
     "Station/Step/Pending",
     "Text/Body",
     "Text/Caption",
@@ -2780,15 +3888,9 @@
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/Station/view.json",
    "first_seen": "2026-10-21 03:43",
-   "hash": "c33ad96f1483",
-   "inline_styles": 78,
-   "inline_where": [
-    "Header",
-    "Body",
-    "Status",
-    "Chip",
-    "Msg"
-   ],
+   "hash": "e337f890dc5a",
+   "inline_styles": 0,
+   "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-06T20:37:54Z",
    "modified_by": "build_station.py",
@@ -2806,10 +3908,203 @@
     "system.util.invokeAsynchronous"
    ]
   },
+  "EFC_Library:view:Docks/VFD": {
+   "bound_classes": 15,
+   "bytes": 186332,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Button/Default",
+    "Button/Icon",
+    "Button/Momentary",
+    "Button/Start",
+    "Button/Stop",
+    "Button/Toggle/Off",
+    "Container/Faceplate",
+    "Container/GroupBox",
+    "Container/PopupHeader",
+    "Container/Scroll",
+    "Indicator/Badge",
+    "Input/Check",
+    "Input/Setpoint",
+    "Text/Caption",
+    "Text/Color/Muted",
+    "Text/Micro",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Mod/Tabular",
+    "Text/Mod/Upper",
+    "Text/Size/L",
+    "Text/Status",
+    "Text/Subheader",
+    "Text/TagName",
+    "Text/Units",
+    "Text/Value",
+    "Util/Gap/M",
+    "Util/Gap/S",
+    "Util/Gap/XS"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 860,
+    "width": 400
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/VFD/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "d4e0eaba1e67",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tType": {
+     "default": "T_VFD",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_VFD"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Docks/ValveAnalog": {
+   "bound_classes": 8,
+   "bytes": 127477,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Button/Default",
+    "Button/Icon",
+    "Button/Toggle/Off",
+    "Container/Faceplate",
+    "Container/GroupBox",
+    "Container/PopupHeader",
+    "Container/Scroll",
+    "Indicator/Badge",
+    "Input/Setpoint",
+    "Text/Caption",
+    "Text/Color/Muted",
+    "Text/Micro",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Mod/Tabular",
+    "Text/Mod/Upper",
+    "Text/Size/L",
+    "Text/Status",
+    "Text/Subheader",
+    "Text/TagName",
+    "Text/Units",
+    "Text/Value",
+    "Util/Gap/M",
+    "Util/Gap/S",
+    "Util/Gap/XS"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 860,
+    "width": 400
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/ValveAnalog/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "a778ec5c9c09",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tType": {
+     "default": "T_CValve",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_CValve"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Docks/ValveDiscrete": {
+   "bound_classes": 10,
+   "bytes": 95025,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Button/Default",
+    "Button/Icon",
+    "Button/Start",
+    "Button/Stop",
+    "Button/Toggle/Off",
+    "Container/Faceplate",
+    "Container/GroupBox",
+    "Container/PopupHeader",
+    "Container/Scroll",
+    "Indicator/Badge",
+    "Input/Check",
+    "Input/Setpoint",
+    "Text/Caption",
+    "Text/Color/Muted",
+    "Text/Micro",
+    "Text/Mod/Ellipsis",
+    "Text/Mod/Right",
+    "Text/Mod/Tabular",
+    "Text/Mod/Upper",
+    "Text/Size/L",
+    "Text/Status",
+    "Text/Subheader",
+    "Text/TagName",
+    "Text/Units",
+    "Text/Value",
+    "Util/Gap/M",
+    "Util/Gap/S",
+    "Util/Gap/XS"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 860,
+    "width": 400
+   },
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/ValveDiscrete/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "ac2435c2d34c",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "tType": {
+     "default": "T_DValve",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_DValve"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
   "EFC_Library:view:Styles/_Catalog": {
    "bound_classes": 0,
-   "bytes": 126476,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 129526,
+   "changed_at": "2026-10-21 03:55",
    "classes": [
     "Alarm/Banner",
     "Alarm/Critical/Fill",
@@ -2961,6 +4256,10 @@
     "Util/Clip",
     "Util/Collapsed",
     "Util/Disabled",
+    "Util/Gap/L",
+    "Util/Gap/M",
+    "Util/Gap/S",
+    "Util/Gap/XS",
     "Util/Highlight",
     "Util/Pad/L",
     "Util/Pad/M",
@@ -2986,8 +4285,8 @@
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Styles/_Catalog/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "e5df02b9ef3a",
-   "inline_styles": 144,
+   "hash": "4bab56c75264",
+   "inline_styles": 146,
    "inline_where": [
     "root",
     "Lbl_EFC_Style_Library",
@@ -2997,6 +4296,344 @@
    ],
    "kind": "view",
    "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {},
+   "pclib_types": [],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/AnalogIndicator/A_RangeBar": {
+   "bound_classes": 7,
+   "bytes": 35979,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Indicator/Analog/A/Pointer",
+    "Indicator/Analog/A/ValueRow",
+    "Indicator/Analog/A/root",
+    "Indicator/Analog/Card",
+    "Indicator/Analog/Chip",
+    "Indicator/Analog/Desc",
+    "Indicator/Analog/Scale",
+    "Indicator/Analog/Track",
+    "Indicator/Analog/ValueBox",
+    "Indicator/Analog/ZoneIdeal",
+    "Indicator/Analog/ZoneNormal",
+    "Text/Mod/Right",
+    "Text/TagName",
+    "Text/Units"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f",
+    "#6e6e6e",
+    "#d50000",
+    "#ff7a00",
+    "#ffd200"
+   ],
+   "default_size": {
+    "height": 120,
+    "width": 256
+   },
+   "doc_hash": "360497e0b108",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/AnalogIndicator/A_RangeBar/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "360497e0b108",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-13T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "Format": {
+     "default": "#,##0.0",
+     "dir": "input"
+    },
+    "LabelMode": {
+     "default": "Both",
+     "dir": "input"
+    },
+    "ShowMinMax": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_KPI",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "[default]KPI/KPI_101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_KPI"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/AnalogIndicator/B_PointerScale": {
+   "bound_classes": 6,
+   "bytes": 42363,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Indicator/Analog/A/ValueRow",
+    "Indicator/Analog/A/root",
+    "Indicator/Analog/B/Pointer",
+    "Indicator/Analog/B/Scale",
+    "Indicator/Analog/Card",
+    "Indicator/Analog/Chip",
+    "Indicator/Analog/Desc",
+    "Indicator/Analog/Scale",
+    "Indicator/Analog/Track",
+    "Indicator/Analog/ValueBox",
+    "Indicator/Analog/ZoneIdeal",
+    "Indicator/Analog/ZoneNormal",
+    "Text/Mod/Center",
+    "Text/Mod/Right",
+    "Text/TagName",
+    "Text/Units"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f",
+    "#6e6e6e",
+    "#d50000",
+    "#ff7a00",
+    "#ffd200"
+   ],
+   "default_size": {
+    "height": 330,
+    "width": 128
+   },
+   "doc_hash": "aa903669ff3b",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/AnalogIndicator/B_PointerScale/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "aa903669ff3b",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-13T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "Format": {
+     "default": "#,##0.0",
+     "dir": "input"
+    },
+    "ShowLimitType": {
+     "default": true,
+     "dir": "input"
+    },
+    "ShowLimitValue": {
+     "default": true,
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_KPI",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "[default]KPI/KPI_101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_KPI"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/AnalogIndicator/C_CompactRow": {
+   "bound_classes": 6,
+   "bytes": 32198,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Indicator/Analog/A/ValueRow",
+    "Indicator/Analog/A/root",
+    "Indicator/Analog/C/Pointer",
+    "Indicator/Analog/C/root",
+    "Indicator/Analog/CardCompact",
+    "Indicator/Analog/Chip",
+    "Indicator/Analog/Track",
+    "Indicator/Analog/ValueBox",
+    "Indicator/Analog/ZoneIdeal",
+    "Indicator/Analog/ZoneNormal",
+    "Text/TagName",
+    "Text/Units"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f",
+    "#6e6e6e",
+    "#d50000",
+    "#ff7a00",
+    "#ffd200"
+   ],
+   "default_size": {
+    "height": 46,
+    "width": 200
+   },
+   "doc_hash": "02daf72c0760",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/AnalogIndicator/C_CompactRow/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "02daf72c0760",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-13T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "Format": {
+     "default": "#,##0.0",
+     "dir": "input"
+    },
+    "Header": {
+     "default": "Tag",
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_KPI",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "[default]KPI/KPI_101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_KPI"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/AnalogIndicator/D_MiniColumn": {
+   "bound_classes": 6,
+   "bytes": 32588,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Indicator/Analog/Card",
+    "Indicator/Analog/Chip",
+    "Indicator/Analog/D/Bar",
+    "Indicator/Analog/D/Pointer",
+    "Indicator/Analog/D/root",
+    "Indicator/Analog/Header",
+    "Indicator/Analog/Track",
+    "Indicator/Analog/ValueBox",
+    "Indicator/Analog/ZoneIdeal",
+    "Indicator/Analog/ZoneNormal",
+    "Text/Mod/Center",
+    "Text/Size/M",
+    "Text/Units"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#1f1f1f",
+    "#6e6e6e",
+    "#d50000",
+    "#ff7a00",
+    "#ffd200"
+   ],
+   "default_size": {
+    "height": 200,
+    "width": 64
+   },
+   "doc_hash": "db9ea4cfd9fa",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/AnalogIndicator/D_MiniColumn/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "db9ea4cfd9fa",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-13T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "Format": {
+     "default": "#,##0.0",
+     "dir": "input"
+    },
+    "Header": {
+     "default": "Tag",
+     "dir": "input"
+    },
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_KPI",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "[default]KPI/KPI_101",
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_KPI"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": []
+  },
+  "EFC_Library:view:Templates/AnalogIndicator/_Examples": {
+   "bound_classes": 0,
+   "bytes": 5375,
+   "changed_at": "2026-10-21 03:55",
+   "classes": [
+    "Container/Screen",
+    "Indicator/Analog//C",
+    "Indicator/Analog//D",
+    "Indicator/Analog//root"
+   ],
+   "colors": [],
+   "default_size": {
+    "height": 420,
+    "width": 900
+   },
+   "doc_hash": "f27eb4491aab",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/AnalogIndicator/_Examples/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "f27eb4491aab",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-13T00:00:00Z",
    "modified_by": "efc-ignition-library",
    "params": {},
    "pclib_types": [],
@@ -3753,8 +5390,8 @@
   },
   "EFC_Library:view:Templates/IO/Parts/SlotTile": {
    "bound_classes": 2,
-   "bytes": 7613,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 7721,
+   "changed_at": "2026-10-21 03:53",
    "classes": [
     "Container/Card",
     "State/Running",
@@ -3773,11 +5410,11 @@
     "height": 150,
     "width": 132
    },
-   "doc_hash": "209f09e84905",
+   "doc_hash": "c1581c80c234",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Parts/SlotTile/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "209f09e84905",
+   "hash": "c1581c80c234",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -3788,6 +5425,14 @@
      "default": "",
      "dir": "input"
     },
+    "dockId": {
+     "default": "dw_IOCard",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
     "model": {
      "default": "",
      "dir": "input"
@@ -3795,14 +5440,16 @@
     "slot": {
      "default": 0,
      "dir": "input"
+    },
+    "tType": {
+     "default": "native",
+     "dir": "input"
     }
    },
    "pclib_types": [],
-   "popups": 1,
+   "popups": 0,
    "resource_version": 1,
-   "system_calls": [
-    "system.perspective.openPopup"
-   ]
+   "system_calls": []
   },
   "EFC_Library:view:Templates/IO/RackOverview": {
    "bound_classes": 0,
@@ -3878,44 +5525,49 @@
   },
   "EFC_Library:view:Templates/Loops/Loop_B1_Bar": {
    "bound_classes": 0,
-   "bytes": 26425,
-   "changed_at": "2026-10-21 03:43",
-   "classes": [],
+   "bytes": 24037,
+   "changed_at": "2026-10-21 03:56",
+   "classes": [
+    "Loop/B1/body",
+    "Loop/B1/header",
+    "Loop/B1/mode",
+    "Loop/B1/out",
+    "Loop/B1/outBarRow",
+    "Loop/B1/outLbl",
+    "Loop/B1/outRow",
+    "Loop/B1/pctU",
+    "Loop/B1/pv",
+    "Loop/B1/root",
+    "Loop/B1/sp",
+    "Loop/B1/spLbl",
+    "Loop/B1/tag",
+    "Loop/B1/title",
+    "Loop/B1/units",
+    "Loop/B1/vals"
+   ],
    "colors": [
-    "#1e2329",
+    "#1f1f1f",
     "#1f4e99",
-    "#222222",
-    "#2b3138",
-    "#2f6fd6",
-    "#454d55",
-    "#6b737c",
-    "#7c858f",
-    "#c3c8ce",
-    "#dce6f7",
-    "#e6e9ec",
-    "#e9ecef",
-    "#f7f8f9",
-    "#ff8c00",
-    "#ffffff",
-    "rgba(20,30,40,0.08)"
+    "#3a3a3a",
+    "#4d4d4d",
+    "#7f7f7f",
+    "#a6a6a6",
+    "#e6e6e6",
+    "#ededed",
+    "#ff7a00",
+    "#ffffff"
    ],
    "default_size": {
     "height": 156,
     "width": 150
    },
-   "doc_hash": "ee7e8e05d7b3",
+   "doc_hash": "880daefd14cf",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B1_Bar/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "ee7e8e05d7b3",
-   "inline_styles": 65,
-   "inline_where": [
-    "root",
-    "header",
-    "title",
-    "tag",
-    "mode"
-   ],
+   "hash": "880daefd14cf",
+   "inline_styles": 0,
+   "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-05T12:00:00Z",
    "modified_by": "admin",
@@ -3950,45 +5602,51 @@
   },
   "EFC_Library:view:Templates/Loops/Loop_B2_Horizontal": {
    "bound_classes": 0,
-   "bytes": 28202,
-   "changed_at": "2026-10-21 03:43",
-   "classes": [],
+   "bytes": 25794,
+   "changed_at": "2026-10-21 03:56",
+   "classes": [
+    "Loop/B1/header",
+    "Loop/B1/mode",
+    "Loop/B1/outLbl",
+    "Loop/B1/pv",
+    "Loop/B1/spLbl",
+    "Loop/B1/tag",
+    "Loop/B1/title",
+    "Loop/B2/barWrap",
+    "Loop/B2/mid",
+    "Loop/B2/ob",
+    "Loop/B2/out",
+    "Loop/B2/outRow",
+    "Loop/B2/pctU",
+    "Loop/B2/root",
+    "Loop/B2/sp",
+    "Loop/B2/spRow",
+    "Loop/B2/units"
+   ],
    "colors": [
-    "#1e2329",
+    "#1f1f1f",
     "#1f4e99",
-    "#222222",
-    "#2b3138",
-    "#2f6fd6",
-    "#454d55",
-    "#6b737c",
-    "#7c858f",
-    "#c3c8ce",
-    "#cbd2d9",
-    "#dce6f7",
-    "#e6e9ec",
-    "#e9ecef",
-    "#f7f8f9",
-    "#ff8c00",
-    "#ffffff",
-    "rgba(20,30,40,0.08)"
+    "#3a3a3a",
+    "#4d4d4d",
+    "#7f7f7f",
+    "#a6a6a6",
+    "#cfcfcf",
+    "#e6e6e6",
+    "#ededed",
+    "#ff7a00",
+    "#ffffff"
    ],
    "default_size": {
     "height": 92,
     "width": 260
    },
-   "doc_hash": "99ec158220b7",
+   "doc_hash": "b4baf47ae7e0",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B2_Horizontal/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "99ec158220b7",
-   "inline_styles": 67,
-   "inline_where": [
-    "root",
-    "header",
-    "title",
-    "tag",
-    "mode"
-   ],
+   "hash": "b4baf47ae7e0",
+   "inline_styles": 0,
+   "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-05T12:00:00Z",
    "modified_by": "admin",
@@ -4023,47 +5681,51 @@
   },
   "EFC_Library:view:Templates/Loops/Loop_B3_Sparkline": {
    "bound_classes": 0,
-   "bytes": 32757,
-   "changed_at": "2026-10-21 03:43",
-   "classes": [],
+   "bytes": 29930,
+   "changed_at": "2026-10-21 03:56",
+   "classes": [
+    "Loop/B1/header",
+    "Loop/B1/mode",
+    "Loop/B1/outLbl",
+    "Loop/B1/pv",
+    "Loop/B1/root",
+    "Loop/B1/spLbl",
+    "Loop/B1/tag",
+    "Loop/B1/title",
+    "Loop/B2/ob",
+    "Loop/B2/sp",
+    "Loop/B2/units",
+    "Loop/B3/body",
+    "Loop/B3/dev",
+    "Loop/B3/out",
+    "Loop/B3/outRow",
+    "Loop/B3/sparkWrap",
+    "Loop/B3/vals"
+   ],
    "colors": [
-    "#1e2329",
+    "#1f1f1f",
     "#1f4e99",
-    "#222222",
-    "#2b3138",
-    "#2f6fd6",
-    "#454d55",
-    "#6b737c",
-    "#7c858f",
-    "#8a4a00",
-    "#c3c8ce",
-    "#dce6f7",
-    "#e3e6e9",
-    "#e6e9ec",
-    "#e9ecef",
-    "#f7f8f9",
-    "#ff8c00",
-    "#ffe7cc",
-    "#ffffff",
-    "rgba(20,30,40,0.08)"
+    "#3a3a3a",
+    "#4d4d4d",
+    "#7f7f7f",
+    "#8f4500",
+    "#a6a6a6",
+    "#e6e6e6",
+    "#ededed",
+    "#ff7a00",
+    "#ffffff"
    ],
    "default_size": {
     "height": 184,
     "width": 172
    },
-   "doc_hash": "efcbbd9c8e48",
+   "doc_hash": "dd5213b12971",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B3_Sparkline/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "efcbbd9c8e48",
-   "inline_styles": 76,
-   "inline_where": [
-    "root",
-    "header",
-    "title",
-    "tag",
-    "mode"
-   ],
+   "hash": "dd5213b12971",
+   "inline_styles": 0,
+   "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-05T12:00:00Z",
    "modified_by": "admin",
@@ -4100,45 +5762,46 @@
   },
   "EFC_Library:view:Templates/Loops/Loop_B4_Column": {
    "bound_classes": 0,
-   "bytes": 24432,
-   "changed_at": "2026-10-21 03:43",
-   "classes": [],
+   "bytes": 22411,
+   "changed_at": "2026-10-21 03:56",
+   "classes": [
+    "Loop/B1/mode",
+    "Loop/B1/outLbl",
+    "Loop/B1/tag",
+    "Loop/B1/title",
+    "Loop/B4/bars",
+    "Loop/B4/chipRow",
+    "Loop/B4/labs",
+    "Loop/B4/out",
+    "Loop/B4/pv",
+    "Loop/B4/root",
+    "Loop/B4/sp",
+    "Loop/B4/spRow",
+    "Loop/B4/units"
+   ],
    "colors": [
-    "#1e2329",
+    "#1f1f1f",
     "#1f4e99",
-    "#222222",
-    "#2b3138",
-    "#2f6fd6",
-    "#454d55",
-    "#6b737c",
-    "#7c858f",
-    "#a9b0b8",
-    "#c3c8ce",
-    "#dce6f7",
-    "#e6e9ec",
-    "#e9ecef",
-    "#f7f8f9",
-    "#ff8c00",
-    "#ffffff",
-    "rgba(20,30,40,0.08)"
+    "#3a3a3a",
+    "#4d4d4d",
+    "#7f7f7f",
+    "#a6a6a6",
+    "#e6e6e6",
+    "#ededed",
+    "#ff7a00",
+    "#ffffff"
    ],
    "default_size": {
     "height": 196,
     "width": 104
    },
-   "doc_hash": "5d415e64a96c",
+   "doc_hash": "ca9a545302ca",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/Loop_B4_Column/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "5d415e64a96c",
-   "inline_styles": 57,
-   "inline_where": [
-    "root",
-    "title",
-    "tag",
-    "chipRow",
-    "mode"
-   ],
+   "hash": "ca9a545302ca",
+   "inline_styles": 0,
+   "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-05T12:00:00Z",
    "modified_by": "admin",
@@ -5140,10 +6803,82 @@
     "system.tag.writeBlocking"
    ]
   },
+  "EFC_Library:view:Templates/Rotating/VFD": {
+   "bound_classes": 2,
+   "bytes": 20013,
+   "changed_at": "2026-10-21 03:53",
+   "classes": [
+    "Button/Command",
+    "Indicator/InterlockBadge",
+    "Indicator/PermissiveBadge",
+    "State/Stopped",
+    "Text/Mod/Center",
+    "Text/Mod/NoWrap",
+    "Text/TagName",
+    "Util/Collapsed",
+    "Util/Pointer"
+   ],
+   "colors": [
+    "#00a3e0",
+    "#262626",
+    "#3a3a3a",
+    "#9e9e9e",
+    "#c4c4c4",
+    "#d50000",
+    "#f2f2f2",
+    "#ff7a00",
+    "#ffd200",
+    "#ffffff"
+   ],
+   "default_size": {
+    "height": 116,
+    "width": 120
+   },
+   "doc_hash": "2901adce8be1",
+   "docks": [],
+   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/VFD/view.json",
+   "first_seen": "2026-10-21 03:53",
+   "hash": "2901adce8be1",
+   "inline_styles": 0,
+   "inline_where": [],
+   "kind": "view",
+   "last_modified": "2026-10-19T00:00:00Z",
+   "modified_by": "efc-ignition-library",
+   "params": {
+    "dockId": {
+     "default": "",
+     "dir": "input"
+    },
+    "dwTagPath": {
+     "default": "",
+     "dir": "input"
+    },
+    "tType": {
+     "default": "T_VFD",
+     "dir": "input"
+    },
+    "tagPath": {
+     "default": "[default]PID_Demo/M601",
+     "dir": "input"
+    },
+    "useButton": {
+     "default": true,
+     "dir": "input"
+    }
+   },
+   "pclib_types": [
+    "T_VFD"
+   ],
+   "popups": 0,
+   "resource_version": 1,
+   "system_calls": [
+    "system.tag.writeBlocking"
+   ]
+  },
   "EFC_Library:view:Templates/Station/Station_Fill": {
    "bound_classes": 5,
-   "bytes": 91234,
-   "changed_at": "2026-10-21 03:43",
+   "bytes": 90524,
+   "changed_at": "2026-10-21 03:56",
    "classes": [
     "Bar/Band/Deadband",
     "Bar/Fill",
@@ -5157,6 +6892,22 @@
     "Container/ValueBox",
     "Input/Setpoint",
     "State/Stopped",
+    "Station/Fill/Body",
+    "Station/Fill/Boxes",
+    "Station/Fill/Buttons",
+    "Station/Fill/Chip",
+    "Station/Fill/Commands",
+    "Station/Fill/Header",
+    "Station/Fill/Net",
+    "Station/Fill/NetBar",
+    "Station/Fill/NetCap",
+    "Station/Fill/NetRow",
+    "Station/Fill/SpRow0",
+    "Station/Fill/SpTarget",
+    "Station/Fill/SpTargetRow",
+    "Station/Fill/Tare",
+    "Station/Fill/Target",
+    "Station/Fill/root",
     "Text/Body",
     "Text/Caption",
     "Text/Label",
@@ -5177,19 +6928,13 @@
     "height": 400,
     "width": 300
    },
-   "doc_hash": "f4fdd97f86bb",
+   "doc_hash": "907a1a96ba4f",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/Station_Fill/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "f4fdd97f86bb",
-   "inline_styles": 33,
-   "inline_where": [
-    "root",
-    "Header",
-    "Chip",
-    "Body",
-    "Target"
-   ],
+   "hash": "907a1a96ba4f",
+   "inline_styles": 0,
+   "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-06T20:37:54Z",
    "modified_by": "build_station.py",
@@ -5209,14 +6954,19 @@
   },
   "EFC_Library:view:Templates/Station/Station_Tile": {
    "bound_classes": 3,
-   "bytes": 28667,
-   "changed_at": "2026-10-21 03:43",
+   "bytes": 28551,
+   "changed_at": "2026-10-21 03:56",
    "classes": [
     "Bar/Fill",
     "Bar/Marker",
     "Bar/Track",
     "Container/Card",
     "State/Stopped",
+    "Station/Fill/Chip",
+    "Station/Fill/Target",
+    "Station/Sidebar/Setpoints",
+    "Station/Tile/Scale",
+    "Station/Tile/Target",
     "Text/Caption",
     "Text/Color/Default",
     "Text/Mod/Ellipsis",
@@ -5234,19 +6984,13 @@
     "height": 96,
     "width": 220
    },
-   "doc_hash": "94bc13f6c878",
+   "doc_hash": "66a7bb76aa5b",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/Station_Tile/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "94bc13f6c878",
-   "inline_styles": 8,
-   "inline_where": [
-    "root",
-    "Scale",
-    "Chip",
-    "Target",
-    "Pt"
-   ],
+   "hash": "66a7bb76aa5b",
+   "inline_styles": 0,
+   "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-06T20:37:54Z",
    "modified_by": "build_station.py",
@@ -5277,10 +7021,16 @@
   },
   "EFC_Library:view:Templates/Station/_Demo": {
    "bound_classes": 0,
-   "bytes": 10542,
-   "changed_at": "2026-10-21 03:43",
+   "bytes": 10721,
+   "changed_at": "2026-10-21 03:56",
    "classes": [
     "Container/Screen",
+    "Station/_Demo/Left",
+    "Station/_Demo/Station_Fill_Station_1",
+    "Station/_Demo/Station_Sidebar_Station_1",
+    "Station/_Demo/Station_Tile_Station_1",
+    "Station/_Demo/Tiles",
+    "Station/_Demo/root",
     "Text/Subheader",
     "Text/Title",
     "Util/Pad/L"
@@ -5290,19 +7040,13 @@
     "height": 1080,
     "width": 1920
    },
-   "doc_hash": "18348ae95adc",
+   "doc_hash": "34176cfdb070",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/_Demo/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "18348ae95adc",
-   "inline_styles": 15,
-   "inline_where": [
-    "root",
-    "Left",
-    "Tiles",
-    "Station_Tile_Station_1",
-    "Station_Tile_Station_2"
-   ],
+   "hash": "34176cfdb070",
+   "inline_styles": 0,
+   "inline_where": [],
    "kind": "view",
    "last_modified": "2026-10-06T20:37:54Z",
    "modified_by": "build_station.py",
@@ -5610,8 +7354,8 @@
   },
   "EFC_Library:view:Templates/_Demo": {
    "bound_classes": 0,
-   "bytes": 29594,
-   "changed_at": "2026-10-21 00:35",
+   "bytes": 31543,
+   "changed_at": "2026-10-21 03:53",
    "classes": [
     "Container/Panel",
     "Container/Screen",
@@ -5624,12 +7368,12 @@
     "height": 1080,
     "width": 1920
    },
-   "doc_hash": "2db0baca5495",
+   "doc_hash": "da6856cfe1cb",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/_Demo/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "2db0baca5495",
-   "inline_styles": 47,
+   "hash": "da6856cfe1cb",
+   "inline_styles": 50,
    "inline_where": [
     "root",
     "Sec",
@@ -7085,12 +8829,11 @@
    ]
   }
  },
- "last_audit_fp": "95e140df57fb",
- "last_delta": 13,
+ "last_audit_fp": "875740d81e09",
+ "last_delta": 5,
  "projects": [
-  "EFC_AnalogIndicators",
   "EFC_Library"
  ],
- "scanned_at": "2026-10-21 03:43",
+ "scanned_at": "2026-10-21 03:56",
  "upstream": {}
 }

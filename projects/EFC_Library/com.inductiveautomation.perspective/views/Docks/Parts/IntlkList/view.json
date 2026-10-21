@@ -1520,8 +1520,7 @@
       "direction": "column",
       "alignItems": "stretch",
       "style": {
-        "classes": "Container/GroupBox",
-        "gap": "0.185vh"
+        "classes": "Container/GroupBox Util/Gap/XS"
       }
     },
     "children": [
@@ -1622,8 +1621,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -1821,8 +1819,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -2020,8 +2017,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -2219,8 +2215,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -2418,8 +2413,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -2617,8 +2611,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -2816,8 +2809,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -3015,8 +3007,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -3214,8 +3205,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -3413,8 +3403,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -3612,8 +3601,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -3811,8 +3799,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -4010,8 +3997,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -4209,8 +4195,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -4408,8 +4393,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -4607,8 +4591,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "",
-            "gap": "0.370vh"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {

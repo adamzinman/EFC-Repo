@@ -1,4 +1,6 @@
-import json, zipfile, copy, os
+import json, zipfile, copy, os, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+from common import extract_inline
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "build", "analog", "EFC_AnalogIndicators.zip")
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 TS = "2026-10-13T00:00:00Z"
@@ -230,6 +232,11 @@ ex_root = flex("root", "row", [
 EXAMPLES = {"custom": {}, "params": {}, "props": {"defaultSize": {"width": 900, "height": 420}}, "root": ex_root}
 
 # ---------------------------------------------------------------- write
+EXTRA = {}                                    # EFC_Styles classes only: inline layout styles -> Indicator/Analog/<view>/<component>
+for name, vw in list(VIEWS.items()) + [("_Examples", EXAMPLES)]:
+    extract_inline(vw, "Indicator/Analog/" + name.split("_")[0], EXTRA)
+for k, st in EXTRA.items():
+    CLASSES[k[len(SC):]] = st; DESC[k[len(SC):]] = "Layout (generated from the view)"
 with zipfile.ZipFile(OUT, "w", zipfile.ZIP_DEFLATED) as z:
     z.writestr("project.json", json.dumps({"title": "EFC_AnalogIndicators", "description": "Analog indicator templates A-D + Indicator/Analog style classes. Merge into EFC_Styles / EFC_ProcessValues via Designer File > Import.",
         "parent": "EFC_Styles", "enabled": True, "inheritable": True}, indent=2))

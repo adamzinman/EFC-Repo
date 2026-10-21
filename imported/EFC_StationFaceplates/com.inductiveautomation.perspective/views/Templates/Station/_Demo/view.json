@@ -24,9 +24,7 @@
       "alignItems": "stretch",
       "wrap": "nowrap",
       "style": {
-        "classes": "Container/Screen Util/Pad/L",
-        "gap": "2.222vh",
-        "overflow": "auto"
+        "classes": "Container/Screen Util/Pad/L Station/_Demo/root"
       }
     },
     "children": [
@@ -47,8 +45,7 @@
           "alignItems": "stretch",
           "wrap": "nowrap",
           "style": {
-            "classes": "",
-            "gap": "0.926vh"
+            "classes": "Station/_Demo/Left"
           }
         },
         "children": [
@@ -105,8 +102,7 @@
               "alignItems": "stretch",
               "wrap": "nowrap",
               "style": {
-                "classes": "",
-                "gap": "1.481vh"
+                "classes": "Station/_Demo/Tiles"
               }
             },
             "children": [
@@ -127,7 +123,7 @@
                     "tagPath": "[default]Station_Demo/Station_1"
                   },
                   "style": {
-                    "height": "8.889vh"
+                    "classes": "Station/_Demo/Station_Tile_Station_1"
                   }
                 }
               },
@@ -148,7 +144,7 @@
                     "tagPath": "[default]Station_Demo/Station_2"
                   },
                   "style": {
-                    "height": "8.889vh"
+                    "classes": "Station/_Demo/Station_Tile_Station_1"
                   }
                 }
               },
@@ -169,7 +165,7 @@
                     "tagPath": "[default]Station_Demo/Station_3"
                   },
                   "style": {
-                    "height": "8.889vh"
+                    "classes": "Station/_Demo/Station_Tile_Station_1"
                   }
                 }
               },
@@ -190,7 +186,7 @@
                     "tagPath": "[default]Station_Demo/Station_4"
                   },
                   "style": {
-                    "height": "8.889vh"
+                    "classes": "Station/_Demo/Station_Tile_Station_1"
                   }
                 }
               }
@@ -231,8 +227,7 @@
               "alignItems": "stretch",
               "wrap": "nowrap",
               "style": {
-                "classes": "",
-                "gap": "1.481vh"
+                "classes": "Station/_Demo/Tiles"
               }
             },
             "children": [
@@ -253,7 +248,7 @@
                     "tagPath": "[default]Station_Demo/Station_1"
                   },
                   "style": {
-                    "height": "37.037vh"
+                    "classes": "Station/_Demo/Station_Fill_Station_1"
                   }
                 }
               },
@@ -274,7 +269,7 @@
                     "tagPath": "[default]Station_Demo/Station_2"
                   },
                   "style": {
-                    "height": "37.037vh"
+                    "classes": "Station/_Demo/Station_Fill_Station_1"
                   }
                 }
               },
@@ -295,7 +290,7 @@
                     "tagPath": "[default]Station_Demo/Station_3"
                   },
                   "style": {
-                    "height": "37.037vh"
+                    "classes": "Station/_Demo/Station_Fill_Station_1"
                   }
                 }
               },
@@ -316,7 +311,7 @@
                     "tagPath": "[default]Station_Demo/Station_4"
                   },
                   "style": {
-                    "height": "37.037vh"
+                    "classes": "Station/_Demo/Station_Fill_Station_1"
                   }
                 }
               }
@@ -341,8 +336,7 @@
           "alignItems": "stretch",
           "wrap": "nowrap",
           "style": {
-            "classes": "",
-            "gap": "0.926vh"
+            "classes": "Station/_Demo/Left"
           }
         },
         "children": [
@@ -381,7 +375,7 @@
                 "tagPath": "[default]Station_Demo/Station_1"
               },
               "style": {
-                "height": "74.074vh"
+                "classes": "Station/_Demo/Station_Sidebar_Station_1"
               }
             }
           }

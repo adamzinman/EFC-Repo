@@ -9,7 +9,7 @@
 <!-- keep:end -->
 
 <!-- auto:start -->
-_Auto-generated 2026-10-21 03:43 from EFC_Library:view:Templates/Loops/Loop_B4_Column. Do not edit this section._
+_Auto-generated 2026-10-21 03:56 from EFC_Library:view:Templates/Loops/Loop_B4_Column. Do not edit this section._
 
 | Param | Direction | Default |
 |---|---|---|
@@ -21,8 +21,8 @@ _Auto-generated 2026-10-21 03:43 from EFC_Library:view:Templates/Loops/Loop_B4_C
 
 - PCLib types: T_PID
 - Dynamic window: none
-- Style classes: none
-- Inline style props: 57
+- Style classes: Loop/B1/mode, Loop/B1/outLbl, Loop/B1/tag, Loop/B1/title, Loop/B4/bars, Loop/B4/chipRow, Loop/B4/labs, Loop/B4/out, Loop/B4/pv, Loop/B4/root, Loop/B4/sp, Loop/B4/spRow, Loop/B4/units
+- Inline style props: 0
 - Popups opened: 0
 - system.* calls: none
 - Last modified: 2026-10-05T12:00:00Z by admin

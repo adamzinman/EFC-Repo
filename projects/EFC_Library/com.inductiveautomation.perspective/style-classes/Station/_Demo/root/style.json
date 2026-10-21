@@ -1,0 +1,9 @@
+{
+  "base": {
+    "style": {
+      "gap": "2.222vh",
+      "overflow": "auto"
+    }
+  },
+  "variants": []
+}

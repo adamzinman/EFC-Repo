@@ -56,8 +56,7 @@
       "direction": "column",
       "alignItems": "stretch",
       "style": {
-        "classes": "Container/Popup",
-        "gap": "0.741vh"
+        "classes": "Container/Popup Util/Gap/L"
       }
     },
     "children": [
@@ -165,8 +164,7 @@
           "direction": "row",
           "alignItems": "stretch",
           "style": {
-            "classes": "",
-            "gap": "0.556vh"
+            "classes": "Util/Gap/M"
           }
         },
         "children": [

@@ -209,6 +209,18 @@ def config(vw, entries, name="Configuration", title="Configuration"):
             kids.append(entry(vw, f"E{i}", text, mem, ENG, unit, fmtstr="#,##0.###"))
     return section(name, title, kids, collapsible=True, vw=vw)
 
+GAPS = {v(2): "Util/Gap/XS", v(4): "Util/Gap/S", v(6): "Util/Gap/M", v(8): "Util/Gap/L"}
+def classify(o):
+    """EFC_Styles classes only: fold the generator's flex gaps into Util/Gap/* classes."""
+    if isinstance(o, dict):
+        st = o.get("props", {}).get("style") if isinstance(o.get("props"), dict) else None
+        if isinstance(st, dict) and "gap" in st:
+            st["classes"] = " ".join(x for x in (st.get("classes", ""), GAPS[st.pop("gap")]) if x)
+        for x in o.values(): classify(x)
+    elif isinstance(o, list):
+        for x in o: classify(x)
+    return o
+
 def window(path, ttype, vw, blocks):
     root = flex("root", "column", blocks, extra={"style": {"classes": "Container/Faceplate Container/Scroll", "gap": v(6)}})
     params = {"tagPath": "", "tType": ttype}
@@ -506,7 +518,6 @@ RANGES = [("24h", 1440), ("8h", 480), ("1h", 60), ("30m", 30), ("5m", 5)]
 def trend_part():
     """Docks/Parts/Trend: history of the pens, default 30 min. The expand toggle is an in/out param the window
     uses to grow the graph vertically (never wider, decision 26); the range box shows while expanded."""
-    pens_cls = ["Value/Normal", "Value/Setpoint", "Value/Output"]
     sw, sh = 360, 100
     tr = {"type": "script", "code": "\treturn efc.ui.trend(self.view.params.tagPath, list(self.view.params.pens or []), self.view.custom.range, %d, %d)" % (sw, sh)}
     custom = {"range": 30, "hist": {"d": ["", "", ""], "lo": "", "hi": ""}}
@@ -514,7 +525,7 @@ def trend_part():
     for p, d in (("tagPath", "input"), ("pens", "input"), ("expanded", "inout")):
         pc["params." + p] = {"paramDirection": d, "persistent": True}
     els = [{"type": "path", "name": f"pen{i}", "d": "", "fill": {"paint": "transparent"},
-            "stroke": {"paint": c, "width": 1.5}} for i, c in enumerate(["#1F1F1F", "#3A6EA5", "#7A7A7A"])]
+            "stroke": {"paint": c, "width": 1.5}} for i, c in enumerate(["#1F1F1F", "#1F4E99", "#7F7F7F"])]
     svg = comp("ia.shapes.svg", "Graph", {"viewBox": f"0 0 {sw} {sh}", "preserveAspectRatio": "none", "elements": els,
                                           "style": {"classes": "Container/Inset"}}, {"shrink": 0, "grow": 1, "basis": "0px"},
                {f"props.elements[{i}].d": expr(f"try({{view.custom.hist.d[{i}]}}, '')") for i in range(3)})
@@ -564,6 +575,7 @@ def build():
     write(os.path.join(proj, "project.json"), project_json(PROJECT, "EFC dynamic windows, parts, screen region and efc.ui"))
     for fn in VIEWS:
         path, view = fn()
+        classify(view["root"])
         d = os.path.join(proj, PERSPECTIVE, "views", path)
         write(os.path.join(d, "view.json"), dump(view))
         write(os.path.join(d, "resource.json"), resource_json(["view.json"], "build_docks.py"))

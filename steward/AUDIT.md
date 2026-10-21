@@ -1,20 +1,9 @@
-# Audit (2026-10-21 03:43)
+# Audit (2026-10-21 03:56)
 
-82 findings: ERROR 0, WARN 45, INFO 37
+48 findings: ERROR 0, WARN 10, INFO 38
 Upstream check: DUE (last: never)
 
 ## WARN
-- EFC/AnalogIndicator/A_RangeBar [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
-- EFC/AnalogIndicator/A_RangeBar [inline-style] - 3 inline style props (use style classes) e.g. ['root', 'ValueRow', 'Pointer']
-- EFC/AnalogIndicator/B_PointerScale [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
-- EFC/AnalogIndicator/B_PointerScale [inline-style] - 5 inline style props (use style classes) e.g. ['root', 'Scale', 'Pointer']
-- EFC/AnalogIndicator/C_CompactRow [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
-- EFC/AnalogIndicator/C_CompactRow [inline-style] - 4 inline style props (use style classes) e.g. ['root', 'Top', 'ValueRow']
-- EFC/AnalogIndicator/D_MiniColumn [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
-- EFC/AnalogIndicator/D_MiniColumn [inline-style] - 4 inline style props (use style classes) e.g. ['root', 'Bar', 'Pointer']
-- Docks/Station [inline-style] - 78 inline style props (use style classes) e.g. ['Header', 'Body', 'Status']
-- Templates/HeatTransfer/HX_AirCooled [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
-- Templates/HeatTransfer/Heater_Electric [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
 - Templates/IO/Faceplates/BMXAMI0810 [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/IO/Faceplates/BMXAMO0802 [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/IO/Faceplates/BMXART0814 [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
@@ -24,37 +13,13 @@ Upstream check: DUE (last: never)
 - Templates/IO/Faceplates/BMXDDO3202K [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/IO/Faceplates/BMXDDO6402K [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
 - Templates/IO/RackOverview [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
-- Templates/Loops/Loop_B1_Bar [inline-style] - 65 inline style props (use style classes) e.g. ['root', 'header', 'title']
-- Templates/Loops/Loop_B1_Bar [off-palette] - colors outside palette: ['#1e2329', '#222222', '#2b3138', '#2f6fd6', '#454d55', '#6b737c']
-- Templates/Loops/Loop_B2_Horizontal [inline-style] - 67 inline style props (use style classes) e.g. ['root', 'header', 'title']
-- Templates/Loops/Loop_B2_Horizontal [off-palette] - colors outside palette: ['#1e2329', '#222222', '#2b3138', '#2f6fd6', '#454d55', '#6b737c']
-- Templates/Loops/Loop_B3_Sparkline [inline-style] - 76 inline style props (use style classes) e.g. ['root', 'header', 'title']
-- Templates/Loops/Loop_B3_Sparkline [off-palette] - colors outside palette: ['#1e2329', '#222222', '#2b3138', '#2f6fd6', '#454d55', '#6b737c']
-- Templates/Loops/Loop_B4_Column [inline-style] - 57 inline style props (use style classes) e.g. ['root', 'title', 'tag']
-- Templates/Loops/Loop_B4_Column [off-palette] - colors outside palette: ['#1e2329', '#222222', '#2b3138', '#2f6fd6', '#454d55', '#6b737c']
-- Templates/Rotating/Agitator [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Rotating/Blower [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Rotating/Compressor_Centrifugal [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Rotating/Compressor_Diaphragm [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Rotating/Motor [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Rotating/Pump_Centrifugal [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
-- Templates/Rotating/Pump_Diaphragm [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
-- Templates/Rotating/Pump_PD_Rotary [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
-- Templates/Rotating/Pump_Reciprocating [off-palette] - colors outside palette: ['#262626', '#ebebeb', '#f2f2f2']
-- Templates/Rotating/Pump_Vacuum [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
 - Templates/Station/Station_Fill [no-pclib] - no PCLib type referenced (add one, or list in `exempt` if not applicable)
-- Templates/Station/Station_Fill [inline-style] - 33 inline style props (use style classes) e.g. ['root', 'Header', 'Chip']
-- Templates/Station/Station_Tile [inline-style] - 8 inline style props (use style classes) e.g. ['root', 'Scale', 'Chip']
-- Templates/Valves/Valve_Control [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Valves/Valve_MOV [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Valves/Valve_OnOff_Pneumatic [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
-- Templates/Valves/Valve_Solenoid [off-palette] - colors outside palette: ['#262626', '#f2f2f2']
 
 ## INFO
-- EFC/AnalogIndicator/A_RangeBar [no-purpose] - docs page has no human-written purpose yet
-- EFC/AnalogIndicator/B_PointerScale [no-purpose] - docs page has no human-written purpose yet
-- EFC/AnalogIndicator/C_CompactRow [no-purpose] - docs page has no human-written purpose yet
-- EFC/AnalogIndicator/D_MiniColumn [no-purpose] - docs page has no human-written purpose yet
+- Templates/AnalogIndicator/A_RangeBar [no-purpose] - docs page has no human-written purpose yet
+- Templates/AnalogIndicator/B_PointerScale [no-purpose] - docs page has no human-written purpose yet
+- Templates/AnalogIndicator/C_CompactRow [no-purpose] - docs page has no human-written purpose yet
+- Templates/AnalogIndicator/D_MiniColumn [no-purpose] - docs page has no human-written purpose yet
 - Templates/HeatTransfer/HX_AirCooled [no-purpose] - docs page has no human-written purpose yet
 - Templates/HeatTransfer/Heater_Electric [no-purpose] - docs page has no human-written purpose yet
 - Templates/IO/Faceplates/BMXAMI0810 [no-purpose] - docs page has no human-written purpose yet
@@ -82,6 +47,7 @@ Upstream check: DUE (last: never)
 - Templates/Rotating/Pump_PD_Rotary [no-purpose] - docs page has no human-written purpose yet
 - Templates/Rotating/Pump_Reciprocating [no-purpose] - docs page has no human-written purpose yet
 - Templates/Rotating/Pump_Vacuum [no-purpose] - docs page has no human-written purpose yet
+- Templates/Rotating/VFD [no-purpose] - docs page has no human-written purpose yet
 - Templates/Station/Station_Fill [no-purpose] - docs page has no human-written purpose yet
 - Templates/Station/Station_Tile [no-purpose] - docs page has no human-written purpose yet
 - Templates/Valves/Valve_Control [no-purpose] - docs page has no human-written purpose yet

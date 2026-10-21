@@ -428,9 +428,7 @@
       "alignItems": "stretch",
       "wrap": "nowrap",
       "style": {
-        "classes": "Container/Card Util/Pointer",
-        "padding": "0.556vh 0.741vh",
-        "gap": "0.37vh"
+        "classes": "Container/Card Util/Pointer Station/Sidebar/Setpoints"
       }
     },
     "propConfig": {
@@ -438,7 +436,7 @@
         "binding": {
           "type": "expr",
           "config": {
-            "expression": "\"Container/Card Util/Pointer\" + {view.custom.s.hiCls}"
+            "expression": "(\"Container/Card Util/Pointer\" + {view.custom.s.hiCls}) + ' Station/Sidebar/Setpoints'"
           }
         }
       }
@@ -518,8 +516,7 @@
             "props": {
               "text": "",
               "style": {
-                "classes": "Text/Caption",
-                "marginLeft": "0.556vh"
+                "classes": "Text/Caption Station/Tile/Scale"
               }
             },
             "propConfig": {
@@ -565,8 +562,7 @@
             "props": {
               "text": "",
               "style": {
-                "classes": "State/Stopped",
-                "alignSelf": "center"
+                "classes": "State/Stopped Station/Fill/Chip"
               }
             },
             "propConfig": {
@@ -580,9 +576,9 @@
               },
               "props.style.classes": {
                 "binding": {
-                  "type": "property",
+                  "type": "expr",
                   "config": {
-                    "path": "view.custom.s.chip"
+                    "expression": "({view.custom.s.chip}) + ' Station/Fill/Chip'"
                   }
                 }
               }
@@ -717,9 +713,7 @@
             "props": {
               "text": "",
               "style": {
-                "classes": "Value/Setpoint",
-                "marginLeft": "0.278vh",
-                "fontSize": "1.019vh"
+                "classes": "Value/Setpoint Station/Tile/Target"
               }
             },
             "propConfig": {
@@ -782,9 +776,9 @@
               },
               "props.style.classes": {
                 "binding": {
-                  "type": "property",
+                  "type": "expr",
                   "config": {
-                    "path": "view.custom.s.fillCls"
+                    "expression": "{view.custom.s.fillCls}"
                   }
                 }
               }
@@ -874,8 +868,7 @@
             "props": {
               "text": "",
               "style": {
-                "classes": "Text/Caption Text/Color/Default Text/Weight/Semibold",
-                "marginLeft": "0.278vh"
+                "classes": "Text/Caption Text/Color/Default Text/Weight/Semibold Station/Fill/Target"
               }
             },
             "propConfig": {
@@ -903,8 +896,7 @@
             "props": {
               "text": "psig",
               "style": {
-                "classes": "Text/Caption",
-                "marginLeft": "0.278vh"
+                "classes": "Text/Caption Station/Fill/Target"
               }
             }
           },

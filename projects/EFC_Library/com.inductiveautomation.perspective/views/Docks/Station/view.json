@@ -117,7 +117,8 @@
       "resetLocked": true,
       "foot": "Tare and Zero locked while active"
     },
-    "pendingCmd": ""
+    "pendingCmd": "",
+    "level": 0
   },
   "params": {
     "tagPath": ""
@@ -608,6 +609,20 @@
           "fallbackDelay": 2.5
         }
       }
+    },
+    "custom.level": {
+      "binding": {
+        "type": "property",
+        "config": {
+          "path": "session.props.auth.user.roles"
+        },
+        "transforms": [
+          {
+            "type": "script",
+            "code": "\treturn efc.ui.level(value)"
+          }
+        ]
+      }
     }
   },
   "props": {
@@ -654,8 +669,7 @@
           "alignItems": "center",
           "wrap": "nowrap",
           "style": {
-            "classes": "Container/PopupHeader",
-            "padding": "0 0.37vh 0 0.926vh"
+            "classes": "Container/PopupHeader Station/Sidebar/Header"
           }
         },
         "children": [
@@ -791,9 +805,7 @@
           "alignItems": "stretch",
           "wrap": "nowrap",
           "style": {
-            "classes": "",
-            "padding": "0.556vh",
-            "gap": "0.37vh"
+            "classes": "Station/Sidebar/Body"
           }
         },
         "children": [
@@ -814,8 +826,7 @@
               "alignItems": "stretch",
               "wrap": "nowrap",
               "style": {
-                "classes": "Container/Faceplate",
-                "padding": "0.556vh 0.741vh"
+                "classes": "Container/Faceplate Station/Sidebar/Status"
               }
             },
             "propConfig": {
@@ -823,7 +834,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "\"Container/Faceplate\" + {view.custom.s.hiCls}"
+                    "expression": "(\"Container/Faceplate\" + {view.custom.s.hiCls}) + ' Station/Sidebar/Status'"
                   }
                 }
               }
@@ -864,8 +875,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "classes": "State/Stopped",
-                        "alignSelf": "center"
+                        "classes": "State/Stopped Station/Fill/Chip"
                       }
                     },
                     "propConfig": {
@@ -879,9 +889,9 @@
                       },
                       "props.style.classes": {
                         "binding": {
-                          "type": "property",
+                          "type": "expr",
                           "config": {
-                            "path": "view.custom.s.chip"
+                            "expression": "({view.custom.s.chip}) + ' Station/Fill/Chip'"
                           }
                         }
                       }
@@ -933,9 +943,9 @@
                       },
                       "props.style.classes": {
                         "binding": {
-                          "type": "property",
+                          "type": "expr",
                           "config": {
-                            "path": "view.custom.s.selCls"
+                            "expression": "{view.custom.s.selCls}"
                           }
                         }
                       },
@@ -943,7 +953,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "!{view.custom.s.dis}"
+                            "expression": "{view.custom.level} >= 1 && (!{view.custom.s.dis})"
                           }
                         }
                       }
@@ -976,8 +986,7 @@
                 "props": {
                   "text": "",
                   "style": {
-                    "classes": "Text/Body Text/Mod/Ellipsis",
-                    "marginTop": "0.37vh"
+                    "classes": "Text/Body Text/Mod/Ellipsis Station/Fill/NetBar"
                   }
                 },
                 "propConfig": {
@@ -1008,9 +1017,7 @@
                   "alignItems": "stretch",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "gap": "0.185vh",
-                    "marginTop": "0.556vh"
+                    "classes": "Station/Sidebar/Steps"
                   }
                 },
                 "children": [
@@ -1031,8 +1038,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.185vh"
+                        "classes": "Station/Fill/SpTarget"
                       }
                     },
                     "children": [
@@ -1056,9 +1062,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.steps[0]"
+                                "expression": "{view.custom.s.steps[0]}"
                               }
                             }
                           }
@@ -1084,9 +1090,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.stepText[0]"
+                                "expression": "{view.custom.s.stepText[0]}"
                               }
                             }
                           }
@@ -1111,8 +1117,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.185vh"
+                        "classes": "Station/Fill/SpTarget"
                       }
                     },
                     "children": [
@@ -1136,9 +1141,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.steps[1]"
+                                "expression": "{view.custom.s.steps[1]}"
                               }
                             }
                           }
@@ -1164,9 +1169,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.stepText[1]"
+                                "expression": "{view.custom.s.stepText[1]}"
                               }
                             }
                           }
@@ -1191,8 +1196,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.185vh"
+                        "classes": "Station/Fill/SpTarget"
                       }
                     },
                     "children": [
@@ -1216,9 +1220,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.steps[2]"
+                                "expression": "{view.custom.s.steps[2]}"
                               }
                             }
                           }
@@ -1244,9 +1248,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.stepText[2]"
+                                "expression": "{view.custom.s.stepText[2]}"
                               }
                             }
                           }
@@ -1271,8 +1275,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.185vh"
+                        "classes": "Station/Fill/SpTarget"
                       }
                     },
                     "children": [
@@ -1296,9 +1299,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.steps[3]"
+                                "expression": "{view.custom.s.steps[3]}"
                               }
                             }
                           }
@@ -1324,9 +1327,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.stepText[3]"
+                                "expression": "{view.custom.s.stepText[3]}"
                               }
                             }
                           }
@@ -1351,8 +1354,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.185vh"
+                        "classes": "Station/Fill/SpTarget"
                       }
                     },
                     "children": [
@@ -1376,9 +1378,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.steps[4]"
+                                "expression": "{view.custom.s.steps[4]}"
                               }
                             }
                           }
@@ -1404,9 +1406,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.stepText[4]"
+                                "expression": "{view.custom.s.stepText[4]}"
                               }
                             }
                           }
@@ -1431,8 +1433,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.185vh"
+                        "classes": "Station/Fill/SpTarget"
                       }
                     },
                     "children": [
@@ -1456,9 +1457,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.steps[5]"
+                                "expression": "{view.custom.s.steps[5]}"
                               }
                             }
                           }
@@ -1484,9 +1485,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.stepText[5]"
+                                "expression": "{view.custom.s.stepText[5]}"
                               }
                             }
                           }
@@ -1515,8 +1516,7 @@
               "alignItems": "stretch",
               "wrap": "nowrap",
               "style": {
-                "classes": "Container/Faceplate",
-                "padding": "0.556vh 0.741vh"
+                "classes": "Container/Faceplate Station/Sidebar/Status"
               }
             },
             "children": [
@@ -1591,8 +1591,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "classes": "Value/Setpoint",
-                        "marginLeft": "0.278vh"
+                        "classes": "Value/Setpoint Station/Fill/Target"
                       }
                     },
                     "propConfig": {
@@ -1653,8 +1652,7 @@
                   "alignItems": "baseline",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "marginTop": "0.185vh"
+                    "classes": "Station/Fill/NetRow"
                   }
                 },
                 "children": [
@@ -1672,8 +1670,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "classes": "Text/ValueHero Text/Mod/NoWrap",
-                        "lineHeight": "3.148vh"
+                        "classes": "Text/ValueHero Text/Mod/NoWrap Station/Fill/Net"
                       }
                     },
                     "propConfig": {
@@ -1777,8 +1774,7 @@
                 "props": {
                   "mode": "percent",
                   "style": {
-                    "classes": "Bar/Track Util/Clip",
-                    "marginTop": "0.37vh"
+                    "classes": "Bar/Track Util/Clip Station/Fill/NetBar"
                   }
                 },
                 "children": [
@@ -1811,9 +1807,9 @@
                       },
                       "props.style.classes": {
                         "binding": {
-                          "type": "property",
+                          "type": "expr",
                           "config": {
-                            "path": "view.custom.s.fillCls"
+                            "expression": "{view.custom.s.fillCls}"
                           }
                         }
                       }
@@ -1904,8 +1900,7 @@
                   "alignItems": "stretch",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "marginTop": "0.278vh"
+                    "classes": "Station/Fill/NetCap"
                   }
                 },
                 "children": [
@@ -1941,8 +1936,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "classes": "Text/Caption",
-                        "marginLeft": "0.278vh"
+                        "classes": "Text/Caption Station/Fill/Target"
                       }
                     },
                     "propConfig": {
@@ -2039,9 +2033,7 @@
                   "alignItems": "stretch",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "gap": "0.37vh",
-                    "marginTop": "0.556vh"
+                    "classes": "Station/Sidebar/Boxes"
                   }
                 },
                 "children": [
@@ -2062,8 +2054,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "Container/ValueBox",
-                        "padding": "0.185vh 0.37vh"
+                        "classes": "Container/ValueBox Station/Fill/Tare"
                       }
                     },
                     "children": [
@@ -2155,8 +2146,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "Container/ValueBox",
-                        "padding": "0.185vh 0.37vh"
+                        "classes": "Container/ValueBox Station/Fill/Tare"
                       }
                     },
                     "children": [
@@ -2248,8 +2238,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "Container/ValueBox",
-                        "padding": "0.185vh 0.37vh"
+                        "classes": "Container/ValueBox Station/Fill/Tare"
                       }
                     },
                     "children": [
@@ -2345,8 +2334,7 @@
               "alignItems": "stretch",
               "wrap": "nowrap",
               "style": {
-                "classes": "Container/Faceplate",
-                "padding": "0.556vh 0.741vh"
+                "classes": "Container/Faceplate Station/Sidebar/Status"
               }
             },
             "children": [
@@ -2436,8 +2424,7 @@
                   "alignItems": "baseline",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "marginTop": "0.185vh"
+                    "classes": "Station/Fill/NetRow"
                   }
                 },
                 "children": [
@@ -2469,9 +2456,9 @@
                       },
                       "props.style.classes": {
                         "binding": {
-                          "type": "property",
+                          "type": "expr",
                           "config": {
-                            "path": "view.custom.s.ptCls"
+                            "expression": "{view.custom.s.ptCls}"
                           }
                         }
                       }
@@ -2557,8 +2544,7 @@
                 "props": {
                   "mode": "percent",
                   "style": {
-                    "classes": "Bar/Track Util/Clip",
-                    "marginTop": "0.278vh"
+                    "classes": "Bar/Track Util/Clip Station/Fill/NetCap"
                   }
                 },
                 "children": [
@@ -2668,8 +2654,7 @@
                   "alignItems": "stretch",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "marginTop": "0.185vh"
+                    "classes": "Station/Fill/NetRow"
                   }
                 },
                 "children": [
@@ -2705,8 +2690,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "classes": "Text/Caption Text/Color/Editable",
-                        "marginLeft": "0.278vh"
+                        "classes": "Text/Caption Text/Color/Editable Station/Fill/Target"
                       }
                     },
                     "propConfig": {
@@ -2770,8 +2754,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "classes": "Text/Caption Text/Color/Editable",
-                        "marginLeft": "0.278vh"
+                        "classes": "Text/Caption Text/Color/Editable Station/Fill/Target"
                       }
                     },
                     "propConfig": {
@@ -2806,9 +2789,7 @@
               "alignItems": "stretch",
               "wrap": "nowrap",
               "style": {
-                "classes": "Container/Faceplate",
-                "padding": "0.556vh 0.741vh",
-                "gap": "0.926vh"
+                "classes": "Container/Faceplate Station/Sidebar/PermIO"
               }
             },
             "children": [
@@ -2829,8 +2810,7 @@
                   "alignItems": "stretch",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "gap": "0.185vh"
+                    "classes": "Station/Fill/SpTarget"
                   }
                 },
                 "children": [
@@ -2869,8 +2849,7 @@
                       "alignItems": "center",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.463vh"
+                        "classes": "Station/Sidebar/Perm0"
                       }
                     },
                     "children": [
@@ -2888,16 +2867,15 @@
                         "props": {
                           "text": "",
                           "style": {
-                            "classes": "Indicator/LED/Off",
-                            "height": "0.926vh"
+                            "classes": "Indicator/LED/Off Station/Sidebar/Led"
                           }
                         },
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.permLed[0]"
+                                "expression": "({view.custom.s.permLed[0]}) + ' Station/Sidebar/Led'"
                               }
                             }
                           }
@@ -2923,9 +2901,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.permTxt[0]"
+                                "expression": "{view.custom.s.permTxt[0]}"
                               }
                             }
                           }
@@ -2950,8 +2928,7 @@
                       "alignItems": "center",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.463vh"
+                        "classes": "Station/Sidebar/Perm0"
                       }
                     },
                     "children": [
@@ -2969,16 +2946,15 @@
                         "props": {
                           "text": "",
                           "style": {
-                            "classes": "Indicator/LED/Off",
-                            "height": "0.926vh"
+                            "classes": "Indicator/LED/Off Station/Sidebar/Led"
                           }
                         },
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.permLed[1]"
+                                "expression": "({view.custom.s.permLed[1]}) + ' Station/Sidebar/Led'"
                               }
                             }
                           }
@@ -3004,9 +2980,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.permTxt[1]"
+                                "expression": "{view.custom.s.permTxt[1]}"
                               }
                             }
                           }
@@ -3031,8 +3007,7 @@
                       "alignItems": "center",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.463vh"
+                        "classes": "Station/Sidebar/Perm0"
                       }
                     },
                     "children": [
@@ -3050,16 +3025,15 @@
                         "props": {
                           "text": "",
                           "style": {
-                            "classes": "Indicator/LED/Off",
-                            "height": "0.926vh"
+                            "classes": "Indicator/LED/Off Station/Sidebar/Led"
                           }
                         },
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.permLed[2]"
+                                "expression": "({view.custom.s.permLed[2]}) + ' Station/Sidebar/Led'"
                               }
                             }
                           }
@@ -3085,9 +3059,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.permTxt[2]"
+                                "expression": "{view.custom.s.permTxt[2]}"
                               }
                             }
                           }
@@ -3112,8 +3086,7 @@
                       "alignItems": "center",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.463vh"
+                        "classes": "Station/Sidebar/Perm0"
                       }
                     },
                     "children": [
@@ -3131,16 +3104,15 @@
                         "props": {
                           "text": "",
                           "style": {
-                            "classes": "Indicator/LED/Off",
-                            "height": "0.926vh"
+                            "classes": "Indicator/LED/Off Station/Sidebar/Led"
                           }
                         },
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.permLed[3]"
+                                "expression": "({view.custom.s.permLed[3]}) + ' Station/Sidebar/Led'"
                               }
                             }
                           }
@@ -3166,9 +3138,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.permTxt[3]"
+                                "expression": "{view.custom.s.permTxt[3]}"
                               }
                             }
                           }
@@ -3193,8 +3165,7 @@
                       "alignItems": "center",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.463vh"
+                        "classes": "Station/Sidebar/Perm0"
                       }
                     },
                     "children": [
@@ -3212,16 +3183,15 @@
                         "props": {
                           "text": "",
                           "style": {
-                            "classes": "Indicator/LED/Off",
-                            "height": "0.926vh"
+                            "classes": "Indicator/LED/Off Station/Sidebar/Led"
                           }
                         },
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.permLed[4]"
+                                "expression": "({view.custom.s.permLed[4]}) + ' Station/Sidebar/Led'"
                               }
                             }
                           }
@@ -3247,9 +3217,9 @@
                         "propConfig": {
                           "props.style.classes": {
                             "binding": {
-                              "type": "property",
+                              "type": "expr",
                               "config": {
-                                "path": "view.custom.s.permTxt[4]"
+                                "expression": "{view.custom.s.permTxt[4]}"
                               }
                             }
                           }
@@ -3276,8 +3246,7 @@
                   "alignItems": "stretch",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "gap": "0.185vh"
+                    "classes": "Station/Fill/SpTarget"
                   }
                 },
                 "children": [
@@ -3414,8 +3383,7 @@
                           "alignItems": "center",
                           "wrap": "nowrap",
                           "style": {
-                            "classes": "",
-                            "gap": "0.37vh"
+                            "classes": "Station/Fill/Boxes"
                           }
                         },
                         "children": [
@@ -3455,8 +3423,7 @@
                             "props": {
                               "text": "I",
                               "style": {
-                                "classes": "Indicator/InterlockBadge",
-                                "height": "1.296vh"
+                                "classes": "Indicator/InterlockBadge Station/Sidebar/Ilk"
                               }
                             },
                             "propConfig": {
@@ -3507,16 +3474,15 @@
                             "props": {
                               "text": "",
                               "style": {
-                                "classes": "Indicator/LED/Off",
-                                "height": "0.926vh"
+                                "classes": "Indicator/LED/Off Station/Sidebar/Led"
                               }
                             },
                             "propConfig": {
                               "props.style.classes": {
                                 "binding": {
-                                  "type": "property",
+                                  "type": "expr",
                                   "config": {
-                                    "path": "view.custom.s.inReq"
+                                    "expression": "({view.custom.s.inReq}) + ' Station/Sidebar/Led'"
                                   }
                                 }
                               }
@@ -3559,16 +3525,15 @@
                             "props": {
                               "text": "",
                               "style": {
-                                "classes": "Indicator/LED/Off",
-                                "height": "0.926vh"
+                                "classes": "Indicator/LED/Off Station/Sidebar/Led"
                               }
                             },
                             "propConfig": {
                               "props.style.classes": {
                                 "binding": {
-                                  "type": "property",
+                                  "type": "expr",
                                   "config": {
-                                    "path": "view.custom.s.inCmd"
+                                    "expression": "({view.custom.s.inCmd}) + ' Station/Sidebar/Led'"
                                   }
                                 }
                               }
@@ -3616,8 +3581,7 @@
                           "alignItems": "center",
                           "wrap": "nowrap",
                           "style": {
-                            "classes": "",
-                            "gap": "0.37vh"
+                            "classes": "Station/Fill/Boxes"
                           }
                         },
                         "children": [
@@ -3657,8 +3621,7 @@
                             "props": {
                               "text": "I",
                               "style": {
-                                "classes": "Indicator/InterlockBadge",
-                                "height": "1.296vh"
+                                "classes": "Indicator/InterlockBadge Station/Sidebar/Ilk"
                               }
                             },
                             "propConfig": {
@@ -3709,16 +3672,15 @@
                             "props": {
                               "text": "",
                               "style": {
-                                "classes": "Indicator/LED/Off",
-                                "height": "0.926vh"
+                                "classes": "Indicator/LED/Off Station/Sidebar/Led"
                               }
                             },
                             "propConfig": {
                               "props.style.classes": {
                                 "binding": {
-                                  "type": "property",
+                                  "type": "expr",
                                   "config": {
-                                    "path": "view.custom.s.smReq"
+                                    "expression": "({view.custom.s.smReq}) + ' Station/Sidebar/Led'"
                                   }
                                 }
                               }
@@ -3761,16 +3723,15 @@
                             "props": {
                               "text": "",
                               "style": {
-                                "classes": "Indicator/LED/Off",
-                                "height": "0.926vh"
+                                "classes": "Indicator/LED/Off Station/Sidebar/Led"
                               }
                             },
                             "propConfig": {
                               "props.style.classes": {
                                 "binding": {
-                                  "type": "property",
+                                  "type": "expr",
                                   "config": {
-                                    "path": "view.custom.s.smCmd"
+                                    "expression": "({view.custom.s.smCmd}) + ' Station/Sidebar/Led'"
                                   }
                                 }
                               }
@@ -3818,8 +3779,7 @@
                           "alignItems": "center",
                           "wrap": "nowrap",
                           "style": {
-                            "classes": "",
-                            "gap": "0.37vh"
+                            "classes": "Station/Fill/Boxes"
                           }
                         },
                         "children": [
@@ -3859,8 +3819,7 @@
                             "props": {
                               "text": "I",
                               "style": {
-                                "classes": "Indicator/InterlockBadge",
-                                "height": "1.296vh"
+                                "classes": "Indicator/InterlockBadge Station/Sidebar/Ilk"
                               }
                             },
                             "propConfig": {
@@ -3911,16 +3870,15 @@
                             "props": {
                               "text": "",
                               "style": {
-                                "classes": "Indicator/LED/Off",
-                                "height": "0.926vh"
+                                "classes": "Indicator/LED/Off Station/Sidebar/Led"
                               }
                             },
                             "propConfig": {
                               "props.style.classes": {
                                 "binding": {
-                                  "type": "property",
+                                  "type": "expr",
                                   "config": {
-                                    "path": "view.custom.s.vaReq"
+                                    "expression": "({view.custom.s.vaReq}) + ' Station/Sidebar/Led'"
                                   }
                                 }
                               }
@@ -3963,16 +3921,15 @@
                             "props": {
                               "text": "",
                               "style": {
-                                "classes": "Indicator/LED/Off",
-                                "height": "0.926vh"
+                                "classes": "Indicator/LED/Off Station/Sidebar/Led"
                               }
                             },
                             "propConfig": {
                               "props.style.classes": {
                                 "binding": {
-                                  "type": "property",
+                                  "type": "expr",
                                   "config": {
-                                    "path": "view.custom.s.vaCmd"
+                                    "expression": "({view.custom.s.vaCmd}) + ' Station/Sidebar/Led'"
                                   }
                                 }
                               }
@@ -4003,9 +3960,7 @@
               "alignItems": "stretch",
               "wrap": "nowrap",
               "style": {
-                "classes": "Container/Faceplate",
-                "padding": "0.556vh 0.741vh",
-                "gap": "0.37vh"
+                "classes": "Container/Faceplate Station/Sidebar/Setpoints"
               }
             },
             "children": [
@@ -4044,8 +3999,7 @@
                   "alignItems": "stretch",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "gap": "0.741vh"
+                    "classes": "Station/Fill/SpRow0"
                   }
                 },
                 "children": [
@@ -4066,8 +4020,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.185vh"
+                        "classes": "Station/Fill/SpTarget"
                       }
                     },
                     "children": [
@@ -4106,8 +4059,7 @@
                           "alignItems": "center",
                           "wrap": "nowrap",
                           "style": {
-                            "classes": "",
-                            "gap": "0.278vh"
+                            "classes": "Station/Fill/SpTargetRow"
                           }
                         },
                         "children": [
@@ -4148,7 +4100,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "!{view.custom.s.dis}"
+                                    "expression": "{view.custom.level} >= 1 && (!{view.custom.s.dis})"
                                   }
                                 }
                               }
@@ -4203,8 +4155,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.185vh"
+                        "classes": "Station/Fill/SpTarget"
                       }
                     },
                     "children": [
@@ -4243,8 +4194,7 @@
                           "alignItems": "center",
                           "wrap": "nowrap",
                           "style": {
-                            "classes": "",
-                            "gap": "0.278vh"
+                            "classes": "Station/Fill/SpTargetRow"
                           }
                         },
                         "children": [
@@ -4285,7 +4235,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "!{view.custom.s.dis}"
+                                    "expression": "{view.custom.level} >= 1 && (!{view.custom.s.dis})"
                                   }
                                 }
                               }
@@ -4342,8 +4292,7 @@
                   "alignItems": "stretch",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "gap": "0.741vh"
+                    "classes": "Station/Fill/SpRow0"
                   }
                 },
                 "children": [
@@ -4364,8 +4313,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.185vh"
+                        "classes": "Station/Fill/SpTarget"
                       }
                     },
                     "children": [
@@ -4404,8 +4352,7 @@
                           "alignItems": "center",
                           "wrap": "nowrap",
                           "style": {
-                            "classes": "",
-                            "gap": "0.278vh"
+                            "classes": "Station/Fill/SpTargetRow"
                           }
                         },
                         "children": [
@@ -4446,7 +4393,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "!{view.custom.s.dis}"
+                                    "expression": "{view.custom.level} >= 1 && (!{view.custom.s.dis})"
                                   }
                                 }
                               }
@@ -4491,8 +4438,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.185vh"
+                        "classes": "Station/Fill/SpTarget"
                       }
                     },
                     "children": [
@@ -4531,8 +4477,7 @@
                           "alignItems": "center",
                           "wrap": "nowrap",
                           "style": {
-                            "classes": "",
-                            "gap": "0.278vh"
+                            "classes": "Station/Fill/SpTargetRow"
                           }
                         },
                         "children": [
@@ -4573,7 +4518,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "!{view.custom.s.dis}"
+                                    "expression": "{view.custom.level} >= 1 && (!{view.custom.s.dis})"
                                   }
                                 }
                               }
@@ -4620,8 +4565,7 @@
                   "alignItems": "stretch",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "gap": "0.741vh"
+                    "classes": "Station/Fill/SpRow0"
                   }
                 },
                 "children": [
@@ -4642,8 +4586,7 @@
                       "alignItems": "stretch",
                       "wrap": "nowrap",
                       "style": {
-                        "classes": "",
-                        "gap": "0.185vh"
+                        "classes": "Station/Fill/SpTarget"
                       }
                     },
                     "children": [
@@ -4682,8 +4625,7 @@
                           "alignItems": "center",
                           "wrap": "nowrap",
                           "style": {
-                            "classes": "",
-                            "gap": "0.278vh"
+                            "classes": "Station/Fill/SpTargetRow"
                           }
                         },
                         "children": [
@@ -4724,7 +4666,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "!{view.custom.s.dis}"
+                                    "expression": "{view.custom.level} >= 1 && (!{view.custom.s.dis})"
                                   }
                                 }
                               }
@@ -4801,10 +4743,7 @@
               "alignItems": "stretch",
               "wrap": "nowrap",
               "style": {
-                "classes": "Container/Faceplate",
-                "padding": "0.556vh 0.741vh",
-                "gap": "0.37vh",
-                "marginTop": "auto"
+                "classes": "Container/Faceplate Station/Sidebar/Commands"
               }
             },
             "children": [
@@ -4825,8 +4764,7 @@
                   "alignItems": "stretch",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "gap": "0.556vh"
+                    "classes": "Station/Fill/Buttons"
                   }
                 },
                 "propConfig": {
@@ -4862,7 +4800,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "!{view.custom.s.tzLocked}"
+                            "expression": "{view.custom.level} >= 1 && (!{view.custom.s.tzLocked})"
                           }
                         }
                       }
@@ -4901,7 +4839,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "!{view.custom.s.tzLocked}"
+                            "expression": "{view.custom.level} >= 1 && (!{view.custom.s.tzLocked})"
                           }
                         }
                       }
@@ -4940,7 +4878,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "!{view.custom.s.resetLocked}"
+                            "expression": "{view.custom.level} >= 1 && (!{view.custom.s.resetLocked})"
                           }
                         }
                       }
@@ -4976,8 +4914,7 @@
                   "alignItems": "center",
                   "wrap": "nowrap",
                   "style": {
-                    "classes": "",
-                    "gap": "0.556vh"
+                    "classes": "Station/Fill/Buttons"
                   }
                 },
                 "propConfig": {
@@ -5046,6 +4983,16 @@
                           "type": "script"
                         }
                       }
+                    },
+                    "propConfig": {
+                      "props.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} >= 1"
+                          }
+                        }
+                      }
                     }
                   },
                   {
@@ -5073,6 +5020,16 @@
                           },
                           "scope": "G",
                           "type": "script"
+                        }
+                      }
+                    },
+                    "propConfig": {
+                      "props.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} >= 1"
+                          }
                         }
                       }
                     }
