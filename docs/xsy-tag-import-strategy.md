@@ -232,7 +232,7 @@ Conventions are the same as `ddtsync` and the existing `[EFC]` provider:
 
 ## 10. Relationship to `ddtsync`
 
-`ddtsync` (branch `claude/plc-ddt-udt-migration-e5u64l`, not yet merged) browses the live PLC over OPC UA and adds missing UDT members. The XSY import now does everything `ddtsync` does to UDTs, works offline from the export and also manages instances. Recommendation: move the shared parts (type map, JSON builders, the `configure` wrapper, report) into `efc/plc/common`. Then keep `ddtsync` only as a check that the live OPC UA server exposes what the `.XSY` says it should.
+`ddtsync` (`scripts/ddtsync.py`) browses the live PLC over OPC UA and adds missing UDT members. The XSY import now does everything `ddtsync` does to UDTs, works offline from the export and also manages instances. Recommendation: move the shared parts (type map, JSON builders, the `configure` wrapper, report) into `efc/plc/common`. Then keep `ddtsync` only as a check that the live OPC UA server exposes what the `.XSY` says it should.
 
 ## 11. Open questions
 
