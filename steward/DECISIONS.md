@@ -14,3 +14,6 @@ Approved items from the design review. Phase 3 builds from this list.
 | 8 | 2026-10-21 | dw_ValveDiscrete rev 2 approved. |
 | 9 | 2026-10-21 | Fix 7: `alignItems: stretch` on AnalogIndicator flex containers (zone bars collapse otherwise). |
 | 10 | 2026-10-21 | Bypass UI: each bypassed condition shows its own time left (`Sts_BypLeft[n]`) and an audit line (user, role, time, reason). Bypass button (Supervisor+) opens `Docks/Parts/BypassConfirm`: duration presets up to `Cfg_BypassMax`, reason required, logged to the Ignition audit log; BYPASS also needs `Inp_BypassPerm`. |
+| 11 | 2026-10-21 | Agitator and compressor templates bind to T_Motor or T_VFD depending on how the drive is controlled (template param `tType`); dock follows: dw_Rotating or dw_VFD. T_Agitator / T_Compressor not used until a use case appears. |
+| 12 | 2026-10-21 | Analog valve manual presets 0 / 25 / 50 / 75 / 100 % approved. JOG is Maintenance+. |
+| 13 | 2026-10-21 | Uniform dock buttons. Command tier (mode AUTO/MAN/MAINT/OOS, OPEN/CLOSE, START/STOP, RESET, JOG, FWD/REV): one size (72 x 30 px at 1080p), `Button/Default`, the current state highlighted with `Button/Toggle/On`. Secondary tier (BYPASS, UNBYP, ACK, RESET LATCHED, RESET MAINT, SIMULATE, presets): one smaller size, `Button/Small`. `Button/Danger` only for the confirm action in BypassConfirm. |

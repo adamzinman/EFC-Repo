@@ -18,10 +18,7 @@
     "EFC/AnalogIndicator": "dw_ProcessValue",
     "Templates/Loops": "dw_Loop",
     "Templates/Station": "dw_Station",
-    "Templates/IO": "dw_IOCard",
-    "Templates/Rotating/Agitator": "dw_VFD",
-    "Templates/Rotating/Compressor_Centrifugal": "dw_VFD",
-    "Templates/Rotating/Compressor_Diaphragm": "dw_VFD"
+    "Templates/IO": "dw_IOCard"
   },
   "rules": {
     "require_dock": true,
