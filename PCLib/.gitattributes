@@ -1,0 +1,4 @@
+# Keep the Control Expert import files and ST sources byte-exact (CRLF, as gen_phase.py writes them)
+*.xdb -text
+*.xdd -text
+*.st -text

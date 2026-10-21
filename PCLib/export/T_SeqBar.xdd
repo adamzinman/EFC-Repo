@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-14-17:38:13" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_SeqBar" version="1.00" dateTime="dt#2026-10-14-17:38:13">
+	<comment>Sequence bar for a T_Phase: segment labels and states for the HMI step bar</comment>
+	<structure>
+		<variables name="Cfg_Title" typeName="STRING[24]">
+			<comment>Title shown on the sequence bar</comment>
+		</variables>
+		<variables name="Cfg_NumSeg" typeName="INT">
+			<comment>Segments shown (1..10); 0 = labels not loaded yet</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_SegText" typeName="ARRAY[1..10] OF STRING[12]">
+			<comment>Segment labels</comment>
+		</variables>
+		<variables name="Sts_Seg" typeName="ARRAY[1..10] OF INT">
+			<comment>Segment state: 0=Pending 1=Active 2=Done 3=Fault 4=Held/Paused/Waiting 5=Skipped</comment>
+		</variables>
+		<variables name="Sts_Skip" typeName="ARRAY[1..10] OF BOOL">
+			<comment>Segment skipped this run (set by phase logic, cleared at Start)</comment>
+		</variables>
+		<variables name="Sts_ActSeg" typeName="INT">
+			<comment>Active segment, 0 = none</comment>
+		</variables>
+		<variables name="Sts_PhState" typeName="INT">
+			<comment>Copy of T_Phase.Sts_State</comment>
+		</variables>
+		<variables name="Sts_Mode" typeName="INT">
+			<comment>Copy of T_Phase.Sts_Mode</comment>
+		</variables>
+		<variables name="Sts_Owner" typeName="INT">
+			<comment>Copy of T_Phase.Sts_Owner</comment>
+		</variables>
+		<variables name="Sts_Step" typeName="INT">
+			<comment>Copy of T_Phase.Sts_Step</comment>
+		</variables>
+		<variables name="Sts_WaitAdv" typeName="BOOL">
+			<comment>Semi-automatic: waiting for Advance</comment>
+		</variables>
+		<variables name="Sts_Fail" typeName="BOOL">
+			<comment>Phase failure active</comment>
+		</variables>
+		<variables name="Val_Msg" typeName="STRING[40]">
+			<comment>Operator message: step text, state or failure text</comment>
+		</variables>
+		<variables name="Val_StepTime" typeName="TIME">
+			<comment>Time in the current step</comment>
+		</variables>
+		<variables name="Val_StepPct" typeName="INT">
+			<comment>Progress within the active segment, 0..100</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>
