@@ -329,3 +329,31 @@ End verbatim (L70-74):
 
 ### What the code does (observed style)
 Section `Runtime_Tracking` (ST): once per `%S6` pulse while `DEV.YI` (running feedback) is true, it increments `DEV.Run_Sec` to 59, rolls into `DEV.Run_Min`, then `DEV.Run_Hour`; computes `DEV.Runtime = Run_Hour + Run_Min/60.0` and clears it when `DEV.Reset_Runtime` is set (which it then resets). Note the bug-like use of unqualified `Run_Min`/`Run_Hour` (the DFB's private variables, L59, L62) in `DEV.Run_Min := Run_Min + 1.0`, mixing local and DDT members. Section `Commands` (LD, text boxes: "Permissive Control", "Mode control for the Device", command rung): permissives `Dev.Auto_Perm`/`Dev.Man_Perm` from `Estop`/`Interlock` (NC contacts); mode set/reset latches (`Dev.Auto`/`Manual`/`Off`/`LockedOut`) driven by rising-edge `PContact`s on HMI bits (`Dev.HMI_Auto` etc.) and system bits (`Sys_Auto`, `Sys_Man`, `Sys_Off`), lockout resets the other modes; `Dev.CMD` coil from `Dev.Req` with auto/permissive or HMI_CMD/manual/permissive paths, with HMI_CMD reset on Interlock/Estop. Style notes: DDT-centred device struct passed IN_OUT as pin 1 named `DEV`; `Sys_*` mode inputs; `HMI_*` command bits inside the DDT; Mixed-case names with underscores; edge detection via LD `PContact` rather than R_TRIG instances; TON/TOF/`Stall_TMR` declared but unused in sample code; Mode as INT + DDT_Mode enum-style struct.
+
+## 12. Addendum: second sample `FB_AlmCore_reexport_16.2.XDB` (2026-10-21)
+
+Source: `types/dfb/FB_AlmCore.XDB` written by `tools/st2xdb.py` (checksums omitted), imported into Control Expert V16.2 - 250430, then exported again. 198 lines, CRLF on every line, tabs only, no BOM, no self-closing tags. A line diff against the generated file shows only the three header differences below. Every other line (pins, blocks, locals, ST body) is byte-identical.
+
+Now **verified** (were "not demonstrated"):
+
+| Item | Observed (re-export line) |
+|---|---|
+| `outputParameters` | Element name `outputParameters`, placed **after `inputParameters`** and before `privateLocalVariables` (L56-84). Variables carry `PositionPin` like inputs. |
+| Output pin numbering | Continues the input sequence: inputs 1-15, outputs 16-24 (L58-82). |
+| Elementary types | `TIME` on inputs and outputs (L28, L75); `INT` output (L72). |
+| Checksums | Import accepts a file with **no** `TypeCodeCheckSumString` / `TypeSignatureCheckSumString`. Control Expert computes them and writes them on export (`09AF` / `2A99`, L6-7). `--checksums omit` is the generator default. |
+| ST comments | `(* ... *)` lines kept verbatim (L101-106). |
+| Typed literal | `T#0S` kept verbatim (L138). |
+| ST `-` operator on TIME | `MaxShelf - tonShelf.ET` (L136) accepted. |
+| Multiple sections name | Section name `Main` kept (L99). |
+| `FBSource@dateTime` | Kept from the imported file (`dt#2026-10-21-19:00:00`), not replaced by the import time. |
+
+Header differences (not errors):
+
+| Line | Generated | Re-export | Meaning |
+|---|---|---|---|
+| L3 `fileHeader@dateTime` | generator time | export time | written at export |
+| L4 `contentHeader` | `name="EFCLib" version="1.0.0" dateTime="date_and_time#..."` | `name="Project" version="0.0.000"` **with no `dateTime`** | project the type was exported from. `dateTime` is optional; the import ignores the generator's values |
+| L6-7 | absent | checksum attributes | see above |
+
+Still not demonstrated: IN_OUT of a DDT in a generated file, DDT nested in DDT, arrays, `DT`/`UDINT`/`DINT`/`WORD`/`STRING`/`LREAL`, EBOOL, R_TRIG/F_TRIG, user DFB instances, `<comment>`/`variableInit`, `>`/`&` in ST, DDTSource omission.

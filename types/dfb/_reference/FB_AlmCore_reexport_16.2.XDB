@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FBExchangeFile>
+	<fileHeader company="Schneider Automation" product="Control Expert V16.2 - 250430" dateTime="date_and_time#2026-10-21-15:25:37" content="Function Block source file" DTDVersion="41"></fileHeader>
+	<contentHeader name="Project" version="0.0.000"></contentHeader>
+	<FBSource nameOfFBType="FB_AlmCore" version="1.00" dateTime="dt#2026-10-21-19:00:00">
+		<attribute name="TypeCodeCheckSumString" value="09AF"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="2A99"></attribute>
+		<attribute name="UseNewTplSignAlgo" value="TRUE"></attribute>
+		<inputParameters>
+			<variables name="Cond" typeName="BOOL">
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+			<variables name="Supp" typeName="BOOL">
+				<attribute name="PositionPin" value="2"></attribute>
+			</variables>
+			<variables name="OOSIn" typeName="BOOL">
+				<attribute name="PositionPin" value="3"></attribute>
+			</variables>
+			<variables name="Enabled" typeName="BOOL">
+				<attribute name="PositionPin" value="4"></attribute>
+			</variables>
+			<variables name="LatchCfg" typeName="BOOL">
+				<attribute name="PositionPin" value="5"></attribute>
+			</variables>
+			<variables name="NoAck" typeName="BOOL">
+				<attribute name="PositionPin" value="6"></attribute>
+			</variables>
+			<variables name="OnDly" typeName="TIME">
+				<attribute name="PositionPin" value="7"></attribute>
+			</variables>
+			<variables name="OffDly" typeName="TIME">
+				<attribute name="PositionPin" value="8"></attribute>
+			</variables>
+			<variables name="MaxShelf" typeName="TIME">
+				<attribute name="PositionPin" value="9"></attribute>
+			</variables>
+			<variables name="Ack" typeName="BOOL">
+				<attribute name="PositionPin" value="10"></attribute>
+			</variables>
+			<variables name="Rst" typeName="BOOL">
+				<attribute name="PositionPin" value="11"></attribute>
+			</variables>
+			<variables name="Shelve" typeName="BOOL">
+				<attribute name="PositionPin" value="12"></attribute>
+			</variables>
+			<variables name="Unshelve" typeName="BOOL">
+				<attribute name="PositionPin" value="13"></attribute>
+			</variables>
+			<variables name="RemoveSvc" typeName="BOOL">
+				<attribute name="PositionPin" value="14"></attribute>
+			</variables>
+			<variables name="ReturnSvc" typeName="BOOL">
+				<attribute name="PositionPin" value="15"></attribute>
+			</variables>
+		</inputParameters>
+		<outputParameters>
+			<variables name="Active" typeName="BOOL">
+				<attribute name="PositionPin" value="16"></attribute>
+			</variables>
+			<variables name="Unack" typeName="BOOL">
+				<attribute name="PositionPin" value="17"></attribute>
+			</variables>
+			<variables name="Shelved" typeName="BOOL">
+				<attribute name="PositionPin" value="18"></attribute>
+			</variables>
+			<variables name="Suppressed" typeName="BOOL">
+				<attribute name="PositionPin" value="19"></attribute>
+			</variables>
+			<variables name="OOS" typeName="BOOL">
+				<attribute name="PositionPin" value="20"></attribute>
+			</variables>
+			<variables name="State" typeName="INT">
+				<attribute name="PositionPin" value="21"></attribute>
+			</variables>
+			<variables name="ShelfLeft" typeName="TIME">
+				<attribute name="PositionPin" value="22"></attribute>
+			</variables>
+			<variables name="EvtActive" typeName="BOOL">
+				<attribute name="PositionPin" value="23"></attribute>
+			</variables>
+			<variables name="EvtRTN" typeName="BOOL">
+				<attribute name="PositionPin" value="24"></attribute>
+			</variables>
+		</outputParameters>
+		<privateLocalVariables>
+			<variables name="xInitDone" typeName="BOOL"></variables>
+			<variables name="xOOS" typeName="BOOL"></variables>
+			<variables name="xShelved" typeName="BOOL"></variables>
+			<variables name="xInhibit" typeName="BOOL"></variables>
+			<variables name="xCond" typeName="BOOL"></variables>
+			<variables name="xLatch" typeName="BOOL"></variables>
+			<variables name="xActive" typeName="BOOL"></variables>
+			<variables name="xActivePrev" typeName="BOOL"></variables>
+			<variables name="xUnack" typeName="BOOL"></variables>
+			<variables name="tonShelf" typeName="TON"></variables>
+			<variables name="tonOn" typeName="TON"></variables>
+			<variables name="tofOff" typeName="TOF"></variables>
+		</privateLocalVariables>
+		<FBProgram name="Main">
+			<STSource>
+(* FB_AlmCore v1.00 - 2026-10-21 - EFC Controls *)
+(* ISA-18.2 / IEC 62682 alarm state machine: on/off delays, latching, acknowledge, *)
+(* time-limited shelving, suppression by design, out of service. *)
+(* Shared by FB_Alarm and FB_AlmLim. Interface: FB_AlmCore.iface.yaml *)
+
+(* ---- First scan after a cold start: alarm cleared ---- *)
+IF NOT xInitDone THEN
+	xOOS := FALSE;
+	xShelved := FALSE;
+	xLatch := FALSE;
+	xUnack := FALSE;
+	xActivePrev := FALSE;
+	xInitDone := TRUE;
+END_IF;
+
+(* ---- Out of service (state H) ---- *)
+IF RemoveSvc THEN
+	xOOS := TRUE;
+END_IF;
+IF ReturnSvc THEN
+	xOOS := FALSE;
+END_IF;
+
+(* ---- Shelving (state F), always time-limited ---- *)
+IF Shelve AND Enabled AND NOT xOOS AND NOT OOSIn THEN
+	xShelved := TRUE;
+END_IF;
+IF Unshelve OR xOOS OR OOSIn OR NOT Enabled THEN
+	xShelved := FALSE;
+END_IF;
+tonShelf(IN := xShelved, PT := MaxShelf);
+IF tonShelf.Q THEN
+	xShelved := FALSE;
+END_IF;
+IF xShelved THEN
+	ShelfLeft := MaxShelf - tonShelf.ET;
+ELSE
+	ShelfLeft := T#0S;
+END_IF;
+
+xInhibit := xOOS OR OOSIn OR xShelved OR Supp OR NOT Enabled;
+
+(* ---- Chattering control: on-delay, off-delay ---- *)
+tonOn(IN := Cond AND NOT xInhibit, PT := OnDly);
+tofOff(IN := tonOn.Q, PT := OffDly);
+xCond := tofOff.Q AND NOT xInhibit;
+
+(* ---- Latching (state E): reset clears it only after return to normal ---- *)
+IF xInhibit OR NOT LatchCfg THEN
+	xLatch := FALSE;
+ELSIF xCond THEN
+	xLatch := TRUE;
+ELSIF Rst THEN
+	xLatch := FALSE;
+END_IF;
+
+xActive := xCond OR xLatch;
+
+(* ---- Annunciation edges (stored previous state) and acknowledge ---- *)
+EvtActive := xActive AND NOT xActivePrev;
+EvtRTN := xActivePrev AND NOT xActive AND NOT xInhibit;
+xActivePrev := xActive;
+
+IF EvtActive AND NOT NoAck THEN
+	xUnack := TRUE;
+END_IF;
+IF Ack OR xInhibit OR NoAck THEN
+	xUnack := FALSE;
+END_IF;
+
+(* ---- State per the ISA-18.2 state model ---- *)
+IF xOOS OR OOSIn OR NOT Enabled THEN
+	State := 7;
+ELSIF Supp THEN
+	State := 6;
+ELSIF xShelved THEN
+	State := 5;
+ELSIF xLatch AND NOT xCond THEN
+	State := 4;
+ELSIF xActive AND xUnack THEN
+	State := 1;
+ELSIF xActive THEN
+	State := 2;
+ELSIF xUnack THEN
+	State := 3;
+ELSE
+	State := 0;
+END_IF;
+
+Active := xActive;
+Unack := xUnack;
+Shelved := xShelved;
+Suppressed := Supp AND Enabled AND NOT xOOS AND NOT OOSIn;
+OOS := xOOS OR OOSIn;
+</STSource>
+		</FBProgram>
+	</FBSource>
+</FBExchangeFile>

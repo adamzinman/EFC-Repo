@@ -61,4 +61,5 @@ Accepted by the 16.2 import (verified by import, not yet by a re-export):
 - outputParameters block placed after inputParameters; output PositionPins continue the input sequence (16-24).
 - Checksum attributes omitted (only UseNewTplSignAlgo emitted).
 - TIME pins, typed literal T#0S, ST comments (* *), contentHeader name "EFCLib" version "1.0.0".
-Still open: Analyze/Rebuild result, simulator test sheet, re-export of FB_AlmCore, DFB_FmtTest export (Q3).
+Re-export received: _reference/FB_AlmCore_reexport_16.2.XDB = generated file except header dates, contentHeader (no dateTime) and CE-computed checksums. Recorded in XDB_FORMAT_REFERENCE.md section 12.
+Still open: Analyze/Rebuild result, simulator test sheet, DFB_FmtTest export (Q3).

@@ -29,6 +29,8 @@ DFB_DIR = os.path.join(ROOT, "types", "dfb")
 SRC_DIR = os.path.join(DFB_DIR, "src")
 XDD_DIR = os.path.join(ROOT, "types", "xdd")
 REF_XDB = os.path.join(DFB_DIR, "_reference", "DFB_Device.XDB")
+# Every real 16.2 export; the structural diff compares against the union of their structures.
+REF_XDBS = [REF_XDB, os.path.join(DFB_DIR, "_reference", "FB_AlmCore_reexport_16.2.XDB")]
 
 CRLF = "\r\n"
 TAB = "\t"
@@ -45,7 +47,7 @@ ELEMENTARY = {"BOOL", "INT", "DINT", "UINT", "UDINT", "WORD", "DWORD", "BYTE", "
               "TIME", "DT", "DATE", "TOD", "STRING"}
 STD_FBS = {"TON", "TOF", "TP", "R_TRIG", "F_TRIG", "CTU", "CTD", "CTUD", "SR", "RS"}
 # Element types the reference export demonstrates; anything else is reported as unverified.
-VERIFIED_TYPES = {"BOOL", "INT", "REAL", "TON", "TOF"}
+VERIFIED_TYPES = {"BOOL", "INT", "REAL", "TIME", "TON", "TOF"}   # TIME: FB_AlmCore re-export
 
 ST_KEYWORDS = {"IF", "THEN", "ELSIF", "ELSE", "END_IF", "CASE", "OF", "END_CASE", "FOR", "TO", "BY",
                "DO", "END_FOR", "WHILE", "END_WHILE", "REPEAT", "UNTIL", "END_REPEAT", "EXIT",
@@ -349,9 +351,12 @@ def signature(root):
 
 
 def structural_diff(data):
-    ref = signature(ET.parse(REF_XDB).getroot())
+    ref = set()
+    for path in REF_XDBS:
+        ref |= signature(ET.parse(path).getroot())
     gen = signature(ET.fromstring(data))
     ld = {s for s in ref if "LDSource" in s[0]}                   # LD sections are never generated
+    # Structure the references show that this DFB doesn't need is informational only.
     missing = sorted(ref - gen - ld)
     extra = sorted(gen - ref)
     return missing, extra
@@ -359,17 +364,17 @@ def structural_diff(data):
 
 def unverified_items(d, ddts, opts, body=""):
     items = []
-    if "(*" in body:
-        items.append("ST comments (* *)")
-    if re.search(r"\b\w+#", strip_comments(body)):
-        items.append("typed literals (T#..., 16#...)")
-    for ch, name in (("<", "'<' (&lt;)"), (">", "'>' (&gt;)"), ("&", "'&' (&amp;)")):
-        if ch in strip_comments(body) and ch != "<":
+    # Verified by the FB_AlmCore re-export (XDB_FORMAT_REFERENCE.md section 12): ST comments,
+    # T# literals, outputParameters after inputParameters, omitted checksums.
+    if re.search(r"\b(?!T#)\w+#", strip_comments(body)):
+        items.append("typed literal other than T# (16#..., WORD#...)")
+    for ch, name in ((">", "'>' (&gt;)"), ("&", "'&' (&amp;)")):
+        if ch in strip_comments(body):
             items.append("ST contains " + name)
-    if d["outputs"]:
+    if d["outputs"] and opts.outputs_pos != "after-inputs":
         items.append("outputParameters block (position: %s)" % opts.outputs_pos)
-    if opts.checksums == "omit":
-        items.append("checksum attributes omitted")
+    if opts.checksums == "copy":
+        items.append("checksums copied from the sample (import computes its own; omit is verified)")
     if opts.var_comments:
         items.append("<comment> on variables")
     types = {base_type(v["type"]) for k in ("inputs", "outputs", "inouts", "public", "private") for v in d[k]}
