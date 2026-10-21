@@ -94,6 +94,7 @@ Parts in `imported/` have no generator here, so edit them in the Designer, expor
 - [`docs/station-faceplates.md`](docs/station-faceplates.md): station faceplates, member mapping, dock setup.
 - [`docs/ddt-udt-sync.md`](docs/ddt-udt-sync.md): gateway script that builds or extends UDTs from the DDTs in an M580 over its BMENUA0100 OPC UA card (`scripts/ddtsync.py`).
 - [`docs/design-briefs.md`](docs/design-briefs.md): I/O card and station faceplates, compressor screen, Haskel pump.
+- [`docs/presentations/EFCLib_v1_Engineering_Briefing.pptx`](docs/presentations/EFCLib_v1_Engineering_Briefing.pptx): engineering briefing on the EFCLib v1 styles, symbols, templates and dynamic windows, with speaker notes (source in `docs/presentations/efclib-v1-source/`).
 
 ## PCLib: ISA-88 phases and sequence bar
 `PCLib/` holds the phase DFBs for Control Expert Classic V16.2 and their Ignition 8.1 sequence bar. See [`PCLib/README_FB_Phase.md`](PCLib/README_FB_Phase.md).
