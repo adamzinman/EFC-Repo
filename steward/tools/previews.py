@@ -227,10 +227,12 @@ def grp(title, body, note=""):
 
 def cond(state, text, first=False, byp=True):
     led = {"ok": "Indicator/LED/On", "fail": "Indicator/LED/Fault", "byp": "Indicator/LED/Unknown", "latch": "Indicator/LED/Fault"}[state]
-    tag = {"ok": "", "fail": '<span data-c="Text/Color/Fault">NOT OK</span>', "byp": '<span data-c="Indicator/Badge">BYPASSED 3h12</span>', "latch": '<span data-c="Text/Color/Fault">LATCHED</span>'}[state]
+    tag = {"ok": "", "fail": '<span data-c="Text/Color/Fault">NOT OK</span>', "byp": '<span data-c="Indicator/Badge" title="Sts_BypLeft[n]">BYPASSED 3h12 left</span>', "latch": '<span data-c="Text/Color/Fault">LATCHED</span>'}[state]
     fo = '<span data-c="Indicator/Badge" title="first out">1st</span>' if first else ""
     b = f'<button data-c="Button/Small">{"UNBYP" if state == "byp" else "BYPASS"}</button>{role("Sup")}' if byp else ""
-    return f'<div class="cond"><span data-c="{led}" class="led"></span><span data-c="Text/Body" style="flex:1">{text}</span>{fo}{tag}{b}</div>'
+    audit = ('<div data-c="Text/Caption" class="audit">bypassed by jsmith (Supervisor) 07:30 &middot; "Level transmitter LT-100 replaced, verifying"</div>'
+             if state == "byp" else "")
+    return f'<div class="cond"><span data-c="{led}" class="led"></span><span data-c="Text/Body" style="flex:1">{text}</span>{fo}{tag}{b}</div>{audit}'
 
 
 def history_strip():
@@ -266,7 +268,7 @@ def valve_discrete():
                                                    ("Indicator/LED/Off", "Fail to open", ""), ("Indicator/LED/Off", "Position conflict", ""), ("Indicator/LED/Off", "Uncommanded move", "")])
                  + '<div class="row"><button data-c="Button/Default">ACK</button></div>')
     hist = grp("HISTORY (8 h)", history_strip())
-    maint = grp("MAINTENANCE", '<div class="kv"><span data-c="Text/Label">CYCLES</span><span data-c="Text/Value">12 408</span>'
+    maint = details("MAINTENANCE", '<div class="kv"><span data-c="Text/Label">CYCLES</span><span data-c="Text/Value">12 408</span>'
                 '<span data-c="Text/Label">HRS SINCE MAINT</span><span data-c="Text/Value">1 102</span>'
                 f'<span data-c="Text/Label">MAINT DUE</span><span data-c="Text/Value">no</span></div><div class="row"><button data-c="Button/Small">RESET MAINT</button>{role("Maint")}<button data-c="Button/Small">SIMULATE</button>{role("Maint")}</div>')
     cfg = '<details data-c="Container/GroupBox" class="grp"><summary data-c="Text/Subheader">CONFIGURATION</summary>fail-open: no &middot; interlock-to-open: no &middot; dual-coil: no</details>'
@@ -348,7 +350,7 @@ def valve_analog():
         + '<div class="row"><span data-c="Text/Label" class="lbl">MAN</span><span data-c="Input/Setpoint" class="num" style="width:70px">55.0 %</span>'
           + "".join(f'<button data-c="Button/Small">{v}</button>' for v in ("0", "25", "50", "75", "100")) + '<button data-c="Button/Subtle">RESET</button></div>'
           '<div data-c="Text/Caption" class="hint">Entry enabled in MAN, not interlocked</div>'
-        + grp("INTERLOCKS", cond("ok", "Reactor pressure not HH") + cond("ok", "Agitator running", byp=True)
+        + grp("INTERLOCKS", cond("ok", "Reactor pressure not HH") + cond("byp", "Agitator running")
               + '<div data-c="Text/Caption">On trip the valve goes to 0 % (Cfg_IntlkPos)</div>', '<span data-c="Indicator/InterlockBadge" class="mini">I</span>')
         + alarm_grp([("Indicator/LED/Off", "Position deviation", ""), ("Indicator/LED/Off", "Feedback bad", ""), ("Indicator/LED/Off", "Interlock trip", "")])
         + grp("HISTORY (8 h)", trend([(dem, "#1F4E99", True), (pos, "#262626", False)], [("demand", "#1F4E99"), ("position", "#262626")]))
@@ -388,10 +390,26 @@ def motor_body(vfd=False):
     maint = details("MAINTENANCE", kv(("RUN HOURS", "1 284"), ("STARTS", "3 120"), ("STARTS LAST HR", "2 / 6"), ("HRS SINCE MAINT", "412"), ("MAINT DUE", "no"))
                 + f'<div class="row"><button data-c="Button/Small">RESET MAINT</button>{role("Maint")}<button data-c="Button/Small">SIMULATE</button>{role("Maint")}</div>')
     perm = grp("PERMISSIVES", cond("ok", "Suction valve XV-201 open") + cond("ok", "Seal flush flow OK"), '<span data-c="Indicator/PermissiveBadge" class="mini">P</span>')
-    intl = grp("INTERLOCKS", cond("ok", "Discharge pressure not HH") + cond("ok", "Tank T-200 not LL", byp=True), '<span data-c="Indicator/InterlockBadge" class="mini">I</span>')
+    intl = grp("INTERLOCKS", cond("ok", "Discharge pressure not HH") + cond("byp", "Tank T-200 not LL"), '<span data-c="Indicator/InterlockBadge" class="mini">I</span>')
     cfgtxt = ("speed 0-50 Hz &middot; deviation 2 Hz / 10 s &middot; reversible: no &middot; " if vfd else "") + "auto restart: no &middot; restart delay 5 s &middot; rated 60 A &middot; max 6 starts/h &middot; feedback time 3 s"
     tagdesc = ("P-201", "Circulation pump (VFD)") if vfd else ("P-101", "Transfer pump")
     return hdr(*tagdesc) + '<div class="body">' + state + fb + restart + mode_row() + cmd + drive + perm + intl + alarm_grp(rows) + grp("HISTORY (8 h)", hist) + maint + details("CONFIGURATION", cfgtxt) + "</div>"
+
+
+def bypass_popup():
+    return ('<div data-c="Container/PopupHeader" class="hdr"><div style="flex:1"><div data-c="Text/TagName Text/Color/Inverse">BYPASS CONDITION</div>'
+            '<div data-c="Text/Caption Text/Color/Inverse">P-201 &middot; Interlocks &middot; condition 3</div></div><button data-c="Button/Icon" class="x">&#x2715;</button></div>'
+            '<div class="body">'
+            '<div data-c="Text/Body"><b>Tank T-200 not LL</b></div>'
+            '<div data-c="Text/Caption">Currently: NOT OK &middot; bypassable &middot; max 8 h (Cfg_BypassMax)</div>'
+            '<div class="row"><span data-c="Text/Label" class="lbl" style="width:70px">DURATION</span>'
+            + "".join(f'<button data-c="{c}">{t}</button>' for t, c in (("1 h", "Button/Small"), ("2 h", "Button/Small"), ("4 h", "Button/Toggle/On"), ("8 h", "Button/Small"))) +
+            '</div><div class="row"><span data-c="Text/Label" style="width:70px">REASON</span><span data-c="Input/Field" style="flex:1;min-height:38px;padding:2px 4px">'
+            'Level transmitter LT-100 replaced, verifying</span></div>'
+            '<div data-c="Text/Caption">Required. Logged with your user name and time (IEC 61511 bypass record).</div>'
+            '<div class="row" style="justify-content:flex-end;margin-top:6px"><button data-c="Button/Default">CANCEL</button><button data-c="Button/Danger">BYPASS</button></div>'
+            '<div data-c="Text/Caption">Signed in as jsmith (Supervisor). Hidden below Supervisor; BYPASS also needs Inp_BypassPerm.</div>'
+            '</div>')
 
 
 DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:border-box}.dock2 .hdr{display:flex;align-items:center;gap:6px;padding:6px 8px}
@@ -399,7 +417,7 @@ DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:b
 .dock2 .row{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.dock2 .lbl{width:40px}.dock2 .big{font-size:16px;padding:2px 10px}
 .dock2 .dim{opacity:.35}.dock2 .hint{margin-top:-3px}.dock2 .grp{padding:4px 6px}.dock2 .gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
 .dock2 .cond{display:flex;gap:5px;align-items:center;min-height:20px}.dock2 .led{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
-.dock2 .mini{width:14px;height:14px;font-size:10px;display:inline-flex;align-items:center;justify-content:center}
+.dock2 .audit{margin:-2px 0 2px 15px;font-style:italic}.dock2 .mini{width:14px;height:14px;font-size:10px;display:inline-flex;align-items:center;justify-content:center}
 .role{font-size:9px;color:#5E35B1;border:1px dashed #5E35B1;border-radius:3px;padding:0 2px}
 .strip{display:flex;height:12px;border:1px solid #7F7F7F}.axis{display:flex;justify-content:space-between;font-size:9px;color:#616161}
 .legend2{font-size:9px;color:#424242}.legend2 i{display:inline-block;width:8px;height:8px;margin:0 2px 0 6px}.ev{display:flex;justify-content:space-between;font-size:11px;padding:1px 3px}
@@ -460,6 +478,10 @@ if __name__ == "__main__":
             frag = template_card(path, "gap:T_Station").replace("click symbol: open dock", "existing dock view; planned: move to <code>Docks/Station</code>, resize 300 to 400 px wide")
         open(f"{OUT}/{slug(path)}.html", "w").write(frag)
         groups.setdefault("Docks (dynamic windows)", []).append(frag)
+    fr = frame("Docks/Parts/BypassConfirm", f'<div data-c="Container/Popup" class="dock2">{bypass_popup()}</div>', 400, 330, "T_Intlk", "popup",
+               "<br><b>NEW - design proposal</b> &middot; opened by every Bypass button (Supervisor+)", maxh=600)
+    open(f"{OUT}/Docks_Parts_BypassConfirm.html", "w").write(fr)
+    groups.setdefault("Docks (dynamic windows)", []).append(fr)
     body = "".join(f'<h2>{esc(g)}</h2><div class="grid">{"".join(fr)}</div>' for g, fr in groups.items())
     page = (f'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>EFC Library Previews</title><style>{PAGE_CSS}\n{DOCK_CSS}\n/* EFC_Styles */\n{css_block()}</style></head><body>'

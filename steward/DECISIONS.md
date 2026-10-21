@@ -13,3 +13,4 @@ Approved items from the design review. Phase 3 builds from this list.
 | 7 | 2026-10-21 | Named permissives / interlocks: embed `Perm : T_Intlk` / `Intlk : T_Intlk` in T_DValve, T_Motor, T_VFD (both) and T_CValve, T_PID (Intlk); equipment modules get `Prot : T_Intlk`. Existing Inp_IntlkOK / Inp_PermOK kept and ANDed. Shared `Parts/IntlkList` view. Add `Sts_BypLeft : ARRAY[0..15] OF TIME` to T_Intlk; bypass audit trail logged in Ignition (user, time, condition). |
 | 8 | 2026-10-21 | dw_ValveDiscrete rev 2 approved. |
 | 9 | 2026-10-21 | Fix 7: `alignItems: stretch` on AnalogIndicator flex containers (zone bars collapse otherwise). |
+| 10 | 2026-10-21 | Bypass UI: each bypassed condition shows its own time left (`Sts_BypLeft[n]`) and an audit line (user, role, time, reason). Bypass button (Supervisor+) opens `Docks/Parts/BypassConfirm`: duration presets up to `Cfg_BypassMax`, reason required, logged to the Ignition audit log; BYPASS also needs `Inp_BypassPerm`. |
