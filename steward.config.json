@@ -1,0 +1,70 @@
+{
+  "projects": [
+    "projects/EFC_Library",
+    "projects/EFC_AnalogIndicators"
+  ],
+  "output_dir": "steward",
+  "template_folders": [
+    "Templates",
+    "EFC/AnalogIndicator"
+  ],
+  "dock_map": {
+    "Templates/Valves": "dw_ValveDiscrete",
+    "Templates/Valves/Valve_Control": "dw_ValveAnalog",
+    "Templates/Rotating": "dw_Rotating",
+    "Templates/Rotating/VFD": "dw_VFD",
+    "Templates/HeatTransfer": "dw_HeatTransfer",
+    "Templates/ProcessValues": "dw_ProcessValue",
+    "EFC/AnalogIndicator": "dw_ProcessValue",
+    "Templates/Loops": "dw_Loop",
+    "Templates/Station": "StationSidebar",
+    "Templates/IO": "dw_IOCard",
+    "Templates/Rotating/Agitator": "dw_VFD",
+    "Templates/Rotating/Compressor_Centrifugal": "dw_VFD",
+    "Templates/Rotating/Compressor_Diaphragm": "dw_VFD"
+  },
+  "rules": {
+    "require_dock": true,
+    "dock_events": [
+      "dom.onClick"
+    ],
+    "require_pclib": true,
+    "max_inline_styles": 0,
+    "check_palette": true,
+    "require_docs": true,
+    "project_json_at_root": true
+  },
+  "pclib": {
+    "type_regex": "\\bT_[A-Za-z0-9_]+",
+    "udt_exports": [
+      "types/export/PCLib_Ignition81.json",
+      "types/T_KPI/T_KPI_Ignition81.json"
+    ]
+  },
+  "styles": {
+    "projects": [
+      "EFC_Library",
+      "EFC_AnalogIndicators"
+    ],
+    "palette_from_style_classes": true,
+    "palette": []
+  },
+  "deprecated_calls": {},
+  "exempt": [
+    "EFC/AnalogIndicator/_Examples",
+    "Styles/_Catalog",
+    "Templates/IO/Parts/AnalogRow_AI",
+    "Templates/IO/Parts/AnalogRow_AO",
+    "Templates/IO/Parts/AnalogRow_TEMP",
+    "Templates/IO/Parts/DiscreteTile",
+    "Templates/IO/Parts/SlotTile",
+    "Templates/IO/_Demo",
+    "Templates/Loops/Popups/LoopConfig",
+    "Templates/Loops/_Demo",
+    "Templates/ProcessValues/_Demo",
+    "Templates/Station/Station_Sidebar",
+    "Templates/Station/_Demo",
+    "Templates/_Demo"
+  ],
+  "upstream_check_days": 30
+}
