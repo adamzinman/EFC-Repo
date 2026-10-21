@@ -2,16 +2,18 @@
 
 Every EFC Ignition Perspective design (**Ignition 8.1**, ready for 8.3) in one repo: the projects, the generators that build them, tags, symbols and design docs. [`docs/inventory.md`](docs/inventory.md) lists every design and its status.
 
-- **EFC_Styles:** the ISA-101 style class library (166 classes, light-gray scheme, vh-scaled from 1080p to 4K).
-- **PID_Symbols:** templates for actively controlled devices (valves, pumps, compressors, motors and more). Each template is one symbol, embedded as a Drawing whose fills follow the device state.
-- **EFC_PID_Library:** EFC_Styles and PID_Symbols merged into one project with no parent.
-- **EFC_ProcessValues:** process-value cards `PV_StatusStrip` and `PV_RangeBar` with ISA-18.2 alarm letters.
-- **EFC_IOFaceplates:** Modicon x80 I/O card faceplates with a rack overview (imported export).
-- **EFC_StationFaceplates:** DDT_Station scale/fill faceplates (sidebar, fill, tile) with demo tags (imported export).
-- **PID_Loops:** PID loop cards B1–B4, the LoopConfig popup and a `PID_Loop` UDT.
-- **Nav connector symbols** (options A–D) and the legacy diaphragm-compressor add-on, kept for reference.
-- **HTML mockups** in `mockups/` (open them in a browser).
-- **Projects added from existing exports** go in with `tools/import_project_zip.py`. See the inventory.
+Everything ships as **one Perspective project, `EFC_Library`** (no parent). Its views live under a single `Templates/` tree:
+
+| Folder | What's in it | Source |
+|---|---|---|
+| `Templates/Valves`, `Rotating`, `HeatTransfer`, `_Demo` | 16 controlled-device templates (P&ID symbols embedded as Drawings) | `generator/build_pid.py` |
+| `Templates/ProcessValues` | `PV_StatusStrip`, `PV_RangeBar` with ISA-18.2 alarm letters | `generator/build_pv.py` |
+| `Templates/Loops` | PID loop cards B1–B4 and `Popups/LoopConfig` | `generator/pid_loops/` |
+| `Templates/Station` | DDT_Station sidebar, fill and tile faceplates | `imported/EFC_StationFaceplates/` |
+| `Templates/IO` | Modicon x80 I/O card faceplates, parts and `RackOverview` | `imported/EFC_IOFaceplates/` |
+| `Styles/_Catalog` + style classes + stylesheet | EFC_Styles: 166 ISA-101 classes, light-gray scheme, vh-scaled | `generator/build_styles.py` |
+
+Also in the repo: 214 plain P&ID SVGs in `symbols/`, nav-connector options A–D, tags (UDTs and demo instances) in `tags/`, HTML mockups in `mockups/`, and one rendered image per view in `docs/previews/templates/`. Retired material is in `archive/` (see `archive/ARCHIVED.md`).
 
 Current version: see [`VERSION.json`](VERSION.json). What changed: see [`CHANGELOG.md`](CHANGELOG.md).
 
@@ -20,36 +22,27 @@ Current version: see [`VERSION.json`](VERSION.json). What changed: see [`CHANGEL
 ## Repository layout
 
 ```
-build.py                 one command to regenerate, check and package everything
-VERSION.json             library version + release date (also stamped into resource.json)
-generator/               SOURCE OF TRUTH: Python that writes the projects
+build.py                 one command to regenerate, merge, check and package everything
+VERSION.json             library version + release date
+generator/               SOURCE OF TRUTH for the generated parts
   build_styles.py          EFC_Styles classes + palette
   build_pid.py             PID_Symbols templates (one per symbol)
-  build_pv.py, common.py   EFC_ProcessValues templates + PV demo tags
-  pid_loops/               PID_Loops templates, popup, UDT + demo tags
+  build_pv.py, common.py   process-value templates + PV demo tags
+  pid_loops/               PID loop cards, popup, UDT + demo tags
   nav_connectors/          off-page connector SVG options + mockup
-  compressor_addon/        legacy diaphragm-compressor add-on (superseded)
-  pid_common.py            shared layout, binding and SVG-export helpers
-  active.py                geometry + state colors for the 16 active symbols
-  v2/                      geometry for the 198 static symbols
-  check_81.py              static Ignition 8.1 import check
-  preview.py, preview_pid.py, make_project_zip.py
-projects/                GENERATED, committed so diffs are readable; gateway folder layout
-  EFC_Styles/              style classes + advanced stylesheet + Styles/_Catalog view
-  PID_Symbols/             templates (parent: EFC_Styles)
-  EFC_PID_Library/         both merged into one project with no parent
-  EFC_ProcessValues/       PV templates (parent: EFC_Styles)
-  PID_Loops/               loop cards + LoopConfig popup (no parent; inline styles)
-  PID_Compressor_Diaphragm/  legacy add-on, reference only
-  <imported>/              projects added from existing exports (see projects/IMPORTED.md)
-tools/import_project_zip.py  add an existing project export to projects/
-tags/                    GENERATED: PID UDTs + demo instances, PV demo UDT + instances (Tag Browser import JSON)
-symbols/                 GENERATED: 214 plain SVGs (static set + symbols/Active)
-mockups/                 HTML design previews (style preview, loop options, nav connectors, compressor add-on)
-docs/                    inventory, design notes, briefs, standards, ISA-101 audit, references, style indexes, previews
+  render_views.py          renders every view to docs/previews/templates/ (review images)
+  pid_common.py, active.py, v2/, check_81.py, preview*.py, make_project_zip.py
+imported/                SOURCE for parts built in the Designer (EFC_IOFaceplates, EFC_StationFaceplates)
+projects/EFC_Library/    GENERATED: the single merged project, gateway folder layout. Don't hand-edit.
+tags/                    UDTs + demo instances (Tag Browser import JSON)
+symbols/                 GENERATED: 214 plain SVGs
+mockups/                 HTML design previews
+docs/                    inventory, reference docs, template-review.md, previews/
+archive/                 retired files, kept for reference (not built)
+tools/import_project_zip.py  add or refresh a Designer-built part in imported/
 ```
 
-`build/` and `dist/` are build output and are ignored by git.
+`build.py` builds the generated parts in `build/components/`, merges them with `imported/` into `projects/EFC_Library`, and fails if any embedded view, repeater or popup path doesn't resolve. `build/` and `dist/` are ignored by git.
 
 ## Working on the library
 
@@ -62,33 +55,34 @@ git diff --stat                 # 3. review: every template/style change is a JS
 git commit -am "..."            # 4. commit generator AND generated files together
 ```
 
-- **Don't hand-edit `projects/`.** The next build overwrites it. Change the generator instead.
-- **Preview first:** look at `docs/previews/templates.png` before committing a visual change. This is the agreed workflow rule.
+- **Don't hand-edit `projects/`.** The next build overwrites it. Change the generator, or re-import the Designer export into `imported/`.
+- **Preview first:** look at `docs/previews/templates.png` and `docs/previews/templates/` before committing a visual change. This is the agreed workflow rule.
 - **Releases:**
   1. Bump `VERSION.json` and add a `CHANGELOG.md` entry.
   2. Run `python3 build.py --dist`.
-  3. Tag the commit (`git tag v5.2`) and attach the `dist/*.zip` files to the release.
-- **CI** (`.github/workflows/check.yml`): rebuilds on every push and fails if the committed `projects/` doesn't match the generator, or if the 8.1 import check fails.
+  3. Tag the commit (`git tag v7.1`) and attach the `dist/*.zip` files to the release.
+- **CI** (`.github/workflows/check.yml`): rebuilds on every push and fails if the committed `projects/` doesn't match the generator and `imported/`, or if the 8.1 import check fails.
 
 ## Getting it onto a gateway
 
-**Option A: import zips (simplest).** Run `python3 build.py --dist`. It writes one `<Project>_PROJECT.zip` per project plus `EFC_Ignition_Library_v<ver>.zip`, a single download bundle. Then in the Gateway web page go to Config → Projects → Import:
-- `dist/EFC_PID_Library_PROJECT.zip`: everything in one project. Use this on its own, or as the parent of your HMI project.
-- **Or** `dist/EFC_Styles_PROJECT.zip` first, then `dist/PID_Symbols_PROJECT.zip` (the inheritance chain). Don't mix this with Option A's single file in the same chain.
+**Option A: import the zip.** Run `python3 build.py --dist`, then in the Gateway web page go to Config → Projects → Import and import `dist/EFC_Library_PROJECT.zip`. Use it on its own, or make it the parent of your HMI project.
 
-**Option B: copy the folders.** Each folder under `projects/` uses the same layout as the gateway's `data/projects/<Name>/`. Copy the folders you want into `<ignition>/data/projects/`, then have the gateway pick them up: run `system.project.requestScan()` from the Script Console, or restart the gateway. This also works for a gateway-side git clone, by symlinking or copying into `data/projects`.
+**Upgrading from v6.x:** EFC_Library replaces EFC_Styles, PID_Symbols, EFC_PID_Library, EFC_ProcessValues, PID_Loops, EFC_IOFaceplates and EFC_StationFaceplates. Re-point any HMI project that inherits from one of them to EFC_Library, then delete the old projects. Two folders moved: `IO/…` is now `Templates/IO/…` and `PID/…` is now `Templates/Loops/…`; update any of your own screens that embed or open those views by path.
 
-**Tags:** in the Tag Browser, import `tags/*_UDT.json` into Data Types. Import `tags/PV_Demo_Tags.json` at the `[default]` provider root to try `Templates/ProcessValues/_Demo`. Optionally import `tags/PID_Demo_Instances.json` to try `Templates/_Demo`. Real discrete valves use the plant `DDT_Valve` UDT. See [`docs/library-reference.md`](docs/library-reference.md) for the member mapping, import order and template behavior.
+**Option B: copy the folder.** `projects/EFC_Library/` uses the gateway's `data/projects/<Name>/` layout. Copy it into `<ignition>/data/projects/`, then run `system.project.requestScan()` from the Script Console or restart the gateway.
 
-## Adding an existing project
+**Tags:** in the Tag Browser, import `tags/*_UDT.json` into Data Types. Import `tags/PV_Demo_Tags.json` at the `[default]` provider root to try `Templates/ProcessValues/_Demo`, `tags/PID_Demo_Instances.json` for `Templates/_Demo`, and the Station and PID_Loops demo files for theirs. Real discrete valves use the plant `DDT_Valve` UDT. See [`docs/library-reference.md`](docs/library-reference.md).
+
+## Adding or refreshing a Designer-built part
 ```bash
-python3 tools/import_project_zip.py EFC_IOFaceplates.zip EFC_StationFaceplates.zip PID_Loops_PROJECT.zip
-python3 build.py && git add -A && git commit -m "Import faceplates and loops"
+python3 tools/import_project_zip.py EFC_IOFaceplates.zip
+python3 build.py --preview && git add -A && git commit -m "Refresh I/O faceplates"
 ```
-Imported projects have no generator here, so edit them in the Designer, export, and re-import. They are still zipped by `--dist` and checked by `check_81.py`.
+Parts in `imported/` have no generator here, so edit them in the Designer, export, and re-import. A new part also needs its name added to `IMPORTED_PARTS` in `build.py`.
 
 ## Documentation
 - [`docs/inventory.md`](docs/inventory.md): every design, version, status and location.
+- [`docs/template-review.md`](docs/template-review.md): findings from the rendered review images.
 - [`docs/library-reference.md`](docs/library-reference.md): templates, UDT mapping, status logic, colors, 8.1 compatibility.
 - [`docs/design-notes.md`](docs/design-notes.md): every design decision (notes 1–42) and the open items.
 - [`docs/isa101-audit.md`](docs/isa101-audit.md): the ISA-101 / ISA-18.2 audit and documented deviations.
