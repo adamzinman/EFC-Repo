@@ -14,7 +14,7 @@ VIEWS = os.path.join(PROJ, "com.inductiveautomation.perspective", "views")
 # ---------------------------------------------------------------- palette (ISA-101, matches the mockup)
 C = dict(card="#F0F0F0", line="#A6A6A6", line2="#7F7F7F", txt="#1F1F1F", muted="#5A5A5A", sp="#1F4E99",   # EFC_Styles palette
          bar="#7F7F7F", bar2="#A6A6A6", track="#E6E6E6", band="#CFCFCF", chip="#EDEDED", chipTxt="#4D4D4D",
-         dark="#3A3A3A", casBg="#E6E6E6", casTxt="#1F4E99", alH="#FF7A00", warnBg="#FFFFFF", warnTxt="#8F4500",
+         dark="#3A3A3A", casBg="#DCE6F7", casTxt="#1F4E99", alH="#FF7A00", warnBg="#FFFFFF", warnTxt="#8F4500",
          white="#FFFFFF", lockBg="#EDEDED", lockTxt="#4D4D4D")
 FONT = "Inter, 'Segoe UI', Roboto, Arial, sans-serif"
 NUM = "tabular-nums"
@@ -139,7 +139,7 @@ efc.ui.openDynamic(self)
 '''   # click opens the dw_Loop dynamic window (decision 15: LoopConfig popup retired)
 
 
-def card_root(children, pad, extra_style=None, direction="column", align=None):
+def card_root(children, pad, extra_style=None, direction="column", align="stretch"):
     st = {"backgroundColor": C["card"], "borderRadius": v(8), "boxShadow": "0 1px 2px rgba(20,30,40,0.08)",
           "padding": pad, "cursor": "pointer", "fontFamily": FONT, "overflow": "hidden"}
     st.update(extra_style or {})
