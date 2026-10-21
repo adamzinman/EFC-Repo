@@ -7,6 +7,7 @@ xsyimport.py is tested offline (test_xsyimport.py).
 
 Install (gateway scripting project, inheritable library):
   Project Library  efc/xsyimport.py      <- copy of tools/xsyimport/xsyimport.py
+  Project Library  efc/library_types.py  <- copy of tools/xsyimport/library_types.py
   Project Library  efc/xsyimport_gw.py   <- this file
   Message handler  name "xsyImport"      -> calls  efc.xsyimport_gw.handle(payload)
 
@@ -72,8 +73,14 @@ def _apply(p, line):
         for q in system.tag.configure(typesRoot + "/" + line + "/" + tname, members, "i"):
             if not q.isGood():
                 bad.append("UDT member %s.*: %s" % (tname, q))
-    if p.tag_create:
-        _ensure_folder(PROVIDER + line, IMPORTED)
+    made = set()
+    for folder, js in p.tag_create:                # create imported/ and imported/<array> as needed
+        parts = folder.split("/")
+        for depth in range(1, len(parts) + 1):
+            sub = "/".join(parts[:depth])
+            if sub not in made:
+                _ensure_folder(PROVIDER + "/".join(parts[:depth - 1]) if depth > 1 else PROVIDER + "", parts[depth - 1])
+                made.add(sub)
     for folder, js in p.tag_create:
         for q in system.tag.configure(PROVIDER + folder, [js], "i"):
             if not q.isGood():

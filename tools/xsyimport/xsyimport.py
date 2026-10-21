@@ -2,15 +2,18 @@
 """Control Expert V16.2 .XSY -> Ignition 8.1 tag planner.
 
 Pure logic: no system.* calls, so the same file runs in Jython 2.7 (gateway
-scripting project, as efc/xsyimport.py) and in CPython (tools/xsyimport tests).
+scripting project, as efc/xsyimport.py) and in CPython (tests).
 
     plan(xsy_bytes, line, tag_tree, types_tree, options) -> Plan
 
-Nothing is written here. The gateway glue (gateway.py) applies a Plan with
-system.tag.configure. Rules follow docs/xsy-tag-import-strategy.md and the
-shared PLC <-> Ignition interface contract (v1.0).
+Nothing is written here. gateway.py applies a Plan with system.tag.configure.
+Rules: docs/xsy-tag-import-strategy.md, shared interface contract v1.0.
+
+Policy:
+  * every HMI-flagged variable is imported (all tags shown on the HMI)
+  * an existing UDT gets new members added; old members are never deleted, only reported
+  * duplicates, tags no longer in the PLC and possible renames are reported, never changed
 """
-import base64
 import re
 import xml.etree.ElementTree as ET
 
@@ -19,7 +22,9 @@ try:  # Jython 2.7 uses unicode; CPython 3 uses str
 except NameError:
     STRING_TYPES = (str,)
 
-VERSION = "1.0.0"
+from library_types import LIBRARY_TYPES
+
+VERSION = "1.1.0"
 HMI_ATTR = "IsVariableHMI"
 HMI_TRUE = ("-1", "1", "TRUE")
 PARAM_PREFIX = "OPC Prefix"
@@ -29,41 +34,48 @@ DEFAULT_PREFIX = "ns=2;s=0:"
 IMPORTED = "imported"
 ITEM_PATH = "{OPC Prefix}{Tag}.{TagName}"
 
-# Control Expert elementary type -> Ignition dataType (contract v1.0 table).
+# Control Expert elementary type -> Ignition dataType. The first block is contract v1.0.
+# BYTE/SINT/USINT/LREAL/LINT follow tools/ddtsync; BYTE -> Int2 keeps unsigned 8-bit values.
 ELEMENTARY = {
     "BOOL": "Boolean", "EBOOL": "Boolean",
-    "INT": "Int2",
-    "UINT": "Int4", "WORD": "Int4", "DINT": "Int4",
+    "INT": "Int2", "SINT": "Int1", "BYTE": "Int2", "USINT": "Int2",
+    "UINT": "Int4", "WORD": "Int4", "DINT": "Int4", "LINT": "Int8",
     "UDINT": "Int8", "DWORD": "Int8",
-    "REAL": "Float4",
-    "STRING": "String",
+    "REAL": "Float4", "LREAL": "Float8",
     "TIME": "Int4",
+}
+ARRAY_OF = {  # Ignition array dataType for each element dataType
+    "Boolean": "BooleanArray", "Int1": "Int1Array", "Int2": "Int2Array", "Int4": "Int4Array",
+    "Int8": "Int8Array", "Float4": "Float4Array", "Float8": "Float8Array", "String": "StringArray",
 }
 LINE_RE = re.compile(r"^\d{3}$")
 NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
-STRING_RE = re.compile(r"^STRING(\[\d+\])?$")
+STRING_RE = re.compile(r"^STRING(\[\d+\])?$", re.I)
+ARRAY_RE = re.compile(r"^ARRAY\s*\[\s*(-?\d+)\s*\.\.\s*(-?\d+)\s*\]\s*OF\s+(.+)$", re.I)
 
 DEFAULTS = {
     "opcServer": None,          # required: the OPC UA connection name, asked at run time
     "prefix": DEFAULT_PREFIX,   # OPC item prefix for elementary tags and UDT members
     "syncDocumentation": True,  # a non-empty PLC comment overwrites Ignition Documentation; blank never does
     "typesFolder": None,        # UDT folder under _types_; defaults to the line number
+    "library": None,            # library layouts; defaults to library_types.LIBRARY_TYPES
 }
 
 
 class ImportRefused(Exception):
-    """Raised for inputs that must not be imported at all (never a per-variable problem)."""
+    """Inputs that must not be imported at all (never a per-variable problem)."""
 
 
 # --------------------------------------------------------------------------- XSY
 
 class Model(object):
     def __init__(self):
-        self.ddts = {}   # DDT name -> [(member, typeName, comment)]
-        self.fbs = {}    # FB type name -> [(member, typeName, comment)] (inputs, outputs, public)
-        self.hmi = []    # [(variable, typeName, comment)] for HMI-flagged top-level variables
-        self.total = 0   # top-level variables in the export
-        self.flagged = 0 # variables that carry the HMI attribute at all, any value
+        self.ddts = {}      # DDT name -> [(member, typeName, comment)]
+        self.fbs = {}       # FB type name -> [(member, typeName, comment)] (inputs, outputs, public)
+        self.hmi = []       # [(variable, typeName, comment)] for HMI-flagged top-level variables
+        self.total = 0
+        self.flagged = 0    # variables that carry the HMI attribute at all, any value
+        self.from_library = set()   # type names whose layout came from the library, not the export
 
 
 def _comment(el):
@@ -101,29 +113,52 @@ def parse(data):
             m.hmi.append((v.get("name"), (v.get("typeName") or "").strip(), _comment(v)))
     if m.total and m.flagged == 0:
         raise ImportRefused("export has no %s attributes; re-export with attributes included. "
-                           "Refusing to import every variable." % HMI_ATTR)
+                            "Refusing to import every variable." % HMI_ATTR)
     return m
+
+
+def _add_library(model, library):
+    """Use a library layout only for a type the export does not define, and only when confirmed."""
+    for name, entry in (library or {}).items():
+        if name in model.ddts or name in model.fbs:
+            continue
+        if entry.get("confidence") != "confirmed":
+            continue
+        model.ddts[name] = [(m[0], m[1], m[2]) for m in entry["members"]]
+        model.from_library.add(name)
 
 
 # --------------------------------------------------------------------- type rules
 
 def _elem(t):
-    u = t.upper()
-    if STRING_RE.match(u):
+    if STRING_RE.match(t):
         return "String"
-    return ELEMENTARY.get(u)
+    return ELEMENTARY.get(t.upper())
 
 
 def _kind(tn, model):
-    """-> (kind, value, reason). kind is 'elem' (value = dataType), 'udt' (value = type name) or 'skip'."""
-    if tn.upper().startswith("ARRAY"):
-        return "skip", None, "array %s is not mapped in v1" % tn
+    """-> (kind, value, reason).
+
+    kind: 'elem' (value = dataType), 'elemarray' (value = array dataType),
+          'udt' (value = type name), 'udtarray' (value = (type name, lo, hi)), 'skip'.
+    """
+    am = ARRAY_RE.match(tn)
+    if am:
+        lo, hi, elem = int(am.group(1)), int(am.group(2)), am.group(3).strip()
+        if hi < lo:
+            return "skip", None, "array %s has an empty range" % tn
+        ek, ev, _ = _kind(elem, model)
+        if ek == "elem" and ev in ARRAY_OF:
+            return "elemarray", ARRAY_OF[ev], None
+        if ek == "udt":
+            return "udtarray", (ev, lo, hi), None
+        return "skip", None, "array of %s is not mapped" % elem
     dt = _elem(tn)
     if dt:
         return "elem", dt, None
     if tn in model.ddts or tn in model.fbs:
         return "udt", tn, None
-    return "skip", None, "type %s is not elementary and not defined in the export" % tn
+    return "skip", None, ("type %s is not elementary and not defined in the export or the library" % tn)
 
 
 def _atomic_member(name, dt, comment):
@@ -164,7 +199,7 @@ class _Builder(object):
                 problem = "member %s has a name Ignition does not allow" % mname
                 break
             kind, val, why = _kind(tn, self.model)
-            if kind == "elem":
+            if kind in ("elem", "elemarray"):
                 tags.append(_atomic_member(mname, val, comment))
             elif kind == "udt":
                 sub, why2 = self.udt(val, stack + (name,))
@@ -252,14 +287,17 @@ def _last(path):
 class Plan(object):
     def __init__(self):
         self.udt_create = []    # (types folder, udt json), nested types first
-        self.udt_extend = []    # (type name, [member json]) missing members added
-        self.udt_stale = []     # (type name, member) in Ignition but no longer in the PLC; reported only
-        self.udt_diff = []      # (type name, member, message); reported only
+        self.udt_extend = []    # (type name, [member json]) new members added to an existing UDT
+        self.udt_stale = []     # (type name, member) in Ignition, not in the PLC: kept and reported
+        self.udt_diff = []      # (type name, member, message): reported, not changed
         self.udt_skipped = []   # (type name, reason)
         self.tag_create = []    # (folder, tag json)
         self.tag_update = []    # (full path, {property: value}) documentation only
         self.exists = []        # (variable, path): already in Ignition, nothing to do
-        self.conflicts = []     # (variable, message): different type/dataType, reported only
+        self.conflicts = []     # (variable, message): reported, not changed
+        self.duplicates = []    # (PLC identity, [paths]): reported, not changed
+        self.not_in_plc = []    # (PLC identity, path): kept, reported
+        self.renames = []       # (old path, new name): possible rename, reported
         self.skipped = []       # (variable, reason)
 
     def counts(self):
@@ -267,7 +305,9 @@ class Plan(object):
                 "udt_stale": len(self.udt_stale), "udt_diff": len(self.udt_diff),
                 "udt_skipped": len(self.udt_skipped), "tag_create": len(self.tag_create),
                 "tag_update": len(self.tag_update), "exists": len(self.exists),
-                "conflicts": len(self.conflicts), "skipped": len(self.skipped)}
+                "conflicts": len(self.conflicts), "duplicates": len(self.duplicates),
+                "not_in_plc": len(self.not_in_plc), "renames": len(self.renames),
+                "skipped": len(self.skipped)}
 
     def is_noop(self):
         return not (self.udt_create or self.udt_extend or self.tag_create or self.tag_update)
@@ -291,78 +331,120 @@ def plan(data, line, tag_tree, types_tree, options=None):
     sync_doc = bool(opts["syncDocumentation"])
 
     model = parse(data)
+    _add_library(model, LIBRARY_TYPES if opts["library"] is None else opts["library"])
     builder = _Builder(model, tf, prefix)
     existing_types = types_index(types_tree)
     recs = records(tag_tree, line)
+    imported_path = "%s/%s" % (line, IMPORTED)
     inst, atoms, used_names = {}, {}, set()
+    by_identity = {}           # PLC identity -> [path], for duplicate detection
     for r in recs:
         if not r["top"]:
             continue
-        used_names.add(r["name"])
+        if r["path"] == "%s/%s" % (imported_path, r["name"]):   # only names directly under imported/ clash
+            used_names.add(r["name"])
         if r["tagType"] == "UdtInstance":
-            tag = _pval(r["params"].get(PARAM_TAG))
-            if tag:
-                inst.setdefault(tag, r)
+            ident = _pval(r["params"].get(PARAM_TAG))
+            if ident:
+                inst.setdefault(ident, r)
+                by_identity.setdefault(ident, []).append(r["path"])
         elif r["tagType"] == "AtomicTag" and r["opcItemPath"]:
-            key = _plc_key(r["opcItemPath"])
-            if key:
-                atoms.setdefault(key, r)
+            ident = _plc_key(r["opcItemPath"])
+            if ident:
+                atoms.setdefault(ident, r)
+                by_identity.setdefault(ident, []).append(r["path"])
 
     p = Plan()
     imported = "%s/%s" % (line, IMPORTED)
+    wanted = set()             # PLC identities the export still exposes
+    new_docs = []              # (name, kind, type, documentation) of tags this run creates
+
+    def atomic(vname, dt, comment):
+        rec = atoms.get(vname)
+        if rec is None and vname in inst:
+            p.conflicts.append((vname, "UDT instance %s in Ignition, %s in PLC; not changed"
+                                % (inst[vname]["typeId"], dt)))
+            return
+        if rec:
+            p.exists.append((vname, rec["path"]))
+            if rec["dataType"] and rec["dataType"] != dt:
+                p.conflicts.append((vname, "dataType %s in Ignition, %s in PLC; not changed"
+                                    % (rec["dataType"], dt)))
+            if sync_doc and comment and rec["documentation"] != comment:
+                p.tag_update.append((rec["path"], {"tagType": "AtomicTag", "documentation": comment}))
+            return
+        if vname in used_names:
+            p.skipped.append((vname, "name already used by another tag under %s" % line))
+            return
+        p.tag_create.append((imported, {
+            "name": vname, "tagType": "AtomicTag", "valueSource": "opc", "dataType": dt,
+            "opcServer": server, "opcItemPath": prefix + vname, "documentation": comment}))
+        new_docs.append((vname, "AtomicTag", dt, comment))
 
     for vname, tn, comment in model.hmi:
         if not NAME_RE.match(vname or ""):
             p.skipped.append((vname, "name is not allowed in Ignition"))
             continue
+        wanted.add(vname)
         kind, val, why = _kind(tn, model)
 
-        if kind == "elem":
-            rec = atoms.get(vname)
-            if rec is None and vname in inst:
-                p.conflicts.append((vname, "UDT instance %s in Ignition, %s in PLC; not changed"
-                                    % (inst[vname]["typeId"], val)))
+        if kind in ("elem", "elemarray"):
+            atomic(vname, val, comment)
+            continue
+
+        if kind == "udt":
+            js, why = builder.udt(val)
+            if js is None:
+                p.skipped.append((vname, "type %s: %s" % (val, why)))
                 continue
+            rec = inst.get(vname)
             if rec:
+                if _last(rec["typeId"]) != val:
+                    p.conflicts.append((vname, "type %s in Ignition, %s in PLC; not changed"
+                                        % (rec["typeId"], val)))
                 p.exists.append((vname, rec["path"]))
-                if rec["dataType"] and rec["dataType"] != val:
-                    p.conflicts.append((vname, "dataType %s in Ignition, %s in PLC; not changed"
-                                        % (rec["dataType"], val)))
                 if sync_doc and comment and rec["documentation"] != comment:
-                    p.tag_update.append((rec["path"], {"tagType": "AtomicTag", "documentation": comment}))
+                    p.tag_update.append((rec["path"], {"tagType": "UdtInstance", "documentation": comment}))
                 continue
             if vname in used_names:
                 p.skipped.append((vname, "name already used by another tag under %s" % line))
                 continue
             p.tag_create.append((imported, {
-                "name": vname, "tagType": "AtomicTag", "valueSource": "opc", "dataType": val,
-                "opcServer": server, "opcItemPath": prefix + vname, "documentation": comment}))
+                "name": vname, "tagType": "UdtInstance", "typeId": "%s/%s" % (tf, val),
+                "parameters": {PARAM_SERVER: {"dataType": "String", "value": server},
+                               PARAM_TAG: {"dataType": "String", "value": vname}},
+                "documentation": comment}))
+            new_docs.append((vname, "UdtInstance", val, comment))
             continue
 
-        if kind != "udt":
-            p.skipped.append((vname, why))
+        if kind == "udtarray":
+            elem, lo, hi = val
+            js, why = builder.udt(elem)
+            if js is None:
+                p.skipped.append((vname, "array of %s: %s" % (elem, why)))
+                continue
+            if vname in used_names:
+                p.skipped.append((vname, "name already used by another tag under %s" % line))
+                continue
+            folder = "%s/%s" % (imported, vname)
+            for i in range(lo, hi + 1):
+                ident = "%s[%d]" % (vname, i)
+                wanted.add(ident)
+                rec = inst.get(ident)
+                if rec:
+                    p.exists.append((ident, rec["path"]))
+                    if _last(rec["typeId"]) != elem:
+                        p.conflicts.append((ident, "type %s in Ignition, %s in PLC; not changed"
+                                            % (rec["typeId"], elem)))
+                    continue
+                p.tag_create.append((folder, {
+                    "name": "_%d" % i, "tagType": "UdtInstance", "typeId": "%s/%s" % (tf, elem),
+                    "parameters": {PARAM_SERVER: {"dataType": "String", "value": server},
+                                   PARAM_TAG: {"dataType": "String", "value": ident}},
+                    "documentation": comment}))
             continue
-        js, why = builder.udt(val)
-        if js is None:
-            p.skipped.append((vname, "type %s: %s" % (val, why)))
-            continue
-        rec = inst.get(vname)
-        if rec:
-            if _last(rec["typeId"]) != val:
-                p.conflicts.append((vname, "type %s in Ignition, %s in PLC; not changed"
-                                    % (rec["typeId"], val)))
-            p.exists.append((vname, rec["path"]))
-            if sync_doc and comment and rec["documentation"] != comment:
-                p.tag_update.append((rec["path"], {"tagType": "UdtInstance", "documentation": comment}))
-            continue
-        if vname in used_names:
-            p.skipped.append((vname, "name already used by another tag under %s" % line))
-            continue
-        p.tag_create.append((imported, {
-            "name": vname, "tagType": "UdtInstance", "typeId": "%s/%s" % (tf, val),
-            "parameters": {PARAM_SERVER: {"dataType": "String", "value": server},
-                           PARAM_TAG: {"dataType": "String", "value": vname}},
-            "documentation": comment}))
+
+        p.skipped.append((vname, why))
 
     # UDT definitions: create missing types, add missing members, report the rest.
     for tname in builder.order:
@@ -395,6 +477,20 @@ def plan(data, line, tag_tree, types_tree, options=None):
             p.udt_skipped.append((tname, why))
 
     p.udt_create.sort(key=lambda item: builder.order.index(item[1]["name"]))
+
+    # Reports only: duplicates, tags the export no longer exposes, possible renames.
+    for ident, paths in sorted(by_identity.items()):
+        if len(paths) > 1:
+            p.duplicates.append((ident, paths))
+    for ident, rec in sorted(list(inst.items()) + list(atoms.items())):
+        if ident not in wanted and not any(ident.startswith(w + "[") for w in wanted):
+            p.not_in_plc.append((ident, rec["path"]))
+    for ident, path in list(p.not_in_plc):
+        rec = inst.get(ident) or atoms.get(ident)
+        for name, ttype, dt, doc in new_docs:
+            if doc and rec["documentation"] == doc and rec["tagType"] == ttype:
+                p.renames.append((path, name))
+                break
     return p
 
 
@@ -409,20 +505,19 @@ def report_text(p, header):
         for it in items:
             lines.append("  " + fmt(it))
 
-    section("NEW UDT", p.udt_create, lambda it: "%s/%s  (%d members)" % (it[0], it[1]["name"], len(it[1]["tags"])))
-    section("EXTENDED UDT (members added)", p.udt_extend,
+    section("NEW UDT", p.udt_create,
+            lambda it: "%s/%s  (%d members)" % (it[0], it[1]["name"], len(it[1]["tags"])))
+    section("EXTENDED UDT (new members added)", p.udt_extend,
             lambda it: "%s: + %s" % (it[0], ", ".join(t["name"] for t in it[1])))
     section("NEW TAG", p.tag_create, lambda it: "%s/%s  (%s)" % (it[0], it[1]["name"], it[1]["tagType"]))
-    section("UPDATED DOCUMENTATION", p.tag_update, lambda it: "%s" % it[0])
+    section("DOCUMENTATION UPDATE", p.tag_update, lambda it: "%s" % it[0])
     section("UP TO DATE", p.exists, lambda it: "%s -> %s" % (it[0], it[1]))
+    section("DUPLICATE (reported, not changed)", p.duplicates, lambda it: "%s: %s" % (it[0], ", ".join(it[1])))
+    section("NOT IN PLC (kept, not deleted)", p.not_in_plc, lambda it: "%s -> %s" % it)
+    section("POSSIBLE RENAME (not changed)", p.renames, lambda it: "%s -> %s" % it)
     section("CONFLICT (reported, not changed)", p.conflicts, lambda it: "%s: %s" % it)
-    section("UDT DIFFERENCE (reported, not changed)", p.udt_diff, lambda it: "%s.%s: %s" % it)
-    section("STALE UDT MEMBER (in Ignition, not in PLC; kept)", p.udt_stale, lambda it: "%s.%s" % it)
+    section("UDT MEMBER NOT IN PLC (kept, not deleted)", p.udt_stale, lambda it: "%s.%s" % it)
+    section("UDT MEMBER DIFFERENCE (reported, not changed)", p.udt_diff, lambda it: "%s.%s: %s" % it)
     section("SKIPPED TAG", p.skipped, lambda it: "%s: %s" % it)
     section("SKIPPED UDT", p.udt_skipped, lambda it: "%s: %s" % it)
     return "\n".join(lines)
-
-
-def encode(text):
-    """Payload helper shared by the Designer and the gateway (base64 of the raw XSY bytes)."""
-    return base64.b64encode(text)

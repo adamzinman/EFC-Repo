@@ -111,14 +111,18 @@ class FreshLineTests(unittest.TestCase):
         cls.p = X.plan(load_xsy(), "058", [], [], {"opcServer": SERVER})
 
     def test_every_hmi_variable_accounted_for_once(self):
-        accounted = (len(self.p.tag_create) + len(self.p.exists) + len(self.p.conflicts)
-                     + len(self.p.skipped))
-        self.assertEqual(accounted, 217)
+        # array-of-DDT variables expand to one tag per element; count them under the array name
+        names = set()
+        for fold, js in self.p.tag_create:
+            names.add(fold.split("/")[-1] if js["name"].startswith("_") and "/" in fold and fold.split("/")[-1] != "imported" else js["name"])
+        names |= set(v for v, _ in self.p.exists if "[" not in v) | set(v for v, _ in self.p.conflicts if "[" not in v)
+        names |= set(v for v, _ in self.p.skipped)
+        self.assertEqual(len(names), 217)
 
     def test_arrays_and_io_card_types_are_skipped_with_reason(self):
         reasons = dict(self.p.skipped)
-        self.assertIn("Spare_Valve", reasons)
-        self.assertIn("array", reasons["Spare_Valve"])
+        self.assertNotIn("Spare_Valve", reasons)   # array of DDT: imported as indexed instances
+        self.assertIn("Spare_Valve", [f.split("/")[-1] for f, _ in self.p.tag_create])
         self.assertIn("PLC0_d0_r0_s5_DDO1602", reasons)
         self.assertIn("T_U_DIS_STD_OUT_16", reasons["PLC0_d0_r0_s5_DDO1602"])
         self.assertNotIn("PLC0_d0_r0_s5_DDO1602", [j["name"] for _, j in self.p.tag_create])
@@ -156,7 +160,8 @@ class FreshLineTests(unittest.TestCase):
         for fold, js in self.p.tag_create:
             if js["tagType"] == "UdtInstance":
                 self.assertEqual(set(js["parameters"]), {"OPC Server", "Tag"})
-                self.assertEqual(js["parameters"]["Tag"]["value"], js["name"])
+                tag = js["parameters"]["Tag"]["value"]
+                self.assertTrue(tag == js["name"] or tag.endswith("[" + js["name"][1:] + "]"), tag)
 
     def test_udt_member_bindings_follow_contract(self):
         for _, js in self.p.udt_create:

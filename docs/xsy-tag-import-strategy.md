@@ -79,9 +79,15 @@ Ignition is the state. There is no state file. Running twice in a row changes no
 Elementary types (contract v1.0): BOOL/EBOOL → Boolean, INT → Int2, UINT/WORD/DINT → Int4,
 UDINT/DWORD → Int8, REAL → Float4, STRING[n] → String, TIME → Int4.
 
-**Not mapped in v1 (skipped with a reason):** arrays (including `Station`, `Scale`, `Spare_Valve` and the
-31 array members inside DDTs), BYTE, LREAL and other types outside the table, I/O card types, and any UDT that
-depends on a skipped type.
+**Arrays (v2):** an array of an elementary type becomes one array tag (`Int2Array` etc.); a `BYTE` maps to
+`Int2` (unsigned 8-bit values stay intact, as in `ddtsync`), and `SINT`, `USINT`, `LINT` and `LREAL` map
+similarly. An array of a DDT (`Station`, `Scale`, `Spare_Valve`) becomes a folder of instances, one per index:
+`imported/Station/_1` … `_6`, with `Tag` = `Station[1]`. Arrays inside a UDT member that are not elementary
+(an array of structures) are still skipped and reported.
+
+**I/O card types (v2):** the `T_U_*` device types are not in the export. The web lookup did not confirm a
+member layout (see `tools/xsyimport/library_types.py`), so they stay skipped with a reason until a confirmed
+layout is entered from the Control Expert project. Anything not confirmed is never used.
 
 **Member bindings** follow the live convention:
 - `OPC Prefix` = `ns=2;s=0:` (default), `OPC Server` = blank, `Tag` = blank on each UDT
@@ -114,14 +120,21 @@ depends on a skipped type.
 | Found, PLC comment non-empty and different | documentation updated (`"m"`) |
 | Found, PLC comment blank | **nothing**: Ignition text is never blanked |
 | Found, `typeId` or `dataType` differs | **reported as a conflict, not changed** |
+| Same PLC identity found more than once | **duplicate**, all paths listed, nothing changed |
+| Existing tag whose PLC identity is no longer exposed | **not in PLC**, kept and listed, never deleted |
+| Not-in-PLC tag and a new tag with the same documentation and type | **possible rename**, listed for you to act on |
 | UDT exists, members missing in it | missing members added (`"i"`) |
 | UDT exists, member differs or is no longer in the PLC | reported; never changed or deleted |
 | Tag moved or renamed by hand | still found by PLC identity (instance `Tag`, or the atomic's OPC item name) |
 
 Found means: anywhere under `<line>/`. A tag in the line's `Valves/` folder counts as found.
 
-**Not done in v1:** changing a UDT's type on an instance, deleting stale members or tags, updating OPC bindings
-on existing atomic tags, and re-routing tags into type folders. All are reported only.
+**Policy (agreed):** when a UDT already exists and the PLC adds members, the new members are added. Members that
+the PLC no longer has are never deleted; they are listed. Duplicates, not-in-PLC tags and possible renames are
+listed and never changed. A rename is never applied automatically; a deletion is never applied automatically.
+
+**Not done:** changing a UDT member's data type on an existing UDT, changing an instance's type, updating OPC
+bindings on existing atomic tags, and re-routing tags into type folders. All are reported only.
 
 ## 8. Current results (dry run against the sample export)
 
@@ -129,6 +142,7 @@ on existing atomic tags, and re-routing tags into type folders. All are reported
 |---|---|---|---|---|---|---|
 | 058, RGTCR tags as the line's tags | 13 | 95 | 88 | 0 | 19 (`Setpoint` UDT instance vs REAL) | 15 / 6 |
 | 058, empty line | 13 | 203 | 0 | 0 | 0 | 14 / 6 |
+| 058, RGTCR tags as the line's tags (v2) | 22 | 115 | 94 | 0 | 19 (`Setpoint`) | 7 / 0 (1 duplicate, 21 not in PLC) |
 
 The 19 conflicts are the `HMI_SP_*` setpoints. They are reported and not changed, as agreed.
 
