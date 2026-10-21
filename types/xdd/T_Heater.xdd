@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-1:58:43" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:36:12" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
 <contentHeader name="PCLib" version="1.00"></contentHeader>
-<DDTSource DDTName="T_Heater" version="1.00" dateTime="dt#2026-10-21-01:58:43">
+<DDTSource DDTName="T_Heater" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Electric heater: on/off contactor, time-proportioned SSR, or SCR power controller</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -13,6 +13,12 @@
 		</variables>
 		<variables name="Mode" typeName="T_Mode">
 			<comment>Mode block</comment>
+		</variables>
+		<variables name="Perm" typeName="T_Intlk">
+			<comment>Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK</comment>
+		</variables>
+		<variables name="Intlk" typeName="T_Intlk">
+			<comment>Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK</comment>
 		</variables>
 		<variables name="Inp_ContactorFbk" typeName="BOOL">
 			<comment>Main / isolating contactor closed (aux contact)</comment>

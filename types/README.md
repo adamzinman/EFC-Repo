@@ -156,26 +156,26 @@ MTP services use a PackML-derived state model (Execute, Completing, Unholding...
 | [`T_AlmLim`](#t_almlim) | Support (alarm object) | e.g. VAHLim / VAHEn / VAHAct | 28 | - |
 | [`T_Mode`](#t_mode) | Support (mode + ownership) | OpMode (Offline/Operator/Automatic) + SrcMode | 20 | - |
 | [`T_RunTime`](#t_runtime) | Support (asset data) | - | 11 | - |
+| [`T_Intlk`](#t_intlk) | Support (interlock group) | LockView16 | 27 | T_Alarm |
 | [`T_AI`](#t_ai) | Control module | AnaMon | 35 | T_Alarm, T_AlmLim |
 | [`T_DI`](#t_di) | Control module | BinMon | 19 | T_Alarm |
-| [`T_DValve`](#t_dvalve) | Control module | MonBinVlv | 41 | T_Alarm, T_Mode, T_RunTime |
-| [`T_CValve`](#t_cvalve) | Control module | MonAnaVlv | 42 | T_Alarm, T_Mode |
-| [`T_Motor`](#t_motor) | Control module | MonBinDrv | 52 | T_Alarm, T_AlmLim, T_Mode, T_RunTime |
-| [`T_VFD`](#t_vfd) | Control module | MonAnaDrv | 82 | T_Alarm, T_Mode, T_RunTime |
-| [`T_Heater`](#t_heater) | Control module | MonBinDrv (on/off) / MonAnaDrv (SSR, SCR) | 64 | T_Alarm, T_Mode, T_RunTime |
-| [`T_PID`](#t_pid) | Control module | PIDCtrl | 51 | T_Alarm, T_AlmLim |
-| [`T_PumpProt`](#t_pumpprot) | Control module | - | 28 | T_Alarm, T_AlmLim |
+| [`T_DValve`](#t_dvalve) | Control module | MonBinVlv | 43 | T_Alarm, T_Intlk, T_Mode, T_RunTime |
+| [`T_CValve`](#t_cvalve) | Control module | MonAnaVlv | 43 | T_Alarm, T_Intlk, T_Mode |
+| [`T_Motor`](#t_motor) | Control module | MonBinDrv | 54 | T_Alarm, T_AlmLim, T_Intlk, T_Mode, T_RunTime |
+| [`T_VFD`](#t_vfd) | Control module | MonAnaDrv | 84 | T_Alarm, T_Intlk, T_Mode, T_RunTime |
+| [`T_Heater`](#t_heater) | Control module | MonBinDrv (on/off) / MonAnaDrv (SSR, SCR) | 66 | T_Alarm, T_Intlk, T_Mode, T_RunTime |
+| [`T_PID`](#t_pid) | Control module | PIDCtrl | 52 | T_Alarm, T_AlmLim, T_Intlk |
+| [`T_PumpProt`](#t_pumpprot) | Control module | - | 29 | T_Alarm, T_AlmLim, T_Intlk |
 | [`T_PumpDS`](#t_pumpds) | Equipment module | - | 26 | T_Alarm, T_Mode |
-| [`T_Agitator`](#t_agitator) | Equipment module | MonAnaDrv (drive) | 15 | T_Alarm, T_AlmLim, T_Mode, T_RunTime, T_VFD |
-| [`T_Compressor`](#t_compressor) | Equipment module | MonAnaDrv (drive) | 29 | T_Alarm, T_AlmLim, T_Mode, T_RunTime, T_VFD |
-| [`T_Conveyor`](#t_conveyor) | Equipment module | MonBinDrv (drive) | 28 | T_Alarm, T_AlmLim, T_Mode, T_Motor, T_RunTime |
+| [`T_Agitator`](#t_agitator) | Equipment module | MonAnaDrv (drive) | 16 | T_Alarm, T_AlmLim, T_Intlk, T_Mode, T_RunTime, T_VFD |
+| [`T_Compressor`](#t_compressor) | Equipment module | MonAnaDrv (drive) | 30 | T_Alarm, T_AlmLim, T_Intlk, T_Mode, T_RunTime, T_VFD |
+| [`T_Conveyor`](#t_conveyor) | Equipment module | MonBinDrv (drive) | 29 | T_Alarm, T_AlmLim, T_Intlk, T_Mode, T_Motor, T_RunTime |
 | [`T_Tank`](#t_tank) | Equipment module / Unit vessel | - | 41 | T_Alarm, T_AlmLim |
 | [`T_Totalizer`](#t_totalizer) | Control module | - | 41 | T_Alarm, T_AlmLim |
 | [`T_HeatEx`](#t_heatex) | Control module (monitoring) | - | 31 | T_AlmLim |
-| [`T_DosePump`](#t_dosepump) | Equipment module | MonAnaDrv (drive) | 31 | T_Alarm, T_AlmLim, T_Mode, T_Motor, T_RunTime |
+| [`T_DosePump`](#t_dosepump) | Equipment module | MonAnaDrv (drive) | 32 | T_Alarm, T_AlmLim, T_Intlk, T_Mode, T_Motor, T_RunTime |
 | [`T_Analyzer`](#t_analyzer) | Control module | AnaMon | 28 | T_AI, T_Alarm, T_AlmLim |
 | [`T_GasDet`](#t_gasdet) | Control module | AnaMon | 39 | T_Alarm, T_AlmLim |
-| [`T_Intlk`](#t_intlk) | Support (interlock group) | LockView16 | 26 | T_Alarm |
 | [`T_ESD`](#t_esd) | Support (shutdown group) | - | 34 | T_Alarm |
 | [`T_Station`](#t_station) | Equipment module | - | 56 | T_Alarm, T_AlmLim, T_Intlk, T_Mode |
 | [`T_Phase`](#t_phase) | Equipment phase (procedural) | Service (state machine) | 42 | T_Alarm |
@@ -389,6 +389,8 @@ On/off valve: single or dual solenoid, limit switches, travel alarms.
 | `Cfg_Tag` | `STRING[20]` |  | Equipment / instrument tag, e.g. FT-101 |
 | `Cfg_Desc` | `STRING[40]` |  | Description shown on HMI faceplate |
 | `Mode` | `T_Mode` |  | Mode block |
+| `Perm` | `T_Intlk` |  | Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK |
+| `Intlk` | `T_Intlk` |  | Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK |
 | `Inp_ZSO` | `BOOL` |  | Open limit switch |
 | `Inp_ZSC` | `BOOL` |  | Closed limit switch |
 | `Inp_Remote` | `BOOL` |  | Local/Remote switch in REMOTE (if fitted) |
@@ -439,6 +441,7 @@ Modulating control valve: limits, rate limit, positioner feedback.
 | `Cfg_Tag` | `STRING[20]` |  | Equipment / instrument tag, e.g. FT-101 |
 | `Cfg_Desc` | `STRING[40]` |  | Description shown on HMI faceplate |
 | `Mode` | `T_Mode` |  | Mode block |
+| `Intlk` | `T_Intlk` |  | Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK |
 | `Inp_PosFbk` | `REAL` |  | Position feedback (%) |
 | `Inp_FbkBad` | `BOOL` |  | Feedback signal bad |
 | `Inp_ZSC` | `BOOL` |  | Closed limit switch (optional) |
@@ -490,6 +493,8 @@ Direct-on-line / star-delta / soft-start motor.
 | `Cfg_Tag` | `STRING[20]` |  | Equipment / instrument tag, e.g. FT-101 |
 | `Cfg_Desc` | `STRING[40]` |  | Description shown on HMI faceplate |
 | `Mode` | `T_Mode` |  | Mode block |
+| `Perm` | `T_Intlk` |  | Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK |
+| `Intlk` | `T_Intlk` |  | Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK |
 | `Inp_RunFbk` | `BOOL` |  | Run feedback (contactor aux / drive running) |
 | `Inp_Remote` | `BOOL` |  | Local/Remote switch in REMOTE |
 | `Inp_AvailOK` | `BOOL` |  | MCC available: breaker closed, control power OK |
@@ -551,6 +556,8 @@ Variable speed drive (fieldbus or hardwired).
 | `Cfg_Tag` | `STRING[20]` |  | Equipment / instrument tag, e.g. FT-101 |
 | `Cfg_Desc` | `STRING[40]` |  | Description shown on HMI faceplate |
 | `Mode` | `T_Mode` |  | Mode block |
+| `Perm` | `T_Intlk` |  | Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK |
+| `Intlk` | `T_Intlk` |  | Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK |
 | `Inp_RunFbk` | `BOOL` |  | Run feedback (contactor aux / drive running) |
 | `Inp_Remote` | `BOOL` |  | Local/Remote switch in REMOTE |
 | `Inp_AvailOK` | `BOOL` |  | MCC available: breaker closed, control power OK |
@@ -642,6 +649,8 @@ Electric heater: on/off contactor, time-proportioned SSR, or SCR power controlle
 | `Cfg_Tag` | `STRING[20]` |  | Equipment / instrument tag, e.g. FT-101 |
 | `Cfg_Desc` | `STRING[40]` |  | Description shown on HMI faceplate |
 | `Mode` | `T_Mode` |  | Mode block |
+| `Perm` | `T_Intlk` |  | Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK |
+| `Intlk` | `T_Intlk` |  | Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK |
 | `Inp_ContactorFbk` | `BOOL` |  | Main / isolating contactor closed (aux contact) |
 | `Inp_Remote` | `BOOL` |  | Local/Remote switch in REMOTE |
 | `Inp_AvailOK` | `BOOL` |  | Supply available: breaker closed, control power OK |
@@ -714,6 +723,7 @@ PID loop wrapper (maps onto PIDFF EFB), Man/Auto/Cas, tracking.
 |---|---|---|---|
 | `Cfg_Tag` | `STRING[20]` |  | Equipment / instrument tag, e.g. FT-101 |
 | `Cfg_Desc` | `STRING[40]` |  | Description shown on HMI faceplate |
+| `Intlk` | `T_Intlk` |  | Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK |
 | `Cfg_PVEU` | `STRING[12]` |  | PV engineering units text |
 | `Inp_PV` | `REAL` |  | Process value (EU) |
 | `Inp_PVBad` | `BOOL` |  | PV bad quality |
@@ -776,6 +786,7 @@ Pump protection layer: dry run, low flow, deadhead, seal, bearing.
 |---|---|---|---|
 | `Cfg_Tag` | `STRING[20]` |  | Equipment / instrument tag, e.g. FT-101 |
 | `Cfg_Desc` | `STRING[40]` |  | Description shown on HMI faceplate |
+| `Prot` | `T_Intlk` |  | Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK |
 | `Inp_Running` | `BOOL` |  | Pump running (from Motor / VFD Sts_Running) |
 | `Inp_SuctPress` | `REAL` |  | Suction pressure (EU) |
 | `Inp_DischPress` | `REAL` |  | Discharge pressure (EU) |
@@ -847,6 +858,7 @@ Agitator / mixer: VFD + submergence, seal and gearbox protection.
 | Member | Type | Init | Description |
 |---|---|---|---|
 | `Drv` | `T_VFD` |  | Drive (fixed-speed agitators: ignore speed members) |
+| `Prot` | `T_Intlk` |  | Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK |
 | `Inp_Level` | `REAL` |  | Vessel level (EU) |
 | `Inp_SealOK` | `BOOL` |  | Seal / seal support system healthy |
 | `Inp_GbxTemp` | `REAL` |  | Gearbox oil temperature (degC) |
@@ -871,6 +883,7 @@ Compressor / blower: load-unload, anti-cycle, lube and thermal protection.
 | Member | Type | Init | Description |
 |---|---|---|---|
 | `Drv` | `T_VFD` |  | Drive (fixed-speed: ignore speed members) |
+| `Prot` | `T_Intlk` |  | Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK |
 | `Inp_SuctPress` | `REAL` |  | Suction pressure (EU) |
 | `Inp_DischPress` | `REAL` |  | Discharge / header pressure (EU) |
 | `Inp_DischTemp` | `REAL` |  | Discharge temperature (degC) |
@@ -908,6 +921,7 @@ Belt / screw conveyor: start warning, zero-speed, pull-cord, alignment.
 
 | Member | Type | Init | Description |
 |---|---|---|---|
+| `Prot` | `T_Intlk` |  | Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK |
 | `Mtr` | `T_Motor` |  | Drive motor |
 | `Inp_MotionOK` | `BOOL` |  | Zero-speed switch: motion detected |
 | `Inp_PullCordOK` | `BOOL` |  | Pull-cord / lanyard switches healthy |
@@ -1087,6 +1101,7 @@ Chemical dosing / metering pump: manual, flow-paced, trim, batch.
 
 | Member | Type | Init | Description |
 |---|---|---|---|
+| `Prot` | `T_Intlk` |  | Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK |
 | `Mtr` | `T_Motor` |  | Pump motor / enable |
 | `Cfg_RateEU` | `STRING[8]` |  | Dose rate units text, e.g. L/h |
 | `Cfg_DoseMode` | `INT` | 0 | 0=Manual rate 1=Flow-paced 2=Flow-paced + trim 3=Batch volume |
@@ -1186,6 +1201,42 @@ Weigh-fill station: vessel on a scale, inlet / sample / vacuum valves, net-weigh
 
 ## Analyzers and safety
 
+### T_Intlk
+
+Interlock / permissive group: 16 conditions, first-out, timed bypass.
+
+**ISA-88 role:** Support (interlock group) | **MTP:** LockView16 | **Standards:** ISA-84 / IEC 61511 (BPCS layer only), ISA-18.2 / IEC 62682, ISA-101.01, VDI/VDE/NAMUR 2658-4 (MTP)
+
+| Member | Type | Init | Description |
+|---|---|---|---|
+| `Cfg_Tag` | `STRING[20]` |  | Equipment / instrument tag, e.g. FT-101 |
+| `Cfg_Desc` | `STRING[40]` |  | Description shown on HMI faceplate |
+| `Inp_Cond` | `ARRAY[0..15] OF BOOL` |  | Condition n: TRUE = healthy / permitted |
+| `Cfg_Used` | `ARRAY[0..15] OF BOOL` |  | Condition n is configured |
+| `Cfg_CondDesc` | `ARRAY[0..15] OF STRING[32]` |  | HMI text for condition n |
+| `Cfg_Bypassable` | `ARRAY[0..15] OF BOOL` |  | Condition n may be bypassed |
+| `Cfg_Latch` | `BOOL` |  | Latch failures until Cmd_Reset (interlock); FALSE = permissive |
+| `Cfg_BypassMax` | `TIME` | T#8H | Maximum bypass duration |
+| `Cmd_Bypass` | `ARRAY[0..15] OF BOOL` |  | Bypass condition n (one-shot) |
+| `Cmd_Unbypass` | `ARRAY[0..15] OF BOOL` |  | Remove bypass on condition n (one-shot) |
+| `Cmd_UnbypassAll` | `BOOL` |  | Remove all bypasses (one-shot) |
+| `Inp_BypassPerm` | `BOOL` |  | Bypass authorisation (key switch / HMI permit) - IEC 61511 bypass management |
+| `Cmd_Reset` | `BOOL` |  | Reset latched conditions (one-shot) |
+| `Out_OK` | `BOOL` |  | All used conditions healthy or bypassed - wire to Inp_IntlkOK / Inp_PermOK |
+| `Sts_OKNoByp` | `BOOL` |  | All used conditions healthy without bypasses |
+| `Sts_Bypassed` | `ARRAY[0..15] OF BOOL` |  | Condition n bypassed |
+| `Sts_Latched` | `ARRAY[0..15] OF BOOL` |  | Condition n latched failed |
+| `Sts_FirstOut` | `INT` |  | First condition to fail (-1 = none) |
+| `Sts_NumBypassed` | `INT` |  | Number of bypassed conditions |
+| `Sts_BypLeft` | `ARRAY[0..15] OF TIME` |  | Bypass time remaining for condition n (0 = not bypassed) |
+| `Sts_BypassLeft` | `TIME` |  | Time left on the oldest bypass |
+| `Sts_ResetReq` | `BOOL` |  | Conditions healthy, reset required |
+| `Sts_CondWord` | `WORD` |  | Packed Inp_Cond (bit n = condition n) for SCADA |
+| `Sts_BypWord` | `WORD` |  | Packed Sts_Bypassed for SCADA |
+| `Sts_LatchWord` | `WORD` |  | Packed Sts_Latched for SCADA |
+| `Alm_Trip` | `T_Alarm` |  | Interlock tripped |
+| `Alm_Bypass` | `T_Alarm` |  | One or more conditions bypassed |
+
 ### T_Analyzer
 
 Process analyzer (pH, ORP, conductivity, DO, turbidity, Cl2 ...).
@@ -1270,41 +1321,6 @@ Fixed gas detector (4-20mA): latching A1/A2/A3, inhibit, fault.
 | `Alm_Fault` | `T_Alarm` |  | Detector fault |
 | `Alm_OverRng` | `T_Alarm` |  | Over-range |
 | `Alm_InhibitLong` | `T_Alarm` |  | Inhibit timed out |
-
-### T_Intlk
-
-Interlock / permissive group: 16 conditions, first-out, timed bypass.
-
-**ISA-88 role:** Support (interlock group) | **MTP:** LockView16 | **Standards:** ISA-84 / IEC 61511 (BPCS layer only), ISA-18.2 / IEC 62682, ISA-101.01, VDI/VDE/NAMUR 2658-4 (MTP)
-
-| Member | Type | Init | Description |
-|---|---|---|---|
-| `Cfg_Tag` | `STRING[20]` |  | Equipment / instrument tag, e.g. FT-101 |
-| `Cfg_Desc` | `STRING[40]` |  | Description shown on HMI faceplate |
-| `Inp_Cond` | `ARRAY[0..15] OF BOOL` |  | Condition n: TRUE = healthy / permitted |
-| `Cfg_Used` | `ARRAY[0..15] OF BOOL` |  | Condition n is configured |
-| `Cfg_CondDesc` | `ARRAY[0..15] OF STRING[32]` |  | HMI text for condition n |
-| `Cfg_Bypassable` | `ARRAY[0..15] OF BOOL` |  | Condition n may be bypassed |
-| `Cfg_Latch` | `BOOL` |  | Latch failures until Cmd_Reset (interlock); FALSE = permissive |
-| `Cfg_BypassMax` | `TIME` | T#8H | Maximum bypass duration |
-| `Cmd_Bypass` | `ARRAY[0..15] OF BOOL` |  | Bypass condition n (one-shot) |
-| `Cmd_Unbypass` | `ARRAY[0..15] OF BOOL` |  | Remove bypass on condition n (one-shot) |
-| `Cmd_UnbypassAll` | `BOOL` |  | Remove all bypasses (one-shot) |
-| `Inp_BypassPerm` | `BOOL` |  | Bypass authorisation (key switch / HMI permit) - IEC 61511 bypass management |
-| `Cmd_Reset` | `BOOL` |  | Reset latched conditions (one-shot) |
-| `Out_OK` | `BOOL` |  | All used conditions healthy or bypassed - wire to Inp_IntlkOK / Inp_PermOK |
-| `Sts_OKNoByp` | `BOOL` |  | All used conditions healthy without bypasses |
-| `Sts_Bypassed` | `ARRAY[0..15] OF BOOL` |  | Condition n bypassed |
-| `Sts_Latched` | `ARRAY[0..15] OF BOOL` |  | Condition n latched failed |
-| `Sts_FirstOut` | `INT` |  | First condition to fail (-1 = none) |
-| `Sts_NumBypassed` | `INT` |  | Number of bypassed conditions |
-| `Sts_BypassLeft` | `TIME` |  | Time left on the oldest bypass |
-| `Sts_ResetReq` | `BOOL` |  | Conditions healthy, reset required |
-| `Sts_CondWord` | `WORD` |  | Packed Inp_Cond (bit n = condition n) for SCADA |
-| `Sts_BypWord` | `WORD` |  | Packed Sts_Bypassed for SCADA |
-| `Sts_LatchWord` | `WORD` |  | Packed Sts_Latched for SCADA |
-| `Alm_Trip` | `T_Alarm` |  | Interlock tripped |
-| `Alm_Bypass` | `T_Alarm` |  | One or more conditions bypassed |
 
 ### T_ESD
 

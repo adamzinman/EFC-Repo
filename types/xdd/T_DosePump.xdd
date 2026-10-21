@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:36:12" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
 <contentHeader name="PCLib" version="1.00"></contentHeader>
-<DDTSource DDTName="T_DosePump" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+<DDTSource DDTName="T_DosePump" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Chemical dosing / metering pump: manual, flow-paced, trim, batch</comment>
 	<structure>
+		<variables name="Prot" typeName="T_Intlk">
+			<comment>Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK</comment>
+		</variables>
 		<variables name="Mtr" typeName="T_Motor">
 			<comment>Pump motor / enable</comment>
 		</variables>

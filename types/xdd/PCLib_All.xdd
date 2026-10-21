@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:8:45" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:36:12" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
 <contentHeader name="PCLib" version="1.00"></contentHeader>
-<DDTSource DDTName="T_Alarm" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Alarm" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Discrete alarm, ISA-18.2 / IEC 62682 state model, shelving, suppression, out-of-service</comment>
 	<structure>
 		<variables name="Inp_Cond" typeName="BOOL">
@@ -91,7 +91,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_AlmLim" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_AlmLim" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Analog limit alarm: limit + deadband + ISA-18.2 / IEC 62682 alarm</comment>
 	<structure>
 		<variables name="Cfg_Lim" typeName="REAL">
@@ -187,7 +187,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Mode" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Mode" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Control-module mode and ISA-88 ownership (arbitration); maps to MTP OpMode</comment>
 	<structure>
 		<variables name="Cmd_Auto" typeName="BOOL">
@@ -253,7 +253,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_RunTime" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_RunTime" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Run-hours, starts and maintenance counters</comment>
 	<structure>
 		<variables name="Inp_Running" typeName="BOOL">
@@ -292,7 +292,94 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_AI" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Intlk" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+	<comment>Interlock / permissive group: 16 conditions, first-out, timed bypass</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Inp_Cond" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n: TRUE = healthy / permitted</comment>
+		</variables>
+		<variables name="Cfg_Used" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n is configured</comment>
+		</variables>
+		<variables name="Cfg_CondDesc" typeName="ARRAY[0..15] OF STRING[32]">
+			<comment>HMI text for condition n</comment>
+		</variables>
+		<variables name="Cfg_Bypassable" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n may be bypassed</comment>
+		</variables>
+		<variables name="Cfg_Latch" typeName="BOOL">
+			<comment>Latch failures until Cmd_Reset (interlock); FALSE = permissive</comment>
+		</variables>
+		<variables name="Cfg_BypassMax" typeName="TIME">
+			<comment>Maximum bypass duration</comment>
+			<variableInit value="T#8H"></variableInit>
+		</variables>
+		<variables name="Cmd_Bypass" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Bypass condition n (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Unbypass" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Remove bypass on condition n (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_UnbypassAll" typeName="BOOL">
+			<comment>Remove all bypasses (one-shot)</comment>
+		</variables>
+		<variables name="Inp_BypassPerm" typeName="BOOL">
+			<comment>Bypass authorisation (key switch / HMI permit) - IEC 61511 bypass management</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Reset latched conditions (one-shot)</comment>
+		</variables>
+		<variables name="Out_OK" typeName="BOOL">
+			<comment>All used conditions healthy or bypassed - wire to Inp_IntlkOK / Inp_PermOK</comment>
+		</variables>
+		<variables name="Sts_OKNoByp" typeName="BOOL">
+			<comment>All used conditions healthy without bypasses</comment>
+		</variables>
+		<variables name="Sts_Bypassed" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n bypassed</comment>
+		</variables>
+		<variables name="Sts_Latched" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n latched failed</comment>
+		</variables>
+		<variables name="Sts_FirstOut" typeName="INT">
+			<comment>First condition to fail (-1 = none)</comment>
+		</variables>
+		<variables name="Sts_NumBypassed" typeName="INT">
+			<comment>Number of bypassed conditions</comment>
+		</variables>
+		<variables name="Sts_BypLeft" typeName="ARRAY[0..15] OF TIME">
+			<comment>Bypass time remaining for condition n (0 = not bypassed)</comment>
+		</variables>
+		<variables name="Sts_BypassLeft" typeName="TIME">
+			<comment>Time left on the oldest bypass</comment>
+		</variables>
+		<variables name="Sts_ResetReq" typeName="BOOL">
+			<comment>Conditions healthy, reset required</comment>
+		</variables>
+		<variables name="Sts_CondWord" typeName="WORD">
+			<comment>Packed Inp_Cond (bit n = condition n) for SCADA</comment>
+		</variables>
+		<variables name="Sts_BypWord" typeName="WORD">
+			<comment>Packed Sts_Bypassed for SCADA</comment>
+		</variables>
+		<variables name="Sts_LatchWord" typeName="WORD">
+			<comment>Packed Sts_Latched for SCADA</comment>
+		</variables>
+		<variables name="Alm_Trip" typeName="T_Alarm">
+			<comment>Interlock tripped</comment>
+		</variables>
+		<variables name="Alm_Bypass" typeName="T_Alarm">
+			<comment>One or more conditions bypassed</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_AI" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Analog input: scaling, filtering, NE43 range check, alarms, sim</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -414,7 +501,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_DI" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_DI" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Digital input: invert, debounce, sim, optional state alarm</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -479,7 +566,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_DValve" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_DValve" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>On/off valve: single or dual solenoid, limit switches, travel alarms</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -490,6 +577,12 @@
 		</variables>
 		<variables name="Mode" typeName="T_Mode">
 			<comment>Mode block</comment>
+		</variables>
+		<variables name="Perm" typeName="T_Intlk">
+			<comment>Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK</comment>
+		</variables>
+		<variables name="Intlk" typeName="T_Intlk">
+			<comment>Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK</comment>
 		</variables>
 		<variables name="Inp_ZSO" typeName="BOOL">
 			<comment>Open limit switch</comment>
@@ -610,7 +703,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_CValve" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_CValve" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Modulating control valve: limits, rate limit, positioner feedback</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -621,6 +714,9 @@
 		</variables>
 		<variables name="Mode" typeName="T_Mode">
 			<comment>Mode block</comment>
+		</variables>
+		<variables name="Intlk" typeName="T_Intlk">
+			<comment>Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK</comment>
 		</variables>
 		<variables name="Inp_PosFbk" typeName="REAL">
 			<comment>Position feedback (%)</comment>
@@ -755,7 +851,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Motor" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Motor" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Direct-on-line / star-delta / soft-start motor</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -766,6 +862,12 @@
 		</variables>
 		<variables name="Mode" typeName="T_Mode">
 			<comment>Mode block</comment>
+		</variables>
+		<variables name="Perm" typeName="T_Intlk">
+			<comment>Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK</comment>
+		</variables>
+		<variables name="Intlk" typeName="T_Intlk">
+			<comment>Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK</comment>
 		</variables>
 		<variables name="Inp_RunFbk" typeName="BOOL">
 			<comment>Run feedback (contactor aux / drive running)</comment>
@@ -920,7 +1022,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_VFD" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_VFD" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Variable speed drive (fieldbus or hardwired)</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -931,6 +1033,12 @@
 		</variables>
 		<variables name="Mode" typeName="T_Mode">
 			<comment>Mode block</comment>
+		</variables>
+		<variables name="Perm" typeName="T_Intlk">
+			<comment>Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK</comment>
+		</variables>
+		<variables name="Intlk" typeName="T_Intlk">
+			<comment>Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK</comment>
 		</variables>
 		<variables name="Inp_RunFbk" typeName="BOOL">
 			<comment>Run feedback (contactor aux / drive running)</comment>
@@ -1183,7 +1291,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Heater" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Heater" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Electric heater: on/off contactor, time-proportioned SSR, or SCR power controller</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1194,6 +1302,12 @@
 		</variables>
 		<variables name="Mode" typeName="T_Mode">
 			<comment>Mode block</comment>
+		</variables>
+		<variables name="Perm" typeName="T_Intlk">
+			<comment>Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK</comment>
+		</variables>
+		<variables name="Intlk" typeName="T_Intlk">
+			<comment>Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK</comment>
 		</variables>
 		<variables name="Inp_ContactorFbk" typeName="BOOL">
 			<comment>Main / isolating contactor closed (aux contact)</comment>
@@ -1392,7 +1506,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_PID" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_PID" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>PID loop wrapper (maps onto PIDFF EFB), Man/Auto/Cas, tracking</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1400,6 +1514,9 @@
 		</variables>
 		<variables name="Cfg_Desc" typeName="STRING[40]">
 			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Intlk" typeName="T_Intlk">
+			<comment>Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK</comment>
 		</variables>
 		<variables name="Cfg_PVEU" typeName="STRING[12]">
 			<comment>PV engineering units text</comment>
@@ -1568,7 +1685,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_PumpProt" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_PumpProt" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Pump protection layer: dry run, low flow, deadhead, seal, bearing</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1576,6 +1693,9 @@
 		</variables>
 		<variables name="Cfg_Desc" typeName="STRING[40]">
 			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Prot" typeName="T_Intlk">
+			<comment>Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK</comment>
 		</variables>
 		<variables name="Inp_Running" typeName="BOOL">
 			<comment>Pump running (from Motor / VFD Sts_Running)</comment>
@@ -1663,7 +1783,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_PumpDS" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_PumpDS" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Duty/standby/lead-lag coordinator for up to 4 pumps</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1754,11 +1874,14 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Agitator" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Agitator" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Agitator / mixer: VFD + submergence, seal and gearbox protection</comment>
 	<structure>
 		<variables name="Drv" typeName="T_VFD">
 			<comment>Drive (fixed-speed agitators: ignore speed members)</comment>
+		</variables>
+		<variables name="Prot" typeName="T_Intlk">
+			<comment>Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK</comment>
 		</variables>
 		<variables name="Inp_Level" typeName="REAL">
 			<comment>Vessel level (EU)</comment>
@@ -1807,11 +1930,14 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Compressor" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Compressor" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Compressor / blower: load-unload, anti-cycle, lube and thermal protection</comment>
 	<structure>
 		<variables name="Drv" typeName="T_VFD">
 			<comment>Drive (fixed-speed: ignore speed members)</comment>
+		</variables>
+		<variables name="Prot" typeName="T_Intlk">
+			<comment>Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK</comment>
 		</variables>
 		<variables name="Inp_SuctPress" typeName="REAL">
 			<comment>Suction pressure (EU)</comment>
@@ -1905,9 +2031,12 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Conveyor" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Conveyor" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Belt / screw conveyor: start warning, zero-speed, pull-cord, alignment</comment>
 	<structure>
+		<variables name="Prot" typeName="T_Intlk">
+			<comment>Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK</comment>
+		</variables>
 		<variables name="Mtr" typeName="T_Motor">
 			<comment>Drive motor</comment>
 		</variables>
@@ -1997,7 +2126,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Tank" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Tank" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Tank / vessel: level-to-volume, inventory, fill/drain permissives, alarms</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2132,7 +2261,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Totalizer" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Totalizer" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Flow totalizer + batch delivery: analog or pulse, day/hour totals</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2269,7 +2398,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_HeatEx" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_HeatEx" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Heat exchanger performance monitor: duty, LMTD, UA, fouling, DP</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2373,9 +2502,12 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_DosePump" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_DosePump" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Chemical dosing / metering pump: manual, flow-paced, trim, batch</comment>
 	<structure>
+		<variables name="Prot" typeName="T_Intlk">
+			<comment>Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK</comment>
+		</variables>
 		<variables name="Mtr" typeName="T_Motor">
 			<comment>Pump motor / enable</comment>
 		</variables>
@@ -2481,7 +2613,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Analyzer" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Analyzer" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Process analyzer (pH, ORP, conductivity, DO, turbidity, Cl2 ...)</comment>
 	<structure>
 		<variables name="AI" typeName="T_AI">
@@ -2576,7 +2708,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_GasDet" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_GasDet" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Fixed gas detector (4-20mA): latching A1/A2/A3, inhibit, fault</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2708,91 +2840,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Intlk" version="1.00" dateTime="dt#2026-10-21-03:08:45">
-	<comment>Interlock / permissive group: 16 conditions, first-out, timed bypass</comment>
-	<structure>
-		<variables name="Cfg_Tag" typeName="STRING[20]">
-			<comment>Equipment / instrument tag, e.g. FT-101</comment>
-		</variables>
-		<variables name="Cfg_Desc" typeName="STRING[40]">
-			<comment>Description shown on HMI faceplate</comment>
-		</variables>
-		<variables name="Inp_Cond" typeName="ARRAY[0..15] OF BOOL">
-			<comment>Condition n: TRUE = healthy / permitted</comment>
-		</variables>
-		<variables name="Cfg_Used" typeName="ARRAY[0..15] OF BOOL">
-			<comment>Condition n is configured</comment>
-		</variables>
-		<variables name="Cfg_CondDesc" typeName="ARRAY[0..15] OF STRING[32]">
-			<comment>HMI text for condition n</comment>
-		</variables>
-		<variables name="Cfg_Bypassable" typeName="ARRAY[0..15] OF BOOL">
-			<comment>Condition n may be bypassed</comment>
-		</variables>
-		<variables name="Cfg_Latch" typeName="BOOL">
-			<comment>Latch failures until Cmd_Reset (interlock); FALSE = permissive</comment>
-		</variables>
-		<variables name="Cfg_BypassMax" typeName="TIME">
-			<comment>Maximum bypass duration</comment>
-			<variableInit value="T#8H"></variableInit>
-		</variables>
-		<variables name="Cmd_Bypass" typeName="ARRAY[0..15] OF BOOL">
-			<comment>Bypass condition n (one-shot)</comment>
-		</variables>
-		<variables name="Cmd_Unbypass" typeName="ARRAY[0..15] OF BOOL">
-			<comment>Remove bypass on condition n (one-shot)</comment>
-		</variables>
-		<variables name="Cmd_UnbypassAll" typeName="BOOL">
-			<comment>Remove all bypasses (one-shot)</comment>
-		</variables>
-		<variables name="Inp_BypassPerm" typeName="BOOL">
-			<comment>Bypass authorisation (key switch / HMI permit) - IEC 61511 bypass management</comment>
-		</variables>
-		<variables name="Cmd_Reset" typeName="BOOL">
-			<comment>Reset latched conditions (one-shot)</comment>
-		</variables>
-		<variables name="Out_OK" typeName="BOOL">
-			<comment>All used conditions healthy or bypassed - wire to Inp_IntlkOK / Inp_PermOK</comment>
-		</variables>
-		<variables name="Sts_OKNoByp" typeName="BOOL">
-			<comment>All used conditions healthy without bypasses</comment>
-		</variables>
-		<variables name="Sts_Bypassed" typeName="ARRAY[0..15] OF BOOL">
-			<comment>Condition n bypassed</comment>
-		</variables>
-		<variables name="Sts_Latched" typeName="ARRAY[0..15] OF BOOL">
-			<comment>Condition n latched failed</comment>
-		</variables>
-		<variables name="Sts_FirstOut" typeName="INT">
-			<comment>First condition to fail (-1 = none)</comment>
-		</variables>
-		<variables name="Sts_NumBypassed" typeName="INT">
-			<comment>Number of bypassed conditions</comment>
-		</variables>
-		<variables name="Sts_BypassLeft" typeName="TIME">
-			<comment>Time left on the oldest bypass</comment>
-		</variables>
-		<variables name="Sts_ResetReq" typeName="BOOL">
-			<comment>Conditions healthy, reset required</comment>
-		</variables>
-		<variables name="Sts_CondWord" typeName="WORD">
-			<comment>Packed Inp_Cond (bit n = condition n) for SCADA</comment>
-		</variables>
-		<variables name="Sts_BypWord" typeName="WORD">
-			<comment>Packed Sts_Bypassed for SCADA</comment>
-		</variables>
-		<variables name="Sts_LatchWord" typeName="WORD">
-			<comment>Packed Sts_Latched for SCADA</comment>
-		</variables>
-		<variables name="Alm_Trip" typeName="T_Alarm">
-			<comment>Interlock tripped</comment>
-		</variables>
-		<variables name="Alm_Bypass" typeName="T_Alarm">
-			<comment>One or more conditions bypassed</comment>
-		</variables>
-	</structure>
-</DDTSource>
-<DDTSource DDTName="T_ESD" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_ESD" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Emergency shutdown group (BPCS layer): de-energise-to-trip, MOS, first-out</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2903,7 +2951,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Station" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Station" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>Weigh-fill station: vessel on a scale, inlet / sample / vacuum valves, net-weight fill to target</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -3077,7 +3125,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>ISA-88 equipment phase: Part 1 state model, commands, modes, parameters, reports</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -3209,7 +3257,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Unit" version="1.00" dateTime="dt#2026-10-21-03:08:45">
+<DDTSource DDTName="T_Unit" version="1.00" dateTime="dt#2026-10-21-03:36:12">
 	<comment>ISA-88 unit: allocation, batch identity, procedural and equipment state</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">

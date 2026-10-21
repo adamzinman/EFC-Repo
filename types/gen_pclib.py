@@ -248,6 +248,35 @@ T("RunTime", "Run-hours, starts and maintenance counters", [
 ], "Common")
 
 # ---------------- Core ----------------
+T("Intlk", "Interlock / permissive group: 16 conditions, first-out, timed bypass", HDR + [
+    M("Inp_Cond", "ARRAY[0..15] OF BOOL", "Condition n: TRUE = healthy / permitted"),
+    M("Cfg_Used", "ARRAY[0..15] OF BOOL", "Condition n is configured"),
+    M("Cfg_CondDesc", "ARRAY[0..15] OF STRING[32]", "HMI text for condition n"),
+    M("Cfg_Bypassable", "ARRAY[0..15] OF BOOL", "Condition n may be bypassed"),
+    M("Cfg_Latch", "BOOL", "Latch failures until Cmd_Reset (interlock); FALSE = permissive"),
+    M("Cfg_BypassMax", "TIME", "Maximum bypass duration", "T#8H"),
+    M("Cmd_Bypass", "ARRAY[0..15] OF BOOL", "Bypass condition n (one-shot)"),
+    M("Cmd_Unbypass", "ARRAY[0..15] OF BOOL", "Remove bypass on condition n (one-shot)"),
+    M("Cmd_UnbypassAll", "BOOL", "Remove all bypasses (one-shot)"),
+    M("Inp_BypassPerm", "BOOL", "Bypass authorisation (key switch / HMI permit) - IEC 61511 bypass management"),
+    M("Cmd_Reset", "BOOL", "Reset latched conditions (one-shot)"),
+    M("Out_OK", "BOOL", "All used conditions healthy or bypassed - wire to Inp_IntlkOK / Inp_PermOK"),
+    M("Sts_OKNoByp", "BOOL", "All used conditions healthy without bypasses"),
+    M("Sts_Bypassed", "ARRAY[0..15] OF BOOL", "Condition n bypassed"),
+    M("Sts_Latched", "ARRAY[0..15] OF BOOL", "Condition n latched failed"),
+    M("Sts_FirstOut", "INT", "First condition to fail (-1 = none)"),
+    M("Sts_NumBypassed", "INT", "Number of bypassed conditions"),
+    M("Sts_BypLeft", "ARRAY[0..15] OF TIME", "Bypass time remaining for condition n (0 = not bypassed)"),
+    M("Sts_BypassLeft", "TIME", "Time left on the oldest bypass"),
+    M("Sts_ResetReq", "BOOL", "Conditions healthy, reset required"),
+    M("Sts_CondWord", "WORD", "Packed Inp_Cond (bit n = condition n) for SCADA"),
+    M("Sts_BypWord", "WORD", "Packed Sts_Bypassed for SCADA"),
+    M("Sts_LatchWord", "WORD", "Packed Sts_Latched for SCADA"),
+    A("Alm_Trip", "Interlock tripped"),
+    A("Alm_Bypass", "One or more conditions bypassed"),
+], "Safety")
+
+
 T("AI", "Analog input: scaling, filtering, NE43 range check, alarms, sim", HDR + [
     M("Cfg_EU", "STRING[12]", "Engineering units text"),
     M("Inp_Raw", "INT", "Raw counts from analog channel"),
@@ -305,6 +334,8 @@ T("DI", "Digital input: invert, debounce, sim, optional state alarm", HDR + [
 
 T("DValve", "On/off valve: single or dual solenoid, limit switches, travel alarms", HDR + [
     M("Mode", "@Mode", "Mode block"),
+    M("Perm", "@Intlk", "Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK"),
+    M("Intlk", "@Intlk", "Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"),
     M("Inp_ZSO", "BOOL", "Open limit switch"),
     M("Inp_ZSC", "BOOL", "Closed limit switch"),
     M("Inp_Remote", "BOOL", "Local/Remote switch in REMOTE (if fitted)"),
@@ -347,6 +378,7 @@ T("DValve", "On/off valve: single or dual solenoid, limit switches, travel alarm
 
 T("CValve", "Modulating control valve: limits, rate limit, positioner feedback", HDR + [
     M("Mode", "@Mode", "Mode block"),
+    M("Intlk", "@Intlk", "Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"),
     M("Inp_PosFbk", "REAL", "Position feedback (%)"),
     M("Inp_FbkBad", "BOOL", "Feedback signal bad"),
     M("Inp_ZSC", "BOOL", "Closed limit switch (optional)"),
@@ -389,6 +421,8 @@ T("CValve", "Modulating control valve: limits, rate limit, positioner feedback",
 
 T("Motor", "Direct-on-line / star-delta / soft-start motor", HDR + [
     M("Mode", "@Mode", "Mode block"),
+    M("Perm", "@Intlk", "Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK"),
+    M("Intlk", "@Intlk", "Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"),
 ] + MOTOR_INPUTS + [
     M("Inp_OL", "BOOL", "Overload / motor protection relay tripped"),
     M("Inp_Current", "REAL", "Motor current (A), optional"),
@@ -405,6 +439,8 @@ T("Motor", "Direct-on-line / star-delta / soft-start motor", HDR + [
 
 T("VFD", "Variable speed drive (fieldbus or hardwired)", HDR + [
     M("Mode", "@Mode", "Mode block"),
+    M("Perm", "@Intlk", "Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK"),
+    M("Intlk", "@Intlk", "Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"),
 ] + MOTOR_INPUTS + [
     M("Inp_DrvReady", "BOOL", "Drive ready"),
     M("Inp_DrvFault", "BOOL", "Drive faulted"),
@@ -452,6 +488,8 @@ T("VFD", "Variable speed drive (fieldbus or hardwired)", HDR + [
 
 T("Heater", "Electric heater: on/off contactor, time-proportioned SSR, or SCR power controller", HDR + [
     M("Mode", "@Mode", "Mode block"),
+    M("Perm", "@Intlk", "Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK"),
+    M("Intlk", "@Intlk", "Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"),
     M("Inp_ContactorFbk", "BOOL", "Main / isolating contactor closed (aux contact)"),
     M("Inp_Remote", "BOOL", "Local/Remote switch in REMOTE"),
     M("Inp_AvailOK", "BOOL", "Supply available: breaker closed, control power OK"),
@@ -516,6 +554,7 @@ T("Heater", "Electric heater: on/off contactor, time-proportioned SSR, or SCR po
 ], "Core")
 
 T("PID", "PID loop wrapper (maps onto PIDFF EFB), Man/Auto/Cas, tracking", HDR + [
+    M("Intlk", "@Intlk", "Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"),
     M("Cfg_PVEU", "STRING[12]", "PV engineering units text"),
     M("Inp_PV", "REAL", "Process value (EU)"),
     M("Inp_PVBad", "BOOL", "PV bad quality"),
@@ -569,6 +608,7 @@ T("PID", "PID loop wrapper (maps onto PIDFF EFB), Man/Auto/Cas, tracking", HDR +
 
 # ---------------- Rotating extras ----------------
 T("PumpProt", "Pump protection layer: dry run, low flow, deadhead, seal, bearing", HDR + [
+    M("Prot", "@Intlk", "Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK"),
     M("Inp_Running", "BOOL", "Pump running (from Motor / VFD Sts_Running)"),
     M("Inp_SuctPress", "REAL", "Suction pressure (EU)"),
     M("Inp_DischPress", "REAL", "Discharge pressure (EU)"),
@@ -626,6 +666,7 @@ T("PumpDS", "Duty/standby/lead-lag coordinator for up to 4 pumps", HDR + [
 
 T("Agitator", "Agitator / mixer: VFD + submergence, seal and gearbox protection", [
     M("Drv", "@VFD", "Drive (fixed-speed agitators: ignore speed members)"),
+    M("Prot", "@Intlk", "Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK"),
     M("Inp_Level", "REAL", "Vessel level (EU)"),
     M("Inp_SealOK", "BOOL", "Seal / seal support system healthy"),
     M("Inp_GbxTemp", "REAL", "Gearbox oil temperature (degC)"),
@@ -644,6 +685,7 @@ T("Agitator", "Agitator / mixer: VFD + submergence, seal and gearbox protection"
 
 T("Compressor", "Compressor / blower: load-unload, anti-cycle, lube and thermal protection", [
     M("Drv", "@VFD", "Drive (fixed-speed: ignore speed members)"),
+    M("Prot", "@Intlk", "Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK"),
     M("Inp_SuctPress", "REAL", "Suction pressure (EU)"),
     M("Inp_DischPress", "REAL", "Discharge / header pressure (EU)"),
     M("Inp_DischTemp", "REAL", "Discharge temperature (degC)"),
@@ -675,6 +717,7 @@ T("Compressor", "Compressor / blower: load-unload, anti-cycle, lube and thermal 
 ], "Rotating")
 
 T("Conveyor", "Belt / screw conveyor: start warning, zero-speed, pull-cord, alignment", [
+    M("Prot", "@Intlk", "Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK"),
     M("Mtr", "@Motor", "Drive motor"),
     M("Inp_MotionOK", "BOOL", "Zero-speed switch: motion detected"),
     M("Inp_PullCordOK", "BOOL", "Pull-cord / lanyard switches healthy"),
@@ -823,6 +866,7 @@ T("HeatEx", "Heat exchanger performance monitor: duty, LMTD, UA, fouling, DP", H
 ], "Process")
 
 T("DosePump", "Chemical dosing / metering pump: manual, flow-paced, trim, batch", [
+    M("Prot", "@Intlk", "Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK"),
     M("Mtr", "@Motor", "Pump motor / enable"),
     M("Cfg_RateEU", "STRING[8]", "Dose rate units text, e.g. L/h"),
     M("Cfg_DoseMode", "INT", "0=Manual rate 1=Flow-paced 2=Flow-paced + trim 3=Batch volume", "0"),
@@ -924,33 +968,6 @@ T("GasDet", "Fixed gas detector (4-20mA): latching A1/A2/A3, inhibit, fault", HD
     A("Alm_Fault", "Detector fault"),
     A("Alm_OverRng", "Over-range"),
     A("Alm_InhibitLong", "Inhibit timed out"),
-], "Safety")
-
-T("Intlk", "Interlock / permissive group: 16 conditions, first-out, timed bypass", HDR + [
-    M("Inp_Cond", "ARRAY[0..15] OF BOOL", "Condition n: TRUE = healthy / permitted"),
-    M("Cfg_Used", "ARRAY[0..15] OF BOOL", "Condition n is configured"),
-    M("Cfg_CondDesc", "ARRAY[0..15] OF STRING[32]", "HMI text for condition n"),
-    M("Cfg_Bypassable", "ARRAY[0..15] OF BOOL", "Condition n may be bypassed"),
-    M("Cfg_Latch", "BOOL", "Latch failures until Cmd_Reset (interlock); FALSE = permissive"),
-    M("Cfg_BypassMax", "TIME", "Maximum bypass duration", "T#8H"),
-    M("Cmd_Bypass", "ARRAY[0..15] OF BOOL", "Bypass condition n (one-shot)"),
-    M("Cmd_Unbypass", "ARRAY[0..15] OF BOOL", "Remove bypass on condition n (one-shot)"),
-    M("Cmd_UnbypassAll", "BOOL", "Remove all bypasses (one-shot)"),
-    M("Inp_BypassPerm", "BOOL", "Bypass authorisation (key switch / HMI permit) - IEC 61511 bypass management"),
-    M("Cmd_Reset", "BOOL", "Reset latched conditions (one-shot)"),
-    M("Out_OK", "BOOL", "All used conditions healthy or bypassed - wire to Inp_IntlkOK / Inp_PermOK"),
-    M("Sts_OKNoByp", "BOOL", "All used conditions healthy without bypasses"),
-    M("Sts_Bypassed", "ARRAY[0..15] OF BOOL", "Condition n bypassed"),
-    M("Sts_Latched", "ARRAY[0..15] OF BOOL", "Condition n latched failed"),
-    M("Sts_FirstOut", "INT", "First condition to fail (-1 = none)"),
-    M("Sts_NumBypassed", "INT", "Number of bypassed conditions"),
-    M("Sts_BypassLeft", "TIME", "Time left on the oldest bypass"),
-    M("Sts_ResetReq", "BOOL", "Conditions healthy, reset required"),
-    M("Sts_CondWord", "WORD", "Packed Inp_Cond (bit n = condition n) for SCADA"),
-    M("Sts_BypWord", "WORD", "Packed Sts_Bypassed for SCADA"),
-    M("Sts_LatchWord", "WORD", "Packed Sts_Latched for SCADA"),
-    A("Alm_Trip", "Interlock tripped"),
-    A("Alm_Bypass", "One or more conditions bypassed"),
 ], "Safety")
 
 T("ESD", "Emergency shutdown group (BPCS layer): de-energise-to-trip, MOS, first-out", HDR + [

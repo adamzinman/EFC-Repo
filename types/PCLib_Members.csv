@@ -84,6 +84,33 @@ T_RunTime,Support (asset data),-,Val_StartsLastHr,INT,,Starts in the last 60 min
 T_RunTime,Support (asset data),-,Val_LastRun,TIME,,Duration of last run
 T_RunTime,Support (asset data),-,Val_HrsSinceMaint,REAL,,Run hours since last maintenance reset
 T_RunTime,Support (asset data),-,Sts_MaintDue,BOOL,,Maintenance due
+T_Intlk,Support (interlock group),LockView16,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
+T_Intlk,Support (interlock group),LockView16,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
+T_Intlk,Support (interlock group),LockView16,Inp_Cond,ARRAY[0..15] OF BOOL,,Condition n: TRUE = healthy / permitted
+T_Intlk,Support (interlock group),LockView16,Cfg_Used,ARRAY[0..15] OF BOOL,,Condition n is configured
+T_Intlk,Support (interlock group),LockView16,Cfg_CondDesc,ARRAY[0..15] OF STRING[32],,HMI text for condition n
+T_Intlk,Support (interlock group),LockView16,Cfg_Bypassable,ARRAY[0..15] OF BOOL,,Condition n may be bypassed
+T_Intlk,Support (interlock group),LockView16,Cfg_Latch,BOOL,,Latch failures until Cmd_Reset (interlock); FALSE = permissive
+T_Intlk,Support (interlock group),LockView16,Cfg_BypassMax,TIME,T#8H,Maximum bypass duration
+T_Intlk,Support (interlock group),LockView16,Cmd_Bypass,ARRAY[0..15] OF BOOL,,Bypass condition n (one-shot)
+T_Intlk,Support (interlock group),LockView16,Cmd_Unbypass,ARRAY[0..15] OF BOOL,,Remove bypass on condition n (one-shot)
+T_Intlk,Support (interlock group),LockView16,Cmd_UnbypassAll,BOOL,,Remove all bypasses (one-shot)
+T_Intlk,Support (interlock group),LockView16,Inp_BypassPerm,BOOL,,Bypass authorisation (key switch / HMI permit) - IEC 61511 bypass management
+T_Intlk,Support (interlock group),LockView16,Cmd_Reset,BOOL,,Reset latched conditions (one-shot)
+T_Intlk,Support (interlock group),LockView16,Out_OK,BOOL,,All used conditions healthy or bypassed - wire to Inp_IntlkOK / Inp_PermOK
+T_Intlk,Support (interlock group),LockView16,Sts_OKNoByp,BOOL,,All used conditions healthy without bypasses
+T_Intlk,Support (interlock group),LockView16,Sts_Bypassed,ARRAY[0..15] OF BOOL,,Condition n bypassed
+T_Intlk,Support (interlock group),LockView16,Sts_Latched,ARRAY[0..15] OF BOOL,,Condition n latched failed
+T_Intlk,Support (interlock group),LockView16,Sts_FirstOut,INT,,First condition to fail (-1 = none)
+T_Intlk,Support (interlock group),LockView16,Sts_NumBypassed,INT,,Number of bypassed conditions
+T_Intlk,Support (interlock group),LockView16,Sts_BypLeft,ARRAY[0..15] OF TIME,,Bypass time remaining for condition n (0 = not bypassed)
+T_Intlk,Support (interlock group),LockView16,Sts_BypassLeft,TIME,,Time left on the oldest bypass
+T_Intlk,Support (interlock group),LockView16,Sts_ResetReq,BOOL,,"Conditions healthy, reset required"
+T_Intlk,Support (interlock group),LockView16,Sts_CondWord,WORD,,Packed Inp_Cond (bit n = condition n) for SCADA
+T_Intlk,Support (interlock group),LockView16,Sts_BypWord,WORD,,Packed Sts_Bypassed for SCADA
+T_Intlk,Support (interlock group),LockView16,Sts_LatchWord,WORD,,Packed Sts_Latched for SCADA
+T_Intlk,Support (interlock group),LockView16,Alm_Trip,T_Alarm,,Interlock tripped
+T_Intlk,Support (interlock group),LockView16,Alm_Bypass,T_Alarm,,One or more conditions bypassed
 T_AI,Control module,AnaMon,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
 T_AI,Control module,AnaMon,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
 T_AI,Control module,AnaMon,Cfg_EU,STRING[12],,Engineering units text
@@ -141,6 +168,8 @@ T_DI,Control module,BinMon,Alm_Bad,T_Alarm,,Channel fault alarm
 T_DValve,Control module,MonBinVlv,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
 T_DValve,Control module,MonBinVlv,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
 T_DValve,Control module,MonBinVlv,Mode,T_Mode,,Mode block
+T_DValve,Control module,MonBinVlv,Perm,T_Intlk,,"Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK"
+T_DValve,Control module,MonBinVlv,Intlk,T_Intlk,,"Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"
 T_DValve,Control module,MonBinVlv,Inp_ZSO,BOOL,,Open limit switch
 T_DValve,Control module,MonBinVlv,Inp_ZSC,BOOL,,Closed limit switch
 T_DValve,Control module,MonBinVlv,Inp_Remote,BOOL,,Local/Remote switch in REMOTE (if fitted)
@@ -182,6 +211,7 @@ T_DValve,Control module,MonBinVlv,Run,T_RunTime,,Cycle counter (Val_Starts = ope
 T_CValve,Control module,MonAnaVlv,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
 T_CValve,Control module,MonAnaVlv,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
 T_CValve,Control module,MonAnaVlv,Mode,T_Mode,,Mode block
+T_CValve,Control module,MonAnaVlv,Intlk,T_Intlk,,"Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"
 T_CValve,Control module,MonAnaVlv,Inp_PosFbk,REAL,,Position feedback (%)
 T_CValve,Control module,MonAnaVlv,Inp_FbkBad,BOOL,,Feedback signal bad
 T_CValve,Control module,MonAnaVlv,Inp_ZSC,BOOL,,Closed limit switch (optional)
@@ -224,6 +254,8 @@ T_CValve,Control module,MonAnaVlv,Alm_IntlkTrip,T_Alarm,,Driven to interlock pos
 T_Motor,Control module,MonBinDrv,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
 T_Motor,Control module,MonBinDrv,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
 T_Motor,Control module,MonBinDrv,Mode,T_Mode,,Mode block
+T_Motor,Control module,MonBinDrv,Perm,T_Intlk,,"Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK"
+T_Motor,Control module,MonBinDrv,Intlk,T_Intlk,,"Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"
 T_Motor,Control module,MonBinDrv,Inp_RunFbk,BOOL,,Run feedback (contactor aux / drive running)
 T_Motor,Control module,MonBinDrv,Inp_Remote,BOOL,,Local/Remote switch in REMOTE
 T_Motor,Control module,MonBinDrv,Inp_AvailOK,BOOL,,"MCC available: breaker closed, control power OK"
@@ -276,6 +308,8 @@ T_Motor,Control module,MonBinDrv,Run,T_RunTime,,Run hours / starts
 T_VFD,Control module,MonAnaDrv,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
 T_VFD,Control module,MonAnaDrv,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
 T_VFD,Control module,MonAnaDrv,Mode,T_Mode,,Mode block
+T_VFD,Control module,MonAnaDrv,Perm,T_Intlk,,"Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK"
+T_VFD,Control module,MonAnaDrv,Intlk,T_Intlk,,"Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"
 T_VFD,Control module,MonAnaDrv,Inp_RunFbk,BOOL,,Run feedback (contactor aux / drive running)
 T_VFD,Control module,MonAnaDrv,Inp_Remote,BOOL,,Local/Remote switch in REMOTE
 T_VFD,Control module,MonAnaDrv,Inp_AvailOK,BOOL,,"MCC available: breaker closed, control power OK"
@@ -358,6 +392,8 @@ T_VFD,Control module,MonAnaDrv,Run,T_RunTime,,Run hours / starts
 T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
 T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_Desc,STRING[40],,Description shown on HMI faceplate
 T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Mode,T_Mode,,Mode block
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Perm,T_Intlk,,"Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Intlk,T_Intlk,,"Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"
 T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_ContactorFbk,BOOL,,Main / isolating contactor closed (aux contact)
 T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_Remote,BOOL,,Local/Remote switch in REMOTE
 T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_AvailOK,BOOL,,"Supply available: breaker closed, control power OK"
@@ -421,6 +457,7 @@ T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Alm_IntlkTri
 T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Run,T_RunTime,,On hours / switch-on count
 T_PID,Control module,PIDCtrl,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
 T_PID,Control module,PIDCtrl,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
+T_PID,Control module,PIDCtrl,Intlk,T_Intlk,,"Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK"
 T_PID,Control module,PIDCtrl,Cfg_PVEU,STRING[12],,PV engineering units text
 T_PID,Control module,PIDCtrl,Inp_PV,REAL,,Process value (EU)
 T_PID,Control module,PIDCtrl,Inp_PVBad,BOOL,,PV bad quality
@@ -472,6 +509,7 @@ T_PID,Control module,PIDCtrl,Alm_DevL,T_AlmLim,,"Low deviation (SP - PV), EU"
 T_PID,Control module,PIDCtrl,Alm_PVBad,T_Alarm,,PV bad
 T_PumpProt,Control module,-,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
 T_PumpProt,Control module,-,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
+T_PumpProt,Control module,-,Prot,T_Intlk,,Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK
 T_PumpProt,Control module,-,Inp_Running,BOOL,,Pump running (from Motor / VFD Sts_Running)
 T_PumpProt,Control module,-,Inp_SuctPress,REAL,,Suction pressure (EU)
 T_PumpProt,Control module,-,Inp_DischPress,REAL,,Discharge pressure (EU)
@@ -525,6 +563,7 @@ T_PumpDS,Equipment module,-,Alm_NoneAvail,T_Alarm,,Demand present but no pump av
 T_PumpDS,Equipment module,-,Sts_ChgOver,BOOL,,"Automatic changeover occurred (event, not an alarm - ISA-18.2)"
 T_PumpDS,Equipment module,-,Val_ChgOverCount,UDINT,,Automatic changeover counter
 T_Agitator,Equipment module,MonAnaDrv (drive),Drv,T_VFD,,Drive (fixed-speed agitators: ignore speed members)
+T_Agitator,Equipment module,MonAnaDrv (drive),Prot,T_Intlk,,Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK
 T_Agitator,Equipment module,MonAnaDrv (drive),Inp_Level,REAL,,Vessel level (EU)
 T_Agitator,Equipment module,MonAnaDrv (drive),Inp_SealOK,BOOL,,Seal / seal support system healthy
 T_Agitator,Equipment module,MonAnaDrv (drive),Inp_GbxTemp,REAL,,Gearbox oil temperature (degC)
@@ -540,6 +579,7 @@ T_Agitator,Equipment module,MonAnaDrv (drive),Alm_Seal,T_Alarm,,Seal fault
 T_Agitator,Equipment module,MonAnaDrv (drive),Alm_GbxTemp,T_AlmLim,,High gearbox temperature
 T_Agitator,Equipment module,MonAnaDrv (drive),Alm_Vib,T_AlmLim,,High vibration
 T_Compressor,Equipment module,MonAnaDrv (drive),Drv,T_VFD,,Drive (fixed-speed: ignore speed members)
+T_Compressor,Equipment module,MonAnaDrv (drive),Prot,T_Intlk,,Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK
 T_Compressor,Equipment module,MonAnaDrv (drive),Inp_SuctPress,REAL,,Suction pressure (EU)
 T_Compressor,Equipment module,MonAnaDrv (drive),Inp_DischPress,REAL,,Discharge / header pressure (EU)
 T_Compressor,Equipment module,MonAnaDrv (drive),Inp_DischTemp,REAL,,Discharge temperature (degC)
@@ -568,6 +608,7 @@ T_Compressor,Equipment module,MonAnaDrv (drive),Alm_LoOilPress,T_AlmLim,,Low lub
 T_Compressor,Equipment module,MonAnaDrv (drive),Alm_HiOilTemp,T_AlmLim,,High lube oil temperature
 T_Compressor,Equipment module,MonAnaDrv (drive),Alm_Vib,T_AlmLim,,High vibration
 T_Compressor,Equipment module,MonAnaDrv (drive),Alm_LoSuct,T_AlmLim,,Low suction pressure
+T_Conveyor,Equipment module,MonBinDrv (drive),Prot,T_Intlk,,Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK
 T_Conveyor,Equipment module,MonBinDrv (drive),Mtr,T_Motor,,Drive motor
 T_Conveyor,Equipment module,MonBinDrv (drive),Inp_MotionOK,BOOL,,Zero-speed switch: motion detected
 T_Conveyor,Equipment module,MonBinDrv (drive),Inp_PullCordOK,BOOL,,Pull-cord / lanyard switches healthy
@@ -709,6 +750,7 @@ T_HeatEx,Control module (monitoring),-,Alm_HotDP,T_AlmLim,,High hot side DP
 T_HeatEx,Control module (monitoring),-,Alm_ColdDP,T_AlmLim,,High cold side DP
 T_HeatEx,Control module (monitoring),-,Alm_HeatBal,T_AlmLim,,Heat balance error (possible instrument fault)
 T_HeatEx,Control module (monitoring),-,Alm_HiOutT,T_AlmLim,,High process outlet temperature
+T_DosePump,Equipment module,MonAnaDrv (drive),Prot,T_Intlk,,Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK
 T_DosePump,Equipment module,MonAnaDrv (drive),Mtr,T_Motor,,Pump motor / enable
 T_DosePump,Equipment module,MonAnaDrv (drive),Cfg_RateEU,STRING[8],,"Dose rate units text, e.g. L/h"
 T_DosePump,Equipment module,MonAnaDrv (drive),Cfg_DoseMode,INT,0,0=Manual rate 1=Flow-paced 2=Flow-paced + trim 3=Batch volume
@@ -807,32 +849,6 @@ T_GasDet,Control module,AnaMon,Alm_A3,T_AlmLim,,Alarm level 3 (high-high / STEL)
 T_GasDet,Control module,AnaMon,Alm_Fault,T_Alarm,,Detector fault
 T_GasDet,Control module,AnaMon,Alm_OverRng,T_Alarm,,Over-range
 T_GasDet,Control module,AnaMon,Alm_InhibitLong,T_Alarm,,Inhibit timed out
-T_Intlk,Support (interlock group),LockView16,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
-T_Intlk,Support (interlock group),LockView16,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
-T_Intlk,Support (interlock group),LockView16,Inp_Cond,ARRAY[0..15] OF BOOL,,Condition n: TRUE = healthy / permitted
-T_Intlk,Support (interlock group),LockView16,Cfg_Used,ARRAY[0..15] OF BOOL,,Condition n is configured
-T_Intlk,Support (interlock group),LockView16,Cfg_CondDesc,ARRAY[0..15] OF STRING[32],,HMI text for condition n
-T_Intlk,Support (interlock group),LockView16,Cfg_Bypassable,ARRAY[0..15] OF BOOL,,Condition n may be bypassed
-T_Intlk,Support (interlock group),LockView16,Cfg_Latch,BOOL,,Latch failures until Cmd_Reset (interlock); FALSE = permissive
-T_Intlk,Support (interlock group),LockView16,Cfg_BypassMax,TIME,T#8H,Maximum bypass duration
-T_Intlk,Support (interlock group),LockView16,Cmd_Bypass,ARRAY[0..15] OF BOOL,,Bypass condition n (one-shot)
-T_Intlk,Support (interlock group),LockView16,Cmd_Unbypass,ARRAY[0..15] OF BOOL,,Remove bypass on condition n (one-shot)
-T_Intlk,Support (interlock group),LockView16,Cmd_UnbypassAll,BOOL,,Remove all bypasses (one-shot)
-T_Intlk,Support (interlock group),LockView16,Inp_BypassPerm,BOOL,,Bypass authorisation (key switch / HMI permit) - IEC 61511 bypass management
-T_Intlk,Support (interlock group),LockView16,Cmd_Reset,BOOL,,Reset latched conditions (one-shot)
-T_Intlk,Support (interlock group),LockView16,Out_OK,BOOL,,All used conditions healthy or bypassed - wire to Inp_IntlkOK / Inp_PermOK
-T_Intlk,Support (interlock group),LockView16,Sts_OKNoByp,BOOL,,All used conditions healthy without bypasses
-T_Intlk,Support (interlock group),LockView16,Sts_Bypassed,ARRAY[0..15] OF BOOL,,Condition n bypassed
-T_Intlk,Support (interlock group),LockView16,Sts_Latched,ARRAY[0..15] OF BOOL,,Condition n latched failed
-T_Intlk,Support (interlock group),LockView16,Sts_FirstOut,INT,,First condition to fail (-1 = none)
-T_Intlk,Support (interlock group),LockView16,Sts_NumBypassed,INT,,Number of bypassed conditions
-T_Intlk,Support (interlock group),LockView16,Sts_BypassLeft,TIME,,Time left on the oldest bypass
-T_Intlk,Support (interlock group),LockView16,Sts_ResetReq,BOOL,,"Conditions healthy, reset required"
-T_Intlk,Support (interlock group),LockView16,Sts_CondWord,WORD,,Packed Inp_Cond (bit n = condition n) for SCADA
-T_Intlk,Support (interlock group),LockView16,Sts_BypWord,WORD,,Packed Sts_Bypassed for SCADA
-T_Intlk,Support (interlock group),LockView16,Sts_LatchWord,WORD,,Packed Sts_Latched for SCADA
-T_Intlk,Support (interlock group),LockView16,Alm_Trip,T_Alarm,,Interlock tripped
-T_Intlk,Support (interlock group),LockView16,Alm_Bypass,T_Alarm,,One or more conditions bypassed
 T_ESD,Support (shutdown group),-,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
 T_ESD,Support (shutdown group),-,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
 T_ESD,Support (shutdown group),-,Cfg_Level,INT,1,"ESD level, e.g. 0=Plant 1=Unit 2=Equipment"
