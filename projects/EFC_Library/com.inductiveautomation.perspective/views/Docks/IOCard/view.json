@@ -27,34 +27,6 @@
         ]
       }
     },
-    "custom.m_Cfg_Tag": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Tag",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Desc": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Desc",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
     "custom.m_Module_MOD_ERROR": {
       "binding": {
         "type": "tag",

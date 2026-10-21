@@ -445,15 +445,16 @@ def io_card():
     full = ("model = self.view.params.model\nif model:\n\tp = self.view.params.tagPath\n"
             "\tsystem.perspective.openPopup('io_' + p, 'Templates/IO/Faceplates/' + model, params={'cardPath': p},\n"
             "\t\ttitle='', showCloseIcon=False, draggable=True, resizable=False, modal=False)")
-    path, view = window("Docks/IOCard", "native", vw, [
+    blocks = [
         header(vw),
         banner(vw, [(m("Module/MOD_ERROR"), "MODULE ERROR", "State/Fault"), ("true", "OK", "State/Running")], []),
         section("Card", "Card", [row("Model", "Model", "{view.params.model}"), row("Rack", "Rack", m("Rack")), row("Slot", "Slot", m("Slot")),
                                  row("Desc", "Description", m("CardDesc")), row("Diag", "Diagnostic", m("Module/HMI/DiagText")),
                                  button("Full", "FULL FACEPLATE", full, cls="Button/Primary", grow=0)]),
-    ])
+    ]
     for k in ("Cfg_Tag", "Cfg_Desc"):                       # native DDTs have no Cfg_Tag / Cfg_Desc: show the card instead
-        vw.custom.pop("m_" + k); vw.pc.pop("custom.m_" + k)
+        vw.custom.pop("m_" + k); vw.pc.pop("custom.m_" + k)   # must happen before window() copies vw.pc
+    path, view = window("Docks/IOCard", "native", vw, blocks)
     hdr = view["root"]["children"][0]["children"][0]["children"]
     hdr[0]["propConfig"]["props.text"] = expr("'Rack ' + " + m("Rack") + " + ' / slot ' + " + m("Slot"))
     hdr[1]["propConfig"]["props.text"] = expr("{view.params.model}")

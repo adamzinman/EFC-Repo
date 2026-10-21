@@ -168,4 +168,4 @@ Tree of `BMXAMI0810`. The AMO and ART views have the same tree except for the co
 - **READ_STS caption.** Static text with no binding. Not defined in the repo. Open question (see the discrete doc).
 - **Unused variable.** `n = 8` in the transform is never used. Cosmetic.
 - **Column header cells.** The AMO view has no `Limit` header and the ART view has no `Range` header, which matches the row templates. Not a defect, but the header and row must change together if a row template changes.
-- **Dock doc.** [IOCard](../../../Docks/IOCard.md) covers the dock, including the orphan `m_Cfg_Tag` / `m_Cfg_Desc` bindings described in the discrete doc.
+- **Dock doc.** [IOCard](../../../Docks/IOCard.md) covers the dock.

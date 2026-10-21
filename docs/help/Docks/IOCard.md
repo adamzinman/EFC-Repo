@@ -54,8 +54,6 @@ All three params have `paramDirection: input` and `persistent: true`. There are 
 | `view.custom.m_Slot` | `null` | tag | `{0}/Slot` | Slot number. Drives the header and the Slot row. |
 | `view.custom.m_CardDesc` | `null` | tag | `{0}/CardDesc` | Card description. Drives the Description row. |
 | `view.custom.m_Module_HMI_DiagText` | `null` | tag | `{0}/Module/HMI/DiagText` | Module diagnostic text. Drives the Diagnostic row. |
-| `m_Cfg_Tag` (not declared in `custom`) | none | tag | `{0}/Cfg_Tag` | Orphan binding: its propConfig entry exists, but there is no `custom` key. The native card UDT has no `Cfg_Tag`. See Notes. |
-| `m_Cfg_Desc` (not declared in `custom`) | none | tag | `{0}/Cfg_Desc` | Orphan binding, same as `m_Cfg_Tag`. The card UDT has no `Cfg_Desc`. See Notes. |
 
 ### Component-level custom properties
 
@@ -69,7 +67,7 @@ None. The components carry no `custom` properties.
 
 ## Bindings reference
 
-Total: **17 bindings**: 8 at view root (1 `property`, 7 `tag`) and 9 on components (`expr`). The two orphan `tag` bindings are included in the 8 (see Notes).
+Total: **15 bindings**: 6 at view root (1 `property`, 5 `tag`) and 9 on components (`expr`).
 
 ### View root
 
@@ -166,12 +164,11 @@ The UDT also has `CardModel`, which this view does not read (it uses `params.mod
 
 ## Notes and open questions
 
-1. **Orphan bindings for `Cfg_Tag` and `Cfg_Desc`.** The view's `propConfig` has `custom.m_Cfg_Tag` and `custom.m_Cfg_Desc`, which read `{0}/Cfg_Tag` and `{0}/Cfg_Desc`, but the `custom` block does not declare those keys, and the native card UDT has no such members. In `io_card()` the two keys are popped from `custom` and from the generator's `vw.pc` after `window()` has run. `window()` had already copied `vw.pc`, so the returned `propConfig` still has them. This is a defect in the generator. Pop them from the returned `propConfig` too, or before `window()` is called.
-2. **`custom.level` is bound but unused.** There is no role gating in this window. That is acceptable for a read-only view, but it means the binding does nothing.
-3. **The banner does not test quality.** `if(MOD_ERROR, ...)` reads a null or bad-quality value as FALSE, so a lost OPC connection shows `OK`. The faceplate's health chip shows `COMMS?` for bad quality (IO README). This window does not, so the two views can disagree.
-4. **The `UNKNOWN` branch is unreachable.** Its condition is `true`.
-5. **Channel faults are not summarised.** The window shows only module-level bits. Channel `CH_ERROR` values and per-channel diagnostics are not shown here; they are on the faceplate.
-6. **Diagnostic text lists module bits only.** `Module/HMI/DiagText` names module bits, not channel bits.
-7. **FULL FACEPLATE depends on `model`.** SlotTile only calls `openDynamic` when the tile has a model, so a normal open has one. A window opened from some other caller with a blank model shows no faceplate, and the button does nothing with no message.
-8. **Popup id.** The faceplate popup id is `io_` plus the card path, so opening the same card's faceplate twice uses the same id. How Perspective handles a second open with the same id is not visible in this repository.
-9. **Help for the IO templates is not written.** The `Templates/IO/*` views (rack overview, tile, faceplates) have no files under `docs/help/Templates/IO/` yet, so the faceplate referenced by FULL FACEPLATE is not documented here.
+1. **`custom.level` is bound but unused.** There is no role gating in this window. That is acceptable for a read-only view, but it means the binding does nothing.
+2. **The banner does not test quality.** `if(MOD_ERROR, ...)` reads a null or bad-quality value as FALSE, so a lost OPC connection shows `OK`. The faceplate's health chip shows `COMMS?` for bad quality (IO README). This window does not, so the two views can disagree.
+3. **The `UNKNOWN` branch is unreachable.** Its condition is `true`.
+4. **Channel faults are not summarised.** The window shows only module-level bits. Channel `CH_ERROR` values and per-channel diagnostics are not shown here; they are on the faceplate.
+5. **Diagnostic text lists module bits only.** `Module/HMI/DiagText` names module bits, not channel bits.
+6. **FULL FACEPLATE depends on `model`.** SlotTile only calls `openDynamic` when the tile has a model, so a normal open has one. A window opened from some other caller with a blank model shows no faceplate, and the button does nothing with no message.
+7. **Popup id.** The faceplate popup id is `io_` plus the card path, so opening the same card's faceplate twice uses the same id. How Perspective handles a second open with the same id is not visible in this repository.
+8. **Help for the IO templates is not written.** The `Templates/IO/*` views (rack overview, tile, faceplates) have no files under `docs/help/Templates/IO/` yet, so the faceplate referenced by FULL FACEPLATE is not documented here.

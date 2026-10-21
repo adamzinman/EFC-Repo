@@ -192,5 +192,5 @@ Tree of `BMXDDO6402K`, the largest. The other views have fewer body groups (one 
 - **Unused variable.** Each transform sets `n = 16` and never uses it. Cosmetic. The channel count is set only by the `range`.
 - **Preview default.** All five default to `[default]IO_Demo/Rack0/R0S2`, a preview address. The popup always passes a `cardPath`, so the default is only used when the view is opened with no param (for example from the designer).
 - **Model names.** The dock builds the popup path from the model name (`Templates/IO/Faceplates/` + model). Only the five discrete and three analog faceplates exist. Other card models would open a missing view (behaviour not checked at runtime).
-- **Dock doc.** [IOCard](../../../Docks/IOCard.md) covers the dock, including the orphan bindings noted below.
+- **Dock doc.** [IOCard](../../../Docks/IOCard.md) covers the dock.
 - **Dock generator and committed JSON.** `generator/docks/build_docks.py` removes the `m_Cfg_Tag` and `m_Cfg_Desc` custom props from the IOCard dock, but the committed `Docks/IOCard/view.json` still has tag bindings for them (`propConfig`). The bindings point at members that a native device does not have. This is a defect in the dock, see the dock doc.
