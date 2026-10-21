@@ -5,15 +5,15 @@ This is the layout standard every EFC Perspective screen and template follows. I
 ## Frame (16:9)
 Screens scale at 16:9 from **1920×1080 to 3840×2160**. Text inside templates must stay usable across that whole range, which is why every EFC_Styles size is in vh: 1080p is 1×, 1440p is 1.33× and 2160p is 2×.
 
-| Region | Size at 3840×2160 (largest) | Notes |
-|---|---|---|
-| Header | top | Title, navigation, status |
-| Alarm bar | bottom, 140 px tall | Most-recent alarms |
-| Left menu | 120 px wide | Screen navigation |
-| Trends / dynamic window | right, 800 px wide | Trends; faceplates open here (e.g. the Haskel pump faceplate) |
-| Process area | remainder | P&ID templates (PID_Symbols, PV, loops) |
+| Region | Size at 1920×1080 (design) | Size at 3840×2160 | Notes |
+|---|---|---|---|
+| Header | 1920 × 80 | 3840 × 160 | Title, navigation, status |
+| Left menu | 120 × 860 | 240 × 1720 | Screen navigation |
+| Main process area | 1400 × 860 | 2800 × 1720 | P&ID templates (PID_Symbols, PV, loops) |
+| Trends / dynamic window | 400 × 860 (37.04 vh × 79.63 vh) | 800 × 1720 | Right region between header and alarm bar; an Embedded View switched by `efc.ui` (dynamic windows, trends). Expands to about 50 % for an expanded graph. |
+| Alarm bar | 1920 × 140 | 3840 × 280 | Most-recent alarms (about four rows plus a header row) |
 
-All regions scale down proportionally on smaller displays.
+Sizes match the Controls Standard screen design appendix (Perspective Screen Design Standard). All regions scale down proportionally on smaller displays.
 
 ## Graphics conventions
 - **ISA-101 high-performance grayscale:**

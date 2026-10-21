@@ -6,7 +6,7 @@ Approved items from the design review. Phase 3 builds from this list.
 |---|---|---|
 | 1 | 2026-10-21 | Interaction: click on the symbol opens the dynamic window; in touch mode (useButton = false) double-click/tap sends the manual command for two-state devices only (T_DValve, T_Motor), when in Manual, available, not interlocked/local/faulted; per-template `dblCmd` param (default true). Click target = symbol bounding box, min 44 px. |
 | 2 | 2026-10-21 | Each screen view has a `defaultDock` param; dock close button reopens it (`efc.ui.closeDynamic`). |
-| 3 | 2026-10-21 | Docks follow screen-layout-standard: right, 800 px wide at 4K (400 px / 37.04 vh at 1080p). Height pending header size. |
+| 3 | 2026-10-21 | Docks follow screen-layout-standard: right, 800 px wide at 4K (400 px / 37.04 vh at 1080p). Height: see decision 25. |
 | 4 | 2026-10-21 | Station dock id `dw_Station`; view moves to `Docks/Station`, resized to 400 px wide. CHANGELOG upgrade note for the id and path. |
 | 5 | 2026-10-21 | Role hierarchy Guest < Operator < Maintenance < Supervisor < Engineer < Admin, stored as one session level at login. MAINT / OOS mode buttons: Maintenance+. Bypass: Supervisor+. |
 | 6 | 2026-10-21 | Docks show a small history (8 h state strip + last events). |
@@ -28,3 +28,4 @@ Approved items from the design review. Phase 3 builds from this list.
 | 22 | 2026-10-21 | HTML mockup work (steward/previews) is delegated to a Sonnet subagent: `.claude/agents/mockup-builder.md`. |
 | 23 | 2026-10-21 | No PCLib type for I/O cards or racks (T_IOCard / T_IORack removed). I/O card, rack and power-supply faceplates bind to the PLC's standard Modicon x80 device DDTs from Control Expert, imported directly into Ignition. |
 | 24 | 2026-10-21 | Dynamic windows use the embedded-view strategy, not Perspective docks: the screen shell's right region is an Embedded View whose path and params are bound to a per-page session value set by `efc.ui.openDynamic` (dynamic-window id + tagPath); close returns it to the screen's `defaultDock` view. Sized in vh (37.04 vh at 1080p), expands to about 50 % for the expanded trend. Ids keep the `dw_` names. Matches the Controls Standard screen design appendix. |
+| 25 | 2026-10-21 | Shell sizes follow the Controls Standard rev I screen design appendix (design 1920 x 1080; double at 3840 x 2160): header 1920 x 80, left menu 120 x 860, main process area 1400 x 860, dynamic window 400 x 860, alarm bar 1920 x 140. The dynamic window fills the full height between header and alarm bar: 400 x 860 at 1080p = 37.04 vh x 79.63 vh (800 x 1720 at 4K). Corrects earlier mockups (header 60, alarm bar 70, menu 60, window 940 tall). |
