@@ -217,8 +217,76 @@ def analog(*rows):
 
 OPENCLOSE = cmds(("OPEN", "Button/Primary"), ("CLOSE", "Button/Default"), ("RESET", "Button/Subtle"))
 STARTSTOP = cmds(("START", "Button/Start"), ("STOP", "Button/Stop"), ("RESET", "Button/Subtle"))
+def role(lbl):
+    return f'<span class="role" title="visible to {lbl} and higher">{lbl}+</span>'
+
+
+def grp(title, body, note=""):
+    return f'<div data-c="Container/GroupBox" class="grp"><div class="gh"><span data-c="Text/Subheader">{title}</span>{note}</div>{body}</div>'
+
+
+def cond(state, text, first=False, byp=True):
+    led = {"ok": "Indicator/LED/On", "fail": "Indicator/LED/Fault", "byp": "Indicator/LED/Unknown", "latch": "Indicator/LED/Fault"}[state]
+    tag = {"ok": "", "fail": '<span data-c="Text/Color/Fault">NOT OK</span>', "byp": '<span data-c="Indicator/Badge">BYPASSED 3h12</span>', "latch": '<span data-c="Text/Color/Fault">LATCHED</span>'}[state]
+    fo = '<span data-c="Indicator/Badge" title="first out">1st</span>' if first else ""
+    b = f'<button data-c="Button/Small">{"UNBYP" if state == "byp" else "BYPASS"}</button>{role("Sup")}' if byp else ""
+    return f'<div class="cond"><span data-c="{led}" class="led"></span><span data-c="Text/Body" style="flex:1">{text}</span>{fo}{tag}{b}</div>'
+
+
+def history_strip():
+    segs = [("closed", 30), ("open", 18), ("closed", 22), ("open", 25), ("closed", 5)]
+    col = {"open": "#4D4D4D", "closed": "#C4C4C4", "fault": "#D50000"}
+    bar = "".join(f'<div style="flex:{w};background:{col[k]}" title="{k}"></div>' for k, w in segs)
+    ev = "".join(f'<div data-c="Table/{"Row" if i % 2 else "RowAlt"}" class="ev"><span>{t}</span><span>{e}</span></div>'
+                 for i, (t, e) in enumerate([("10:42:07", "CLOSED"), ("10:41:59", "Cmd Close (op: jsmith)"), ("09:15:30", "OPEN"), ("09:15:22", "Cmd Open (auto)")]))
+    return (f'<div class="strip">{bar}</div><div class="axis"><span>-8 h</span><span>-4 h</span><span>now</span></div>'
+            f'<div class="legend2"><i style="background:#4D4D4D"></i>open <i style="background:#C4C4C4"></i>closed <i style="background:#D50000"></i>fault</div>{ev}')
+
+
+def valve_discrete():
+    head = ('<div data-c="Container/PopupHeader" class="hdr"><div style="flex:1;min-width:0"><div data-c="Text/TagName Text/Color/Inverse">XV-101</div>'
+            '<div data-c="Text/Caption Text/Color/Inverse">Feed tank inlet valve</div></div><button data-c="Button/Icon" class="x" title="close: back to the screen default dock">&#x2715;</button></div>')
+    state = ('<div class="row st"><span data-c="State/Stopped" class="big">CLOSED</span><span data-c="Indicator/Badge">NE107 OK</span>'
+             '<span data-c="Mode/Simulated" class="dim">SIM</span><span data-c="Mode/Local" class="dim">LOCAL</span></div>'
+             '<div class="row"><span data-c="Indicator/LED/Off" class="led"></span><span data-c="Text/Label">ZSO open</span>'
+             '<span data-c="Indicator/LED/On" class="led"></span><span data-c="Text/Label">ZSC closed</span>'
+             '<span data-c="Text/Label" style="margin-left:auto">travel 5 s</span></div>')
+    mode = ('<div class="row"><span data-c="Text/Label" class="lbl">MODE</span><button data-c="Mode/Auto">AUTO</button><button data-c="Mode/Manual">MAN</button>'
+            f'<button data-c="Button/Subtle">MAINT</button><button data-c="Button/Subtle">OOS</button>{role("Maint")}</div>')
+    cmd = ('<div class="row"><span data-c="Text/Label" class="lbl">CMD</span><button data-c="Button/Primary">OPEN</button><button data-c="Button/Default">CLOSE</button>'
+           '<button data-c="Button/Subtle">RESET</button></div>'
+           '<div data-c="Text/Caption" class="hint">Enabled in MAN, available, not interlocked, not LOCAL</div>')
+    perm = grp("PERMISSIVES", cond("ok", "Seal water pressure OK") + cond("fail", "Downstream valve XV-102 closed", byp=True) + cond("ok", "Tank T-100 not high-high"),
+               '<span data-c="Indicator/PermissiveBadge" class="mini">P</span>')
+    intl = grp("INTERLOCKS", cond("latch", "Tank T-100 low-low", first=True) + cond("byp", "Pump P-101 running") + cond("ok", "ESD-1 healthy", byp=False)
+               + f'<div class="row"><button data-c="Button/Default">RESET LATCHED</button><span data-c="Text/Caption">reset required</span></div>',
+               '<span data-c="Indicator/InterlockBadge" class="mini">I</span>')
+    alarms = grp("ALARMS", "".join(f'<div class="cond"><span data-c="{c}" class="led"></span><span data-c="Text/Body" style="flex:1">{t}</span><span data-c="Text/Caption">{s}</span></div>'
+                                   for c, t, s in [("Alarm/High/Fill", "Fail to close", "active, unacked"), ("Alarm/Medium/Fill", "Interlock trip", "active"),
+                                                   ("Indicator/LED/Off", "Fail to open", ""), ("Indicator/LED/Off", "Position conflict", ""), ("Indicator/LED/Off", "Uncommanded move", "")])
+                 + '<div class="row"><button data-c="Button/Default">ACK</button></div>')
+    hist = grp("HISTORY (8 h)", history_strip())
+    maint = grp("MAINTENANCE", '<div class="kv"><span data-c="Text/Label">CYCLES</span><span data-c="Text/Value">12 408</span>'
+                '<span data-c="Text/Label">HRS SINCE MAINT</span><span data-c="Text/Value">1 102</span>'
+                f'<span data-c="Text/Label">MAINT DUE</span><span data-c="Text/Value">no</span></div><div class="row"><button data-c="Button/Small">RESET MAINT</button>{role("Maint")}<button data-c="Button/Small">SIMULATE</button>{role("Maint")}</div>')
+    cfg = '<details data-c="Container/GroupBox" class="grp"><summary data-c="Text/Subheader">CONFIGURATION</summary>fail-open: no &middot; interlock-to-open: no &middot; dual-coil: no</details>'
+    return head + '<div class="body">' + state + mode + cmd + perm + intl + alarms + hist + maint + cfg + "</div>"
+
+
+DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:border-box}.dock2 .hdr{display:flex;align-items:center;gap:6px;padding:6px 8px}
+.dock2 .x{width:28px;height:28px}.dock2 .body{flex:1;overflow:hidden;padding:4px 8px;display:flex;flex-direction:column;gap:5px}
+.dock2 .row{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.dock2 .lbl{width:40px}.dock2 .big{font-size:16px;padding:2px 10px}
+.dock2 .dim{opacity:.35}.dock2 .hint{margin-top:-3px}.dock2 .grp{padding:4px 6px}.dock2 .gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.dock2 .cond{display:flex;gap:5px;align-items:center;min-height:20px}.dock2 .led{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.dock2 .mini{width:14px;height:14px;font-size:10px;display:inline-flex;align-items:center;justify-content:center}
+.role{font-size:9px;color:#5E35B1;border:1px dashed #5E35B1;border-radius:3px;padding:0 2px}
+.strip{display:flex;height:12px;border:1px solid #7F7F7F}.axis{display:flex;justify-content:space-between;font-size:9px;color:#616161}
+.legend2{font-size:9px;color:#424242}.legend2 i{display:inline-block;width:8px;height:8px;margin:0 2px 0 6px}.ev{display:flex;justify-content:space-between;font-size:11px;padding:1px 3px}
+.dock2 details summary{cursor:pointer}"""
+
+
 DOCKS = {
-    "dw_ValveDiscrete": ("T_DValve", ["mode", OPENCLOSE, "perm", "alarms", "run"]),
+    "dw_ValveDiscrete": ("T_DValve", "valve_discrete"),
     "dw_ValveAnalog": ("T_CValve", ["mode", analog(("POSITION SP", "55.0 %", 55, "Input/Setpoint"), ("POSITION FBK", "54.6 %", 54, "Value/Normal")), "perm", "alarms", "trend"]),
     "dw_Rotating": ("T_Motor", ["mode", STARTSTOP, analog(("CURRENT", "38.2 A", 64, "Value/Normal")), "perm", "alarms", "run"]),
     "dw_VFD": ("T_VFD", ["mode", STARTSTOP, analog(("SPEED SP", "48.0 Hz", 80, "Input/Setpoint"), ("SPEED", "47.9 Hz", 80, "Value/Normal"), ("CURRENT", "61.0 A", 71, "Value/Normal")), "perm", "alarms", "trend", "run"]),
@@ -230,6 +298,9 @@ DOCKS = {
 
 
 def dock_card(did, path, ttype, parts):
+    if parts == "valve_discrete":  # reviewed design (rev 2)
+        inner = f'<div data-c="Container/Faceplate" class="dock2">{valve_discrete()}</div>'
+        return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 - design proposal</b> &middot; dashed purple = role-gated", maxh=600)
     body = "".join(SECTIONS.get(p, p) for p in parts)
     head = (f'<div data-c="Container/PopupHeader" class="row"><span data-c="Text/TagName">XV-101</span>'
             f'<span data-c="Text/Caption" style="flex:1">Description</span><button data-c="Button/Icon" title="close: back to screen default dock">&#x2715;</button></div>'
@@ -268,7 +339,7 @@ if __name__ == "__main__":
         groups.setdefault("Docks (dynamic windows)", []).append(frag)
     body = "".join(f'<h2>{esc(g)}</h2><div class="grid">{"".join(fr)}</div>' for g, fr in groups.items())
     page = (f'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
-            f'<title>EFC Library Previews</title><style>{PAGE_CSS}\n/* EFC_Styles */\n{css_block()}</style></head><body>'
+            f'<title>EFC Library Previews</title><style>{PAGE_CSS}\n{DOCK_CSS}\n/* EFC_Styles */\n{css_block()}</style></head><body>'
             f'<h1>EFC Library - review contact sheet</h1><p class="legend">Dashed blue = click target (opens dock). Red type = gap (no EFCLib v1 type). '
             f'Templates are drawn from slim output (layout approximate); docks and VFD are new design proposals.</p>{body}</body></html>')
     import base64  # inline the renders so index.html is self-contained
