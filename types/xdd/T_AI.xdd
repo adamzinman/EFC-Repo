@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_AI" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Analog input: scaling, filtering, NE43 range check, alarms, sim</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_EU" typeName="STRING[12]">
+			<comment>Engineering units text</comment>
+		</variables>
+		<variables name="Inp_Raw" typeName="INT">
+			<comment>Raw counts from analog channel</comment>
+		</variables>
+		<variables name="Inp_ChFault" typeName="BOOL">
+			<comment>Channel / module diagnostic fault</comment>
+		</variables>
+		<variables name="Cfg_RawMin" typeName="INT">
+			<comment>Raw counts at 0% (M340/M580 4-20mA default 0)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_RawMax" typeName="INT">
+			<comment>Raw counts at 100% (M340/M580 4-20mA default 10000)</comment>
+			<variableInit value="10000"></variableInit>
+		</variables>
+		<variables name="Cfg_EUMin" typeName="REAL">
+			<comment>PV at 0% (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_EUMax" typeName="REAL">
+			<comment>PV at 100% (EU)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_FiltTC" typeName="REAL">
+			<comment>1st-order filter time constant (s), 0 = off</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SqrtExtract" typeName="BOOL">
+			<comment>Square-root extraction (DP flow)</comment>
+		</variables>
+		<variables name="Cfg_LoCutoff" typeName="REAL">
+			<comment>Low cutoff (% span): PV forced to EUMin below this, 0 = off</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_BadLoPct" typeName="REAL">
+			<comment>Bad below this % span (NE43 3.6mA = -2.5%)</comment>
+			<variableInit value="-2.5"></variableInit>
+		</variables>
+		<variables name="Cfg_BadHiPct" typeName="REAL">
+			<comment>Bad above this % span (NE43 21mA = 106.25%)</comment>
+			<variableInit value="106.25"></variableInit>
+		</variables>
+		<variables name="Cfg_BadAction" typeName="INT">
+			<comment>On bad PV: 0=Hold last good 1=Substitute 2=EUMin 3=EUMax</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_SubstPV" typeName="REAL">
+			<comment>Substitute PV used when Cfg_BadAction = 1</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation enabled</comment>
+		</variables>
+		<variables name="Sim_PV" typeName="REAL">
+			<comment>Simulated PV (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Val_PV" typeName="REAL">
+			<comment>Process value (EU) - use this in logic</comment>
+		</variables>
+		<variables name="Val_PVPct" typeName="REAL">
+			<comment>Process value (% of span)</comment>
+		</variables>
+		<variables name="Val_ROC" typeName="REAL">
+			<comment>Rate of change (EU/s, 1 s window) - input to Alm_ROC</comment>
+		</variables>
+		<variables name="Sts_Bad" typeName="BOOL">
+			<comment>PV bad (out of range or channel fault)</comment>
+		</variables>
+		<variables name="Sts_URng" typeName="BOOL">
+			<comment>Under range</comment>
+		</variables>
+		<variables name="Sts_ORng" typeName="BOOL">
+			<comment>Over range</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Sts_Subst" typeName="BOOL">
+			<comment>Substitute / held value in use</comment>
+		</variables>
+		<variables name="Sts_Quality" typeName="INT">
+			<comment>0=Good 1=Uncertain (simulation, NE107 C or S) 2=Bad</comment>
+		</variables>
+		<variables name="Inp_NE107" typeName="INT">
+			<comment>NE107 status reported by smart device (HART / fieldbus)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Alm_HH" typeName="T_AlmLim">
+			<comment>High-high alarm</comment>
+		</variables>
+		<variables name="Alm_H" typeName="T_AlmLim">
+			<comment>High alarm</comment>
+		</variables>
+		<variables name="Alm_L" typeName="T_AlmLim">
+			<comment>Low alarm</comment>
+		</variables>
+		<variables name="Alm_LL" typeName="T_AlmLim">
+			<comment>Low-low alarm</comment>
+		</variables>
+		<variables name="Alm_ROC" typeName="T_AlmLim">
+			<comment>Rate-of-change alarm (Cfg_Lim in EU/s)</comment>
+		</variables>
+		<variables name="Alm_Bad" typeName="T_Alarm">
+			<comment>Bad PV alarm</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

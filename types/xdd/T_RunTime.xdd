@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_RunTime" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Run-hours, starts and maintenance counters</comment>
+	<structure>
+		<variables name="Inp_Running" typeName="BOOL">
+			<comment>Equipment running (from owner logic)</comment>
+		</variables>
+		<variables name="Cfg_MaintHrs" typeName="REAL">
+			<comment>Maintenance interval in run hours, 0 = off</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cmd_ResetMaint" typeName="BOOL">
+			<comment>Reset hours-since-maintenance (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_ResetAll" typeName="BOOL">
+			<comment>Reset all counters (one-shot, supervisor)</comment>
+		</variables>
+		<variables name="Val_RunSecs" typeName="UDINT">
+			<comment>Total run time (s) - master counter</comment>
+		</variables>
+		<variables name="Val_RunHrs" typeName="REAL">
+			<comment>Total run hours (display)</comment>
+		</variables>
+		<variables name="Val_Starts" typeName="UDINT">
+			<comment>Total starts / cycles</comment>
+		</variables>
+		<variables name="Val_StartsLastHr" typeName="INT">
+			<comment>Starts in the last 60 min (rolling)</comment>
+		</variables>
+		<variables name="Val_LastRun" typeName="TIME">
+			<comment>Duration of last run</comment>
+		</variables>
+		<variables name="Val_HrsSinceMaint" typeName="REAL">
+			<comment>Run hours since last maintenance reset</comment>
+		</variables>
+		<variables name="Sts_MaintDue" typeName="BOOL">
+			<comment>Maintenance due</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

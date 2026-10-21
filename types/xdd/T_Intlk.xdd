@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Intlk" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Interlock / permissive group: 16 conditions, first-out, timed bypass</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Inp_Cond" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n: TRUE = healthy / permitted</comment>
+		</variables>
+		<variables name="Cfg_Used" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n is configured</comment>
+		</variables>
+		<variables name="Cfg_CondDesc" typeName="ARRAY[0..15] OF STRING[32]">
+			<comment>HMI text for condition n</comment>
+		</variables>
+		<variables name="Cfg_Bypassable" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n may be bypassed</comment>
+		</variables>
+		<variables name="Cfg_Latch" typeName="BOOL">
+			<comment>Latch failures until Cmd_Reset (interlock); FALSE = permissive</comment>
+		</variables>
+		<variables name="Cfg_BypassMax" typeName="TIME">
+			<comment>Maximum bypass duration</comment>
+			<variableInit value="T#8H"></variableInit>
+		</variables>
+		<variables name="Cmd_Bypass" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Bypass condition n (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Unbypass" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Remove bypass on condition n (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_UnbypassAll" typeName="BOOL">
+			<comment>Remove all bypasses (one-shot)</comment>
+		</variables>
+		<variables name="Inp_BypassPerm" typeName="BOOL">
+			<comment>Bypass authorisation (key switch / HMI permit) - IEC 61511 bypass management</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Reset latched conditions (one-shot)</comment>
+		</variables>
+		<variables name="Out_OK" typeName="BOOL">
+			<comment>All used conditions healthy or bypassed - wire to Inp_IntlkOK / Inp_PermOK</comment>
+		</variables>
+		<variables name="Sts_OKNoByp" typeName="BOOL">
+			<comment>All used conditions healthy without bypasses</comment>
+		</variables>
+		<variables name="Sts_Bypassed" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n bypassed</comment>
+		</variables>
+		<variables name="Sts_Latched" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n latched failed</comment>
+		</variables>
+		<variables name="Sts_FirstOut" typeName="INT">
+			<comment>First condition to fail (-1 = none)</comment>
+		</variables>
+		<variables name="Sts_NumBypassed" typeName="INT">
+			<comment>Number of bypassed conditions</comment>
+		</variables>
+		<variables name="Sts_BypassLeft" typeName="TIME">
+			<comment>Time left on the oldest bypass</comment>
+		</variables>
+		<variables name="Sts_ResetReq" typeName="BOOL">
+			<comment>Conditions healthy, reset required</comment>
+		</variables>
+		<variables name="Sts_CondWord" typeName="WORD">
+			<comment>Packed Inp_Cond (bit n = condition n) for SCADA</comment>
+		</variables>
+		<variables name="Sts_BypWord" typeName="WORD">
+			<comment>Packed Sts_Bypassed for SCADA</comment>
+		</variables>
+		<variables name="Sts_LatchWord" typeName="WORD">
+			<comment>Packed Sts_Latched for SCADA</comment>
+		</variables>
+		<variables name="Alm_Trip" typeName="T_Alarm">
+			<comment>Interlock tripped</comment>
+		</variables>
+		<variables name="Alm_Bypass" typeName="T_Alarm">
+			<comment>One or more conditions bypassed</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

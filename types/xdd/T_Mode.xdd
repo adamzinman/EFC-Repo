@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Mode" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Control-module mode and ISA-88 ownership (arbitration); maps to MTP OpMode</comment>
+	<structure>
+		<variables name="Cmd_Auto" typeName="BOOL">
+			<comment>Operator request Automatic (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Man" typeName="BOOL">
+			<comment>Operator request Manual (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Maint" typeName="BOOL">
+			<comment>Request Maintenance (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_OOS" typeName="BOOL">
+			<comment>Request Out-of-Service (one-shot)</comment>
+		</variables>
+		<variables name="Prog_Auto" typeName="BOOL">
+			<comment>Owner request Automatic</comment>
+		</variables>
+		<variables name="Prog_Man" typeName="BOOL">
+			<comment>Owner request Manual</comment>
+		</variables>
+		<variables name="Prog_Lock" typeName="BOOL">
+			<comment>Owner locks current mode (operator cannot change)</comment>
+		</variables>
+		<variables name="Prog_Acquire" typeName="BOOL">
+			<comment>ISA-88 arbitration: owner (phase / EM) acquires this module</comment>
+		</variables>
+		<variables name="Prog_Release" typeName="BOOL">
+			<comment>ISA-88 arbitration: owner releases this module</comment>
+		</variables>
+		<variables name="Inp_ReqOwnerID" typeName="DINT">
+			<comment>ID of the phase / equipment module requesting ownership</comment>
+		</variables>
+		<variables name="Cmd_ForceRelease" typeName="BOOL">
+			<comment>Supervisor forces release of ownership (one-shot)</comment>
+		</variables>
+		<variables name="Cfg_PowerUpMode" typeName="INT">
+			<comment>Mode at cold start: 0=OOS 1=Maint 2=Man 3=Auto</comment>
+			<variableInit value="2"></variableInit>
+		</variables>
+		<variables name="Cfg_NoMaint" typeName="BOOL">
+			<comment>Maintenance mode not allowed</comment>
+		</variables>
+		<variables name="Sts_Auto" typeName="BOOL">
+			<comment>In Automatic (commanded by owner) - MTP Automatic</comment>
+		</variables>
+		<variables name="Sts_Man" typeName="BOOL">
+			<comment>In Manual (commanded by operator) - MTP Operator</comment>
+		</variables>
+		<variables name="Sts_Maint" typeName="BOOL">
+			<comment>In Maintenance</comment>
+		</variables>
+		<variables name="Sts_OOS" typeName="BOOL">
+			<comment>Out of service - MTP Offline</comment>
+		</variables>
+		<variables name="Sts_Mode" typeName="INT">
+			<comment>0=OOS 1=Maint 2=Man 3=Auto  (MTP: 0=Offline 2=Operator 3=Automatic)</comment>
+		</variables>
+		<variables name="Sts_Owned" typeName="BOOL">
+			<comment>Acquired by an owner</comment>
+		</variables>
+		<variables name="Val_OwnerID" typeName="DINT">
+			<comment>ID of current owner, 0 = free</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

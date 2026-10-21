@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_DosePump" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Chemical dosing / metering pump: manual, flow-paced, trim, batch</comment>
+	<structure>
+		<variables name="Mtr" typeName="T_Motor">
+			<comment>Pump motor / enable</comment>
+		</variables>
+		<variables name="Cfg_RateEU" typeName="STRING[8]">
+			<comment>Dose rate units text, e.g. L/h</comment>
+		</variables>
+		<variables name="Cfg_DoseMode" typeName="INT">
+			<comment>0=Manual rate 1=Flow-paced 2=Flow-paced + trim 3=Batch volume</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaxRate" typeName="REAL">
+			<comment>Pump rate at 100% output (L/h)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_CalFactor" typeName="REAL">
+			<comment>Calibration factor from drawdown test</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DoseConc" typeName="REAL">
+			<comment>Target dose in process (mg/L)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_ChemConc" typeName="REAL">
+			<comment>Chemical strength (% w/w)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_ChemSG" typeName="REAL">
+			<comment>Chemical specific gravity</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_TankCap" typeName="REAL">
+			<comment>Chemical day tank capacity (L)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_NoFlowDly" typeName="TIME">
+			<comment>Flow verification delay</comment>
+			<variableInit value="T#30S"></variableInit>
+		</variables>
+		<variables name="Inp_PaceFlow" typeName="REAL">
+			<comment>Process flow for pacing (m3/h)</comment>
+		</variables>
+		<variables name="Inp_TrimPct" typeName="REAL">
+			<comment>Trim from residual PID (%, -100..+100)</comment>
+		</variables>
+		<variables name="Inp_FlowOK" typeName="BOOL">
+			<comment>Flow verification switch: dosing detected</comment>
+		</variables>
+		<variables name="Inp_ChemLvl" typeName="REAL">
+			<comment>Chemical day tank level (%)</comment>
+		</variables>
+		<variables name="Inp_Leak" typeName="BOOL">
+			<comment>Leak detector / bund alarm</comment>
+		</variables>
+		<variables name="Cmd_Rate" typeName="REAL">
+			<comment>Operator dose rate (L/h)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Prog_Rate" typeName="REAL">
+			<comment>Program dose rate (L/h)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cmd_CalDone" typeName="BOOL">
+			<comment>Calibration complete, stamp date (one-shot)</comment>
+		</variables>
+		<variables name="Out_Rate" typeName="REAL">
+			<comment>Speed / stroke output to pump (%)</comment>
+		</variables>
+		<variables name="Out_IntlkOK" typeName="BOOL">
+			<comment>Wire to Mtr.Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Val_RateSP" typeName="REAL">
+			<comment>Active dose rate (L/h)</comment>
+		</variables>
+		<variables name="Val_Total" typeName="LREAL">
+			<comment>Total dosed (L)</comment>
+		</variables>
+		<variables name="Val_Today" typeName="REAL">
+			<comment>Dosed today (L)</comment>
+		</variables>
+		<variables name="Val_DaysLeft" typeName="REAL">
+			<comment>Days of chemical remaining at current usage</comment>
+		</variables>
+		<variables name="Val_LastCal" typeName="DT">
+			<comment>Date of last calibration</comment>
+		</variables>
+		<variables name="Sts_RateLimited" typeName="BOOL">
+			<comment>Demand exceeds pump capacity</comment>
+		</variables>
+		<variables name="Alm_NoFlow" typeName="T_Alarm">
+			<comment>No flow detected while running</comment>
+		</variables>
+		<variables name="Alm_LoChem" typeName="T_AlmLim">
+			<comment>Low chemical level (%)</comment>
+		</variables>
+		<variables name="Alm_LoLoChem" typeName="T_AlmLim">
+			<comment>Low-low chemical level (%) - stops pump</comment>
+		</variables>
+		<variables name="Alm_Leak" typeName="T_Alarm">
+			<comment>Leak detected</comment>
+		</variables>
+		<variables name="Alm_RateLim" typeName="T_Alarm">
+			<comment>Dose demand exceeds pump capacity</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

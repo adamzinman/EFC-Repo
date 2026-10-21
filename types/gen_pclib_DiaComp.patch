@@ -1,0 +1,126 @@
+--- gen_pclib_v100.py	2026-10-13 17:01:42.900137382 +0000
++++ pclib/gen_pclib.py	2026-10-13 17:01:42.974613352 +0000
+@@ -183,6 +183,7 @@
+     "Agitator":   ("Equipment module", "MonAnaDrv (drive)", [S88, S182, S101]),
+     "Compressor": ("Equipment module", "MonAnaDrv (drive)", [S88, S182, S101]),
+     "Conveyor":   ("Equipment module", "MonBinDrv (drive)", [S88, S182, S101]),
++    "DiaComp":    ("Equipment module", "MonBinDrv (drive)", [S88, S51, S182, S101]),
+     "Tank":       ("Equipment module / Unit vessel", "-", [S88, S51, S182, S101]),
+     "Totalizer":  ("Control module", "-", [S88, S51, S182, S101]),
+     "HeatEx":     ("Control module (monitoring)", "-", [S88, S182, S101]),
+@@ -638,6 +639,106 @@
+     A("Alm_DownstrStop", "Tripped by downstream conveyor"),
+ ], "Rotating")
+ 
++T("DiaComp", "Diaphragm compressor unit: one motor, two diaphragm stages, leak detection, hydraulic oil, purge", HDR + [
++    M("Mode", "@Mode", "Unit mode block (Auto = Prog_ commands, Man = operator)"),
++    M("Mtr", "@Motor", "Drive motor (one motor drives both stages through the crankshaft)"),
++    M("Cfg_PressEU", "STRING[8]", "Pressure units text, e.g. barg, psig"),
++    # ---- Process and machine inputs ----
++    M("Inp_SuctPress", "REAL", "Stage 1 suction pressure (Cfg_PressEU)"),
++    M("Inp_InterPress", "REAL", "Interstage pressure: stage 1 discharge / stage 2 suction"),
++    M("Inp_DischPress", "REAL", "Stage 2 (final) discharge pressure"),
++    M("Inp_S1DischTemp", "REAL", "Stage 1 discharge gas temperature (degC)"),
++    M("Inp_S2DischTemp", "REAL", "Stage 2 discharge gas temperature (degC)"),
++    M("Inp_S1OilPress", "REAL", "Stage 1 head hydraulic oil pressure (Cfg_PressEU)"),
++    M("Inp_S2OilPress", "REAL", "Stage 2 head hydraulic oil pressure (Cfg_PressEU)"),
++    M("Inp_CaseOilPress", "REAL", "Crankcase lube oil pressure (Cfg_PressEU)"),
++    M("Inp_CaseOilTemp", "REAL", "Crankcase lube oil temperature (degC)"),
++    M("Inp_CWTemp", "REAL", "Cooling water return temperature (degC)"),
++    M("Inp_S1LeakOK", "BOOL", "Stage 1 diaphragm leak detection healthy (no leak between diaphragms)"),
++    M("Inp_S2LeakOK", "BOOL", "Stage 2 diaphragm leak detection healthy (no leak between diaphragms)"),
++    M("Inp_CWFlowOK", "BOOL", "Cooling water flow switch healthy"),
++    M("Inp_GasDetOK", "BOOL", "Area gas detection healthy (from T_GasDet / ESD)"),
++    M("Inp_ExtIntlkOK", "BOOL", "External interlocks healthy (ESD, upstream / downstream)"),
++    M("Inp_SuctVlvOpen", "BOOL", "Suction isolation valve confirmed open"),
++    M("Inp_DischVlvOpen", "BOOL", "Discharge isolation valve confirmed open"),
++    # ---- Configuration ----
++    M("Cfg_CtrlMode", "INT", "0=Start/stop by command only 1=Auto start/stop on Inp_DischPress "
++      "2=Run continuous, recycle on Inp_DischPress", "0"),
++    M("Cfg_LoadPress", "REAL", "Load / start (cut-in) discharge pressure", "0.0"),
++    M("Cfg_UnloadPress", "REAL", "Unload / stop (cut-out) discharge pressure", "0.0"),
++    M("Cfg_UnloadedStart", "TIME", "Run on recycle after start before loading", "T#10S"),
++    M("Cfg_OilBypass", "TIME", "Low oil pressure trips bypassed after start", "T#10S"),
++    M("Cfg_MinRun", "TIME", "Minimum run time", "T#5M"),
++    M("Cfg_MinStop", "TIME", "Minimum stop time (anti-cycle)", "T#2M"),
++    M("Cfg_IdleTime", "TIME", "Unloaded run time before auto stop (Cfg_CtrlMode 1)", "T#10M"),
++    M("Cfg_LeakDly", "TIME", "Diaphragm leak confirmation delay", "T#2S"),
++    M("Cfg_TripOnLeak", "BOOL", "Trip on diaphragm leak (FALSE = alarm only)", "TRUE"),
++    M("Cfg_PurgeOnLeak", "BOOL", "Start the purge automatically after a leak trip"),
++    M("Cfg_PurgeTime", "TIME", "Purge duration", "T#5M"),
++    M("Cfg_DiaHrs", "REAL", "Diaphragm replacement interval (run hours), 0 = off", "0.0"),
++    M("Cfg_PAtm", "REAL", "Added to gauge pressures for compression ratio; 0 if transmitters read absolute", "0.0"),
++    # ---- Commands ----
++    M("Cmd_Start", "BOOL", "Operator start (one-shot)"),
++    M("Cmd_Stop", "BOOL", "Operator stop (one-shot)"),
++    M("Cmd_Reset", "BOOL", "Reset unit trips (one-shot)"),
++    M("Cmd_Load", "BOOL", "Operator load: close recycle (one-shot, Manual)"),
++    M("Cmd_Unload", "BOOL", "Operator unload: open recycle (one-shot, Manual)"),
++    M("Cmd_Purge", "BOOL", "Start purge (one-shot, unit stopped)"),
++    M("Cmd_PurgeStop", "BOOL", "Abort purge (one-shot)"),
++    M("Cmd_ResetDiaS1", "BOOL", "Stage 1 diaphragms replaced: reset hours (one-shot)"),
++    M("Cmd_ResetDiaS2", "BOOL", "Stage 2 diaphragms replaced: reset hours (one-shot)"),
++    M("Prog_Start", "BOOL", "Program / sequence start request (Auto)"),
++    M("Prog_Stop", "BOOL", "Program / sequence stop request (Auto)"),
++    # ---- Outputs ----
++    M("Out_StartReq", "BOOL", "Start request - wire to Mtr.Prog_Start"),
++    M("Out_StopReq", "BOOL", "Stop request - wire to Mtr.Prog_Stop"),
++    M("Out_IntlkOK", "BOOL", "Unit trips healthy - wire to Mtr.Inp_IntlkOK"),
++    M("Out_PermOK", "BOOL", "Start permissives healthy - wire to Mtr.Inp_PermOK"),
++    M("Out_Recycle", "BOOL", "Recycle / bypass valve open (unloaded start, unload)"),
++    M("Out_SuctVlv", "BOOL", "Open suction isolation valve"),
++    M("Out_DischVlv", "BOOL", "Open discharge isolation valve"),
++    M("Out_CWVlv", "BOOL", "Open cooling water valve"),
++    M("Out_PurgeVlv", "BOOL", "Open purge gas valve"),
++] + SIM + [
++    # ---- Status and values ----
++    M("Sts_State", "INT", "0=Stopped 1=Pre-start 2=Starting unloaded 3=Loaded 4=Unloaded (recycle) "
++      "5=Stopping 6=Anti-cycle 7=Purging 8=Tripped 9=Not available"),
++    M("Sts_Loaded", "BOOL", "Running loaded"),
++    M("Sts_Unloaded", "BOOL", "Running on recycle"),
++    M("Sts_AntiCycle", "BOOL", "Waiting on minimum stop time"),
++    M("Sts_Purging", "BOOL", "Purge in progress"),
++    M("Sts_Tripped", "BOOL", "Unit tripped - reset required"),
++    M("Sts_ResetReq", "BOOL", "Trip causes cleared, reset required"),
++    M("Sts_FirstOut", "INT", "First trip cause: 0=None 1=S1 leak 2=S2 leak 3=Case oil 4=S1 head oil "
++      "5=S2 head oil 6=S1 disch temp 7=S2 disch temp 8=Interstage press 9=Disch press 10=Suction press "
++      "11=Cooling water 12=Gas detection 13=External interlock 14=Motor"),
++    M("Sts_DiaDueS1", "BOOL", "Stage 1 diaphragm replacement due"),
++    M("Sts_DiaDueS2", "BOOL", "Stage 2 diaphragm replacement due"),
++    M("Val_TimeToStart", "TIME", "Anti-cycle time remaining"),
++    M("Val_PurgeLeft", "TIME", "Purge time remaining"),
++    M("Val_S1Ratio", "REAL", "Stage 1 compression ratio (absolute)"),
++    M("Val_S2Ratio", "REAL", "Stage 2 compression ratio (absolute)"),
++    M("Val_S1DiaHrs", "REAL", "Stage 1 run hours since diaphragm change"),
++    M("Val_S2DiaHrs", "REAL", "Stage 2 run hours since diaphragm change"),
++    # ---- Alarms ----
++    A("Alm_S1Leak", "Stage 1 diaphragm leak"),
++    A("Alm_S2Leak", "Stage 2 diaphragm leak"),
++    AL("Alm_LoCaseOil", "Low crankcase oil pressure"),
++    AL("Alm_HiCaseOilT", "High crankcase oil temperature"),
++    AL("Alm_LoS1Oil", "Low stage 1 head hydraulic oil pressure"),
++    AL("Alm_LoS2Oil", "Low stage 2 head hydraulic oil pressure"),
++    AL("Alm_HiS1DischT", "High stage 1 discharge temperature"),
++    AL("Alm_HiS2DischT", "High stage 2 discharge temperature"),
++    AL("Alm_HiInterPress", "High interstage pressure"),
++    AL("Alm_HiDischPress", "High final discharge pressure"),
++    AL("Alm_LoSuct", "Low suction pressure"),
++    AL("Alm_HiCWTemp", "High cooling water return temperature"),
++    A("Alm_CWFail", "Cooling water flow failure"),
++    A("Alm_GasDet", "Unit tripped by area gas detection"),
++    A("Alm_ExtIntlk", "Unit tripped by external interlock"),
++    A("Alm_DiaDue", "Diaphragm replacement due (either stage)"),
++], "Rotating")
++
+ # ---------------- Process extras ----------------
+ T("Tank", "Tank / vessel: level-to-volume, inventory, fill/drain permissives, alarms", HDR + [
+     M("Cfg_Product", "STRING[24]", "Stored product"),
+@@ -1167,7 +1268,7 @@
+ 
+ ### Ignition 8.1 Perspective
+ 
+-The JSON holds 26 UDT definitions in a `PCLib` folder, matching the DDTs member for member.
++The JSON holds one UDT definition per DDT in a `PCLib` folder, matching the DDTs member for member.
+ Nested DDTs (`Mode`, `Alm_*`, `Run`, `Drv`...) are nested UDT instances. Arrays are folders with one tag per element.
+ 
+ 1. In the Designer Tag Browser, select **Data Types**, click **Import Tags** (or right-click > Import Tags) and

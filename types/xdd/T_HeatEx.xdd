@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_HeatEx" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Heat exchanger performance monitor: duty, LMTD, UA, fouling, DP</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Inp_HotInT" typeName="REAL">
+			<comment>Hot side inlet temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_HotOutT" typeName="REAL">
+			<comment>Hot side outlet temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_ColdInT" typeName="REAL">
+			<comment>Cold side inlet temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_ColdOutT" typeName="REAL">
+			<comment>Cold side outlet temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_HotFlow" typeName="REAL">
+			<comment>Hot side mass flow (kg/s)</comment>
+		</variables>
+		<variables name="Inp_ColdFlow" typeName="REAL">
+			<comment>Cold side mass flow (kg/s)</comment>
+		</variables>
+		<variables name="Inp_HotDP" typeName="REAL">
+			<comment>Hot side differential pressure (kPa)</comment>
+		</variables>
+		<variables name="Inp_ColdDP" typeName="REAL">
+			<comment>Cold side differential pressure (kPa)</comment>
+		</variables>
+		<variables name="Cfg_HotCp" typeName="REAL">
+			<comment>Hot side specific heat (kJ/kg.K)</comment>
+			<variableInit value="4.186"></variableInit>
+		</variables>
+		<variables name="Cfg_ColdCp" typeName="REAL">
+			<comment>Cold side specific heat (kJ/kg.K)</comment>
+			<variableInit value="4.186"></variableInit>
+		</variables>
+		<variables name="Cfg_CounterFlow" typeName="BOOL">
+			<comment>Counter-current (FALSE = co-current) for LMTD</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cfg_DesignUA" typeName="REAL">
+			<comment>Clean design UA (kW/K)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MinFlow" typeName="REAL">
+			<comment>Below this flow the calculations are frozen (kg/s)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_CalcFilt" typeName="REAL">
+			<comment>Filter time constant for calculated values (s)</comment>
+			<variableInit value="60.0"></variableInit>
+		</variables>
+		<variables name="Val_DutyHot" typeName="REAL">
+			<comment>Heat released by hot side (kW)</comment>
+		</variables>
+		<variables name="Val_DutyCold" typeName="REAL">
+			<comment>Heat absorbed by cold side (kW)</comment>
+		</variables>
+		<variables name="Val_Duty" typeName="REAL">
+			<comment>Average duty (kW)</comment>
+		</variables>
+		<variables name="Val_HeatBal" typeName="REAL">
+			<comment>Heat balance error (%)</comment>
+		</variables>
+		<variables name="Val_LMTD" typeName="REAL">
+			<comment>Log mean temperature difference (K)</comment>
+		</variables>
+		<variables name="Val_UA" typeName="REAL">
+			<comment>Actual UA (kW/K)</comment>
+		</variables>
+		<variables name="Val_Clean" typeName="REAL">
+			<comment>Cleanliness: UA as % of design</comment>
+		</variables>
+		<variables name="Val_Approach" typeName="REAL">
+			<comment>Approach temperature (K)</comment>
+		</variables>
+		<variables name="Val_Effect" typeName="REAL">
+			<comment>Thermal effectiveness (0-1)</comment>
+		</variables>
+		<variables name="Sts_CalcValid" typeName="BOOL">
+			<comment>Inputs valid, calculations live</comment>
+		</variables>
+		<variables name="Alm_Fouling" typeName="T_AlmLim">
+			<comment>Low cleanliness (Val_Clean below limit)</comment>
+		</variables>
+		<variables name="Alm_HotDP" typeName="T_AlmLim">
+			<comment>High hot side DP</comment>
+		</variables>
+		<variables name="Alm_ColdDP" typeName="T_AlmLim">
+			<comment>High cold side DP</comment>
+		</variables>
+		<variables name="Alm_HeatBal" typeName="T_AlmLim">
+			<comment>Heat balance error (possible instrument fault)</comment>
+		</variables>
+		<variables name="Alm_HiOutT" typeName="T_AlmLim">
+			<comment>High process outlet temperature</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

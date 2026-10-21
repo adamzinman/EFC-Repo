@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Conveyor" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Belt / screw conveyor: start warning, zero-speed, pull-cord, alignment</comment>
+	<structure>
+		<variables name="Mtr" typeName="T_Motor">
+			<comment>Drive motor</comment>
+		</variables>
+		<variables name="Inp_MotionOK" typeName="BOOL">
+			<comment>Zero-speed switch: motion detected</comment>
+		</variables>
+		<variables name="Inp_PullCordOK" typeName="BOOL">
+			<comment>Pull-cord / lanyard switches healthy</comment>
+		</variables>
+		<variables name="Inp_AlignLOK" typeName="BOOL">
+			<comment>Belt alignment left healthy</comment>
+		</variables>
+		<variables name="Inp_AlignROK" typeName="BOOL">
+			<comment>Belt alignment right healthy</comment>
+		</variables>
+		<variables name="Inp_ChuteOK" typeName="BOOL">
+			<comment>Chute not blocked</comment>
+		</variables>
+		<variables name="Inp_BeltRipOK" typeName="BOOL">
+			<comment>Belt rip detector healthy</comment>
+		</variables>
+		<variables name="Inp_DownstrRun" typeName="BOOL">
+			<comment>Downstream conveyor running</comment>
+		</variables>
+		<variables name="Inp_Rate" typeName="REAL">
+			<comment>Belt scale rate (t/h), optional</comment>
+		</variables>
+		<variables name="Cfg_UseDownstr" typeName="BOOL">
+			<comment>Require downstream running (cascade start/trip)</comment>
+		</variables>
+		<variables name="Cfg_WarnTime" typeName="TIME">
+			<comment>Pre-start warning horn time</comment>
+			<variableInit value="T#10S"></variableInit>
+		</variables>
+		<variables name="Cfg_MotionDly" typeName="TIME">
+			<comment>Time after start to detect motion</comment>
+			<variableInit value="T#5S"></variableInit>
+		</variables>
+		<variables name="Cfg_PurgeTime" typeName="TIME">
+			<comment>Run-out time before stopping (empty belt)</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Out_Horn" typeName="BOOL">
+			<comment>Start warning horn</comment>
+		</variables>
+		<variables name="Out_Beacon" typeName="BOOL">
+			<comment>Start warning beacon</comment>
+		</variables>
+		<variables name="Out_IntlkOK" typeName="BOOL">
+			<comment>Wire to Mtr.Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Out_PermOK" typeName="BOOL">
+			<comment>Wire to Mtr.Inp_PermOK</comment>
+		</variables>
+		<variables name="Out_StartReq" typeName="BOOL">
+			<comment>Start request to Mtr after warning completes</comment>
+		</variables>
+		<variables name="Sts_Warning" typeName="BOOL">
+			<comment>Pre-start warning in progress</comment>
+		</variables>
+		<variables name="Sts_Purging" typeName="BOOL">
+			<comment>Running out before stop</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=Stopped 1=Warning 2=Starting 3=Running 4=Purging 5=Tripped</comment>
+		</variables>
+		<variables name="Val_Total" typeName="LREAL">
+			<comment>Total conveyed (t)</comment>
+		</variables>
+		<variables name="Alm_ZeroSpd" typeName="T_Alarm">
+			<comment>Zero-speed / belt slip</comment>
+		</variables>
+		<variables name="Alm_PullCord" typeName="T_Alarm">
+			<comment>Pull-cord operated</comment>
+		</variables>
+		<variables name="Alm_Misalign" typeName="T_Alarm">
+			<comment>Belt misalignment</comment>
+		</variables>
+		<variables name="Alm_Chute" typeName="T_Alarm">
+			<comment>Chute blocked</comment>
+		</variables>
+		<variables name="Alm_BeltRip" typeName="T_Alarm">
+			<comment>Belt rip</comment>
+		</variables>
+		<variables name="Alm_DownstrStop" typeName="T_Alarm">
+			<comment>Tripped by downstream conveyor</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>ISA-88 equipment phase: Part 1 state model, commands, modes, parameters, reports</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_PhaseID" typeName="INT">
+			<comment>Phase ID (unique in the unit) for batch server / unit procedure</comment>
+		</variables>
+		<variables name="Cfg_UnitID" typeName="INT">
+			<comment>ID of the unit this phase belongs to</comment>
+		</variables>
+		<variables name="Cfg_StepTimeout" typeName="TIME">
+			<comment>Step watchdog, T#0S = off</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cmd_Auto" typeName="BOOL">
+			<comment>Operator request Automatic mode (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_SemiAuto" typeName="BOOL">
+			<comment>Operator request Semi-automatic mode (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Man" typeName="BOOL">
+			<comment>Operator request Manual mode (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Start" typeName="BOOL">
+			<comment>Operator Start (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Stop" typeName="BOOL">
+			<comment>Operator Stop (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Hold" typeName="BOOL">
+			<comment>Operator Hold (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Restart" typeName="BOOL">
+			<comment>Operator Restart from Held (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Abort" typeName="BOOL">
+			<comment>Operator Abort (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Operator Reset to Idle (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Pause" typeName="BOOL">
+			<comment>Operator Pause at next transition (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Resume" typeName="BOOL">
+			<comment>Operator Resume from Paused (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Advance" typeName="BOOL">
+			<comment>Advance to next step in Semi-automatic (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_TakeOwn" typeName="BOOL">
+			<comment>Operator takes control from the recipe (one-shot)</comment>
+		</variables>
+		<variables name="Prog_Cmd" typeName="INT">
+			<comment>Command from batch server / unit procedure: 1=Start 2=Stop 3=Hold 4=Restart 5=Abort 6=Reset 7=Pause 8=Resume</comment>
+		</variables>
+		<variables name="Prog_Acquire" typeName="BOOL">
+			<comment>Recipe (batch server / unit procedure) takes ownership</comment>
+		</variables>
+		<variables name="Prog_Release" typeName="BOOL">
+			<comment>Recipe releases ownership</comment>
+		</variables>
+		<variables name="Prog_ReqAck" typeName="BOOL">
+			<comment>Batch server acknowledges Sts_ReqCode</comment>
+		</variables>
+		<variables name="Prm_Real" typeName="ARRAY[1..16] OF REAL">
+			<comment>Recipe parameters (REAL) - control recipe formula</comment>
+		</variables>
+		<variables name="Prm_DInt" typeName="ARRAY[1..8] OF DINT">
+			<comment>Recipe parameters (DINT) - control recipe formula</comment>
+		</variables>
+		<variables name="Rpt_Real" typeName="ARRAY[1..16] OF REAL">
+			<comment>Report values (REAL) returned to batch record</comment>
+		</variables>
+		<variables name="Rpt_DInt" typeName="ARRAY[1..8] OF DINT">
+			<comment>Report values (DINT) returned to batch record</comment>
+		</variables>
+		<variables name="Val_BatchID" typeName="STRING[32]">
+			<comment>Batch ID of the control recipe running this phase</comment>
+		</variables>
+		<variables name="Val_StateTime" typeName="TIME">
+			<comment>Time in current state</comment>
+		</variables>
+		<variables name="Val_RunTime" typeName="TIME">
+			<comment>Running time excluding Held / Paused</comment>
+		</variables>
+		<variables name="Val_FailText" typeName="STRING[40]">
+			<comment>Failure description for HMI / batch record</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>ISA-88 state: 0=Idle 1=Running 2=Complete 3=Pausing 4=Paused 5=Holding 6=Held 7=Restarting 8=Stopping 9=Stopped 10=Aborting 11=Aborted</comment>
+		</variables>
+		<variables name="Sts_PrevState" typeName="INT">
+			<comment>Previous state (for Restart / diagnostics)</comment>
+		</variables>
+		<variables name="Sts_Mode" typeName="INT">
+			<comment>ISA-88 mode: 1=Manual 2=Semi-automatic 3=Automatic</comment>
+		</variables>
+		<variables name="Sts_Owner" typeName="INT">
+			<comment>0=Operator 1=Recipe (batch server / unit procedure)</comment>
+		</variables>
+		<variables name="Sts_CmdMask" typeName="WORD">
+			<comment>Commands valid in current state (bit n = command n of Prog_Cmd) - for HMI</comment>
+		</variables>
+		<variables name="Sts_CmdRejected" typeName="BOOL">
+			<comment>Last command was not valid in the current state</comment>
+		</variables>
+		<variables name="Sts_Step" typeName="INT">
+			<comment>Active step number within the state logic</comment>
+		</variables>
+		<variables name="Sts_WaitAdvance" typeName="BOOL">
+			<comment>Semi-automatic: waiting for Cmd_Advance</comment>
+		</variables>
+		<variables name="Sts_ReqCode" typeName="INT">
+			<comment>Request to batch server (e.g. download params, upload reports), 0 = none</comment>
+		</variables>
+		<variables name="Sts_FailCode" typeName="INT">
+			<comment>Failure code, 0 = none</comment>
+		</variables>
+		<variables name="Alm_Fail" typeName="T_Alarm">
+			<comment>Phase failure</comment>
+		</variables>
+		<variables name="Alm_StepTimeout" typeName="T_Alarm">
+			<comment>Step exceeded Cfg_StepTimeout</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

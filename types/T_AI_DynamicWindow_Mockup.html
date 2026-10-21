@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T_AI Dynamic Window</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
+<style>
+body{margin:0;padding:24px;background:#D9D9D9;font-family:'Noto Sans','Segoe UI',Arial,sans-serif;color:#1F1F1F}
+.demo{display:flex;gap:8px;margin-bottom:16px}
+.demo button{font:inherit;font-size:13px;padding:6px 12px;border:1px solid #7F7F7F;background:#F0F0F0;cursor:pointer}
+.demo button.on{background:#BFBFBF}
+.wrap{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.note{font-size:12px;color:#4D4D4D;max-width:220px;line-height:1.5}
+.p{background:#E0E0E0;border:1px solid #7F7F7F;width:400px;height:860px;font-size:12px;display:flex;flex-direction:column;box-sizing:border-box}
+.p .h{height:430px;display:flex;flex-direction:column;box-sizing:border-box;overflow:hidden}
+.p .s{border-top:1px solid #A6A6A6;padding:6px 12px}
+.p .l{color:#4D4D4D;font-size:11px}
+.p .r{display:flex;justify-content:space-between;align-items:center;padding:2px 0}
+.p .c{font-size:11px;padding:1px 6px;border:1px solid #7F7F7F;background:#F0F0F0}
+.p .b{font-size:11px;padding:2px 8px;border:1px solid #7F7F7F;background:#F0F0F0;border-radius:2px}
+.p .v{font-family:Consolas,monospace;font-size:12px}
+.p .sw{width:10px;height:10px;display:inline-block;border:1px solid #7F7F7F;margin-right:6px;vertical-align:-1px}
+</style>
+</head>
+<body>
+<div class="demo">
+  <button data-s="normal">Normal</button><button data-s="high">High alarm</button>
+  <button data-s="bad">Bad PV</button><button data-s="sim">Simulated</button>
+</div>
+<div class="wrap">
+<div>
+  <div class="note" style="margin-bottom:6px">Standard layout, 1920×1080</div>
+  <svg width="210" height="118" viewBox="0 0 210 118">
+    <rect x="0" y="0" width="210" height="118" fill="#D9D9D9" stroke="#7F7F7F"/>
+    <rect x="0" y="0" width="210" height="9" fill="#C4C4C4" stroke="#7F7F7F" stroke-width="0.5"/>
+    <rect x="0" y="9" width="13" height="94" fill="#CCCCCC" stroke="#7F7F7F" stroke-width="0.5"/>
+    <rect x="0" y="103" width="210" height="15" fill="#BDBDBD" stroke="#7F7F7F" stroke-width="0.5"/>
+    <rect x="166" y="9" width="44" height="47" fill="#F0F0F0" stroke="#1F1F1F" stroke-width="1.5"/>
+    <rect x="166" y="56" width="44" height="47" fill="#E0E0E0" stroke="#1F1F1F" stroke-width="1.5"/>
+    <polyline points="170,92 178,86 186,89 194,76 206,80" fill="none" stroke="#1F1F1F"/>
+    <text x="172" y="36" font-size="11" fill="#1F1F1F">Info</text>
+    <circle cx="76" cy="52" r="6" fill="#F0F0F0" stroke="#1F1F1F" stroke-width="1.5"/>
+    <text x="70" y="69" font-size="11" fill="#1F1F1F">FT-101</text>
+    <path d="M84 52 L164 40" stroke="#1F1F1F" stroke-dasharray="3 2" fill="none"/>
+    <text x="20" y="21" font-size="11" fill="#4D4D4D">Process area</text>
+    <text x="20" y="114" font-size="11" fill="#4D4D4D">Alarm bar</text>
+  </svg>
+  <div class="note" style="margin-top:8px">Dynamic window 400×860, split into two 430 px halves. Top: object info. Bottom: PV trend with alarm limits.</div>
+</div>
+
+<div class="p">
+  <div class="h">
+    <div style="padding:8px 12px;display:flex;justify-content:space-between;align-items:center;background:#C4C4C4">
+      <div><div style="font-size:15px;font-weight:600">FT-101 <span class="l" style="font-weight:400">T_AI</span></div>
+      <div class="l">Feed flow to reactor R-100</div></div>
+      <div style="display:flex;gap:10px;color:#4D4D4D;font-size:16px">
+        <i class="ti ti-pin" title="Pin"></i><i class="ti ti-external-link" title="Open faceplate"></i><i class="ti ti-x" title="Clear"></i>
+      </div>
+    </div>
+    <div class="s" id="pvbox" style="background:#F0F0F0">
+      <div style="display:flex;align-items:baseline;gap:6px">
+        <span id="pv" style="font-size:28px;font-weight:600;font-family:Consolas,monospace;padding:0 3px">42.7</span>
+        <span class="l" style="font-size:12px">m3/h</span><span id="badge" style="margin-left:auto"></span>
+      </div>
+      <svg width="376" height="34" viewBox="0 0 376 34">
+        <rect x="2" y="8" width="372" height="10" fill="#CFCFCF" stroke="#7F7F7F"/>
+        <rect x="57.8" y="8" width="241.8" height="10" fill="#BDBDBD"/>
+        <line x1="20.6" y1="4" x2="20.6" y2="22" stroke="#595959" stroke-width="2"/>
+        <line x1="57.8" y1="6" x2="57.8" y2="20" stroke="#595959"/>
+        <line x1="299.6" y1="6" x2="299.6" y2="20" stroke="#595959"/>
+        <line x1="336.8" y1="4" x2="336.8" y2="22" stroke="#595959" stroke-width="2"/>
+        <polygon id="ptr" points="0,6 -6,0 6,0" fill="#1F1F1F"/>
+        <line id="ptrl" x1="0" y1="6" x2="0" y2="20" stroke="#1F1F1F" stroke-width="2"/>
+        <g font-size="11" fill="#4D4D4D">
+          <text x="2" y="32">0</text><text x="14" y="32">LL</text><text x="54" y="32">L</text>
+          <text x="296" y="32">H</text><text x="329" y="32">HH</text><text x="352" y="32">100</text>
+        </g>
+      </svg>
+      <div class="r">
+        <span class="l">Quality <span id="q" class="v">Good</span></span>
+        <span class="l">NE107 <span id="ne" class="v">OK</span></span>
+        <span class="l">ROC <span id="roc" class="v">0.02/s</span></span>
+      </div>
+    </div>
+    <div class="s" style="flex:1">
+      <div class="r" style="padding-bottom:3px"><span style="font-weight:600">Alarms</span>
+        <span style="display:flex;gap:4px"><span class="b">Ack</span><span class="b">Shelve</span></span></div>
+      <div id="alms"></div>
+    </div>
+    <div class="s">
+      <div class="r"><span class="l">Range</span><span class="v">0.0 to 100.0 m3/h</span></div>
+      <div class="r"><span class="l">Mode / owner</span><span class="v">Auto · none</span></div>
+      <div style="display:flex;gap:6px;padding:4px 0 2px">
+        <span class="b" style="flex:1;text-align:center">Faceplate</span><span class="b" style="flex:1;text-align:center">Alarm history</span>
+      </div>
+    </div>
+  </div>
+  <div class="h" style="border-top:2px solid #7F7F7F">
+    <div style="padding:8px 12px 4px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-weight:600">Trend <span class="l" style="font-weight:400">FT-101 Val_PV</span></span>
+      <span style="display:flex;gap:2px"><span class="b">15m</span><span class="b" style="background:#BFBFBF">1h</span><span class="b">8h</span><span class="b">24h</span></span>
+    </div>
+    <svg width="398" height="392" viewBox="0 0 398 392">
+      <rect x="34" y="6" width="354" height="350" fill="#F0F0F0" stroke="#A6A6A6"/>
+      <g stroke="#CFCFCF"><line x1="34" y1="93.5" x2="388" y2="93.5"/><line x1="34" y1="181" x2="388" y2="181"/><line x1="34" y1="268.5" x2="388" y2="268.5"/>
+        <line x1="122.5" y1="6" x2="122.5" y2="356"/><line x1="211" y1="6" x2="211" y2="356"/><line x1="299.5" y1="6" x2="299.5" y2="356"/></g>
+      <g stroke="#7F7F7F" stroke-dasharray="4 3"><line x1="34" y1="41" x2="388" y2="41"/><line x1="34" y1="76" x2="388" y2="76"/><line x1="34" y1="303.5" x2="388" y2="303.5"/><line x1="34" y1="338.5" x2="388" y2="338.5"/></g>
+      <g font-size="11" fill="#4D4D4D">
+        <text x="6" y="12">100</text><text x="12" y="98">75</text><text x="12" y="185">50</text><text x="12" y="273">25</text><text x="20" y="360">0</text>
+        <text x="360" y="37">HH</text><text x="368" y="72">H</text><text x="368" y="300">L</text><text x="362" y="335">LL</text>
+        <text x="34" y="372">-60 min</text><text x="112" y="372">-45</text><text x="201" y="372">-30</text><text x="289" y="372">-15</text><text x="368" y="372">now</text>
+        <text x="34" y="388">m3/h</text>
+      </g>
+      <rect id="simband" x="0" y="6" width="0" height="350" fill="#D7EEEB"/>
+      <polyline id="tr" fill="none" stroke="#1F1F1F" stroke-width="1.5" points=""/>
+      <polyline id="trbad" fill="none" stroke="#B000B0" stroke-width="1.5" stroke-dasharray="3 3" points=""/>
+      <circle id="dot" r="3" fill="#1F1F1F" cx="388" cy="0"/>
+    </svg>
+  </div>
+</div>
+</div>
+<script>
+const P={1:'#D50000',2:'#FF7A00',3:'#FFD200',4:'#00A3E0'};
+const L=[['HH','90.0',1],['H','80.0',3],['L','15.0',3],['LL','5.0',2],['ROC','10.0/s',4],['Bad PV','',2]];
+const y=v=>356-v*3.5, X=i=>34+i*354/30, bx=v=>2+v*3.72;
+const series=f=>Array.from({length:31},(_,i)=>`${X(i).toFixed(1)},${y(f(i)).toFixed(1)}`).join(' ');
+const base=i=>42+3*Math.sin(i/3)+((i*7)%5)/3;
+const S={
+ normal:{pv:'42.7',v:42.7,q:'Good',ne:'OK',roc:'0.02/s',a:{},tr:series(base)},
+ high:{pv:'86.3',v:86.3,q:'Good',ne:'OK',roc:'0.41/s',a:{H:'Active, unack'},tr:series(i=>i<18?base(i):Math.min(86.3,base(i)+(i-18)*3.8))},
+ bad:{pv:'42.7',v:base(22),q:'Bad',ne:'F',roc:'0.00/s',bad:true,a:{'Bad PV':'Active, unack',HH:'Suppressed',H:'Suppressed',L:'Suppressed',LL:'Suppressed',ROC:'Suppressed'},
+      tr:Array.from({length:23},(_,i)=>`${X(i).toFixed(1)},${y(base(i)).toFixed(1)}`).join(' '),
+      trbad:`${X(22).toFixed(1)},${y(base(22)).toFixed(1)} 388,${y(base(22)).toFixed(1)}`},
+ sim:{pv:'55.0',v:55,q:'Uncertain',ne:'C',roc:'0.00/s',sim:true,a:{},tr:series(i=>i<22?base(i):55)}
+};
+const $=id=>document.getElementById(id);
+function show(k){
+ const s=S[k], px=bx(s.v), pc=s.bad?'#B000B0':s.sim?'#00695C':'#1F1F1F';
+ $('pv').textContent=s.pv;$('q').textContent=s.q;$('ne').textContent=s.ne;$('roc').textContent=s.roc;
+ $('pv').style.color=pc;$('pv').style.outline=s.bad?'2px solid #B000B0':'none';
+ $('pvbox').style.background=s.sim?'#D7EEEB':'#F0F0F0';
+ $('badge').innerHTML=s.sim?'<span class="c" style="background:#D7EEEB;color:#00695C;border-color:#00695C">SIM</span>':s.bad?'<span class="c" style="color:#B000B0;border-color:#B000B0">Holding last good</span>':'';
+ $('ptr').setAttribute('points',`${px},6 ${px-6},0 ${px+6},0`);$('ptr').setAttribute('fill',pc);
+ $('ptrl').setAttribute('x1',px);$('ptrl').setAttribute('x2',px);$('ptrl').setAttribute('stroke',pc);
+ $('tr').setAttribute('points',s.tr);$('trbad').setAttribute('points',s.trbad||'');
+ $('dot').setAttribute('cy',y(s.v).toFixed(1));$('dot').setAttribute('fill',pc);
+ $('simband').setAttribute('x',s.sim?X(22):0);$('simband').setAttribute('width',s.sim?388-X(22):0);
+ $('alms').innerHTML=L.map(([n,l,p])=>{const st=s.a[n]||'Normal',act=st.startsWith('Active');
+  return `<div class="r" style="padding:3px 4px;${act?`outline:2px solid ${P[p]};outline-offset:-2px;background:#F0F0F0`:''}"><span><span class="sw" style="${act?`background:${P[p]};border-color:#595959`:''}"></span>${n}${l?` <span class="l">${l}</span>`:''}</span><span class="l" style="${act?'color:#1F1F1F;font-weight:600':''}">${st}</span></div>`}).join('');
+ document.querySelectorAll('.demo button').forEach(b=>b.classList.toggle('on',b.dataset.s===k));
+}
+document.querySelectorAll('.demo button').forEach(b=>b.onclick=()=>show(b.dataset.s));
+show('normal');
+</script>
+</body>
+</html>

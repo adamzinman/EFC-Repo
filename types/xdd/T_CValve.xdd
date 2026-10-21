@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_CValve" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Modulating control valve: limits, rate limit, positioner feedback</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Mode" typeName="T_Mode">
+			<comment>Mode block</comment>
+		</variables>
+		<variables name="Inp_PosFbk" typeName="REAL">
+			<comment>Position feedback (%)</comment>
+		</variables>
+		<variables name="Inp_FbkBad" typeName="BOOL">
+			<comment>Feedback signal bad</comment>
+		</variables>
+		<variables name="Inp_ZSC" typeName="BOOL">
+			<comment>Closed limit switch (optional)</comment>
+		</variables>
+		<variables name="Inp_IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (FALSE drives to Cfg_IntlkPos)</comment>
+		</variables>
+		<variables name="Inp_IOFault" typeName="BOOL">
+			<comment>I/O channel or comms fault</comment>
+		</variables>
+		<variables name="Cfg_HasFbk" typeName="BOOL">
+			<comment>Position feedback fitted</comment>
+		</variables>
+		<variables name="Cfg_FailPos" typeName="REAL">
+			<comment>Fail position (%): 0 = fail closed, 100 = fail open</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_IntlkPos" typeName="REAL">
+			<comment>Position driven to on interlock (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_OutMin" typeName="REAL">
+			<comment>Minimum output (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_OutMax" typeName="REAL">
+			<comment>Maximum output (%)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_RateUp" typeName="REAL">
+			<comment>Opening rate limit (%/s), 0 = none</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_RateDn" typeName="REAL">
+			<comment>Closing rate limit (%/s), 0 = none</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_TightShut" typeName="REAL">
+			<comment>Demand below this (%) forces 0 for tight shut-off</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_ReverseAct" typeName="BOOL">
+			<comment>Reverse-acting output (100% signal = closed)</comment>
+		</variables>
+		<variables name="Cfg_RawMin" typeName="INT">
+			<comment>Analog output raw counts at 0%</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_RawMax" typeName="INT">
+			<comment>Analog output raw counts at 100%</comment>
+			<variableInit value="10000"></variableInit>
+		</variables>
+		<variables name="Cfg_DevLim" typeName="REAL">
+			<comment>Position deviation alarm limit (%)</comment>
+			<variableInit value="5.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DevTime" typeName="TIME">
+			<comment>Deviation must persist this long</comment>
+			<variableInit value="T#15S"></variableInit>
+		</variables>
+		<variables name="Cmd_ManPos" typeName="REAL">
+			<comment>Operator manual demand (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Fault reset (one-shot)</comment>
+		</variables>
+		<variables name="Prog_Pos" typeName="REAL">
+			<comment>Program / PID demand (%) - Auto mode</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Out_CV" typeName="REAL">
+			<comment>Output demand (%) after limits and rate limit</comment>
+		</variables>
+		<variables name="Out_CVRaw" typeName="INT">
+			<comment>Output in raw counts for AO channel</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation: ignore field I/O, logic generates feedback</comment>
+		</variables>
+		<variables name="Val_Demand" typeName="REAL">
+			<comment>Active demand before rate limit (%)</comment>
+		</variables>
+		<variables name="Val_Pos" typeName="REAL">
+			<comment>Position (%) - feedback, or demand if no feedback</comment>
+		</variables>
+		<variables name="Val_Dev" typeName="REAL">
+			<comment>Demand minus position (%)</comment>
+		</variables>
+		<variables name="Val_Travel" typeName="REAL">
+			<comment>Accumulated travel (% of full stroke, summed) for diagnostics</comment>
+		</variables>
+		<variables name="Val_Reversals" typeName="UDINT">
+			<comment>Direction reversal count</comment>
+		</variables>
+		<variables name="Sts_Closed" typeName="BOOL">
+			<comment>Valve closed</comment>
+		</variables>
+		<variables name="Sts_Intlk" typeName="BOOL">
+			<comment>Interlock active</comment>
+		</variables>
+		<variables name="Sts_RateLim" typeName="BOOL">
+			<comment>Output is being rate limited</comment>
+		</variables>
+		<variables name="Sts_Fault" typeName="BOOL">
+			<comment>Any fault present</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Inp_NE107" typeName="INT">
+			<comment>NE107 status reported by smart device (HART / fieldbus)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Alm_PosDev" typeName="T_Alarm">
+			<comment>Position deviation</comment>
+		</variables>
+		<variables name="Alm_FbkBad" typeName="T_Alarm">
+			<comment>Feedback bad</comment>
+		</variables>
+		<variables name="Alm_IntlkTrip" typeName="T_Alarm">
+			<comment>Driven to interlock position</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

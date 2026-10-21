@@ -1,0 +1,2913 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Alarm" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Discrete alarm, ISA-18.2 / IEC 62682 state model, shelving, suppression, out-of-service</comment>
+	<structure>
+		<variables name="Inp_Cond" typeName="BOOL">
+			<comment>Raw alarm condition (written by owner logic)</comment>
+		</variables>
+		<variables name="Inp_Suppress" typeName="BOOL">
+			<comment>Suppressed-by-design: state-based suppression by logic (ISA-18.2 state G)</comment>
+		</variables>
+		<variables name="Cfg_En" typeName="BOOL">
+			<comment>Alarm configured (FALSE = not an alarm, e.g. instrument not fitted)</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cfg_Latch" typeName="BOOL">
+			<comment>Latching alarm: active until Cmd_Reset after RTN (ISA-18.2 state E)</comment>
+		</variables>
+		<variables name="Cfg_NoAck" typeName="BOOL">
+			<comment>No acknowledge required - use only for alarms rationalised as such</comment>
+		</variables>
+		<variables name="Cfg_OnDly" typeName="TIME">
+			<comment>On-delay (ISA-18.2 chattering control)</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_OffDly" typeName="TIME">
+			<comment>Off-delay (ISA-18.2 chattering control)</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_Priority" typeName="INT">
+			<comment>Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low</comment>
+			<variableInit value="3"></variableInit>
+		</variables>
+		<variables name="Cfg_Class" typeName="INT">
+			<comment>Alarm class (alarm philosophy): 0=General 1=Safety 2=Environmental 3=Quality 4=Asset</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaxShelf" typeName="TIME">
+			<comment>Maximum shelve duration (shelving must be time-limited)</comment>
+			<variableInit value="T#8H"></variableInit>
+		</variables>
+		<variables name="Cmd_Ack" typeName="BOOL">
+			<comment>Operator acknowledge (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Reset latched alarm (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Shelve" typeName="BOOL">
+			<comment>Operator shelve (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Unshelve" typeName="BOOL">
+			<comment>Operator unshelve (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_RemoveSvc" typeName="BOOL">
+			<comment>Remove from service for maintenance (one-shot, permit required)</comment>
+		</variables>
+		<variables name="Cmd_ReturnSvc" typeName="BOOL">
+			<comment>Return to service (one-shot)</comment>
+		</variables>
+		<variables name="Sts_Active" typeName="BOOL">
+			<comment>Alarm active (after delays and latch)</comment>
+		</variables>
+		<variables name="Sts_Unack" typeName="BOOL">
+			<comment>Alarm unacknowledged</comment>
+		</variables>
+		<variables name="Sts_Shelved" typeName="BOOL">
+			<comment>Shelved by operator (ISA-18.2 state F)</comment>
+		</variables>
+		<variables name="Sts_Suppressed" typeName="BOOL">
+			<comment>Suppressed by design (ISA-18.2 state G)</comment>
+		</variables>
+		<variables name="Sts_OOS" typeName="BOOL">
+			<comment>Out of service (ISA-18.2 state H)</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=A Normal 1=B Unack 2=C Acked 3=D RTN-Unack 4=E Latched 5=F Shelved 6=G Suppressed-by-design 7=H Out-of-service</comment>
+		</variables>
+		<variables name="Sts_ShelfLeft" typeName="TIME">
+			<comment>Shelve time remaining</comment>
+		</variables>
+		<variables name="Val_Count" typeName="UDINT">
+			<comment>Activation counter (alarm performance KPIs)</comment>
+		</variables>
+		<variables name="Val_LastActive" typeName="DT">
+			<comment>Date/time of last activation</comment>
+		</variables>
+		<variables name="Val_LastRTN" typeName="DT">
+			<comment>Date/time of last return to normal</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_AlmLim" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Analog limit alarm: limit + deadband + ISA-18.2 / IEC 62682 alarm</comment>
+	<structure>
+		<variables name="Cfg_Lim" typeName="REAL">
+			<comment>Alarm limit (EU) - from rationalisation / master alarm database</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DB" typeName="REAL">
+			<comment>Deadband for return to normal (EU, ISA-18.2 chattering control)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Inp_Cond" typeName="BOOL">
+			<comment>Raw alarm condition (written by owner logic)</comment>
+		</variables>
+		<variables name="Inp_Suppress" typeName="BOOL">
+			<comment>Suppressed-by-design: state-based suppression by logic (ISA-18.2 state G)</comment>
+		</variables>
+		<variables name="Cfg_En" typeName="BOOL">
+			<comment>Alarm enabled - set TRUE once Cfg_Lim is rationalised</comment>
+		</variables>
+		<variables name="Cfg_Latch" typeName="BOOL">
+			<comment>Latching alarm: active until Cmd_Reset after RTN (ISA-18.2 state E)</comment>
+		</variables>
+		<variables name="Cfg_NoAck" typeName="BOOL">
+			<comment>No acknowledge required - use only for alarms rationalised as such</comment>
+		</variables>
+		<variables name="Cfg_OnDly" typeName="TIME">
+			<comment>On-delay (ISA-18.2 chattering control)</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_OffDly" typeName="TIME">
+			<comment>Off-delay (ISA-18.2 chattering control)</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_Priority" typeName="INT">
+			<comment>Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low</comment>
+			<variableInit value="3"></variableInit>
+		</variables>
+		<variables name="Cfg_Class" typeName="INT">
+			<comment>Alarm class (alarm philosophy): 0=General 1=Safety 2=Environmental 3=Quality 4=Asset</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaxShelf" typeName="TIME">
+			<comment>Maximum shelve duration (shelving must be time-limited)</comment>
+			<variableInit value="T#8H"></variableInit>
+		</variables>
+		<variables name="Cmd_Ack" typeName="BOOL">
+			<comment>Operator acknowledge (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Reset latched alarm (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Shelve" typeName="BOOL">
+			<comment>Operator shelve (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Unshelve" typeName="BOOL">
+			<comment>Operator unshelve (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_RemoveSvc" typeName="BOOL">
+			<comment>Remove from service for maintenance (one-shot, permit required)</comment>
+		</variables>
+		<variables name="Cmd_ReturnSvc" typeName="BOOL">
+			<comment>Return to service (one-shot)</comment>
+		</variables>
+		<variables name="Sts_Active" typeName="BOOL">
+			<comment>Alarm active (after delays and latch)</comment>
+		</variables>
+		<variables name="Sts_Unack" typeName="BOOL">
+			<comment>Alarm unacknowledged</comment>
+		</variables>
+		<variables name="Sts_Shelved" typeName="BOOL">
+			<comment>Shelved by operator (ISA-18.2 state F)</comment>
+		</variables>
+		<variables name="Sts_Suppressed" typeName="BOOL">
+			<comment>Suppressed by design (ISA-18.2 state G)</comment>
+		</variables>
+		<variables name="Sts_OOS" typeName="BOOL">
+			<comment>Out of service (ISA-18.2 state H)</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=A Normal 1=B Unack 2=C Acked 3=D RTN-Unack 4=E Latched 5=F Shelved 6=G Suppressed-by-design 7=H Out-of-service</comment>
+		</variables>
+		<variables name="Sts_ShelfLeft" typeName="TIME">
+			<comment>Shelve time remaining</comment>
+		</variables>
+		<variables name="Val_Count" typeName="UDINT">
+			<comment>Activation counter (alarm performance KPIs)</comment>
+		</variables>
+		<variables name="Val_LastActive" typeName="DT">
+			<comment>Date/time of last activation</comment>
+		</variables>
+		<variables name="Val_LastRTN" typeName="DT">
+			<comment>Date/time of last return to normal</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_Mode" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Control-module mode and ISA-88 ownership (arbitration); maps to MTP OpMode</comment>
+	<structure>
+		<variables name="Cmd_Auto" typeName="BOOL">
+			<comment>Operator request Automatic (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Man" typeName="BOOL">
+			<comment>Operator request Manual (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Maint" typeName="BOOL">
+			<comment>Request Maintenance (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_OOS" typeName="BOOL">
+			<comment>Request Out-of-Service (one-shot)</comment>
+		</variables>
+		<variables name="Prog_Auto" typeName="BOOL">
+			<comment>Owner request Automatic</comment>
+		</variables>
+		<variables name="Prog_Man" typeName="BOOL">
+			<comment>Owner request Manual</comment>
+		</variables>
+		<variables name="Prog_Lock" typeName="BOOL">
+			<comment>Owner locks current mode (operator cannot change)</comment>
+		</variables>
+		<variables name="Prog_Acquire" typeName="BOOL">
+			<comment>ISA-88 arbitration: owner (phase / EM) acquires this module</comment>
+		</variables>
+		<variables name="Prog_Release" typeName="BOOL">
+			<comment>ISA-88 arbitration: owner releases this module</comment>
+		</variables>
+		<variables name="Inp_ReqOwnerID" typeName="DINT">
+			<comment>ID of the phase / equipment module requesting ownership</comment>
+		</variables>
+		<variables name="Cmd_ForceRelease" typeName="BOOL">
+			<comment>Supervisor forces release of ownership (one-shot)</comment>
+		</variables>
+		<variables name="Cfg_PowerUpMode" typeName="INT">
+			<comment>Mode at cold start: 0=OOS 1=Maint 2=Man 3=Auto</comment>
+			<variableInit value="2"></variableInit>
+		</variables>
+		<variables name="Cfg_NoMaint" typeName="BOOL">
+			<comment>Maintenance mode not allowed</comment>
+		</variables>
+		<variables name="Sts_Auto" typeName="BOOL">
+			<comment>In Automatic (commanded by owner) - MTP Automatic</comment>
+		</variables>
+		<variables name="Sts_Man" typeName="BOOL">
+			<comment>In Manual (commanded by operator) - MTP Operator</comment>
+		</variables>
+		<variables name="Sts_Maint" typeName="BOOL">
+			<comment>In Maintenance</comment>
+		</variables>
+		<variables name="Sts_OOS" typeName="BOOL">
+			<comment>Out of service - MTP Offline</comment>
+		</variables>
+		<variables name="Sts_Mode" typeName="INT">
+			<comment>0=OOS 1=Maint 2=Man 3=Auto  (MTP: 0=Offline 2=Operator 3=Automatic)</comment>
+		</variables>
+		<variables name="Sts_Owned" typeName="BOOL">
+			<comment>Acquired by an owner</comment>
+		</variables>
+		<variables name="Val_OwnerID" typeName="DINT">
+			<comment>ID of current owner, 0 = free</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_RunTime" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Run-hours, starts and maintenance counters</comment>
+	<structure>
+		<variables name="Inp_Running" typeName="BOOL">
+			<comment>Equipment running (from owner logic)</comment>
+		</variables>
+		<variables name="Cfg_MaintHrs" typeName="REAL">
+			<comment>Maintenance interval in run hours, 0 = off</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cmd_ResetMaint" typeName="BOOL">
+			<comment>Reset hours-since-maintenance (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_ResetAll" typeName="BOOL">
+			<comment>Reset all counters (one-shot, supervisor)</comment>
+		</variables>
+		<variables name="Val_RunSecs" typeName="UDINT">
+			<comment>Total run time (s) - master counter</comment>
+		</variables>
+		<variables name="Val_RunHrs" typeName="REAL">
+			<comment>Total run hours (display)</comment>
+		</variables>
+		<variables name="Val_Starts" typeName="UDINT">
+			<comment>Total starts / cycles</comment>
+		</variables>
+		<variables name="Val_StartsLastHr" typeName="INT">
+			<comment>Starts in the last 60 min (rolling)</comment>
+		</variables>
+		<variables name="Val_LastRun" typeName="TIME">
+			<comment>Duration of last run</comment>
+		</variables>
+		<variables name="Val_HrsSinceMaint" typeName="REAL">
+			<comment>Run hours since last maintenance reset</comment>
+		</variables>
+		<variables name="Sts_MaintDue" typeName="BOOL">
+			<comment>Maintenance due</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_AI" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Analog input: scaling, filtering, NE43 range check, alarms, sim</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_EU" typeName="STRING[12]">
+			<comment>Engineering units text</comment>
+		</variables>
+		<variables name="Inp_Raw" typeName="INT">
+			<comment>Raw counts from analog channel</comment>
+		</variables>
+		<variables name="Inp_ChFault" typeName="BOOL">
+			<comment>Channel / module diagnostic fault</comment>
+		</variables>
+		<variables name="Cfg_RawMin" typeName="INT">
+			<comment>Raw counts at 0% (M340/M580 4-20mA default 0)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_RawMax" typeName="INT">
+			<comment>Raw counts at 100% (M340/M580 4-20mA default 10000)</comment>
+			<variableInit value="10000"></variableInit>
+		</variables>
+		<variables name="Cfg_EUMin" typeName="REAL">
+			<comment>PV at 0% (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_EUMax" typeName="REAL">
+			<comment>PV at 100% (EU)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_FiltTC" typeName="REAL">
+			<comment>1st-order filter time constant (s), 0 = off</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SqrtExtract" typeName="BOOL">
+			<comment>Square-root extraction (DP flow)</comment>
+		</variables>
+		<variables name="Cfg_LoCutoff" typeName="REAL">
+			<comment>Low cutoff (% span): PV forced to EUMin below this, 0 = off</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_BadLoPct" typeName="REAL">
+			<comment>Bad below this % span (NE43 3.6mA = -2.5%)</comment>
+			<variableInit value="-2.5"></variableInit>
+		</variables>
+		<variables name="Cfg_BadHiPct" typeName="REAL">
+			<comment>Bad above this % span (NE43 21mA = 106.25%)</comment>
+			<variableInit value="106.25"></variableInit>
+		</variables>
+		<variables name="Cfg_BadAction" typeName="INT">
+			<comment>On bad PV: 0=Hold last good 1=Substitute 2=EUMin 3=EUMax</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_SubstPV" typeName="REAL">
+			<comment>Substitute PV used when Cfg_BadAction = 1</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation enabled</comment>
+		</variables>
+		<variables name="Sim_PV" typeName="REAL">
+			<comment>Simulated PV (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Val_PV" typeName="REAL">
+			<comment>Process value (EU) - use this in logic</comment>
+		</variables>
+		<variables name="Val_PVPct" typeName="REAL">
+			<comment>Process value (% of span)</comment>
+		</variables>
+		<variables name="Val_ROC" typeName="REAL">
+			<comment>Rate of change (EU/s, 1 s window) - input to Alm_ROC</comment>
+		</variables>
+		<variables name="Sts_Bad" typeName="BOOL">
+			<comment>PV bad (out of range or channel fault)</comment>
+		</variables>
+		<variables name="Sts_URng" typeName="BOOL">
+			<comment>Under range</comment>
+		</variables>
+		<variables name="Sts_ORng" typeName="BOOL">
+			<comment>Over range</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Sts_Subst" typeName="BOOL">
+			<comment>Substitute / held value in use</comment>
+		</variables>
+		<variables name="Sts_Quality" typeName="INT">
+			<comment>0=Good 1=Uncertain (simulation, NE107 C or S) 2=Bad</comment>
+		</variables>
+		<variables name="Inp_NE107" typeName="INT">
+			<comment>NE107 status reported by smart device (HART / fieldbus)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Alm_HH" typeName="T_AlmLim">
+			<comment>High-high alarm</comment>
+		</variables>
+		<variables name="Alm_H" typeName="T_AlmLim">
+			<comment>High alarm</comment>
+		</variables>
+		<variables name="Alm_L" typeName="T_AlmLim">
+			<comment>Low alarm</comment>
+		</variables>
+		<variables name="Alm_LL" typeName="T_AlmLim">
+			<comment>Low-low alarm</comment>
+		</variables>
+		<variables name="Alm_ROC" typeName="T_AlmLim">
+			<comment>Rate-of-change alarm (Cfg_Lim in EU/s)</comment>
+		</variables>
+		<variables name="Alm_Bad" typeName="T_Alarm">
+			<comment>Bad PV alarm</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_DI" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Digital input: invert, debounce, sim, optional state alarm</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Inp_Raw" typeName="BOOL">
+			<comment>Raw input from channel</comment>
+		</variables>
+		<variables name="Inp_ChFault" typeName="BOOL">
+			<comment>Channel / module diagnostic fault</comment>
+		</variables>
+		<variables name="Cfg_Invert" typeName="BOOL">
+			<comment>Invert raw signal (fail-safe NC contacts)</comment>
+		</variables>
+		<variables name="Cfg_OnDly" typeName="TIME">
+			<comment>Debounce on-delay</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_OffDly" typeName="TIME">
+			<comment>Debounce off-delay</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_AlmMode" typeName="INT">
+			<comment>0=No alarm 1=Alarm when Val TRUE 2=Alarm when Val FALSE</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_TrueText" typeName="STRING[16]">
+			<comment>HMI text for TRUE state, e.g. OPEN</comment>
+		</variables>
+		<variables name="Cfg_FalseText" typeName="STRING[16]">
+			<comment>HMI text for FALSE state, e.g. CLOSED</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation enabled</comment>
+		</variables>
+		<variables name="Sim_Val" typeName="BOOL">
+			<comment>Simulated value</comment>
+		</variables>
+		<variables name="Val" typeName="BOOL">
+			<comment>Conditioned value - use this in logic</comment>
+		</variables>
+		<variables name="Sts_Bad" typeName="BOOL">
+			<comment>Channel fault</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Val_Transitions" typeName="UDINT">
+			<comment>Count of FALSE-&gt;TRUE transitions</comment>
+		</variables>
+		<variables name="Alm" typeName="T_Alarm">
+			<comment>State alarm (see Cfg_AlmMode)</comment>
+		</variables>
+		<variables name="Alm_Bad" typeName="T_Alarm">
+			<comment>Channel fault alarm</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_DValve" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>On/off valve: single or dual solenoid, limit switches, travel alarms</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Mode" typeName="T_Mode">
+			<comment>Mode block</comment>
+		</variables>
+		<variables name="Inp_ZSO" typeName="BOOL">
+			<comment>Open limit switch</comment>
+		</variables>
+		<variables name="Inp_ZSC" typeName="BOOL">
+			<comment>Closed limit switch</comment>
+		</variables>
+		<variables name="Inp_Remote" typeName="BOOL">
+			<comment>Local/Remote switch in REMOTE (if fitted)</comment>
+		</variables>
+		<variables name="Inp_IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (FALSE drives to interlock position)</comment>
+		</variables>
+		<variables name="Inp_PermOK" typeName="BOOL">
+			<comment>Permissives healthy (TRUE = may leave safe position)</comment>
+		</variables>
+		<variables name="Inp_IOFault" typeName="BOOL">
+			<comment>I/O channel or comms fault</comment>
+		</variables>
+		<variables name="Cfg_HasZSO" typeName="BOOL">
+			<comment>Open limit switch fitted</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cfg_HasZSC" typeName="BOOL">
+			<comment>Closed limit switch fitted</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cfg_FailOpen" typeName="BOOL">
+			<comment>Fail position: TRUE = fail open, FALSE = fail closed</comment>
+		</variables>
+		<variables name="Cfg_IntlkOpen" typeName="BOOL">
+			<comment>Interlock drives valve: TRUE = open, FALSE = closed</comment>
+		</variables>
+		<variables name="Cfg_DualCoil" typeName="BOOL">
+			<comment>Dual solenoid (uses Out_Open and Out_Close)</comment>
+		</variables>
+		<variables name="Cfg_TravelTime" typeName="TIME">
+			<comment>Maximum travel time before failure alarm</comment>
+			<variableInit value="T#10S"></variableInit>
+		</variables>
+		<variables name="Cmd_Open" typeName="BOOL">
+			<comment>Operator open (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Close" typeName="BOOL">
+			<comment>Operator close (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Fault reset (one-shot)</comment>
+		</variables>
+		<variables name="Prog_Open" typeName="BOOL">
+			<comment>Program open request (Auto)</comment>
+		</variables>
+		<variables name="Prog_Close" typeName="BOOL">
+			<comment>Program close request (Auto)</comment>
+		</variables>
+		<variables name="Out_Open" typeName="BOOL">
+			<comment>Solenoid output: open (energise)</comment>
+		</variables>
+		<variables name="Out_Close" typeName="BOOL">
+			<comment>Solenoid output: close (dual-coil only)</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation: ignore field I/O, logic generates feedback</comment>
+		</variables>
+		<variables name="Sts_Opened" typeName="BOOL">
+			<comment>Confirmed open</comment>
+		</variables>
+		<variables name="Sts_Closed" typeName="BOOL">
+			<comment>Confirmed closed</comment>
+		</variables>
+		<variables name="Sts_Opening" typeName="BOOL">
+			<comment>Travelling open</comment>
+		</variables>
+		<variables name="Sts_Closing" typeName="BOOL">
+			<comment>Travelling closed</comment>
+		</variables>
+		<variables name="Sts_Avail" typeName="BOOL">
+			<comment>Available to Auto/program control</comment>
+		</variables>
+		<variables name="Sts_Intlk" typeName="BOOL">
+			<comment>Interlock not healthy</comment>
+		</variables>
+		<variables name="Sts_NotPerm" typeName="BOOL">
+			<comment>Permissive not healthy</comment>
+		</variables>
+		<variables name="Sts_Local" typeName="BOOL">
+			<comment>In local control</comment>
+		</variables>
+		<variables name="Sts_Fault" typeName="BOOL">
+			<comment>Any fault present</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=Transit/unknown 1=Closed 2=Open 3=Opening 4=Closing 5=Fault</comment>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Alm_FailOpen" typeName="T_Alarm">
+			<comment>Failed to open within travel time</comment>
+		</variables>
+		<variables name="Alm_FailClose" typeName="T_Alarm">
+			<comment>Failed to close within travel time</comment>
+		</variables>
+		<variables name="Alm_PosConflict" typeName="T_Alarm">
+			<comment>Both limit switches made</comment>
+		</variables>
+		<variables name="Alm_Uncmd" typeName="T_Alarm">
+			<comment>Left commanded position without a command</comment>
+		</variables>
+		<variables name="Alm_IntlkTrip" typeName="T_Alarm">
+			<comment>Driven to safe position by interlock</comment>
+		</variables>
+		<variables name="Run" typeName="T_RunTime">
+			<comment>Cycle counter (Val_Starts = operations)</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_CValve" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Modulating control valve: limits, rate limit, positioner feedback</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Mode" typeName="T_Mode">
+			<comment>Mode block</comment>
+		</variables>
+		<variables name="Inp_PosFbk" typeName="REAL">
+			<comment>Position feedback (%)</comment>
+		</variables>
+		<variables name="Inp_FbkBad" typeName="BOOL">
+			<comment>Feedback signal bad</comment>
+		</variables>
+		<variables name="Inp_ZSC" typeName="BOOL">
+			<comment>Closed limit switch (optional)</comment>
+		</variables>
+		<variables name="Inp_IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (FALSE drives to Cfg_IntlkPos)</comment>
+		</variables>
+		<variables name="Inp_IOFault" typeName="BOOL">
+			<comment>I/O channel or comms fault</comment>
+		</variables>
+		<variables name="Cfg_HasFbk" typeName="BOOL">
+			<comment>Position feedback fitted</comment>
+		</variables>
+		<variables name="Cfg_FailPos" typeName="REAL">
+			<comment>Fail position (%): 0 = fail closed, 100 = fail open</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_IntlkPos" typeName="REAL">
+			<comment>Position driven to on interlock (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_OutMin" typeName="REAL">
+			<comment>Minimum output (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_OutMax" typeName="REAL">
+			<comment>Maximum output (%)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_RateUp" typeName="REAL">
+			<comment>Opening rate limit (%/s), 0 = none</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_RateDn" typeName="REAL">
+			<comment>Closing rate limit (%/s), 0 = none</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_TightShut" typeName="REAL">
+			<comment>Demand below this (%) forces 0 for tight shut-off</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_ReverseAct" typeName="BOOL">
+			<comment>Reverse-acting output (100% signal = closed)</comment>
+		</variables>
+		<variables name="Cfg_RawMin" typeName="INT">
+			<comment>Analog output raw counts at 0%</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_RawMax" typeName="INT">
+			<comment>Analog output raw counts at 100%</comment>
+			<variableInit value="10000"></variableInit>
+		</variables>
+		<variables name="Cfg_DevLim" typeName="REAL">
+			<comment>Position deviation alarm limit (%)</comment>
+			<variableInit value="5.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DevTime" typeName="TIME">
+			<comment>Deviation must persist this long</comment>
+			<variableInit value="T#15S"></variableInit>
+		</variables>
+		<variables name="Cmd_ManPos" typeName="REAL">
+			<comment>Operator manual demand (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Fault reset (one-shot)</comment>
+		</variables>
+		<variables name="Prog_Pos" typeName="REAL">
+			<comment>Program / PID demand (%) - Auto mode</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Out_CV" typeName="REAL">
+			<comment>Output demand (%) after limits and rate limit</comment>
+		</variables>
+		<variables name="Out_CVRaw" typeName="INT">
+			<comment>Output in raw counts for AO channel</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation: ignore field I/O, logic generates feedback</comment>
+		</variables>
+		<variables name="Val_Demand" typeName="REAL">
+			<comment>Active demand before rate limit (%)</comment>
+		</variables>
+		<variables name="Val_Pos" typeName="REAL">
+			<comment>Position (%) - feedback, or demand if no feedback</comment>
+		</variables>
+		<variables name="Val_Dev" typeName="REAL">
+			<comment>Demand minus position (%)</comment>
+		</variables>
+		<variables name="Val_Travel" typeName="REAL">
+			<comment>Accumulated travel (% of full stroke, summed) for diagnostics</comment>
+		</variables>
+		<variables name="Val_Reversals" typeName="UDINT">
+			<comment>Direction reversal count</comment>
+		</variables>
+		<variables name="Sts_Closed" typeName="BOOL">
+			<comment>Valve closed</comment>
+		</variables>
+		<variables name="Sts_Intlk" typeName="BOOL">
+			<comment>Interlock active</comment>
+		</variables>
+		<variables name="Sts_RateLim" typeName="BOOL">
+			<comment>Output is being rate limited</comment>
+		</variables>
+		<variables name="Sts_Fault" typeName="BOOL">
+			<comment>Any fault present</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Inp_NE107" typeName="INT">
+			<comment>NE107 status reported by smart device (HART / fieldbus)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Alm_PosDev" typeName="T_Alarm">
+			<comment>Position deviation</comment>
+		</variables>
+		<variables name="Alm_FbkBad" typeName="T_Alarm">
+			<comment>Feedback bad</comment>
+		</variables>
+		<variables name="Alm_IntlkTrip" typeName="T_Alarm">
+			<comment>Driven to interlock position</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_Motor" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Direct-on-line / star-delta / soft-start motor</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Mode" typeName="T_Mode">
+			<comment>Mode block</comment>
+		</variables>
+		<variables name="Inp_RunFbk" typeName="BOOL">
+			<comment>Run feedback (contactor aux / drive running)</comment>
+		</variables>
+		<variables name="Inp_Remote" typeName="BOOL">
+			<comment>Local/Remote switch in REMOTE</comment>
+		</variables>
+		<variables name="Inp_AvailOK" typeName="BOOL">
+			<comment>MCC available: breaker closed, control power OK</comment>
+		</variables>
+		<variables name="Inp_EStopOK" typeName="BOOL">
+			<comment>Field E-stop circuit healthy</comment>
+		</variables>
+		<variables name="Inp_IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (TRUE = may run; FALSE trips)</comment>
+		</variables>
+		<variables name="Inp_PermOK" typeName="BOOL">
+			<comment>Permissives healthy (TRUE = may start)</comment>
+		</variables>
+		<variables name="Inp_IOFault" typeName="BOOL">
+			<comment>I/O channel or comms fault</comment>
+		</variables>
+		<variables name="Inp_OL" typeName="BOOL">
+			<comment>Overload / motor protection relay tripped</comment>
+		</variables>
+		<variables name="Inp_Current" typeName="REAL">
+			<comment>Motor current (A), optional</comment>
+		</variables>
+		<variables name="Cfg_FbkTime" typeName="TIME">
+			<comment>Time allowed for run feedback after start/stop</comment>
+			<variableInit value="T#5S"></variableInit>
+		</variables>
+		<variables name="Cfg_RestartDly" typeName="TIME">
+			<comment>Minimum stopped time before restart</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_NoFbk" typeName="BOOL">
+			<comment>No run feedback wired (feedback follows output)</comment>
+		</variables>
+		<variables name="Cfg_AutoRestart" typeName="BOOL">
+			<comment>Auto mode restarts after power loss / interlock clears</comment>
+		</variables>
+		<variables name="Cfg_RatedAmps" typeName="REAL">
+			<comment>Motor nameplate full-load current (A)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaxStartsHr" typeName="INT">
+			<comment>Maximum starts per hour, 0 = no limit</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cmd_Start" typeName="BOOL">
+			<comment>Operator start (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Stop" typeName="BOOL">
+			<comment>Operator stop (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Fault / trip reset (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Jog" typeName="BOOL">
+			<comment>Maintenance jog (maintained, Maint mode only)</comment>
+		</variables>
+		<variables name="Prog_Start" typeName="BOOL">
+			<comment>Program / sequence start request (Auto mode)</comment>
+		</variables>
+		<variables name="Prog_Stop" typeName="BOOL">
+			<comment>Program / sequence stop request (Auto mode)</comment>
+		</variables>
+		<variables name="Out_Run" typeName="BOOL">
+			<comment>Run output to contactor / starter</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation: ignore field I/O, logic generates feedback</comment>
+		</variables>
+		<variables name="Sts_Running" typeName="BOOL">
+			<comment>Running (feedback confirmed)</comment>
+		</variables>
+		<variables name="Sts_Stopped" typeName="BOOL">
+			<comment>Stopped (feedback confirmed)</comment>
+		</variables>
+		<variables name="Sts_Starting" typeName="BOOL">
+			<comment>Start commanded, waiting for feedback</comment>
+		</variables>
+		<variables name="Sts_Stopping" typeName="BOOL">
+			<comment>Stop commanded, waiting for feedback</comment>
+		</variables>
+		<variables name="Sts_Avail" typeName="BOOL">
+			<comment>Available to Auto/program control</comment>
+		</variables>
+		<variables name="Sts_Ready" typeName="BOOL">
+			<comment>Ready to start now (all permissives, no trip)</comment>
+		</variables>
+		<variables name="Sts_Intlk" typeName="BOOL">
+			<comment>Interlock not healthy</comment>
+		</variables>
+		<variables name="Sts_NotPerm" typeName="BOOL">
+			<comment>Permissive not healthy</comment>
+		</variables>
+		<variables name="Sts_Local" typeName="BOOL">
+			<comment>In local control</comment>
+		</variables>
+		<variables name="Sts_Tripped" typeName="BOOL">
+			<comment>Tripped - reset required</comment>
+		</variables>
+		<variables name="Sts_Fault" typeName="BOOL">
+			<comment>Any fault present</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=Stopped 1=Starting 2=Running 3=Stopping 4=Tripped 5=Not available</comment>
+		</variables>
+		<variables name="Sts_RestartLeft" typeName="TIME">
+			<comment>Restart-delay time remaining</comment>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Val_Current" typeName="REAL">
+			<comment>Motor current (A)</comment>
+		</variables>
+		<variables name="Val_LoadPct" typeName="REAL">
+			<comment>Load (% of Cfg_RatedAmps)</comment>
+		</variables>
+		<variables name="Alm_FailStart" typeName="T_Alarm">
+			<comment>No run feedback within Cfg_FbkTime</comment>
+		</variables>
+		<variables name="Alm_FailStop" typeName="T_Alarm">
+			<comment>Run feedback still present after stop</comment>
+		</variables>
+		<variables name="Alm_Uncmd" typeName="T_Alarm">
+			<comment>Running without a command</comment>
+		</variables>
+		<variables name="Alm_EStop" typeName="T_Alarm">
+			<comment>E-stop activated</comment>
+		</variables>
+		<variables name="Alm_IntlkTrip" typeName="T_Alarm">
+			<comment>Tripped by interlock</comment>
+		</variables>
+		<variables name="Alm_ExcessStarts" typeName="T_Alarm">
+			<comment>Start blocked: Cfg_MaxStartsHr exceeded</comment>
+		</variables>
+		<variables name="Alm_OL" typeName="T_Alarm">
+			<comment>Overload trip</comment>
+		</variables>
+		<variables name="Alm_HiCurrent" typeName="T_AlmLim">
+			<comment>High current (A)</comment>
+		</variables>
+		<variables name="Run" typeName="T_RunTime">
+			<comment>Run hours / starts</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_VFD" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Variable speed drive (fieldbus or hardwired)</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Mode" typeName="T_Mode">
+			<comment>Mode block</comment>
+		</variables>
+		<variables name="Inp_RunFbk" typeName="BOOL">
+			<comment>Run feedback (contactor aux / drive running)</comment>
+		</variables>
+		<variables name="Inp_Remote" typeName="BOOL">
+			<comment>Local/Remote switch in REMOTE</comment>
+		</variables>
+		<variables name="Inp_AvailOK" typeName="BOOL">
+			<comment>MCC available: breaker closed, control power OK</comment>
+		</variables>
+		<variables name="Inp_EStopOK" typeName="BOOL">
+			<comment>Field E-stop circuit healthy</comment>
+		</variables>
+		<variables name="Inp_IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (TRUE = may run; FALSE trips)</comment>
+		</variables>
+		<variables name="Inp_PermOK" typeName="BOOL">
+			<comment>Permissives healthy (TRUE = may start)</comment>
+		</variables>
+		<variables name="Inp_IOFault" typeName="BOOL">
+			<comment>I/O channel or comms fault</comment>
+		</variables>
+		<variables name="Inp_DrvReady" typeName="BOOL">
+			<comment>Drive ready</comment>
+		</variables>
+		<variables name="Inp_DrvFault" typeName="BOOL">
+			<comment>Drive faulted</comment>
+		</variables>
+		<variables name="Inp_DrvWarn" typeName="BOOL">
+			<comment>Drive warning / alarm</comment>
+		</variables>
+		<variables name="Inp_FaultCode" typeName="UINT">
+			<comment>Drive fault code</comment>
+		</variables>
+		<variables name="Inp_CommOK" typeName="BOOL">
+			<comment>Drive communications healthy</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Inp_NE107" typeName="INT">
+			<comment>NE107 status reported by smart device (HART / fieldbus)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Inp_SpdFbk" typeName="REAL">
+			<comment>Speed feedback (Cfg_SpdEU)</comment>
+		</variables>
+		<variables name="Inp_Current" typeName="REAL">
+			<comment>Motor current (A)</comment>
+		</variables>
+		<variables name="Inp_Torque" typeName="REAL">
+			<comment>Motor torque (%)</comment>
+		</variables>
+		<variables name="Inp_Power" typeName="REAL">
+			<comment>Motor power (kW)</comment>
+		</variables>
+		<variables name="Cfg_FbkTime" typeName="TIME">
+			<comment>Time allowed for run feedback after start/stop</comment>
+			<variableInit value="T#5S"></variableInit>
+		</variables>
+		<variables name="Cfg_RestartDly" typeName="TIME">
+			<comment>Minimum stopped time before restart</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_NoFbk" typeName="BOOL">
+			<comment>No run feedback wired (feedback follows output)</comment>
+		</variables>
+		<variables name="Cfg_AutoRestart" typeName="BOOL">
+			<comment>Auto mode restarts after power loss / interlock clears</comment>
+		</variables>
+		<variables name="Cfg_RatedAmps" typeName="REAL">
+			<comment>Motor nameplate full-load current (A)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaxStartsHr" typeName="INT">
+			<comment>Maximum starts per hour, 0 = no limit</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_SpdEU" typeName="STRING[8]">
+			<comment>Speed units text (%, Hz, rpm)</comment>
+		</variables>
+		<variables name="Cfg_SpdMin" typeName="REAL">
+			<comment>Minimum speed reference</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SpdMax" typeName="REAL">
+			<comment>Maximum speed reference</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SpdDevLim" typeName="REAL">
+			<comment>Speed deviation alarm limit</comment>
+			<variableInit value="5.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SpdDevTime" typeName="TIME">
+			<comment>Speed deviation delay</comment>
+			<variableInit value="T#20S"></variableInit>
+		</variables>
+		<variables name="Cfg_Reversible" typeName="BOOL">
+			<comment>Reverse direction allowed</comment>
+		</variables>
+		<variables name="Cmd_Start" typeName="BOOL">
+			<comment>Operator start (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Stop" typeName="BOOL">
+			<comment>Operator stop (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Fault / trip reset (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Jog" typeName="BOOL">
+			<comment>Maintenance jog (maintained, Maint mode only)</comment>
+		</variables>
+		<variables name="Prog_Start" typeName="BOOL">
+			<comment>Program / sequence start request (Auto mode)</comment>
+		</variables>
+		<variables name="Prog_Stop" typeName="BOOL">
+			<comment>Program / sequence stop request (Auto mode)</comment>
+		</variables>
+		<variables name="Cmd_Spd" typeName="REAL">
+			<comment>Operator manual speed reference</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cmd_Rev" typeName="BOOL">
+			<comment>Operator direction: TRUE = reverse</comment>
+		</variables>
+		<variables name="Prog_Spd" typeName="REAL">
+			<comment>Program / PID speed reference (Auto)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Prog_Rev" typeName="BOOL">
+			<comment>Program direction: TRUE = reverse</comment>
+		</variables>
+		<variables name="Out_Run" typeName="BOOL">
+			<comment>Run command to drive</comment>
+		</variables>
+		<variables name="Out_Rev" typeName="BOOL">
+			<comment>Reverse command to drive</comment>
+		</variables>
+		<variables name="Out_SpdRef" typeName="REAL">
+			<comment>Speed reference to drive (limited)</comment>
+		</variables>
+		<variables name="Out_FltReset" typeName="BOOL">
+			<comment>Fault reset pulse to drive</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation: ignore field I/O, logic generates feedback</comment>
+		</variables>
+		<variables name="Sts_Running" typeName="BOOL">
+			<comment>Running (feedback confirmed)</comment>
+		</variables>
+		<variables name="Sts_Stopped" typeName="BOOL">
+			<comment>Stopped (feedback confirmed)</comment>
+		</variables>
+		<variables name="Sts_Starting" typeName="BOOL">
+			<comment>Start commanded, waiting for feedback</comment>
+		</variables>
+		<variables name="Sts_Stopping" typeName="BOOL">
+			<comment>Stop commanded, waiting for feedback</comment>
+		</variables>
+		<variables name="Sts_Avail" typeName="BOOL">
+			<comment>Available to Auto/program control</comment>
+		</variables>
+		<variables name="Sts_Ready" typeName="BOOL">
+			<comment>Ready to start now (all permissives, no trip)</comment>
+		</variables>
+		<variables name="Sts_Intlk" typeName="BOOL">
+			<comment>Interlock not healthy</comment>
+		</variables>
+		<variables name="Sts_NotPerm" typeName="BOOL">
+			<comment>Permissive not healthy</comment>
+		</variables>
+		<variables name="Sts_Local" typeName="BOOL">
+			<comment>In local control</comment>
+		</variables>
+		<variables name="Sts_Tripped" typeName="BOOL">
+			<comment>Tripped - reset required</comment>
+		</variables>
+		<variables name="Sts_Fault" typeName="BOOL">
+			<comment>Any fault present</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=Stopped 1=Starting 2=Running 3=Stopping 4=Tripped 5=Not available</comment>
+		</variables>
+		<variables name="Sts_RestartLeft" typeName="TIME">
+			<comment>Restart-delay time remaining</comment>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Sts_AtSpd" typeName="BOOL">
+			<comment>At speed (feedback within deviation limit)</comment>
+		</variables>
+		<variables name="Sts_Rev" typeName="BOOL">
+			<comment>Running in reverse</comment>
+		</variables>
+		<variables name="Sts_CommFail" typeName="BOOL">
+			<comment>Communication failure</comment>
+		</variables>
+		<variables name="Val_SpdRef" typeName="REAL">
+			<comment>Active speed reference</comment>
+		</variables>
+		<variables name="Val_Spd" typeName="REAL">
+			<comment>Speed</comment>
+		</variables>
+		<variables name="Val_Current" typeName="REAL">
+			<comment>Motor current (A)</comment>
+		</variables>
+		<variables name="Val_Torque" typeName="REAL">
+			<comment>Torque (%)</comment>
+		</variables>
+		<variables name="Val_Power" typeName="REAL">
+			<comment>Power (kW)</comment>
+		</variables>
+		<variables name="Val_Energy" typeName="LREAL">
+			<comment>Energy (kWh), integrated from power</comment>
+		</variables>
+		<variables name="Alm_FailStart" typeName="T_Alarm">
+			<comment>No run feedback within Cfg_FbkTime</comment>
+		</variables>
+		<variables name="Alm_FailStop" typeName="T_Alarm">
+			<comment>Run feedback still present after stop</comment>
+		</variables>
+		<variables name="Alm_Uncmd" typeName="T_Alarm">
+			<comment>Running without a command</comment>
+		</variables>
+		<variables name="Alm_EStop" typeName="T_Alarm">
+			<comment>E-stop activated</comment>
+		</variables>
+		<variables name="Alm_IntlkTrip" typeName="T_Alarm">
+			<comment>Tripped by interlock</comment>
+		</variables>
+		<variables name="Alm_ExcessStarts" typeName="T_Alarm">
+			<comment>Start blocked: Cfg_MaxStartsHr exceeded</comment>
+		</variables>
+		<variables name="Alm_DrvFault" typeName="T_Alarm">
+			<comment>Drive fault</comment>
+		</variables>
+		<variables name="Alm_DrvWarn" typeName="T_Alarm">
+			<comment>Drive warning</comment>
+		</variables>
+		<variables name="Alm_CommFail" typeName="T_Alarm">
+			<comment>Drive comms failure</comment>
+		</variables>
+		<variables name="Alm_SpdDev" typeName="T_Alarm">
+			<comment>Speed deviation</comment>
+		</variables>
+		<variables name="Run" typeName="T_RunTime">
+			<comment>Run hours / starts</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_PID" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>PID loop wrapper (maps onto PIDFF EFB), Man/Auto/Cas, tracking</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_PVEU" typeName="STRING[12]">
+			<comment>PV engineering units text</comment>
+		</variables>
+		<variables name="Inp_PV" typeName="REAL">
+			<comment>Process value (EU)</comment>
+		</variables>
+		<variables name="Inp_PVBad" typeName="BOOL">
+			<comment>PV bad quality</comment>
+		</variables>
+		<variables name="Inp_CasSP" typeName="REAL">
+			<comment>Cascade (remote) setpoint from master loop</comment>
+		</variables>
+		<variables name="Inp_FF" typeName="REAL">
+			<comment>Feed-forward input (% CV)</comment>
+		</variables>
+		<variables name="Inp_TrackEn" typeName="BOOL">
+			<comment>Output tracking enable</comment>
+		</variables>
+		<variables name="Inp_TrackVal" typeName="REAL">
+			<comment>Output tracking value (%)</comment>
+		</variables>
+		<variables name="Inp_IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (FALSE forces Cfg_IntlkCV)</comment>
+		</variables>
+		<variables name="Cmd_Man" typeName="BOOL">
+			<comment>Operator request Manual (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Auto" typeName="BOOL">
+			<comment>Operator request Auto (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Cas" typeName="BOOL">
+			<comment>Operator request Cascade (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_SP" typeName="REAL">
+			<comment>Operator setpoint (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cmd_CV" typeName="REAL">
+			<comment>Operator manual output (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Prog_SP" typeName="REAL">
+			<comment>Program setpoint (EU), used when Cfg_ProgSP</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_ProgSP" typeName="BOOL">
+			<comment>Setpoint owned by program instead of operator</comment>
+		</variables>
+		<variables name="Cfg_Kp" typeName="REAL">
+			<comment>Proportional gain</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_Ti" typeName="TIME">
+			<comment>Integral time, T#0S = no integral</comment>
+			<variableInit value="T#10S"></variableInit>
+		</variables>
+		<variables name="Cfg_Td" typeName="TIME">
+			<comment>Derivative time</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_DirectAct" typeName="BOOL">
+			<comment>TRUE = direct acting (CV rises with PV); FALSE = reverse</comment>
+		</variables>
+		<variables name="Cfg_PVMin" typeName="REAL">
+			<comment>PV range low (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_PVMax" typeName="REAL">
+			<comment>PV range high (EU)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SPMin" typeName="REAL">
+			<comment>Setpoint low limit (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SPMax" typeName="REAL">
+			<comment>Setpoint high limit (EU)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_CVMin" typeName="REAL">
+			<comment>Output low limit (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_CVMax" typeName="REAL">
+			<comment>Output high limit (%)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SPRate" typeName="REAL">
+			<comment>Setpoint ramp rate (EU/s), 0 = step</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_CVRate" typeName="REAL">
+			<comment>Output rate limit (%/s), 0 = none</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DB" typeName="REAL">
+			<comment>Error deadband (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_FFGain" typeName="REAL">
+			<comment>Feed-forward gain</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_PVTrack" typeName="BOOL">
+			<comment>Setpoint tracks PV while in Manual (bumpless)</comment>
+		</variables>
+		<variables name="Cfg_IntlkCV" typeName="REAL">
+			<comment>Output forced on interlock (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_BadPVAction" typeName="INT">
+			<comment>On bad PV: 0=Hold CV 1=Go Manual 2=Go Cfg_IntlkCV</comment>
+			<variableInit value="1"></variableInit>
+		</variables>
+		<variables name="Out_CV" typeName="REAL">
+			<comment>Controller output (%)</comment>
+		</variables>
+		<variables name="Val_SP" typeName="REAL">
+			<comment>Active setpoint after ramp and limits (EU)</comment>
+		</variables>
+		<variables name="Val_SPTarget" typeName="REAL">
+			<comment>Target setpoint before ramp (EU)</comment>
+		</variables>
+		<variables name="Val_PV" typeName="REAL">
+			<comment>Process value (EU)</comment>
+		</variables>
+		<variables name="Val_Err" typeName="REAL">
+			<comment>Error SP - PV (EU)</comment>
+		</variables>
+		<variables name="Sts_Man" typeName="BOOL">
+			<comment>In Manual</comment>
+		</variables>
+		<variables name="Sts_Auto" typeName="BOOL">
+			<comment>In Auto</comment>
+		</variables>
+		<variables name="Sts_Cas" typeName="BOOL">
+			<comment>In Cascade</comment>
+		</variables>
+		<variables name="Sts_Track" typeName="BOOL">
+			<comment>Output tracking</comment>
+		</variables>
+		<variables name="Sts_Intlk" typeName="BOOL">
+			<comment>Interlock active</comment>
+		</variables>
+		<variables name="Sts_WindupHi" typeName="BOOL">
+			<comment>Output at high limit</comment>
+		</variables>
+		<variables name="Sts_WindupLo" typeName="BOOL">
+			<comment>Output at low limit</comment>
+		</variables>
+		<variables name="Sts_SPRamping" typeName="BOOL">
+			<comment>Setpoint ramping</comment>
+		</variables>
+		<variables name="Sts_Mode" typeName="INT">
+			<comment>0=Man 1=Auto 2=Cas 3=Track 4=Intlk</comment>
+		</variables>
+		<variables name="Alm_DevH" typeName="T_AlmLim">
+			<comment>High deviation (PV - SP), EU</comment>
+		</variables>
+		<variables name="Alm_DevL" typeName="T_AlmLim">
+			<comment>Low deviation (SP - PV), EU</comment>
+		</variables>
+		<variables name="Alm_PVBad" typeName="T_Alarm">
+			<comment>PV bad</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_PumpProt" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Pump protection layer: dry run, low flow, deadhead, seal, bearing</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Inp_Running" typeName="BOOL">
+			<comment>Pump running (from Motor / VFD Sts_Running)</comment>
+		</variables>
+		<variables name="Inp_SuctPress" typeName="REAL">
+			<comment>Suction pressure (EU)</comment>
+		</variables>
+		<variables name="Inp_DischPress" typeName="REAL">
+			<comment>Discharge pressure (EU)</comment>
+		</variables>
+		<variables name="Inp_Flow" typeName="REAL">
+			<comment>Pump flow (EU)</comment>
+		</variables>
+		<variables name="Inp_DryRun" typeName="BOOL">
+			<comment>Dry-run switch / low level active</comment>
+		</variables>
+		<variables name="Inp_SealLeak" typeName="BOOL">
+			<comment>Seal leak / seal pot alarm</comment>
+		</variables>
+		<variables name="Inp_BrgTemp" typeName="REAL">
+			<comment>Bearing temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_Vib" typeName="REAL">
+			<comment>Vibration (mm/s)</comment>
+		</variables>
+		<variables name="Cfg_MinFlow" typeName="REAL">
+			<comment>Minimum continuous flow (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MinFlowDly" typeName="TIME">
+			<comment>Low-flow delay after start</comment>
+			<variableInit value="T#30S"></variableInit>
+		</variables>
+		<variables name="Cfg_DeadheadDP" typeName="REAL">
+			<comment>Differential pressure indicating deadhead (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DryRunDly" typeName="TIME">
+			<comment>Dry-run delay</comment>
+			<variableInit value="T#5S"></variableInit>
+		</variables>
+		<variables name="Cfg_TripDryRun" typeName="BOOL">
+			<comment>Trip on dry run</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cfg_TripLowFlow" typeName="BOOL">
+			<comment>Trip on low flow</comment>
+		</variables>
+		<variables name="Cfg_TripDeadhead" typeName="BOOL">
+			<comment>Trip on deadhead</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cfg_TripSeal" typeName="BOOL">
+			<comment>Trip on seal leak</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Reset latched trips (one-shot)</comment>
+		</variables>
+		<variables name="Out_IntlkOK" typeName="BOOL">
+			<comment>Protections healthy - wire to Motor/VFD Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Val_DP" typeName="REAL">
+			<comment>Differential pressure (EU)</comment>
+		</variables>
+		<variables name="Alm_DryRun" typeName="T_Alarm">
+			<comment>Dry run</comment>
+		</variables>
+		<variables name="Alm_LowFlow" typeName="T_Alarm">
+			<comment>Low flow (below minimum continuous flow)</comment>
+		</variables>
+		<variables name="Alm_Deadhead" typeName="T_Alarm">
+			<comment>Deadhead (high DP, no flow)</comment>
+		</variables>
+		<variables name="Alm_SealLeak" typeName="T_Alarm">
+			<comment>Seal leak</comment>
+		</variables>
+		<variables name="Alm_BrgTemp" typeName="T_AlmLim">
+			<comment>High bearing temperature</comment>
+		</variables>
+		<variables name="Alm_Vib" typeName="T_AlmLim">
+			<comment>High vibration</comment>
+		</variables>
+		<variables name="Alm_LoSuct" typeName="T_AlmLim">
+			<comment>Low suction pressure</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_PumpDS" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Duty/standby/lead-lag coordinator for up to 4 pumps</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Mode" typeName="T_Mode">
+			<comment>Mode block (Auto = Prog_NumReq, Man = Cmd_NumReq)</comment>
+		</variables>
+		<variables name="Inp_Avail" typeName="ARRAY[1..4] OF BOOL">
+			<comment>Pump n available (Motor Sts_Avail)</comment>
+		</variables>
+		<variables name="Inp_Running" typeName="ARRAY[1..4] OF BOOL">
+			<comment>Pump n running</comment>
+		</variables>
+		<variables name="Inp_Fault" typeName="ARRAY[1..4] OF BOOL">
+			<comment>Pump n faulted</comment>
+		</variables>
+		<variables name="Inp_RunHrs" typeName="ARRAY[1..4] OF REAL">
+			<comment>Pump n run hours (for equalisation)</comment>
+		</variables>
+		<variables name="Cfg_NumPumps" typeName="INT">
+			<comment>Number of pumps in group (1-4)</comment>
+			<variableInit value="2"></variableInit>
+		</variables>
+		<variables name="Cfg_Strategy" typeName="INT">
+			<comment>Rotation: 0=Fixed lead 1=Rotate on stop 2=Equalise hours 3=Timed</comment>
+			<variableInit value="1"></variableInit>
+		</variables>
+		<variables name="Cfg_RotateHrs" typeName="REAL">
+			<comment>Timed rotation interval (h)</comment>
+			<variableInit value="168.0"></variableInit>
+		</variables>
+		<variables name="Cfg_StageDly" typeName="TIME">
+			<comment>Delay between staging pumps on/off</comment>
+			<variableInit value="T#10S"></variableInit>
+		</variables>
+		<variables name="Cfg_ChgOnFault" typeName="BOOL">
+			<comment>Automatic changeover to standby on fault</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cmd_NumReq" typeName="INT">
+			<comment>Operator: number of pumps required (Manual)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cmd_Lead" typeName="INT">
+			<comment>Operator-selected lead pump (Fixed strategy)</comment>
+			<variableInit value="1"></variableInit>
+		</variables>
+		<variables name="Cmd_Rotate" typeName="BOOL">
+			<comment>Force rotation now (one-shot)</comment>
+		</variables>
+		<variables name="Prog_NumReq" typeName="INT">
+			<comment>Program: number of pumps required (Auto)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Out_RunReq" typeName="ARRAY[1..4] OF BOOL">
+			<comment>Run request to pump n (wire to Prog_Start)</comment>
+		</variables>
+		<variables name="Sts_Order" typeName="ARRAY[1..4] OF INT">
+			<comment>Rank of pump n: 1=Lead 2=Lag1 ...</comment>
+		</variables>
+		<variables name="Sts_Lead" typeName="INT">
+			<comment>Current lead pump</comment>
+		</variables>
+		<variables name="Sts_NumRunning" typeName="INT">
+			<comment>Pumps running</comment>
+		</variables>
+		<variables name="Sts_NumAvail" typeName="INT">
+			<comment>Pumps available</comment>
+		</variables>
+		<variables name="Val_HrsToRotate" typeName="REAL">
+			<comment>Hours until next timed rotation</comment>
+		</variables>
+		<variables name="Alm_NoStandby" typeName="T_Alarm">
+			<comment>No standby pump available</comment>
+		</variables>
+		<variables name="Alm_NoneAvail" typeName="T_Alarm">
+			<comment>Demand present but no pump available</comment>
+		</variables>
+		<variables name="Sts_ChgOver" typeName="BOOL">
+			<comment>Automatic changeover occurred (event, not an alarm - ISA-18.2)</comment>
+		</variables>
+		<variables name="Val_ChgOverCount" typeName="UDINT">
+			<comment>Automatic changeover counter</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_Agitator" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Agitator / mixer: VFD + submergence, seal and gearbox protection</comment>
+	<structure>
+		<variables name="Drv" typeName="T_VFD">
+			<comment>Drive (fixed-speed agitators: ignore speed members)</comment>
+		</variables>
+		<variables name="Inp_Level" typeName="REAL">
+			<comment>Vessel level (EU)</comment>
+		</variables>
+		<variables name="Inp_SealOK" typeName="BOOL">
+			<comment>Seal / seal support system healthy</comment>
+		</variables>
+		<variables name="Inp_GbxTemp" typeName="REAL">
+			<comment>Gearbox oil temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_Vib" typeName="REAL">
+			<comment>Vibration (mm/s)</comment>
+		</variables>
+		<variables name="Cfg_MinLevel" typeName="REAL">
+			<comment>Minimum level to run (impeller submergence)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_LvlHyst" typeName="REAL">
+			<comment>Level hysteresis (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_TripLowLvl" typeName="BOOL">
+			<comment>Trip running agitator on low level</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Out_IntlkOK" typeName="BOOL">
+			<comment>Wire to Drv.Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Out_PermOK" typeName="BOOL">
+			<comment>Wire to Drv.Inp_PermOK</comment>
+		</variables>
+		<variables name="Sts_LvlOK" typeName="BOOL">
+			<comment>Level above minimum</comment>
+		</variables>
+		<variables name="Alm_LowLvlRun" typeName="T_Alarm">
+			<comment>Running / start requested below minimum level</comment>
+		</variables>
+		<variables name="Alm_Seal" typeName="T_Alarm">
+			<comment>Seal fault</comment>
+		</variables>
+		<variables name="Alm_GbxTemp" typeName="T_AlmLim">
+			<comment>High gearbox temperature</comment>
+		</variables>
+		<variables name="Alm_Vib" typeName="T_AlmLim">
+			<comment>High vibration</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_Compressor" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Compressor / blower: load-unload, anti-cycle, lube and thermal protection</comment>
+	<structure>
+		<variables name="Drv" typeName="T_VFD">
+			<comment>Drive (fixed-speed: ignore speed members)</comment>
+		</variables>
+		<variables name="Inp_SuctPress" typeName="REAL">
+			<comment>Suction pressure (EU)</comment>
+		</variables>
+		<variables name="Inp_DischPress" typeName="REAL">
+			<comment>Discharge / header pressure (EU)</comment>
+		</variables>
+		<variables name="Inp_DischTemp" typeName="REAL">
+			<comment>Discharge temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_OilPress" typeName="REAL">
+			<comment>Lube oil pressure (EU)</comment>
+		</variables>
+		<variables name="Inp_OilTemp" typeName="REAL">
+			<comment>Lube oil temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_Vib" typeName="REAL">
+			<comment>Vibration (mm/s)</comment>
+		</variables>
+		<variables name="Inp_LoadFbk" typeName="BOOL">
+			<comment>Loaded feedback (inlet valve open)</comment>
+		</variables>
+		<variables name="Cfg_LoadPress" typeName="REAL">
+			<comment>Load (cut-in) pressure</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_UnloadPress" typeName="REAL">
+			<comment>Unload (cut-out) pressure</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MinRun" typeName="TIME">
+			<comment>Minimum run time</comment>
+			<variableInit value="T#5M"></variableInit>
+		</variables>
+		<variables name="Cfg_MinStop" typeName="TIME">
+			<comment>Minimum stop time (anti-cycle)</comment>
+			<variableInit value="T#2M"></variableInit>
+		</variables>
+		<variables name="Cfg_IdleTime" typeName="TIME">
+			<comment>Unloaded run time before auto stop</comment>
+			<variableInit value="T#10M"></variableInit>
+		</variables>
+		<variables name="Cfg_OilBypass" typeName="TIME">
+			<comment>Low oil pressure bypass after start</comment>
+			<variableInit value="T#10S"></variableInit>
+		</variables>
+		<variables name="Out_Load" typeName="BOOL">
+			<comment>Load solenoid / inlet valve</comment>
+		</variables>
+		<variables name="Out_BlowOff" typeName="BOOL">
+			<comment>Blow-off / recycle valve open</comment>
+		</variables>
+		<variables name="Out_IntlkOK" typeName="BOOL">
+			<comment>Wire to Drv.Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Sts_Loaded" typeName="BOOL">
+			<comment>Loaded</comment>
+		</variables>
+		<variables name="Sts_Idle" typeName="BOOL">
+			<comment>Running unloaded</comment>
+		</variables>
+		<variables name="Sts_AntiCycle" typeName="BOOL">
+			<comment>Waiting on minimum stop time</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=Off 1=Starting 2=Unloaded 3=Loaded 4=Idle stop 5=Anti-cycle 6=Tripped</comment>
+		</variables>
+		<variables name="Val_TimeToStart" typeName="TIME">
+			<comment>Anti-cycle time remaining</comment>
+		</variables>
+		<variables name="Val_PressRatio" typeName="REAL">
+			<comment>Compression ratio (absolute)</comment>
+		</variables>
+		<variables name="Alm_HiDischPress" typeName="T_AlmLim">
+			<comment>High discharge pressure</comment>
+		</variables>
+		<variables name="Alm_HiDischTemp" typeName="T_AlmLim">
+			<comment>High discharge temperature</comment>
+		</variables>
+		<variables name="Alm_LoOilPress" typeName="T_AlmLim">
+			<comment>Low lube oil pressure</comment>
+		</variables>
+		<variables name="Alm_HiOilTemp" typeName="T_AlmLim">
+			<comment>High lube oil temperature</comment>
+		</variables>
+		<variables name="Alm_Vib" typeName="T_AlmLim">
+			<comment>High vibration</comment>
+		</variables>
+		<variables name="Alm_LoSuct" typeName="T_AlmLim">
+			<comment>Low suction pressure</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_Conveyor" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Belt / screw conveyor: start warning, zero-speed, pull-cord, alignment</comment>
+	<structure>
+		<variables name="Mtr" typeName="T_Motor">
+			<comment>Drive motor</comment>
+		</variables>
+		<variables name="Inp_MotionOK" typeName="BOOL">
+			<comment>Zero-speed switch: motion detected</comment>
+		</variables>
+		<variables name="Inp_PullCordOK" typeName="BOOL">
+			<comment>Pull-cord / lanyard switches healthy</comment>
+		</variables>
+		<variables name="Inp_AlignLOK" typeName="BOOL">
+			<comment>Belt alignment left healthy</comment>
+		</variables>
+		<variables name="Inp_AlignROK" typeName="BOOL">
+			<comment>Belt alignment right healthy</comment>
+		</variables>
+		<variables name="Inp_ChuteOK" typeName="BOOL">
+			<comment>Chute not blocked</comment>
+		</variables>
+		<variables name="Inp_BeltRipOK" typeName="BOOL">
+			<comment>Belt rip detector healthy</comment>
+		</variables>
+		<variables name="Inp_DownstrRun" typeName="BOOL">
+			<comment>Downstream conveyor running</comment>
+		</variables>
+		<variables name="Inp_Rate" typeName="REAL">
+			<comment>Belt scale rate (t/h), optional</comment>
+		</variables>
+		<variables name="Cfg_UseDownstr" typeName="BOOL">
+			<comment>Require downstream running (cascade start/trip)</comment>
+		</variables>
+		<variables name="Cfg_WarnTime" typeName="TIME">
+			<comment>Pre-start warning horn time</comment>
+			<variableInit value="T#10S"></variableInit>
+		</variables>
+		<variables name="Cfg_MotionDly" typeName="TIME">
+			<comment>Time after start to detect motion</comment>
+			<variableInit value="T#5S"></variableInit>
+		</variables>
+		<variables name="Cfg_PurgeTime" typeName="TIME">
+			<comment>Run-out time before stopping (empty belt)</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Out_Horn" typeName="BOOL">
+			<comment>Start warning horn</comment>
+		</variables>
+		<variables name="Out_Beacon" typeName="BOOL">
+			<comment>Start warning beacon</comment>
+		</variables>
+		<variables name="Out_IntlkOK" typeName="BOOL">
+			<comment>Wire to Mtr.Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Out_PermOK" typeName="BOOL">
+			<comment>Wire to Mtr.Inp_PermOK</comment>
+		</variables>
+		<variables name="Out_StartReq" typeName="BOOL">
+			<comment>Start request to Mtr after warning completes</comment>
+		</variables>
+		<variables name="Sts_Warning" typeName="BOOL">
+			<comment>Pre-start warning in progress</comment>
+		</variables>
+		<variables name="Sts_Purging" typeName="BOOL">
+			<comment>Running out before stop</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=Stopped 1=Warning 2=Starting 3=Running 4=Purging 5=Tripped</comment>
+		</variables>
+		<variables name="Val_Total" typeName="LREAL">
+			<comment>Total conveyed (t)</comment>
+		</variables>
+		<variables name="Alm_ZeroSpd" typeName="T_Alarm">
+			<comment>Zero-speed / belt slip</comment>
+		</variables>
+		<variables name="Alm_PullCord" typeName="T_Alarm">
+			<comment>Pull-cord operated</comment>
+		</variables>
+		<variables name="Alm_Misalign" typeName="T_Alarm">
+			<comment>Belt misalignment</comment>
+		</variables>
+		<variables name="Alm_Chute" typeName="T_Alarm">
+			<comment>Chute blocked</comment>
+		</variables>
+		<variables name="Alm_BeltRip" typeName="T_Alarm">
+			<comment>Belt rip</comment>
+		</variables>
+		<variables name="Alm_DownstrStop" typeName="T_Alarm">
+			<comment>Tripped by downstream conveyor</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_Tank" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Tank / vessel: level-to-volume, inventory, fill/drain permissives, alarms</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_Product" typeName="STRING[24]">
+			<comment>Stored product</comment>
+		</variables>
+		<variables name="Cfg_LvlEU" typeName="STRING[8]">
+			<comment>Level units text</comment>
+		</variables>
+		<variables name="Cfg_VolEU" typeName="STRING[8]">
+			<comment>Volume units text</comment>
+		</variables>
+		<variables name="Inp_Level" typeName="REAL">
+			<comment>Level (Cfg_LvlEU) from AI Val_PV</comment>
+		</variables>
+		<variables name="Inp_LevelBad" typeName="BOOL">
+			<comment>Level signal bad</comment>
+		</variables>
+		<variables name="Inp_LSHH" typeName="BOOL">
+			<comment>High-high level switch active</comment>
+		</variables>
+		<variables name="Inp_LSLL" typeName="BOOL">
+			<comment>Low-low level switch active</comment>
+		</variables>
+		<variables name="Inp_Temp" typeName="REAL">
+			<comment>Temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_Press" typeName="REAL">
+			<comment>Pressure (EU)</comment>
+		</variables>
+		<variables name="Cfg_MaxLevel" typeName="REAL">
+			<comment>Level at 100% full</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_Capacity" typeName="REAL">
+			<comment>Volume at 100% full</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_Shape" typeName="INT">
+			<comment>0=Vertical / linear 1=Horizontal cylinder 2=Strapping table</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_Strap" typeName="ARRAY[0..10] OF REAL">
+			<comment>Strapping table: volume at 0,10..100% level</comment>
+		</variables>
+		<variables name="Cfg_SG" typeName="REAL">
+			<comment>Specific gravity (for mass)</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_FillStop" typeName="REAL">
+			<comment>Fill permissive removed above this level</comment>
+			<variableInit value="90.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DrainStop" typeName="REAL">
+			<comment>Drain permissive removed below this level</comment>
+			<variableInit value="5.0"></variableInit>
+		</variables>
+		<variables name="Cfg_RateWindow" typeName="TIME">
+			<comment>Window for net-flow (rate of change) calc</comment>
+			<variableInit value="T#1M"></variableInit>
+		</variables>
+		<variables name="Prog_EqState" typeName="INT">
+			<comment>ISA-88 equipment state request from unit / phase logic</comment>
+		</variables>
+		<variables name="Out_FillPerm" typeName="BOOL">
+			<comment>Filling permitted (wire to inlet pump / valve)</comment>
+		</variables>
+		<variables name="Out_DrainPerm" typeName="BOOL">
+			<comment>Draining permitted (wire to outlet pump / valve)</comment>
+		</variables>
+		<variables name="Val_Volume" typeName="REAL">
+			<comment>Volume (Cfg_VolEU)</comment>
+		</variables>
+		<variables name="Val_PctFull" typeName="REAL">
+			<comment>Volume (% of capacity)</comment>
+		</variables>
+		<variables name="Val_Ullage" typeName="REAL">
+			<comment>Remaining capacity (Cfg_VolEU)</comment>
+		</variables>
+		<variables name="Val_Mass" typeName="REAL">
+			<comment>Mass (t, from volume x SG)</comment>
+		</variables>
+		<variables name="Val_NetFlow" typeName="REAL">
+			<comment>Net in/out flow (Cfg_VolEU per min, + = filling)</comment>
+		</variables>
+		<variables name="Val_MinToFull" typeName="REAL">
+			<comment>Minutes to full at current rate</comment>
+		</variables>
+		<variables name="Val_MinToEmpty" typeName="REAL">
+			<comment>Minutes to empty at current rate</comment>
+		</variables>
+		<variables name="Sts_Filling" typeName="BOOL">
+			<comment>Level rising</comment>
+		</variables>
+		<variables name="Sts_Draining" typeName="BOOL">
+			<comment>Level falling</comment>
+		</variables>
+		<variables name="Sts_EqState" typeName="INT">
+			<comment>ISA-88 equipment state: 0=Available-clean 1=In use 2=Dirty 3=Cleaning (CIP) 4=Sterilising (SIP) 5=Maintenance 6=Out of service</comment>
+		</variables>
+		<variables name="Alm_HH" typeName="T_AlmLim">
+			<comment>High-high level</comment>
+		</variables>
+		<variables name="Alm_H" typeName="T_AlmLim">
+			<comment>High level</comment>
+		</variables>
+		<variables name="Alm_L" typeName="T_AlmLim">
+			<comment>Low level</comment>
+		</variables>
+		<variables name="Alm_LL" typeName="T_AlmLim">
+			<comment>Low-low level</comment>
+		</variables>
+		<variables name="Alm_LSHH" typeName="T_Alarm">
+			<comment>High-high level switch</comment>
+		</variables>
+		<variables name="Alm_LSLL" typeName="T_Alarm">
+			<comment>Low-low level switch</comment>
+		</variables>
+		<variables name="Alm_LvlDisc" typeName="T_Alarm">
+			<comment>Analog level disagrees with level switch</comment>
+		</variables>
+		<variables name="Alm_HiTemp" typeName="T_AlmLim">
+			<comment>High temperature</comment>
+		</variables>
+		<variables name="Alm_HiPress" typeName="T_AlmLim">
+			<comment>High pressure</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_Totalizer" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Flow totalizer + batch delivery: analog or pulse, day/hour totals</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_RateEU" typeName="STRING[12]">
+			<comment>Rate units text, e.g. m3/h</comment>
+		</variables>
+		<variables name="Cfg_TotEU" typeName="STRING[12]">
+			<comment>Total units text, e.g. m3</comment>
+		</variables>
+		<variables name="Inp_Rate" typeName="REAL">
+			<comment>Flow rate (Cfg_RateEU)</comment>
+		</variables>
+		<variables name="Inp_RateBad" typeName="BOOL">
+			<comment>Rate signal bad</comment>
+		</variables>
+		<variables name="Inp_Pulses" typeName="UDINT">
+			<comment>Raw pulse counter (pulse mode)</comment>
+		</variables>
+		<variables name="Cfg_UsePulses" typeName="BOOL">
+			<comment>Totalise from pulses instead of rate</comment>
+		</variables>
+		<variables name="Cfg_PulseWt" typeName="REAL">
+			<comment>Total units per pulse</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_TimeBase" typeName="REAL">
+			<comment>Seconds per rate time unit: 1=/s 60=/min 3600=/h</comment>
+			<variableInit value="3600.0"></variableInit>
+		</variables>
+		<variables name="Cfg_Conv" typeName="REAL">
+			<comment>Conversion rate units -&gt; total units</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_LoCutoff" typeName="REAL">
+			<comment>Rates below this are not totalised</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_BadAction" typeName="INT">
+			<comment>On bad rate: 0=Stop totalising 1=Use last good rate</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_DayStartHr" typeName="INT">
+			<comment>Hour the production day starts (0-23)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_BatchSP" typeName="REAL">
+			<comment>Batch target quantity</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_PreAct" typeName="REAL">
+			<comment>Pre-act (in-flight) quantity</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_AutoPreAct" typeName="BOOL">
+			<comment>Learn pre-act from overrun</comment>
+		</variables>
+		<variables name="Cfg_SlowPct" typeName="REAL">
+			<comment>Dribble / slow-fill at this % of batch</comment>
+			<variableInit value="90.0"></variableInit>
+		</variables>
+		<variables name="Cmd_Start" typeName="BOOL">
+			<comment>Operator batch start (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Hold" typeName="BOOL">
+			<comment>Operator batch hold (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Operator batch reset (one-shot)</comment>
+		</variables>
+		<variables name="Prog_Start" typeName="BOOL">
+			<comment>Program batch start</comment>
+		</variables>
+		<variables name="Prog_Hold" typeName="BOOL">
+			<comment>Program batch hold</comment>
+		</variables>
+		<variables name="Prog_Reset" typeName="BOOL">
+			<comment>Program batch reset</comment>
+		</variables>
+		<variables name="Out_Slow" typeName="BOOL">
+			<comment>Slow-fill / dribble</comment>
+		</variables>
+		<variables name="Out_BatchDone" typeName="BOOL">
+			<comment>Batch target reached (close valve)</comment>
+		</variables>
+		<variables name="Val_Batch" typeName="LREAL">
+			<comment>Batch total</comment>
+		</variables>
+		<variables name="Val_Remaining" typeName="REAL">
+			<comment>Batch remaining</comment>
+		</variables>
+		<variables name="Val_Overrun" typeName="REAL">
+			<comment>Last batch overrun</comment>
+		</variables>
+		<variables name="Val_GrandTotal" typeName="LREAL">
+			<comment>Grand total (non-resettable)</comment>
+		</variables>
+		<variables name="Val_ThisHr" typeName="LREAL">
+			<comment>Total this hour</comment>
+		</variables>
+		<variables name="Val_LastHr" typeName="LREAL">
+			<comment>Total last hour</comment>
+		</variables>
+		<variables name="Val_Today" typeName="LREAL">
+			<comment>Total this production day</comment>
+		</variables>
+		<variables name="Val_Yday" typeName="LREAL">
+			<comment>Total previous production day</comment>
+		</variables>
+		<variables name="Sts_Running" typeName="BOOL">
+			<comment>Batch running</comment>
+		</variables>
+		<variables name="Sts_Hold" typeName="BOOL">
+			<comment>Batch held</comment>
+		</variables>
+		<variables name="Sts_Done" typeName="BOOL">
+			<comment>Batch complete</comment>
+		</variables>
+		<variables name="Alm_HiRate" typeName="T_AlmLim">
+			<comment>High flow rate</comment>
+		</variables>
+		<variables name="Alm_LoRate" typeName="T_AlmLim">
+			<comment>Low flow rate</comment>
+		</variables>
+		<variables name="Alm_Overrun" typeName="T_AlmLim">
+			<comment>Batch overrun</comment>
+		</variables>
+		<variables name="Alm_RateBad" typeName="T_Alarm">
+			<comment>Rate signal bad while totalising</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_HeatEx" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Heat exchanger performance monitor: duty, LMTD, UA, fouling, DP</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Inp_HotInT" typeName="REAL">
+			<comment>Hot side inlet temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_HotOutT" typeName="REAL">
+			<comment>Hot side outlet temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_ColdInT" typeName="REAL">
+			<comment>Cold side inlet temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_ColdOutT" typeName="REAL">
+			<comment>Cold side outlet temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_HotFlow" typeName="REAL">
+			<comment>Hot side mass flow (kg/s)</comment>
+		</variables>
+		<variables name="Inp_ColdFlow" typeName="REAL">
+			<comment>Cold side mass flow (kg/s)</comment>
+		</variables>
+		<variables name="Inp_HotDP" typeName="REAL">
+			<comment>Hot side differential pressure (kPa)</comment>
+		</variables>
+		<variables name="Inp_ColdDP" typeName="REAL">
+			<comment>Cold side differential pressure (kPa)</comment>
+		</variables>
+		<variables name="Cfg_HotCp" typeName="REAL">
+			<comment>Hot side specific heat (kJ/kg.K)</comment>
+			<variableInit value="4.186"></variableInit>
+		</variables>
+		<variables name="Cfg_ColdCp" typeName="REAL">
+			<comment>Cold side specific heat (kJ/kg.K)</comment>
+			<variableInit value="4.186"></variableInit>
+		</variables>
+		<variables name="Cfg_CounterFlow" typeName="BOOL">
+			<comment>Counter-current (FALSE = co-current) for LMTD</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cfg_DesignUA" typeName="REAL">
+			<comment>Clean design UA (kW/K)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MinFlow" typeName="REAL">
+			<comment>Below this flow the calculations are frozen (kg/s)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_CalcFilt" typeName="REAL">
+			<comment>Filter time constant for calculated values (s)</comment>
+			<variableInit value="60.0"></variableInit>
+		</variables>
+		<variables name="Val_DutyHot" typeName="REAL">
+			<comment>Heat released by hot side (kW)</comment>
+		</variables>
+		<variables name="Val_DutyCold" typeName="REAL">
+			<comment>Heat absorbed by cold side (kW)</comment>
+		</variables>
+		<variables name="Val_Duty" typeName="REAL">
+			<comment>Average duty (kW)</comment>
+		</variables>
+		<variables name="Val_HeatBal" typeName="REAL">
+			<comment>Heat balance error (%)</comment>
+		</variables>
+		<variables name="Val_LMTD" typeName="REAL">
+			<comment>Log mean temperature difference (K)</comment>
+		</variables>
+		<variables name="Val_UA" typeName="REAL">
+			<comment>Actual UA (kW/K)</comment>
+		</variables>
+		<variables name="Val_Clean" typeName="REAL">
+			<comment>Cleanliness: UA as % of design</comment>
+		</variables>
+		<variables name="Val_Approach" typeName="REAL">
+			<comment>Approach temperature (K)</comment>
+		</variables>
+		<variables name="Val_Effect" typeName="REAL">
+			<comment>Thermal effectiveness (0-1)</comment>
+		</variables>
+		<variables name="Sts_CalcValid" typeName="BOOL">
+			<comment>Inputs valid, calculations live</comment>
+		</variables>
+		<variables name="Alm_Fouling" typeName="T_AlmLim">
+			<comment>Low cleanliness (Val_Clean below limit)</comment>
+		</variables>
+		<variables name="Alm_HotDP" typeName="T_AlmLim">
+			<comment>High hot side DP</comment>
+		</variables>
+		<variables name="Alm_ColdDP" typeName="T_AlmLim">
+			<comment>High cold side DP</comment>
+		</variables>
+		<variables name="Alm_HeatBal" typeName="T_AlmLim">
+			<comment>Heat balance error (possible instrument fault)</comment>
+		</variables>
+		<variables name="Alm_HiOutT" typeName="T_AlmLim">
+			<comment>High process outlet temperature</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_DosePump" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Chemical dosing / metering pump: manual, flow-paced, trim, batch</comment>
+	<structure>
+		<variables name="Mtr" typeName="T_Motor">
+			<comment>Pump motor / enable</comment>
+		</variables>
+		<variables name="Cfg_RateEU" typeName="STRING[8]">
+			<comment>Dose rate units text, e.g. L/h</comment>
+		</variables>
+		<variables name="Cfg_DoseMode" typeName="INT">
+			<comment>0=Manual rate 1=Flow-paced 2=Flow-paced + trim 3=Batch volume</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaxRate" typeName="REAL">
+			<comment>Pump rate at 100% output (L/h)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_CalFactor" typeName="REAL">
+			<comment>Calibration factor from drawdown test</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DoseConc" typeName="REAL">
+			<comment>Target dose in process (mg/L)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_ChemConc" typeName="REAL">
+			<comment>Chemical strength (% w/w)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_ChemSG" typeName="REAL">
+			<comment>Chemical specific gravity</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_TankCap" typeName="REAL">
+			<comment>Chemical day tank capacity (L)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_NoFlowDly" typeName="TIME">
+			<comment>Flow verification delay</comment>
+			<variableInit value="T#30S"></variableInit>
+		</variables>
+		<variables name="Inp_PaceFlow" typeName="REAL">
+			<comment>Process flow for pacing (m3/h)</comment>
+		</variables>
+		<variables name="Inp_TrimPct" typeName="REAL">
+			<comment>Trim from residual PID (%, -100..+100)</comment>
+		</variables>
+		<variables name="Inp_FlowOK" typeName="BOOL">
+			<comment>Flow verification switch: dosing detected</comment>
+		</variables>
+		<variables name="Inp_ChemLvl" typeName="REAL">
+			<comment>Chemical day tank level (%)</comment>
+		</variables>
+		<variables name="Inp_Leak" typeName="BOOL">
+			<comment>Leak detector / bund alarm</comment>
+		</variables>
+		<variables name="Cmd_Rate" typeName="REAL">
+			<comment>Operator dose rate (L/h)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Prog_Rate" typeName="REAL">
+			<comment>Program dose rate (L/h)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cmd_CalDone" typeName="BOOL">
+			<comment>Calibration complete, stamp date (one-shot)</comment>
+		</variables>
+		<variables name="Out_Rate" typeName="REAL">
+			<comment>Speed / stroke output to pump (%)</comment>
+		</variables>
+		<variables name="Out_IntlkOK" typeName="BOOL">
+			<comment>Wire to Mtr.Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Val_RateSP" typeName="REAL">
+			<comment>Active dose rate (L/h)</comment>
+		</variables>
+		<variables name="Val_Total" typeName="LREAL">
+			<comment>Total dosed (L)</comment>
+		</variables>
+		<variables name="Val_Today" typeName="REAL">
+			<comment>Dosed today (L)</comment>
+		</variables>
+		<variables name="Val_DaysLeft" typeName="REAL">
+			<comment>Days of chemical remaining at current usage</comment>
+		</variables>
+		<variables name="Val_LastCal" typeName="DT">
+			<comment>Date of last calibration</comment>
+		</variables>
+		<variables name="Sts_RateLimited" typeName="BOOL">
+			<comment>Demand exceeds pump capacity</comment>
+		</variables>
+		<variables name="Alm_NoFlow" typeName="T_Alarm">
+			<comment>No flow detected while running</comment>
+		</variables>
+		<variables name="Alm_LoChem" typeName="T_AlmLim">
+			<comment>Low chemical level (%)</comment>
+		</variables>
+		<variables name="Alm_LoLoChem" typeName="T_AlmLim">
+			<comment>Low-low chemical level (%) - stops pump</comment>
+		</variables>
+		<variables name="Alm_Leak" typeName="T_Alarm">
+			<comment>Leak detected</comment>
+		</variables>
+		<variables name="Alm_RateLim" typeName="T_Alarm">
+			<comment>Dose demand exceeds pump capacity</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_Analyzer" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Process analyzer (pH, ORP, conductivity, DO, turbidity, Cl2 ...)</comment>
+	<structure>
+		<variables name="AI" typeName="T_AI">
+			<comment>Measured value, scaling and alarms</comment>
+		</variables>
+		<variables name="Cfg_AnType" typeName="INT">
+			<comment>1=pH 2=ORP 3=Conductivity 4=DO 5=Turbidity 6=Free Cl2 7=TOC 8=Other</comment>
+			<variableInit value="1"></variableInit>
+		</variables>
+		<variables name="Inp_Temp" typeName="REAL">
+			<comment>Sample / compensation temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_DevFault" typeName="BOOL">
+			<comment>Transmitter diagnostic fault</comment>
+		</variables>
+		<variables name="Inp_DevMaint" typeName="BOOL">
+			<comment>Transmitter in maintenance / calibration</comment>
+		</variables>
+		<variables name="Inp_DevWarn" typeName="BOOL">
+			<comment>Transmitter warning (e.g. sensor ageing)</comment>
+		</variables>
+		<variables name="Inp_NE107" typeName="INT">
+			<comment>NE107 status reported by smart device (HART / fieldbus)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Inp_SampleOK" typeName="BOOL">
+			<comment>Sample flow healthy (flow switch)</comment>
+		</variables>
+		<variables name="Inp_Slope" typeName="REAL">
+			<comment>Sensor slope from transmitter (e.g. pH mV/pH)</comment>
+		</variables>
+		<variables name="Cfg_HoldMax" typeName="TIME">
+			<comment>Maximum hold time before alarm</comment>
+			<variableInit value="T#1H"></variableInit>
+		</variables>
+		<variables name="Cfg_CalDays" typeName="INT">
+			<comment>Calibration interval (days)</comment>
+			<variableInit value="30"></variableInit>
+		</variables>
+		<variables name="Cfg_FrozenTime" typeName="TIME">
+			<comment>PV unchanged for this long = frozen sensor</comment>
+			<variableInit value="T#30M"></variableInit>
+		</variables>
+		<variables name="Cfg_FrozenBand" typeName="REAL">
+			<comment>Band within which PV is considered unchanged</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cmd_Hold" typeName="BOOL">
+			<comment>Hold PV and suppress alarms for calibration (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Release" typeName="BOOL">
+			<comment>Release hold (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_CalDone" typeName="BOOL">
+			<comment>Calibration completed, stamp date (one-shot)</comment>
+		</variables>
+		<variables name="Val_PV" typeName="REAL">
+			<comment>Value for control - held value while in hold</comment>
+		</variables>
+		<variables name="Val_HeldPV" typeName="REAL">
+			<comment>Value captured at start of hold</comment>
+		</variables>
+		<variables name="Val_LastCal" typeName="DT">
+			<comment>Date/time of last calibration</comment>
+		</variables>
+		<variables name="Val_DaysSinceCal" typeName="REAL">
+			<comment>Days since last calibration</comment>
+		</variables>
+		<variables name="Sts_Hold" typeName="BOOL">
+			<comment>In hold / calibration</comment>
+		</variables>
+		<variables name="Sts_CalDue" typeName="BOOL">
+			<comment>Calibration due</comment>
+		</variables>
+		<variables name="Alm_DevFault" typeName="T_Alarm">
+			<comment>Transmitter fault</comment>
+		</variables>
+		<variables name="Alm_NoSample" typeName="T_Alarm">
+			<comment>No sample flow</comment>
+		</variables>
+		<variables name="Alm_Frozen" typeName="T_Alarm">
+			<comment>Frozen / stuck reading</comment>
+		</variables>
+		<variables name="Alm_CalDue" typeName="T_Alarm">
+			<comment>Calibration overdue</comment>
+		</variables>
+		<variables name="Alm_HoldLong" typeName="T_Alarm">
+			<comment>Hold exceeded Cfg_HoldMax</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_GasDet" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Fixed gas detector (4-20mA): latching A1/A2/A3, inhibit, fault</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_Gas" typeName="STRING[12]">
+			<comment>Gas, e.g. CH4, H2S, CO, O2</comment>
+		</variables>
+		<variables name="Cfg_EU" typeName="STRING[8]">
+			<comment>Units, e.g. %LEL, ppm, %vol</comment>
+		</variables>
+		<variables name="Inp_Raw" typeName="INT">
+			<comment>Raw counts from analog channel</comment>
+		</variables>
+		<variables name="Inp_ChFault" typeName="BOOL">
+			<comment>Channel / module diagnostic fault</comment>
+		</variables>
+		<variables name="Cfg_RawMin" typeName="INT">
+			<comment>Raw counts at 4 mA</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_RawMax" typeName="INT">
+			<comment>Raw counts at 20 mA</comment>
+			<variableInit value="10000"></variableInit>
+		</variables>
+		<variables name="Cfg_RangeMax" typeName="REAL">
+			<comment>Concentration at 20 mA</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_O2Mode" typeName="BOOL">
+			<comment>Oxygen depletion: A1/A2 act on falling concentration</comment>
+		</variables>
+		<variables name="Cfg_FaultmA" typeName="REAL">
+			<comment>Signal below this (mA) = detector fault</comment>
+			<variableInit value="3.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaintLomA" typeName="REAL">
+			<comment>Maintenance / inhibit signal band low (mA), vendor-specific</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaintHimA" typeName="REAL">
+			<comment>Maintenance / inhibit signal band high (mA), vendor-specific</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_OverRngmA" typeName="REAL">
+			<comment>Signal above this (mA) = over-range (treat as alarm)</comment>
+			<variableInit value="20.5"></variableInit>
+		</variables>
+		<variables name="Cfg_InhibitMax" typeName="TIME">
+			<comment>Maximum operator inhibit time</comment>
+			<variableInit value="T#2H"></variableInit>
+		</variables>
+		<variables name="Cmd_Inhibit" typeName="BOOL">
+			<comment>Operator inhibit for maintenance (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Uninhibit" typeName="BOOL">
+			<comment>Remove inhibit (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Reset latched alarms (one-shot)</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation enabled</comment>
+		</variables>
+		<variables name="Sim_mA" typeName="REAL">
+			<comment>Simulated signal (mA)</comment>
+			<variableInit value="4.0"></variableInit>
+		</variables>
+		<variables name="Out_A1" typeName="BOOL">
+			<comment>Alarm level 1 active (to voting / beacons)</comment>
+		</variables>
+		<variables name="Out_A2" typeName="BOOL">
+			<comment>Alarm level 2 active</comment>
+		</variables>
+		<variables name="Out_A3" typeName="BOOL">
+			<comment>Alarm level 3 active</comment>
+		</variables>
+		<variables name="Out_Fault" typeName="BOOL">
+			<comment>Detector fault / unavailable</comment>
+		</variables>
+		<variables name="Val_mA" typeName="REAL">
+			<comment>Signal (mA)</comment>
+		</variables>
+		<variables name="Val_Conc" typeName="REAL">
+			<comment>Gas concentration (Cfg_EU)</comment>
+		</variables>
+		<variables name="Val_Peak" typeName="REAL">
+			<comment>Peak concentration since last reset</comment>
+		</variables>
+		<variables name="Sts_Inhibit" typeName="BOOL">
+			<comment>Operator inhibit active</comment>
+		</variables>
+		<variables name="Sts_DetMaint" typeName="BOOL">
+			<comment>Detector signalling maintenance</comment>
+		</variables>
+		<variables name="Sts_InhibitLeft" typeName="TIME">
+			<comment>Inhibit time remaining</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Inp_NE107" typeName="INT">
+			<comment>NE107 status reported by smart device (HART / fieldbus)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Alm_A1" typeName="T_AlmLim">
+			<comment>Alarm level 1 (low) - set Cfg_Latch as required</comment>
+		</variables>
+		<variables name="Alm_A2" typeName="T_AlmLim">
+			<comment>Alarm level 2 (high) - set Cfg_Latch as required</comment>
+		</variables>
+		<variables name="Alm_A3" typeName="T_AlmLim">
+			<comment>Alarm level 3 (high-high / STEL)</comment>
+		</variables>
+		<variables name="Alm_Fault" typeName="T_Alarm">
+			<comment>Detector fault</comment>
+		</variables>
+		<variables name="Alm_OverRng" typeName="T_Alarm">
+			<comment>Over-range</comment>
+		</variables>
+		<variables name="Alm_InhibitLong" typeName="T_Alarm">
+			<comment>Inhibit timed out</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_Intlk" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Interlock / permissive group: 16 conditions, first-out, timed bypass</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Inp_Cond" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n: TRUE = healthy / permitted</comment>
+		</variables>
+		<variables name="Cfg_Used" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n is configured</comment>
+		</variables>
+		<variables name="Cfg_CondDesc" typeName="ARRAY[0..15] OF STRING[32]">
+			<comment>HMI text for condition n</comment>
+		</variables>
+		<variables name="Cfg_Bypassable" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n may be bypassed</comment>
+		</variables>
+		<variables name="Cfg_Latch" typeName="BOOL">
+			<comment>Latch failures until Cmd_Reset (interlock); FALSE = permissive</comment>
+		</variables>
+		<variables name="Cfg_BypassMax" typeName="TIME">
+			<comment>Maximum bypass duration</comment>
+			<variableInit value="T#8H"></variableInit>
+		</variables>
+		<variables name="Cmd_Bypass" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Bypass condition n (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Unbypass" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Remove bypass on condition n (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_UnbypassAll" typeName="BOOL">
+			<comment>Remove all bypasses (one-shot)</comment>
+		</variables>
+		<variables name="Inp_BypassPerm" typeName="BOOL">
+			<comment>Bypass authorisation (key switch / HMI permit) - IEC 61511 bypass management</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Reset latched conditions (one-shot)</comment>
+		</variables>
+		<variables name="Out_OK" typeName="BOOL">
+			<comment>All used conditions healthy or bypassed - wire to Inp_IntlkOK / Inp_PermOK</comment>
+		</variables>
+		<variables name="Sts_OKNoByp" typeName="BOOL">
+			<comment>All used conditions healthy without bypasses</comment>
+		</variables>
+		<variables name="Sts_Bypassed" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n bypassed</comment>
+		</variables>
+		<variables name="Sts_Latched" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Condition n latched failed</comment>
+		</variables>
+		<variables name="Sts_FirstOut" typeName="INT">
+			<comment>First condition to fail (-1 = none)</comment>
+		</variables>
+		<variables name="Sts_NumBypassed" typeName="INT">
+			<comment>Number of bypassed conditions</comment>
+		</variables>
+		<variables name="Sts_BypassLeft" typeName="TIME">
+			<comment>Time left on the oldest bypass</comment>
+		</variables>
+		<variables name="Sts_ResetReq" typeName="BOOL">
+			<comment>Conditions healthy, reset required</comment>
+		</variables>
+		<variables name="Sts_CondWord" typeName="WORD">
+			<comment>Packed Inp_Cond (bit n = condition n) for SCADA</comment>
+		</variables>
+		<variables name="Sts_BypWord" typeName="WORD">
+			<comment>Packed Sts_Bypassed for SCADA</comment>
+		</variables>
+		<variables name="Sts_LatchWord" typeName="WORD">
+			<comment>Packed Sts_Latched for SCADA</comment>
+		</variables>
+		<variables name="Alm_Trip" typeName="T_Alarm">
+			<comment>Interlock tripped</comment>
+		</variables>
+		<variables name="Alm_Bypass" typeName="T_Alarm">
+			<comment>One or more conditions bypassed</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_ESD" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Emergency shutdown group (BPCS layer): de-energise-to-trip, MOS, first-out</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_Level" typeName="INT">
+			<comment>ESD level, e.g. 0=Plant 1=Unit 2=Equipment</comment>
+			<variableInit value="1"></variableInit>
+		</variables>
+		<variables name="Inp_OK" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Trip input n: TRUE = healthy</comment>
+		</variables>
+		<variables name="Inp_UpstrOK" typeName="BOOL">
+			<comment>Higher-level ESD healthy (cascade)</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Inp_ManTripOK" typeName="BOOL">
+			<comment>Field ESD push-button circuit healthy</comment>
+		</variables>
+		<variables name="Inp_ResetPB" typeName="BOOL">
+			<comment>Field reset push-button</comment>
+		</variables>
+		<variables name="Inp_MOSKey" typeName="BOOL">
+			<comment>Maintenance override key switch enabled</comment>
+		</variables>
+		<variables name="Inp_FinalSafe" typeName="BOOL">
+			<comment>All final elements confirmed in safe state</comment>
+		</variables>
+		<variables name="Cfg_Used" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Input n configured</comment>
+		</variables>
+		<variables name="Cfg_InDesc" typeName="ARRAY[0..15] OF STRING[32]">
+			<comment>HMI text for input n</comment>
+		</variables>
+		<variables name="Cfg_MOSAllowed" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Override allowed on input n</comment>
+		</variables>
+		<variables name="Cfg_MOSMax" typeName="TIME">
+			<comment>Maximum override duration</comment>
+			<variableInit value="T#4H"></variableInit>
+		</variables>
+		<variables name="Cfg_FieldReset" typeName="BOOL">
+			<comment>Field reset push-button required to reset</comment>
+		</variables>
+		<variables name="Cfg_SafeTime" typeName="TIME">
+			<comment>Time for final elements to reach safe state</comment>
+			<variableInit value="T#30S"></variableInit>
+		</variables>
+		<variables name="Cmd_ManTrip" typeName="BOOL">
+			<comment>HMI manual trip (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>HMI reset (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_MOS" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Apply override on input n (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_MOSOff" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Remove override on input n (one-shot)</comment>
+		</variables>
+		<variables name="Out_Healthy" typeName="BOOL">
+			<comment>TRUE = run permitted (energised); FALSE = trip</comment>
+		</variables>
+		<variables name="Sts_Tripped" typeName="BOOL">
+			<comment>Group tripped</comment>
+		</variables>
+		<variables name="Sts_ResetReady" typeName="BOOL">
+			<comment>All inputs healthy, reset possible</comment>
+		</variables>
+		<variables name="Sts_FirstOut" typeName="INT">
+			<comment>First input to trip (-1 none, 16=manual, 17=upstream)</comment>
+		</variables>
+		<variables name="Sts_MOS" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Override active on input n</comment>
+		</variables>
+		<variables name="Sts_NumMOS" typeName="INT">
+			<comment>Number of active overrides</comment>
+		</variables>
+		<variables name="Sts_InWord" typeName="WORD">
+			<comment>Packed Inp_OK for SCADA</comment>
+		</variables>
+		<variables name="Sts_LatchWord" typeName="WORD">
+			<comment>Packed latched trips for SCADA</comment>
+		</variables>
+		<variables name="Sts_MOSWord" typeName="WORD">
+			<comment>Packed Sts_MOS for SCADA</comment>
+		</variables>
+		<variables name="Val_TripTime" typeName="DT">
+			<comment>Date/time of last trip</comment>
+		</variables>
+		<variables name="Val_TripCount" typeName="UDINT">
+			<comment>Trip counter</comment>
+		</variables>
+		<variables name="Alm_Trip" typeName="T_Alarm">
+			<comment>ESD trip</comment>
+		</variables>
+		<variables name="Alm_FailSafe" typeName="T_Alarm">
+			<comment>Final elements failed to reach safe state</comment>
+		</variables>
+		<variables name="Alm_MOS" typeName="T_Alarm">
+			<comment>Maintenance override active</comment>
+		</variables>
+		<variables name="Alm_MOSLong" typeName="T_Alarm">
+			<comment>Override exceeded Cfg_MOSMax</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>ISA-88 equipment phase: Part 1 state model, commands, modes, parameters, reports</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_PhaseID" typeName="INT">
+			<comment>Phase ID (unique in the unit) for batch server / unit procedure</comment>
+		</variables>
+		<variables name="Cfg_UnitID" typeName="INT">
+			<comment>ID of the unit this phase belongs to</comment>
+		</variables>
+		<variables name="Cfg_StepTimeout" typeName="TIME">
+			<comment>Step watchdog, T#0S = off</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cmd_Auto" typeName="BOOL">
+			<comment>Operator request Automatic mode (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_SemiAuto" typeName="BOOL">
+			<comment>Operator request Semi-automatic mode (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Man" typeName="BOOL">
+			<comment>Operator request Manual mode (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Start" typeName="BOOL">
+			<comment>Operator Start (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Stop" typeName="BOOL">
+			<comment>Operator Stop (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Hold" typeName="BOOL">
+			<comment>Operator Hold (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Restart" typeName="BOOL">
+			<comment>Operator Restart from Held (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Abort" typeName="BOOL">
+			<comment>Operator Abort (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Operator Reset to Idle (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Pause" typeName="BOOL">
+			<comment>Operator Pause at next transition (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Resume" typeName="BOOL">
+			<comment>Operator Resume from Paused (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Advance" typeName="BOOL">
+			<comment>Advance to next step in Semi-automatic (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_TakeOwn" typeName="BOOL">
+			<comment>Operator takes control from the recipe (one-shot)</comment>
+		</variables>
+		<variables name="Prog_Cmd" typeName="INT">
+			<comment>Command from batch server / unit procedure: 1=Start 2=Stop 3=Hold 4=Restart 5=Abort 6=Reset 7=Pause 8=Resume</comment>
+		</variables>
+		<variables name="Prog_Acquire" typeName="BOOL">
+			<comment>Recipe (batch server / unit procedure) takes ownership</comment>
+		</variables>
+		<variables name="Prog_Release" typeName="BOOL">
+			<comment>Recipe releases ownership</comment>
+		</variables>
+		<variables name="Prog_ReqAck" typeName="BOOL">
+			<comment>Batch server acknowledges Sts_ReqCode</comment>
+		</variables>
+		<variables name="Prm_Real" typeName="ARRAY[1..16] OF REAL">
+			<comment>Recipe parameters (REAL) - control recipe formula</comment>
+		</variables>
+		<variables name="Prm_DInt" typeName="ARRAY[1..8] OF DINT">
+			<comment>Recipe parameters (DINT) - control recipe formula</comment>
+		</variables>
+		<variables name="Rpt_Real" typeName="ARRAY[1..16] OF REAL">
+			<comment>Report values (REAL) returned to batch record</comment>
+		</variables>
+		<variables name="Rpt_DInt" typeName="ARRAY[1..8] OF DINT">
+			<comment>Report values (DINT) returned to batch record</comment>
+		</variables>
+		<variables name="Val_BatchID" typeName="STRING[32]">
+			<comment>Batch ID of the control recipe running this phase</comment>
+		</variables>
+		<variables name="Val_StateTime" typeName="TIME">
+			<comment>Time in current state</comment>
+		</variables>
+		<variables name="Val_RunTime" typeName="TIME">
+			<comment>Running time excluding Held / Paused</comment>
+		</variables>
+		<variables name="Val_FailText" typeName="STRING[40]">
+			<comment>Failure description for HMI / batch record</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>ISA-88 state: 0=Idle 1=Running 2=Complete 3=Pausing 4=Paused 5=Holding 6=Held 7=Restarting 8=Stopping 9=Stopped 10=Aborting 11=Aborted</comment>
+		</variables>
+		<variables name="Sts_PrevState" typeName="INT">
+			<comment>Previous state (for Restart / diagnostics)</comment>
+		</variables>
+		<variables name="Sts_Mode" typeName="INT">
+			<comment>ISA-88 mode: 1=Manual 2=Semi-automatic 3=Automatic</comment>
+		</variables>
+		<variables name="Sts_Owner" typeName="INT">
+			<comment>0=Operator 1=Recipe (batch server / unit procedure)</comment>
+		</variables>
+		<variables name="Sts_CmdMask" typeName="WORD">
+			<comment>Commands valid in current state (bit n = command n of Prog_Cmd) - for HMI</comment>
+		</variables>
+		<variables name="Sts_CmdRejected" typeName="BOOL">
+			<comment>Last command was not valid in the current state</comment>
+		</variables>
+		<variables name="Sts_Step" typeName="INT">
+			<comment>Active step number within the state logic</comment>
+		</variables>
+		<variables name="Sts_WaitAdvance" typeName="BOOL">
+			<comment>Semi-automatic: waiting for Cmd_Advance</comment>
+		</variables>
+		<variables name="Sts_ReqCode" typeName="INT">
+			<comment>Request to batch server (e.g. download params, upload reports), 0 = none</comment>
+		</variables>
+		<variables name="Sts_FailCode" typeName="INT">
+			<comment>Failure code, 0 = none</comment>
+		</variables>
+		<variables name="Alm_Fail" typeName="T_Alarm">
+			<comment>Phase failure</comment>
+		</variables>
+		<variables name="Alm_StepTimeout" typeName="T_Alarm">
+			<comment>Step exceeded Cfg_StepTimeout</comment>
+		</variables>
+	</structure>
+</DDTSource>
+<DDTSource DDTName="T_Unit" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>ISA-88 unit: allocation, batch identity, procedural and equipment state</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_UnitID" typeName="INT">
+			<comment>Unit ID</comment>
+		</variables>
+		<variables name="Cfg_UnitClass" typeName="STRING[24]">
+			<comment>Unit class name (master recipe equipment requirement)</comment>
+		</variables>
+		<variables name="Cfg_CleanHold" typeName="TIME">
+			<comment>Clean hold time - clean status expires after this</comment>
+			<variableInit value="T#72H"></variableInit>
+		</variables>
+		<variables name="Inp_ReqOwnerID" typeName="DINT">
+			<comment>ID of control recipe requesting allocation</comment>
+		</variables>
+		<variables name="Prog_Acquire" typeName="BOOL">
+			<comment>Allocate unit to requesting control recipe</comment>
+		</variables>
+		<variables name="Prog_Release" typeName="BOOL">
+			<comment>Release unit</comment>
+		</variables>
+		<variables name="Cmd_ForceRelease" typeName="BOOL">
+			<comment>Supervisor forces release (one-shot)</comment>
+		</variables>
+		<variables name="Prog_EqState" typeName="INT">
+			<comment>Equipment state request from phase logic</comment>
+		</variables>
+		<variables name="Cmd_EqState" typeName="INT">
+			<comment>Operator equipment state change (e.g. to Maintenance)</comment>
+		</variables>
+		<variables name="Val_OwnerID" typeName="DINT">
+			<comment>Allocated control recipe ID, 0 = free</comment>
+		</variables>
+		<variables name="Val_BatchID" typeName="STRING[32]">
+			<comment>Batch ID</comment>
+		</variables>
+		<variables name="Val_RecipeName" typeName="STRING[32]">
+			<comment>Control recipe / master recipe name</comment>
+		</variables>
+		<variables name="Val_RecipeVer" typeName="INT">
+			<comment>Recipe version</comment>
+		</variables>
+		<variables name="Val_ProductCode" typeName="STRING[24]">
+			<comment>Product / material code</comment>
+		</variables>
+		<variables name="Val_BatchSize" typeName="REAL">
+			<comment>Batch size (scaled)</comment>
+		</variables>
+		<variables name="Val_BatchStart" typeName="DT">
+			<comment>Batch start date/time</comment>
+		</variables>
+		<variables name="Val_LastClean" typeName="DT">
+			<comment>Date/time of last completed clean</comment>
+		</variables>
+		<variables name="Sts_Allocated" typeName="BOOL">
+			<comment>Unit allocated to a control recipe</comment>
+		</variables>
+		<variables name="Sts_ProcState" typeName="INT">
+			<comment>Unit procedure state: 0=Idle 1=Running 2=Complete 3=Pausing 4=Paused 5=Holding 6=Held 7=Restarting 8=Stopping 9=Stopped 10=Aborting 11=Aborted</comment>
+		</variables>
+		<variables name="Sts_Mode" typeName="INT">
+			<comment>Unit procedure mode: 1=Manual 2=Semi-automatic 3=Automatic</comment>
+		</variables>
+		<variables name="Sts_ActivePhase" typeName="INT">
+			<comment>Cfg_PhaseID of the active phase, 0 = none</comment>
+		</variables>
+		<variables name="Sts_EqState" typeName="INT">
+			<comment>ISA-88 equipment state: 0=Available-clean 1=In use 2=Dirty 3=Cleaning (CIP) 4=Sterilising (SIP) 5=Maintenance 6=Out of service</comment>
+		</variables>
+		<variables name="Sts_CleanExpired" typeName="BOOL">
+			<comment>Clean hold time exceeded</comment>
+		</variables>
+		<variables name="Alm_CleanExpired" typeName="T_Alarm">
+			<comment>Clean status expired</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

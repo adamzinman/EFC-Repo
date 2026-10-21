@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Unit" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>ISA-88 unit: allocation, batch identity, procedural and equipment state</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_UnitID" typeName="INT">
+			<comment>Unit ID</comment>
+		</variables>
+		<variables name="Cfg_UnitClass" typeName="STRING[24]">
+			<comment>Unit class name (master recipe equipment requirement)</comment>
+		</variables>
+		<variables name="Cfg_CleanHold" typeName="TIME">
+			<comment>Clean hold time - clean status expires after this</comment>
+			<variableInit value="T#72H"></variableInit>
+		</variables>
+		<variables name="Inp_ReqOwnerID" typeName="DINT">
+			<comment>ID of control recipe requesting allocation</comment>
+		</variables>
+		<variables name="Prog_Acquire" typeName="BOOL">
+			<comment>Allocate unit to requesting control recipe</comment>
+		</variables>
+		<variables name="Prog_Release" typeName="BOOL">
+			<comment>Release unit</comment>
+		</variables>
+		<variables name="Cmd_ForceRelease" typeName="BOOL">
+			<comment>Supervisor forces release (one-shot)</comment>
+		</variables>
+		<variables name="Prog_EqState" typeName="INT">
+			<comment>Equipment state request from phase logic</comment>
+		</variables>
+		<variables name="Cmd_EqState" typeName="INT">
+			<comment>Operator equipment state change (e.g. to Maintenance)</comment>
+		</variables>
+		<variables name="Val_OwnerID" typeName="DINT">
+			<comment>Allocated control recipe ID, 0 = free</comment>
+		</variables>
+		<variables name="Val_BatchID" typeName="STRING[32]">
+			<comment>Batch ID</comment>
+		</variables>
+		<variables name="Val_RecipeName" typeName="STRING[32]">
+			<comment>Control recipe / master recipe name</comment>
+		</variables>
+		<variables name="Val_RecipeVer" typeName="INT">
+			<comment>Recipe version</comment>
+		</variables>
+		<variables name="Val_ProductCode" typeName="STRING[24]">
+			<comment>Product / material code</comment>
+		</variables>
+		<variables name="Val_BatchSize" typeName="REAL">
+			<comment>Batch size (scaled)</comment>
+		</variables>
+		<variables name="Val_BatchStart" typeName="DT">
+			<comment>Batch start date/time</comment>
+		</variables>
+		<variables name="Val_LastClean" typeName="DT">
+			<comment>Date/time of last completed clean</comment>
+		</variables>
+		<variables name="Sts_Allocated" typeName="BOOL">
+			<comment>Unit allocated to a control recipe</comment>
+		</variables>
+		<variables name="Sts_ProcState" typeName="INT">
+			<comment>Unit procedure state: 0=Idle 1=Running 2=Complete 3=Pausing 4=Paused 5=Holding 6=Held 7=Restarting 8=Stopping 9=Stopped 10=Aborting 11=Aborted</comment>
+		</variables>
+		<variables name="Sts_Mode" typeName="INT">
+			<comment>Unit procedure mode: 1=Manual 2=Semi-automatic 3=Automatic</comment>
+		</variables>
+		<variables name="Sts_ActivePhase" typeName="INT">
+			<comment>Cfg_PhaseID of the active phase, 0 = none</comment>
+		</variables>
+		<variables name="Sts_EqState" typeName="INT">
+			<comment>ISA-88 equipment state: 0=Available-clean 1=In use 2=Dirty 3=Cleaning (CIP) 4=Sterilising (SIP) 5=Maintenance 6=Out of service</comment>
+		</variables>
+		<variables name="Sts_CleanExpired" typeName="BOOL">
+			<comment>Clean hold time exceeded</comment>
+		</variables>
+		<variables name="Alm_CleanExpired" typeName="T_Alarm">
+			<comment>Clean status expired</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>
