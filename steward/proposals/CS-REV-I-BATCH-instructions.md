@@ -10,8 +10,8 @@ Sources: `steward/proposals/CS-REV-I-heaters-instructions.md` (row 1), `CS-REV-I
 2. **Wrong path in row 2 Edit 6 and row 1 Edit 4.** Both point at `Claude outputs/REV-I-CHANGES.md`, a Drive folder path to a different copy of the log (2026-10-16). Use `references/REV-I-CHANGES.md` (Drive `references` folder, 2026-10-14 copy, exists in rev I). Append; do not create. The three REV-I entries (H1, H2, H3 below) go in that one file. That copy stops at item 8; the `Claude outputs` copy has items 9-10 (2026-10-15), so the next number is 11 once the two copies are reconciled (open item).
 3. **Dropped:** row 2 Edit 5. It is superseded by Edit 8 (G1). Do not apply it.
 4. **Dedupe:** row 2 Edit 1 and row 3 Edit 3 both touch `sections/hmi-dynamic-windows.tex`; row 3 Edit 3 is appended to that file's table block (B2). Row 2 Edit 8 and row 3 Edit 2 both touch the appendix; they are different paragraphs (G1 shell and dynamic window, G2 Templates).
-5. **Conflict to confirm.** Rev I wording, `appendices/perspective-screen-design.tex`, Templates section (checked 2026-10-21): "All template text uses the dp style classes." The Text Scaling Standard in the same appendix defines the `dp` unit (a `--dp` CSS variable) and says "Text sizes are applied through Style Classes", with suggested classes Text/Small to Text/Title. The name `EFC_Styles` does not appear in the rev I files checked (Ch6, Ch7, Ch11, Appendix I, and the screen-design appendix). Row 3 Edit 2 replaces the sentence with EFC_Styles wording; apply only if Adam confirms that `EFC_Styles` is the library name for the dp style classes (library open item).
-6. **Policy (already recorded, decision 19):** Edit D exempts HMI bypasses from the two-person / MOC rule in Online Changes and Forces. Confirm the standard should carry this before applying D.
+5. **Resolved 2026-10-21 (all style classes -> EFC_Styles, see G2).** Background: Rev I wording, `appendices/perspective-screen-design.tex`, Templates section (checked 2026-10-21): "All template text uses the dp style classes." The Text Scaling Standard in the same appendix defines the `dp` unit (a `--dp` CSS variable) and says "Text sizes are applied through Style Classes", with suggested classes Text/Small to Text/Title. The name `EFC_Styles` does not appear in the rev I files checked (Ch6, Ch7, Ch11, Appendix I, and the screen-design appendix). Adam confirmed: EFC_Styles is the class library name; apply G2a-c.
+6. **Policy (decided 2026-10-21):** Edit D: safety-related signals can never be bypassed in software. HMI bypass by Supervisor+ with reason is exempt from the two-person / MOC rule only for conditions engineering configured as bypassable (Cfg_Bypassable, never on safety conditions).
 7. **Policy (decision 24 vs 26):** the expanded trend stays inside the 400 x 860 window (decision 26). Decision 24's "about 50 %" is not used anywhere in this batch.
 
 ---
@@ -160,7 +160,7 @@ The Permissives and Interlocks sections list each condition by name (\texttt{Cfg
   \item \textbf{Confirmation.} BYPASS opens a confirmation (\texttt{Docks/Parts/BypassConfirm}). The user picks a duration from the presets 1~h, 2~h, 4~h and 8~h, limited to the group's maximum (\texttt{Cfg\_BypassMax}), and must enter a reason. The bypass is not applied without a reason.
   \item \textbf{Indication.} Each bypassed condition shows its own time left and an audit line: who bypassed it, their role, when, and the reason.
   \item \textbf{Logging.} Bypass and unbypass are written to the Ignition audit log (Section~\ref{sec:ignition-roles}).
-  \item \textbf{Rule.} A bypass made this way from the HMI is the rule, and it is exempt from the second-person and approved MOC requirement for a force or bypass in Section~\ref{sec:online-changes}. PLC forces and logic changes are not exempt.
+  \item \textbf{Rule.} A bypass made this way from the HMI, on a condition configured as bypassable, is exempt from the second-person and approved MOC requirement in Section~\ref{sec:online-changes}. Safety-related signals are never configured as bypassable and cannot be bypassed in software. PLC forces and logic changes are not exempt.
 \end{itemize}
 \future{Named permissive and interlock groups are to be embedded in the device types: \texttt{Perm : T\_Intlk} and \texttt{Intlk : T\_Intlk} in \texttt{T\_DValve}, \texttt{T\_Motor} and \texttt{T\_VFD}, \texttt{Intlk : T\_Intlk} in \texttt{T\_CValve} and \texttt{T\_PID}, and \texttt{Prot : T\_Intlk} in equipment modules. The existing \texttt{Inp\_IntlkOK} and \texttt{Inp\_PermOK} are kept and ANDed with the group. \texttt{T\_Intlk} gains \texttt{Sts\_BypLeft : ARRAY[0..15] OF TIME} so the time left can be shown per condition; until then only the time left on the oldest bypass (\texttt{Sts\_BypassLeft}) is available.}
 
@@ -197,10 +197,11 @@ Anchor (from `sections/07-software.tex`, section at `\label{sec:online-changes}`
   \item A force or bypass on an interlock or safety-related signal needs a second person to check it and an approved MOC (Section~\ref{sec:review-release}).
 ```
 
-Replace that line with exactly this:
+Replace that line with exactly these two lines (Adam, 2026-10-21: safety signals cannot be bypassed through software):
 
 ```latex
-  \item A force or bypass on an interlock or safety-related signal needs a second person to check it and an approved MOC (Section~\ref{sec:review-release}), except an HMI bypass of a permissive or interlock condition. An HMI bypass is the rule when one user with the Supervisor role or higher sets it from the dynamic window through the bypass confirmation, with a mandatory reason, a duration up to the configured maximum (\texttt{Cfg\_BypassMax}), and an entry in the audit log (Section~\ref{sec:hmi-bypass}). It needs no second person and no MOC. PLC forces and logic changes on an interlock or safety-related signal keep the second-person and MOC requirement.
+  \item Safety-related signals (safety PLC and SIS functions, emergency stops, safety interlocks) are never forced or bypassed in software, from the HMI or in the PLC. They are defeated only through the hardware and procedures of the safety system.
+  \item A force or bypass on a process interlock or permissive needs a second person to check it and an approved MOC (Section~\ref{sec:review-release}), except an HMI bypass of a condition that engineering has configured as bypassable (\texttt{Cfg\_Bypassable}). Such an HMI bypass is set by one user with the Supervisor role or higher from the dynamic window through the bypass confirmation, with a mandatory reason, a duration up to the configured maximum (\texttt{Cfg\_BypassMax}), and an entry in the audit log (Section~\ref{sec:hmi-bypass}); it needs no second person and no MOC. \texttt{Cfg\_Bypassable} is set during design and changed only under MOC, and is never set on a safety-related condition. PLC forces and logic changes keep the second-person and MOC requirement.
 ```
 
 Checks for this edit: `sec:online-changes` and `sec:review-release` exist in rev I (grep `sections/`); `sec:hmi-bypass` is created by Edit 1 of this file, so Edit 1 must be applied first. Leave the existing `\note` at the top of the section (it says the policy is not yet enforced) unchanged; that is a separate decision.
@@ -441,16 +442,20 @@ The trends/dynamic window fills the full height between the header and the alarm
 ```
 
 ---
-### G2. appendices/perspective-screen-design.tex, Templates (row 3 Edit 2)
+### G2. appendices/perspective-screen-design.tex, style classes -> EFC_Styles (row 3 Edit 2; Adam, 2026-10-21: change all style classes to EFC_Styles)
 
-**Anchor** (`\section{Templates}`, second paragraph; checked verbatim against rev I on 2026-10-21): the sentence
+**G2a. Anchor** (`\section{Templates}`, second paragraph; checked verbatim against rev I on 2026-10-21): the sentence
 `All template text uses the dp style classes.`
 
-**Action:** replace that sentence (only that sentence) with:
+Replace that sentence (only that sentence) with:
 
 ```latex
-All template text and styling uses \texttt{EFC\_Styles} classes; templates carry no static inline styles. Generators move static inline styles into generated classes (for example \texttt{Loop/*}, \texttt{Indicator/Analog/*} and \texttt{Station/*}). Spacing uses the \texttt{Util/Gap} classes \texttt{XS}, \texttt{S}, \texttt{M} and \texttt{L}.
+All template text and styling uses the \texttt{EFC\_Styles} classes; templates carry no static inline styles. Generators move static inline styles into generated classes (for example \texttt{Loop/*}, \texttt{Indicator/Analog/*} and \texttt{Station/*}). Spacing uses the \texttt{Util/Gap} classes \texttt{XS}, \texttt{S}, \texttt{M} and \texttt{L}.
 ```
+
+**G2b. Text Scaling Standard** (same appendix): the sentence that says text sizes are applied through Style Classes, and its list of suggested classes (Text/Small to Text/Title). Change "Style Classes" to "\texttt{EFC\_Styles} classes" and replace the suggested class names with the EFC_Styles text classes: \texttt{Text/Size/XXS}, \texttt{XS}, \texttt{S}, \texttt{M}, \texttt{L}, \texttt{XL}, \texttt{XXL}, \texttt{XXXL}, plus the role classes \texttt{Text/Label}, \texttt{Text/Value}, \texttt{Text/Title}. Keep the \texttt{dp} unit and the \texttt{--dp} CSS variable text unchanged: dp is the unit, EFC_Styles is the class library.
+
+**G2c. Everywhere else:** search every `.tex` file for "style class" / "style classes" (any case). Where it names the class library, use "\texttt{EFC\_Styles} classes". Leave generic mentions of Perspective's Style Classes feature as they are. List each change in the report.
 
 ---
 ### H1. references/REV-I-CHANGES.md, row 2 entry (row 2 Edit 6)
@@ -508,7 +513,7 @@ From row 2 (HMI rules):
 
 From row 3 (library build):
 - Whether template and class names (`Templates/Rotating/VFD`, `Templates/AnalogIndicator`, `EFC_Styles`, `Util/Gap`) belong in a generic standard.
-- Confirm that the rev I sentence "dp style classes" and EFC_Styles are the same concept (Decision 5 above).
+- (Resolved 2026-10-21: all style-class references use EFC_Styles; G2a-c.)
 - LoopConfig retirement (decision 15) and the VFD and AnalogIndicator template changes are library-only; no standard text proposed.
 
 Batch-level:
