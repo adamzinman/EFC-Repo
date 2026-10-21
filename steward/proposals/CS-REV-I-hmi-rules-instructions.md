@@ -1,8 +1,8 @@
 # Controls Standard rev I: add HMI role, dynamic window, bypass and trend rules
 
-Instructions for an agent working on the EFC Controls Standard (LaTeX, Google Drive folder `Claude/Controls Standard`, **revision I**). Apply exactly these seven edits, then stop and report. Do not change anything else, do not bump the revision letter, and do not regenerate whole files.
+Instructions for an agent working on the EFC Controls Standard (LaTeX, Google Drive folder `Claude/Controls Standard`, **revision I**). Apply exactly these edits (Edit 5 is folded into Edit 8), then stop and report. Do not change anything else, do not bump the revision letter, and do not regenerate whole files.
 
-**Why:** the EFCLib design review (steward/DECISIONS.md rows 1-16) fixed how users, dynamic windows (docks), touch commands, bypasses and dock trends work on Perspective screens. The standard needs (1) the role hierarchy and a table of minimum roles in Chapter 11 Security and Audit, (2) a new Chapter 11 section on dynamic windows, (3) a pointer from Alarms to the role table and (4) a cross-reference from the Perspective Screen Design appendix.
+**Why:** the EFCLib design review (steward/DECISIONS.md rows 1-16) fixed how users, dynamic windows, touch commands, bypasses and trends work on Perspective screens. Dynamic windows are an Embedded View in the screen shell, not Perspective docks (decision 24). The standard needs (1) the role hierarchy and a table of minimum roles in Chapter 11 Security and Audit, (2) a new Chapter 11 section on dynamic windows, (3) a pointer from Alarms to the role table and (4) the shell right-region and dynamic-window text of the Perspective Screen Design appendix, rewritten for the embedded-view strategy (Edit 8).
 
 **Source of the content:** EFC-Repo branch `steward/finish-library` (`steward/DECISIONS.md` rows 1-6, 8, 10, 12-16, 19; row 7 only where it affects the HMI). Electric heater text (row 17) is in `CS-REV-I-heaters-instructions.md` and is not repeated here. Anchors below were taken from the rev I files in Drive (`sections/11-scada-standards.tex`, `appendices/perspective-screen-design.tex`, `appendices/data-types-future.tex`).
 
@@ -14,18 +14,18 @@ Create it with exactly this content:
 
 ```latex
 \section[Dynamic Windows]{Dynamic Windows \newmark}\label{sec:hmi-dynamic-windows}
-Every equipment template opens a dynamic window: a panel on the right of the screen that shows the device's state, mode, commands, permissives, interlocks, alarms and history. Equipment of the same kind shares one dynamic window (Table~\ref{tab:hmi-docks}), so a valve, motor or loop looks and works the same on every screen.
+Every equipment template opens a dynamic window: a panel on the right of the screen that shows the device's state, mode, commands, permissives, interlocks, alarms and history. Equipment of the same kind shares one dynamic window (Table~\ref{tab:hmi-dw-ids}), so a valve, motor or loop looks and works the same on every screen.
 
 \begin{small}
 \begin{longtable}{@{}P{3.6cm}P{12.6cm}@{}}
-\caption{Dynamic Windows}\label{tab:hmi-docks} \\
+\caption{Dynamic Windows}\label{tab:hmi-dw-ids} \\
 \toprule
-\rowcolor{tblhead}\textbf{Dock id} & \textbf{Used by} \\
+\rowcolor{tblhead}\textbf{Window id} & \textbf{Used by} \\
 \midrule
 \endfirsthead
 \multicolumn{2}{@{}l}{\small\textit{Table \thetable{} continued}} \\
 \toprule
-\rowcolor{tblhead}\textbf{Dock id} & \textbf{Used by} \\
+\rowcolor{tblhead}\textbf{Window id} & \textbf{Used by} \\
 \midrule
 \endhead
 \texttt{dw\_ValveDiscrete} & On/off valves (\texttt{T\_DValve}) \\
@@ -42,11 +42,13 @@ Every equipment template opens a dynamic window: a panel on the right of the scr
 \end{longtable}
 \end{small}
 
+I/O card, rack and power-supply faceplates bind directly to the Modicon x80 device DDTs from Control Expert, which are imported into Ignition as-is; there is no PCLib type for them (\texttt{T\_IOCard} and \texttt{T\_IORack} are removed), and the window id \texttt{dw\_IOCard} is kept.
+
 \subsection[Size, Opening and Closing]{Size, Opening and Closing \newmark}\label{sec:hmi-dw-open}
 \begin{itemize}[itemsep=1pt]
-  \item \textbf{Size and position.} The dynamic window fills the right-hand slot of the shell: 400 design px wide (37.04\,vh), which is 400\,px at 1920 $\times$ 1080 and 800\,px at 3840 $\times$ 2160, and the full height between the header and the alarm bar (Appendix~\ref{app:screen-design}).
+  \item \textbf{Size and position.} The dynamic window fills the right-hand region of the shell: 400 design px wide (37.04\,vh), which is 400\,px at 1920 $\times$ 1080 and 800\,px at 3840 $\times$ 2160, and the full height between the header and the alarm bar (Appendix~\ref{app:screen-design}).
   \item \textbf{Opening.} A single click or tap on the template symbol opens its dynamic window. The click target is the whole symbol bounding box, at least 44 design px in each direction.
-  \item \textbf{Closing.} The close button returns the right-hand slot to the screen's default content. Each screen view has a \texttt{defaultDock} parameter that names it (normally the screen's trends).
+  \item \textbf{Closing.} The close button returns the right-hand region to the screen's default view. Each screen view has a \texttt{defaultDock} view parameter that names it (normally the screen's trends), and \texttt{setDefaultDock} sets it on startup.
 \end{itemize}
 
 \subsection[Layout and Buttons]{Layout and Buttons \newmark}\label{sec:hmi-dw-layout}
@@ -84,7 +86,7 @@ The Permissives and Interlocks sections list each condition by name (\texttt{Cfg
 \future{Named permissive and interlock groups are to be embedded in the device types: \texttt{Perm : T\_Intlk} and \texttt{Intlk : T\_Intlk} in \texttt{T\_DValve}, \texttt{T\_Motor} and \texttt{T\_VFD}, \texttt{Intlk : T\_Intlk} in \texttt{T\_CValve} and \texttt{T\_PID}, and \texttt{Prot : T\_Intlk} in equipment modules. The existing \texttt{Inp\_IntlkOK} and \texttt{Inp\_PermOK} are kept and ANDed with the group. \texttt{T\_Intlk} gains \texttt{Sts\_BypLeft : ARRAY[0..15] OF TIME} so the time left can be shown per condition; until then only the time left on the oldest bypass (\texttt{Sts\_BypassLeft}) is available.}
 
 \subsection[Trends]{Trends \newmark}\label{sec:hmi-trends}
-Trends in a dynamic window show the last 30~minutes by default. Every graph has an expand button that opens it at about half the screen (960 $\times$ 540 design px, \texttt{Docks/Parts/TrendExpanded}) with range buttons 5~m, 30~m, 1~h, 8~h and 24~h, and pause /\allowbreak{} live.
+Trends in a dynamic window show the last 30~minutes by default. Every graph has an expand button (\texttt{efc.ui.expandTrend}) that widens the dynamic window region to about 50\,\% of the shell width; the expanded graph fills 960 $\times$ 540 design px (view \texttt{Docks/Parts/TrendExpanded}) with range buttons 5~m, 30~m, 1~h, 8~h and 24~h, and pause /\allowbreak{} live.
 ```
 
 ## Edit 2: `sections/11-scada-standards.tex`, include the new section
@@ -161,24 +163,14 @@ Bypass, unbypass, shelving, alarm-limit, configuration and tuning changes are wr
 
 ## Edit 5: `appendices/perspective-screen-design.tex` (Appendix: Perspective Screen Design Standard)
 
-Under `\section{Navigation and Dynamic Content}`, at the end of the paragraph that starts `\textbf{Trends / dynamic window.}` (it ends `is an acceptable alternative.`), append (same paragraph, one space before it):
-
-```latex
-What the dynamic window shows and how it opens and closes is set in Section~\ref{sec:hmi-dynamic-windows}. \newmark
-```
-
-Then insert this line on its own, immediately after that paragraph and before the blank line that precedes `\textbf{Menu.}`:
-
-```latex
-\note{Open: EFCLib opens dynamic windows as a Perspective right dock with its width in vh (37.04\,vh), closed with \texttt{efc.ui.closeDynamic}, while Section ``Approach'' says docks are not used for the shell regions and this paragraph describes an Embedded View bound to session properties. Which one is the standard is \tbd; the losing text is to be amended.}
-```
+Superseded by Edit 8, which rewrites the same paragraph and includes the cross-reference sentence this edit would have appended. Make no separate change for Edit 5. The open note that stood here is removed: decision 24 settles the shell question in favour of the embedded view.
 
 ## Edit 6: `Claude outputs/REV-I-CHANGES.md`
 
 Append this item to the numbered list of applied changes (use the next free number in place of N):
 
 ```
-N. Ch11 SCADA: Roles and audit rewritten (label sec:ignition-roles): role hierarchy Guest < Operator < Maintenance < Supervisor < Engineer < Admin, one session level at login, controls hidden below the required level, Table tab:hmi-roles (MAINT/OOS, JOG, simulation, maintenance resets = Maintenance; bypass and shelving = Supervisor; alarm limits, configuration and tuning = Engineer), audit-log content. New section Dynamic Windows (sections/hmi-dynamic-windows.tex, \input before Alarms): dock ids (Table tab:hmi-docks), size, open/close and defaultDock, section order, button tiers, touch double-tap (dblCmd), named permissives/interlocks and bypass (BypassConfirm, presets 1/2/4/8 h up to Cfg_BypassMax, mandatory reason, time left and audit line per condition; T_Intlk embedding as \future), trends (30 min default, expand 960 x 540, ranges 5 m to 24 h). Alarms: shelving/limit roles sentence. Appendix Perspective Screen Design: cross-reference from Trends / dynamic window and open note on dock vs embedded view. Section Online Changes and Forces (sec:online-changes): HMI bypass by one Supervisor-or-higher user with a mandatory reason, up to the configured maximum, audit-logged, is exempt from the second-person and MOC requirement; PLC forces and logic changes keep it (Edit 7, cross-ref sec:hmi-bypass).
+N. Ch11 SCADA: Roles and audit rewritten (label sec:ignition-roles): role hierarchy Guest < Operator < Maintenance < Supervisor < Engineer < Admin, one session level at login, controls hidden below the required level, Table tab:hmi-roles (MAINT/OOS, JOG, simulation, maintenance resets = Maintenance; bypass and shelving = Supervisor; alarm limits, configuration and tuning = Engineer), audit-log content. New section Dynamic Windows (sections/hmi-dynamic-windows.tex, \input before Alarms): window ids (Table tab:hmi-dw-ids), size, open/close and defaultDock, section order, button tiers, touch double-tap (dblCmd), named permissives/interlocks and bypass (BypassConfirm, presets 1/2/4/8 h up to Cfg_BypassMax, mandatory reason, time left and audit line per condition; T_Intlk embedding as \future), trends (30 min default, expand widens the region to about 50 % with the graph at 960 x 540, ranges 5 m to 24 h). I/O card, rack and power-supply faceplates bind directly to the Modicon x80 device DDTs from Control Expert (no PCLib type; decision 23). Alarms: shelving/limit roles sentence. Appendix Perspective Screen Design: Trends / dynamic window paragraph and shell table rewritten as the embedded-view dynamic window (efc.ui session value, openDynamic/closeDynamic/expandTrend, defaultDock, sizes in vh; Edit 8), which settles the former dock-vs-embedded-view question. Section Online Changes and Forces (sec:online-changes): HMI bypass by one Supervisor-or-higher user with a mandatory reason, up to the configured maximum, audit-logged, is exempt from the second-person and MOC requirement; PLC forces and logic changes keep it (Edit 7, cross-ref sec:hmi-bypass).
 ```
 
 Add to its "Still open (need Adam)" list:
@@ -186,7 +178,6 @@ Add to its "Still open (need Adam)" list:
 ```
 - Minimum role for alarm acknowledge, setpoint changes and reset of latched interlocks (tab:hmi-roles).
 - Which actions are Admin-only, e.g. user and role administration (tab:hmi-roles).
-- Dynamic window as a Perspective right dock (EFCLib) vs the appendix's embedded view and "docks are not used" (app:screen-design, Navigation and Dynamic Content).
 ```
 
 ## Edit 7: `sections/07-software.tex`, Online Changes and Forces
@@ -209,17 +200,65 @@ Background: the rev H copy is the only copy available to the documentation subag
 
 ---
 
+## Edit 8: `appendices/perspective-screen-design.tex` (Appendix: Perspective Screen Design Standard), shell right region (decision 24)
+
+This replaces the cross-reference that Edit 5 would have added. The sentence in 8a is part of the new paragraph: do not add it a second time. Anchors are quoted from rev I.
+
+**8a.** Under `\section{Navigation and Dynamic Content}`, replace the whole paragraph that starts `\textbf{Trends / dynamic window.}` (quoted verbatim below) with the new paragraph. The message-handler alternative in the old text is removed; `efc.ui` does not use it.
+
+Old:
+
+```latex
+\textbf{Trends / dynamic window.} The right-hand Embedded View's path and params are bound to session custom properties (for example \texttt{session.\allowbreak{}custom.\allowbreak{}trend.\allowbreak{}view} and \texttt{session.\allowbreak{}custom.\allowbreak{}trend.\allowbreak{}params}). Clicking equipment on a process screen writes to these properties to change the panel's content. A message handler on the shell (\texttt{system.\allowbreak{}perspective.\allowbreak{}sendMessage}) is an acceptable alternative.
+```
+
+New:
+
+```latex
+\textbf{Trends / dynamic window.} The right-hand region of the shell is one Embedded View, the dynamic window. Its path and params are bound to a per-page session value, \texttt{session.\allowbreak{}custom.\allowbreak{}efcDw[pageId]}, which holds the current view path, the params and the screen's default view. The project-library script \texttt{efc.ui} writes that value. A click on a template symbol calls \texttt{openDynamic} and shows that device's dynamic window for its tag path. The close button calls \texttt{closeDynamic}, which returns the region to the screen's default view. \texttt{expandTrend} widens the region to about 50\,\% of the shell width for an expanded trend graph. Each screen view names its default view in the \texttt{defaultDock} view parameter, which \texttt{setDefaultDock} reads on startup. The region is sized in viewport height: 37.04\,vh wide and the full height between the header and the alarm bar. There are no Perspective docks and no per-project page or dock configuration. What the dynamic window shows and how it opens and closes is set in Section~\ref{sec:hmi-dynamic-windows}. \newmark
+```
+
+**8b.** In the Shell Layout table, replace this row (first column only; the 4K table row `Trends / dynamic window & 400 $\times$ 860 & 800 $\times$ 1720` is unchanged, so 800 px at 4K stays):
+
+Old:
+
+```latex
+Trends / dynamic window & 400 $\times$ 860 & 79.17\% & 7.41\% & 20.83\% & 79.63\% \\
+```
+
+New:
+
+```latex
+Trends / dynamic window (37.04\,vh wide) & 400 $\times$ 860 & 79.17\% & 7.41\% & 20.83\% & 79.63\% \\
+```
+
+**8c.** In the paragraph after that table, replace this sentence:
+
+Old:
+
+```latex
+The trends/dynamic window is 400 design px wide, which renders at 800\,px on a 3840 $\times$ 2160 display (its largest size) and scales down proportionally on smaller displays.
+```
+
+New:
+
+```latex
+The trends/dynamic window is 400 design px wide (37.04\,vh at 1080p), which renders at 800\,px on a 3840 $\times$ 2160 display (its largest size) and scales down proportionally on smaller displays. When a trend graph is expanded, the region widens to about 50\,\% of the shell width (Section~\ref{sec:hmi-trends}).
+```
+
+---
+
 ## Checks before reporting back
 
-1. Labels referenced by the new text already exist in rev I: `app:screen-design`, `sec:pclib-t-intlk`, `sec:pclib-modes`. New labels: `sec:hmi-dynamic-windows`, `tab:hmi-docks`, `sec:hmi-dw-open`, `sec:hmi-dw-layout`, `sec:hmi-touch`, `sec:hmi-bypass`, `sec:hmi-trends`, `sec:ignition-roles`, `tab:hmi-roles`; confirm none is already defined (`grep -rn` over `sections/` and `appendices/`).
+1. Labels referenced by the new text already exist in rev I: `app:screen-design`, `sec:pclib-t-intlk`, `sec:pclib-modes`. New labels: `sec:hmi-dynamic-windows`, `tab:hmi-dw-ids`, `sec:hmi-dw-open`, `sec:hmi-dw-layout`, `sec:hmi-touch`, `sec:hmi-bypass`, `sec:hmi-trends`, `sec:ignition-roles`, `tab:hmi-roles`; confirm none is already defined (`grep -rn` over `sections/` and `appendices/`).
 2. Macros used: `\newmark`, `\tbd`, `\note`, `\future`, column type `P{}`, colour `tblhead`, `enumitem` list options; all are defined in `preamble.tex`.
 3. Build only if Adam asks (rev I convention: do not compile until told). If asked, run `pdflatex` on the main document three times and confirm there are no undefined references.
 4. Report the four files touched (plus the new file) with a one-line summary each. Do not echo whole sections.
 
 ## Background (for the reviewer; do not paste into the standard)
 
-- Rows used: 1 (click/double-tap, dblCmd, 44 px target), 2 (defaultDock, close), 3 (right dock 800 px at 4K, 37.04 vh), 4 (dw_Station), 5 (roles, MAINT/OOS, bypass), 6 (8 h history), 7 (Perm/Intlk embedding, Sts_BypLeft: \future only), 8 (dw_ValveDiscrete layout), 10 (BypassConfirm, Inp_BypassPerm, per-condition time left and audit line), 12 (presets, JOG Maintenance+), 13 (button tiers), 14 (limits, shelving, configuration roles and audit), 15 (LoopConfig retired: tuning in dw_Loop), 16 (trend expand and ranges), 19 (HMI bypass exemption from the Online Changes and Forces rule, Edit 7). Rows 9 and 11 are library-only; 17 is in the heaters file; 18 is process.
+- Rows used: 1 (click/double-tap, dblCmd, 44 px target), 2 (defaultDock, close), 3 (right-hand region, 800 px at 4K, 37.04 vh), 4 (dw_Station), 5 (roles, MAINT/OOS, bypass), 6 (8 h history), 7 (Perm/Intlk embedding, Sts_BypLeft: \future only), 8 (dw_ValveDiscrete layout), 10 (BypassConfirm, Inp_BypassPerm, per-condition time left and audit line), 12 (presets, JOG Maintenance+), 13 (button tiers), 14 (limits, shelving, configuration roles and audit), 15 (LoopConfig retired: tuning in dw_Loop), 16 (trend expand and ranges), 19 (HMI bypass exemption from the Online Changes and Forces rule, Edit 7). Rows 9 and 11 are library-only; 17 is in the heaters file; 18 is process. Decisions 23 and 24 are in Edit 1 (x80 sentence), Edit 6 and Edit 8; 24 settles the dock-vs-embedded-view question.
 - Chapter 10 mode transitions (sec:pclib-modes) already name the Operator role for Auto/Manual and the Maintenance role for MAINT/OOS, so Table tab:hmi-roles is consistent with it; Chapter 10 is not edited.
 - `T_Intlk` in rev I Appendix I has `Cfg_Bypassable`, `Cfg_BypassMax` (default T#8H), `Inp_BypassPerm` and `Sts_BypassLeft` (oldest bypass only); `Sts_BypLeft[n]` is planned, hence the \future.
-- Sizes are in design px (1080p pixels), as in the Perspective Screen Design appendix: 400 dp = 37.04 vh = 800 px at 4K; the dock height between header (80 dp) and alarm bar (140 dp) is 860 dp.
+- Sizes are in design px (1080p pixels), as in the Perspective Screen Design appendix: 400 dp = 37.04 vh = 800 px at 4K; the window height between header (80 dp) and alarm bar (140 dp) is 860 dp.
 ```
