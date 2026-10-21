@@ -46,7 +46,7 @@ I/O card, rack and power-supply faceplates bind directly to the Modicon x80 devi
 
 \subsection[Size, Opening and Closing]{Size, Opening and Closing \newmark}\label{sec:hmi-dw-open}
 \begin{itemize}[itemsep=1pt]
-  \item \textbf{Size and position.} The dynamic window fills the right-hand region of the shell: 400 design px wide (37.04\,vh), which is 400\,px at 1920 $\times$ 1080 and 800\,px at 3840 $\times$ 2160, and the full height between the header and the alarm bar (Appendix~\ref{app:screen-design}).
+  \item \textbf{Size and position.} The dynamic window fills the full height between the header and the alarm bar, in the right-hand region of the shell: 400 $\times$ 860 at 1920 $\times$ 1080 (37.04\,vh wide, 79.63\,vh tall), and 800 $\times$ 1720 at 3840 $\times$ 2160 (Appendix~\ref{app:screen-design}).
   \item \textbf{Opening.} A single click or tap on the template symbol opens its dynamic window. The click target is the whole symbol bounding box, at least 44 design px in each direction.
   \item \textbf{Closing.} The close button returns the right-hand region to the screen's default view. Each screen view has a \texttt{defaultDock} view parameter that names it (normally the screen's trends), and \texttt{setDefaultDock} sets it on startup.
 \end{itemize}
@@ -215,7 +215,7 @@ Old:
 New:
 
 ```latex
-\textbf{Trends / dynamic window.} The right-hand region of the shell is one Embedded View, the dynamic window. Its path and params are bound to a per-page session value, \texttt{session.\allowbreak{}custom.\allowbreak{}efcDw[pageId]}, which holds the current view path, the params and the screen's default view. The project-library script \texttt{efc.ui} writes that value. A click on a template symbol calls \texttt{openDynamic} and shows that device's dynamic window for its tag path. The close button calls \texttt{closeDynamic}, which returns the region to the screen's default view. \texttt{expandTrend} widens the region to about 50\,\% of the shell width for an expanded trend graph. Each screen view names its default view in the \texttt{defaultDock} view parameter, which \texttt{setDefaultDock} reads on startup. The region is sized in viewport height: 37.04\,vh wide and the full height between the header and the alarm bar. There are no Perspective docks and no per-project page or dock configuration. What the dynamic window shows and how it opens and closes is set in Section~\ref{sec:hmi-dynamic-windows}. \newmark
+\textbf{Trends / dynamic window.} The right-hand region of the shell is one Embedded View, the dynamic window. Its path and params are bound to a per-page session value, \texttt{session.\allowbreak{}custom.\allowbreak{}efcDw[pageId]}, which holds the current view path, the params and the screen's default view. The project-library script \texttt{efc.ui} writes that value. A click on a template symbol calls \texttt{openDynamic} and shows that device's dynamic window for its tag path. The close button calls \texttt{closeDynamic}, which returns the region to the screen's default view. \texttt{expandTrend} widens the region to about 50\,\% of the shell width for an expanded trend graph. Each screen view names its default view in the \texttt{defaultDock} view parameter, which \texttt{setDefaultDock} reads on startup. The region is sized in viewport height: 37.04\,vh wide and 79.63\,vh tall, the full height between the header and the alarm bar (400 $\times$ 860 at 1920 $\times$ 1080; 800 $\times$ 1720 at 3840 $\times$ 2160). There are no Perspective docks and no per-project page or dock configuration. What the dynamic window shows and how it opens and closes is set in Section~\ref{sec:hmi-dynamic-windows}. \newmark
 ```
 
 **8b.** In the Shell Layout table, replace this row (first column only; the 4K table row `Trends / dynamic window & 400 $\times$ 860 & 800 $\times$ 1720` is unchanged, so 800 px at 4K stays):
@@ -229,7 +229,7 @@ Trends / dynamic window & 400 $\times$ 860 & 79.17\% & 7.41\% & 20.83\% & 79.63\
 New:
 
 ```latex
-Trends / dynamic window (37.04\,vh wide) & 400 $\times$ 860 & 79.17\% & 7.41\% & 20.83\% & 79.63\% \\
+Trends / dynamic window (37.04\,vh wide, 79.63\,vh tall) & 400 $\times$ 860 & 79.17\% & 7.41\% & 20.83\% & 79.63\% \\
 ```
 
 **8c.** In the paragraph after that table, replace this sentence:
@@ -243,7 +243,7 @@ The trends/dynamic window is 400 design px wide, which renders at 800\,px on a 3
 New:
 
 ```latex
-The trends/dynamic window is 400 design px wide (37.04\,vh at 1080p), which renders at 800\,px on a 3840 $\times$ 2160 display (its largest size) and scales down proportionally on smaller displays. When a trend graph is expanded, the region widens to about 50\,\% of the shell width (Section~\ref{sec:hmi-trends}).
+The trends/dynamic window fills the full height between the header and the alarm bar: 400 $\times$ 860 design px at 1920 $\times$ 1080 (37.04\,vh wide, 79.63\,vh tall), which renders at 800 $\times$ 1720\,px on a 3840 $\times$ 2160 display (its largest size) and scales down proportionally on smaller displays. When a trend graph is expanded, the region widens to about 50\,\% of the shell width (Section~\ref{sec:hmi-trends}).
 ```
 
 ---
@@ -257,8 +257,8 @@ The trends/dynamic window is 400 design px wide (37.04\,vh at 1080p), which rend
 
 ## Background (for the reviewer; do not paste into the standard)
 
-- Rows used: 1 (click/double-tap, dblCmd, 44 px target), 2 (defaultDock, close), 3 (right-hand region, 800 px at 4K, 37.04 vh), 4 (dw_Station), 5 (roles, MAINT/OOS, bypass), 6 (8 h history), 7 (Perm/Intlk embedding, Sts_BypLeft: \future only), 8 (dw_ValveDiscrete layout), 10 (BypassConfirm, Inp_BypassPerm, per-condition time left and audit line), 12 (presets, JOG Maintenance+), 13 (button tiers), 14 (limits, shelving, configuration roles and audit), 15 (LoopConfig retired: tuning in dw_Loop), 16 (trend expand and ranges), 19 (HMI bypass exemption from the Online Changes and Forces rule, Edit 7). Rows 9 and 11 are library-only; 17 is in the heaters file; 18 is process. Decisions 23 and 24 are in Edit 1 (x80 sentence), Edit 6 and Edit 8; 24 settles the dock-vs-embedded-view question.
+- Rows used: 1 (click/double-tap, dblCmd, 44 px target), 2 (defaultDock, close), 3 (right-hand region, 400 $\times$ 860 at 1080p, 800 $\times$ 1720 at 4K, 37.04 vh x 79.63 vh), 4 (dw_Station), 5 (roles, MAINT/OOS, bypass), 6 (8 h history), 7 (Perm/Intlk embedding, Sts_BypLeft: \future only), 8 (dw_ValveDiscrete layout), 10 (BypassConfirm, Inp_BypassPerm, per-condition time left and audit line), 12 (presets, JOG Maintenance+), 13 (button tiers), 14 (limits, shelving, configuration roles and audit), 15 (LoopConfig retired: tuning in dw_Loop), 16 (trend expand and ranges), 19 (HMI bypass exemption from the Online Changes and Forces rule, Edit 7). Rows 9 and 11 are library-only; 17 is in the heaters file; 18 is process. Decisions 23 and 24 are in Edit 1 (x80 sentence), Edit 6 and Edit 8; 24 settles the dock-vs-embedded-view question.
 - Chapter 10 mode transitions (sec:pclib-modes) already name the Operator role for Auto/Manual and the Maintenance role for MAINT/OOS, so Table tab:hmi-roles is consistent with it; Chapter 10 is not edited.
 - `T_Intlk` in rev I Appendix I has `Cfg_Bypassable`, `Cfg_BypassMax` (default T#8H), `Inp_BypassPerm` and `Sts_BypassLeft` (oldest bypass only); `Sts_BypLeft[n]` is planned, hence the \future.
-- Sizes are in design px (1080p pixels), as in the Perspective Screen Design appendix: 400 dp = 37.04 vh = 800 px at 4K; the window height between header (80 dp) and alarm bar (140 dp) is 860 dp.
+- Sizes are in design px (1080p pixels), as in the Perspective Screen Design appendix: 400 dp = 37.04 vh = 800 px at 4K; the window height between header (80 dp) and alarm bar (140 dp) is 860 dp, which is 79.63 vh (800 x 1720 px at 4K).
 ```
