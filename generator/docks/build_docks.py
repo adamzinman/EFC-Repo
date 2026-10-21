@@ -163,6 +163,11 @@ def commands(vw, buttons, extra=(), hint="Enabled in MAN, available, permitted, 
     """buttons: [(TEXT, member, class, minlvl, enabled_expr or None)] - uniform size, one row of up to four."""
     b = [button(f"B{i}", t, f"efc.ui.cmd(self, '{mem}', True, {lv})", cls=cls, show=lvl(lv), enabled=en)
          for i, (t, mem, cls, lv, en) in enumerate(buttons)]
+    for x, (t, mem, cls, lv, en) in zip(b, buttons):
+        if mem == "Cmd_Jog":                                       # hold-to-jog: TRUE on press, FALSE on release / leave
+            x["events"] = {"dom": {k: script(f"efc.ui.cmd(self, '{mem}', {val}, {lv})") for k, val in
+                                   (("onMouseDown", True), ("onTouchStart", True), ("onMouseUp", False),
+                                    ("onMouseLeave", False), ("onTouchEnd", False))}}
     kids = [flex("Buttons", "row", b, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})] + list(extra)
     if hint:
         kids.append(label("Hint", hint, "Text/Micro Text/Color/Muted"))
@@ -319,8 +324,9 @@ def motor_like(path, ttype, extra_values, extra_alarms, extra_cmd, extra_cfg, pe
                common_chips(vw) + [(m("Sts_NotPerm"), "NOT PERM")]),
         mode_section(vw),
         commands(vw, [("START", "Cmd_Start", "Button/Start", OP, rd), ("STOP", "Cmd_Stop", "Button/Stop", OP, None),
-                      ("RESET", "Cmd_Reset", "Button/Default", OP, None), ("JOG", "Cmd_Jog", "Button/Momentary", MAINT, rd)],
-                 extra=extra_cmd(vw) if extra_cmd else ()),
+                      ("RESET", "Cmd_Reset", "Button/Default", OP, None), ("JOG", "Cmd_Jog", "Button/Momentary", MAINT, f"{m('Mode/Sts_Maint')} && " + ready_expr(vw, mode=False))],   # JOG: MAINT only, hold to jog
+                 extra=extra_cmd(vw) if extra_cmd else (),
+                 hint="Enabled in MAN, available, permitted, not interlocked, not LOCAL. JOG: hold, MAINT mode only"),
         section("Values", "Values", vals + (extra_values(vw) if extra_values else [])),
         intlk("Perm", "Permissives", "Perm"), intlk("Intlk", "Interlocks", "Intlk"),
         alarms(vw, [("Alm_FailStart", "Fail to start"), ("Alm_FailStop", "Fail to stop"), ("Alm_Uncmd", "Uncommanded run/stop"),

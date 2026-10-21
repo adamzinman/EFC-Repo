@@ -25,8 +25,8 @@ The operator and maintenance dynamic window for a motor-driven equipment item (T
 - `START` writes `Cmd_Start` at level 1. Enabled when `Mode/Sts_Man && Sts_Avail && !Sts_Intlk && !Sts_Local && !Sts_NotPerm`.
 - `STOP` writes `Cmd_Stop` at level 1. It has no enable condition.
 - `RESET` writes `Cmd_Reset` at level 1. It has no enable condition.
-- `JOG` writes `Cmd_Jog` at level 2 (visible at level 2 only). Enabled by the same expression as START.
-- A hint line reads "Enabled in MAN, available, permitted, not interlocked, not LOCAL".
+- `JOG` is hold-to-jog, visible at level 2 and above only. It writes `Cmd_Jog` TRUE on mouse down or touch start and FALSE on mouse up, mouse leave or touch end (`efc.ui.cmd`, level 2, not audited). It is enabled only in MAINT: `Mode/Sts_Maint` and the START terms except `Mode/Sts_Man` (available, not interlocked, not LOCAL, not NOT PERM).
+- A hint line reads "Enabled in MAN, available, permitted, not interlocked, not LOCAL. JOG: hold, MAINT mode only".
 
 **Values** (all levels). Current (`Val_Current`, A). Rated (`Cfg_RatedAmps`, A). Load (`Val_LoadPct`, %). A diagnostics row shows the NAMUR NE107 text for `Sts_NE107`: 0 `NE107 OK`, 1 `NE107 F`, 2 `NE107 C`, 3 `NE107 S`, 4 `NE107 M`.
 
@@ -137,7 +137,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Commands/Body/Buttons/B1 | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
 | root/Commands/Body/Buttons/B2 | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
 | root/Commands/Body/Buttons/B3 | `position.display` | expr | `{view.custom.level} >= 2` | Shown while expression is true |
-| root/Commands/Body/Buttons/B3 | `props.enabled` | expr | `{view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}` | Enabled while expression is true |
+| root/Commands/Body/Buttons/B3 | `props.enabled` | expr | `{view.custom.m_Mode_Sts_Maint} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}` | Enabled while expression is true |
 
 ### `root/Values`
 
@@ -242,7 +242,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 ## Scripts reference
 
-Total: **16 scripts**: 13 event scripts (12 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). 2 property-change `onChange` scripts (`props.value` of the TIME entries, see the end of the list). No `customMethods`, no `messageHandlers`.
+Total: **20 scripts**: 17 event scripts (11 `component.onActionPerformed`, 6 `dom` events: 1 `onClick` and the 5 JOG events) and 1 transform script (`custom.level`). 2 property-change `onChange` scripts (`props.value` of the TIME entries, see the end of the list). No `customMethods`, no `messageHandlers`.
 
 The button handlers below call `efc.ui` functions. Those functions are summarised after the list.
 
@@ -294,10 +294,16 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	efc.ui.cmd(self, 'Cmd_Reset', True, 1)
 ```
 
-9. **`root/Commands/Body/Buttons/B3`**: `events.component.onActionPerformed`, scope G.
+9. **`root/Commands/Body/Buttons/B3`** (JOG): five `events.dom` scripts, scope G. Press writes TRUE (`onMouseDown`, `onTouchStart`); release writes FALSE (`onMouseUp`, `onMouseLeave`, `onTouchEnd`).
 
 ```python
+	# onMouseDown, onTouchStart
 	efc.ui.cmd(self, 'Cmd_Jog', True, 2)
+```
+
+```python
+	# onMouseUp, onMouseLeave, onTouchEnd
+	efc.ui.cmd(self, 'Cmd_Jog', False, 2)
 ```
 
 10. **`root/Alarms/Body/Ack`**: `events.component.onActionPerformed`, scope G.
@@ -356,7 +362,7 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 | `Commands/B0` (START) | `efc.ui.cmd(... 'Cmd_Start', True, 1)` | `Cmd_Start` | level 1 | no |
 | `Commands/B1` (STOP) | `efc.ui.cmd(... 'Cmd_Stop', True, 1)` | `Cmd_Stop` | level 1 | no |
 | `Commands/B2` (RESET) | `efc.ui.cmd(... 'Cmd_Reset', True, 1)` | `Cmd_Reset` | level 1 | no |
-| `Commands/B3` (JOG) | `efc.ui.cmd(... 'Cmd_Jog', True, 2)` | `Cmd_Jog` | level 2 | no |
+| `Commands/B3` (JOG) | `efc.ui.cmd(... 'Cmd_Jog', True, 2)` on mouse down / touch start; `efc.ui.cmd(... 'Cmd_Jog', False, 2)` on mouse up / mouse leave / touch end | `Cmd_Jog` (held) | level 2 | no |
 | `Alarms/Ack` | `efc.ui.ackAll` on the eight alarms | `Alm_*/Cmd_Ack` where unacked | level 1 | no |
 | `Maintenance/ResetMaint` | `efc.ui.cmd(... 'Run/Cmd_ResetMaint', True, 2)` | `Run/Cmd_ResetMaint` | level 2 | yes |
 | `Maintenance/Sim` (SIMULATE) | `efc.ui.cmd(... 'Sim_En', not m_Sim_En, 2)` | `Sim_En` (toggle) | level 2 | yes |
@@ -370,7 +376,7 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 
 - **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
 - **`efc.ui.closeDynamic(component)`**: writes `efcDw[pageId]` back to the stored `default` path and params. Writes no tags.
-- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: the role-checked write described above. It writes the value once with `writeBlocking` and does not write it back. One-shot members, and `Cmd_Jog` (see notes), depend on the PLC behaviour. Audits when `audit=True`.
+- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: the role-checked write described above. It writes the value once with `writeBlocking` and does not write it back. One-shot members depend on the PLC behaviour; `Cmd_Jog` is written TRUE on press and FALSE on release. Audits when `audit=True`.
 - **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true, at level 1 and above.
 - **`efc.ui.openDynamic`** (called from the template, not from this view): maps the template's type to a window and writes the region state.
 - **`efc.ui.bypass` / `unbypass`**: exist in the module but are not called from this view. Interlock bypass is handled in the embedded `IntlkList` views, which are not in this file.
@@ -606,8 +612,6 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 
 ## Notes and open questions
 
-- **JOG is sent once and never released.** `efc.ui.cmd` writes `Cmd_Jog` = True once. The PCLib comment says the command is "maintained", and the button uses the `Button/Momentary` class, but the view has no release handler and never writes False. Confirm how the PLC treats `Cmd_Jog`. If it is maintained, the jog latches until something clears it.
-- **JOG enable checks Manual, not Maintenance.** JOG is visible at level 2 and is enabled by the START expression, which requires `Mode/Sts_Man`. The PCLib comment says "Maint mode only". In MAINT, `Sts_Man` should be FALSE, so JOG would be disabled there, and it would be enabled in MAN. This is the reverse of the comment. Confirm the intended mode rule.
 - **START is not blocked by a trip or fault.** START's enable does not include `Sts_Tripped` or `Sts_Fault`. The same is true of the discrete dock's OPEN and CLOSE.
 - **STOP and RESET have no enable.** They are clickable at level 1 and above in any mode and state.
 - **Restart countdown and readiness are not shown.** `Sts_RestartLeft`, `Sts_Ready` and `Sts_State` are not used. `Cfg_NoFbk` is not shown or editable here.

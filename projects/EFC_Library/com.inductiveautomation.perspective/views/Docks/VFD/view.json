@@ -2033,18 +2033,46 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}"
+                            "expression": "{view.custom.m_Mode_Sts_Maint} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}"
                           }
                         }
                       }
                     },
                     "events": {
-                      "component": {
-                        "onActionPerformed": {
+                      "dom": {
+                        "onMouseDown": {
                           "type": "script",
                           "scope": "G",
                           "config": {
                             "script": "\tefc.ui.cmd(self, 'Cmd_Jog', True, 2)"
+                          }
+                        },
+                        "onTouchStart": {
+                          "type": "script",
+                          "scope": "G",
+                          "config": {
+                            "script": "\tefc.ui.cmd(self, 'Cmd_Jog', True, 2)"
+                          }
+                        },
+                        "onMouseUp": {
+                          "type": "script",
+                          "scope": "G",
+                          "config": {
+                            "script": "\tefc.ui.cmd(self, 'Cmd_Jog', False, 2)"
+                          }
+                        },
+                        "onMouseLeave": {
+                          "type": "script",
+                          "scope": "G",
+                          "config": {
+                            "script": "\tefc.ui.cmd(self, 'Cmd_Jog', False, 2)"
+                          }
+                        },
+                        "onTouchEnd": {
+                          "type": "script",
+                          "scope": "G",
+                          "config": {
+                            "script": "\tefc.ui.cmd(self, 'Cmd_Jog', False, 2)"
                           }
                         }
                       }
@@ -2279,7 +2307,7 @@
                   "grow": 0
                 },
                 "props": {
-                  "text": "Enabled in MAN, available, permitted, not interlocked, not LOCAL",
+                  "text": "Enabled in MAN, available, permitted, not interlocked, not LOCAL. JOG: hold, MAINT mode only",
                   "style": {
                     "classes": "Text/Micro Text/Color/Muted"
                   }

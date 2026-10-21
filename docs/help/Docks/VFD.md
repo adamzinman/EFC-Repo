@@ -26,9 +26,9 @@ The operator and maintenance dynamic window for a variable frequency drive (T_VF
 - `START` (`B0`) writes `Cmd_Start`. Enabled only when all of these are true: `Mode/Sts_Man`, `Sts_Avail`, not `Sts_Intlk`, not `Sts_Local`, not `Sts_NotPerm`. It does not check `Sts_Running`, `Sts_Stopped`, `Sts_Tripped`, `Sts_Fault` or `Mode/Sts_OOS`.
 - `STOP` (`B1`) writes `Cmd_Stop`. It has **no enable condition**.
 - `RESET` (`B2`) writes `Cmd_Reset`. It has **no enable condition**, so it is clickable outside MAN.
-- `JOG` (`B3`) writes `Cmd_Jog` and is visible at level 2 and above only. It uses the same enable as START. It does not check `Mode/Sts_Maint`. See Notes.
+- `JOG` (`B3`) is hold-to-jog and is visible at level 2 and above only. It writes `Cmd_Jog` TRUE on mouse down or touch start and FALSE on mouse up, mouse leave or touch end (`efc.ui.cmd`, level 2, not audited). It is enabled only in MAINT: `Mode/Sts_Maint` and the START terms except `Mode/Sts_Man` (available, not interlocked, not LOCAL, not NOT PERM).
 
-A hint line states "Enabled in MAN, available, permitted, not interlocked, not LOCAL". This is true for START and JOG only.
+A hint line states "Enabled in MAN, available, permitted, not interlocked, not LOCAL. JOG: hold, MAINT mode only". The first part is true for START only; STOP and RESET have no enable.
 
 **Speed and direction.** Both are in the Commands section at level 1 and above.
 
@@ -147,7 +147,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Commands/Body/Buttons/B1 | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
 | root/Commands/Body/Buttons/B2 | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
 | root/Commands/Body/Buttons/B3 | `position.display` | expr | `{view.custom.level} >= 2` | Shown while expression is true |
-| root/Commands/Body/Buttons/B3 | `props.enabled` | expr | `{view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}` | Enabled while expression is true |
+| root/Commands/Body/Buttons/B3 | `props.enabled` | expr | `{view.custom.m_Mode_Sts_Maint} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}` | Enabled while expression is true |
 | root/Commands/Body/Spd | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
 | root/Commands/Body/Spd/Entry | `props.value` | tag (indirect) | tag `{0}/Cmd_Spd` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Commands/Body/Spd/Entry | `props.enabled` | expr | `{view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail}` | Enabled while expression is true |
@@ -290,7 +290,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 ## Scripts reference
 
-Total: **19 scripts**: 15 event scripts (14 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). 3 property-change `onChange` scripts (`props.value` of the TIME entries, see the end of the list). No `customMethods`, no `messageHandlers`.
+Total: **23 scripts**: 19 event scripts (13 `component.onActionPerformed`, 6 `dom` events: 1 `onClick` and the 5 JOG events) and 1 transform script (`custom.level`). 3 property-change `onChange` scripts (`props.value` of the TIME entries, see the end of the list). No `customMethods`, no `messageHandlers`.
 
 The button handlers below call `efc.ui` functions. Those functions are summarised after the list.
 
@@ -342,10 +342,16 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	efc.ui.cmd(self, 'Cmd_Reset', True, 1)
 ```
 
-9. **`root/Commands/Body/Buttons/B3`**: `events.component.onActionPerformed`, scope G.
+9. **`root/Commands/Body/Buttons/B3`** (JOG): five `events.dom` scripts, scope G. Press writes TRUE (`onMouseDown`, `onTouchStart`); release writes FALSE (`onMouseUp`, `onMouseLeave`, `onTouchEnd`).
 
 ```python
+	# onMouseDown, onTouchStart
 	efc.ui.cmd(self, 'Cmd_Jog', True, 2)
+```
+
+```python
+	# onMouseUp, onMouseLeave, onTouchEnd
+	efc.ui.cmd(self, 'Cmd_Jog', False, 2)
 ```
 
 10. **`root/Commands/Body/Dir/Fwd`**: `events.component.onActionPerformed`, scope G.
@@ -424,7 +430,7 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 | `Commands/B0` (START) | `efc.ui.cmd(... 'Cmd_Start', True, 1)` | `Cmd_Start` | level 1 | no |
 | `Commands/B1` (STOP) | `efc.ui.cmd(... 'Cmd_Stop', True, 1)` | `Cmd_Stop` | level 1 | no |
 | `Commands/B2` (RESET) | `efc.ui.cmd(... 'Cmd_Reset', True, 1)` | `Cmd_Reset` | level 1 | no |
-| `Commands/B3` (JOG) | `efc.ui.cmd(... 'Cmd_Jog', True, 2)` | `Cmd_Jog` | level 2 | no |
+| `Commands/B3` (JOG) | `efc.ui.cmd(... 'Cmd_Jog', True, 2)` on mouse down / touch start; `efc.ui.cmd(... 'Cmd_Jog', False, 2)` on mouse up / mouse leave / touch end | `Cmd_Jog` (held) | level 2 | no |
 | `Commands/Dir/Fwd` | `efc.ui.cmd(... 'Cmd_Rev', False, 1)` | `Cmd_Rev` = FALSE | level 1 | no |
 | `Commands/Dir/Rev` | `efc.ui.cmd(... 'Cmd_Rev', True, 1)` | `Cmd_Rev` = TRUE | level 1 | no |
 | `Alarms/Ack` | `efc.ui.ackAll` on the ten alarms | `Alm_*/Cmd_Ack` where unacked | level 1 | no |
@@ -750,10 +756,9 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 ## Notes and open questions
 
 - **`Val_LoadPct` is not defined on T_VFD.** The Load row (`root/Values/Body/Load/Val`, and the mirror `custom.m_Val_LoadPct`) reads `{0}/Val_LoadPct`. `types/PCLib_Members.csv` defines `Val_LoadPct` on T_Motor and T_Heater, but not on T_VFD. The generator's shared `motor_like()` layout adds this row to every motor-type window. Confirm the T_VFD UDT in the tag provider has this member. If it does not, the row will show bad quality or be empty.
-- **JOG does not match its PCLib definition.** The `Cmd_Jog` comment says "maintained, Maint mode only". The view shows JOG at level 2 and above, and enables it in MAN (`Mode/Sts_Man`) with the START rule. It never checks `Mode/Sts_Maint`. The button has only `onActionPerformed`, which writes TRUE once. There is no release write in this view, so whether `Cmd_Jog` returns to FALSE depends on the owner logic or the `Button/Momentary` style, neither of which is defined in this file. Open question.
-- **Speed and direction are enabled by a looser rule than START.** The speed entry and FWD/REV require only `Mode/Sts_Man` and `Sts_Avail`. START and JOG also require `!Sts_Intlk`, `!Sts_Local` and `!Sts_NotPerm`. The generator (`vfd()`, `cmd()`) builds both rules this way, so the difference is intentional in the source. Confirm it is intended. The operator can change the speed reference and direction while interlocked, in LOCAL, or not permitted. Whether the PLC ignores those writes is not in this file.
+- **Speed and direction are enabled by a looser rule than START.** The speed entry and FWD/REV require only `Mode/Sts_Man` and `Sts_Avail`. START also requires `!Sts_Intlk`, `!Sts_Local` and `!Sts_NotPerm`. The generator (`vfd()`, `cmd()`) builds both rules this way, so the difference is intentional in the source. Confirm it is intended. The operator can change the speed reference and direction while interlocked, in LOCAL, or not permitted. Whether the PLC ignores those writes is not in this file.
 - **START does not check the drive state.** START is enabled while the drive is running, tripped or faulted, so it can write `Cmd_Start` in those states. STOP and RESET have no enable at all, so RESET is clickable outside MAN.
-- **The hint line is not accurate.** It says the commands are "Enabled in MAN, available, permitted, not interlocked, not LOCAL". That is true only for START and JOG. STOP and RESET have no enable, and the speed entry and direction buttons use the looser rule above.
+- **The hint line is not accurate.** It says the commands are "Enabled in MAN, available, permitted, not interlocked, not LOCAL". That is true only for START (JOG is MAINT-only and says so in the hint). STOP and RESET have no enable, and the speed entry and direction buttons use the looser rule above.
 - **Direction is not shown.** `Sts_Rev` (running in reverse) is not bound. The FWD and REV buttons have no state highlight, so neither the commanded nor the running direction is visible.
 - **Speed unit label is blank.** The unit beside the speed entry is an empty static label with no binding. The Values rows show the unit from `Cfg_SpdEU`.
 - **Trend pens share one scale and have no legend.** `efc.ui.trend` scales every pen to one minimum and maximum. Speed reference, speed (in `Cfg_SpdEU` units) and current (A) therefore share one axis. The part draws the pens in fixed colours by position (dark, blue, grey) and the view does not label them. See [Parts/Trend.md](Parts/Trend.md).
