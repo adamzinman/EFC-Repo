@@ -289,7 +289,8 @@
       "direction": "column",
       "style": {
         "classes": "Loop/B4/root"
-      }
+      },
+      "alignItems": "stretch"
     },
     "position": {
       "shrink": 0
@@ -420,7 +421,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "case({view.custom.mode}, 0, \"#3A3A3A\", 2, \"#E6E6E6\", \"#EDEDED\")"
+                    "expression": "case({view.custom.mode}, 0, \"#3A3A3A\", 2, \"#DCE6F7\", \"#EDEDED\")"
                   }
                 }
               },
