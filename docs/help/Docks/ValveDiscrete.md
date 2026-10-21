@@ -1,7 +1,7 @@
 # Docks/ValveDiscrete
 
 Source: `projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/ValveDiscrete/view.json`
-Opened from: the `Valve_Solenoid` template (and its MOV and Pneumatic siblings) through `efc.ui.openDynamic`. Dynamic window id `dw_ValveDiscrete`.
+Opened from: the discrete valve templates (`Valve_Solenoid`, `Valve_MOV`, `Valve_OnOff_Pneumatic`; see [Discrete valve templates](../Templates/Valves/Valve_Discrete.md)) through `efc.ui.openDynamic`. Dynamic window id `dw_ValveDiscrete`.
 
 ## Overview
 
@@ -52,54 +52,23 @@ Both have `paramDirection: input` and `persistent: true`. No output parameters.
 
 ### View-level custom properties (`custom`)
 
-
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
 | `view.custom.level` | `0` | property + script transform | `session.props.auth.user.roles` → `return efc.ui.level(value)` | Role level 0-5 from `session.props.auth.user.roles` via `efc.ui.level`. Gates buttons and sections (Guest 0, Operator 1, Maintenance 2, Supervisor 3, Engineer 4, Admin 5). |
-| `view.custom.m_Mode_Sts_Man` | `null` | tag | tag `{0}/Mode/Sts_Man` | Mirror of tag `<tagPath>/Mode/Sts_Man`. |
-| `view.custom.m_Sts_Avail` | `null` | tag | tag `{0}/Sts_Avail` | Mirror of tag `<tagPath>/Sts_Avail`. |
-| `view.custom.m_Sts_Intlk` | `null` | tag | tag `{0}/Sts_Intlk` | Mirror of tag `<tagPath>/Sts_Intlk`. |
-| `view.custom.m_Sts_Local` | `null` | tag | tag `{0}/Sts_Local` | Mirror of tag `<tagPath>/Sts_Local`. |
-| `view.custom.m_Sts_NotPerm` | `null` | tag | tag `{0}/Sts_NotPerm` | Mirror of tag `<tagPath>/Sts_NotPerm`. |
-| `view.custom.m_Cfg_Tag` | `null` | tag | tag `{0}/Cfg_Tag` | Mirror of tag `<tagPath>/Cfg_Tag`. |
-| `view.custom.m_Cfg_Desc` | `null` | tag | tag `{0}/Cfg_Desc` | Mirror of tag `<tagPath>/Cfg_Desc`. |
-| `view.custom.m_Sts_Fault` | `null` | tag | tag `{0}/Sts_Fault` | Mirror of tag `<tagPath>/Sts_Fault`. |
-| `view.custom.m_Sts_Opening` | `null` | tag | tag `{0}/Sts_Opening` | Mirror of tag `<tagPath>/Sts_Opening`. |
-| `view.custom.m_Sts_Closing` | `null` | tag | tag `{0}/Sts_Closing` | Mirror of tag `<tagPath>/Sts_Closing`. |
-| `view.custom.m_Sts_Opened` | `null` | tag | tag `{0}/Sts_Opened` | Mirror of tag `<tagPath>/Sts_Opened`. |
-| `view.custom.m_Sts_Closed` | `null` | tag | tag `{0}/Sts_Closed` | Mirror of tag `<tagPath>/Sts_Closed`. |
-| `view.custom.m_Sts_Sim` | `null` | tag | tag `{0}/Sts_Sim` | Mirror of tag `<tagPath>/Sts_Sim`. |
-| `view.custom.m_Mode_Sts_OOS` | `null` | tag | tag `{0}/Mode/Sts_OOS` | Mirror of tag `<tagPath>/Mode/Sts_OOS`. |
-| `view.custom.m_Mode_Sts_Maint` | `null` | tag | tag `{0}/Mode/Sts_Maint` | Mirror of tag `<tagPath>/Mode/Sts_Maint`. |
-| `view.custom.m_Mode_Sts_Auto` | `null` | tag | tag `{0}/Mode/Sts_Auto` | Mirror of tag `<tagPath>/Mode/Sts_Auto`. |
-| `view.custom.m_Inp_ZSO` | `null` | tag | tag `{0}/Inp_ZSO` | Mirror of tag `<tagPath>/Inp_ZSO`. |
-| `view.custom.m_Cfg_HasZSO` | `null` | tag | tag `{0}/Cfg_HasZSO` | Mirror of tag `<tagPath>/Cfg_HasZSO`. |
-| `view.custom.m_Inp_ZSC` | `null` | tag | tag `{0}/Inp_ZSC` | Mirror of tag `<tagPath>/Inp_ZSC`. |
-| `view.custom.m_Cfg_HasZSC` | `null` | tag | tag `{0}/Cfg_HasZSC` | Mirror of tag `<tagPath>/Cfg_HasZSC`. |
-| `view.custom.m_Sts_NE107` | `null` | tag | tag `{0}/Sts_NE107` | Mirror of tag `<tagPath>/Sts_NE107`. |
-| `view.custom.m_Alm_FailOpen_Sts_Active` | `null` | tag | tag `{0}/Alm_FailOpen/Sts_Active` | Mirror of tag `<tagPath>/Alm_FailOpen/Sts_Active`. |
-| `view.custom.m_Alm_FailOpen_Sts_Unack` | `null` | tag | tag `{0}/Alm_FailOpen/Sts_Unack` | Mirror of tag `<tagPath>/Alm_FailOpen/Sts_Unack`. |
-| `view.custom.m_Alm_FailOpen_Cfg_Priority` | `null` | tag | tag `{0}/Alm_FailOpen/Cfg_Priority` | Mirror of tag `<tagPath>/Alm_FailOpen/Cfg_Priority`. |
-| `view.custom.m_Alm_FailClose_Sts_Active` | `null` | tag | tag `{0}/Alm_FailClose/Sts_Active` | Mirror of tag `<tagPath>/Alm_FailClose/Sts_Active`. |
-| `view.custom.m_Alm_FailClose_Sts_Unack` | `null` | tag | tag `{0}/Alm_FailClose/Sts_Unack` | Mirror of tag `<tagPath>/Alm_FailClose/Sts_Unack`. |
-| `view.custom.m_Alm_FailClose_Cfg_Priority` | `null` | tag | tag `{0}/Alm_FailClose/Cfg_Priority` | Mirror of tag `<tagPath>/Alm_FailClose/Cfg_Priority`. |
-| `view.custom.m_Alm_PosConflict_Sts_Active` | `null` | tag | tag `{0}/Alm_PosConflict/Sts_Active` | Mirror of tag `<tagPath>/Alm_PosConflict/Sts_Active`. |
-| `view.custom.m_Alm_PosConflict_Sts_Unack` | `null` | tag | tag `{0}/Alm_PosConflict/Sts_Unack` | Mirror of tag `<tagPath>/Alm_PosConflict/Sts_Unack`. |
-| `view.custom.m_Alm_PosConflict_Cfg_Priority` | `null` | tag | tag `{0}/Alm_PosConflict/Cfg_Priority` | Mirror of tag `<tagPath>/Alm_PosConflict/Cfg_Priority`. |
-| `view.custom.m_Alm_Uncmd_Sts_Active` | `null` | tag | tag `{0}/Alm_Uncmd/Sts_Active` | Mirror of tag `<tagPath>/Alm_Uncmd/Sts_Active`. |
-| `view.custom.m_Alm_Uncmd_Sts_Unack` | `null` | tag | tag `{0}/Alm_Uncmd/Sts_Unack` | Mirror of tag `<tagPath>/Alm_Uncmd/Sts_Unack`. |
-| `view.custom.m_Alm_Uncmd_Cfg_Priority` | `null` | tag | tag `{0}/Alm_Uncmd/Cfg_Priority` | Mirror of tag `<tagPath>/Alm_Uncmd/Cfg_Priority`. |
-| `view.custom.m_Alm_IntlkTrip_Sts_Active` | `null` | tag | tag `{0}/Alm_IntlkTrip/Sts_Active` | Mirror of tag `<tagPath>/Alm_IntlkTrip/Sts_Active`. |
-| `view.custom.m_Alm_IntlkTrip_Sts_Unack` | `null` | tag | tag `{0}/Alm_IntlkTrip/Sts_Unack` | Mirror of tag `<tagPath>/Alm_IntlkTrip/Sts_Unack`. |
-| `view.custom.m_Alm_IntlkTrip_Cfg_Priority` | `null` | tag | tag `{0}/Alm_IntlkTrip/Cfg_Priority` | Mirror of tag `<tagPath>/Alm_IntlkTrip/Cfg_Priority`. |
-| `view.custom.m_Run_Val_RunHrs` | `null` | tag | tag `{0}/Run/Val_RunHrs` | Mirror of tag `<tagPath>/Run/Val_RunHrs`. |
-| `view.custom.m_Run_Val_Starts` | `null` | tag | tag `{0}/Run/Val_Starts` | Mirror of tag `<tagPath>/Run/Val_Starts`. |
-| `view.custom.m_Run_Val_StartsLastHr` | `null` | tag | tag `{0}/Run/Val_StartsLastHr` | Mirror of tag `<tagPath>/Run/Val_StartsLastHr`. |
-| `view.custom.m_Run_Val_HrsSinceMaint` | `null` | tag | tag `{0}/Run/Val_HrsSinceMaint` | Mirror of tag `<tagPath>/Run/Val_HrsSinceMaint`. |
-| `view.custom.m_Run_Sts_MaintDue` | `null` | tag | tag `{0}/Run/Sts_MaintDue` | Mirror of tag `<tagPath>/Run/Sts_MaintDue`. |
-| `view.custom.m_Sim_En` | `null` | tag | tag `{0}/Sim_En` | Mirror of tag `<tagPath>/Sim_En`. |
-| `view.custom.m_Cfg_TravelTime` | `null` | tag | tag `{0}/Cfg_TravelTime` | Mirror of tag `<tagPath>/Cfg_TravelTime`. |
 | `view.custom.open_Configuration` | `false` | none (written by scripts) | none | View-local toggle for the Configuration section. Set by the header click script; not bound to any tag; not persisted. |
+
+#### Tag mirrors (`custom.m_*`)
+
+There are 43 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The rest of the view reads tag values only through these mirrors.
+
+| Group | Members |
+|---|---|
+| Mode | `Mode/Sts_Man`, `Mode/Sts_OOS`, `Mode/Sts_Maint`, `Mode/Sts_Auto` |
+| Status / other | `Sts_Avail`, `Sts_Intlk`, `Sts_Local`, `Sts_NotPerm`, `Sts_Fault`, `Sts_Opening`, `Sts_Closing`, `Sts_Opened`, `Sts_Closed`, `Sts_Sim`, `Sts_NE107`, `Sim_En` |
+| Config | `Cfg_Tag`, `Cfg_Desc`, `Cfg_HasZSO`, `Cfg_HasZSC`, `Cfg_TravelTime` |
+| Inputs | `Inp_ZSO`, `Inp_ZSC` |
+| Alarms | `Alm_FailOpen/Sts_Active`, `Alm_FailOpen/Sts_Unack`, `Alm_FailOpen/Cfg_Priority`, `Alm_FailClose/Sts_Active`, `Alm_FailClose/Sts_Unack`, `Alm_FailClose/Cfg_Priority`, `Alm_PosConflict/Sts_Active`, `Alm_PosConflict/Sts_Unack`, `Alm_PosConflict/Cfg_Priority`, `Alm_Uncmd/Sts_Active`, `Alm_Uncmd/Sts_Unack`, `Alm_Uncmd/Cfg_Priority`, `Alm_IntlkTrip/Sts_Active`, `Alm_IntlkTrip/Sts_Unack`, `Alm_IntlkTrip/Cfg_Priority` |
+| Runtime | `Run/Val_RunHrs`, `Run/Val_Starts`, `Run/Val_StartsLastHr`, `Run/Val_HrsSinceMaint`, `Run/Sts_MaintDue` |
 
 ### Component-level custom properties
 
@@ -117,344 +86,119 @@ None.
 
 Total: **101 bindings**: 44 at view root (all `custom.*`, including 1 `property` binding with a transform) and 57 on components. Types: 54 `expr`, 46 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 57.
 
-### View root (44 bindings)
+### View root
 
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
-| (view root) | `custom.level` | property + transform | `session.props.auth.user.roles` | Reads session property; transform: script |
-| (view root) | `custom.m_Mode_Sts_Man` | tag (indirect) | tag `{0}/Mode/Sts_Man`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sts_Avail` | tag (indirect) | tag `{0}/Sts_Avail`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sts_Intlk` | tag (indirect) | tag `{0}/Sts_Intlk`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sts_Local` | tag (indirect) | tag `{0}/Sts_Local`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sts_NotPerm` | tag (indirect) | tag `{0}/Sts_NotPerm`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Cfg_Tag` | tag (indirect) | tag `{0}/Cfg_Tag`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Cfg_Desc` | tag (indirect) | tag `{0}/Cfg_Desc`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sts_Fault` | tag (indirect) | tag `{0}/Sts_Fault`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sts_Opening` | tag (indirect) | tag `{0}/Sts_Opening`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sts_Closing` | tag (indirect) | tag `{0}/Sts_Closing`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sts_Opened` | tag (indirect) | tag `{0}/Sts_Opened`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sts_Closed` | tag (indirect) | tag `{0}/Sts_Closed`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sts_Sim` | tag (indirect) | tag `{0}/Sts_Sim`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Mode_Sts_OOS` | tag (indirect) | tag `{0}/Mode/Sts_OOS`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Mode_Sts_Maint` | tag (indirect) | tag `{0}/Mode/Sts_Maint`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Mode_Sts_Auto` | tag (indirect) | tag `{0}/Mode/Sts_Auto`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Inp_ZSO` | tag (indirect) | tag `{0}/Inp_ZSO`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Cfg_HasZSO` | tag (indirect) | tag `{0}/Cfg_HasZSO`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Inp_ZSC` | tag (indirect) | tag `{0}/Inp_ZSC`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Cfg_HasZSC` | tag (indirect) | tag `{0}/Cfg_HasZSC`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sts_NE107` | tag (indirect) | tag `{0}/Sts_NE107`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_FailOpen_Sts_Active` | tag (indirect) | tag `{0}/Alm_FailOpen/Sts_Active`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_FailOpen_Sts_Unack` | tag (indirect) | tag `{0}/Alm_FailOpen/Sts_Unack`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_FailOpen_Cfg_Priority` | tag (indirect) | tag `{0}/Alm_FailOpen/Cfg_Priority`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_FailClose_Sts_Active` | tag (indirect) | tag `{0}/Alm_FailClose/Sts_Active`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_FailClose_Sts_Unack` | tag (indirect) | tag `{0}/Alm_FailClose/Sts_Unack`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_FailClose_Cfg_Priority` | tag (indirect) | tag `{0}/Alm_FailClose/Cfg_Priority`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_PosConflict_Sts_Active` | tag (indirect) | tag `{0}/Alm_PosConflict/Sts_Active`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_PosConflict_Sts_Unack` | tag (indirect) | tag `{0}/Alm_PosConflict/Sts_Unack`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_PosConflict_Cfg_Priority` | tag (indirect) | tag `{0}/Alm_PosConflict/Cfg_Priority`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_Uncmd_Sts_Active` | tag (indirect) | tag `{0}/Alm_Uncmd/Sts_Active`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_Uncmd_Sts_Unack` | tag (indirect) | tag `{0}/Alm_Uncmd/Sts_Unack`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_Uncmd_Cfg_Priority` | tag (indirect) | tag `{0}/Alm_Uncmd/Cfg_Priority`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_IntlkTrip_Sts_Active` | tag (indirect) | tag `{0}/Alm_IntlkTrip/Sts_Active`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_IntlkTrip_Sts_Unack` | tag (indirect) | tag `{0}/Alm_IntlkTrip/Sts_Unack`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Alm_IntlkTrip_Cfg_Priority` | tag (indirect) | tag `{0}/Alm_IntlkTrip/Cfg_Priority`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Run_Val_RunHrs` | tag (indirect) | tag `{0}/Run/Val_RunHrs`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Run_Val_Starts` | tag (indirect) | tag `{0}/Run/Val_Starts`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Run_Val_StartsLastHr` | tag (indirect) | tag `{0}/Run/Val_StartsLastHr`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Run_Val_HrsSinceMaint` | tag (indirect) | tag `{0}/Run/Val_HrsSinceMaint`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Run_Sts_MaintDue` | tag (indirect) | tag `{0}/Run/Sts_MaintDue`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Sim_En` | tag (indirect) | tag `{0}/Sim_En`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.m_Cfg_TravelTime` | tag (indirect) | tag `{0}/Cfg_TravelTime`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
+The view-root bindings drive the custom properties. Each one is listed with its full source in **View-level custom properties** above.
 
-### `root/Header/Names/Tag` (1)
+### `root/Header`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Header/Names/Tag | `props.text` | expr | `{view.custom.m_Cfg_Tag}` | Text content |
-
-### `root/Header/Names/Desc` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Header/Names/Desc | `props.text` | expr | `{view.custom.m_Cfg_Desc}` | Text content |
 
-### `root/Banner` (1)
+### `root/Banner`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Banner | `props.style.classes` | expr | `if({view.custom.m_Sts_Fault}, 'State/Fault', if({view.custom.m_Sts_Opening}, 'State/Transition', if({view.custom.m_Sts_Closing}, 'State/Transition', if({view.custom.m_Sts_Opened}, 'State/Running', if({view.custom.m_Sts_Closed}, 'State/Stopped', 'State/Unknown')))))` | CSS class(es) selected by state |
-
-### `root/Banner/State` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Banner/State | `props.text` | expr | `if({view.custom.m_Sts_Fault}, 'FAULT', if({view.custom.m_Sts_Opening}, 'OPENING', if({view.custom.m_Sts_Closing}, 'CLOSING', if({view.custom.m_Sts_Opened}, 'OPEN', if({view.custom.m_Sts_Closed}, 'CLOSED', 'UNKNOWN')))))` | Text content |
-
-### `root/Banner/Chip0` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Banner/Chip0 | `position.display` | expr | `{view.custom.m_Sts_Sim}` | Shown while expression is true |
-
-### `root/Banner/Chip1` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Banner/Chip1 | `position.display` | expr | `{view.custom.m_Sts_Local}` | Shown while expression is true |
-
-### `root/Banner/Chip2` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Banner/Chip2 | `position.display` | expr | `{view.custom.m_Sts_Intlk}` | Shown while expression is true |
-
-### `root/Banner/Chip3` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Banner/Chip3 | `position.display` | expr | `{view.custom.m_Sts_NotPerm}` | Shown while expression is true |
 
-### `root/Mode/Body/Current/Val` (1)
+### `root/Mode`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Mode/Body/Current/Val | `props.text` | expr | `if({view.custom.m_Mode_Sts_OOS}, 'OOS', if({view.custom.m_Mode_Sts_Maint}, 'MAINT', if({view.custom.m_Mode_Sts_Man}, 'MAN', 'AUTO')))` | Text content |
-
-### `root/Mode/Body/Buttons/Auto` (2)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Mode/Body/Buttons/Auto | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
 | root/Mode/Body/Buttons/Auto | `props.style.classes` | expr | `if({view.custom.m_Mode_Sts_Auto}, 'Button/Toggle/On', 'Button/Toggle/Off')` | CSS class(es) selected by state |
-
-### `root/Mode/Body/Buttons/Man` (2)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Mode/Body/Buttons/Man | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
 | root/Mode/Body/Buttons/Man | `props.style.classes` | expr | `if({view.custom.m_Mode_Sts_Man}, 'Button/Toggle/On', 'Button/Toggle/Off')` | CSS class(es) selected by state |
-
-### `root/Mode/Body/Buttons/Maint` (2)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Mode/Body/Buttons/Maint | `position.display` | expr | `{view.custom.level} >= 2` | Shown while expression is true |
 | root/Mode/Body/Buttons/Maint | `props.style.classes` | expr | `if({view.custom.m_Mode_Sts_Maint}, 'Button/Toggle/On', 'Button/Toggle/Off')` | CSS class(es) selected by state |
-
-### `root/Mode/Body/Buttons/OOS` (2)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Mode/Body/Buttons/OOS | `position.display` | expr | `{view.custom.level} >= 2` | Shown while expression is true |
 | root/Mode/Body/Buttons/OOS | `props.style.classes` | expr | `if({view.custom.m_Mode_Sts_OOS}, 'Button/Toggle/On', 'Button/Toggle/Off')` | CSS class(es) selected by state |
 
-### `root/Commands` (1)
+### `root/Commands`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Commands | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
-
-### `root/Commands/Body/Buttons/B0` (2)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Commands/Body/Buttons/B0 | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
 | root/Commands/Body/Buttons/B0 | `props.enabled` | expr | `{view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}` | Enabled while expression is true |
-
-### `root/Commands/Body/Buttons/B1` (2)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Commands/Body/Buttons/B1 | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
 | root/Commands/Body/Buttons/B1 | `props.enabled` | expr | `{view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}` | Enabled while expression is true |
-
-### `root/Commands/Body/Buttons/B2` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Commands/Body/Buttons/B2 | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
 
-### `root/Feedback/Body/ZSO` (1)
+### `root/Feedback`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Feedback/Body/ZSO | `position.display` | expr | `{view.custom.m_Cfg_HasZSO}` | Shown while expression is true |
-
-### `root/Feedback/Body/ZSO/Val` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Feedback/Body/ZSO/Val | `props.text` | expr | `if({view.custom.m_Inp_ZSO}, 'ON', 'off')` | Text content |
-
-### `root/Feedback/Body/ZSC` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Feedback/Body/ZSC | `position.display` | expr | `{view.custom.m_Cfg_HasZSC}` | Shown while expression is true |
-
-### `root/Feedback/Body/ZSC/Val` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Feedback/Body/ZSC/Val | `props.text` | expr | `if({view.custom.m_Inp_ZSC}, 'ON', 'off')` | Text content |
-
-### `root/Feedback/Body/NE107/Val` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Feedback/Body/NE107/Val | `props.text` | expr | `case(toInt({view.custom.m_Sts_NE107}), 0, 'NE107 OK', 1, 'NE107 F', 2, 'NE107 C', 3, 'NE107 S', 4, 'NE107 M', '')` | Text content |
 
-### `root/Perm` (1)
+### `root/Perm`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Perm | `props.params.tagPath` | expr | `{view.params.tagPath} + '/Perm'` | Embedded view tagPath param |
 
-### `root/Intlk` (1)
+### `root/Intlk`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Intlk | `props.params.tagPath` | expr | `{view.params.tagPath} + '/Intlk'` | Embedded view tagPath param |
 
-### `root/Alarms/Body/None` (1)
+### `root/Alarms`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Alarms/Body/None | `position.display` | expr | `!({view.custom.m_Alm_FailOpen_Sts_Active} \|\| {view.custom.m_Alm_FailClose_Sts_Active} \|\| {view.custom.m_Alm_PosConflict_Sts_Active} \|\| {view.custom.m_Alm_Uncmd_Sts_Active} \|\| {view.custom.m_Alm_IntlkTrip_Sts_Active})` | Shown while expression is true |
-
-### `root/Alarms/Body/List/A0` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Alarms/Body/List/A0 | `props.style.classes` | expr | `if({view.custom.m_Alm_FailOpen_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_FailOpen_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_FailOpen_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_FailOpen_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))` | CSS class(es) selected by state |
-
-### `root/Alarms/Body/List/A1` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Alarms/Body/List/A1 | `props.style.classes` | expr | `if({view.custom.m_Alm_FailClose_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_FailClose_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_FailClose_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_FailClose_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))` | CSS class(es) selected by state |
-
-### `root/Alarms/Body/List/A2` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Alarms/Body/List/A2 | `props.style.classes` | expr | `if({view.custom.m_Alm_PosConflict_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_PosConflict_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_PosConflict_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_PosConflict_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))` | CSS class(es) selected by state |
-
-### `root/Alarms/Body/List/A3` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Alarms/Body/List/A3 | `props.style.classes` | expr | `if({view.custom.m_Alm_Uncmd_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_Uncmd_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_Uncmd_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_Uncmd_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))` | CSS class(es) selected by state |
-
-### `root/Alarms/Body/List/A4` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Alarms/Body/List/A4 | `props.style.classes` | expr | `if({view.custom.m_Alm_IntlkTrip_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_IntlkTrip_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_IntlkTrip_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_IntlkTrip_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))` | CSS class(es) selected by state |
-
-### `root/Alarms/Body/Ack` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Alarms/Body/Ack | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
 
-### `root/Trend` (2)
+### `root/Trend`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Trend | `props.params.tagPath` | expr | `{view.params.tagPath}` | Embedded view tagPath param |
 | root/Trend | `position.basis` | expr | `if({this.props.params.expanded}, '70.370vh', '15.741vh')` | Row height |
 
-### `root/Maintenance` (1)
+### `root/Maintenance`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Maintenance | `position.display` | expr | `{view.custom.level} >= 2` | Shown while expression is true |
-
-### `root/Maintenance/Body/Hrs/Val` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Maintenance/Body/Hrs/Val | `props.text` | expr | `numberFormat({view.custom.m_Run_Val_RunHrs}, '#,##0')` | Text content |
-
-### `root/Maintenance/Body/Starts/Val` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Maintenance/Body/Starts/Val | `props.text` | expr | `numberFormat({view.custom.m_Run_Val_Starts}, '#,##0')` | Text content |
-
-### `root/Maintenance/Body/StartsHr/Val` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Maintenance/Body/StartsHr/Val | `props.text` | expr | `numberFormat({view.custom.m_Run_Val_StartsLastHr}, '#,##0')` | Text content |
-
-### `root/Maintenance/Body/SinceMaint/Val` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Maintenance/Body/SinceMaint/Val | `props.text` | expr | `numberFormat({view.custom.m_Run_Val_HrsSinceMaint}, '#,##0')` | Text content |
-
-### `root/Maintenance/Body/Due/Val` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Maintenance/Body/Due/Val | `props.text` | expr | `if({view.custom.m_Run_Sts_MaintDue}, 'YES', 'no')` | Text content |
 
-### `root/Configuration/Header/Chevron` (1)
+### `root/Configuration`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Configuration/Header/Chevron | `props.text` | expr | `if({view.custom.open_Configuration}, '▾', '▸')` | Text content |
-
-### `root/Configuration/Body` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Configuration/Body | `position.display` | expr | `{view.custom.open_Configuration}` | Shown while expression is true |
-
-### `root/Configuration/Body/R0` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Configuration/Body/R0 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
-
-### `root/Configuration/Body/R0/Val` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Configuration/Body/R0/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_TravelTime}, '#,##0.###')` | Text content |
-
-### `root/Configuration/Body/R0/EU` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Configuration/Body/R0/EU | `props.text` | expr | `'s'` | Text content |
-
-### `root/Configuration/Body/E0` (1)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Configuration/Body/E0 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-
-### `root/Configuration/Body/E0/Entry` (2)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Configuration/Body/E0/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_TravelTime` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/E0/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
-
-### `root/Configuration/Body/C1` (2)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Configuration/Body/C1 | `props.selected` | tag (indirect) | tag `{0}/Cfg_HasZSO` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/C1 | `props.enabled` | expr | `{view.custom.level} >= 4` | Enabled while expression is true |
-
-### `root/Configuration/Body/C2` (2)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/Configuration/Body/C2 | `props.selected` | tag (indirect) | tag `{0}/Cfg_HasZSC` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/C2 | `props.enabled` | expr | `{view.custom.level} >= 4` | Enabled while expression is true |
 
@@ -464,13 +208,11 @@ Total: **13 scripts**: 12 event scripts (11 `component.onActionPerformed`, 1 `do
 
 The button handlers below call `efc.ui` functions. Those functions are summarised after the list.
 
-
 1. **`root/Header/Close`**: `events.component.onActionPerformed`, scope G.
 
 ```python
 	efc.ui.closeDynamic(self)
 ```
-
 
 2. **`root/Mode/Body/Buttons/Auto`**: `events.component.onActionPerformed`, scope G.
 
@@ -478,13 +220,11 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	efc.ui.cmd(self, 'Mode/Cmd_Auto', True, 1, audit=False)
 ```
 
-
 3. **`root/Mode/Body/Buttons/Man`**: `events.component.onActionPerformed`, scope G.
 
 ```python
 	efc.ui.cmd(self, 'Mode/Cmd_Man', True, 1, audit=False)
 ```
-
 
 4. **`root/Mode/Body/Buttons/Maint`**: `events.component.onActionPerformed`, scope G.
 
@@ -492,13 +232,11 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	efc.ui.cmd(self, 'Mode/Cmd_Maint', True, 2, audit=True)
 ```
 
-
 5. **`root/Mode/Body/Buttons/OOS`**: `events.component.onActionPerformed`, scope G.
 
 ```python
 	efc.ui.cmd(self, 'Mode/Cmd_OOS', True, 2, audit=True)
 ```
-
 
 6. **`root/Commands/Body/Buttons/B0`**: `events.component.onActionPerformed`, scope G.
 
@@ -506,13 +244,11 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	efc.ui.cmd(self, 'Cmd_Open', True, 1)
 ```
 
-
 7. **`root/Commands/Body/Buttons/B1`**: `events.component.onActionPerformed`, scope G.
 
 ```python
 	efc.ui.cmd(self, 'Cmd_Close', True, 1)
 ```
-
 
 8. **`root/Commands/Body/Buttons/B2`**: `events.component.onActionPerformed`, scope G.
 
@@ -520,13 +256,11 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	efc.ui.cmd(self, 'Cmd_Reset', True, 1)
 ```
 
-
 9. **`root/Alarms/Body/Ack`**: `events.component.onActionPerformed`, scope G.
 
 ```python
 	efc.ui.ackAll(self, ['Alm_FailOpen', 'Alm_FailClose', 'Alm_PosConflict', 'Alm_Uncmd', 'Alm_IntlkTrip'])
 ```
-
 
 10. **`root/Maintenance/Body/Buttons/ResetMaint`**: `events.component.onActionPerformed`, scope G.
 
@@ -534,13 +268,11 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	efc.ui.cmd(self, 'Run/Cmd_ResetMaint', True, 2, audit=True)
 ```
 
-
 11. **`root/Maintenance/Body/Buttons/Sim`**: `events.component.onActionPerformed`, scope G.
 
 ```python
 	efc.ui.cmd(self, 'Sim_En', not self.view.custom.m_Sim_En, 2, audit=True)
 ```
-
 
 12. **`root/Configuration/Header`**: `events.dom.onClick`, scope G.
 
@@ -548,13 +280,11 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	self.view.custom.open_Configuration = not self.view.custom.open_Configuration
 ```
 
-
 13. **transform on `(view root)` `custom.level`**: `custom.level` binding, `property` source `session.props.auth.user.roles`.
 
 ```python
 	return efc.ui.level(value)
 ```
-
 
 ### Explanation of each handler
 
@@ -582,7 +312,6 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 - **`efc.ui.cmd(component, member, value, minLevel, audit)`**: the role-checked write described above. Audits when `audit=True`.
 - **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true, only at level 1 and above.
 - **`efc.ui.bypass` / `unbypass`**: exist in the module but are not called from this view. Interlock bypass is handled in the embedded `IntlkList` views, which are not in this file.
-
 
 ## Tag members used
 
@@ -648,8 +377,6 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Alm_PosConflict/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_Uncmd/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_IntlkTrip/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
-
-
 
 ## Component tree
 
@@ -753,7 +480,6 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
       - `C1` (ia.input.checkbox)
       - `C2` (ia.input.checkbox)
 ```
-
 
 ## Notes and open questions
 

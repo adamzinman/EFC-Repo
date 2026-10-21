@@ -1,17 +1,28 @@
-# Templates/Valves/Valve_Solenoid
+# Discrete valve templates
 
-Source: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Valves/Valve_Solenoid/view.json`
-Dynamic window it opens: `Docks/ValveDiscrete` (see [ValveDiscrete](../../Docks/ValveDiscrete.md)).
+Covers `Templates/Valves/Valve_Solenoid`, `Templates/Valves/Valve_MOV` and `Templates/Valves/Valve_OnOff_Pneumatic`.
+Sources: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Valves/<name>/view.json`
+Dynamic window they open: `Docks/ValveDiscrete` (see [ValveDiscrete](../../Docks/ValveDiscrete.md)).
 
 ## Overview
 
-A single-device P&ID symbol for a two-state solenoid-operated valve (T_DValve). It shows the valve state as a fill colour, an alarm or fault outline, interlock (I) and permissive (P) badges, a mode/status line, and an optional in-place command button.
+These are single-device P&ID symbols for a two-state valve (T_DValve). Each shows the valve state as a fill colour, an alarm or fault outline, interlock (I) and permissive (P) badges, a mode/status line, and an optional in-place command button.
 
 - **Default size:** 120 x 100 (`props.defaultSize`).
-- **Bound to:** one T_DValve instance through `params.tagPath` (default `[default]PID_Demo/XV102`).
+- **Bound to:** one T_DValve instance through `params.tagPath`.
 - **Opening the dock:** a single click on the symbol runs `efc.ui.openDynamic(self)`. It maps `tType` (or `dockId`) to a window, then writes `session.custom.efcDw[pageId] = {path, params:{tagPath}}`. The screen's `Docks/Region` embedded view shows that path. Only `tagPath` is passed on; `dwTagPath` overrides it when set.
 
-Note on the siblings: `Valve_MOV` and `Valve_OnOff_Pneumatic` are the same view with different symbol geometry and default tagPath (`XV103` and `XV101`). Checked by diff: the MOV bindings are identical to this view, but its head is a circle and the P/I badges are offset (y 0.207 vs 0.211). The Pneumatic view differs more: its symbol has 3 elements, not 4. Its bindings point at `elements[1]` (head) and `elements[2]` (body), so the body binding is not on `elements[3]` as it is here, and its P/I badges are placed differently. Do not assume the bindings are identical across the three.
+### Differences between the three views
+
+All three have the same params, custom properties, bindings (expressions and sources), scripts and component tree. This document applies to all three. Only the following differ:
+
+| View | Symbol head (`elements[1]`) | Body element bound to `custom.fill` | Default `tagPath` | P/I badge position (x / y) |
+|---|---|---|---|---|
+| `Valve_Solenoid` | rect 28x22 with an "S" mark | `elements[3]` | `[default]PID_Demo/XV102` | P 0.307 / 0.211, I 0.577 / 0.211 |
+| `Valve_MOV` | circle r14 with an "M" mark | `elements[3]` | `[default]PID_Demo/XV103` | P 0.307 / 0.207, I 0.577 / 0.207 |
+| `Valve_OnOff_Pneumatic` | flat rect 40x16, no mark (3 elements, not 4) | `elements[2]` | `[default]PID_Demo/XV101` | P 0.285 / 0.216, I 0.598 / 0.216 |
+
+In every view, the head is `elements[1]`. Where this document says `elements[3]` for the body, read `elements[2]` for `Valve_OnOff_Pneumatic`.
 
 ## How it operates
 
@@ -48,7 +59,7 @@ Priority is fault, then opened, then closed, then transition.
 
 | Name | Direction | Default | Meaning | Set / read by |
 |---|---|---|---|---|
-| `tagPath` | input | `[default]PID_Demo/XV102` | T_DValve instance. All bindings use it as `{view.params.tagPath}`. | Caller; read by bindings and `efc.ui` |
+| `tagPath` | input | per view (see table above) | T_DValve instance. All bindings use it as `{view.params.tagPath}`. | Caller; read by bindings and `efc.ui` |
 | `useButton` | input | `true` | `true` shows the PB command button; `false` enables touch mode (M label, double-tap). | Caller; read by bindings and `efc.ui.dblCmd` |
 | `tType` | input | `T_DValve` | Type key. `efc.ui.openDynamic` uses it (via BY_TYPE) to pick the window. | Read by `efc.ui.openDynamic` and `efc.ui.dblCmd`; not referenced in this view's bindings |
 | `dockId` | input | `""` | Overrides the window chosen from `tType`. Must be a key of `efc.ui.WINDOWS`. | Read by `efc.ui.openDynamic` only |
@@ -60,7 +71,6 @@ All six params have `paramDirection: input` and `persistent: true`. No output pa
 ### View-level custom properties (`custom`)
 
 Every property below has a binding (none is set by a script), so the source column gives what drives it.
-
 
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
@@ -103,38 +113,11 @@ None. The template reads no `session.*` or `page.*` values and sends no messages
 
 Total: **45 bindings** (26 at view root in `custom.*`, 19 on components). Types: 29 `expr`, 16 `tag`. No transforms. `params.*` entries have `paramDirection` only and are not bindings.
 
-### View root (26 bindings)
+### View root
 
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
-| (view root) | `custom.cmd` | tag (indirect) | tag `{0}/Out_Open`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.opened` | tag (indirect) | tag `{0}/Sts_Opened`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.closed` | tag (indirect) | tag `{0}/Sts_Closed`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.fault` | tag (indirect) | tag `{0}/Sts_Fault`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.hasZso` | tag (indirect) | tag `{0}/Cfg_HasZSO`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.hasZsc` | tag (indirect) | tag `{0}/Cfg_HasZSC`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.state` | expr | `if(coalesce({view.custom.fault}, false), 3, if(coalesce({view.custom.opened}, false), 1, if(coalesce({view.custom.closed}, false), 0, 2)))` | Sets view.custom (see custom properties table) |
-| (view root) | `custom.command` | expr | `if(coalesce({view.custom.hasZso}, false) \|\| coalesce({view.custom.hasZsc}, false), if(coalesce({view.custom.cmd}, false), 1, 0), -1)` | Sets view.custom (see custom properties table) |
-| (view root) | `custom.name` | tag (indirect) | tag `{0}/Cfg_Tag`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.desc` | tag (indirect) | tag `{0}/Cfg_Desc`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.man` | tag (indirect) | tag `{0}/Mode/Sts_Man`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.oos` | tag (indirect) | tag `{0}/Mode/Sts_OOS`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.avail` | tag (indirect) | tag `{0}/Sts_Avail`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.local` | tag (indirect) | tag `{0}/Sts_Local`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.intlk` | tag (indirect) | tag `{0}/Sts_Intlk`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.firstOut` | tag (indirect) | tag `{0}/Intlk/Sts_FirstOut`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.firstDesc` | tag (indirect) | tag `{0}/Intlk/Cfg_CondDesc/{1}`; refs {"0": "{view.params.tagPath}", "1": "{view.custom.firstOut}"} | Reads tag value |
-| (view root) | `custom.mode` | expr | `if(coalesce({view.custom.man}, false), 1, 0)` | Sets view.custom (see custom properties table) |
-| (view root) | `custom.permMissing` | tag (indirect) | tag `{0}/Sts_NotPerm`; refs {"0": "{view.params.tagPath}"} | Reads tag value |
-| (view root) | `custom.alarm` | expr | `if(forceQuality(coalesce(try(isAlarmActiveFiltered({view.params.tagPath} + "/*", "*", "*", 4, 4, 0, 1, 0), false), false)), 4, if(forceQuality(coalesce(try(isAlarmActiveFiltered({view.params.tagPath} + "/*", "*", "*", 3, 3, 0, 1, 0), false), false)), 3, if(forceQuality(coalesce(try(isAlarmActiveFiltered({view.params.tagPath} + "/*", "*", "*", 2, 2, 0, 1, 0), false), false)), 2, if(forceQuality(coalesce(try(isAlarmActiveFiltered({view.params.tagPath} + "/*", "*", "*", 1, 1, 0, 1, 0), false), false)), 1, 0))))` | Sets view.custom (see custom properties table) |
-| (view root) | `custom.fill` | expr | `case({view.custom.state}, 0, "#9E9E9E", 1, "#FFFFFF", 2, "#C4C4C4", 3, "#3A3A3A", "#C4C4C4")` | Sets view.custom (see custom properties table) |
-| (view root) | `custom.head` | expr | `if({view.custom.command} < 0, {view.custom.fill}, if({view.custom.command} = 1, "#FFFFFF", "#9E9E9E"))` | Sets view.custom (see custom properties table) |
-| (view root) | `custom.line` | expr | `if({view.custom.state} = 3, "#D50000", case({view.custom.alarm}, 1, "#00A3E0", 2, "#FFD200", 3, "#FF7A00", 4, "#D50000", "#262626"))` | Sets view.custom (see custom properties table) |
-| (view root) | `custom.con` | expr | `if({view.custom.state} = 3, "#F2F2F2", "#262626")` | Sets view.custom (see custom properties table) |
-| (view root) | `custom.lw` | expr | `if({view.custom.alarm} > 0 \|\| {view.custom.state} = 3, 8.333, 4.167)` | Sets view.custom (see custom properties table) |
-| (view root) | `custom.canCmd` | expr | `coalesce({view.custom.man}, false) && coalesce({view.custom.avail}, true) && !coalesce({view.custom.local}, false) && !coalesce({view.custom.oos}, false) && (coalesce({view.custom.cmd}, false) \|\| (!coalesce({view.custom.permMissing}, false) && !coalesce({view.custom.intlk}, false)))` | Sets view.custom (see custom properties table) |
+The view-root bindings drive the custom properties. Each one is listed with its full source in **View-level custom properties** above.
 
-### `root/Tag` (3)
+### `root/Tag`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
@@ -142,7 +125,7 @@ Total: **45 bindings** (26 at view root in `custom.*`, 19 on components). Types:
 | root/Tag | `meta.tooltip.text` | expr | `coalesce({view.custom.desc}, "")` | Tooltip |
 | root/Tag | `meta.tooltip.enabled` | expr | `len(coalesce({view.custom.desc}, "")) > 0` | Tooltip |
 
-### `root/Symbol` (6)
+### `root/Symbol`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
@@ -153,34 +136,29 @@ Total: **45 bindings** (26 at view root in `custom.*`, 19 on components). Types:
 | root/Symbol | `props.elements[3].stroke.paint` | expr | `{view.custom.line}` | SVG element colour or stroke width |
 | root/Symbol | `props.elements[3].stroke.width` | expr | `{view.custom.lw}` | SVG element colour or stroke width |
 
-### `root/P` (1)
+### `root/P`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/P | `meta.visible` | expr | `coalesce({view.custom.permMissing}, false)` | Shown while expression is true |
 
-### `root/I` (2)
+### `root/I`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/I | `meta.visible` | expr | `coalesce({view.custom.intlk}, false)` | Shown while expression is true |
 | root/I | `meta.tooltip.text` | expr | `"Interlock active - " + "open" + " blocked" + if(coalesce({view.custom.firstOut}, -1) >= 0 && len(coalesce({view.custom.firstDesc}, "")) > 0, ": " + {view.custom.firstDesc}, "")` | Tooltip |
 
-### `root/StatusGroup/M` (2)
+### `root/StatusGroup`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/StatusGroup/M | `meta.visible` | expr | `!{view.params.useButton} && coalesce({view.custom.man}, false)` | Shown while expression is true |
 | root/StatusGroup/M | `props.style.classes` | expr | `if(!{view.params.useButton} && coalesce({view.custom.man}, false), "Mode/ManualSplit", "Util/Collapsed")` | CSS class(es) selected by state |
-
-### `root/StatusGroup/Status` (2)
-
-| Component | Property | Type | Source | Effect |
-|---|---|---|---|---|
 | root/StatusGroup/Status | `props.text` | expr | `case({view.custom.state}, 0, "CLOSED", 1, "OPEN", 2, if(coalesce({view.custom.cmd}, false), "OPENING", "CLOSING"), 3, "FAULT", "???")` | Text content |
 | root/StatusGroup/Status | `props.style.classes` | expr | `case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown") + if(!{view.params.useButton} && coalesce({view.custom.man}, false), " Mode/ManualJoined", "")` | CSS class(es) selected by state |
 
-### `root/PB` (3)
+### `root/PB`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
@@ -192,7 +170,6 @@ Total: **45 bindings** (26 at view root in `custom.*`, 19 on components). Types:
 
 Total: **3 event scripts**, no `customMethods`, no `messageHandlers`, no property-change scripts, no script transforms. `view.scripts` is absent.
 
-
 1. **`root/Symbol`**: `events.dom.onClick` on `root/Symbol`, scope G.
    Opens the dynamic window for this tag. Calls `efc.ui.openDynamic`, which writes `session.custom.efcDw` (see below). No tag writes.
 
@@ -200,14 +177,12 @@ Total: **3 event scripts**, no `customMethods`, no `messageHandlers`, no propert
 	efc.ui.openDynamic(self)
 ```
 
-
 2. **`root/Symbol`**: `events.dom.onDoubleClick` on `root/Symbol`, scope G.
    Touch-mode double-tap. Calls `efc.ui.dblCmd`, which toggles Open/Close only when ready (see below). Writes one tag, only when the guards pass.
 
 ```python
 	efc.ui.dblCmd(self)
 ```
-
 
 3. **`root/PB`**: `events.component.onActionPerformed` on `root/PB`, scope G.
    Manual command button. Writes `True` to `Cmd_Close` if `Out_Open` is true, else to `Cmd_Open`, directly via `system.tag.writeBlocking`. No role check, no audit.
@@ -223,7 +198,6 @@ Total: **3 event scripts**, no `customMethods`, no `messageHandlers`, no propert
 - **`efc.ui.dblCmd(component)`**: returns immediately unless all of these hold: `useButton` false, `dblCmd` true, `tType` in `DBL_CMD` (only `T_DValve` and `T_Motor`), and the user's level is 1 (Operator) or higher. It then reads `Sts_Opened`, `Mode/Sts_Man`, `Sts_Avail`, `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault`. It writes nothing unless `Mode/Sts_Man` and `Sts_Avail` are true and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are all false. When it does write, it sends `Cmd_Close` if `Sts_Opened` is true, else `Cmd_Open`, with `True`. It does not check `Mode/Sts_OOS`. The steward note omits the fault check, which the code does have.
 - **Role levels** (`efc.ui.level`): the highest index in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` gives 0 to 5. Operator is 1. Used by the dock; `dblCmd` uses `userLevel >= 1`.
 - **`efc.ui.closeDynamic`** is not called from this view. The dock's close button calls it.
-
 
 ## Tag members used
 
@@ -250,9 +224,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv`.
 | `Cmd_Open` | write (PB, double-tap) | BOOL | Operator open (one-shot) |
 | `Cmd_Close` | write (PB, double-tap) | BOOL | Operator close (one-shot) |
 
-
 The alarm expression reads `<tagPath>/*` through `isAlarmActiveFiltered`, not a member. The alarm members `Alm_*` are not referenced here.
-
 
 ## Component tree
 
