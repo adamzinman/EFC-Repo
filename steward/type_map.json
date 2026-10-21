@@ -1,10 +1,15 @@
 {
   "_doc": "Item -> EFCLib v1 T_ type and dynamic-window dock. Read by steward/tools/*.py. 'gap:' = type not in types/.",
   "docks": {
-    "dw_ValveDiscrete": "Docks/ValveDiscrete", "dw_ValveAnalog": "Docks/ValveAnalog",
-    "dw_Rotating": "Docks/Rotating", "dw_VFD": "Docks/VFD", "dw_HeatTransfer": "Docks/HeatTransfer",
-    "dw_ProcessValue": "Docks/ProcessValue", "dw_Loop": "Docks/Loop",
-    "StationSidebar": "Templates/Station/Station_Sidebar", "dw_IOCard": "Docks/IOCard"
+    "dw_ValveDiscrete": "Docks/ValveDiscrete",
+    "dw_ValveAnalog": "Docks/ValveAnalog",
+    "dw_Rotating": "Docks/Rotating",
+    "dw_VFD": "Docks/VFD",
+    "dw_HeatTransfer": "Docks/HeatTransfer",
+    "dw_ProcessValue": "Docks/ProcessValue",
+    "dw_Loop": "Docks/Loop",
+    "dw_Station": "Templates/Station/Station_Sidebar",
+    "dw_IOCard": "Docks/IOCard"
   },
   "items": {
     "Templates/Valves/Valve_Solenoid": "T_DValve",

@@ -12,7 +12,7 @@ OUT = f"{R}/steward/previews"
 tm = json.load(open(f"{R}/steward/type_map.json"))
 cfg = json.load(open(f"{R}/steward.config.json"))
 CARD_W = 240  # px, width of a template card; docks use DOCK_W
-DOCK_W, DOCK_H = 230, 640  # right dock, 360 x 1000 at 1080p
+DOCK_DW, DOCK_DH = 400, 940  # right dock at 1080p: 400 wide (800 @ 4K, screen-layout-standard); height pending header size
 slug = lambda p: p.replace("/", "_")
 esc = html.escape
 
@@ -49,7 +49,18 @@ def css_block():
 
 
 # ---------- slim -> HTML ----------
-PLACEHOLDER = {"Tag": "XV-101", "Status": "CLOSED", "Value": "42.7", "PV": "42.7", "Units": "kPa", "SP": "40.0", "OP": "55 %"}
+PLACEHOLDER = [("tag", "XV-101"), ("header", "XV-101"), ("name", "XV-101"), ("desc", "Description"), ("unit", "kPa"),
+               ("status", "CLOSED"), ("state", "CLOSED"), ("chip", "OK"), ("mode", "AUTO"), ("sp", "40.0"), ("out", "55 %"),
+               ("op", "55 %"), ("pv", "42.7"), ("val", "42.7"), ("dev", "+2.7"), ("min", "0"), ("max", "100"), ("msg", "Ready"),
+               ("net", "12.40"), ("tare", "0.85"), ("total", "13.25"), ("pct", "62 %")]
+
+
+def placeholder(name):
+    n = name.lower()
+    for k, v in PLACEHOLDER:
+        if n == k or n.startswith(k) or n.endswith(k):
+            return v
+    return ""
 
 
 def run(*a):
@@ -66,6 +77,17 @@ def slim(item):
     return json.loads(txt[txt.index("{"):])
 
 
+def positions(item, file):
+    """Only the layout keys (position, container mode/direction) from the raw view, keyed by name path."""
+    out = {}
+    def walk(c, path):
+        out[path] = {"position": c.get("position", {}), "mode": c.get("props", {}).get("mode")}
+        for k in c.get("children", []) or []:
+            walk(k, path + (k.get("meta", {}).get("name", ""),))
+    walk(json.load(open(f"{R}/{file}"))["root"], ("root",))
+    return out
+
+
 def svg_el(e):
     t = e.get("type")
     if t == "group":
@@ -80,63 +102,95 @@ def svg_el(e):
     return f"<{t} {a}/>" if t in ("path", "rect", "circle", "ellipse", "line", "polygon", "polyline") else ""
 
 
-def comp(c, hit=False):
+def dim(v, mode):
+    if isinstance(v, str):
+        return v if v.strip().endswith(("%", "px")) else f"{v}px"
+    return f"{v * 100:.3f}%" if mode == "percent" and abs(v) <= 1.0001 else f"{v}px"
+
+
+def place(pos, parent_kind, mode):
+    if parent_kind == "coord":
+        return "position:absolute;" + ";".join(f"{k}:{dim(pos[j], mode)}" for k, j in (("left", "x"), ("top", "y"), ("width", "width"), ("height", "height")) if j in pos)
+    if parent_kind == "flex":
+        return f"flex:{pos.get('grow', 0)} {pos.get('shrink', 1)} {dim(pos['basis'], None) if 'basis' in pos and pos['basis'] != 'auto' else 'auto'};min-width:0;min-height:0"
+    return "width:100%;height:100%"
+
+
+def comp(c, P, path=("root",), parent="root", hit=False):
     t, name, p = c.get("type", ""), c.get("name", ""), c.get("props", {})
     cls = (p.get("style") or {}).get("classes", "") if isinstance(p.get("style"), dict) else ""
     dc = f' data-c="{esc(cls)}"' if cls else ""
-    kids = "".join(comp(k, hit) for k in c.get("children", []))
+    L = P.get(path, {})
+    parent_mode = P.get(path[:-1], {}).get("mode") if len(path) > 1 else None
+    st = place(L.get("position", {}), parent, parent_mode)
+    if "Util/Collapsed" in cls:
+        return ""
     if t == "shapes.svg":
         body = "".join(svg_el(e) for e in p.get("elements", []))
-        svg = f'<svg viewBox="{p.get("viewBox", "0 0 100 100")}" preserveAspectRatio="xMidYMid meet">{body}</svg>'
-        if name != "Symbol":
-            return f'<div class="sym2">{svg}</div>'
-        return f'<div class="sym{" hit" if hit else ""}" title="click: open dynamic window">{svg}</div>'
+        svg = f'<svg viewBox="{p.get("viewBox", "0 0 100 100")}" preserveAspectRatio="{p.get('preserveAspectRatio', 'xMidYMid') if p.get('preserveAspectRatio') == 'none' else p.get('preserveAspectRatio', 'xMidYMid') + ' meet'}" width="100%" height="100%">{body}</svg>'
+        h = ' class="hit" title="click: open dynamic window"' if hit and name == "Symbol" else ""
+        return f'<div{h} style="{st};display:flex">{svg}</div>'
     if t == "display.label":
-        if "Util/Collapsed" in cls:
-            return ""
-        txt = p.get("text") or PLACEHOLDER.get(name, name)
-        pos = f' class="badge b{name}"' if name in ("P", "I") else ""
-        return f"<span{pos}{dc}>{esc(str(txt))}</span>"
+        txt = p.get("text") if p.get("text") not in (None, "") else placeholder(name)
+        return f'<span style="{st};display:flex;align-items:center;overflow:hidden"{dc}>{esc(str(txt))}</span>'
     if t == "input.button":
-        return f'<button{dc}>{esc(p.get("text") or "")}</button>'
-    if t.startswith("container") or t == "ia.container.flex":
-        d = p.get("direction", "column")
-        return f'<div class="box" style="flex-direction:{"row" if "row" in str(d) else "column"}"{dc}>{kids}</div>'
-    if "view" in t and "embed" in t or t == "ia.display.view":
-        return f'<div class="ph">embedded: {esc(str(p.get("path", name)))}</div>'
+        return f'<button style="{st}"{dc}>{esc(p.get("text") or placeholder(name))}</button>'
+    if t.startswith("input."):
+        return f'<span style="{st};display:flex;align-items:center"{dc} class="inp">0.0</span>'
+    if t.startswith("container"):
+        kind = "coord" if "coord" in t else "flex" if "flex" in t else "other"
+        kids = "".join(comp(k, P, path + (k.get("name", ""),), kind, hit) for k in c.get("children", []))
+        lay = "position:relative" if kind == "coord" else f"display:flex;flex-direction:{'row' if 'row' in str(p.get('direction', 'row')) else 'column'};justify-content:{p.get('justify', 'flex-start')};align-items:{p.get('alignItems', 'stretch')}" if kind == "flex" else "display:flex;flex-direction:column"
+        return f'<div style="{st};{lay}"{dc}>{kids}</div>'
+    if "image" in t:
+        return f'<div style="{st}"></div>'
     if "repeater" in t:
-        return '<div class="box" style="flex-direction:row">' + '<div class="ph">item</div>' * 3 + "</div>"
-    return f'<div class="ph">{esc(t.split(".")[-1])}: {esc(name)}</div>'
+        return f'<div style="{st};display:flex;gap:2px">' + '<div class="ph">item</div>' * 3 + "</div>"
+    if "view" in t:
+        return f'<div class="ph" style="{st}">{esc(str(p.get("path", name)).split("/")[-1])}</div>'
+    return f'<div class="ph" style="{st}">{esc(t.split(".")[-1])}</div>'
 
 
-def frame(item, inner, w, h, ttype, dock, extra=""):
+def frame(item, inner, dw, dh, ttype, dock, extra="", cw=None, maxh=320):
+    sc = min((cw or CARD_W) / dw, maxh / dh)
+    cw = round(dw * sc)
     gap = ttype.startswith("gap:")
     tt = f'<b class="{"gap" if gap else "ok"}">{esc(ttype.replace("gap:", "GAP "))}</b>'
-    return (f'<figure class="card" id="{slug(item)}"><div class="view" style="width:{w}px;min-height:{h}px;--vh:{10.8 * w / max(int(w0[item]), 1):.3f}px">{inner}</div>'
+    return (f'<figure class="card" id="{slug(item)}"><div class="view" style="width:{cw}px;height:{round(dh * sc)}px">'
+            f'<div class="stage" style="width:{dw}px;height:{dh}px;transform:scale({sc:.4f})">{inner}</div></div>'
             f'<figcaption><code>{esc(item)}</code><br>{tt} &middot; dock <code>{esc(dock)}</code>{extra}</figcaption></figure>')
-
-
-w0 = {}
 
 
 def template_card(item, ttype, new_note=""):
     src = item if not new_note else "Templates/Rotating/Motor"
     info, sl = show(src), slim(src)
     size = info.get("default_size") or {"width": 120, "height": 100}
-    w0[item] = size["width"]
-    w, h = CARD_W, round(CARD_W * size["height"] / size["width"])
-    inner = comp(sl["root"], hit=True)
-    if 'class="sym hit"' not in inner:  # no symbol: whole view is the click target
-        inner = f'<div class="hit" style="display:contents">{inner}</div>'
-        new_note = new_note or ""
+    dw, dh = size["width"], size["height"]
+    P = positions(src, info["file"])
+    rel = (f"../../docs/previews/templates/{src.split('Templates/', 1)[1]}.png" if src.startswith("Templates/")
+           else f"renders/AnalogIndicator/{src.rsplit('/', 1)[1]}.png")  # renders/ made by render_views.py in a temp copy
+    if os.path.exists(os.path.normpath(f"{OUT}/{rel}")):
+        # real render (generator/render_views.py, demo tags bound) + click target at the Symbol's real position
+        sym = P.get(("root", "Symbol"))
+        tgt = place(sym["position"], "coord", P[("root",)]["mode"]) if sym else "position:absolute;inset:0"
+        inner = (f'<img src="{rel}" style="position:absolute;inset:0;width:100%;height:100%">'
+                 f'<div class="hit" style="{tgt};pointer-events:none" title="click: open dynamic window"></div>')
+        new_note += "" if new_note else ("<br><i>render with planned fix 7 (alignItems: stretch); as committed the zone bars collapse</i>"
+                                         if rel.startswith("renders/") else "<br><i>render of the real view</i>")
+    else:
+        inner = comp(sl["root"], P, hit=True)
+        new_note += "" if new_note else "<br><i>mockup from slim (bound geometry not shown)</i>"
+    if 'class="hit"' not in inner:  # no symbol: whole view is the click target
+        inner = f'<div class="hit" style="position:absolute;inset:0;pointer-events:none"></div>{inner}'
     if "/Valves/" not in item:
         inner = inner.replace(">CLOSED<", ">STOPPED<")
-    if new_note:
-        inner += '<div class="box" style="flex-direction:row"><div data-c="Bar/Track" style="flex:1;height:6px"><div data-c="Bar/Fill" style="width:62%;height:100%"></div></div><span data-c="Text/Value">48.2 Hz</span></div>'
-        h += 24
+    if "NEW" in new_note:
+        dh += 14
+        inner = (f'<div style="position:relative;width:100%;height:{dh - 14}px">{inner}</div>'
+                 '<div style="display:flex;flex:none;gap:4px;align-items:center;height:14px"><div data-c="Bar/Track" style="flex:1;height:5px"><div data-c="Bar/Fill" style="width:62%;height:100%"></div></div><span data-c="Text/Caption">48.2 Hz</span></div>')
     dbl = ttype in ("T_DValve", "T_Motor")
     extra = "<br>click symbol: open dock" + (" &middot; dbl-tap (touch, Manual, canCmd): toggle" if dbl else "") + new_note
-    return frame(item, inner, w, h, ttype, dock_for(item), extra)
+    return frame(item, inner, dw, dh, ttype, dock_for(item), extra)
 
 
 # ---------- new dock proposals ----------
@@ -180,20 +234,19 @@ def dock_card(did, path, ttype, parts):
     head = (f'<div data-c="Container/PopupHeader" class="row"><span data-c="Text/TagName">XV-101</span>'
             f'<span data-c="Text/Caption" style="flex:1">Description</span><button data-c="Button/Icon" title="close: back to screen default dock">&#x2715;</button></div>'
             f'<div class="row"><span data-c="State/Stopped">CLOSED</span><span data-c="Text/Caption">NE107: OK</span></div>')
-    w0[path] = 360
     inner = f'<div data-c="Container/Faceplate" class="dock">{head}{body}</div>'
-    return frame(path, inner, DOCK_W, DOCK_H, ttype.replace("GAP ", "gap:"), did, "<br><b>NEW - design proposal</b> &middot; close &#x2715; reopens the screen's defaultDock")
+    return frame(path, inner, DOCK_DW, DOCK_DH, ttype.replace("GAP ", "gap:"), did, "<br><b>NEW - design proposal</b> &middot; close &#x2715; reopens the screen's defaultDock", maxh=600)
 
 
 PAGE_CSS = """body{margin:0;padding:16px;background:#E6E6E6;font:12px 'Noto Sans','Segoe UI',Arial,sans-serif;color:#1F1F1F}
 h1{font-size:16px;margin:0 0 4px}h2{font-size:13px;margin:18px 0 6px;border-bottom:1px solid #BDBDBD}
 .grid{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start}.card{margin:0;background:#F2F2F2;border:1px solid #C4C4C4;padding:6px}
-.card figcaption{font-size:10px;line-height:1.4;margin-top:4px;max-width:240px}.gap{color:#B71C1C}.ok{color:#1B5E20}
-.view{position:relative;overflow:hidden;background:#DADADA;display:flex;flex-direction:column}
+.card figcaption{font-size:10px;line-height:1.4;margin-top:4px;width:240px}.gap{color:#B71C1C}.ok{color:#1B5E20}
+.view{position:relative;overflow:hidden;background:#DADADA}.stage{position:relative;transform-origin:0 0;--vh:10.8px;display:flex;flex-direction:column}.stage>div:first-of-type{flex:1}
 .box{display:flex;gap:2px;align-items:center;justify-content:center}.row{display:flex;gap:4px;align-items:center;margin:3px 0;flex-wrap:wrap}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:2px 6px;margin:3px 0}.sym{height:150px;display:flex;flex:none}.sym svg,.sym2 svg{width:100%;height:100%}.sym2{height:28px;display:flex}
-.view:has(>.hit){outline:1.5px dashed #00A3E0}.hit{outline:1.5px dashed #00A3E0;outline-offset:-1px;cursor:pointer}.badge{position:absolute;top:2px}.bP{left:2px}.bI{right:2px}.view>.box:first-child{padding:0 22px}
-.ph{border:1px dashed #9E9E9E;color:#616161;font-size:10px;padding:2px;margin:1px;text-align:center;flex:1}
+.hit{outline:1.5px dashed #00A3E0;outline-offset:-1px;cursor:pointer}.badge{position:absolute;top:2px}.bP{left:2px}.bI{right:2px}.view>.box:first-child{padding:0 22px}
+.inp{background:#fff;border:1px solid #BDBDBD;padding:0 3px}.ph{border:1px dashed #9E9E9E;color:#616161;font-size:10px;box-sizing:border-box;padding:2px;margin:1px;text-align:center;flex:1}
 .dock{height:100%;box-sizing:border-box;overflow:hidden;padding:6px}.legend{font-size:11px;color:#424242}
 @media(max-width:600px){body{padding:16px}.card{width:100%}}"""
 
@@ -210,7 +263,7 @@ if __name__ == "__main__":
             t, parts = DOCKS[did]
             frag = dock_card(did, path, t, parts)
         else:  # existing dock view: draw it like a template
-            frag = template_card(path, "gap:T_Station").replace("click symbol: open dock", "existing dock view")
+            frag = template_card(path, "gap:T_Station").replace("click symbol: open dock", "existing dock view; planned: move to <code>Docks/Station</code>, resize 300 to 400 px wide")
         open(f"{OUT}/{slug(path)}.html", "w").write(frag)
         groups.setdefault("Docks (dynamic windows)", []).append(frag)
     body = "".join(f'<h2>{esc(g)}</h2><div class="grid">{"".join(fr)}</div>' for g, fr in groups.items())
