@@ -399,7 +399,7 @@ def process_value():
                     ("true", f"{fmt(m('Val_PV'))} + ' ' + {eu}", "State/Stopped")],
                [(m("Sts_Sim"), "SIM"), (m("Sts_Subst"), "SUBST"), (m("Sts_ORng"), "OVER"), (m("Sts_URng"), "UNDER")]),
         section("Values", "Values", [row("PV", "Value", fmt(m("Val_PV")), eu), row("Pct", "Of range", fmt(m("Val_PVPct"), "0"), "'%'"),
-                                     row("ROC", "Rate of change", fmt(m("Val_ROC"), "#,##0.###"), eu + " + '/min'"),
+                                     row("ROC", "Rate of change", fmt(m("Val_ROC"), "#,##0.###"), eu + " + '/s'"),
                                      row("Rng", "Range", f"{fmt(m('Cfg_EUMin'), '#,##0.##')} + ' .. ' + {fmt(m('Cfg_EUMax'), '#,##0.##')}", eu),
                                      row("NE107", "Diagnostics", ne107(vw))]),
         alarms(vw, [("Alm_HH", "High high"), ("Alm_H", "High"), ("Alm_L", "Low"), ("Alm_LL", "Low low"),
@@ -407,7 +407,7 @@ def process_value():
         trend(["Val_PV"]),
         section("Maintenance", "Maintenance", [check("Sim", "Simulate", "Sim_En", MAINT),
                                                entry(vw, "SimPV", "Simulated value", "Sim_PV", MAINT, "", show=m("Sim_En"))], show=lvl(MAINT)),
-        config(vw, lim + [("ROC limit", "Alm_ROC/Cfg_Lim", "/min")], name="Limits", title="Alarm limits"),
+        config(vw, lim + [("ROC limit", "Alm_ROC/Cfg_Lim", "/s")], name="Limits", title="Alarm limits"),
         config(vw, [("EU min", "Cfg_EUMin", ""), ("EU max", "Cfg_EUMax", ""), ("Raw min", "Cfg_RawMin", ""), ("Raw max", "Cfg_RawMax", ""),
                     ("Filter TC", "Cfg_FiltTC", "s"), ("Low cutoff", "Cfg_LoCutoff", ""), ("Square root", "?Cfg_SqrtExtract", "")]),
     ])

@@ -1320,7 +1320,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Cfg_EU} + '/min'"
+                            "expression": "{view.custom.m_Cfg_EU} + '/s'"
                           }
                         }
                       }
@@ -3135,7 +3135,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "'/min'"
+                            "expression": "'/s'"
                           }
                         }
                       }
@@ -3242,7 +3242,7 @@
                       "basis": "3.704vh"
                     },
                     "props": {
-                      "text": "/min",
+                      "text": "/s",
                       "style": {
                         "classes": "Text/Units"
                       }

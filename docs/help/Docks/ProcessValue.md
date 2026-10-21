@@ -20,7 +20,7 @@ The operator and maintenance window for an analog process value (T_AI). It shows
 
 **Banner.** If `Sts_Bad` is true the banner reads `BAD QUALITY` (style `State/Fault`). Otherwise it shows the value with its unit, `numberFormat(Val_PV, '#,##0.0') + ' ' + Cfg_EU`, in style `State/Stopped` whatever the value. Four badges appear when their flag is true: SIM (`Sts_Sim`), SUBST (`Sts_Subst`), OVER (`Sts_ORng`) and UNDER (`Sts_URng`).
 
-**Values** (all levels). Five rows: value (`Val_PV`, `Cfg_EU`, `#,##0.0`), of range (`Val_PVPct`, %, `0` decimals), rate of change (`Val_ROC`, shown with the unit `Cfg_EU + '/min'`), range (`Cfg_EUMin` .. `Cfg_EUMax`, `Cfg_EU`) and diagnostics (`Sts_NE107` text: `NE107 OK`, `NE107 F`, `NE107 C`, `NE107 S`, `NE107 M`, or blank). The rows are not gated by `Sts_Bad`. The units and the rate-of-change label are discussed in the notes.
+**Values** (all levels). Five rows: value (`Val_PV`, `Cfg_EU`, `#,##0.0`), of range (`Val_PVPct`, %, `0` decimals), rate of change (`Val_ROC`, shown with the unit `Cfg_EU + '/s'`), range (`Cfg_EUMin` .. `Cfg_EUMax`, `Cfg_EU`) and diagnostics (`Sts_NE107` text: `NE107 OK`, `NE107 F`, `NE107 C`, `NE107 S`, `NE107 M`, or blank). The rows are not gated by `Sts_Bad`. The rate of change is in EU per second, as PCLib defines `Val_ROC`.
 
 **Alarms** (all levels). Six rows: high high (`Alm_HH`), high (`Alm_H`), low (`Alm_L`), low low (`Alm_LL`), rate of change (`Alm_ROC`) and bad quality (`Alm_Bad`). A row is coloured when its alarm is active, using the alarm's `Cfg_Priority`: 1 `Critical`, 2 `High`, 3 `Medium`, 4 `Low`, anything else `Medium`. The class adds `/Unacked` or `/Fill`. An inactive but unacknowledged alarm uses `Alarm/Status/ClearedUnacked`. An inactive, acknowledged alarm uses `Text/Caption Text/Color/Muted`. "No active alarms" is shown when none is active. **ACK** (level 1 and above) calls `efc.ui.ackAll`, which writes `Cmd_Ack` only for the alarms whose `Sts_Unack` is true.
 
@@ -115,7 +115,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Values/Body/Pct/Val | `props.text` | expr | `numberFormat({view.custom.m_Val_PVPct}, '0')` | Text content |
 | root/Values/Body/Pct/EU | `props.text` | expr | `'%'` | Text content |
 | root/Values/Body/ROC/Val | `props.text` | expr | `numberFormat({view.custom.m_Val_ROC}, '#,##0.###')` | Text content |
-| root/Values/Body/ROC/EU | `props.text` | expr | `{view.custom.m_Cfg_EU} + '/min'` | Text content |
+| root/Values/Body/ROC/EU | `props.text` | expr | `{view.custom.m_Cfg_EU} + '/s'` | Text content |
 | root/Values/Body/Rng/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_EUMin}, '#,##0.##') + ' .. ' + numberFormat({view.custom.m_Cfg_EUMax}, '#,##0.##')` | Text content |
 | root/Values/Body/Rng/EU | `props.text` | expr | `{view.custom.m_Cfg_EU}` | Text content |
 | root/Values/Body/NE107/Val | `props.text` | expr | `case(toInt({view.custom.m_Sts_NE107}), 0, 'NE107 OK', 1, 'NE107 F', 2, 'NE107 C', 3, 'NE107 S', 4, 'NE107 M', '')` | Text content |
@@ -183,7 +183,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Limits/Body/E3/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Limits/Body/R4 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Limits/Body/R4/Val | `props.text` | expr | `numberFormat({view.custom.m_Alm_ROC_Cfg_Lim}, '#,##0.###')` | Text content |
-| root/Limits/Body/R4/EU | `props.text` | expr | `'/min'` | Text content |
+| root/Limits/Body/R4/EU | `props.text` | expr | `'/s'` | Text content |
 | root/Limits/Body/E4 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Limits/Body/E4/Entry | `props.value` | tag (indirect) | tag `{0}/Alm_ROC/Cfg_Lim` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Limits/Body/E4/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
@@ -510,7 +510,6 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
 ## Notes and open questions
 
 - **The AnalogIndicator templates open a window that binds members their type does not define (probable defect).** Templates A to D default to `tType` `T_KPI` and open this window. `T_KPI` is a proposed UDT (`types/T_KPI/README.md`) and is not in `types/PCLib_Members.csv`. This window binds twelve member names that the proposed `T_KPI` does not define: `Val_ROC`, `Alm_ROC`, `Alm_Bad`, `Sts_NE107`, `Sts_URng`, `Sts_ORng`, `Sts_Subst`, `Cfg_RawMin`, `Cfg_RawMax`, `Cfg_LoCutoff`, `Cfg_SqrtExtract` and `Sim_PV`. The proposal names the simulated value `Sim_Value`, not `Sim_PV`. The README omits the raw-channel members, NE107 and ROC on purpose, but says nothing about the window. When an AnalogIndicator opens this window those rows will be blank or unbound. Decide whether `T_KPI` should carry these members, or whether the KPI templates need their own window.
-- **Rate-of-change units (probable defect).** PCLib gives `Val_ROC` as "EU/s, 1 s window", and `Alm_ROC/Cfg_Lim` as "in EU/s". The Values row shows the value with the unit `Cfg_EU + '/min'`, and the rate-of-change limit row shows `/min`. Nothing in this view scales the value. If the PLC value is in EU/s, the row understates the rate by a factor of 60. Confirm the units of `Val_ROC` and `Alm_ROC/Cfg_Lim` in the PLC logic.
 - **Simulation is not audited.** The Simulate checkbox (`Sim_En`) and the simulated value entry (`Sim_PV`) are direct bindings with no `efc.ui` call, so a simulation can be switched on or its value changed at level 2 with no audit entry. ValveDiscrete audits its simulate control through `efc.ui.cmd(..., audit=True)`. This is inconsistent.
 - **Limit and configuration changes are not audited and not role-checked in script.** The only guards are the level 4 visibility and enable bindings. Confirm whether these changes must be audited.
 - **Units not shown on several rows.** The four PV limit rows (`Alm_HH`, `Alm_H`, `Alm_L`, `Alm_LL`) and the EU min and EU max rows show no unit, although the values are in `Cfg_EU`. The low cutoff (`Cfg_LoCutoff`) is documented in PCLib as % of span, but it is shown with no unit.
