@@ -165,7 +165,7 @@ Bypass, unbypass, shelving, alarm-limit, configuration and tuning changes are wr
 
 Superseded by Edit 8, which rewrites the same paragraph and includes the cross-reference sentence this edit would have appended. Make no separate change for Edit 5. The open note that stood here is removed: decision 24 settles the shell question in favour of the embedded view.
 
-## Edit 6: `Claude outputs/REV-I-CHANGES.md`
+## Edit 6: `references/REV-I-CHANGES.md`
 
 Append this item to the numbered list of applied changes (use the next free number in place of N):
 
@@ -182,7 +182,7 @@ Add to its "Still open (need Adam)" list:
 
 ## Edit 7: `sections/07-software.tex`, Online Changes and Forces
 
-Anchor (quoted from the rev H copy of `sections/07-software.tex`, section at `\label{sec:online-changes}`; the bullet is the third item of the `itemize`). Re-check it verbatim against rev I before applying; see Background.
+Anchor (from `sections/07-software.tex`, section at `\label{sec:online-changes}`; the bullet is the third item of the `itemize`). Checked verbatim against rev I on 2026-10-21; the text below is the rev I line.
 
 ```latex
   \item A force or bypass on an interlock or safety-related signal needs a second person to check it and an approved MOC (Section~\ref{sec:review-release}).
@@ -196,7 +196,7 @@ Replace that line with exactly this:
 
 Checks for this edit: `sec:online-changes` and `sec:review-release` exist in rev I (grep `sections/`); `sec:hmi-bypass` is created by Edit 1 of this file, so Edit 1 must be applied first. Leave the existing `\note` at the top of the section (it says the policy is not yet enforced) unchanged; that is a separate decision.
 
-Background: the rev H copy is the only copy available to the documentation subagent (`revision.tex` = H, file dated 2026-10-08). The Google Drive rev I copy could not be read from this session, so the anchor and the line number are unverified against rev I. The section is in `07-software.tex`, not `10-plc-standards.tex`.
+Background: the anchor was checked against rev I (`sections/07-software.tex`, Drive, 2026-10-21) and matches verbatim. The section is in `07-software.tex`, not `10-plc-standards.tex`.
 
 ---
 

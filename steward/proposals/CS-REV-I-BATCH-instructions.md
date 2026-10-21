@@ -1,18 +1,45 @@
 # Controls Standard rev I: batch instructions (rows 1-3 of DOC-QUEUE)
 
-Instructions for an agent working on the EFC Controls Standard (LaTeX, Google Drive folder `Claude/Controls Standard`, **revision I**). Apply the edits in the order given below, then stop and report. Do not change anything else, do not bump the revision letter, do not regenerate whole files, and do not compile until Adam asks. Each edit names its file and quotes its anchor. Anchors were taken from the rev H copy (the latest revision available in Drive); re-check every anchor verbatim against rev I before applying, and stop if one has moved.
+Instructions for an agent working on the EFC Controls Standard (LaTeX, Google Drive folder `Claude/Controls Standard`, **revision I**). Apply the edits in the order given below, then stop and report. Do not change anything else, do not bump the revision letter, do not regenerate whole files, and do not compile until Adam asks. Each edit names its file and quotes its anchor. Anchors were checked verbatim against rev I (Drive folder `Claude/Controls Standard`, `revision.tex` = I) on 2026-10-21; the result for each is in the Anchor check table below. If an anchor has moved when an edit is applied, stop and report.
 
 Sources: `steward/proposals/CS-REV-I-heaters-instructions.md` (row 1), `CS-REV-I-hmi-rules-instructions.md` (row 2), `CS-REV-I-library-build-instructions.md` (row 3). The text below is copied from those files; where they overlap, the duplicate was removed as noted.
 
 ## Decisions needed before applying
 
-1. **Rev I source is missing.** The latest revision in Drive `Claude/Controls Standard` is the rev H zip (`Controls-Standard-rev-H.zip`, `revision.tex` = H). Every anchor here is from rev H. Two files that the rows create (`sections/hmi-dynamic-windows.tex`, `sections/heaters.tex`) do not exist in rev H at all.
-2. **Wrong path in row 2 Edit 6 and row 1 Edit 4.** Both point at `Claude outputs/REV-I-CHANGES.md` (a Drive folder). Use `references/REV-I-CHANGES.md` in the zip. The three REV-I entries (H1, H2, H3 below) go in one file.
+1. **Rev I source found (2026-10-21).** In Drive `Claude/Controls Standard`, `revision.tex` = I (`\newcommand{\documentrevision}{I}`). The rev I section files are in the `sections/`, `appendices/` and `references/` subfolders. `sections/heaters.tex` and `sections/hmi-dynamic-windows.tex` are not in Drive; that is expected, because both are new files created by these edits.
+2. **Wrong path in row 2 Edit 6 and row 1 Edit 4.** Both point at `Claude outputs/REV-I-CHANGES.md`, a Drive folder path to a different copy of the log (2026-10-16). Use `references/REV-I-CHANGES.md` (Drive `references` folder, 2026-10-14 copy, exists in rev I). Append; do not create. The three REV-I entries (H1, H2, H3 below) go in that one file. That copy stops at item 8; the `Claude outputs` copy has items 9-10 (2026-10-15), so the next number is 11 once the two copies are reconciled (open item).
 3. **Dropped:** row 2 Edit 5. It is superseded by Edit 8 (G1). Do not apply it.
 4. **Dedupe:** row 2 Edit 1 and row 3 Edit 3 both touch `sections/hmi-dynamic-windows.tex`; row 3 Edit 3 is appended to that file's table block (B2). Row 2 Edit 8 and row 3 Edit 2 both touch the appendix; they are different paragraphs (G1 shell and dynamic window, G2 Templates).
-5. **Conflict to confirm:** row 3 Edit 2 replaces the rev H sentence `All template text uses the dp style classes.` with EFC_Styles wording. Confirm that EFC_Styles and "dp style classes" are the same concept (library open item).
+5. **Conflict to confirm.** Rev I wording, `appendices/perspective-screen-design.tex`, Templates section (checked 2026-10-21): "All template text uses the dp style classes." The Text Scaling Standard in the same appendix defines the `dp` unit (a `--dp` CSS variable) and says "Text sizes are applied through Style Classes", with suggested classes Text/Small to Text/Title. The name `EFC_Styles` does not appear in the rev I files checked (Ch6, Ch7, Ch11, Appendix I, and the screen-design appendix). Row 3 Edit 2 replaces the sentence with EFC_Styles wording; apply only if Adam confirms that `EFC_Styles` is the library name for the dp style classes (library open item).
 6. **Policy (already recorded, decision 19):** Edit D exempts HMI bypasses from the two-person / MOC rule in Online Changes and Forces. Confirm the standard should carry this before applying D.
 7. **Policy (decision 24 vs 26):** the expanded trend stays inside the 400 x 860 window (decision 26). Decision 24's "about 50 %" is not used anywhere in this batch.
+
+---
+
+## Anchor check (rev I, Drive folder, 2026-10-21)
+
+`revision.tex` = I. Each anchor below was searched verbatim in the rev I file named. Found = keep; moved = replace with rev I text (none needed); missing = flag (none).
+
+| Edit | Rev I file | Anchor | Result |
+|---|---|---|---|
+| A | sections/heaters.tex | new file | not in Drive; create (expected) |
+| B | sections/hmi-dynamic-windows.tex | new file | not in Drive; create (expected) |
+| C | sections/06-hardware.tex | `\subsection{Standard Air Prep Unit}\label{sec:air-prep}` | found, keep |
+| D | sections/07-software.tex | `\item A force or bypass on an interlock ... (Section~\ref{sec:review-release}).` | found, keep |
+| E1 | sections/11-scada-standards.tex | `Perspective screens follow the Perspective Screen Design Standard in Appendix~\ref{app:screen-design}.` | found, keep (`ch:scada` exists, no fallback) |
+| E2 | sections/11-scada-standards.tex | `\section{Alarms}` | found, keep |
+| E3 | sections/11-scada-standards.tex | `Acknowledging an alarm does not clear the process condition that caused it.` | found, keep |
+| E4 | sections/11-scada-standards.tex | `\subsection*{Roles and audit}` and its paragraph | found, keep |
+| F-3a | appendices/data-types-future.tex | row `Control module &` containing `\texttt{T\_VFD}, ` | found, keep |
+| F-3b | appendices/data-types-future.tex | row `\hyperref[sec:pclib-t-vfd]` | found, keep |
+| F-3c | appendices/data-types-future.tex | `\subsection{T\_PID}\label{sec:pclib-t-pid}` | found, keep |
+| G1-8a | appendices/perspective-screen-design.tex | `\textbf{Trends / dynamic window.}` paragraph (Old text) | found verbatim, keep |
+| G1-8b | appendices/perspective-screen-design.tex | Shell Layout row `Trends / dynamic window & 400 $\times$ 860 & 79.17\% ...` | found verbatim, keep |
+| G1-8c | appendices/perspective-screen-design.tex | `The trends/dynamic window is 400 design px wide, ...` | found verbatim, keep |
+| G2 | appendices/perspective-screen-design.tex | `All template text uses the dp style classes.` | found verbatim, keep (see Decision 5) |
+| H1-H3 | references/REV-I-CHANGES.md | append after the numbered list | file exists in rev I; path fixed (Decision 2) |
+
+Totals: 13 anchors kept, 0 moved, 0 missing. Path fixes: 3 (H1, H2, H3 and the row 1 Edit 4 heading). New files: 2.
 
 ---
 
@@ -164,7 +191,7 @@ Line to insert:
 ```
 ### D. sections/07-software.tex, Online Changes and Forces (row 2 Edit 7)
 
-Anchor (quoted from the rev H copy of `sections/07-software.tex`, section at `\label{sec:online-changes}`; the bullet is the third item of the `itemize`). Re-check it verbatim against rev I before applying; see Background.
+Anchor (from `sections/07-software.tex`, section at `\label{sec:online-changes}`; the bullet is the third item of the `itemize`). Checked verbatim against rev I on 2026-10-21; the text below is the rev I line.
 
 ```latex
   \item A force or bypass on an interlock or safety-related signal needs a second person to check it and an approved MOC (Section~\ref{sec:review-release}).
@@ -178,12 +205,12 @@ Replace that line with exactly this:
 
 Checks for this edit: `sec:online-changes` and `sec:review-release` exist in rev I (grep `sections/`); `sec:hmi-bypass` is created by Edit 1 of this file, so Edit 1 must be applied first. Leave the existing `\note` at the top of the section (it says the policy is not yet enforced) unchanged; that is a separate decision.
 
-Background: the rev H copy is the only copy available to the documentation subagent (`revision.tex` = H, file dated 2026-10-08). The Google Drive rev I copy could not be read from this session, so the anchor and the line number are unverified against rev I. The section is in `07-software.tex`, not `10-plc-standards.tex`.
+Background: the anchor was checked against rev I (`sections/07-software.tex`, Drive, 2026-10-21) and matches verbatim. The section is in `07-software.tex`, not `10-plc-standards.tex`.
 
 ---
 ### E1. sections/11-scada-standards.tex, Perspective Design (row 3 Edit 1)
 
-**Anchor** (`\section{Perspective Design}`, first paragraph; quoted from the rev H copy, re-check against rev I): the paragraph whose first sentence is
+**Anchor** (`\section{Perspective Design}`, first paragraph; checked verbatim against rev I on 2026-10-21): the paragraph whose first sentence is
 `Perspective screens follow the Perspective Screen Design Standard in Appendix~\ref{app:screen-design}.`
 
 **Action:** insert the following as a new paragraph immediately after that paragraph. Do not change the anchor paragraph.
@@ -416,7 +443,7 @@ The trends/dynamic window fills the full height between the header and the alarm
 ---
 ### G2. appendices/perspective-screen-design.tex, Templates (row 3 Edit 2)
 
-**Anchor** (`\section{Templates}`, second paragraph; quoted from rev H, re-check against rev I): the sentence
+**Anchor** (`\section{Templates}`, second paragraph; checked verbatim against rev I on 2026-10-21): the sentence
 `All template text uses the dp style classes.`
 
 **Action:** replace that sentence (only that sentence) with:
@@ -458,7 +485,7 @@ Add to its "Still open (need Adam)" list:
 ---
 ### H3. references/REV-I-CHANGES.md, row 3 entry (row 3 Edit 4)
 
-**Path correction:** the rev H zip keeps this file at `references/REV-H-CHANGES.md`. The row 2 file names it `Claude outputs/REV-I-CHANGES.md`, which is a Drive folder, not a path in the standard. Use `references/REV-I-CHANGES.md`. Create it from the rev H pattern if it does not exist yet, and add the item below to the same list as rows 1 and 2 (their Edit 4 and Edit 6 entries). Do not add a second file.
+**Path correction:** the file is `references/REV-I-CHANGES.md` (Drive `references` folder). It already exists in rev I, so append to it; do not create it. The row 2 file names `Claude outputs/REV-I-CHANGES.md`, a different and newer copy of the log (2026-10-16) in a Drive folder, which is not a path in the standard. Add the item below to the same list as rows 1 and 2 (their Edit 4 and Edit 6 entries). Do not add a second file.
 
 Add this numbered item:
 
@@ -477,15 +504,17 @@ From row 1 (heaters):
 From row 2 (HMI rules):
 - Ack, setpoint and latch-reset roles (Operator / Maintenance / Supervisor) to confirm.
 - Admin-only actions to list (none named yet).
-- Edit D (07-software.tex) anchor was checked against rev H only.
+- Edit D (07-software.tex) anchor checked verbatim against rev I on 2026-10-21 (resolved).
 
 From row 3 (library build):
 - Whether template and class names (`Templates/Rotating/VFD`, `Templates/AnalogIndicator`, `EFC_Styles`, `Util/Gap`) belong in a generic standard.
-- Confirm that the rev H sentence "dp style classes" and EFC_Styles are the same concept (Decision 5 above).
+- Confirm that the rev I sentence "dp style classes" and EFC_Styles are the same concept (Decision 5 above).
 - LoopConfig retirement (decision 15) and the VFD and AnalogIndicator template changes are library-only; no standard text proposed.
 
 Batch-level:
-- Rev I source is not in Drive (Decision 1). Re-check all anchors.
+- Anchors checked against rev I on 2026-10-21: 13 found verbatim, none moved, 2 new files absent as expected (Decision 1).
+- Reconcile the two REV-I-CHANGES.md copies (references 2026-10-14 vs Claude outputs 2026-10-16) before H1-H3 are applied; then use the next free number (11 if items 9-10 are merged).
+- Confirm label `sec:pclib-modes` is defined in rev I (a full-text hit exists in `sections/10-plc-standards.tex`; the definition itself was not confirmed).
 
 ## Checks before reporting back
 

@@ -10,7 +10,7 @@ Instructions for an agent working on the EFC Controls Standard (LaTeX, Google Dr
 
 ## Edit 1: `sections/11-scada-standards.tex`, Perspective Design section
 
-**Anchor** (`\section{Perspective Design}`, first paragraph; quoted from the rev H copy, re-check against rev I): the paragraph whose first sentence is
+**Anchor** (`\section{Perspective Design}`, first paragraph; checked verbatim against rev I on 2026-10-21): the paragraph whose first sentence is
 `Perspective screens follow the Perspective Screen Design Standard in Appendix~\ref{app:screen-design}.`
 
 **Action:** insert the following as a new paragraph immediately after that paragraph. Do not change the anchor paragraph.
@@ -25,7 +25,7 @@ Instructions for an agent working on the EFC Controls Standard (LaTeX, Google Dr
 
 ## Edit 2: `appendices/perspective-screen-design.tex`, Templates section
 
-**Anchor** (`\section{Templates}`, second paragraph; quoted from rev H, re-check against rev I): the sentence
+**Anchor** (`\section{Templates}`, second paragraph; checked verbatim against rev I on 2026-10-21): the sentence
 `All template text uses the dp style classes.`
 
 **Action:** replace that sentence (only that sentence) with:
@@ -48,7 +48,7 @@ A template's \texttt{dockId} parameter overrides the default window chosen from 
 
 ## Edit 4: REV-I changes list (`references/REV-I-CHANGES.md` in the zip)
 
-**Path correction:** the rev H zip keeps this file at `references/REV-H-CHANGES.md`. The row 2 file names it `Claude outputs/REV-I-CHANGES.md`, which is a Drive folder, not a path in the standard. Use `references/REV-I-CHANGES.md`. Create it from the rev H pattern if it does not exist yet, and add the item below to the same list as rows 1 and 2 (their Edit 4 and Edit 6 entries). Do not add a second file.
+**Path correction:** the file is `references/REV-I-CHANGES.md` (Drive `references` folder). It already exists in rev I, so append to it; do not create it. The row 2 file names `Claude outputs/REV-I-CHANGES.md`, a different and newer copy of the log (2026-10-16) in a Drive folder, which is not a path in the standard. Add the item below to the same list as rows 1 and 2 (their Edit 4 and Edit 6 entries). Do not add a second file.
 
 Add this numbered item:
 
@@ -59,7 +59,7 @@ Add this numbered item:
 ## Still open (need Adam)
 
 1. Whether template and class names (`Templates/Rotating/VFD`, `Templates/AnalogIndicator`, `EFC_Styles`, `Util/Gap`) belong in a standard that is meant to be generic. Edits 1 and 2 use them; if Adam wants the standard generic, replace the names with plain descriptions.
-2. The `dp style classes` wording in the rev H Templates section may be the same concept as `EFC_Styles`. Confirm before Edit 2 replaces it.
+2. The `dp style classes` wording in the rev I Templates section may be the same concept as `EFC_Styles`. Confirm before Edit 2 replaces it.
 3. LoopConfig retirement (decision 15) is library-only. No standard text is proposed. Confirm that the standard should not mention it.
 4. VFD template `T_VFD` speed on the status line and the `Templates/AnalogIndicator` (T_KPI) rename are library-only; no standard text is proposed.
 
@@ -70,7 +70,7 @@ Add this numbered item:
 1. Labels used by the new text must exist in rev I: `sec:ignition-roles`, `sec:hmi-bypass` (both from the row 2 file), and `app:screen-design`. Grep `sections/` and `appendices/` before inserting. `ch:scada` is optional; see Edit 1.
 2. New labels: none. Do not add any `\label` in this file.
 3. Macros used: `\paragraph`, `\texttt`, `\ref`. All are standard LaTeX or defined in `preamble.tex`.
-4. Anchors were quoted from the rev H copy. Re-check each verbatim against rev I before applying; if a sentence has moved, stop and report.
+4. Anchors were checked verbatim against rev I on 2026-10-21 and all were found. If a sentence has moved when applied, stop and report.
 5. Build only if Adam asks (rev I convention: do not compile until told).
 6. Report the three files touched (`sections/11-scada-standards.tex`, `appendices/perspective-screen-design.tex`, `references/REV-I-CHANGES.md`) with a one-line summary each. Do not echo whole sections.
 
@@ -80,4 +80,4 @@ Add this numbered item:
 
 - Source: `generator/docks/efc_ui.py` header (script library surface, hook wiring), `WINDOWS`, `BY_TYPE` (tType to window; `native` to `dw_IOCard`), `ROLES` (Guest < Operator < Maintenance < Supervisor < Engineer < Admin).
 - Decision 24 said the expanded trend takes about 50 % of the screen. Decision 26 replaces it: the window stays 400 x 860 and expands inside. This file follows decision 26.
-- The rev H zip is the latest revision in Drive `Claude/Controls Standard` (`revision.tex` = H, zip `Controls-Standard-rev-H.zip`, modified 2026-10-14). No rev I source is in Drive or in the repo, so every anchor here is from rev H.
+- Rev I is the latest revision in Drive `Claude/Controls Standard` (`revision.tex` = I). Every anchor here was checked against the rev I files on 2026-10-21.

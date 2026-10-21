@@ -171,7 +171,7 @@ Electric heater: on/\allowbreak{}off contactor, time-proportioned SSR, or SCR po
 
 If the appendix states a total number of types anywhere, add one to it.
 
-## Edit 4: `Claude outputs/REV-I-CHANGES.md`
+## Edit 4: `references/REV-I-CHANGES.md`
 
 Append this item to the numbered list of applied changes (use the next free number in place of N):
 
