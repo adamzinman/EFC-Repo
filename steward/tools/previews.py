@@ -412,6 +412,93 @@ def bypass_popup():
             '</div>')
 
 
+def lim_table(rows, ideal=False):
+    h = ('<div class="lt"><span data-c="Text/Label">LIMIT</span><span data-c="Text/Label">VALUE</span><span data-c="Text/Label">EN</span>'
+         '<span data-c="Text/Label">PRI</span><span data-c="Text/Label">STATE</span>')
+    for n, v, en, pri, st in rows:
+        h += (f'<span data-c="Text/Body">{n}</span><span data-c="Input/Setpoint" class="num gatedS">{v}</span><span data-c="Text/Body">{"&#x2611;" if en else "&#x2610;"}</span>'
+              f'<span data-c="Text/Caption">{pri}</span><span data-c="{"Text/Color/Fault" if st else "Text/Caption"}">{st or "-"}</span>')
+    return h + "</div>"
+
+
+def range_bar(pv_pct, marks, ideal=None):
+    z = f'<div style="position:absolute;left:{ideal[0]}%;width:{ideal[1] - ideal[0]}%;top:0;bottom:0;background:#9DB4D0"></div>' if ideal else ""
+    m = "".join(f'<div class="mk" style="left:{x}%"><span>{t}</span></div>' for t, x in marks)
+    return (f'<div class="rb"><div data-c="Bar/Track" class="rbt">{z}<div data-c="Bar/Fill" style="width:{pv_pct}%;height:100%;opacity:.85"></div>{m}</div>'
+            '<div class="axis"><span>0</span><span>50</span><span>100 kPa</span></div></div>')
+
+
+def process_value():
+    pv = wave(40, 45, 9, 0.9)
+    big = ('<div class="row st"><span data-c="Value/Normal" class="pvbig">42.7</span><span data-c="Text/Units">kPa</span>'
+           '<span data-c="Indicator/Badge">NE107 OK</span><span data-c="Indicator/Badge" class="dim">BAD</span><span data-c="Indicator/Badge" class="dim">SUBST</span>'
+           '<span data-c="Mode/Simulated" class="dim">SIM</span></div>'
+           '<div data-c="Text/Caption">Quality good &middot; rate of change +0.2 kPa/min</div>')
+    rng = grp("RANGE", range_bar(42.7, [("LL", 5), ("L", 15), ("H", 75), ("HH", 90)], ideal=(30, 60))
+              + '<div data-c="Text/Caption">Blue band = ideal range (T_KPI only)</div>')
+    lims = grp("ALARM LIMITS", lim_table([("HH", "90.0", True, "High", ""), ("H", "75.0", True, "Medium", ""), ("L", "15.0", True, "Medium", ""),
+                                         ("LL", "5.0", True, "High", ""), ("ROC", "10.0/min", False, "Low", "")])
+               + '<div class="row"><button data-c="Button/Small">APPLY</button>' + role("Sup") + '<span data-c="Text/Caption">limit edits are logged</span></div>')
+    alarms = alarm_grp([("Indicator/LED/Off", "PV high-high", ""), ("Indicator/LED/Off", "PV high", ""), ("Indicator/LED/Off", "PV low", ""),
+                        ("Indicator/LED/Off", "PV low-low", ""), ("Indicator/LED/Off", "Rate of change", ""), ("Indicator/LED/Off", "Bad PV / channel fault", "")])
+    alarms = alarms.replace('<button data-c="Button/Small">ACK</button>', '<button data-c="Button/Small">ACK</button><button data-c="Button/Small">SHELVE</button>' + role("Sup"))
+    hist = grp("HISTORY (8 h)", trend([(pv, "#262626", False), ([75] * 40, "#E68A00", True), ([15] * 40, "#E68A00", True)], [("PV", "#262626"), ("H / L limits", "#E68A00")]))
+    sim = '<div class="row"><button data-c="Button/Small">SIMULATE</button>' + role("Maint") + '<span data-c="Input/Setpoint" class="num">42.7</span></div>'
+    cfg = details("CONFIGURATION", "EU 0-100 kPa &middot; raw 0-32000 &middot; filter 1.0 s &middot; square root: no &middot; low cut-off 0 % &middot; bad below -5 % / above 105 % &middot; on bad: hold last &middot; substitute 0.0"
+                  + '<div data-c="Text/Caption">Editable by Engineer+</div>')
+    return hdr("PT-101", "Header pressure") + '<div class="body">' + big + rng + lims + alarms + hist + sim + cfg + "</div>"
+
+
+def heat_exchanger():
+    hot_in, hot_out = wave(40, 82, 3, 0.2), wave(40, 41, 3, 1.4)
+    svg = ('<svg viewBox="0 0 360 110" width="100%" height="110" style="display:block">'
+           '<rect x="125" y="25" width="110" height="60" rx="8" fill="#E0E0E0" stroke="#262626" stroke-width="2"/>'
+           '<path d="M132 55 L148 40 L164 70 L180 40 L196 70 L212 40 L228 55" fill="none" stroke="#262626" stroke-width="2"/>'
+           '<line x1="4" y1="40" x2="125" y2="40" stroke="#262626" stroke-width="2"/><line x1="235" y1="70" x2="356" y2="70" stroke="#262626" stroke-width="2"/>'
+           '<line x1="4" y1="70" x2="125" y2="70" stroke="#7F7F7F" stroke-width="2"/><line x1="235" y1="40" x2="356" y2="40" stroke="#7F7F7F" stroke-width="2"/>'
+           '<text x="4" y="33" font-size="11">HOT IN 82.4 &#176;C</text><text x="242" y="88" font-size="11">HOT OUT 41.0 &#176;C</text>'
+           '<text x="4" y="88" font-size="11" fill="#595959">COLD IN 18.2 &#176;C</text><text x="242" y="33" font-size="11" fill="#595959">COLD OUT 36.5 &#176;C</text>'
+           '<text x="148" y="104" font-size="11" fill="#595959">counter-flow</text></svg>')
+    flows = kv(("HOT FLOW", "12.4 m&#179;/h"), ("COLD FLOW", "16.8 m&#179;/h"), ("HOT DP", "0.42 bar"), ("COLD DP", "0.35 bar")).replace('class="kv"', 'class="kv kv4"')
+    perf = grp("PERFORMANCE", kv(("DUTY", "212 kW"), ("HEAT BALANCE", "3.1 %"), ("LMTD", "33.4 K"), ("UA", "6.35 kW/K"),
+                                 ("CLEANLINESS", "82 %"), ("APPROACH", "22.8 K"), ("EFFECTIVENESS", "64 %"), ("CALC", "valid")).replace('class="kv"', 'class="kv kv4"')
+               + bar("CLEAN", "82 %", 82))
+    lims = grp("ALARM LIMITS", lim_table([("Fouling (clean <)", "70 %", True, "Low", ""), ("Hot DP >", "0.80 bar", True, "Medium", ""),
+                                         ("Cold DP >", "0.80 bar", True, "Medium", ""), ("Heat balance >", "10 %", True, "Low", ""), ("Hot out T >", "50 &#176;C", True, "Medium", "")])
+               + '<div class="row"><button data-c="Button/Small">APPLY</button>' + role("Sup") + "</div>")
+    alarms = alarm_grp([("Indicator/LED/Off", "Fouling", ""), ("Indicator/LED/Off", "Hot side DP high", ""), ("Indicator/LED/Off", "Cold side DP high", ""),
+                        ("Indicator/LED/Off", "Heat balance", ""), ("Indicator/LED/Off", "Hot outlet temperature high", "")])
+    hist = grp("HISTORY (8 h)", trend([(hot_in, "#B71C1C", False), (hot_out, "#E57373", False), (wave(40, 82, 4, 2.0), "#1F4E99", True)],
+                                      [("hot in", "#B71C1C"), ("hot out", "#E57373"), ("cleanliness %", "#1F4E99")]))
+    rel = '<div class="row"><span data-c="Text/Label" class="lbl" style="width:auto">RELATED</span><button data-c="Button/Default" style="width:auto;padding:0 8px">FAN P-101 &#x25B8;</button><span data-c="Text/Caption">opens dw_Rotating</span></div>'
+    cfg = details("CONFIGURATION", "Cp hot 4.18 / cold 4.18 kJ/kg K &middot; design UA 7.8 kW/K &middot; min flow 1.0 m&#179;/h &middot; calc filter 30 s"
+                  + '<div data-c="Text/Caption">Editable by Engineer+</div>')
+    return hdr("E-401", "Product cooler") + '<div class="body">' + svg + flows + perf + lims + alarms + hist + rel + cfg + "</div>"
+
+
+def loop():
+    pv, sp = wave(40, 58, 6, 0.4), [60] * 40
+    cv = wave(40, 46, 9, 2.2)
+    big = ('<div class="pvsp"><div><span data-c="Text/Label">PV</span><span data-c="Value/Normal" class="pvbig">118.4</span><span data-c="Text/Units">&#176;F</span></div>'
+           '<div><span data-c="Text/Label">SP</span><span data-c="Input/Setpoint" class="pvbig">120.0</span><span data-c="Text/Units">&#176;F</span></div>'
+           '<div><span data-c="Text/Label">CV</span><span data-c="Value/Output" class="pvbig">46.0</span><span data-c="Text/Units">%</span></div></div>'
+           '<div class="row st"><span data-c="Indicator/Badge">AUTO</span><span data-c="Indicator/Badge" class="dim">TRACK</span><span data-c="Indicator/Badge" class="dim">SP RAMP</span>'
+           '<span data-c="Indicator/Badge" class="dim">WINDUP HI</span><span data-c="Indicator/Badge" class="dim">WINDUP LO</span><span data-c="Indicator/Badge" class="dim">PV BAD</span></div>')
+    bars = grp("LOOP", bar("PV", "118.4 &#176;F", 59.2, marker=60) + bar("SP", "120.0 &#176;F", 60, entry=True) + bar("CV", "46.0 %", 46, cls="Value/Output")
+               + kv(("ERROR", "-1.6 &#176;F"), ("SP TARGET", "120.0 &#176;F")))
+    mode = ('<div class="row"><span data-c="Text/Label" class="lbl">MODE</span><button data-c="Button/Default">MAN</button>'
+            '<button data-c="Button/Default Button/Toggle/On">AUTO</button><button data-c="Button/Default">CAS</button></div>'
+            '<div data-c="Text/Caption" class="hint">SP entry in AUTO, CV entry in MAN; CAS shown if a cascade source is configured</div>')
+    intl = grp("INTERLOCKS", cond("ok", "Heater E-401 available") + '<div data-c="Text/Caption">On trip the output goes to 0 % (Cfg_IntlkCV)</div>',
+               '<span data-c="Indicator/InterlockBadge" class="mini">I</span>')
+    alarms = alarm_grp([("Indicator/LED/Off", "Deviation high", ""), ("Indicator/LED/Off", "Deviation low", ""), ("Indicator/LED/Off", "PV bad", "")])
+    hist = grp("HISTORY (8 h)", trend([(pv, "#262626", False), (sp, "#1F4E99", True), (cv, "#8D6E63", False)], [("PV", "#262626"), ("SP", "#1F4E99"), ("CV", "#8D6E63")]))
+    tune = details("TUNING", kv(("KP", "1.20"), ("TI", "45 s"), ("TD", "0 s"), ("ACTION", "reverse"), ("DEADBAND", "0.0"), ("FF GAIN", "0.0"),
+                                ("SP LIMITS", "50-250 &#176;F"), ("CV LIMITS", "0-100 %"), ("SP RATE", "5 &#176;F/min"), ("CV RATE", "10 %/s")).replace('class="kv"', 'class="kv kv4"')
+                   + '<div class="row"><button data-c="Button/Small">APPLY</button>' + role("Eng") + '<span data-c="Text/Caption">replaces the LoopConfig popup</span></div>')
+    return hdr("TIC-101", "Reactor jacket temperature") + '<div class="body">' + big + bars + mode + intl + alarms + hist + tune + "</div>"
+
+
 DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:border-box}.dock2 .hdr{display:flex;align-items:center;gap:6px;padding:6px 8px}
 .dock2 .x{width:28px;height:28px}.dock2 .body{flex:1;overflow:hidden;padding:4px 8px;display:flex;flex-direction:column;gap:5px}
 .dock2 .row{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.dock2 .lbl{width:40px}.dock2 .big{font-size:16px;padding:2px 10px}
@@ -422,7 +509,7 @@ DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:b
 .strip{display:flex;height:12px;border:1px solid #7F7F7F}.axis{display:flex;justify-content:space-between;font-size:9px;color:#616161}
 .legend2{font-size:9px;color:#424242}.legend2 i{display:inline-block;width:8px;height:8px;margin:0 2px 0 6px}.ev{display:flex;justify-content:space-between;font-size:11px;padding:1px 3px}
 .dock2 details summary{cursor:pointer}.dock2 button[data-c~="Button/Default"]{width:72px;height:30px;padding:0;justify-content:center;text-align:center}.dock2 button[data-c~="Button/Small"]{min-width:64px;height:22px;padding:0 6px;justify-content:center}.dock2 button.preset{min-width:0;width:38px}.dock2 button.gated{outline:1.5px dashed #5E35B1;outline-offset:1px}.barrow{display:flex;align-items:center;gap:5px;margin:2px 0}.bl{width:64px}
-.kv4{grid-template-columns:auto 1fr auto 1fr}.trk{flex:1;height:10px;position:relative}.num{min-width:62px;text-align:right}"""
+.kv4{grid-template-columns:auto 1fr auto 1fr}.pvbig{font-size:26px !important;font-weight:700 !important;margin:0 4px;line-height:1.1}.lt{display:grid;grid-template-columns:1.4fr 1fr .4fr .8fr .8fr;gap:2px 6px;align-items:center}.lt .num{min-width:0}.rb{margin:16px 0 4px}.rbt{position:relative;height:14px}.mk{position:absolute;top:-4px;bottom:-4px;width:2px;background:#E68A00}.mk span{position:absolute;top:-12px;left:-6px;font-size:9px;color:#595959}.pvsp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}.pvsp>div{display:flex;flex-direction:column;align-items:flex-start}.trk{flex:1;height:10px;position:relative}.num{min-width:62px;text-align:right}"""
 
 
 DOCKS = {
@@ -430,9 +517,9 @@ DOCKS = {
     "dw_ValveAnalog": ("T_CValve", "valve_analog"),
     "dw_Rotating": ("T_Motor", "motor"),
     "dw_VFD": ("T_VFD", "vfd"),
-    "dw_HeatTransfer": ("T_HeatEx", [analog(("T IN", "82.4 &deg;C", 70, "Value/Normal"), ("T OUT", "41.0 &deg;C", 35, "Value/Normal"), ("DUTY", "212 kW", 58, "Value/Normal")), "alarms", "trend"]),
-    "dw_ProcessValue": ("T_AI / T_KPI", [analog(("PV", "42.7 kPa", 43, "Value/Normal")), '<div class="kv"><span data-c="Text/Label">HH</span><span data-c="Input/Setpoint">90</span><span data-c="Text/Label">H</span><span data-c="Input/Setpoint">75</span><span data-c="Text/Label">L</span><span data-c="Input/Setpoint">15</span><span data-c="Text/Label">LL</span><span data-c="Input/Setpoint">5</span></div>', "alarms", "trend"]),
-    "dw_Loop": ("T_PID", ["mode", analog(("PV", "42.7 kPa", 43, "Value/Normal"), ("SP", "40.0 kPa", 40, "Input/Setpoint"), ("OP", "55 %", 55, "Value/Output")), cmds(("TUNING", "Button/Default"), ("CASCADE", "Button/Subtle")), "alarms", "trend"]),
+    "dw_HeatTransfer": ("T_HeatEx", "heat_exchanger"),
+    "dw_ProcessValue": ("T_AI / T_KPI", "process_value"),
+    "dw_Loop": ("T_PID", "loop"),
     "dw_IOCard": ("GAP T_IOCard", ['<div class="kv"><span data-c="Text/Label">CARD</span><span data-c="Text/Value">BMXDDI1602 &middot; rack 0 slot 3</span></div>', '<div data-c="Container/GroupBox"><span data-c="Text/Subheader">CHANNELS</span>' + "".join(f'<div data-c="Table/{"Row" if i % 2 else "RowAlt"}">Ch {i:02d} &middot; {"ON" if i % 3 else "OFF"}</div>' for i in range(6)) + "</div>", '<div data-c="Container/GroupBox"><span data-c="Text/Subheader">DIAGNOSTICS</span><div class="row"><span data-c="Indicator/LED/On"></span><span data-c="Text/Body">Module OK</span></div></div>']),
 }
 
@@ -440,7 +527,7 @@ DOCKS = {
 def dock_card(did, path, ttype, parts):
     import re as _re
     gate = lambda h: _re.sub(r'<button ([^>]*)>([^<]*)</button><span class="role" title="([^"]*)">[^<]*</span>', r'<button \1 class="gated" title="\3">\2</button>', h)
-    REV2 = {"valve_discrete": valve_discrete, "valve_analog": valve_analog, "motor": motor_body, "vfd": lambda: motor_body(True)}
+    REV2 = {"valve_discrete": valve_discrete, "valve_analog": valve_analog, "motor": motor_body, "vfd": lambda: motor_body(True), "heat_exchanger": heat_exchanger, "process_value": process_value, "loop": loop}
     if isinstance(parts, str) and parts in REV2:  # rev 2 designs
         inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(REV2[parts]())}</div>'
         return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 - design proposal</b> &middot; dashed purple outline = role-gated (hover for role)", maxh=600)
