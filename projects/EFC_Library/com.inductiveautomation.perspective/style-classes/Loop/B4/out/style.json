@@ -1,0 +1,12 @@
+{
+  "base": {
+    "style": {
+      "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
+      "color": "#4D4D4D",
+      "fontSize": "0.972vh",
+      "fontWeight": 500,
+      "fontVariantNumeric": "tabular-nums"
+    }
+  },
+  "variants": []
+}

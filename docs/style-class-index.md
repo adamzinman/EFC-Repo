@@ -150,6 +150,10 @@
 | `Util/Pad/M` | Padding 8px |
 | `Util/Pad/L` | Padding 12px |
 | `Util/Pad/None` | No padding |
+| `Util/Gap/XS` | Flex gap 2px |
+| `Util/Gap/S` | Flex gap 4px |
+| `Util/Gap/M` | Flex gap 6px |
+| `Util/Gap/L` | Flex gap 8px |
 | `Util/Border` | 1px border |
 | `Util/BorderDashed` | 1px dashed border |
 | `Util/Rounded` | Rounded corners |

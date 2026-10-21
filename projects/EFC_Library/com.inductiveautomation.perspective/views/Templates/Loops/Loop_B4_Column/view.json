@@ -4,6 +4,10 @@
     "sp": 0,
     "out": 0,
     "mode": 0,
+    "devH": 0,
+    "devL": 0,
+    "devHAct": false,
+    "devLAct": false,
     "almHi": 0,
     "almLo": 0,
     "pvLo": 0,
@@ -20,7 +24,10 @@
   },
   "params": {
     "tagPath": "[default]PID_Demo/TIC101",
-    "label": ""
+    "label": "",
+    "tType": "T_PID",
+    "dockId": "",
+    "dwTagPath": ""
   },
   "propConfig": {
     "custom.pv": {
@@ -32,7 +39,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV"
+          "tagPath": "{1}/Val_PV"
         }
       }
     },
@@ -45,7 +52,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/SP"
+          "tagPath": "{1}/Val_SP"
         }
       }
     },
@@ -58,7 +65,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/OUT"
+          "tagPath": "{1}/Out_CV"
         }
       }
     },
@@ -71,33 +78,75 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Mode"
+          "tagPath": "{1}/Sts_Mode"
+        }
+      }
+    },
+    "custom.devH": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevH/Cfg_Lim"
+        }
+      }
+    },
+    "custom.devL": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevL/Cfg_Lim"
+        }
+      }
+    },
+    "custom.devHAct": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevH/Sts_Active"
+        }
+      }
+    },
+    "custom.devLAct": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevL/Sts_Active"
         }
       }
     },
     "custom.almHi": {
       "binding": {
-        "type": "tag",
+        "type": "expr",
         "config": {
-          "fallbackDelay": 2.5,
-          "mode": "indirect",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "tagPath": "{1}/AlmHi"
+          "expression": "{view.custom.sp} + {view.custom.devH}"
         }
       }
     },
     "custom.almLo": {
       "binding": {
-        "type": "tag",
+        "type": "expr",
         "config": {
-          "fallbackDelay": 2.5,
-          "mode": "indirect",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "tagPath": "{1}/AlmLo"
+          "expression": "{view.custom.sp} - {view.custom.devL}"
         }
       }
     },
@@ -110,7 +159,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV.engLow"
+          "tagPath": "{1}/Cfg_PVMin"
         }
       }
     },
@@ -123,7 +172,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV.engHigh"
+          "tagPath": "{1}/Cfg_PVMax"
         }
       }
     },
@@ -136,7 +185,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV.engUnit"
+          "tagPath": "{1}/Cfg_PVEU"
         }
       }
     },
@@ -184,7 +233,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "{view.custom.pv} >= {view.custom.almHi} || {view.custom.pv} <= {view.custom.almLo}"
+          "expression": "{view.custom.devHAct} || {view.custom.devLAct}"
         }
       }
     },
@@ -211,6 +260,18 @@
     "params.label": {
       "paramDirection": "input",
       "persistent": true
+    },
+    "params.tType": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dockId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dwTagPath": {
+      "paramDirection": "input",
+      "persistent": true
     }
   },
   "props": {
@@ -227,15 +288,9 @@
     "props": {
       "direction": "column",
       "style": {
-        "backgroundColor": "#F7F8F9",
-        "borderRadius": "0.741vh",
-        "boxShadow": "0 1px 2px rgba(20,30,40,0.08)",
-        "padding": "0.741vh 0.741vh 0.926vh 0.741vh",
-        "cursor": "pointer",
-        "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-        "overflow": "hidden",
-        "textAlign": "center"
-      }
+        "classes": "Loop/B4/root"
+      },
+      "alignItems": "stretch"
     },
     "position": {
       "shrink": 0
@@ -249,8 +304,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "gap": "0.463vh",
-            "height": "1.481vh"
+            "classes": "Loop/B1/title"
           },
           "justify": "center",
           "alignItems": "center"
@@ -267,11 +321,7 @@
             "props": {
               "text": "",
               "style": {
-                "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                "color": "#1E2329",
-                "fontWeight": 600,
-                "fontSize": "1.157vh",
-                "whiteSpace": "nowrap"
+                "classes": "Loop/B1/tag"
               }
             },
             "position": {
@@ -302,10 +352,10 @@
                   "name": "d",
                   "d": "M6,0.8 L11.2,6 L6,11.2 L0.8,6 Z",
                   "fill": {
-                    "paint": "#FF8C00"
+                    "paint": "#FF7A00"
                   },
                   "stroke": {
-                    "paint": "#222222",
+                    "paint": "#1F1F1F",
                     "width": 0.8
                   }
                 }
@@ -336,7 +386,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "margin": "0.463vh 0 0.648vh 0"
+            "classes": "Loop/B4/chipRow"
           },
           "justify": "center"
         },
@@ -352,14 +402,7 @@
             "props": {
               "text": "",
               "style": {
-                "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                "color": "#1E2329",
-                "fontSize": "0.926vh",
-                "fontWeight": 600,
-                "letterSpacing": "0.04em",
-                "padding": "0.185vh 0.648vh",
-                "borderRadius": "999px",
-                "lineHeight": 1.2
+                "classes": "Loop/B1/mode"
               }
             },
             "position": {
@@ -378,7 +421,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "case({view.custom.mode}, 0, \"#2B3138\", 2, \"#DCE6F7\", \"#E9ECEF\")"
+                    "expression": "case({view.custom.mode}, 0, \"#3A3A3A\", 2, \"#DCE6F7\", \"#EDEDED\")"
                   }
                 }
               },
@@ -386,7 +429,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "case({view.custom.mode}, 0, \"#FFFFFF\", 2, \"#1F4E99\", \"#454D55\")"
+                    "expression": "case({view.custom.mode}, 0, \"#FFFFFF\", 2, \"#1F4E99\", \"#4D4D4D\")"
                   }
                 }
               }
@@ -416,12 +459,7 @@
             "props": {
               "text": "",
               "style": {
-                "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                "color": "#1E2329",
-                "fontSize": "1.759vh",
-                "fontWeight": 600,
-                "fontVariantNumeric": "tabular-nums",
-                "lineHeight": 1
+                "classes": "Loop/B4/pv"
               }
             },
             "position": {
@@ -462,9 +500,7 @@
             "props": {
               "text": "",
               "style": {
-                "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                "color": "#6B737C",
-                "fontSize": "0.926vh"
+                "classes": "Loop/B4/units"
               }
             },
             "position": {
@@ -491,7 +527,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "margin": "0.278vh 0 0.741vh 0"
+            "classes": "Loop/B4/spRow"
           },
           "justify": "center"
         },
@@ -507,12 +543,7 @@
             "props": {
               "text": "",
               "style": {
-                "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                "color": "#2F6FD6",
-                "fontSize": "1.111vh",
-                "fontWeight": 500,
-                "fontVariantNumeric": "tabular-nums",
-                "lineHeight": 1
+                "classes": "Loop/B4/sp"
               }
             },
             "position": {
@@ -539,7 +570,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "height": "7.593vh"
+            "classes": "Loop/B4/bars"
           },
           "justify": "center"
         },
@@ -566,7 +597,7 @@
                   "rx": 6.0,
                   "ry": 6.0,
                   "fill": {
-                    "paint": "#E6E9EC"
+                    "paint": "#E6E6E6"
                   },
                   "stroke": {
                     "paint": "none",
@@ -583,7 +614,7 @@
                   "rx": 6.0,
                   "ry": 6.0,
                   "fill": {
-                    "paint": "#7C858F"
+                    "paint": "#7F7F7F"
                   },
                   "stroke": {
                     "paint": "none",
@@ -600,7 +631,7 @@
                   "rx": 1,
                   "ry": 1,
                   "fill": {
-                    "paint": "#FF8C00"
+                    "paint": "#FF7A00"
                   },
                   "stroke": {
                     "paint": "none",
@@ -617,7 +648,7 @@
                   "rx": 1,
                   "ry": 1,
                   "fill": {
-                    "paint": "#FF8C00"
+                    "paint": "#FF7A00"
                   },
                   "stroke": {
                     "paint": "none",
@@ -629,7 +660,7 @@
                   "name": "sp",
                   "d": "",
                   "fill": {
-                    "paint": "#2F6FD6"
+                    "paint": "#1F4E99"
                   },
                   "stroke": {
                     "paint": "none",
@@ -646,7 +677,7 @@
                   "rx": 6.0,
                   "ry": 6.0,
                   "fill": {
-                    "paint": "#E6E9EC"
+                    "paint": "#E6E6E6"
                   },
                   "stroke": {
                     "paint": "none",
@@ -663,7 +694,7 @@
                   "rx": 6.0,
                   "ry": 6.0,
                   "fill": {
-                    "paint": "#A9B0B8"
+                    "paint": "#A6A6A6"
                   },
                   "stroke": {
                     "paint": "none",
@@ -745,7 +776,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "marginTop": "0.556vh"
+            "classes": "Loop/B4/labs"
           },
           "justify": "center"
         },
@@ -776,11 +807,7 @@
                 "props": {
                   "text": "PV",
                   "style": {
-                    "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                    "color": "#6B737C",
-                    "fontSize": "0.926vh",
-                    "fontWeight": 600,
-                    "letterSpacing": "0.05em"
+                    "classes": "Loop/B1/outLbl"
                   }
                 },
                 "position": {
@@ -812,11 +839,7 @@
                 "props": {
                   "text": "OUT",
                   "style": {
-                    "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                    "color": "#6B737C",
-                    "fontSize": "0.926vh",
-                    "fontWeight": 600,
-                    "letterSpacing": "0.05em"
+                    "classes": "Loop/B1/outLbl"
                   }
                 },
                 "position": {
@@ -831,11 +854,7 @@
                 "props": {
                   "text": "",
                   "style": {
-                    "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                    "color": "#454D55",
-                    "fontSize": "0.972vh",
-                    "fontWeight": 500,
-                    "fontVariantNumeric": "tabular-nums"
+                    "classes": "Loop/B4/out"
                   }
                 },
                 "position": {
@@ -862,7 +881,7 @@
         "binding": {
           "type": "expr",
           "config": {
-            "expression": "if({view.custom.alarm}, \"2px solid #FF8C00\", \"1px solid #C3C8CE\")"
+            "expression": "if({view.custom.alarm}, \"2px solid #FF7A00\", \"1px solid #A6A6A6\")"
           }
         }
       }
@@ -873,7 +892,7 @@
           "type": "script",
           "scope": "G",
           "config": {
-            "script": "\ttp = self.view.params.tagPath\n\tsystem.perspective.openPopup(\"loopcfg_\" + tp, \"Templates/Loops/Popups/LoopConfig\", params={\"tagPath\": tp},\n\t\ttitle=self.view.custom.name, showCloseIcon=True, draggable=True, resizable=False, modal=False,\n\t\toverlayDismiss=True)"
+            "script": "\tefc.ui.openDynamic(self)"
           }
         }
       }

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:36:12" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_PumpProt" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+	<comment>Pump protection layer: dry run, low flow, deadhead, seal, bearing</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Prot" typeName="T_Intlk">
+			<comment>Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK</comment>
+		</variables>
+		<variables name="Inp_Running" typeName="BOOL">
+			<comment>Pump running (from Motor / VFD Sts_Running)</comment>
+		</variables>
+		<variables name="Inp_SuctPress" typeName="REAL">
+			<comment>Suction pressure (EU)</comment>
+		</variables>
+		<variables name="Inp_DischPress" typeName="REAL">
+			<comment>Discharge pressure (EU)</comment>
+		</variables>
+		<variables name="Inp_Flow" typeName="REAL">
+			<comment>Pump flow (EU)</comment>
+		</variables>
+		<variables name="Inp_DryRun" typeName="BOOL">
+			<comment>Dry-run switch / low level active</comment>
+		</variables>
+		<variables name="Inp_SealLeak" typeName="BOOL">
+			<comment>Seal leak / seal pot alarm</comment>
+		</variables>
+		<variables name="Inp_BrgTemp" typeName="REAL">
+			<comment>Bearing temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_Vib" typeName="REAL">
+			<comment>Vibration (mm/s)</comment>
+		</variables>
+		<variables name="Cfg_MinFlow" typeName="REAL">
+			<comment>Minimum continuous flow (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MinFlowDly" typeName="TIME">
+			<comment>Low-flow delay after start</comment>
+			<variableInit value="T#30S"></variableInit>
+		</variables>
+		<variables name="Cfg_DeadheadDP" typeName="REAL">
+			<comment>Differential pressure indicating deadhead (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DryRunDly" typeName="TIME">
+			<comment>Dry-run delay</comment>
+			<variableInit value="T#5S"></variableInit>
+		</variables>
+		<variables name="Cfg_TripDryRun" typeName="BOOL">
+			<comment>Trip on dry run</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cfg_TripLowFlow" typeName="BOOL">
+			<comment>Trip on low flow</comment>
+		</variables>
+		<variables name="Cfg_TripDeadhead" typeName="BOOL">
+			<comment>Trip on deadhead</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cfg_TripSeal" typeName="BOOL">
+			<comment>Trip on seal leak</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Reset latched trips (one-shot)</comment>
+		</variables>
+		<variables name="Out_IntlkOK" typeName="BOOL">
+			<comment>Protections healthy - wire to Motor/VFD Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Val_DP" typeName="REAL">
+			<comment>Differential pressure (EU)</comment>
+		</variables>
+		<variables name="Alm_DryRun" typeName="T_Alarm">
+			<comment>Dry run</comment>
+		</variables>
+		<variables name="Alm_LowFlow" typeName="T_Alarm">
+			<comment>Low flow (below minimum continuous flow)</comment>
+		</variables>
+		<variables name="Alm_Deadhead" typeName="T_Alarm">
+			<comment>Deadhead (high DP, no flow)</comment>
+		</variables>
+		<variables name="Alm_SealLeak" typeName="T_Alarm">
+			<comment>Seal leak</comment>
+		</variables>
+		<variables name="Alm_BrgTemp" typeName="T_AlmLim">
+			<comment>High bearing temperature</comment>
+		</variables>
+		<variables name="Alm_Vib" typeName="T_AlmLim">
+			<comment>High vibration</comment>
+		</variables>
+		<variables name="Alm_LoSuct" typeName="T_AlmLim">
+			<comment>Low suction pressure</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

@@ -1,0 +1,2163 @@
+{
+  "tags": [
+    {
+      "name": "_types_",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "name": "PCLib_Demo",
+          "tagType": "Folder",
+          "tags": [
+            {
+              "name": "T_SeqBar",
+              "tagType": "UdtType",
+              "documentation": "Memory-tag copy of T_SeqBar for the demo",
+              "tags": [
+                {
+                  "name": "Cfg_Title",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "String"
+                },
+                {
+                  "name": "Cfg_NumSeg",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Int2"
+                },
+                {
+                  "name": "Cfg_SegText",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "StringArray",
+                  "value": [
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
+                  ]
+                },
+                {
+                  "name": "Sts_Seg",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Int2Array",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "name": "Sts_ActSeg",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Int2"
+                },
+                {
+                  "name": "Sts_PhState",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Int2"
+                },
+                {
+                  "name": "Sts_Mode",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Int2"
+                },
+                {
+                  "name": "Sts_Owner",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Int2"
+                },
+                {
+                  "name": "Sts_Step",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Int2"
+                },
+                {
+                  "name": "Sts_WaitAdv",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Sts_Fail",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Val_Msg",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "String"
+                },
+                {
+                  "name": "Val_StepTime",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Int4"
+                },
+                {
+                  "name": "Val_StepPct",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Int2"
+                }
+              ]
+            },
+            {
+              "name": "XeFill_Station",
+              "tagType": "UdtType",
+              "documentation": "Memory-tag copy of XeFill_Station",
+              "tags": [
+                {
+                  "name": "StationName",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "String"
+                },
+                {
+                  "name": "ScaleName",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "String"
+                },
+                {
+                  "name": "Units",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "String"
+                },
+                {
+                  "name": "NetWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4"
+                },
+                {
+                  "name": "GrossWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4"
+                },
+                {
+                  "name": "TareWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4"
+                },
+                {
+                  "name": "TotalWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4"
+                },
+                {
+                  "name": "TargetWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4"
+                },
+                {
+                  "name": "Deadband",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4"
+                },
+                {
+                  "name": "Press_Max",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4"
+                },
+                {
+                  "name": "SampleWeight",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4"
+                },
+                {
+                  "name": "SamplePress",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4"
+                },
+                {
+                  "name": "PT",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4"
+                },
+                {
+                  "name": "PT_Valid",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "PT_Diff",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Float4"
+                },
+                {
+                  "name": "Vessel_Present",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Selected",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Disabled",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Failed",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Complete",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Filling",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Vacuuming",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Vacuumed",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Recovering",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Venting",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Active",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "ReadyToStart",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "ReadyToFill",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Press_Balanced",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "InletREQ",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "InletCMD",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "VacuumREQ",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "VacuumCMD",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "SampleREQ",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "SampleCMD",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "Msg",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "String"
+                },
+                {
+                  "name": "StatusEnum",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Int2"
+                },
+                {
+                  "name": "HMI_Select",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "TareCMD",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "ZeroCMD",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                },
+                {
+                  "name": "HMI_Reset",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SeqBar_Demo",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "name": "XeFill_Filling",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib_Demo/T_SeqBar",
+          "tags": [
+            {
+              "name": "Cfg_Title",
+              "tagType": "AtomicTag",
+              "value": "Xenon fill"
+            },
+            {
+              "name": "Cfg_NumSeg",
+              "tagType": "AtomicTag",
+              "value": 6
+            },
+            {
+              "name": "Cfg_SegText",
+              "tagType": "AtomicTag",
+              "value": [
+                "Lineup",
+                "Evacuate",
+                "Leak check",
+                "Pressurise",
+                "Fill",
+                "Done",
+                "",
+                "",
+                "",
+                ""
+              ]
+            },
+            {
+              "name": "Sts_Seg",
+              "tagType": "AtomicTag",
+              "value": [
+                2,
+                2,
+                2,
+                2,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "name": "Sts_ActSeg",
+              "tagType": "AtomicTag",
+              "value": 5
+            },
+            {
+              "name": "Sts_PhState",
+              "tagType": "AtomicTag",
+              "value": 1
+            },
+            {
+              "name": "Sts_Mode",
+              "tagType": "AtomicTag",
+              "value": 3
+            },
+            {
+              "name": "Sts_Owner",
+              "tagType": "AtomicTag",
+              "value": 0
+            },
+            {
+              "name": "Sts_Step",
+              "tagType": "AtomicTag",
+              "value": 80
+            },
+            {
+              "name": "Sts_WaitAdv",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Sts_Fail",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Val_Msg",
+              "tagType": "AtomicTag",
+              "value": "Filling stations"
+            },
+            {
+              "name": "Val_StepTime",
+              "tagType": "AtomicTag",
+              "value": 42000
+            },
+            {
+              "name": "Val_StepPct",
+              "tagType": "AtomicTag",
+              "value": 64
+            }
+          ]
+        },
+        {
+          "name": "XeFill_Held",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib_Demo/T_SeqBar",
+          "tags": [
+            {
+              "name": "Cfg_Title",
+              "tagType": "AtomicTag",
+              "value": "Xenon fill"
+            },
+            {
+              "name": "Cfg_NumSeg",
+              "tagType": "AtomicTag",
+              "value": 6
+            },
+            {
+              "name": "Cfg_SegText",
+              "tagType": "AtomicTag",
+              "value": [
+                "Lineup",
+                "Evacuate",
+                "Leak check",
+                "Pressurise",
+                "Fill",
+                "Done",
+                "",
+                "",
+                "",
+                ""
+              ]
+            },
+            {
+              "name": "Sts_Seg",
+              "tagType": "AtomicTag",
+              "value": [
+                2,
+                2,
+                2,
+                2,
+                3,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "name": "Sts_ActSeg",
+              "tagType": "AtomicTag",
+              "value": 5
+            },
+            {
+              "name": "Sts_PhState",
+              "tagType": "AtomicTag",
+              "value": 6
+            },
+            {
+              "name": "Sts_Mode",
+              "tagType": "AtomicTag",
+              "value": 3
+            },
+            {
+              "name": "Sts_Owner",
+              "tagType": "AtomicTag",
+              "value": 0
+            },
+            {
+              "name": "Sts_Step",
+              "tagType": "AtomicTag",
+              "value": 10
+            },
+            {
+              "name": "Sts_WaitAdv",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Sts_Fail",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Val_Msg",
+              "tagType": "AtomicTag",
+              "value": "Compressor stopped"
+            },
+            {
+              "name": "Val_StepTime",
+              "tagType": "AtomicTag",
+              "value": 9000
+            },
+            {
+              "name": "Val_StepPct",
+              "tagType": "AtomicTag",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "name": "XeFill_Complete",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib_Demo/T_SeqBar",
+          "tags": [
+            {
+              "name": "Cfg_Title",
+              "tagType": "AtomicTag",
+              "value": "Xenon fill"
+            },
+            {
+              "name": "Cfg_NumSeg",
+              "tagType": "AtomicTag",
+              "value": 6
+            },
+            {
+              "name": "Cfg_SegText",
+              "tagType": "AtomicTag",
+              "value": [
+                "Lineup",
+                "Evacuate",
+                "Leak check",
+                "Pressurise",
+                "Fill",
+                "Done",
+                "",
+                "",
+                "",
+                ""
+              ]
+            },
+            {
+              "name": "Sts_Seg",
+              "tagType": "AtomicTag",
+              "value": [
+                2,
+                2,
+                2,
+                2,
+                2,
+                2,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "name": "Sts_ActSeg",
+              "tagType": "AtomicTag",
+              "value": 0
+            },
+            {
+              "name": "Sts_PhState",
+              "tagType": "AtomicTag",
+              "value": 2
+            },
+            {
+              "name": "Sts_Mode",
+              "tagType": "AtomicTag",
+              "value": 3
+            },
+            {
+              "name": "Sts_Owner",
+              "tagType": "AtomicTag",
+              "value": 0
+            },
+            {
+              "name": "Sts_Step",
+              "tagType": "AtomicTag",
+              "value": 90
+            },
+            {
+              "name": "Sts_WaitAdv",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Sts_Fail",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Val_Msg",
+              "tagType": "AtomicTag",
+              "value": "Complete"
+            },
+            {
+              "name": "Val_StepTime",
+              "tagType": "AtomicTag",
+              "value": 5000
+            },
+            {
+              "name": "Val_StepPct",
+              "tagType": "AtomicTag",
+              "value": 100
+            }
+          ]
+        },
+        {
+          "name": "XeFill_SemiAuto",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib_Demo/T_SeqBar",
+          "tags": [
+            {
+              "name": "Cfg_Title",
+              "tagType": "AtomicTag",
+              "value": "Xenon fill"
+            },
+            {
+              "name": "Cfg_NumSeg",
+              "tagType": "AtomicTag",
+              "value": 6
+            },
+            {
+              "name": "Cfg_SegText",
+              "tagType": "AtomicTag",
+              "value": [
+                "Lineup",
+                "Evacuate",
+                "Leak check",
+                "Pressurise",
+                "Fill",
+                "Done",
+                "",
+                "",
+                "",
+                ""
+              ]
+            },
+            {
+              "name": "Sts_Seg",
+              "tagType": "AtomicTag",
+              "value": [
+                2,
+                2,
+                2,
+                4,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "name": "Sts_ActSeg",
+              "tagType": "AtomicTag",
+              "value": 4
+            },
+            {
+              "name": "Sts_PhState",
+              "tagType": "AtomicTag",
+              "value": 1
+            },
+            {
+              "name": "Sts_Mode",
+              "tagType": "AtomicTag",
+              "value": 2
+            },
+            {
+              "name": "Sts_Owner",
+              "tagType": "AtomicTag",
+              "value": 0
+            },
+            {
+              "name": "Sts_Step",
+              "tagType": "AtomicTag",
+              "value": 60
+            },
+            {
+              "name": "Sts_WaitAdv",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Sts_Fail",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Val_Msg",
+              "tagType": "AtomicTag",
+              "value": "Waiting for Advance"
+            },
+            {
+              "name": "Val_StepTime",
+              "tagType": "AtomicTag",
+              "value": 4000
+            },
+            {
+              "name": "Val_StepPct",
+              "tagType": "AtomicTag",
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "XeFill_Demo",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "name": "SeqBar",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib_Demo/T_SeqBar",
+          "tags": [
+            {
+              "name": "Cfg_Title",
+              "tagType": "AtomicTag",
+              "value": "Xenon fill"
+            },
+            {
+              "name": "Cfg_NumSeg",
+              "tagType": "AtomicTag",
+              "value": 6
+            },
+            {
+              "name": "Cfg_SegText",
+              "tagType": "AtomicTag",
+              "value": [
+                "Lineup",
+                "Evacuate",
+                "Leak check",
+                "Pressurise",
+                "Fill",
+                "Done",
+                "",
+                "",
+                "",
+                ""
+              ]
+            },
+            {
+              "name": "Sts_Seg",
+              "tagType": "AtomicTag",
+              "value": [
+                2,
+                2,
+                2,
+                2,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "name": "Sts_ActSeg",
+              "tagType": "AtomicTag",
+              "value": 5
+            },
+            {
+              "name": "Sts_PhState",
+              "tagType": "AtomicTag",
+              "value": 1
+            },
+            {
+              "name": "Sts_Mode",
+              "tagType": "AtomicTag",
+              "value": 3
+            },
+            {
+              "name": "Sts_Owner",
+              "tagType": "AtomicTag",
+              "value": 0
+            },
+            {
+              "name": "Sts_Step",
+              "tagType": "AtomicTag",
+              "value": 80
+            },
+            {
+              "name": "Sts_WaitAdv",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Sts_Fail",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Val_Msg",
+              "tagType": "AtomicTag",
+              "value": "Filling stations"
+            },
+            {
+              "name": "Val_StepTime",
+              "tagType": "AtomicTag",
+              "value": 42000
+            },
+            {
+              "name": "Val_StepPct",
+              "tagType": "AtomicTag",
+              "value": 64
+            }
+          ]
+        },
+        {
+          "name": "Station_1",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib_Demo/XeFill_Station",
+          "tags": [
+            {
+              "name": "StationName",
+              "tagType": "AtomicTag",
+              "value": "Station 1"
+            },
+            {
+              "name": "ScaleName",
+              "tagType": "AtomicTag",
+              "value": "WT-111"
+            },
+            {
+              "name": "Units",
+              "tagType": "AtomicTag",
+              "value": "kg"
+            },
+            {
+              "name": "NetWeight",
+              "tagType": "AtomicTag",
+              "value": 12.8
+            },
+            {
+              "name": "GrossWeight",
+              "tagType": "AtomicTag",
+              "value": 62.8
+            },
+            {
+              "name": "TareWeight",
+              "tagType": "AtomicTag",
+              "value": 50.0
+            },
+            {
+              "name": "TotalWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "TargetWeight",
+              "tagType": "AtomicTag",
+              "value": 20.0
+            },
+            {
+              "name": "Deadband",
+              "tagType": "AtomicTag",
+              "value": 0.2
+            },
+            {
+              "name": "Press_Max",
+              "tagType": "AtomicTag",
+              "value": 60.0
+            },
+            {
+              "name": "SampleWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "SamplePress",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "PT",
+              "tagType": "AtomicTag",
+              "value": 11.787
+            },
+            {
+              "name": "PT_Valid",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "PT_Diff",
+              "tagType": "AtomicTag",
+              "value": 16.713
+            },
+            {
+              "name": "Vessel_Present",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Selected",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Disabled",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Failed",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Complete",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Filling",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Vacuuming",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Vacuumed",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Recovering",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Venting",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Active",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "ReadyToStart",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ReadyToFill",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Press_Balanced",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "InletREQ",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "InletCMD",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "VacuumREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "VacuumCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Msg",
+              "tagType": "AtomicTag",
+              "value": "Fast fill"
+            },
+            {
+              "name": "StatusEnum",
+              "tagType": "AtomicTag",
+              "value": 30
+            },
+            {
+              "name": "HMI_Select",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "TareCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ZeroCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "HMI_Reset",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
+        },
+        {
+          "name": "Station_2",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib_Demo/XeFill_Station",
+          "tags": [
+            {
+              "name": "StationName",
+              "tagType": "AtomicTag",
+              "value": "Station 2"
+            },
+            {
+              "name": "ScaleName",
+              "tagType": "AtomicTag",
+              "value": "WT-121"
+            },
+            {
+              "name": "Units",
+              "tagType": "AtomicTag",
+              "value": "kg"
+            },
+            {
+              "name": "NetWeight",
+              "tagType": "AtomicTag",
+              "value": 9.95
+            },
+            {
+              "name": "GrossWeight",
+              "tagType": "AtomicTag",
+              "value": 59.95
+            },
+            {
+              "name": "TareWeight",
+              "tagType": "AtomicTag",
+              "value": 50.0
+            },
+            {
+              "name": "TotalWeight",
+              "tagType": "AtomicTag",
+              "value": 9.95
+            },
+            {
+              "name": "TargetWeight",
+              "tagType": "AtomicTag",
+              "value": 10.0
+            },
+            {
+              "name": "Deadband",
+              "tagType": "AtomicTag",
+              "value": 0.2
+            },
+            {
+              "name": "Press_Max",
+              "tagType": "AtomicTag",
+              "value": 60.0
+            },
+            {
+              "name": "SampleWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "SamplePress",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "PT",
+              "tagType": "AtomicTag",
+              "value": 8.937
+            },
+            {
+              "name": "PT_Valid",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "PT_Diff",
+              "tagType": "AtomicTag",
+              "value": 19.563000000000002
+            },
+            {
+              "name": "Vessel_Present",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Selected",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Disabled",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Failed",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Complete",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Filling",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Vacuuming",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Vacuumed",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Recovering",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Venting",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Active",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ReadyToStart",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ReadyToFill",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Press_Balanced",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "InletREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "InletCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "VacuumREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "VacuumCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Msg",
+              "tagType": "AtomicTag",
+              "value": "Filled"
+            },
+            {
+              "name": "StatusEnum",
+              "tagType": "AtomicTag",
+              "value": 40
+            },
+            {
+              "name": "HMI_Select",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "TareCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ZeroCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "HMI_Reset",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
+        },
+        {
+          "name": "Station_3",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib_Demo/XeFill_Station",
+          "tags": [
+            {
+              "name": "StationName",
+              "tagType": "AtomicTag",
+              "value": "Station 3"
+            },
+            {
+              "name": "ScaleName",
+              "tagType": "AtomicTag",
+              "value": "WT-131"
+            },
+            {
+              "name": "Units",
+              "tagType": "AtomicTag",
+              "value": "kg"
+            },
+            {
+              "name": "NetWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "GrossWeight",
+              "tagType": "AtomicTag",
+              "value": 50.0
+            },
+            {
+              "name": "TareWeight",
+              "tagType": "AtomicTag",
+              "value": 50.0
+            },
+            {
+              "name": "TotalWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "TargetWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "Deadband",
+              "tagType": "AtomicTag",
+              "value": 0.2
+            },
+            {
+              "name": "Press_Max",
+              "tagType": "AtomicTag",
+              "value": 60.0
+            },
+            {
+              "name": "SampleWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "SamplePress",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "PT",
+              "tagType": "AtomicTag",
+              "value": 3.2
+            },
+            {
+              "name": "PT_Valid",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "PT_Diff",
+              "tagType": "AtomicTag",
+              "value": 25.3
+            },
+            {
+              "name": "Vessel_Present",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Selected",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Disabled",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Failed",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Complete",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Filling",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Vacuuming",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Vacuumed",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Recovering",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Venting",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Active",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ReadyToStart",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ReadyToFill",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Press_Balanced",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "InletREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "InletCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "VacuumREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "VacuumCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Msg",
+              "tagType": "AtomicTag",
+              "value": "Not selected"
+            },
+            {
+              "name": "StatusEnum",
+              "tagType": "AtomicTag",
+              "value": 0
+            },
+            {
+              "name": "HMI_Select",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "TareCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ZeroCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "HMI_Reset",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
+        },
+        {
+          "name": "Station_4",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib_Demo/XeFill_Station",
+          "tags": [
+            {
+              "name": "StationName",
+              "tagType": "AtomicTag",
+              "value": "Station 4"
+            },
+            {
+              "name": "ScaleName",
+              "tagType": "AtomicTag",
+              "value": "WT-141"
+            },
+            {
+              "name": "Units",
+              "tagType": "AtomicTag",
+              "value": "kg"
+            },
+            {
+              "name": "NetWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "GrossWeight",
+              "tagType": "AtomicTag",
+              "value": 50.0
+            },
+            {
+              "name": "TareWeight",
+              "tagType": "AtomicTag",
+              "value": 50.0
+            },
+            {
+              "name": "TotalWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "TargetWeight",
+              "tagType": "AtomicTag",
+              "value": 15.0
+            },
+            {
+              "name": "Deadband",
+              "tagType": "AtomicTag",
+              "value": 0.2
+            },
+            {
+              "name": "Press_Max",
+              "tagType": "AtomicTag",
+              "value": 60.0
+            },
+            {
+              "name": "SampleWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "SamplePress",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "PT",
+              "tagType": "AtomicTag",
+              "value": -1.013
+            },
+            {
+              "name": "PT_Valid",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "PT_Diff",
+              "tagType": "AtomicTag",
+              "value": 29.512999999999998
+            },
+            {
+              "name": "Vessel_Present",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Selected",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Disabled",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Failed",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Complete",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Filling",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Vacuuming",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Vacuumed",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Recovering",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Venting",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Active",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ReadyToStart",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ReadyToFill",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Press_Balanced",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "InletREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "InletCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "VacuumREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "VacuumCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Msg",
+              "tagType": "AtomicTag",
+              "value": "Leak check failed"
+            },
+            {
+              "name": "StatusEnum",
+              "tagType": "AtomicTag",
+              "value": 50
+            },
+            {
+              "name": "HMI_Select",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "TareCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ZeroCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "HMI_Reset",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
+        },
+        {
+          "name": "Station_5",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib_Demo/XeFill_Station",
+          "tags": [
+            {
+              "name": "StationName",
+              "tagType": "AtomicTag",
+              "value": "Station 5"
+            },
+            {
+              "name": "ScaleName",
+              "tagType": "AtomicTag",
+              "value": "WT-151"
+            },
+            {
+              "name": "Units",
+              "tagType": "AtomicTag",
+              "value": "kg"
+            },
+            {
+              "name": "NetWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "GrossWeight",
+              "tagType": "AtomicTag",
+              "value": 50.0
+            },
+            {
+              "name": "TareWeight",
+              "tagType": "AtomicTag",
+              "value": 50.0
+            },
+            {
+              "name": "TotalWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "TargetWeight",
+              "tagType": "AtomicTag",
+              "value": 18.0
+            },
+            {
+              "name": "Deadband",
+              "tagType": "AtomicTag",
+              "value": 0.2
+            },
+            {
+              "name": "Press_Max",
+              "tagType": "AtomicTag",
+              "value": 60.0
+            },
+            {
+              "name": "SampleWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "SamplePress",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "PT",
+              "tagType": "AtomicTag",
+              "value": 3.2
+            },
+            {
+              "name": "PT_Valid",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "PT_Diff",
+              "tagType": "AtomicTag",
+              "value": 25.3
+            },
+            {
+              "name": "Vessel_Present",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Selected",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Disabled",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Failed",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Complete",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Filling",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Vacuuming",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Vacuumed",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Recovering",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Venting",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Active",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ReadyToStart",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ReadyToFill",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Press_Balanced",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "InletREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "InletCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "VacuumREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "VacuumCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Msg",
+              "tagType": "AtomicTag",
+              "value": "Not selected"
+            },
+            {
+              "name": "StatusEnum",
+              "tagType": "AtomicTag",
+              "value": 0
+            },
+            {
+              "name": "HMI_Select",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "TareCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ZeroCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "HMI_Reset",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
+        },
+        {
+          "name": "Station_6",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib_Demo/XeFill_Station",
+          "tags": [
+            {
+              "name": "StationName",
+              "tagType": "AtomicTag",
+              "value": "Station 6"
+            },
+            {
+              "name": "ScaleName",
+              "tagType": "AtomicTag",
+              "value": "WT-161"
+            },
+            {
+              "name": "Units",
+              "tagType": "AtomicTag",
+              "value": "kg"
+            },
+            {
+              "name": "NetWeight",
+              "tagType": "AtomicTag",
+              "value": 24.88
+            },
+            {
+              "name": "GrossWeight",
+              "tagType": "AtomicTag",
+              "value": 74.88
+            },
+            {
+              "name": "TareWeight",
+              "tagType": "AtomicTag",
+              "value": 50.0
+            },
+            {
+              "name": "TotalWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "TargetWeight",
+              "tagType": "AtomicTag",
+              "value": 25.0
+            },
+            {
+              "name": "Deadband",
+              "tagType": "AtomicTag",
+              "value": 0.2
+            },
+            {
+              "name": "Press_Max",
+              "tagType": "AtomicTag",
+              "value": 60.0
+            },
+            {
+              "name": "SampleWeight",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "SamplePress",
+              "tagType": "AtomicTag",
+              "value": 0.0
+            },
+            {
+              "name": "PT",
+              "tagType": "AtomicTag",
+              "value": 23.866999999999997
+            },
+            {
+              "name": "PT_Valid",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "PT_Diff",
+              "tagType": "AtomicTag",
+              "value": 4.633000000000003
+            },
+            {
+              "name": "Vessel_Present",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Selected",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Disabled",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Failed",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Complete",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Filling",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Vacuuming",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Vacuumed",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "Recovering",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Venting",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Active",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "ReadyToStart",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ReadyToFill",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Press_Balanced",
+              "tagType": "AtomicTag",
+              "value": true
+            },
+            {
+              "name": "InletREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "InletCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "VacuumREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "VacuumCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleREQ",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "SampleCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "Msg",
+              "tagType": "AtomicTag",
+              "value": "Settling - checking weight"
+            },
+            {
+              "name": "StatusEnum",
+              "tagType": "AtomicTag",
+              "value": 30
+            },
+            {
+              "name": "HMI_Select",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "TareCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "ZeroCMD",
+              "tagType": "AtomicTag",
+              "value": false
+            },
+            {
+              "name": "HMI_Reset",
+              "tagType": "AtomicTag",
+              "value": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

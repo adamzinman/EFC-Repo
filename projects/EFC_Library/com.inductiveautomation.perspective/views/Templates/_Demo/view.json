@@ -889,6 +889,66 @@
                       "shrink": 0
                     },
                     "props": {
+                      "path": "Templates/Rotating/VFD",
+                      "params": {
+                        "tagPath": "[default]PID_Demo/M601"
+                      },
+                      "useDefaultViewWidth": false,
+                      "useDefaultViewHeight": false,
+                      "style": {
+                        "width": "180.0px"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Cap_13"
+                    },
+                    "position": {
+                      "basis": "auto",
+                      "shrink": 0
+                    },
+                    "props": {
+                      "text": "M601 \u00b7 VFD",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Center"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "Item_14"
+                },
+                "position": {
+                  "basis": "180.0px",
+                  "shrink": 0
+                },
+                "props": {
+                  "direction": "column",
+                  "style": {
+                    "classes": "",
+                    "gap": "2px",
+                    "alignItems": "center"
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.view",
+                    "version": 0,
+                    "meta": {
+                      "name": "V_14"
+                    },
+                    "position": {
+                      "basis": "174.0px",
+                      "shrink": 0
+                    },
+                    "props": {
                       "path": "Templates/HeatTransfer/Heater_Electric",
                       "params": {
                         "tagPath": "[default]PID_Demo/E401"
@@ -904,7 +964,7 @@
                     "type": "ia.display.label",
                     "version": 0,
                     "meta": {
-                      "name": "Cap_13"
+                      "name": "Cap_14"
                     },
                     "position": {
                       "basis": "auto",

@@ -17,16 +17,23 @@
     "aLL": -1,
     "aOVR": -1,
     "aUNR": -1,
-    "aFLTalm": -1,
-    "alm": {
-      "FLT": -1,
-      "HH": -1,
-      "H": -1,
-      "L": -1,
-      "LL": -1,
-      "OVR": -1,
-      "UNR": -1
-    },
+    "FLTact": null,
+    "FLTun": null,
+    "FLTpri": null,
+    "HHact": null,
+    "HHun": null,
+    "HHpri": null,
+    "Hact": null,
+    "Hun": null,
+    "Hpri": null,
+    "Lact": null,
+    "Lun": null,
+    "Lpri": null,
+    "LLact": null,
+    "LLun": null,
+    "LLpri": null,
+    "rOVR": false,
+    "rUNR": false,
     "fltActive": false,
     "anyUnacked": false,
     "activePri": -1,
@@ -35,7 +42,10 @@
     "badValue": false
   },
   "params": {
-    "tagPath": ""
+    "tagPath": "",
+    "tType": "T_AI",
+    "dockId": "",
+    "dwTagPath": ""
   },
   "propConfig": {
     "params.tagPath": {
@@ -55,7 +65,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/PV",
+          "tagPath": "{0}/Val_PV",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -68,7 +78,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Name",
+          "tagPath": "{0}/Cfg_Tag",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -81,7 +91,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Description",
+          "tagPath": "{0}/Cfg_Desc",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -94,7 +104,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Units",
+          "tagPath": "{0}/Cfg_EU",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -107,7 +117,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/HW_Fault",
+          "tagPath": "{0}/Sts_Bad",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -120,7 +130,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/HH/Inhibit",
+          "tagPath": "{0}/Alm_HH/Sts_Suppressed",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -133,7 +143,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/H/Inhibit",
+          "tagPath": "{0}/Alm_H/Sts_Suppressed",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -146,7 +156,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/L/Inhibit",
+          "tagPath": "{0}/Alm_L/Sts_Suppressed",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -159,7 +169,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/LL/Inhibit",
+          "tagPath": "{0}/Alm_LL/Sts_Suppressed",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -167,25 +177,42 @@
         }
       }
     },
-    "custom.alm": {
+    "custom.FLTact": {
       "binding": {
-        "type": "expr",
+        "type": "tag",
         "config": {
-          "expression": "{view.custom.tick}"
-        },
-        "transforms": [
-          {
-            "type": "script",
-            "code": "\t# One alarm-status query per refresh for this UDT instance. Returns {key: code}:\n\t# -1 = none, else state*10 + priority (state 0 active-acked, 1 active-unacked, 2 cleared-unacked;\n\t# priority 0 Diagnostic .. 4 Critical). Replaces isAlarmActiveFiltered (gateway scope needs the\n\t# provider in the path and Perspective never re-runs it on alarm changes).\n\tout = {\"FLT\": -1, \"HH\": -1, \"H\": -1, \"L\": -1, \"LL\": -1, \"OVR\": -1, \"UNR\": -1}\n\ttp = self.view.params.tagPath\n\tif not tp:\n\t\treturn out\n\ttp = str(tp).strip()\n\tprov = \"*\"\n\tpath = tp\n\tif tp.startswith(\"[\") and \"]\" in tp:\n\t\tprov = tp[1:tp.index(\"]\")] or \"*\"\n\t\tpath = tp[tp.index(\"]\") + 1:]\n\tpath = path.strip(\"/\")\n\tkeys = {\"hw_fault\": \"FLT\", \"hh/alarm\": \"HH\", \"h/alarm\": \"H\", \"l/alarm\": \"L\",\n\t\t\t\"ll/alarm\": \"LL\", \"overrange\": \"OVR\", \"underrange\": \"UNR\"}\n\ttry:\n\t\tevents = system.alarm.queryStatus(source=[\"prov:%s:/tag:%s/*\" % (prov, path)])\n\texcept Exception as e:\n\t\tsystem.util.getLogger(\"EFC_PV\").warn(\"queryStatus failed for %s: %s\" % (tp, e))\n\t\treturn out\n\tagg = {}\n\tfor ev in events:\n\t\tst = str(ev.getState())\n\t\tif st not in (\"ActiveUnacked\", \"ActiveAcked\", \"ClearUnacked\"):\n\t\t\tcontinue\n\t\tsrc = str(ev.getSource())\n\t\tif \":/tag:\" not in src:\n\t\t\tcontinue\n\t\ttag = src.split(\":/tag:\", 1)[1].split(\":/alm:\", 1)[0].strip(\"/\")\n\t\tif not tag.lower().startswith(path.lower() + \"/\"):\n\t\t\tcontinue\n\t\tkey = keys.get(tag[len(path) + 1:].lower())\n\t\tif key is None:\n\t\t\tcontinue\n\t\tpri = int(ev.getPriority().ordinal())\n\t\ta = agg.setdefault(key, {\"act\": -1, \"unack\": False, \"clr\": -1})\n\t\tif st == \"ClearUnacked\":\n\t\t\ta[\"clr\"] = max(a[\"clr\"], pri)\n\t\telse:\n\t\t\ta[\"act\"] = max(a[\"act\"], pri)\n\t\t\tif st == \"ActiveUnacked\":\n\t\t\t\ta[\"unack\"] = True\n\tfor key, a in agg.items():\n\t\tif a[\"act\"] >= 0:\n\t\t\tout[key] = (10 if a[\"unack\"] else 0) + a[\"act\"]\n\t\telif a[\"clr\"] >= 0:\n\t\t\tout[key] = 20 + a[\"clr\"]\n\treturn out"
-          }
-        ]
+          "mode": "indirect",
+          "tagPath": "{0}/Sts_Bad/Sts_Active",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
       }
     },
-    "custom.aFLTalm": {
+    "custom.FLTun": {
       "binding": {
-        "type": "expr",
+        "type": "tag",
         "config": {
-          "expression": "coalesce({view.custom.alm.FLT}, -1)"
+          "mode": "indirect",
+          "tagPath": "{0}/Sts_Bad/Sts_Unack",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.FLTpri": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Sts_Bad/Cfg_Priority",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
         }
       }
     },
@@ -193,7 +220,46 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "if({view.custom.aFLTalm} >= 0, {view.custom.aFLTalm},\n  if(toBoolean(coalesce({view.custom.hwFault}, false)), 3, -1))"
+          "expression": "if(toBoolean(coalesce({view.custom.FLTact}, false)), if(toBoolean(coalesce({view.custom.FLTun}, false)), 10, 0) + coalesce({view.custom.FLTpri}, 2),\n  if(toBoolean(coalesce({view.custom.FLTun}, false)), 20 + coalesce({view.custom.FLTpri}, 2), -1))"
+        }
+      }
+    },
+    "custom.HHact": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/HH/Alarm/Sts_Active",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.HHun": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/HH/Alarm/Sts_Unack",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.HHpri": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/HH/Alarm/Cfg_Priority",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
         }
       }
     },
@@ -201,7 +267,46 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "coalesce({view.custom.alm.HH}, -1)"
+          "expression": "if(toBoolean(coalesce({view.custom.HHact}, false)), if(toBoolean(coalesce({view.custom.HHun}, false)), 10, 0) + coalesce({view.custom.HHpri}, 2),\n  if(toBoolean(coalesce({view.custom.HHun}, false)), 20 + coalesce({view.custom.HHpri}, 2), -1))"
+        }
+      }
+    },
+    "custom.Hact": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/H/Alarm/Sts_Active",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.Hun": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/H/Alarm/Sts_Unack",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.Hpri": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/H/Alarm/Cfg_Priority",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
         }
       }
     },
@@ -209,7 +314,46 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "coalesce({view.custom.alm.H}, -1)"
+          "expression": "if(toBoolean(coalesce({view.custom.Hact}, false)), if(toBoolean(coalesce({view.custom.Hun}, false)), 10, 0) + coalesce({view.custom.Hpri}, 2),\n  if(toBoolean(coalesce({view.custom.Hun}, false)), 20 + coalesce({view.custom.Hpri}, 2), -1))"
+        }
+      }
+    },
+    "custom.Lact": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/L/Alarm/Sts_Active",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.Lun": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/L/Alarm/Sts_Unack",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.Lpri": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/L/Alarm/Cfg_Priority",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
         }
       }
     },
@@ -217,7 +361,46 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "coalesce({view.custom.alm.L}, -1)"
+          "expression": "if(toBoolean(coalesce({view.custom.Lact}, false)), if(toBoolean(coalesce({view.custom.Lun}, false)), 10, 0) + coalesce({view.custom.Lpri}, 2),\n  if(toBoolean(coalesce({view.custom.Lun}, false)), 20 + coalesce({view.custom.Lpri}, 2), -1))"
+        }
+      }
+    },
+    "custom.LLact": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/LL/Alarm/Sts_Active",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.LLun": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/LL/Alarm/Sts_Unack",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.LLpri": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/LL/Alarm/Cfg_Priority",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
         }
       }
     },
@@ -225,7 +408,20 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "coalesce({view.custom.alm.LL}, -1)"
+          "expression": "if(toBoolean(coalesce({view.custom.LLact}, false)), if(toBoolean(coalesce({view.custom.LLun}, false)), 10, 0) + coalesce({view.custom.LLpri}, 2),\n  if(toBoolean(coalesce({view.custom.LLun}, false)), 20 + coalesce({view.custom.LLpri}, 2), -1))"
+        }
+      }
+    },
+    "custom.rOVR": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Overrange",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
         }
       }
     },
@@ -233,7 +429,20 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "coalesce({view.custom.alm.OVR}, -1)"
+          "expression": "if(toBoolean(coalesce({view.custom.rOVR}, false)), 0, -1)"
+        }
+      }
+    },
+    "custom.rUNR": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Underrange",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
         }
       }
     },
@@ -241,7 +450,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "coalesce({view.custom.alm.UNR}, -1)"
+          "expression": "if(toBoolean(coalesce({view.custom.rUNR}, false)), 0, -1)"
         }
       }
     },
@@ -289,9 +498,21 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "!isGood({view.custom.pv}) || {view.custom.fltActive}"
+          "expression": "!isGood({view.custom.pv}) || {view.custom.fltActive} || toBoolean(coalesce({view.custom.hwFault}, false))"
         }
       }
+    },
+    "params.tType": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dockId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dwTagPath": {
+      "paramDirection": "input",
+      "persistent": true
     }
   },
   "props": {
@@ -313,7 +534,7 @@
       "alignItems": "stretch",
       "wrap": "nowrap",
       "style": {
-        "classes": "PV/Shell"
+        "classes": "PV/Shell Util/Pointer"
       }
     },
     "children": [
@@ -941,6 +1162,17 @@
           }
         ]
       }
-    ]
+    ],
+    "events": {
+      "dom": {
+        "onClick": {
+          "type": "script",
+          "scope": "G",
+          "config": {
+            "script": "\tefc.ui.openDynamic(self)"
+          }
+        }
+      }
+    }
   }
 }

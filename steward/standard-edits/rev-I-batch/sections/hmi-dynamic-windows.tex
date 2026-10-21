@@ -1,0 +1,76 @@
+\section[Dynamic Windows]{Dynamic Windows \newmark}\label{sec:hmi-dynamic-windows}
+Every equipment template opens a dynamic window: a panel on the right of the screen that shows the device's state, mode, commands, permissives, interlocks, alarms and history. Equipment of the same kind shares one dynamic window (Table~\ref{tab:hmi-dw-ids}), so a valve, motor or loop looks and works the same on every screen.
+
+\begin{small}
+\begin{longtable}{@{}P{3.6cm}P{12.6cm}@{}}
+\caption{Dynamic Windows}\label{tab:hmi-dw-ids} \\
+\toprule
+\rowcolor{tblhead}\textbf{Window id} & \textbf{Used by} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Window id} & \textbf{Used by} \\
+\midrule
+\endhead
+\texttt{dw\_ValveDiscrete} & On/off valves (\texttt{T\_DValve}) \\
+\texttt{dw\_ValveAnalog} & Control valves (\texttt{T\_CValve}) \\
+\texttt{dw\_Rotating} & Fixed-speed motors, pumps, fans, agitators and compressors (\texttt{T\_Motor}) \\
+\texttt{dw\_VFD} & Variable-speed drives (\texttt{T\_VFD}) \\
+\texttt{dw\_Heater} & Electric heaters (\texttt{T\_Heater}) \\
+\texttt{dw\_HeatTransfer} & Heat exchangers (\texttt{T\_HeatEx}) \\
+\texttt{dw\_ProcessValue} & Analog process values and indicators (\texttt{T\_AI}) \\
+\texttt{dw\_Loop} & PID loops (\texttt{T\_PID}), including tuning \\
+\texttt{dw\_Station} & Fill stations \\
+\texttt{dw\_IOCard} & PLC I/O cards and racks (diagnostics) \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+A template's \texttt{dockId} parameter overrides the default window chosen from its \texttt{tType} parameter, and \texttt{dwTagPath} overrides the bound tag. The \texttt{native} type opens the I/O card window; I/O card, rack and power-supply faceplates bind to the Modicon x80 device DDTs (decision 23).
+
+I/O card, rack and power-supply faceplates bind directly to the Modicon x80 device DDTs from Control Expert, which are imported into Ignition as-is; there is no PCLib type for them (\texttt{T\_IOCard} and \texttt{T\_IORack} are removed), and the window id \texttt{dw\_IOCard} is kept.
+
+\subsection[Size, Opening and Closing]{Size, Opening and Closing \newmark}\label{sec:hmi-dw-open}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Size and position.} The dynamic window fills the full height between the header and the alarm bar, in the right-hand region of the shell: 400 $\times$ 860 at 1920 $\times$ 1080 (37.04\,vh wide, 79.63\,vh tall), and 800 $\times$ 1720 at 3840 $\times$ 2160 (Appendix~\ref{app:screen-design}).
+  \item \textbf{Opening.} A single click or tap on the template symbol opens its dynamic window. The click target is the whole symbol bounding box, at least 44 design px in each direction.
+  \item \textbf{Closing.} The close button returns the right-hand region to the screen's default view. Each screen view has a \texttt{defaultDock} view parameter that names it (normally the screen's trends), and \texttt{setDefaultDock} sets it on startup.
+\end{itemize}
+
+\subsection[Layout and Buttons]{Layout and Buttons \newmark}\label{sec:hmi-dw-layout}
+Sections appear in this order; a section that does not apply to the device is left out:
+\begin{enumerate}[itemsep=1pt]
+  \item Header: tag, description and close button.
+  \item State.
+  \item Mode.
+  \item Commands.
+  \item Permissives.
+  \item Interlocks.
+  \item Alarms: active alarms are listed; inactive alarms are folded.
+  \item History: an 8~h state strip and the most recent events.
+  \item Maintenance and Configuration: collapsed by default and shown only to the roles in Table~\ref{tab:hmi-roles}. Loop tuning is done here, in \texttt{dw\_Loop}; there is no separate tuning popup.
+\end{enumerate}
+Buttons come in two sizes so that every dynamic window looks the same:
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Command tier} (mode AUTO /\allowbreak{} MAN /\allowbreak{} MAINT /\allowbreak{} OOS, OPEN /\allowbreak{} CLOSE, START /\allowbreak{} STOP, RESET, JOG, FWD /\allowbreak{} REV): one size, 72 $\times$ 30 design px, style \texttt{Button/Default}. The button for the current state is highlighted with \texttt{Button/Toggle/On}.
+  \item \textbf{Secondary tier} (BYPASS, UNBYP, ACK, RESET LATCHED, RESET MAINT, SIMULATE, analog valve presets 0 /\allowbreak{} 25 /\allowbreak{} 50 /\allowbreak{} 75 /\allowbreak{} 100\,\%): one smaller size, style \texttt{Button/Small}.
+  \item \texttt{Button/Danger} is used only for the confirm action in the bypass confirmation (Section~\ref{sec:hmi-bypass}).
+\end{itemize}
+
+\subsection[Touch Operation]{Touch Operation \newmark}\label{sec:hmi-touch}
+In touch mode (template parameter \texttt{useButton = false}) a double tap on the symbol of a two-state device (\texttt{T\_DValve}, \texttt{T\_Motor}) sends the toggle command (open /\allowbreak{} close, start /\allowbreak{} stop). It is sent only when the device is in Manual and available, and is not interlocked, in local or faulted; otherwise the double tap does nothing. Each template has a \texttt{dblCmd} parameter (default on) to turn this off. Analog devices (control valves, drives, loops) take commands from the dynamic window only.
+
+\subsection[Permissives, Interlocks and Bypass]{Permissives, Interlocks and Bypass \newmark}\label{sec:hmi-bypass}
+The Permissives and Interlocks sections list each condition by name (\texttt{Cfg\_CondDesc} in \texttt{T\_Intlk}, Section~\ref{sec:pclib-t-intlk}) with its state, and mark the first-out, latched and bypassed conditions.
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Who.} Bypass and unbypass need the Supervisor role or higher. The BYPASS button is shown only for conditions configured as bypassable (\texttt{Cfg\_Bypassable}) and works only while the bypass authorisation \texttt{Inp\_BypassPerm} is on.
+  \item \textbf{Confirmation.} BYPASS opens a confirmation (\texttt{Docks/Parts/BypassConfirm}). The user picks a duration from the presets 1~h, 2~h, 4~h and 8~h, limited to the group's maximum (\texttt{Cfg\_BypassMax}), and must enter a reason. The bypass is not applied without a reason.
+  \item \textbf{Indication.} Each bypassed condition shows its own time left and an audit line: who bypassed it, their role, when, and the reason.
+  \item \textbf{Logging.} Bypass and unbypass are written to the Ignition audit log (Section~\ref{sec:ignition-roles}).
+  \item \textbf{Rule.} A bypass made this way from the HMI, on a condition configured as bypassable, is exempt from the second-person and approved MOC requirement in Section~\ref{sec:online-changes}. Safety-related signals are never configured as bypassable and cannot be bypassed in software. PLC forces and logic changes are not exempt.
+\end{itemize}
+\future{Named permissive and interlock groups are to be embedded in the device types: \texttt{Perm : T\_Intlk} and \texttt{Intlk : T\_Intlk} in \texttt{T\_DValve}, \texttt{T\_Motor} and \texttt{T\_VFD}, \texttt{Intlk : T\_Intlk} in \texttt{T\_CValve} and \texttt{T\_PID}, and \texttt{Prot : T\_Intlk} in equipment modules. The existing \texttt{Inp\_IntlkOK} and \texttt{Inp\_PermOK} are kept and ANDed with the group. \texttt{T\_Intlk} gains \texttt{Sts\_BypLeft : ARRAY[0..15] OF TIME} so the time left can be shown per condition; until then only the time left on the oldest bypass (\texttt{Sts\_BypassLeft}) is available.}
+
+\subsection[Trends]{Trends \newmark}\label{sec:hmi-trends}
+Trends in a dynamic window show the last 30~minutes by default. Every graph has an expand button. Expanding a graph keeps the dynamic window at 400 $\times$ 860 design px and the right-hand region never changes width: the graph fills the window below its header (about 400 $\times$ 760 design px) with range buttons 5~m, 30~m, 1~h, 8~h and 24~h, pause /\allowbreak{} live and a collapse button. The other sections of the window are hidden until the graph is collapsed.

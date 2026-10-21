@@ -28,3 +28,40 @@ def project_json(title, description, parent=""):
 
 def project_dir(name):
     return os.path.join(REPO, "projects", name)
+
+def extract_inline(view, prefix, classes):
+    """EFC_Styles classes only: move each component's static inline style (everything but `classes`) into a
+    generated style class <prefix>/<component name>; identical styles share one class. Bound style props
+    (propConfig) are left alone. `classes` collects {name: style} for write_classes()."""
+    by_style = {json.dumps(s, sort_keys=True): n for n, s in classes.items()}
+    def walk(c):
+        st = c.get("props", {}).get("style")
+        bound = c.get("propConfig", {}).get("props.style.classes", {}).get("binding")
+        if bound and bound.get("type") == "property" and not bound.get("transforms") and isinstance(st, dict):
+            path = bound["config"]["path"]               # plain property binding -> equivalent expression we can append to
+            bound.clear(); bound.update({"type": "expr", "config": {"expression": "{%s}" % path}})
+        if bound and bound.get("type") != "expr":
+            bound, st = None, None                       # property/tag-bound classes: leave the inline style
+        if isinstance(st, dict) and any(k != "classes" for k in st):
+            body = {k: v for k, v in st.items() if k != "classes"}
+            key = json.dumps(body, sort_keys=True)
+            name = by_style.get(key)
+            if not name:
+                base = f"{prefix}/{c.get('meta', {}).get('name', 'x')}"
+                name, i = base, 2
+                while name in classes:
+                    name, i = f"{base}{i}", i + 1
+                classes[name], by_style[key] = body, name
+            c["props"]["style"] = {"classes": " ".join(x for x in (st.get("classes", ""), name) if x)}
+            if bound:                                    # expression-bound classes replace the static ones: append there
+                bound["config"]["expression"] = f"({bound['config']['expression']}) + ' {name}'"
+        for k in c.get("children", []):
+            walk(k)
+    walk(view["root"])
+    return view
+
+def write_classes(proj, classes, actor):
+    for name, style in classes.items():
+        d = os.path.join(proj, PERSPECTIVE, "style-classes", *name.split("/"))
+        write(os.path.join(d, "style.json"), dump({"base": {"style": style}, "variants": []}))
+        write(os.path.join(d, "resource.json"), resource_json(["style.json"], actor))

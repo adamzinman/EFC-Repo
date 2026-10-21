@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Analyzer" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Process analyzer (pH, ORP, conductivity, DO, turbidity, Cl2 ...)</comment>
+	<structure>
+		<variables name="AI" typeName="T_AI">
+			<comment>Measured value, scaling and alarms</comment>
+		</variables>
+		<variables name="Cfg_AnType" typeName="INT">
+			<comment>1=pH 2=ORP 3=Conductivity 4=DO 5=Turbidity 6=Free Cl2 7=TOC 8=Other</comment>
+			<variableInit value="1"></variableInit>
+		</variables>
+		<variables name="Inp_Temp" typeName="REAL">
+			<comment>Sample / compensation temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_DevFault" typeName="BOOL">
+			<comment>Transmitter diagnostic fault</comment>
+		</variables>
+		<variables name="Inp_DevMaint" typeName="BOOL">
+			<comment>Transmitter in maintenance / calibration</comment>
+		</variables>
+		<variables name="Inp_DevWarn" typeName="BOOL">
+			<comment>Transmitter warning (e.g. sensor ageing)</comment>
+		</variables>
+		<variables name="Inp_NE107" typeName="INT">
+			<comment>NE107 status reported by smart device (HART / fieldbus)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Inp_SampleOK" typeName="BOOL">
+			<comment>Sample flow healthy (flow switch)</comment>
+		</variables>
+		<variables name="Inp_Slope" typeName="REAL">
+			<comment>Sensor slope from transmitter (e.g. pH mV/pH)</comment>
+		</variables>
+		<variables name="Cfg_HoldMax" typeName="TIME">
+			<comment>Maximum hold time before alarm</comment>
+			<variableInit value="T#1H"></variableInit>
+		</variables>
+		<variables name="Cfg_CalDays" typeName="INT">
+			<comment>Calibration interval (days)</comment>
+			<variableInit value="30"></variableInit>
+		</variables>
+		<variables name="Cfg_FrozenTime" typeName="TIME">
+			<comment>PV unchanged for this long = frozen sensor</comment>
+			<variableInit value="T#30M"></variableInit>
+		</variables>
+		<variables name="Cfg_FrozenBand" typeName="REAL">
+			<comment>Band within which PV is considered unchanged</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cmd_Hold" typeName="BOOL">
+			<comment>Hold PV and suppress alarms for calibration (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Release" typeName="BOOL">
+			<comment>Release hold (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_CalDone" typeName="BOOL">
+			<comment>Calibration completed, stamp date (one-shot)</comment>
+		</variables>
+		<variables name="Val_PV" typeName="REAL">
+			<comment>Value for control - held value while in hold</comment>
+		</variables>
+		<variables name="Val_HeldPV" typeName="REAL">
+			<comment>Value captured at start of hold</comment>
+		</variables>
+		<variables name="Val_LastCal" typeName="DT">
+			<comment>Date/time of last calibration</comment>
+		</variables>
+		<variables name="Val_DaysSinceCal" typeName="REAL">
+			<comment>Days since last calibration</comment>
+		</variables>
+		<variables name="Sts_Hold" typeName="BOOL">
+			<comment>In hold / calibration</comment>
+		</variables>
+		<variables name="Sts_CalDue" typeName="BOOL">
+			<comment>Calibration due</comment>
+		</variables>
+		<variables name="Alm_DevFault" typeName="T_Alarm">
+			<comment>Transmitter fault</comment>
+		</variables>
+		<variables name="Alm_NoSample" typeName="T_Alarm">
+			<comment>No sample flow</comment>
+		</variables>
+		<variables name="Alm_Frozen" typeName="T_Alarm">
+			<comment>Frozen / stuck reading</comment>
+		</variables>
+		<variables name="Alm_CalDue" typeName="T_Alarm">
+			<comment>Calibration overdue</comment>
+		</variables>
+		<variables name="Alm_HoldLong" typeName="T_Alarm">
+			<comment>Hold exceeded Cfg_HoldMax</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

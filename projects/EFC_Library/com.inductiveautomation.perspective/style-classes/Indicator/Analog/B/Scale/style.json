@@ -1,0 +1,9 @@
+{
+  "base": {
+    "style": {
+      "gap": "0.370vh",
+      "padding": "0.278vh 0"
+    }
+  },
+  "variants": []
+}

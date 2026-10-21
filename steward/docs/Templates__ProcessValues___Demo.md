@@ -1,0 +1,23 @@
+# Templates/ProcessValues/_Demo
+
+<!-- keep:start -->
+**Purpose:** Demo page for the process value cards on the PV_Demo memory tags.
+
+**Usage notes:** Design-time reference only.
+
+**Gotchas:** Import tags/PV_Demo_Tags.json first.
+<!-- keep:end -->
+
+<!-- auto:start -->
+_Auto-generated 2026-10-21 03:43 from EFC_Library:view:Templates/ProcessValues/_Demo. Do not edit this section._
+
+No params.
+
+- PCLib types: T_AI_Demo
+- Dynamic window: none
+- Style classes: Container/Screen, Input/Check, Input/Setpoint, Text/Caption, Text/Label, Text/Mod/Wrap, Text/Title, Util/Pad/L, Util/Pad/S
+- Inline style props: 16
+- Popups opened: 0
+- system.* calls: none
+- Last modified: 2026-10-19T00:00:00Z by efc-ignition-library
+<!-- auto:end -->

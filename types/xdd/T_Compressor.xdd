@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:36:12" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Compressor" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+	<comment>Compressor / blower: load-unload, anti-cycle, lube and thermal protection</comment>
+	<structure>
+		<variables name="Drv" typeName="T_VFD">
+			<comment>Drive (fixed-speed: ignore speed members)</comment>
+		</variables>
+		<variables name="Prot" typeName="T_Intlk">
+			<comment>Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK</comment>
+		</variables>
+		<variables name="Inp_SuctPress" typeName="REAL">
+			<comment>Suction pressure (EU)</comment>
+		</variables>
+		<variables name="Inp_DischPress" typeName="REAL">
+			<comment>Discharge / header pressure (EU)</comment>
+		</variables>
+		<variables name="Inp_DischTemp" typeName="REAL">
+			<comment>Discharge temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_OilPress" typeName="REAL">
+			<comment>Lube oil pressure (EU)</comment>
+		</variables>
+		<variables name="Inp_OilTemp" typeName="REAL">
+			<comment>Lube oil temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_Vib" typeName="REAL">
+			<comment>Vibration (mm/s)</comment>
+		</variables>
+		<variables name="Inp_LoadFbk" typeName="BOOL">
+			<comment>Loaded feedback (inlet valve open)</comment>
+		</variables>
+		<variables name="Cfg_LoadPress" typeName="REAL">
+			<comment>Load (cut-in) pressure</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_UnloadPress" typeName="REAL">
+			<comment>Unload (cut-out) pressure</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MinRun" typeName="TIME">
+			<comment>Minimum run time</comment>
+			<variableInit value="T#5M"></variableInit>
+		</variables>
+		<variables name="Cfg_MinStop" typeName="TIME">
+			<comment>Minimum stop time (anti-cycle)</comment>
+			<variableInit value="T#2M"></variableInit>
+		</variables>
+		<variables name="Cfg_IdleTime" typeName="TIME">
+			<comment>Unloaded run time before auto stop</comment>
+			<variableInit value="T#10M"></variableInit>
+		</variables>
+		<variables name="Cfg_OilBypass" typeName="TIME">
+			<comment>Low oil pressure bypass after start</comment>
+			<variableInit value="T#10S"></variableInit>
+		</variables>
+		<variables name="Out_Load" typeName="BOOL">
+			<comment>Load solenoid / inlet valve</comment>
+		</variables>
+		<variables name="Out_BlowOff" typeName="BOOL">
+			<comment>Blow-off / recycle valve open</comment>
+		</variables>
+		<variables name="Out_IntlkOK" typeName="BOOL">
+			<comment>Wire to Drv.Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Sts_Loaded" typeName="BOOL">
+			<comment>Loaded</comment>
+		</variables>
+		<variables name="Sts_Idle" typeName="BOOL">
+			<comment>Running unloaded</comment>
+		</variables>
+		<variables name="Sts_AntiCycle" typeName="BOOL">
+			<comment>Waiting on minimum stop time</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=Off 1=Starting 2=Unloaded 3=Loaded 4=Idle stop 5=Anti-cycle 6=Tripped</comment>
+		</variables>
+		<variables name="Val_TimeToStart" typeName="TIME">
+			<comment>Anti-cycle time remaining</comment>
+		</variables>
+		<variables name="Val_PressRatio" typeName="REAL">
+			<comment>Compression ratio (absolute)</comment>
+		</variables>
+		<variables name="Alm_HiDischPress" typeName="T_AlmLim">
+			<comment>High discharge pressure</comment>
+		</variables>
+		<variables name="Alm_HiDischTemp" typeName="T_AlmLim">
+			<comment>High discharge temperature</comment>
+		</variables>
+		<variables name="Alm_LoOilPress" typeName="T_AlmLim">
+			<comment>Low lube oil pressure</comment>
+		</variables>
+		<variables name="Alm_HiOilTemp" typeName="T_AlmLim">
+			<comment>High lube oil temperature</comment>
+		</variables>
+		<variables name="Alm_Vib" typeName="T_AlmLim">
+			<comment>High vibration</comment>
+		</variables>
+		<variables name="Alm_LoSuct" typeName="T_AlmLim">
+			<comment>Low suction pressure</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

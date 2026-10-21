@@ -1,0 +1,113 @@
+\chapter{Perspective Screen Design Standard}
+\label{app:screen-design}
+\textbf{Applies to:} Ignition Perspective 8.1 (16:9 scalable layout and text scaling, final decisions). Target displays: 1920 $\times$ 1080 through 3840 $\times$ 2160. These techniques carry forward unchanged to the planned Ignition 8.3 upgrade.
+
+\section{Approach}
+All operator screens are built inside a single Shell view designed at 1920 $\times$ 1080. The shell's root is a Coordinate container in Percent mode with the aspect ratio locked to 16:9, so the entire interface scales proportionally and letterboxes on non-16:9 displays. Each screen region (header, menu, main area, trends, alarm bar) is an Embedded View placed in the shell. Perspective docks are not used for these regions, because docks are sized in fixed pixels and would not stay aligned with the scaled content.
+
+\section{Shell Layout}
+\begin{center}
+\begin{tikzpicture}[x=0.0075cm,y=-0.0075cm, font=\footnotesize]
+  \tikzset{reg/.style={draw, fill=headblue!10, align=center}}
+  \draw[reg] (0,0) rectangle (1920,80) node[midway] {Header\\1920 $\times$ 80};
+  \draw[reg] (0,80) rectangle (120,940) node[midway] {Menu\\120 $\times$\\860};
+  \draw[reg, fill=white] (120,80) rectangle (1520,940) node[midway] {Main Process Area\\1400 $\times$ 860};
+  \draw[reg] (1520,80) rectangle (1920,940) node[midway] {Trends /\\Dynamic\\400 $\times$ 860};
+  \draw[reg] (0,940) rectangle (1920,1080) node[midway] {Alarm Bar\\1920 $\times$ 140};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{tabular}{@{}P{3.93cm}P{2.72cm}P{1.96cm}P{1.96cm}P{2.72cm}P{2.37cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Region} & \textbf{Design size (px)} & \textbf{x} & \textbf{y} & \textbf{width} & \textbf{height} \\
+\midrule
+Header & 1920 $\times$ 80 & 0 & 0 & 100\% & 7.41\% \\
+Menu & 120 $\times$ 860 & 0 & 7.41\% & 6.25\% & 79.63\% \\
+Main process area & 1400 $\times$ 860 & 6.25\% & 7.41\% & 72.92\% & 79.63\% \\
+Trends / dynamic window (37.04\,vh wide, 79.63\,vh tall) & 400 $\times$ 860 & 79.17\% & 7.41\% & 20.83\% & 79.63\% \\
+Alarm bar & 1920 $\times$ 140 & 0 & 87.04\% & 100\% & 12.96\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+Percent values are the position properties to enter on each Embedded View in the shell's percent-mode root. The trends/dynamic window fills the full height between the header and the alarm bar: 400 $\times$ 860 design px at 1920 $\times$ 1080 (37.04\,vh wide, 79.63\,vh tall), which renders at 800 $\times$ 1720\,px on a 3840 $\times$ 2160 display (its largest size) and scales down proportionally on smaller displays. When a trend graph is expanded, the graph fills the window below its header and the window keeps its size; the region never changes width (Section~\ref{sec:hmi-trends}). If a collapsible-trends variant of the shell is added later, its main area becomes 1800 $\times$ 860 and should use layouts designed for that size.
+
+\section{Container Settings}
+\begin{center}
+\begin{tabular}{@{}P{4.98cm}P{4.16cm}P{4.77cm}P{2.60cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{View} & \textbf{defaultSize} & \textbf{Root container} & \textbf{aspectRatio} \\
+\midrule
+Shell & 1920 $\times$ 1080 & Coordinate, mode = percent & 16:9 \\
+Region views (header, menu, trends, alarm bar) & Equal to the region's slot size & Coordinate, mode = percent & Blank \\
+Process screens (main area) & 1400 $\times$ 860 & Coordinate, mode = percent & Blank \\
+Templates & The size they occupy on the screen & Coordinate, mode = percent & Blank \\
+\bottomrule
+\end{tabular}
+\end{center}
+Only the shell locks the aspect ratio. Because the shell fixes the overall proportions, every slot keeps a constant shape; setting an aspect ratio on inner views would cause double letterboxing and gaps.
+
+\section{Navigation and Dynamic Content}
+\textbf{Main area navigation.} One page route, \texttt{/screen/:name}, points to the Shell as its primary view. The Shell has a \texttt{name} view parameter, and the main-area Embedded View's path uses the expression binding below. Menu buttons navigate to routes such as \texttt{/screen/Boiler}, so browser back, bookmarks, and direct links all work while the header, menu, and alarm bar remain in place.
+\begin{center}\texttt{"Screens/" + \{view.params.name\}}\end{center}
+
+\textbf{Trends / dynamic window.} The right-hand region of the shell is one Embedded View, the dynamic window. Its path and params are bound to a per-page session value, \texttt{session.\allowbreak{}custom.\allowbreak{}efcDw[pageId]}, which holds the current view path, the params and the screen's default view. The project-library script \texttt{efc.ui} writes that value. A click on a template symbol calls \texttt{openDynamic} and shows that device's dynamic window for its tag path. The close button calls \texttt{closeDynamic}, which returns the region to the screen's default view. An expanded trend graph fills the dynamic window below its header; the window keeps its size and the right-hand region never changes width. Each screen view names its default view in the \texttt{defaultDock} view parameter, which \texttt{setDefaultDock} reads on startup. The region is sized in viewport height: 37.04\,vh wide and 79.63\,vh tall, the full height between the header and the alarm bar (400 $\times$ 860 at 1920 $\times$ 1080; 800 $\times$ 1720 at 3840 $\times$ 2160). There are no Perspective docks and no per-project page or dock configuration. What the dynamic window shows and how it opens and closes is set in Section~\ref{sec:hmi-dynamic-windows}. \newmark
+
+\textbf{Menu.} At 120 design px wide (about 80\,px on a 1280 $\times$ 720 display), the menu uses icons with a short one-word label beneath each.
+
+\textbf{Alarm bar.} At 140 design px tall, the alarm bar shows roughly four alarm rows plus a header row at about 28 design px per row.
+
+\section{Text Scaling Standard}
+All text, padding, borders, border radius, and icon sizes are sized in design pixels (dp): one pixel on a 1920 $\times$ 1080 display, scaled to the current screen. The unit is defined once as a CSS variable in a custom theme's variables file, or in the Advanced Stylesheet if the installed 8.1 build includes it:
+\begin{center}\texttt{:root \{ --dp: min(0.052083vw, 0.092593vh); \}}\end{center}
+Any size is then written as \texttt{calc(N * var(--dp))}, where N is the size in pixels on a 1080p display. Because the unit is derived from the viewport rather than from the enclosing container, it gives the same result at any nesting depth: text in a template inside an embedded view inside the shell scales at exactly the same rate as the shell itself. Where the variable is unavailable, the equivalent direct form is \texttt{min(N/\allowbreak{}19.\allowbreak{}2 vw, N/\allowbreak{}10.\allowbreak{}8 vh)}.
+
+Text sizes are applied through \texttt{EFC\_Styles} classes rather than set on individual components:
+\begin{center}
+\begin{tabular}{@{}P{4.12cm}P{2.60cm}P{5.20cm}P{4.59cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{EFC\_Styles class} & \textbf{1080p size} & \textbf{fontSize using --dp} & \textbf{Direct equivalent} \\
+\midrule
+Text/Size/XXS & 10 & \texttt{calc(10 * var(--dp))} & \texttt{min(0.\allowbreak{}521vw, 0.\allowbreak{}926vh)} \\
+Text/Size/XS & 11 & \texttt{calc(11 * var(--dp))} & \texttt{min(0.\allowbreak{}573vw, 1.\allowbreak{}019vh)} \\
+Text/Size/S & 12 & \texttt{calc(12 * var(--dp))} & \texttt{min(0.\allowbreak{}625vw, 1.\allowbreak{}111vh)} \\
+Text/Size/M & 14 & \texttt{calc(14 * var(--dp))} & \texttt{min(0.\allowbreak{}729vw, 1.\allowbreak{}296vh)} \\
+Text/Size/L & 16 & \texttt{calc(16 * var(--dp))} & \texttt{min(0.\allowbreak{}833vw, 1.\allowbreak{}481vh)} \\
+Text/Size/XL & 20 & \texttt{calc(20 * var(--dp))} & \texttt{min(1.\allowbreak{}042vw, 1.\allowbreak{}852vh)} \\
+Text/Size/XXL & 24 & \texttt{calc(24 * var(--dp))} & \texttt{min(1.\allowbreak{}25vw, 2.\allowbreak{}222vh)} \\
+Text/Size/XXXL & 32 & \texttt{calc(32 * var(--dp))} & \texttt{min(1.\allowbreak{}667vw, 2.\allowbreak{}963vh)} \\
+\bottomrule
+\end{tabular}
+\end{center}
+Line height is set as a unitless value (for example 1.2) so it follows the font size. Fixed px values are not permitted in any font size, padding, or border width on operator screens.
+
+\section{Resolution Behavior}
+\begin{center}
+\begin{tabular}{@{}P{7.42cm}P{4.76cm}P{4.76cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Element} & \textbf{1920 $\times$ 1080} & \textbf{3840 $\times$ 2160} \\
+\midrule
+Shell & 1920 $\times$ 1080 & 3840 $\times$ 2160 \\
+Main process area & 1400 $\times$ 860 & 2800 $\times$ 1720 \\
+Trends / dynamic window & 400 $\times$ 860 & 800 $\times$ 1720 \\
+A 200 $\times$ 120 template & 200 $\times$ 120 & 400 $\times$ 240 \\
+Text at \texttt{calc(14 * var(--dp))} & 14\,px & 28\,px \\
+Text at a fixed 14\,px (not permitted) & 14\,px & 14\,px (half the relative size) \\
+\bottomrule
+\end{tabular}
+\end{center}
+4K monitors running Windows display scaling (150\% or 200\%) report a smaller CSS viewport to the browser. The dp unit handles this automatically; no per-scaling configuration is required.
+
+\section{Templates}
+Each template is designed at the size it will occupy on the screen, with a percent-mode Coordinate root and no aspect ratio. All template text and styling uses the \texttt{EFC\_Styles} classes; templates carry no static inline styles. Generators move static inline styles into generated classes (for example \texttt{Loop/*}, \texttt{Indicator/Analog/*} and \texttt{Station/*}). Spacing uses the \texttt{Util/Gap} classes \texttt{XS}, \texttt{S}, \texttt{M} and \texttt{L}. Templates are placed at their designed size so text stays proportional to the graphic, which also supports consistent symbol sizing across screens.
+
+When the same template must appear at a different size, it takes a \texttt{scale} parameter (default 1) and its font sizes are bound with an expression such as:
+\begin{center}\texttt{"calc(" + (14 * \{view.params.scale\}) + " * var(--dp))"}\end{center}
+
+\section{Components With Internal Pixel Sizing}
+Several components set fonts, row heights, or padding internally in pixels and must be overridden explicitly with dp values: the Table and Alarm Status Table (header style, row style, and row height), the Power Chart and Time Series Chart (axis and legend fonts), and the Menu Tree, Dropdown, and Tab Container (font and padding). Icons are sized in dp so they stay proportional to adjacent labels. Images use \texttt{fit.\allowbreak{}mode = contain}, and SVG graphics are preferred over raster images.
+
+\section{Known Limitations and Testing}
+The Designer evaluates vw and vh against the whole workspace panel, so text sizing appears incorrect there and must be judged in a browser session. Readability at the smallest display is the limiting factor; the smallest routinely used design size should be 14\,dp or larger, and any floor applied with \texttt{max(10px, ...)} must be checked for text overflow.
+
+Before rollout, a test screen containing a template at two sizes, a table, and a chart is opened in Chrome with the device toolbar set to 1920 $\times$ 1080 and 3840 $\times$ 2160 (plus a non-16:9 size such as 1920 $\times$ 1200 to confirm letterboxing). Text should occupy the same proportion of its box at every size; any element that does not still has a fixed pixel value or an unset component-internal size.

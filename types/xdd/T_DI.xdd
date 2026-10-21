@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_DI" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Digital input: invert, debounce, sim, optional state alarm</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Inp_Raw" typeName="BOOL">
+			<comment>Raw input from channel</comment>
+		</variables>
+		<variables name="Inp_ChFault" typeName="BOOL">
+			<comment>Channel / module diagnostic fault</comment>
+		</variables>
+		<variables name="Cfg_Invert" typeName="BOOL">
+			<comment>Invert raw signal (fail-safe NC contacts)</comment>
+		</variables>
+		<variables name="Cfg_OnDly" typeName="TIME">
+			<comment>Debounce on-delay</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_OffDly" typeName="TIME">
+			<comment>Debounce off-delay</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_AlmMode" typeName="INT">
+			<comment>0=No alarm 1=Alarm when Val TRUE 2=Alarm when Val FALSE</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_TrueText" typeName="STRING[16]">
+			<comment>HMI text for TRUE state, e.g. OPEN</comment>
+		</variables>
+		<variables name="Cfg_FalseText" typeName="STRING[16]">
+			<comment>HMI text for FALSE state, e.g. CLOSED</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation enabled</comment>
+		</variables>
+		<variables name="Sim_Val" typeName="BOOL">
+			<comment>Simulated value</comment>
+		</variables>
+		<variables name="Val" typeName="BOOL">
+			<comment>Conditioned value - use this in logic</comment>
+		</variables>
+		<variables name="Sts_Bad" typeName="BOOL">
+			<comment>Channel fault</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Val_Transitions" typeName="UDINT">
+			<comment>Count of FALSE-&gt;TRUE transitions</comment>
+		</variables>
+		<variables name="Alm" typeName="T_Alarm">
+			<comment>State alarm (see Cfg_AlmMode)</comment>
+		</variables>
+		<variables name="Alm_Bad" typeName="T_Alarm">
+			<comment>Channel fault alarm</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

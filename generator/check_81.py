@@ -1,6 +1,6 @@
 """Ignition 8.1 import check for PID_Symbols.zip and EFC_Styles.zip (static; no gateway needed)."""
 import zipfile, json, re, sys
-EXPR_81 = {"case", "if", "indexOf", "lastIndexOf", "len", "numberFormat", "substring", "coalesce", "isNull", "concat",
+EXPR_81 = {"case", "toMillis", "if", "indexOf", "lastIndexOf", "len", "numberFormat", "substring", "coalesce", "isNull", "concat",
            "upper", "lower", "trim", "replace", "split", "stringFormat", "left", "right", "toInt", "toFloat", "toStr", "toBoolean",
            "isAlarmActiveFiltered", "coalesce", "abs", "min", "max", "round", "now", "dateFormat", "getBit", "switch", "try", "lookup", "forceQuality", "isGood"}
 PAR = {"none"} | {f"x{a}Y{b}" for a in ("Min", "Mid", "Max") for b in ("Min", "Mid", "Max")}   # Drawing preserveAspectRatio enum (8.1)
@@ -27,7 +27,7 @@ for zp in sys.argv[1:]:
             r = json.loads(z.read(n)); folder = n.rsplit("/", 1)[0]
             for f in r.get("files", []):
                 if f"{folder}/{f}" not in names: fail(f"{n}: listed file {f} missing")
-            if r.get("scope") != "G" or r.get("version") != 1: fail(f"{n}: scope/version")
+            if r.get("scope") != ("A" if "script-python" in n else "G") or r.get("version") != 1: fail(f"{n}: scope/version")
         if n.endswith("style.json"):
             s = json.loads(z.read(n))
             if "style" not in s.get("base", {}): fail(f"{n}: base.style missing")
@@ -36,7 +36,7 @@ for zp in sys.argv[1:]:
         if n.endswith("view.json"):
             v = json.loads(z.read(n))
             for e in exprs(v):
-                for fn in re.findall(r"\b([a-zA-Z]+)\(", re.sub(r'"[^"]*"', "", e)):
+                for fn in re.findall(r"\b([a-zA-Z]+)\(", re.sub(r'"[^"]*"|\'[^\']*\'', "", e)):
                     if fn not in EXPR_81: fail(f"{n}: expression function {fn}() not in 8.1")
             for c in walk(v["root"]):
                 if c.get("type") == "ia.shapes.svg" and c.get("props", {}).get("preserveAspectRatio", "xMidYMid") not in PAR:

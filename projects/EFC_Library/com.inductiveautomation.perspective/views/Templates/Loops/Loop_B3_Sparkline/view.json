@@ -4,6 +4,10 @@
     "sp": 0,
     "out": 0,
     "mode": 0,
+    "devH": 0,
+    "devL": 0,
+    "devHAct": false,
+    "devLAct": false,
     "almHi": 0,
     "almLo": 0,
     "pvLo": 0,
@@ -25,7 +29,10 @@
   },
   "params": {
     "tagPath": "[default]PID_Demo/TIC101",
-    "label": ""
+    "label": "",
+    "tType": "T_PID",
+    "dockId": "",
+    "dwTagPath": ""
   },
   "propConfig": {
     "custom.pv": {
@@ -37,7 +44,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV"
+          "tagPath": "{1}/Val_PV"
         }
       }
     },
@@ -50,7 +57,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/SP"
+          "tagPath": "{1}/Val_SP"
         }
       }
     },
@@ -63,7 +70,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/OUT"
+          "tagPath": "{1}/Out_CV"
         }
       }
     },
@@ -76,33 +83,75 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Mode"
+          "tagPath": "{1}/Sts_Mode"
+        }
+      }
+    },
+    "custom.devH": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevH/Cfg_Lim"
+        }
+      }
+    },
+    "custom.devL": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevL/Cfg_Lim"
+        }
+      }
+    },
+    "custom.devHAct": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevH/Sts_Active"
+        }
+      }
+    },
+    "custom.devLAct": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/Alm_DevL/Sts_Active"
         }
       }
     },
     "custom.almHi": {
       "binding": {
-        "type": "tag",
+        "type": "expr",
         "config": {
-          "fallbackDelay": 2.5,
-          "mode": "indirect",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "tagPath": "{1}/AlmHi"
+          "expression": "{view.custom.sp} + {view.custom.devH}"
         }
       }
     },
     "custom.almLo": {
       "binding": {
-        "type": "tag",
+        "type": "expr",
         "config": {
-          "fallbackDelay": 2.5,
-          "mode": "indirect",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "tagPath": "{1}/AlmLo"
+          "expression": "{view.custom.sp} - {view.custom.devL}"
         }
       }
     },
@@ -115,7 +164,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV.engLow"
+          "tagPath": "{1}/Cfg_PVMin"
         }
       }
     },
@@ -128,7 +177,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV.engHigh"
+          "tagPath": "{1}/Cfg_PVMax"
         }
       }
     },
@@ -141,7 +190,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/PV.engUnit"
+          "tagPath": "{1}/Cfg_PVEU"
         }
       }
     },
@@ -189,7 +238,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "{view.custom.pv} >= {view.custom.almHi} || {view.custom.pv} <= {view.custom.almLo}"
+          "expression": "{view.custom.devHAct} || {view.custom.devLAct}"
         }
       }
     },
@@ -217,6 +266,18 @@
       "paramDirection": "input",
       "persistent": true
     },
+    "params.tType": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dockId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dwTagPath": {
+      "paramDirection": "input",
+      "persistent": true
+    },
     "custom.devAlm": {
       "binding": {
         "type": "tag",
@@ -226,7 +287,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/AlmDev"
+          "tagPath": "{1}/Alm_DevH/Cfg_Lim"
         }
       }
     },
@@ -239,7 +300,7 @@
         "transforms": [
           {
             "type": "script",
-            "code": "\tbase = self.view.params.tagPath\n\tW, H = 150.0, 34.0\n\tempty = {\"pv\": \"\", \"sp\": \"\"}\n\tif not base:\n\t\treturn empty\n\ttry:\n\t\tds = system.tag.queryTagHistory(paths=[base + \"/PV\", base + \"/SP\"], rangeMinutes=1, returnSize=40,\n\t\t\taggregationMode=\"Average\", returnFormat=\"Wide\", ignoreBadQuality=True)\n\texcept:\n\t\treturn empty\n\trows = []\n\tfor r in range(ds.getRowCount()):\n\t\ta, b = ds.getValueAt(r, 1), ds.getValueAt(r, 2)\n\t\tif a is not None and b is not None:\n\t\t\trows.append((float(a), float(b)))\n\tif len(rows) < 2:\n\t\treturn empty\n\tlo = min(min(p) for p in rows)\n\thi = max(max(p) for p in rows)\n\tpad = max((hi - lo) * 0.15, 0.5)\n\tlo, hi = lo - pad, hi + pad\n\tdef y(val):\n\t\treturn H - 3 - (val - lo) / (hi - lo) * (H - 6)\n\tstep = W / (len(rows) - 1)\n\tdef mk(i):\n\t\treturn \" \".join((\"M\" if n == 0 else \"L\") + \"%.1f,%.1f\" % (n * step, y(p[i])) for n, p in enumerate(rows))\n\treturn {\"pv\": mk(0), \"sp\": mk(1)}"
+            "code": "\tbase = self.view.params.tagPath\n\tW, H = 150.0, 34.0\n\tempty = {\"pv\": \"\", \"sp\": \"\"}\n\tif not base:\n\t\treturn empty\n\ttry:\n\t\tds = system.tag.queryTagHistory(paths=[base + \"/Val_PV\", base + \"/Val_SP\"], rangeMinutes=1, returnSize=40,\n\t\t\taggregationMode=\"Average\", returnFormat=\"Wide\", ignoreBadQuality=True)\n\texcept:\n\t\treturn empty\n\trows = []\n\tfor r in range(ds.getRowCount()):\n\t\ta, b = ds.getValueAt(r, 1), ds.getValueAt(r, 2)\n\t\tif a is not None and b is not None:\n\t\t\trows.append((float(a), float(b)))\n\tif len(rows) < 2:\n\t\treturn empty\n\tlo = min(min(p) for p in rows)\n\thi = max(max(p) for p in rows)\n\tpad = max((hi - lo) * 0.15, 0.5)\n\tlo, hi = lo - pad, hi + pad\n\tdef y(val):\n\t\treturn H - 3 - (val - lo) / (hi - lo) * (H - 6)\n\tstep = W / (len(rows) - 1)\n\tdef mk(i):\n\t\treturn \" \".join((\"M\" if n == 0 else \"L\") + \"%.1f,%.1f\" % (n * step, y(p[i])) for n, p in enumerate(rows))\n\treturn {\"pv\": mk(0), \"sp\": mk(1)}"
           }
         ]
       }
@@ -259,14 +320,9 @@
     "props": {
       "direction": "column",
       "style": {
-        "backgroundColor": "#F7F8F9",
-        "borderRadius": "0.741vh",
-        "boxShadow": "0 1px 2px rgba(20,30,40,0.08)",
-        "padding": "0.741vh 0.926vh 0.926vh 0.926vh",
-        "cursor": "pointer",
-        "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-        "overflow": "hidden"
-      }
+        "classes": "Loop/B1/root"
+      },
+      "alignItems": "stretch"
     },
     "position": {
       "shrink": 0
@@ -280,7 +336,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "marginBottom": "0.741vh"
+            "classes": "Loop/B1/header"
           },
           "justify": "space-between",
           "alignItems": "center"
@@ -297,8 +353,7 @@
             "props": {
               "direction": "row",
               "style": {
-                "gap": "0.463vh",
-                "height": "1.481vh"
+                "classes": "Loop/B1/title"
               },
               "alignItems": "center"
             },
@@ -314,11 +369,7 @@
                 "props": {
                   "text": "",
                   "style": {
-                    "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                    "color": "#1E2329",
-                    "fontWeight": 600,
-                    "fontSize": "1.157vh",
-                    "whiteSpace": "nowrap"
+                    "classes": "Loop/B1/tag"
                   }
                 },
                 "position": {
@@ -349,10 +400,10 @@
                       "name": "d",
                       "d": "M6,0.8 L11.2,6 L6,11.2 L0.8,6 Z",
                       "fill": {
-                        "paint": "#FF8C00"
+                        "paint": "#FF7A00"
                       },
                       "stroke": {
-                        "paint": "#222222",
+                        "paint": "#1F1F1F",
                         "width": 0.8
                       }
                     }
@@ -383,14 +434,7 @@
             "props": {
               "text": "",
               "style": {
-                "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                "color": "#1E2329",
-                "fontSize": "0.926vh",
-                "fontWeight": 600,
-                "letterSpacing": "0.04em",
-                "padding": "0.185vh 0.648vh",
-                "borderRadius": "999px",
-                "lineHeight": 1.2
+                "classes": "Loop/B1/mode"
               }
             },
             "position": {
@@ -409,7 +453,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "case({view.custom.mode}, 0, \"#2B3138\", 2, \"#DCE6F7\", \"#E9ECEF\")"
+                    "expression": "case({view.custom.mode}, 0, \"#3A3A3A\", 2, \"#DCE6F7\", \"#EDEDED\")"
                   }
                 }
               },
@@ -417,7 +461,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "case({view.custom.mode}, 0, \"#FFFFFF\", 2, \"#1F4E99\", \"#454D55\")"
+                    "expression": "case({view.custom.mode}, 0, \"#FFFFFF\", 2, \"#1F4E99\", \"#4D4D4D\")"
                   }
                 }
               }
@@ -433,8 +477,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "gap": "0.741vh",
-            "height": "5.926vh"
+            "classes": "Loop/B3/body"
           }
         },
         "position": {
@@ -460,7 +503,7 @@
                   "rx": 5.0,
                   "ry": 5.0,
                   "fill": {
-                    "paint": "#E6E9EC"
+                    "paint": "#E6E6E6"
                   },
                   "stroke": {
                     "paint": "none",
@@ -477,7 +520,7 @@
                   "rx": 5.0,
                   "ry": 5.0,
                   "fill": {
-                    "paint": "#7C858F"
+                    "paint": "#7F7F7F"
                   },
                   "stroke": {
                     "paint": "none",
@@ -494,7 +537,7 @@
                   "rx": 1,
                   "ry": 1,
                   "fill": {
-                    "paint": "#FF8C00"
+                    "paint": "#FF7A00"
                   },
                   "stroke": {
                     "paint": "none",
@@ -511,7 +554,7 @@
                   "rx": 1,
                   "ry": 1,
                   "fill": {
-                    "paint": "#FF8C00"
+                    "paint": "#FF7A00"
                   },
                   "stroke": {
                     "paint": "none",
@@ -523,7 +566,7 @@
                   "name": "sp",
                   "d": "",
                   "fill": {
-                    "paint": "#2F6FD6"
+                    "paint": "#1F4E99"
                   },
                   "stroke": {
                     "paint": "none",
@@ -587,7 +630,7 @@
             "props": {
               "direction": "column",
               "style": {
-                "gap": "0.37vh"
+                "classes": "Loop/B3/vals"
               },
               "justify": "space-between",
               "alignItems": "flex-end"
@@ -620,12 +663,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                        "color": "#1E2329",
-                        "fontSize": "1.852vh",
-                        "fontWeight": 600,
-                        "fontVariantNumeric": "tabular-nums",
-                        "lineHeight": 1
+                        "classes": "Loop/B1/pv"
                       }
                     },
                     "position": {
@@ -650,10 +688,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                        "color": "#6B737C",
-                        "fontSize": "0.926vh",
-                        "marginLeft": "0.278vh"
+                        "classes": "Loop/B2/units"
                       }
                     },
                     "position": {
@@ -695,12 +730,7 @@
                     "props": {
                       "text": "SP",
                       "style": {
-                        "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                        "color": "#2F6FD6",
-                        "fontSize": "0.926vh",
-                        "fontWeight": 600,
-                        "letterSpacing": "0.05em",
-                        "marginRight": "0.37vh"
+                        "classes": "Loop/B1/spLbl"
                       }
                     },
                     "position": {
@@ -715,12 +745,7 @@
                     "props": {
                       "text": "",
                       "style": {
-                        "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                        "color": "#2F6FD6",
-                        "fontSize": "1.204vh",
-                        "fontWeight": 600,
-                        "fontVariantNumeric": "tabular-nums",
-                        "lineHeight": 1
+                        "classes": "Loop/B2/sp"
                       }
                     },
                     "position": {
@@ -747,13 +772,7 @@
                 "props": {
                   "text": "",
                   "style": {
-                    "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                    "color": "#1E2329",
-                    "fontSize": "0.926vh",
-                    "fontWeight": 600,
-                    "padding": "0.093vh 0.556vh",
-                    "borderRadius": "999px",
-                    "fontVariantNumeric": "tabular-nums"
+                    "classes": "Loop/B3/dev"
                   }
                 },
                 "position": {
@@ -772,7 +791,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if(abs({view.custom.pv} - {view.custom.sp}) > {view.custom.devAlm}, \"#FFE7CC\", \"#E9ECEF\")"
+                        "expression": "if(abs({view.custom.pv} - {view.custom.sp}) > {view.custom.devAlm}, \"#FFFFFF\", \"#EDEDED\")"
                       }
                     }
                   },
@@ -780,7 +799,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if(abs({view.custom.pv} - {view.custom.sp}) > {view.custom.devAlm}, \"#8A4A00\", \"#454D55\")"
+                        "expression": "if(abs({view.custom.pv} - {view.custom.sp}) > {view.custom.devAlm}, \"#8F4500\", \"#4D4D4D\")"
                       }
                     }
                   }
@@ -798,10 +817,7 @@
         "props": {
           "direction": "column",
           "style": {
-            "marginTop": "0.741vh",
-            "border": "1px solid #E3E6E9",
-            "borderRadius": "0.556vh",
-            "overflow": "hidden"
+            "classes": "Loop/B3/sparkWrap"
           }
         },
         "position": {
@@ -842,7 +858,7 @@
                     "paint": "none"
                   },
                   "stroke": {
-                    "paint": "#2F6FD6",
+                    "paint": "#1F4E99",
                     "width": 1.2,
                     "dasharray": "4 3"
                   }
@@ -855,7 +871,7 @@
                     "paint": "none"
                   },
                   "stroke": {
-                    "paint": "#1E2329",
+                    "paint": "#1F1F1F",
                     "width": 1.5
                   }
                 }
@@ -894,7 +910,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "margin": "0.741vh 0 0.37vh 0"
+            "classes": "Loop/B3/outRow"
           },
           "justify": "space-between",
           "alignItems": "baseline"
@@ -911,11 +927,7 @@
             "props": {
               "text": "OUT",
               "style": {
-                "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                "color": "#6B737C",
-                "fontSize": "0.926vh",
-                "fontWeight": 600,
-                "letterSpacing": "0.05em"
+                "classes": "Loop/B1/outLbl"
               }
             },
             "position": {
@@ -944,12 +956,7 @@
                 "props": {
                   "text": "",
                   "style": {
-                    "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                    "color": "#1E2329",
-                    "fontSize": "1.111vh",
-                    "fontWeight": 600,
-                    "fontVariantNumeric": "tabular-nums",
-                    "lineHeight": 1
+                    "classes": "Loop/B3/out"
                   }
                 },
                 "position": {
@@ -974,10 +981,7 @@
                 "props": {
                   "text": "%",
                   "style": {
-                    "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
-                    "color": "#6B737C",
-                    "fontSize": "0.926vh",
-                    "marginLeft": "0.278vh"
+                    "classes": "Loop/B2/units"
                   }
                 },
                 "position": {
@@ -996,7 +1000,7 @@
         "props": {
           "direction": "row",
           "style": {
-            "height": "0.463vh"
+            "classes": "Loop/B2/ob"
           }
         },
         "position": {
@@ -1022,7 +1026,7 @@
                   "rx": 2.5,
                   "ry": 2.5,
                   "fill": {
-                    "paint": "#E6E9EC"
+                    "paint": "#E6E6E6"
                   },
                   "stroke": {
                     "paint": "none",
@@ -1039,7 +1043,7 @@
                   "rx": 2.5,
                   "ry": 2.5,
                   "fill": {
-                    "paint": "#7C858F"
+                    "paint": "#7F7F7F"
                   },
                   "stroke": {
                     "paint": "none",
@@ -1072,7 +1076,7 @@
         "binding": {
           "type": "expr",
           "config": {
-            "expression": "if({view.custom.alarm}, \"2px solid #FF8C00\", \"1px solid #C3C8CE\")"
+            "expression": "if({view.custom.alarm}, \"2px solid #FF7A00\", \"1px solid #A6A6A6\")"
           }
         }
       }
@@ -1083,7 +1087,7 @@
           "type": "script",
           "scope": "G",
           "config": {
-            "script": "\ttp = self.view.params.tagPath\n\tsystem.perspective.openPopup(\"loopcfg_\" + tp, \"Templates/Loops/Popups/LoopConfig\", params={\"tagPath\": tp},\n\t\ttitle=self.view.custom.name, showCloseIcon=True, draggable=True, resizable=False, modal=False,\n\t\toverlayDismiss=True)"
+            "script": "\tefc.ui.openDynamic(self)"
           }
         }
       }

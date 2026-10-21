@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:36:12" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Motor" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+	<comment>Direct-on-line / star-delta / soft-start motor</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Mode" typeName="T_Mode">
+			<comment>Mode block</comment>
+		</variables>
+		<variables name="Perm" typeName="T_Intlk">
+			<comment>Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK</comment>
+		</variables>
+		<variables name="Intlk" typeName="T_Intlk">
+			<comment>Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Inp_RunFbk" typeName="BOOL">
+			<comment>Run feedback (contactor aux / drive running)</comment>
+		</variables>
+		<variables name="Inp_Remote" typeName="BOOL">
+			<comment>Local/Remote switch in REMOTE</comment>
+		</variables>
+		<variables name="Inp_AvailOK" typeName="BOOL">
+			<comment>MCC available: breaker closed, control power OK</comment>
+		</variables>
+		<variables name="Inp_EStopOK" typeName="BOOL">
+			<comment>Field E-stop circuit healthy</comment>
+		</variables>
+		<variables name="Inp_IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (TRUE = may run; FALSE trips)</comment>
+		</variables>
+		<variables name="Inp_PermOK" typeName="BOOL">
+			<comment>Permissives healthy (TRUE = may start)</comment>
+		</variables>
+		<variables name="Inp_IOFault" typeName="BOOL">
+			<comment>I/O channel or comms fault</comment>
+		</variables>
+		<variables name="Inp_OL" typeName="BOOL">
+			<comment>Overload / motor protection relay tripped</comment>
+		</variables>
+		<variables name="Inp_Current" typeName="REAL">
+			<comment>Motor current (A), optional</comment>
+		</variables>
+		<variables name="Cfg_FbkTime" typeName="TIME">
+			<comment>Time allowed for run feedback after start/stop</comment>
+			<variableInit value="T#5S"></variableInit>
+		</variables>
+		<variables name="Cfg_RestartDly" typeName="TIME">
+			<comment>Minimum stopped time before restart</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_NoFbk" typeName="BOOL">
+			<comment>No run feedback wired (feedback follows output)</comment>
+		</variables>
+		<variables name="Cfg_AutoRestart" typeName="BOOL">
+			<comment>Auto mode restarts after power loss / interlock clears</comment>
+		</variables>
+		<variables name="Cfg_RatedAmps" typeName="REAL">
+			<comment>Motor nameplate full-load current (A)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaxStartsHr" typeName="INT">
+			<comment>Maximum starts per hour, 0 = no limit</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cmd_Start" typeName="BOOL">
+			<comment>Operator start (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Stop" typeName="BOOL">
+			<comment>Operator stop (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Fault / trip reset (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Jog" typeName="BOOL">
+			<comment>Maintenance jog (maintained, Maint mode only)</comment>
+		</variables>
+		<variables name="Prog_Start" typeName="BOOL">
+			<comment>Program / sequence start request (Auto mode)</comment>
+		</variables>
+		<variables name="Prog_Stop" typeName="BOOL">
+			<comment>Program / sequence stop request (Auto mode)</comment>
+		</variables>
+		<variables name="Out_Run" typeName="BOOL">
+			<comment>Run output to contactor / starter</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation: ignore field I/O, logic generates feedback</comment>
+		</variables>
+		<variables name="Sts_Running" typeName="BOOL">
+			<comment>Running (feedback confirmed)</comment>
+		</variables>
+		<variables name="Sts_Stopped" typeName="BOOL">
+			<comment>Stopped (feedback confirmed)</comment>
+		</variables>
+		<variables name="Sts_Starting" typeName="BOOL">
+			<comment>Start commanded, waiting for feedback</comment>
+		</variables>
+		<variables name="Sts_Stopping" typeName="BOOL">
+			<comment>Stop commanded, waiting for feedback</comment>
+		</variables>
+		<variables name="Sts_Avail" typeName="BOOL">
+			<comment>Available to Auto/program control</comment>
+		</variables>
+		<variables name="Sts_Ready" typeName="BOOL">
+			<comment>Ready to start now (all permissives, no trip)</comment>
+		</variables>
+		<variables name="Sts_Intlk" typeName="BOOL">
+			<comment>Interlock not healthy</comment>
+		</variables>
+		<variables name="Sts_NotPerm" typeName="BOOL">
+			<comment>Permissive not healthy</comment>
+		</variables>
+		<variables name="Sts_Local" typeName="BOOL">
+			<comment>In local control</comment>
+		</variables>
+		<variables name="Sts_Tripped" typeName="BOOL">
+			<comment>Tripped - reset required</comment>
+		</variables>
+		<variables name="Sts_Fault" typeName="BOOL">
+			<comment>Any fault present</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=Stopped 1=Starting 2=Running 3=Stopping 4=Tripped 5=Not available</comment>
+		</variables>
+		<variables name="Sts_RestartLeft" typeName="TIME">
+			<comment>Restart-delay time remaining</comment>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Val_Current" typeName="REAL">
+			<comment>Motor current (A)</comment>
+		</variables>
+		<variables name="Val_LoadPct" typeName="REAL">
+			<comment>Load (% of Cfg_RatedAmps)</comment>
+		</variables>
+		<variables name="Alm_FailStart" typeName="T_Alarm">
+			<comment>No run feedback within Cfg_FbkTime</comment>
+		</variables>
+		<variables name="Alm_FailStop" typeName="T_Alarm">
+			<comment>Run feedback still present after stop</comment>
+		</variables>
+		<variables name="Alm_Uncmd" typeName="T_Alarm">
+			<comment>Running without a command</comment>
+		</variables>
+		<variables name="Alm_EStop" typeName="T_Alarm">
+			<comment>E-stop activated</comment>
+		</variables>
+		<variables name="Alm_IntlkTrip" typeName="T_Alarm">
+			<comment>Tripped by interlock</comment>
+		</variables>
+		<variables name="Alm_ExcessStarts" typeName="T_Alarm">
+			<comment>Start blocked: Cfg_MaxStartsHr exceeded</comment>
+		</variables>
+		<variables name="Alm_OL" typeName="T_Alarm">
+			<comment>Overload trip</comment>
+		</variables>
+		<variables name="Alm_HiCurrent" typeName="T_AlmLim">
+			<comment>High current (A)</comment>
+		</variables>
+		<variables name="Run" typeName="T_RunTime">
+			<comment>Run hours / starts</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Totalizer" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Flow totalizer + batch delivery: analog or pulse, day/hour totals</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_RateEU" typeName="STRING[12]">
+			<comment>Rate units text, e.g. m3/h</comment>
+		</variables>
+		<variables name="Cfg_TotEU" typeName="STRING[12]">
+			<comment>Total units text, e.g. m3</comment>
+		</variables>
+		<variables name="Inp_Rate" typeName="REAL">
+			<comment>Flow rate (Cfg_RateEU)</comment>
+		</variables>
+		<variables name="Inp_RateBad" typeName="BOOL">
+			<comment>Rate signal bad</comment>
+		</variables>
+		<variables name="Inp_Pulses" typeName="UDINT">
+			<comment>Raw pulse counter (pulse mode)</comment>
+		</variables>
+		<variables name="Cfg_UsePulses" typeName="BOOL">
+			<comment>Totalise from pulses instead of rate</comment>
+		</variables>
+		<variables name="Cfg_PulseWt" typeName="REAL">
+			<comment>Total units per pulse</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_TimeBase" typeName="REAL">
+			<comment>Seconds per rate time unit: 1=/s 60=/min 3600=/h</comment>
+			<variableInit value="3600.0"></variableInit>
+		</variables>
+		<variables name="Cfg_Conv" typeName="REAL">
+			<comment>Conversion rate units -&gt; total units</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_LoCutoff" typeName="REAL">
+			<comment>Rates below this are not totalised</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_BadAction" typeName="INT">
+			<comment>On bad rate: 0=Stop totalising 1=Use last good rate</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_DayStartHr" typeName="INT">
+			<comment>Hour the production day starts (0-23)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_BatchSP" typeName="REAL">
+			<comment>Batch target quantity</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_PreAct" typeName="REAL">
+			<comment>Pre-act (in-flight) quantity</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_AutoPreAct" typeName="BOOL">
+			<comment>Learn pre-act from overrun</comment>
+		</variables>
+		<variables name="Cfg_SlowPct" typeName="REAL">
+			<comment>Dribble / slow-fill at this % of batch</comment>
+			<variableInit value="90.0"></variableInit>
+		</variables>
+		<variables name="Cmd_Start" typeName="BOOL">
+			<comment>Operator batch start (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Hold" typeName="BOOL">
+			<comment>Operator batch hold (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Operator batch reset (one-shot)</comment>
+		</variables>
+		<variables name="Prog_Start" typeName="BOOL">
+			<comment>Program batch start</comment>
+		</variables>
+		<variables name="Prog_Hold" typeName="BOOL">
+			<comment>Program batch hold</comment>
+		</variables>
+		<variables name="Prog_Reset" typeName="BOOL">
+			<comment>Program batch reset</comment>
+		</variables>
+		<variables name="Out_Slow" typeName="BOOL">
+			<comment>Slow-fill / dribble</comment>
+		</variables>
+		<variables name="Out_BatchDone" typeName="BOOL">
+			<comment>Batch target reached (close valve)</comment>
+		</variables>
+		<variables name="Val_Batch" typeName="LREAL">
+			<comment>Batch total</comment>
+		</variables>
+		<variables name="Val_Remaining" typeName="REAL">
+			<comment>Batch remaining</comment>
+		</variables>
+		<variables name="Val_Overrun" typeName="REAL">
+			<comment>Last batch overrun</comment>
+		</variables>
+		<variables name="Val_GrandTotal" typeName="LREAL">
+			<comment>Grand total (non-resettable)</comment>
+		</variables>
+		<variables name="Val_ThisHr" typeName="LREAL">
+			<comment>Total this hour</comment>
+		</variables>
+		<variables name="Val_LastHr" typeName="LREAL">
+			<comment>Total last hour</comment>
+		</variables>
+		<variables name="Val_Today" typeName="LREAL">
+			<comment>Total this production day</comment>
+		</variables>
+		<variables name="Val_Yday" typeName="LREAL">
+			<comment>Total previous production day</comment>
+		</variables>
+		<variables name="Sts_Running" typeName="BOOL">
+			<comment>Batch running</comment>
+		</variables>
+		<variables name="Sts_Hold" typeName="BOOL">
+			<comment>Batch held</comment>
+		</variables>
+		<variables name="Sts_Done" typeName="BOOL">
+			<comment>Batch complete</comment>
+		</variables>
+		<variables name="Alm_HiRate" typeName="T_AlmLim">
+			<comment>High flow rate</comment>
+		</variables>
+		<variables name="Alm_LoRate" typeName="T_AlmLim">
+			<comment>Low flow rate</comment>
+		</variables>
+		<variables name="Alm_Overrun" typeName="T_AlmLim">
+			<comment>Batch overrun</comment>
+		</variables>
+		<variables name="Alm_RateBad" typeName="T_Alarm">
+			<comment>Rate signal bad while totalising</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

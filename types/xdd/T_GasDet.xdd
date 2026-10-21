@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_GasDet" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Fixed gas detector (4-20mA): latching A1/A2/A3, inhibit, fault</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_Gas" typeName="STRING[12]">
+			<comment>Gas, e.g. CH4, H2S, CO, O2</comment>
+		</variables>
+		<variables name="Cfg_EU" typeName="STRING[8]">
+			<comment>Units, e.g. %LEL, ppm, %vol</comment>
+		</variables>
+		<variables name="Inp_Raw" typeName="INT">
+			<comment>Raw counts from analog channel</comment>
+		</variables>
+		<variables name="Inp_ChFault" typeName="BOOL">
+			<comment>Channel / module diagnostic fault</comment>
+		</variables>
+		<variables name="Cfg_RawMin" typeName="INT">
+			<comment>Raw counts at 4 mA</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_RawMax" typeName="INT">
+			<comment>Raw counts at 20 mA</comment>
+			<variableInit value="10000"></variableInit>
+		</variables>
+		<variables name="Cfg_RangeMax" typeName="REAL">
+			<comment>Concentration at 20 mA</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_O2Mode" typeName="BOOL">
+			<comment>Oxygen depletion: A1/A2 act on falling concentration</comment>
+		</variables>
+		<variables name="Cfg_FaultmA" typeName="REAL">
+			<comment>Signal below this (mA) = detector fault</comment>
+			<variableInit value="3.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaintLomA" typeName="REAL">
+			<comment>Maintenance / inhibit signal band low (mA), vendor-specific</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaintHimA" typeName="REAL">
+			<comment>Maintenance / inhibit signal band high (mA), vendor-specific</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_OverRngmA" typeName="REAL">
+			<comment>Signal above this (mA) = over-range (treat as alarm)</comment>
+			<variableInit value="20.5"></variableInit>
+		</variables>
+		<variables name="Cfg_InhibitMax" typeName="TIME">
+			<comment>Maximum operator inhibit time</comment>
+			<variableInit value="T#2H"></variableInit>
+		</variables>
+		<variables name="Cmd_Inhibit" typeName="BOOL">
+			<comment>Operator inhibit for maintenance (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Uninhibit" typeName="BOOL">
+			<comment>Remove inhibit (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Reset latched alarms (one-shot)</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation enabled</comment>
+		</variables>
+		<variables name="Sim_mA" typeName="REAL">
+			<comment>Simulated signal (mA)</comment>
+			<variableInit value="4.0"></variableInit>
+		</variables>
+		<variables name="Out_A1" typeName="BOOL">
+			<comment>Alarm level 1 active (to voting / beacons)</comment>
+		</variables>
+		<variables name="Out_A2" typeName="BOOL">
+			<comment>Alarm level 2 active</comment>
+		</variables>
+		<variables name="Out_A3" typeName="BOOL">
+			<comment>Alarm level 3 active</comment>
+		</variables>
+		<variables name="Out_Fault" typeName="BOOL">
+			<comment>Detector fault / unavailable</comment>
+		</variables>
+		<variables name="Val_mA" typeName="REAL">
+			<comment>Signal (mA)</comment>
+		</variables>
+		<variables name="Val_Conc" typeName="REAL">
+			<comment>Gas concentration (Cfg_EU)</comment>
+		</variables>
+		<variables name="Val_Peak" typeName="REAL">
+			<comment>Peak concentration since last reset</comment>
+		</variables>
+		<variables name="Sts_Inhibit" typeName="BOOL">
+			<comment>Operator inhibit active</comment>
+		</variables>
+		<variables name="Sts_DetMaint" typeName="BOOL">
+			<comment>Detector signalling maintenance</comment>
+		</variables>
+		<variables name="Sts_InhibitLeft" typeName="TIME">
+			<comment>Inhibit time remaining</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Inp_NE107" typeName="INT">
+			<comment>NE107 status reported by smart device (HART / fieldbus)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Alm_A1" typeName="T_AlmLim">
+			<comment>Alarm level 1 (low) - set Cfg_Latch as required</comment>
+		</variables>
+		<variables name="Alm_A2" typeName="T_AlmLim">
+			<comment>Alarm level 2 (high) - set Cfg_Latch as required</comment>
+		</variables>
+		<variables name="Alm_A3" typeName="T_AlmLim">
+			<comment>Alarm level 3 (high-high / STEL)</comment>
+		</variables>
+		<variables name="Alm_Fault" typeName="T_Alarm">
+			<comment>Detector fault</comment>
+		</variables>
+		<variables name="Alm_OverRng" typeName="T_Alarm">
+			<comment>Over-range</comment>
+		</variables>
+		<variables name="Alm_InhibitLong" typeName="T_Alarm">
+			<comment>Inhibit timed out</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

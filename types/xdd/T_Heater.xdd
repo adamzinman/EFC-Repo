@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:36:12" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Heater" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+	<comment>Electric heater: on/off contactor, time-proportioned SSR, or SCR power controller</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Mode" typeName="T_Mode">
+			<comment>Mode block</comment>
+		</variables>
+		<variables name="Perm" typeName="T_Intlk">
+			<comment>Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK</comment>
+		</variables>
+		<variables name="Intlk" typeName="T_Intlk">
+			<comment>Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Inp_ContactorFbk" typeName="BOOL">
+			<comment>Main / isolating contactor closed (aux contact)</comment>
+		</variables>
+		<variables name="Inp_Remote" typeName="BOOL">
+			<comment>Local/Remote switch in REMOTE</comment>
+		</variables>
+		<variables name="Inp_AvailOK" typeName="BOOL">
+			<comment>Supply available: breaker closed, control power OK</comment>
+		</variables>
+		<variables name="Inp_HiLimitOK" typeName="BOOL">
+			<comment>Independent excess-temperature limit healthy (hardwired, latching; PLC monitors only)</comment>
+		</variables>
+		<variables name="Inp_IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (TRUE = may heat; FALSE trips)</comment>
+		</variables>
+		<variables name="Inp_PermOK" typeName="BOOL">
+			<comment>Permissives healthy (TRUE = may switch on)</comment>
+		</variables>
+		<variables name="Inp_IOFault" typeName="BOOL">
+			<comment>I/O channel or comms fault</comment>
+		</variables>
+		<variables name="Inp_Current" typeName="REAL">
+			<comment>Heater current from CT or SCR controller (A), optional</comment>
+		</variables>
+		<variables name="Inp_ScrAlarm" typeName="BOOL">
+			<comment>SCR controller alarm relay (fuse / partial load failure / overtemp)</comment>
+		</variables>
+		<variables name="Cfg_CtrlType" typeName="INT">
+			<comment>0 = on/off (contactor), 1 = time-proportioned SSR on a PLC output, 2 = SCR power controller (analog reference)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_CycleTime" typeName="TIME">
+			<comment>Time-proportioning cycle (type 1): output is ON for Val_Duty % of each cycle</comment>
+			<variableInit value="T#4S"></variableInit>
+		</variables>
+		<variables name="Cfg_MinPulse" typeName="TIME">
+			<comment>Shortest ON or OFF pulse (type 1); shorter pulses are skipped</comment>
+			<variableInit value="T#100MS"></variableInit>
+		</variables>
+		<variables name="Cfg_ScrFiring" typeName="INT">
+			<comment>SCR firing mode set in the controller (type 2, documentation): 0 = burst / zero-cross, 1 = single-cycle, 2 = phase angle</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_PwrMin" typeName="REAL">
+			<comment>Minimum power demand when on (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_PwrMax" typeName="REAL">
+			<comment>Maximum power demand (%)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_PwrRate" typeName="REAL">
+			<comment>Power ramp limit (%/s), 0 = none (soft start for cold elements)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_RatedKW" typeName="REAL">
+			<comment>Heater rated power at 100 % (kW)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_RatedAmps" typeName="REAL">
+			<comment>Heater current at 100 % (A); 0 = no current monitoring</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_LoadFailPct" typeName="REAL">
+			<comment>Partial load failure: current below this % of expected while heating</comment>
+			<variableInit value="80.0"></variableInit>
+		</variables>
+		<variables name="Cfg_LeakAmps" typeName="REAL">
+			<comment>Current above this while the output is off = SSR / SCR shorted (A)</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_FbkTime" typeName="TIME">
+			<comment>Time allowed for contactor feedback and current to settle</comment>
+			<variableInit value="T#3S"></variableInit>
+		</variables>
+		<variables name="Cmd_On" typeName="BOOL">
+			<comment>Operator on (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Off" typeName="BOOL">
+			<comment>Operator off (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Fault / trip reset (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Pwr" typeName="REAL">
+			<comment>Operator power demand (%), Manual mode, types 1 and 2</comment>
+		</variables>
+		<variables name="Prog_On" typeName="BOOL">
+			<comment>Program / sequence on request (Auto mode)</comment>
+		</variables>
+		<variables name="Prog_Off" typeName="BOOL">
+			<comment>Program / sequence off request (Auto mode)</comment>
+		</variables>
+		<variables name="Prog_Pwr" typeName="REAL">
+			<comment>Program power demand (%), Auto mode, e.g. a T_PID Out_CV</comment>
+		</variables>
+		<variables name="Out_Contactor" typeName="BOOL">
+			<comment>Main / isolating contactor (opened on trip, high limit or shorted SSR)</comment>
+		</variables>
+		<variables name="Out_SSR" typeName="BOOL">
+			<comment>Time-proportioned output to the SSR (type 1)</comment>
+		</variables>
+		<variables name="Out_PwrRef" typeName="REAL">
+			<comment>Power reference to the SCR controller, 0-100 % (type 2)</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation: ignore field I/O, logic generates feedback</comment>
+		</variables>
+		<variables name="Sts_On" typeName="BOOL">
+			<comment>On: contactor closed and enabled to heat</comment>
+		</variables>
+		<variables name="Sts_Off" typeName="BOOL">
+			<comment>Off</comment>
+		</variables>
+		<variables name="Sts_Heating" typeName="BOOL">
+			<comment>Output conducting now (on/off: on; SSR: inside the ON part of the cycle; SCR: reference &gt; 0)</comment>
+		</variables>
+		<variables name="Sts_Avail" typeName="BOOL">
+			<comment>Available to Auto/program control</comment>
+		</variables>
+		<variables name="Sts_Intlk" typeName="BOOL">
+			<comment>Interlock not healthy</comment>
+		</variables>
+		<variables name="Sts_NotPerm" typeName="BOOL">
+			<comment>Permissive not healthy</comment>
+		</variables>
+		<variables name="Sts_Local" typeName="BOOL">
+			<comment>In local control</comment>
+		</variables>
+		<variables name="Sts_HiLimit" typeName="BOOL">
+			<comment>Excess-temperature limit tripped (reset at the limit device)</comment>
+		</variables>
+		<variables name="Sts_LoadFail" typeName="BOOL">
+			<comment>Partial load failure (element, fuse or phase lost)</comment>
+		</variables>
+		<variables name="Sts_Shorted" typeName="BOOL">
+			<comment>Current while output off: SSR / SCR failed shorted, contactor opened</comment>
+		</variables>
+		<variables name="Sts_Tripped" typeName="BOOL">
+			<comment>Tripped - reset required</comment>
+		</variables>
+		<variables name="Sts_Fault" typeName="BOOL">
+			<comment>Any fault present</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=Off 1=Switching on 2=On 3=Switching off 4=Tripped 5=Not available</comment>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Val_PwrDemand" typeName="REAL">
+			<comment>Power demand after limits and ramp (%)</comment>
+		</variables>
+		<variables name="Val_Duty" typeName="REAL">
+			<comment>Applied duty / power (%): on/off 0 or 100, SSR ON-time fraction, SCR reference</comment>
+		</variables>
+		<variables name="Val_Power" typeName="REAL">
+			<comment>Estimated power (kW) = Val_Duty x Cfg_RatedKW, or from current</comment>
+		</variables>
+		<variables name="Val_Current" typeName="REAL">
+			<comment>Heater current (A)</comment>
+		</variables>
+		<variables name="Val_LoadPct" typeName="REAL">
+			<comment>Measured current as % of expected at the present duty</comment>
+		</variables>
+		<variables name="Val_Energy" typeName="LREAL">
+			<comment>Energy total (kWh)</comment>
+		</variables>
+		<variables name="Alm_HiLimit" typeName="T_Alarm">
+			<comment>Excess-temperature limit tripped</comment>
+		</variables>
+		<variables name="Alm_Shorted" typeName="T_Alarm">
+			<comment>SSR / SCR shorted - current with output off</comment>
+		</variables>
+		<variables name="Alm_LoadFail" typeName="T_Alarm">
+			<comment>Partial load failure</comment>
+		</variables>
+		<variables name="Alm_FailOn" typeName="T_Alarm">
+			<comment>No contactor feedback / current within Cfg_FbkTime</comment>
+		</variables>
+		<variables name="Alm_FailOff" typeName="T_Alarm">
+			<comment>Contactor feedback still present after off</comment>
+		</variables>
+		<variables name="Alm_ScrFault" typeName="T_Alarm">
+			<comment>SCR controller alarm</comment>
+		</variables>
+		<variables name="Alm_IntlkTrip" typeName="T_Alarm">
+			<comment>Tripped by interlock</comment>
+		</variables>
+		<variables name="Run" typeName="T_RunTime">
+			<comment>On hours / switch-on count</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

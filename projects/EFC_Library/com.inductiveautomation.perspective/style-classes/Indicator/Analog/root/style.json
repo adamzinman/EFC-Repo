@@ -1,0 +1,9 @@
+{
+  "base": {
+    "style": {
+      "gap": "24px",
+      "padding": "24px"
+    }
+  },
+  "variants": []
+}

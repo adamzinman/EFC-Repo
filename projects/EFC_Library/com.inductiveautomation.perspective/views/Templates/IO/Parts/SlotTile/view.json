@@ -3,7 +3,10 @@
   "params": {
     "cardPath": "",
     "model": "",
-    "slot": 0
+    "slot": 0,
+    "tType": "native",
+    "dockId": "dw_IOCard",
+    "dwTagPath": ""
   },
   "propConfig": {
     "custom.modErr": {
@@ -54,6 +57,18 @@
       "persistent": true
     },
     "params.slot": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.tType": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dockId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dwTagPath": {
       "paramDirection": "input",
       "persistent": true
     }
@@ -279,7 +294,7 @@
               "type": "script",
               "scope": "G",
               "config": {
-                "script": "\tmodel = self.view.params.model\n\tif not model:\n\t\treturn\n\tp = self.view.params.cardPath\n\tsystem.perspective.openPopup(\"io_\" + p, \"Templates/IO/Faceplates/\" + model, params={\"cardPath\": p},\n\t\ttitle=\"\", showCloseIcon=False, draggable=True, resizable=False, modal=False)"
+                "script": "\tif self.view.params.model:\n\t\tefc.ui.openDynamic(self)"
               }
             }
           }

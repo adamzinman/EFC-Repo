@@ -1,0 +1,9 @@
+{
+  "base": {
+    "style": {
+      "gap": "0.37vh",
+      "marginTop": "0.556vh"
+    }
+  },
+  "variants": []
+}

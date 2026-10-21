@@ -1,0 +1,298 @@
+diff -ru src/appendices/data-types-future.tex out/appendices/data-types-future.tex
+--- src/appendices/data-types-future.tex	2026-10-21 13:51:28.368891132 +0000
++++ out/appendices/data-types-future.tex	2026-10-21 13:54:03.535389207 +0000
+@@ -131,7 +131,7 @@
+ \midrule
+ \endhead
+ Support & \texttt{T\_Alarm}, \texttt{T\_AlmLim}, \texttt{T\_Mode}, \texttt{T\_RunTime}, \texttt{T\_Intlk}, \texttt{T\_ESD} \\
+-Control module & \texttt{T\_AI}, \texttt{T\_DI}, \texttt{T\_DValve}, \texttt{T\_CValve}, \texttt{T\_Motor}, \texttt{T\_VFD}, \texttt{T\_PID}, \texttt{T\_PumpProt}, \texttt{T\_Totalizer}, \texttt{T\_HeatEx}, \texttt{T\_Analyzer}, \texttt{T\_GasDet} \\
++Control module & \texttt{T\_AI}, \texttt{T\_DI}, \texttt{T\_DValve}, \texttt{T\_CValve}, \texttt{T\_Motor}, \texttt{T\_VFD}, \texttt{T\_Heater}, \texttt{T\_PID}, \texttt{T\_PumpProt}, \texttt{T\_Totalizer}, \texttt{T\_HeatEx}, \texttt{T\_Analyzer}, \texttt{T\_GasDet} \\
+ Equipment module & \texttt{T\_PumpDS}, \texttt{T\_Agitator}, \texttt{T\_Compressor}, \texttt{T\_Conveyor}, \texttt{T\_DosePump} \\
+ Equipment module /\allowbreak{} Unit vessel & \texttt{T\_Tank} \\
+ Equipment phase & \texttt{T\_Phase} \\
+@@ -256,6 +256,7 @@
+ \hyperref[sec:pclib-t-cvalve]{\texttt{T\_CValve}} & Control module & MonAnaVlv & 42 & T\_Alarm, T\_Mode \\
+ \hyperref[sec:pclib-t-motor]{\texttt{T\_Motor}} & Control module & MonBinDrv & 52 & T\_Alarm, T\_AlmLim, T\_Mode, T\_RunTime \\
+ \hyperref[sec:pclib-t-vfd]{\texttt{T\_VFD}} & Control module & MonAnaDrv & 82 & T\_Alarm, T\_Mode, T\_RunTime \\
++\hyperref[sec:pclib-t-heater]{\texttt{T\_Heater}} & Control module & MonBinDrv (on/\allowbreak{}off) /\allowbreak{} MonAnaDrv (SSR, SCR) & 64 & T\_Alarm, T\_Mode, T\_RunTime \\
+ \hyperref[sec:pclib-t-pid]{\texttt{T\_PID}} & Control module & PIDCtrl & 51 & T\_Alarm, T\_AlmLim \\
+ \hyperref[sec:pclib-t-pumpprot]{\texttt{T\_PumpProt}} & Control module & - & 28 & T\_Alarm, T\_AlmLim \\
+ \hyperref[sec:pclib-t-pumpds]{\texttt{T\_PumpDS}} & Equipment module & - & 26 & T\_Alarm, T\_Mode \\
+@@ -856,6 +857,92 @@
+ \bottomrule
+ \end{longtable}
+ \end{small}
++
++\subsection{T\_Heater}\label{sec:pclib-t-heater}
++
++Electric heater: on/\allowbreak{}off contactor, time-proportioned SSR, or SCR power controller.
++
++\par\smallskip{\small \textbf{ISA-88 role:} Control module \quad \textbf{MTP:} MonBinDrv (on/\allowbreak{}off) /\allowbreak{} MonAnaDrv (SSR, SCR) \quad \textbf{Standards:} ISA-88 /\allowbreak{} IEC 61512-1, ISA-5.1, ISA-18.2 /\allowbreak{} IEC 62682, ISA-101.01, NAMUR NE107, VDI/\allowbreak{}VDE/\allowbreak{}NAMUR 2658-4 (MTP), IEC 60947-4-3 (semiconductor controllers, non-motor loads), NFPA 86 (excess-temperature limit)}\par
++
++\begin{small}
++\begin{longtable}{@{}P{3.70cm}P{2.20cm}P{1.70cm}P{8.91cm}@{}}
++\caption{T\_Heater Members}\label{tab:pclib-t-heater} \\
++\toprule
++\rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Init} & \textbf{Description} \\
++\midrule
++\endfirsthead
++\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} continued}} \\
++\toprule
++\rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Init} & \textbf{Description} \\
++\midrule
++\endhead
++\texttt{Cfg\_Tag} & \texttt{STRING[20]} &  & Equipment /\allowbreak{} instrument tag, e.g. FT-101 \\
++\texttt{Cfg\_Desc} & \texttt{STRING[40]} &  & Description shown on HMI faceplate \\
++\texttt{Mode} & \texttt{T\_Mode} &  & Mode block \\
++\texttt{Inp\_ContactorFbk} & \texttt{BOOL} &  & Main /\allowbreak{} isolating contactor closed (aux contact) \\
++\texttt{Inp\_Remote} & \texttt{BOOL} &  & Local/\allowbreak{}Remote switch in REMOTE \\
++\texttt{Inp\_AvailOK} & \texttt{BOOL} &  & Supply available: breaker closed, control power OK \\
++\texttt{Inp\_HiLimitOK} & \texttt{BOOL} &  & Independent excess-temperature limit healthy (hardwired, latching; PLC monitors only) \\
++\texttt{Inp\_IntlkOK} & \texttt{BOOL} &  & Interlocks healthy (TRUE = may heat; FALSE trips) \\
++\texttt{Inp\_PermOK} & \texttt{BOOL} &  & Permissives healthy (TRUE = may switch on) \\
++\texttt{Inp\_IOFault} & \texttt{BOOL} &  & I/\allowbreak{}O channel or comms fault \\
++\texttt{Inp\_Current} & \texttt{REAL} &  & Heater current from CT or SCR controller (A), optional \\
++\texttt{Inp\_ScrAlarm} & \texttt{BOOL} &  & SCR controller alarm relay (fuse /\allowbreak{} partial load failure /\allowbreak{} overtemp) \\
++\texttt{Cfg\_CtrlType} & \texttt{INT} & 0 & 0 = on/\allowbreak{}off (contactor), 1 = time-proportioned SSR on a PLC output, 2 = SCR power controller (analog reference) \\
++\texttt{Cfg\_CycleTime} & \texttt{TIME} & T\#4S & Time-proportioning cycle (type 1): output is ON for Val\_Duty \% of each cycle \\
++\texttt{Cfg\_MinPulse} & \texttt{TIME} & T\#100MS & Shortest ON or OFF pulse (type 1); shorter pulses are skipped \\
++\texttt{Cfg\_ScrFiring} & \texttt{INT} & 0 & SCR firing mode set in the controller (type 2, documentation): 0 = burst /\allowbreak{} zero-cross, 1 = single-cycle, 2 = phase angle \\
++\texttt{Cfg\_PwrMin} & \texttt{REAL} & 0.0 & Minimum power demand when on (\%) \\
++\texttt{Cfg\_PwrMax} & \texttt{REAL} & 100.0 & Maximum power demand (\%) \\
++\texttt{Cfg\_PwrRate} & \texttt{REAL} & 0.0 & Power ramp limit (\%/\allowbreak{}s), 0 = none (soft start for cold elements) \\
++\texttt{Cfg\_RatedKW} & \texttt{REAL} & 0.0 & Heater rated power at 100 \% (kW) \\
++\texttt{Cfg\_RatedAmps} & \texttt{REAL} & 0.0 & Heater current at 100 \% (A); 0 = no current monitoring \\
++\texttt{Cfg\_LoadFailPct} & \texttt{REAL} & 80.0 & Partial load failure: current below this \% of expected while heating \\
++\texttt{Cfg\_LeakAmps} & \texttt{REAL} & 1.0 & Current above this while the output is off = SSR /\allowbreak{} SCR shorted (A) \\
++\texttt{Cfg\_FbkTime} & \texttt{TIME} & T\#3S & Time allowed for contactor feedback and current to settle \\
++\texttt{Cmd\_On} & \texttt{BOOL} &  & Operator on (one-shot) \\
++\texttt{Cmd\_Off} & \texttt{BOOL} &  & Operator off (one-shot) \\
++\texttt{Cmd\_Reset} & \texttt{BOOL} &  & Fault /\allowbreak{} trip reset (one-shot) \\
++\texttt{Cmd\_Pwr} & \texttt{REAL} &  & Operator power demand (\%), Manual mode, types 1 and 2 \\
++\texttt{Prog\_On} & \texttt{BOOL} &  & Program /\allowbreak{} sequence on request (Auto mode) \\
++\texttt{Prog\_Off} & \texttt{BOOL} &  & Program /\allowbreak{} sequence off request (Auto mode) \\
++\texttt{Prog\_Pwr} & \texttt{REAL} &  & Program power demand (\%), Auto mode, e.g. a T\_PID Out\_CV \\
++\texttt{Out\_Contactor} & \texttt{BOOL} &  & Main /\allowbreak{} isolating contactor (opened on trip, high limit or shorted SSR) \\
++\texttt{Out\_SSR} & \texttt{BOOL} &  & Time-proportioned output to the SSR (type 1) \\
++\texttt{Out\_PwrRef} & \texttt{REAL} &  & Power reference to the SCR controller, 0-100 \% (type 2) \\
++\texttt{Sim\_En} & \texttt{BOOL} &  & Simulation: ignore field I/\allowbreak{}O, logic generates feedback \\
++\texttt{Sts\_On} & \texttt{BOOL} &  & On: contactor closed and enabled to heat \\
++\texttt{Sts\_Off} & \texttt{BOOL} &  & Off \\
++\texttt{Sts\_Heating} & \texttt{BOOL} &  & Output conducting now (on/\allowbreak{}off: on; SSR: inside the ON part of the cycle; SCR: reference \textgreater{} 0) \\
++\texttt{Sts\_Avail} & \texttt{BOOL} &  & Available to Auto/\allowbreak{}program control \\
++\texttt{Sts\_Intlk} & \texttt{BOOL} &  & Interlock not healthy \\
++\texttt{Sts\_NotPerm} & \texttt{BOOL} &  & Permissive not healthy \\
++\texttt{Sts\_Local} & \texttt{BOOL} &  & In local control \\
++\texttt{Sts\_HiLimit} & \texttt{BOOL} &  & Excess-temperature limit tripped (reset at the limit device) \\
++\texttt{Sts\_LoadFail} & \texttt{BOOL} &  & Partial load failure (element, fuse or phase lost) \\
++\texttt{Sts\_Shorted} & \texttt{BOOL} &  & Current while output off: SSR /\allowbreak{} SCR failed shorted, contactor opened \\
++\texttt{Sts\_Tripped} & \texttt{BOOL} &  & Tripped --- reset required \\
++\texttt{Sts\_Fault} & \texttt{BOOL} &  & Any fault present \\
++\texttt{Sts\_Sim} & \texttt{BOOL} &  & Simulation active \\
++\texttt{Sts\_State} & \texttt{INT} &  & 0=Off 1=Switching on 2=On 3=Switching off 4=Tripped 5=Not available \\
++\texttt{Sts\_NE107} & \texttt{INT} &  & NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M) \\
++\texttt{Val\_PwrDemand} & \texttt{REAL} &  & Power demand after limits and ramp (\%) \\
++\texttt{Val\_Duty} & \texttt{REAL} &  & Applied duty /\allowbreak{} power (\%): on/\allowbreak{}off 0 or 100, SSR ON-time fraction, SCR reference \\
++\texttt{Val\_Power} & \texttt{REAL} &  & Estimated power (kW) = Val\_Duty x Cfg\_RatedKW, or from current \\
++\texttt{Val\_Current} & \texttt{REAL} &  & Heater current (A) \\
++\texttt{Val\_LoadPct} & \texttt{REAL} &  & Measured current as \% of expected at the present duty \\
++\texttt{Val\_Energy} & \texttt{LREAL} &  & Energy total (kWh) \\
++\texttt{Alm\_HiLimit} & \texttt{T\_Alarm} &  & Excess-temperature limit tripped \\
++\texttt{Alm\_Shorted} & \texttt{T\_Alarm} &  & SSR /\allowbreak{} SCR shorted --- current with output off \\
++\texttt{Alm\_LoadFail} & \texttt{T\_Alarm} &  & Partial load failure \\
++\texttt{Alm\_FailOn} & \texttt{T\_Alarm} &  & No contactor feedback /\allowbreak{} current within Cfg\_FbkTime \\
++\texttt{Alm\_FailOff} & \texttt{T\_Alarm} &  & Contactor feedback still present after off \\
++\texttt{Alm\_ScrFault} & \texttt{T\_Alarm} &  & SCR controller alarm \\
++\texttt{Alm\_IntlkTrip} & \texttt{T\_Alarm} &  & Tripped by interlock \\
++\texttt{Run} & \texttt{T\_RunTime} &  & On hours /\allowbreak{} switch-on count \\
++\bottomrule
++\end{longtable}
++\end{small}
+ 
+ \subsection{T\_PID}\label{sec:pclib-t-pid}
+ 
+diff -ru src/appendices/perspective-screen-design.tex out/appendices/perspective-screen-design.tex
+--- src/appendices/perspective-screen-design.tex	2026-10-21 13:51:28.260942195 +0000
++++ out/appendices/perspective-screen-design.tex	2026-10-21 14:03:11.763004513 +0000
+@@ -25,12 +25,12 @@
+ Header & 1920 $\times$ 80 & 0 & 0 & 100\% & 7.41\% \\
+ Menu & 120 $\times$ 860 & 0 & 7.41\% & 6.25\% & 79.63\% \\
+ Main process area & 1400 $\times$ 860 & 6.25\% & 7.41\% & 72.92\% & 79.63\% \\
+-Trends / dynamic window & 400 $\times$ 860 & 79.17\% & 7.41\% & 20.83\% & 79.63\% \\
++Trends / dynamic window (37.04\,vh wide, 79.63\,vh tall) & 400 $\times$ 860 & 79.17\% & 7.41\% & 20.83\% & 79.63\% \\
+ Alarm bar & 1920 $\times$ 140 & 0 & 87.04\% & 100\% & 12.96\% \\
+ \bottomrule
+ \end{tabular}
+ \end{center}
+-Percent values are the position properties to enter on each Embedded View in the shell's percent-mode root. The trends/dynamic window is 400 design px wide, which renders at 800\,px on a 3840 $\times$ 2160 display (its largest size) and scales down proportionally on smaller displays. If a collapsible-trends variant of the shell is added later, its main area becomes 1800 $\times$ 860 and should use layouts designed for that size.
++Percent values are the position properties to enter on each Embedded View in the shell's percent-mode root. The trends/dynamic window fills the full height between the header and the alarm bar: 400 $\times$ 860 design px at 1920 $\times$ 1080 (37.04\,vh wide, 79.63\,vh tall), which renders at 800 $\times$ 1720\,px on a 3840 $\times$ 2160 display (its largest size) and scales down proportionally on smaller displays. When a trend graph is expanded, the graph fills the window below its header and the window keeps its size; the region never changes width (Section~\ref{sec:hmi-trends}). If a collapsible-trends variant of the shell is added later, its main area becomes 1800 $\times$ 860 and should use layouts designed for that size.
+ 
+ \section{Container Settings}
+ \begin{center}
+@@ -51,7 +51,7 @@
+ \textbf{Main area navigation.} One page route, \texttt{/screen/:name}, points to the Shell as its primary view. The Shell has a \texttt{name} view parameter, and the main-area Embedded View's path uses the expression binding below. Menu buttons navigate to routes such as \texttt{/screen/Boiler}, so browser back, bookmarks, and direct links all work while the header, menu, and alarm bar remain in place.
+ \begin{center}\texttt{"Screens/" + \{view.params.name\}}\end{center}
+ 
+-\textbf{Trends / dynamic window.} The right-hand Embedded View's path and params are bound to session custom properties (for example \texttt{session.\allowbreak{}custom.\allowbreak{}trend.\allowbreak{}view} and \texttt{session.\allowbreak{}custom.\allowbreak{}trend.\allowbreak{}params}). Clicking equipment on a process screen writes to these properties to change the panel's content. A message handler on the shell (\texttt{system.\allowbreak{}perspective.\allowbreak{}sendMessage}) is an acceptable alternative.
++\textbf{Trends / dynamic window.} The right-hand region of the shell is one Embedded View, the dynamic window. Its path and params are bound to a per-page session value, \texttt{session.\allowbreak{}custom.\allowbreak{}efcDw[pageId]}, which holds the current view path, the params and the screen's default view. The project-library script \texttt{efc.ui} writes that value. A click on a template symbol calls \texttt{openDynamic} and shows that device's dynamic window for its tag path. The close button calls \texttt{closeDynamic}, which returns the region to the screen's default view. An expanded trend graph fills the dynamic window below its header; the window keeps its size and the right-hand region never changes width. Each screen view names its default view in the \texttt{defaultDock} view parameter, which \texttt{setDefaultDock} reads on startup. The region is sized in viewport height: 37.04\,vh wide and 79.63\,vh tall, the full height between the header and the alarm bar (400 $\times$ 860 at 1920 $\times$ 1080; 800 $\times$ 1720 at 3840 $\times$ 2160). There are no Perspective docks and no per-project page or dock configuration. What the dynamic window shows and how it opens and closes is set in Section~\ref{sec:hmi-dynamic-windows}. \newmark
+ 
+ \textbf{Menu.} At 120 design px wide (about 80\,px on a 1280 $\times$ 720 display), the menu uses icons with a short one-word label beneath each.
+ 
+@@ -62,17 +62,20 @@
+ \begin{center}\texttt{:root \{ --dp: min(0.052083vw, 0.092593vh); \}}\end{center}
+ Any size is then written as \texttt{calc(N * var(--dp))}, where N is the size in pixels on a 1080p display. Because the unit is derived from the viewport rather than from the enclosing container, it gives the same result at any nesting depth: text in a template inside an embedded view inside the shell scales at exactly the same rate as the shell itself. Where the variable is unavailable, the equivalent direct form is \texttt{min(N/\allowbreak{}19.\allowbreak{}2 vw, N/\allowbreak{}10.\allowbreak{}8 vh)}.
+ 
+-Text sizes are applied through Style Classes rather than set on individual components:
++Text sizes are applied through \texttt{EFC\_Styles} classes rather than set on individual components:
+ \begin{center}
+ \begin{tabular}{@{}P{4.12cm}P{2.60cm}P{5.20cm}P{4.59cm}@{}}
+ \toprule
+-\rowcolor{tblhead}\textbf{Style class (suggested)} & \textbf{1080p size} & \textbf{fontSize using --dp} & \textbf{Direct equivalent} \\
++\rowcolor{tblhead}\textbf{EFC\_Styles class} & \textbf{1080p size} & \textbf{fontSize using --dp} & \textbf{Direct equivalent} \\
+ \midrule
+-Text/Small & 12 & \texttt{calc(12 * var(--dp))} & \texttt{min(0.\allowbreak{}625vw, 1.\allowbreak{}111vh)} \\
+-Text/Label & 14 & \texttt{calc(14 * var(--dp))} & \texttt{min(0.\allowbreak{}729vw, 1.\allowbreak{}296vh)} \\
+-Text/Body & 16 & \texttt{calc(16 * var(--dp))} & \texttt{min(0.\allowbreak{}833vw, 1.\allowbreak{}481vh)} \\
+-Text/Header & 20 & \texttt{calc(20 * var(--dp))} & \texttt{min(1.\allowbreak{}042vw, 1.\allowbreak{}852vh)} \\
+-Text/Title & 28 & \texttt{calc(28 * var(--dp))} & \texttt{min(1.\allowbreak{}458vw, 2.\allowbreak{}593vh)} \\
++Text/Size/XXS & 10 & \texttt{calc(10 * var(--dp))} & \texttt{min(0.\allowbreak{}521vw, 0.\allowbreak{}926vh)} \\
++Text/Size/XS & 11 & \texttt{calc(11 * var(--dp))} & \texttt{min(0.\allowbreak{}573vw, 1.\allowbreak{}019vh)} \\
++Text/Size/S & 12 & \texttt{calc(12 * var(--dp))} & \texttt{min(0.\allowbreak{}625vw, 1.\allowbreak{}111vh)} \\
++Text/Size/M & 14 & \texttt{calc(14 * var(--dp))} & \texttt{min(0.\allowbreak{}729vw, 1.\allowbreak{}296vh)} \\
++Text/Size/L & 16 & \texttt{calc(16 * var(--dp))} & \texttt{min(0.\allowbreak{}833vw, 1.\allowbreak{}481vh)} \\
++Text/Size/XL & 20 & \texttt{calc(20 * var(--dp))} & \texttt{min(1.\allowbreak{}042vw, 1.\allowbreak{}852vh)} \\
++Text/Size/XXL & 24 & \texttt{calc(24 * var(--dp))} & \texttt{min(1.\allowbreak{}25vw, 2.\allowbreak{}222vh)} \\
++Text/Size/XXXL & 32 & \texttt{calc(32 * var(--dp))} & \texttt{min(1.\allowbreak{}667vw, 2.\allowbreak{}963vh)} \\
+ \bottomrule
+ \end{tabular}
+ \end{center}
+@@ -96,7 +99,7 @@
+ 4K monitors running Windows display scaling (150\% or 200\%) report a smaller CSS viewport to the browser. The dp unit handles this automatically; no per-scaling configuration is required.
+ 
+ \section{Templates}
+-Each template is designed at the size it will occupy on the screen, with a percent-mode Coordinate root and no aspect ratio. All template text uses the dp style classes. Templates are placed at their designed size so text stays proportional to the graphic, which also supports consistent symbol sizing across screens.
++Each template is designed at the size it will occupy on the screen, with a percent-mode Coordinate root and no aspect ratio. All template text and styling uses the \texttt{EFC\_Styles} classes; templates carry no static inline styles. Generators move static inline styles into generated classes (for example \texttt{Loop/*}, \texttt{Indicator/Analog/*} and \texttt{Station/*}). Spacing uses the \texttt{Util/Gap} classes \texttt{XS}, \texttt{S}, \texttt{M} and \texttt{L}. Templates are placed at their designed size so text stays proportional to the graphic, which also supports consistent symbol sizing across screens.
+ 
+ When the same template must appear at a different size, it takes a \texttt{scale} parameter (default 1) and its font sizes are bound with an expression such as:
+ \begin{center}\texttt{"calc(" + (14 * \{view.params.scale\}) + " * var(--dp))"}\end{center}
+Only in src: outputs
+diff -ru src/references/REV-I-CHANGES.md out/references/REV-I-CHANGES.md
+--- src/references/REV-I-CHANGES.md	2026-10-21 13:51:28.305098571 +0000
++++ out/references/REV-I-CHANGES.md	2026-10-21 13:54:03.536474509 +0000
+@@ -19,3 +19,31 @@
+ - Vendor phone numbers (Jeff DiTrolio/MDCI, Art McEvoy/ADI, MDCI main, Airline Hydraulics Bensalem) and "what we use them for" column.
+ - Review turnaround, warranty terms, EFC Repo location.
+ - T_UnitCtl not yet designed (state numbering must not collide).
++- Minimum role for alarm acknowledge, setpoint changes and reset of latched interlocks (tab:hmi-roles).
++- Which actions are Admin-only, e.g. user and role administration (tab:hmi-roles).
++- Heater size (kW) above which current monitoring is required (sec:heaters).
++- NFPA 86 clause references for the excess-temperature limit (confirm the adopted edition with the AHJ).
++
++## Added 2026-10-15
++9. Table 6.3 (Terminal Blocks): Analog Inputs primary -> WAGO 2202-3201 (triple-deck L/L/L, push-button, 2.5 mm2, grey, 22 A / 500 V, $6.71 Powermatic Oct 2026). 280-560 moved to Analog Inputs (Alternate); 2020-5311 stays as the second alternate.
++10. Table 6.4 (Accessories): added 2002-1492 (0.8 mm orange end plate, 2002-14xx), 2002-2296 (2.0 mm orange, 2002-22xx), 2002-3292 (0.8 mm orange, 2002-32xx). "202-191" confirmed as 209-191, already in the table.
++
++## Added 2026-10-21 (Ignition library build)
++
++11. Ch11 SCADA: Roles and audit rewritten (label sec:ignition-roles): role hierarchy Guest < Operator < Maintenance < Supervisor < Engineer < Admin, one session level at login, controls hidden below the required level, Table tab:hmi-roles (MAINT/OOS, JOG, simulation, maintenance resets = Maintenance; bypass and shelving = Supervisor; alarm limits, configuration and tuning = Engineer), audit-log content. New section Dynamic Windows (sections/hmi-dynamic-windows.tex, \input before Alarms): window ids (Table tab:hmi-dw-ids), size, open/close and defaultDock, section order, button tiers, touch double-tap (dblCmd), named permissives/interlocks and bypass (BypassConfirm, presets 1/2/4/8 h up to Cfg_BypassMax, mandatory reason, time left and audit line per condition; T_Intlk embedding as \future), trends (30 min default; expand keeps the window at 400 x 860 and fills it below the header, about 400 x 760, with ranges 5 m to 24 h, pause/live and collapse; the region never changes width; decision 26). I/O card, rack and power-supply faceplates bind directly to the Modicon x80 device DDTs from Control Expert (no PCLib type; decision 23). Alarms: shelving/limit roles sentence. Appendix Perspective Screen Design: Trends / dynamic window paragraph and shell table rewritten as the embedded-view dynamic window (efc.ui session value, openDynamic/closeDynamic, defaultDock, sizes in vh; Edit 8), which settles the former dock-vs-embedded-view question. Section Online Changes and Forces (sec:online-changes): HMI bypass by one Supervisor-or-higher user with a mandatory reason, up to the configured maximum, audit-logged, is exempt from the second-person and MOC requirement; PLC forces and logic changes keep it (Edit 7, cross-ref sec:hmi-bypass).
++
++12. Ch6 Other Hardware: new subsection Electric Heaters (sections/heaters.tex, \input before Standard Air Prep Unit): on/off contactor, time-proportioned SSR (duty cycle) and SCR power controller methods (Table tab:heater-methods); required independent excess-temperature limit, series isolating contactor, current monitoring, semiconductor fuses and SSR heat. Appendix I: added T_Heater (64 members) after T_VFD; index row and Control module list updated. Open: kW threshold for current monitoring (\tbd); NFPA 86 clause references to confirm against the adopted edition.
++
++13. Perspective (library build): script library `efc.ui` described in the Perspective Design section (openDynamic, closeDynamic, setDefaultDock, dblCmd, cmd, bypass/unbypass, ackAll, trend, level). Perspective Screen Design: template text and styling use EFC_Styles classes, generated classes for static inline styles, Util/Gap spacing classes; dockId and dwTagPath overrides described under the dynamic-window table. No change to type definitions.
++
++## Queued (confirmed with Adam 2026-10-16; DO NOT apply until told)
++Q1. Ch6 Servers, Computers, and Operator Stations: add an "Alternate IPCs" table under Table tab:operator-workstation-hardware (CL260 stays primary). Requirements for any IPC: DIN-rail mountable, powered from panel 24 VDC, meets Ignition 8.3 / Edge Panel minimum (dual-core, 4 GB RAM, 10 GB free disk; Windows 10/11 or Linux). Proposed EFC baseline above IA minimum: 4 cores, 8 GB RAM, 128 GB SSD (ask Adam to confirm before adding as a rule).
++  - Cincoze DA-1200-N97-R10: Intel N97 4C; 1x DDR5 SODIMM up to 16 GB (order 8 GB) + industrial SSD >=128 GB; DP 4K60; 2x 2.5GbE; 9-48 VDC terminal block; DIN mount; -40 to 70 C; Win10/11 (license extra); $999.95 barebone (MITXPC, Oct 2026), est. $1,150-1,300 configured. Install Ignition Edge on site. Closest match to CL260.
++  - Beckhoff C6015-0040: Atom x7433RE 4C; 8-16 GB LPDDR5; 2x 2.5GbE; 1x DP; 24 VDC; DIN adapter C9900-M602; Win11 IoT Enterprise LTSC 2024. Price: quote. Install Ignition Edge on site.
++  - Siemens SIMATIC IPC BX-21A 6AG4021-0BC00-1AB1: Atom x6413E 4C, 8 GB, 128 GB SSD; 3x GbE; DP up to 4096x2160; 24 VDC; DIN (bracket separate); Win10 IoT Enterprise LTSC 2021 (deviation from Win11 IoT LTSC 2024); $1,373.43 (WIAutomation, Oct 2026, backorder). Slower than N250 - bench-test Edge Panel.
++  - Advantech IGNE-UNO2271GV2-1 (Ignition Edge pre-installed, trial; license from IA): only acceptable with Pentium N6415 4C / 8 GB / 64 GB option (+$640, ~$1,980); base N6210 2C/4 GB/32 GB eMMC is at IA minimum and too weak for Edge Panel. HDMI; 10-30 VDC; DIN kit $9. Advantech is an IA Alliance Partner.
++  - Moxa DRP-C100-C1-T-Win10: Celeron 6305E 2C, 8 GB, 64 GB CFast; HDMI 2.0b + VGA; 2x GbE; 12/24 VDC; DIN; -30 to 60 C; Class I Div 2 / ATEX / IECEx certified; Win10 IoT LTSC 2021 (Win11 IoT LTSC 2024 option); $2,114.10 (RSP Supply, Oct 2026) - over budget; option for C1D2 locations. Moxa is an IA Alliance Partner but this model is not on its Ignition pre-load list.
++  - Excluded (note in text if useful): Lenovo ThinkEdge SE10-I (discontinued); ThinkEdge SE30n Gen2 (12 V DC jack only - would need 24->12 V ~90 W converter; DIN kit 4XH1W58380); Uticor i-edge-boxxed / DIN-Railer (12 VDC); Advantech UNO-127 (EOL Aug 2026, 1080p), UNO-137 V2 ($2,045), IGNE-UNO137-1 ($2,270), IGNE-UNO410-1 ($1,910, C1D2, no video listed); ASRock iBOX-N97 (19 V adapter); Moxa MC-1220 ($3,700-5,800, 2017 CPU), MC-1122 (Atom E3845, VGA).
++  - Add note: Ignition Edge Onboard program ended 2023-08-31; no IA hardware certification; Alliance Partners (Advantech, Moxa, OnLogic, Uticor) ship Ignition pre-installed, license bought separately.
++Q2. Table tab:monitors-industrial (Industrial Monitors): add Hope Industrial HIS-UM23.8-BPVB as the HMI monitor of choice, $1,630 (Adam, Oct 2026). Hope 23.8" line: 1920x1080 16:9, resistive standard / PCAP optional, DP + DVI-I (VGA via adapter), AC + 10.8-26.4 VDC, NEMA 4/4X / IP65/66, Class I/II/III Div 2; "UM" appears to be universal mount (stainless or carbon steel; fits 23" yoke, pedestal, YW wall yoke). Confirm suffix (BPVB) meaning / touch type with Hope before publishing. Keep HIS-ML23.8-FPVB (panel mount, $1,420) as the panel-mount option.
++Q3. Table tab:keyboards (Industrial Keyboards): add Hope Industrial KB-R3-EXT-BLK-4-USB, $920 (Adam, Oct 2026), as the keyboard to pair with the HIS-UM23.8. Confirm EXT vs WMT variant difference, touchpad, and HazLoc rating with Hope (spec page did not load).
+diff -ru src/sections/06-hardware.tex out/sections/06-hardware.tex
+--- src/sections/06-hardware.tex	2026-10-21 13:51:28.367414928 +0000
++++ out/sections/06-hardware.tex	2026-10-21 13:54:03.532935345 +0000
+@@ -397,6 +397,8 @@
+ \end{longtable}
+ The dump-valve and documented safe-state requirements above apply to all three options.
+ 
++\input{sections/heaters}
++
+ \subsection{Standard Air Prep Unit}\label{sec:air-prep}
+ Each pneumatic system uses a standard SMC air preparation assembly (filter, regulator, and lubricator or filter-regulator, ``FRL'') with an electrically operated dump valve and a pressure sensor. The dump valve is the upstream dump valve required for the solenoid manifold above: when it is de-energized it exhausts downstream air so the valves cannot move. The pressure sensor confirms supply pressure to the PLC and is used as a permissive for pneumatic operations.
+ 
+diff -ru src/sections/07-software.tex out/sections/07-software.tex
+--- src/sections/07-software.tex	2026-10-21 13:51:28.176960374 +0000
++++ out/sections/07-software.tex	2026-10-21 13:54:03.533257690 +0000
+@@ -80,7 +80,8 @@
+ \begin{itemize}[itemsep=1pt]
+   \item Keep a running list of active forces and overrides, with who applied each one, why, and when it will be removed. Every force is removed, or made part of the controlled source, before the work is closed out; forces are never used as permanent logic.
+   \item Set a time limit for every force or bypass, and review any that are still active at shift change.
+-  \item A force or bypass on an interlock or safety-related signal needs a second person to check it and an approved MOC (Section~\ref{sec:review-release}).
++  \item Safety-related signals (safety PLC and SIS functions, emergency stops, safety interlocks) are never forced or bypassed in software, from the HMI or in the PLC. They are defeated only through the hardware and procedures of the safety system.
++  \item A force or bypass on a process interlock or permissive needs a second person to check it and an approved MOC (Section~\ref{sec:review-release}), except an HMI bypass of a condition that engineering has configured as bypassable (\texttt{Cfg\_Bypassable}). Such an HMI bypass is set by one user with the Supervisor role or higher from the dynamic window through the bypass confirmation, with a mandatory reason, a duration up to the configured maximum (\texttt{Cfg\_BypassMax}), and an entry in the audit log (Section~\ref{sec:hmi-bypass}); it needs no second person and no MOC. \texttt{Cfg\_Bypassable} is set during design and changed only under MOC, and is never set on a safety-related condition. PLC forces and logic changes keep the second-person and MOC requirement.
+   \item After any change to production software, upload the running program, save a verified backup, and retest what the change affects (Section~\ref{sec:change-testing}).\footnote{Sources for this section: OSHA 29 CFR 1910.119(l) (management of change); ISA/IEC 62443-2-1:2024, SPE~2 (configuration management and change control) and SPE~7 (event logging); ISA/IEC 62443-3-3:2013, SR~2.8 (auditable events) and SR~7.6 (network and security configuration settings); NIST SP 800-82 Rev.~3 (2023), App.~F (configuration management overlay); IEC 61511-1:2016+A1:2017, 11.7 and 16.2 (bypasses, overrides, and forcing of safety functions); NFPA 79-2024, 18.7 and IEC 60204-1:2016+A1:2021, 18.7 (retesting after modification).}
+ \end{itemize}
+ 
+diff -ru src/sections/11-scada-standards.tex out/sections/11-scada-standards.tex
+--- src/sections/11-scada-standards.tex	2026-10-21 13:51:28.218919144 +0000
++++ out/sections/11-scada-standards.tex	2026-10-21 13:54:03.534034913 +0000
+@@ -31,10 +31,14 @@
+ \section{Perspective Design}
+ Perspective screens follow the Perspective Screen Design Standard in Appendix~\ref{app:screen-design}. Perspective views should be tested at the screen sizes and aspect ratios expected in service. Use responsive containers where resizing is required. Docked views, popups, embedded views, parameters, and message handlers should have clear interfaces and should not depend on fragile component paths.
+ 
++\paragraph{Script library.} Perspective screens call the project script library \texttt{efc.ui} (Ignition 8.1 and 8.3) for dynamic-window and command actions, so that every template behaves the same way. Template symbols call \texttt{openDynamic} on click and \texttt{dblCmd} on double-click in touch mode. Window close buttons call \texttt{closeDynamic}. The dynamic-window region calls \texttt{setDefaultDock} at startup to show its screen default view. \texttt{cmd} performs every command write after a role check. \texttt{bypass} and \texttt{unbypass} require Supervisor or higher and a reason, and write an audit entry. \texttt{ackAll}, \texttt{trend} and \texttt{level} provide alarm acknowledgement, trend display and the user's role level. Role levels and bypass rules follow Chapter~\ref{ch:scada} (\texttt{sec:ignition-roles}, \texttt{sec:hmi-bypass}).
++
+ Startup and navigation scripts should be safe to run more than once, finish quickly, and handle missing tags or bad-quality data without breaking the view. Reusable views should not assume that every optional parameter is present.
+ 
++\input{sections/hmi-dynamic-windows}
++
+ \section{Alarms}
+-Configure Ignition alarms from the approved alarm list. Include the identifier, priority, message, cause, consequence, expected response, deadband, delay, shelving permissions, and any state-based suppression. Acknowledging an alarm does not clear the process condition that caused it.
++Configure Ignition alarms from the approved alarm list. Include the identifier, priority, message, cause, consequence, expected response, deadband, delay, shelving permissions, and any state-based suppression. Acknowledging an alarm does not clear the process condition that caused it. Alarm shelving needs the Supervisor role and alarm-limit changes the Engineer role, and both are audit-logged (Table~\ref{tab:hmi-roles}). \newmark
+ 
+ \textbf{Annunciation and acknowledgment.} Ignition annunciates alarms. For PLC data types that carry their own alarm state (the PCLib types, Appendix~\ref{app:data-types-future}), acknowledging the alarm in Ignition writes through to the alarm's \texttt{Cmd\_Ack} member in the PLC, so the PLC and SCADA states stay the same. Alarms are not acknowledged separately in two places. \newmark
+ 
+@@ -75,8 +79,36 @@
+ \note{Not currently implemented. This should be discussed in the near future, including how logins work on shared operator stations --- for example automatic logout after inactivity and a fast way to switch users at the station.}
+ \future{Ignition Perspective can use single sign-on (SSO) through an identity provider using OpenID Connect 1.0 or SAML 2.0, such as Microsoft Entra ID (Azure AD) or Okta. Users would log in with their existing company account rather than a separate Ignition password, and accounts would be added or removed centrally when people join or leave. This works for Perspective, Vision, the Designer, and the Gateway in both 8.1 and 8.3, and is worth looking into, possibly with the parent company's IT group.}
+ 
+-\subsection*{Roles and audit}
+-Use the approved identity provider when practical and assign access by role. Typical roles include operator, maintenance, engineering, supervisor, and administrator. Audit important actions such as setpoint changes, alarm shelving, recipe changes, and security administration.
++\subsection*{Roles and audit}\label{sec:ignition-roles}
++Use the approved identity provider when practical and assign access by role. EFC uses six roles in a fixed order: Guest $<$ Operator $<$ Maintenance $<$ Supervisor $<$ Engineer $<$ Admin. Each role can do everything the roles below it can. The user's highest role is read once at login and held as a single session level, so a change to a user's roles takes effect at the next login. Screens compare that level with the level each action needs (Table~\ref{tab:hmi-roles}); controls that need a higher level than the user has are hidden. \newmark
++
++\begin{small}
++\begin{longtable}{@{}P{8.6cm}P{2.8cm}P{4.8cm}@{}}
++\caption{Minimum Role for HMI Actions}\label{tab:hmi-roles} \\
++\toprule
++\rowcolor{tblhead}\textbf{Action} & \textbf{Minimum role} & \textbf{Audit log} \\
++\midrule
++\endfirsthead
++\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
++\toprule
++\rowcolor{tblhead}\textbf{Action} & \textbf{Minimum role} & \textbf{Audit log} \\
++\midrule
++\endhead
++View screens, trends and alarms & Guest & No \\
++Mode AUTO /\allowbreak{} MAN, device commands in Manual, fault reset (Section~\ref{sec:pclib-modes}) & Operator & No \\
++Alarm acknowledge, setpoint changes, reset of latched interlocks & \tbd & \tbd \\
++Mode MAINT and OOS, JOG, simulation, maintenance resets (run time and counters) & Maintenance & No \\
++Bypass and unbypass of permissives and interlocks (Section~\ref{sec:hmi-bypass}) & Supervisor & Yes, with reason \\
++Alarm shelving & Supervisor & Yes \\
++Alarm-limit changes & Engineer & Yes, old $\rightarrow$ new \\
++Configuration and tuning (\texttt{Cfg\_} members, PID tuning) & Engineer & Yes, old $\rightarrow$ new \\
++User and role administration & \tbd & Yes \\
++\bottomrule
++\end{longtable}
++\end{small}
++
++Bypass, unbypass, shelving, alarm-limit, configuration and tuning changes are written to the Ignition audit log with the old and new value, the user and role, the time, and the reason where one is entered. Also audit setpoint changes, recipe changes, and security administration.
++\note{Open: minimum role for alarm acknowledge, setpoint changes and reset of latched interlocks, and which actions are reserved for Admin (TBD above).}
+ 
+ OPC UA connections should use trusted certificates, a supported security policy (Basic256Sha256, sign and encrypt), named accounts with the minimum permissions needed, and no anonymous access (Section~\ref{sec:protocols}). Remove default accounts and unused connections before turnover.
+ 
+Only in out/sections: heaters.tex
+Only in out/sections: hmi-dynamic-windows.tex

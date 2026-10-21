@@ -6,6 +6,8 @@ need checking on the dev gateway. Samples are in `samples/xsy-import/`.
 
 Code: [`tools/xsyimport/`](../tools/xsyimport/README.md) (`xsyimport.py`, `gateway.py`, `test_xsyimport.py`).
 
+Related: [`scripts/ddtsync.py`](../scripts/ddtsync.py) is merged on `main`. It adds missing members to existing UDTs from the live PLC. See §11.
+
 ## 1. Requirements
 
 | # | Requirement | Met by |
@@ -160,7 +162,7 @@ The 19 conflicts are the `HMI_SP_*` setpoints. They are reported and not changed
 
 ## 11. Relation to `ddtsync`
 
-`ddtsync` (branch `claude/plc-ddt-udt-migration-e5u64l`, not merged) browses the live PLC over OPC UA and adds
+`ddtsync` (`scripts/ddtsync.py`, merged to `main`) browses the live PLC over OPC UA and adds
 missing UDT members. This import works offline from the export and also creates instances. Both use the
 same parameters (`OPC Prefix`, `OPC Server`, `Tag`), so the shared type mapping and JSON shapes can move to
 one module later.

@@ -1,0 +1,297 @@
+{
+  "tags": [
+    {
+      "name": "T_Station_Demo",
+      "tagType": "UdtType",
+      "tags": [
+        {
+          "name": "Sts_Active",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_Complete",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Prm_Deadband",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 0.0
+        },
+        {
+          "name": "Sts_Disabled",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_Failed",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_Filling",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Val_Gross",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 0.0
+        },
+        {
+          "name": "Cmd_Reset",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Cmd_Select",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Out_InletCmd",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_InletReq",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_Msg",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "String",
+          "value": ""
+        },
+        {
+          "name": "Val_Net",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 0.0
+        },
+        {
+          "name": "Val_PT",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 0.0
+        },
+        {
+          "name": "Val_PTDiff",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 0.0
+        },
+        {
+          "name": "Inp_PTValid",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_PressBalanced",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Prm_MaxPress",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 0.0
+        },
+        {
+          "name": "Sts_ReadyToFill",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_ReadyToStart",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_Recovering",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Out_SampleCmd",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Prm_PrefillPress",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 0.0
+        },
+        {
+          "name": "Sts_SampleReq",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Prm_SampleWt",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 0.0
+        },
+        {
+          "name": "Cfg_ScaleName",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "String",
+          "value": "WT000"
+        },
+        {
+          "name": "Sts_Selected",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Cfg_Desc",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "String",
+          "value": "Station 00"
+        },
+        {
+          "name": "Sts_State",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Int2",
+          "value": 0
+        },
+        {
+          "name": "Cmd_Tare",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Val_Tare",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 0.0
+        },
+        {
+          "name": "Prm_TargetWt",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 0.0
+        },
+        {
+          "name": "Val_Total",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "value": 0.0
+        },
+        {
+          "name": "Cfg_EU",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "String",
+          "value": "kg"
+        },
+        {
+          "name": "Out_VacuumCmd",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_VacuumReq",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_Vacuumed",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_Vacuuming",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Sts_Venting",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Inp_VesselPresent",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        },
+        {
+          "name": "Cmd_Zero",
+          "tagType": "AtomicTag",
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "value": false
+        }
+      ]
+    }
+  ]
+}

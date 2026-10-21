@@ -5,289 +5,328 @@
       "tagType": "Folder",
       "tags": [
         {
-          "name": "DDT_Process_Value_Demo",
+          "name": "T_AI_Demo",
           "tagType": "UdtType",
           "tags": [
             {
-              "name": "PV",
+              "name": "Val_PV",
               "tagType": "AtomicTag",
               "valueSource": "memory",
               "dataType": "Float4",
               "value": 28.2
             },
             {
-              "name": "Name",
+              "name": "Cfg_Tag",
               "tagType": "AtomicTag",
               "valueSource": "expr",
               "dataType": "String",
               "expression": "\"{InstanceName}\""
             },
             {
-              "name": "Description",
+              "name": "Cfg_Desc",
               "tagType": "AtomicTag",
               "valueSource": "memory",
               "dataType": "String",
               "value": "Demo pressure transmitter"
             },
             {
-              "name": "Units",
+              "name": "Cfg_EU",
               "tagType": "AtomicTag",
               "valueSource": "memory",
               "dataType": "String",
               "value": "PSIG"
             },
             {
-              "name": "Eng_Min",
+              "name": "Cfg_EUMin",
               "tagType": "AtomicTag",
               "valueSource": "memory",
               "dataType": "Float4",
               "value": 0.0
             },
             {
-              "name": "Eng_Max",
+              "name": "Cfg_EUMax",
               "tagType": "AtomicTag",
               "valueSource": "memory",
               "dataType": "Float4",
               "value": 50.0
             },
             {
-              "name": "HW_Fault",
+              "name": "Sts_Bad",
               "tagType": "AtomicTag",
               "valueSource": "memory",
               "dataType": "Boolean",
-              "value": false,
-              "alarms": [
-                {
-                  "name": "HW_Fault",
-                  "priority": "High",
-                  "mode": "Equality",
-                  "setpointA": 1.0
-                }
-              ]
+              "value": false
             },
             {
-              "name": "Overrange",
-              "tagType": "AtomicTag",
-              "valueSource": "expr",
-              "dataType": "Boolean",
-              "expression": "{[.]PV} > {[.]Eng_Max}",
-              "alarms": [
-                {
-                  "name": "Overrange",
-                  "priority": "Diagnostic",
-                  "mode": "Equality",
-                  "setpointA": 1.0
-                }
-              ]
-            },
-            {
-              "name": "Underrange",
-              "tagType": "AtomicTag",
-              "valueSource": "expr",
-              "dataType": "Boolean",
-              "expression": "{[.]PV} < {[.]Eng_Min}",
-              "alarms": [
-                {
-                  "name": "Underrange",
-                  "priority": "Diagnostic",
-                  "mode": "Equality",
-                  "setpointA": 1.0
-                }
-              ]
-            },
-            {
-              "name": "HH",
+              "name": "Alm_Bad",
               "tagType": "Folder",
               "tags": [
                 {
-                  "name": "SP",
+                  "name": "Sts_Active",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]../Sts_Bad}",
+                  "alarms": [
+                    {
+                      "name": "Bad",
+                      "priority": "High",
+                      "mode": "Equality",
+                      "setpointA": 1.0
+                    }
+                  ]
+                },
+                {
+                  "name": "Sts_Unack",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]../Sts_Bad}"
+                },
+                {
+                  "name": "Cfg_Priority",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Int2",
+                  "value": 3
+                }
+              ]
+            },
+            {
+              "name": "Sts_ORng",
+              "tagType": "AtomicTag",
+              "valueSource": "expr",
+              "dataType": "Boolean",
+              "expression": "{[.]Val_PV} > {[.]Cfg_EUMax}"
+            },
+            {
+              "name": "Sts_URng",
+              "tagType": "AtomicTag",
+              "valueSource": "expr",
+              "dataType": "Boolean",
+              "expression": "{[.]Val_PV} < {[.]Cfg_EUMin}"
+            },
+            {
+              "name": "Alm_HH",
+              "tagType": "Folder",
+              "tags": [
+                {
+                  "name": "Cfg_Lim",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Float4",
                   "value": 42.0
                 },
                 {
-                  "name": "Inhibit",
-                  "tagType": "AtomicTag",
-                  "valueSource": "memory",
-                  "dataType": "Boolean",
-                  "value": false
-                },
-                {
-                  "name": "Enabled",
+                  "name": "Cfg_En",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Boolean",
                   "value": true
                 },
                 {
-                  "name": "DLY",
+                  "name": "Cfg_Priority",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
-                  "dataType": "Int4",
-                  "value": 0
+                  "dataType": "Int2",
+                  "value": 4
                 },
                 {
-                  "name": "Alarm",
+                  "name": "Sts_Suppressed",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean",
+                  "value": false
+                },
+                {
+                  "name": "Sts_Active",
                   "tagType": "AtomicTag",
                   "valueSource": "expr",
                   "dataType": "Boolean",
-                  "expression": "{[.]../PV} >= {[.]SP} && {[.]Enabled} && !{[.]Inhibit}",
+                  "expression": "{[.]../Val_PV} >= {[.]Cfg_Lim} && {[.]Cfg_En} && !{[.]Sts_Suppressed}",
                   "alarms": [
                     {
-                      "name": "HH",
+                      "name": "Alm_HH",
                       "priority": "Critical",
                       "mode": "Equality",
                       "setpointA": 1.0
                     }
                   ]
+                },
+                {
+                  "name": "Sts_Unack",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]../Val_PV} >= {[.]Cfg_Lim} && {[.]Cfg_En} && !{[.]Sts_Suppressed}"
                 }
               ]
             },
             {
-              "name": "H",
+              "name": "Alm_H",
               "tagType": "Folder",
               "tags": [
                 {
-                  "name": "SP",
+                  "name": "Cfg_Lim",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Float4",
                   "value": 35.0
                 },
                 {
-                  "name": "Inhibit",
-                  "tagType": "AtomicTag",
-                  "valueSource": "memory",
-                  "dataType": "Boolean",
-                  "value": false
-                },
-                {
-                  "name": "Enabled",
+                  "name": "Cfg_En",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Boolean",
                   "value": true
                 },
                 {
-                  "name": "DLY",
+                  "name": "Cfg_Priority",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
-                  "dataType": "Int4",
-                  "value": 0
+                  "dataType": "Int2",
+                  "value": 2
                 },
                 {
-                  "name": "Alarm",
+                  "name": "Sts_Suppressed",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean",
+                  "value": false
+                },
+                {
+                  "name": "Sts_Active",
                   "tagType": "AtomicTag",
                   "valueSource": "expr",
                   "dataType": "Boolean",
-                  "expression": "{[.]../PV} >= {[.]SP} && {[.]Enabled} && !{[.]Inhibit}",
+                  "expression": "{[.]../Val_PV} >= {[.]Cfg_Lim} && {[.]Cfg_En} && !{[.]Sts_Suppressed}",
                   "alarms": [
                     {
-                      "name": "H",
+                      "name": "Alm_H",
                       "priority": "Medium",
                       "mode": "Equality",
                       "setpointA": 1.0
                     }
                   ]
+                },
+                {
+                  "name": "Sts_Unack",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]../Val_PV} >= {[.]Cfg_Lim} && {[.]Cfg_En} && !{[.]Sts_Suppressed}"
                 }
               ]
             },
             {
-              "name": "L",
+              "name": "Alm_L",
               "tagType": "Folder",
               "tags": [
                 {
-                  "name": "SP",
+                  "name": "Cfg_Lim",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Float4",
                   "value": 10.0
                 },
                 {
-                  "name": "Inhibit",
-                  "tagType": "AtomicTag",
-                  "valueSource": "memory",
-                  "dataType": "Boolean",
-                  "value": false
-                },
-                {
-                  "name": "Enabled",
+                  "name": "Cfg_En",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Boolean",
                   "value": true
                 },
                 {
-                  "name": "DLY",
+                  "name": "Cfg_Priority",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
-                  "dataType": "Int4",
-                  "value": 0
+                  "dataType": "Int2",
+                  "value": 2
                 },
                 {
-                  "name": "Alarm",
+                  "name": "Sts_Suppressed",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean",
+                  "value": false
+                },
+                {
+                  "name": "Sts_Active",
                   "tagType": "AtomicTag",
                   "valueSource": "expr",
                   "dataType": "Boolean",
-                  "expression": "{[.]../PV} <= {[.]SP} && {[.]Enabled} && !{[.]Inhibit}",
+                  "expression": "{[.]../Val_PV} <= {[.]Cfg_Lim} && {[.]Cfg_En} && !{[.]Sts_Suppressed}",
                   "alarms": [
                     {
-                      "name": "L",
+                      "name": "Alm_L",
                       "priority": "Medium",
                       "mode": "Equality",
                       "setpointA": 1.0
                     }
                   ]
+                },
+                {
+                  "name": "Sts_Unack",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]../Val_PV} <= {[.]Cfg_Lim} && {[.]Cfg_En} && !{[.]Sts_Suppressed}"
                 }
               ]
             },
             {
-              "name": "LL",
+              "name": "Alm_LL",
               "tagType": "Folder",
               "tags": [
                 {
-                  "name": "SP",
+                  "name": "Cfg_Lim",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Float4",
                   "value": 5.0
                 },
                 {
-                  "name": "Inhibit",
-                  "tagType": "AtomicTag",
-                  "valueSource": "memory",
-                  "dataType": "Boolean",
-                  "value": false
-                },
-                {
-                  "name": "Enabled",
+                  "name": "Cfg_En",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Boolean",
                   "value": true
                 },
                 {
-                  "name": "DLY",
+                  "name": "Cfg_Priority",
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
-                  "dataType": "Int4",
-                  "value": 0
+                  "dataType": "Int2",
+                  "value": 4
                 },
                 {
-                  "name": "Alarm",
+                  "name": "Sts_Suppressed",
+                  "tagType": "AtomicTag",
+                  "valueSource": "memory",
+                  "dataType": "Boolean",
+                  "value": false
+                },
+                {
+                  "name": "Sts_Active",
                   "tagType": "AtomicTag",
                   "valueSource": "expr",
                   "dataType": "Boolean",
-                  "expression": "{[.]../PV} <= {[.]SP} && {[.]Enabled} && !{[.]Inhibit}",
+                  "expression": "{[.]../Val_PV} <= {[.]Cfg_Lim} && {[.]Cfg_En} && !{[.]Sts_Suppressed}",
                   "alarms": [
                     {
-                      "name": "LL",
+                      "name": "Alm_LL",
                       "priority": "Critical",
                       "mode": "Equality",
                       "setpointA": 1.0
                     }
                   ]
+                },
+                {
+                  "name": "Sts_Unack",
+                  "tagType": "AtomicTag",
+                  "valueSource": "expr",
+                  "dataType": "Boolean",
+                  "expression": "{[.]../Val_PV} <= {[.]Cfg_Lim} && {[.]Cfg_En} && !{[.]Sts_Suppressed}"
                 }
               ]
             }
@@ -302,10 +341,10 @@
         {
           "name": "PT001",
           "tagType": "UdtInstance",
-          "typeId": "DDT_Process_Value_Demo",
+          "typeId": "T_AI_Demo",
           "tags": [
             {
-              "name": "PV",
+              "name": "Val_PV",
               "tagType": "AtomicTag",
               "value": 28.2
             }
@@ -314,10 +353,10 @@
         {
           "name": "PT002",
           "tagType": "UdtInstance",
-          "typeId": "DDT_Process_Value_Demo",
+          "typeId": "T_AI_Demo",
           "tags": [
             {
-              "name": "PV",
+              "name": "Val_PV",
               "tagType": "AtomicTag",
               "value": 37.6
             }
@@ -326,10 +365,10 @@
         {
           "name": "PT003",
           "tagType": "UdtInstance",
-          "typeId": "DDT_Process_Value_Demo",
+          "typeId": "T_AI_Demo",
           "tags": [
             {
-              "name": "PV",
+              "name": "Val_PV",
               "tagType": "AtomicTag",
               "value": 44.1
             }
@@ -338,10 +377,10 @@
         {
           "name": "PT004",
           "tagType": "UdtInstance",
-          "typeId": "DDT_Process_Value_Demo",
+          "typeId": "T_AI_Demo",
           "tags": [
             {
-              "name": "PV",
+              "name": "Val_PV",
               "tagType": "AtomicTag",
               "value": 3.2
             }
@@ -350,15 +389,15 @@
         {
           "name": "PT005",
           "tagType": "UdtInstance",
-          "typeId": "DDT_Process_Value_Demo",
+          "typeId": "T_AI_Demo",
           "tags": [
             {
-              "name": "PV",
+              "name": "Val_PV",
               "tagType": "AtomicTag",
               "value": 28.2
             },
             {
-              "name": "HW_Fault",
+              "name": "Sts_Bad",
               "tagType": "AtomicTag",
               "value": true
             }

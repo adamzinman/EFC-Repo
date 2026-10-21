@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:36:12" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_DValve" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+	<comment>On/off valve: single or dual solenoid, limit switches, travel alarms</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Mode" typeName="T_Mode">
+			<comment>Mode block</comment>
+		</variables>
+		<variables name="Perm" typeName="T_Intlk">
+			<comment>Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK</comment>
+		</variables>
+		<variables name="Intlk" typeName="T_Intlk">
+			<comment>Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Inp_ZSO" typeName="BOOL">
+			<comment>Open limit switch</comment>
+		</variables>
+		<variables name="Inp_ZSC" typeName="BOOL">
+			<comment>Closed limit switch</comment>
+		</variables>
+		<variables name="Inp_Remote" typeName="BOOL">
+			<comment>Local/Remote switch in REMOTE (if fitted)</comment>
+		</variables>
+		<variables name="Inp_IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (FALSE drives to interlock position)</comment>
+		</variables>
+		<variables name="Inp_PermOK" typeName="BOOL">
+			<comment>Permissives healthy (TRUE = may leave safe position)</comment>
+		</variables>
+		<variables name="Inp_IOFault" typeName="BOOL">
+			<comment>I/O channel or comms fault</comment>
+		</variables>
+		<variables name="Cfg_HasZSO" typeName="BOOL">
+			<comment>Open limit switch fitted</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cfg_HasZSC" typeName="BOOL">
+			<comment>Closed limit switch fitted</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cfg_FailOpen" typeName="BOOL">
+			<comment>Fail position: TRUE = fail open, FALSE = fail closed</comment>
+		</variables>
+		<variables name="Cfg_IntlkOpen" typeName="BOOL">
+			<comment>Interlock drives valve: TRUE = open, FALSE = closed</comment>
+		</variables>
+		<variables name="Cfg_DualCoil" typeName="BOOL">
+			<comment>Dual solenoid (uses Out_Open and Out_Close)</comment>
+		</variables>
+		<variables name="Cfg_TravelTime" typeName="TIME">
+			<comment>Maximum travel time before failure alarm</comment>
+			<variableInit value="T#10S"></variableInit>
+		</variables>
+		<variables name="Cmd_Open" typeName="BOOL">
+			<comment>Operator open (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Close" typeName="BOOL">
+			<comment>Operator close (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Fault reset (one-shot)</comment>
+		</variables>
+		<variables name="Prog_Open" typeName="BOOL">
+			<comment>Program open request (Auto)</comment>
+		</variables>
+		<variables name="Prog_Close" typeName="BOOL">
+			<comment>Program close request (Auto)</comment>
+		</variables>
+		<variables name="Out_Open" typeName="BOOL">
+			<comment>Solenoid output: open (energise)</comment>
+		</variables>
+		<variables name="Out_Close" typeName="BOOL">
+			<comment>Solenoid output: close (dual-coil only)</comment>
+		</variables>
+		<variables name="Sim_En" typeName="BOOL">
+			<comment>Simulation: ignore field I/O, logic generates feedback</comment>
+		</variables>
+		<variables name="Sts_Opened" typeName="BOOL">
+			<comment>Confirmed open</comment>
+		</variables>
+		<variables name="Sts_Closed" typeName="BOOL">
+			<comment>Confirmed closed</comment>
+		</variables>
+		<variables name="Sts_Opening" typeName="BOOL">
+			<comment>Travelling open</comment>
+		</variables>
+		<variables name="Sts_Closing" typeName="BOOL">
+			<comment>Travelling closed</comment>
+		</variables>
+		<variables name="Sts_Avail" typeName="BOOL">
+			<comment>Available to Auto/program control</comment>
+		</variables>
+		<variables name="Sts_Intlk" typeName="BOOL">
+			<comment>Interlock not healthy</comment>
+		</variables>
+		<variables name="Sts_NotPerm" typeName="BOOL">
+			<comment>Permissive not healthy</comment>
+		</variables>
+		<variables name="Sts_Local" typeName="BOOL">
+			<comment>In local control</comment>
+		</variables>
+		<variables name="Sts_Fault" typeName="BOOL">
+			<comment>Any fault present</comment>
+		</variables>
+		<variables name="Sts_Sim" typeName="BOOL">
+			<comment>Simulation active</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=Transit/unknown 1=Closed 2=Open 3=Opening 4=Closing 5=Fault</comment>
+		</variables>
+		<variables name="Sts_NE107" typeName="INT">
+			<comment>NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)</comment>
+		</variables>
+		<variables name="Alm_FailOpen" typeName="T_Alarm">
+			<comment>Failed to open within travel time</comment>
+		</variables>
+		<variables name="Alm_FailClose" typeName="T_Alarm">
+			<comment>Failed to close within travel time</comment>
+		</variables>
+		<variables name="Alm_PosConflict" typeName="T_Alarm">
+			<comment>Both limit switches made</comment>
+		</variables>
+		<variables name="Alm_Uncmd" typeName="T_Alarm">
+			<comment>Left commanded position without a command</comment>
+		</variables>
+		<variables name="Alm_IntlkTrip" typeName="T_Alarm">
+			<comment>Driven to safe position by interlock</comment>
+		</variables>
+		<variables name="Run" typeName="T_RunTime">
+			<comment>Cycle counter (Val_Starts = operations)</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

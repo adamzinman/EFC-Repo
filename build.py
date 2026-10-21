@@ -26,7 +26,7 @@ IMPORTED = os.path.join(ROOT, "imported")
 COMPONENTS = os.path.join(BUILD, "components")
 VERSION = json.load(open(os.path.join(ROOT, "VERSION.json")))
 LIBRARY = "EFC_Library"
-GENERATED_PARTS = ("EFC_Styles", "PID_Symbols", "EFC_ProcessValues", "PID_Loops")
+GENERATED_PARTS = ("EFC_Styles", "PID_Symbols", "EFC_ProcessValues", "PID_Loops", "EFC_AnalogIndicators", "EFC_Docks")
 IMPORTED_PARTS = ("EFC_IOFaceplates", "EFC_StationFaceplates")
 
 # Views that don't already live under Templates/ are moved there in the merged project. Every string that
@@ -35,6 +35,7 @@ RELOCATE = {
     "PID_Loops": [("PID/Templates/", "Templates/Loops/"), ("PID/Popups/", "Templates/Loops/Popups/"),
                   ("PID/_Demo_Loops", "Templates/Loops/_Demo")],
     "EFC_IOFaceplates": [("IO/", "Templates/IO/")],
+    "EFC_StationFaceplates": [("Templates/Station/Station_Sidebar", "Docks/Station")],   # dw_Station dynamic window (decision 4)
 }
 
 
@@ -105,6 +106,9 @@ def generate(preview):
     shutil.copy(os.path.join(BUILD, "styles", "style_index.md"), os.path.join(ROOT, "docs", "style-class-index.md"))
     run("build_pv.py")                    # EFC_ProcessValues -> projects/, tags/PV_Demo_Tags.json, docs/pv-style-index.md
     run("pid_loops/generate_loops.py")           # PID_Loops -> projects/PID_Loops, tags/PID_Loops/
+    run("analog_indicators/gen_analog_indicators.py", stdout=subprocess.DEVNULL)   # T_KPI cards -> Templates/AnalogIndicator
+    unzip_to(os.path.join(BUILD, "analog", "EFC_AnalogIndicators.zip"), os.path.join(PROJECTS, "EFC_AnalogIndicators"))
+    run("docks/build_docks.py")                  # EFC_Docks: dynamic windows, parts, Docks/Region, efc.ui script library
     run("nav_connectors/generate_nav_connectors.py")   # symbols/NavConnectors, mockups/nav-connectors.html
     merge_library()
     os.makedirs(os.path.join(ROOT, "mockups"), exist_ok=True)
@@ -176,8 +180,9 @@ def check_view_refs(lib):
     bad = []
     for v in views:
         txt = open(os.path.join(vroot, v, "view.json")).read()
-        refs = re.findall(r'"path": "((?:Templates|Styles)/[^"]+)"', txt)
+        refs = re.findall(r'"path": "((?:Templates|Styles|Docks)/[^"]+)"', txt)
         refs += [m for m in re.findall(r'openPopup\([^,]+, \\"([^"\\]+)\\"', txt)]
+        refs += re.findall(r"openPopup\([^,]+, '((?:Templates|Docks)/[^']+)'", txt)
         prefixes = re.findall(r'openPopup\([^,]+, \\"([^"\\]+/)\\" \+', txt)
         for r in refs:
             if not r.endswith("/") and r not in views:

@@ -1,0 +1,11 @@
+{
+  "base": {
+    "style": {
+      "marginTop": "0.741vh",
+      "border": "1px solid #E3E6E9",
+      "borderRadius": "0.556vh",
+      "overflow": "hidden"
+    }
+  },
+  "variants": []
+}

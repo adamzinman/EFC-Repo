@@ -3,14 +3,20 @@
     "out": 0.0,
     "pos": 0.0,
     "fb": true,
-    "perm": true,
-    "intlk": false,
     "fault": false,
-    "mode": 0,
-    "name": "",
-    "desc": "",
     "state": 0,
     "command": 0,
+    "name": "",
+    "desc": "",
+    "man": false,
+    "oos": false,
+    "avail": true,
+    "local": false,
+    "intlk": false,
+    "permMissing": false,
+    "firstOut": -1,
+    "firstDesc": "",
+    "mode": 0,
     "alarm": 0,
     "fill": "#9E9E9E",
     "head": "#9E9E9E",
@@ -21,7 +27,10 @@
     "outC": 0.0
   },
   "params": {
-    "tagPath": "[default]PID_Demo/FV101"
+    "tagPath": "[default]PID_Demo/FV101",
+    "tType": "T_CValve",
+    "dockId": "",
+    "dwTagPath": ""
   },
   "propConfig": {
     "params.tagPath": {
@@ -37,7 +46,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Out"
+          "tagPath": "{0}/Val_Demand"
         }
       }
     },
@@ -50,7 +59,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Pos"
+          "tagPath": "{0}/Val_Pos"
         }
       }
     },
@@ -63,33 +72,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Feedback_Enabled"
-        }
-      }
-    },
-    "custom.perm": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/PermOK"
-        }
-      }
-    },
-    "custom.intlk": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Intlk"
+          "tagPath": "{0}/Cfg_HasFbk"
         }
       }
     },
@@ -102,46 +85,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Fault"
-        }
-      }
-    },
-    "custom.mode": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Mode"
-        }
-      }
-    },
-    "custom.name": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Name"
-        }
-      }
-    },
-    "custom.desc": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Description"
+          "tagPath": "{0}/Sts_Fault"
         }
       }
     },
@@ -158,6 +102,132 @@
         "type": "expr",
         "config": {
           "expression": "if(coalesce({view.custom.fb}, true), if(coalesce({view.custom.out}, 0) > 1, 1, 0), -1)"
+        }
+      }
+    },
+    "custom.name": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Cfg_Tag"
+        }
+      }
+    },
+    "custom.desc": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Cfg_Desc"
+        }
+      }
+    },
+    "custom.man": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Mode/Sts_Man"
+        }
+      }
+    },
+    "custom.oos": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Mode/Sts_OOS"
+        }
+      }
+    },
+    "custom.avail": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Sts_Avail"
+        }
+      }
+    },
+    "custom.local": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Sts_Local"
+        }
+      }
+    },
+    "custom.intlk": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Sts_Intlk"
+        }
+      }
+    },
+    "custom.firstOut": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Intlk/Sts_FirstOut"
+        }
+      }
+    },
+    "custom.firstDesc": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}",
+            "1": "{view.custom.firstOut}"
+          },
+          "tagPath": "{0}/Intlk/Cfg_CondDesc/{1}"
+        }
+      }
+    },
+    "custom.mode": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "if(coalesce({view.custom.man}, false), 1, 0)"
         }
       }
     },
@@ -224,6 +294,18 @@
           "expression": "max(0, min(100, coalesce(coalesce({view.custom.out}, 0), 0)))"
         }
       }
+    },
+    "params.tType": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dockId": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.dwTagPath": {
+      "paramDirection": "input",
+      "persistent": true
     }
   },
   "props": {
@@ -295,7 +377,11 @@
         "type": "ia.shapes.svg",
         "version": 0,
         "meta": {
-          "name": "Symbol"
+          "name": "Symbol",
+          "tooltip": {
+            "enabled": true,
+            "text": "Open dynamic window"
+          }
         },
         "position": {
           "x": 0.3167,
@@ -346,7 +432,10 @@
                 "linejoin": "round"
               }
             }
-          ]
+          ],
+          "style": {
+            "classes": "Util/Pointer"
+          }
         },
         "propConfig": {
           "props.elements[1].fill.paint": {
@@ -397,6 +486,17 @@
               }
             }
           }
+        },
+        "events": {
+          "dom": {
+            "onClick": {
+              "type": "script",
+              "scope": "G",
+              "config": {
+                "script": "\tefc.ui.openDynamic(self)"
+              }
+            }
+          }
         }
       },
       {
@@ -426,7 +526,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "!coalesce({view.custom.perm}, true)"
+                "expression": "false"
               }
             }
           }
@@ -462,6 +562,14 @@
                 "expression": "coalesce({view.custom.intlk}, false)"
               }
             }
+          },
+          "meta.tooltip.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "\"Interlock active - \" + \"control\" + \" blocked\" + if(coalesce({view.custom.firstOut}, -1) >= 0 && len(coalesce({view.custom.firstDesc}, \"\")) > 0, \": \" + {view.custom.firstDesc}, \"\")"
+              }
+            }
           }
         }
       },
@@ -486,6 +594,42 @@
           }
         },
         "children": [
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "M"
+            },
+            "position": {
+              "basis": "auto",
+              "shrink": 0,
+              "grow": 0
+            },
+            "props": {
+              "text": "M",
+              "style": {
+                "classes": "Util/Collapsed"
+              }
+            },
+            "propConfig": {
+              "meta.visible": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "coalesce({view.custom.man}, false)"
+                  }
+                }
+              },
+              "props.style.classes": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "if(coalesce({view.custom.man}, false), \"Mode/ManualSplit\", \"Util/Collapsed\")"
+                  }
+                }
+              }
+            }
+          },
           {
             "type": "ia.display.label",
             "version": 0,
@@ -515,7 +659,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "case({view.custom.state}, 0, \"State/Stopped\", 1, \"State/Running\", 2, \"State/Transition\", 3, \"State/Fault\", \"State/Unknown\") + \" Text/Mod/Tabular\""
+                    "expression": "case({view.custom.state}, 0, \"State/Stopped\", 1, \"State/Running\", 2, \"State/Transition\", 3, \"State/Fault\", \"State/Unknown\") + \" Text/Mod/Tabular\" + if(coalesce({view.custom.man}, false), \" Mode/ManualJoined\", \"\")"
                   }
                 }
               }

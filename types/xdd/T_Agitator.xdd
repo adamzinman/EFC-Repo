@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:36:12" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Agitator" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+	<comment>Agitator / mixer: VFD + submergence, seal and gearbox protection</comment>
+	<structure>
+		<variables name="Drv" typeName="T_VFD">
+			<comment>Drive (fixed-speed agitators: ignore speed members)</comment>
+		</variables>
+		<variables name="Prot" typeName="T_Intlk">
+			<comment>Protection group: named trip conditions with first-out; drives Out_IntlkOK / Out_PermOK</comment>
+		</variables>
+		<variables name="Inp_Level" typeName="REAL">
+			<comment>Vessel level (EU)</comment>
+		</variables>
+		<variables name="Inp_SealOK" typeName="BOOL">
+			<comment>Seal / seal support system healthy</comment>
+		</variables>
+		<variables name="Inp_GbxTemp" typeName="REAL">
+			<comment>Gearbox oil temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_Vib" typeName="REAL">
+			<comment>Vibration (mm/s)</comment>
+		</variables>
+		<variables name="Cfg_MinLevel" typeName="REAL">
+			<comment>Minimum level to run (impeller submergence)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_LvlHyst" typeName="REAL">
+			<comment>Level hysteresis (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_TripLowLvl" typeName="BOOL">
+			<comment>Trip running agitator on low level</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Out_IntlkOK" typeName="BOOL">
+			<comment>Wire to Drv.Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Out_PermOK" typeName="BOOL">
+			<comment>Wire to Drv.Inp_PermOK</comment>
+		</variables>
+		<variables name="Sts_LvlOK" typeName="BOOL">
+			<comment>Level above minimum</comment>
+		</variables>
+		<variables name="Alm_LowLvlRun" typeName="T_Alarm">
+			<comment>Running / start requested below minimum level</comment>
+		</variables>
+		<variables name="Alm_Seal" typeName="T_Alarm">
+			<comment>Seal fault</comment>
+		</variables>
+		<variables name="Alm_GbxTemp" typeName="T_AlmLim">
+			<comment>High gearbox temperature</comment>
+		</variables>
+		<variables name="Alm_Vib" typeName="T_AlmLim">
+			<comment>High vibration</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

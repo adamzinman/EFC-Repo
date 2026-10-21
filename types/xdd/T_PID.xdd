@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:36:12" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_PID" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+	<comment>PID loop wrapper (maps onto PIDFF EFB), Man/Auto/Cas, tracking</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Intlk" typeName="T_Intlk">
+			<comment>Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK</comment>
+		</variables>
+		<variables name="Cfg_PVEU" typeName="STRING[12]">
+			<comment>PV engineering units text</comment>
+		</variables>
+		<variables name="Inp_PV" typeName="REAL">
+			<comment>Process value (EU)</comment>
+		</variables>
+		<variables name="Inp_PVBad" typeName="BOOL">
+			<comment>PV bad quality</comment>
+		</variables>
+		<variables name="Inp_CasSP" typeName="REAL">
+			<comment>Cascade (remote) setpoint from master loop</comment>
+		</variables>
+		<variables name="Inp_FF" typeName="REAL">
+			<comment>Feed-forward input (% CV)</comment>
+		</variables>
+		<variables name="Inp_TrackEn" typeName="BOOL">
+			<comment>Output tracking enable</comment>
+		</variables>
+		<variables name="Inp_TrackVal" typeName="REAL">
+			<comment>Output tracking value (%)</comment>
+		</variables>
+		<variables name="Inp_IntlkOK" typeName="BOOL">
+			<comment>Interlocks healthy (FALSE forces Cfg_IntlkCV)</comment>
+		</variables>
+		<variables name="Cmd_Man" typeName="BOOL">
+			<comment>Operator request Manual (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Auto" typeName="BOOL">
+			<comment>Operator request Auto (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Cas" typeName="BOOL">
+			<comment>Operator request Cascade (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_SP" typeName="REAL">
+			<comment>Operator setpoint (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cmd_CV" typeName="REAL">
+			<comment>Operator manual output (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Prog_SP" typeName="REAL">
+			<comment>Program setpoint (EU), used when Cfg_ProgSP</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_ProgSP" typeName="BOOL">
+			<comment>Setpoint owned by program instead of operator</comment>
+		</variables>
+		<variables name="Cfg_Kp" typeName="REAL">
+			<comment>Proportional gain</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_Ti" typeName="TIME">
+			<comment>Integral time, T#0S = no integral</comment>
+			<variableInit value="T#10S"></variableInit>
+		</variables>
+		<variables name="Cfg_Td" typeName="TIME">
+			<comment>Derivative time</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_DirectAct" typeName="BOOL">
+			<comment>TRUE = direct acting (CV rises with PV); FALSE = reverse</comment>
+		</variables>
+		<variables name="Cfg_PVMin" typeName="REAL">
+			<comment>PV range low (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_PVMax" typeName="REAL">
+			<comment>PV range high (EU)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SPMin" typeName="REAL">
+			<comment>Setpoint low limit (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SPMax" typeName="REAL">
+			<comment>Setpoint high limit (EU)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_CVMin" typeName="REAL">
+			<comment>Output low limit (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_CVMax" typeName="REAL">
+			<comment>Output high limit (%)</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_SPRate" typeName="REAL">
+			<comment>Setpoint ramp rate (EU/s), 0 = step</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_CVRate" typeName="REAL">
+			<comment>Output rate limit (%/s), 0 = none</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DB" typeName="REAL">
+			<comment>Error deadband (EU)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_FFGain" typeName="REAL">
+			<comment>Feed-forward gain</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_PVTrack" typeName="BOOL">
+			<comment>Setpoint tracks PV while in Manual (bumpless)</comment>
+		</variables>
+		<variables name="Cfg_IntlkCV" typeName="REAL">
+			<comment>Output forced on interlock (%)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_BadPVAction" typeName="INT">
+			<comment>On bad PV: 0=Hold CV 1=Go Manual 2=Go Cfg_IntlkCV</comment>
+			<variableInit value="1"></variableInit>
+		</variables>
+		<variables name="Out_CV" typeName="REAL">
+			<comment>Controller output (%)</comment>
+		</variables>
+		<variables name="Val_SP" typeName="REAL">
+			<comment>Active setpoint after ramp and limits (EU)</comment>
+		</variables>
+		<variables name="Val_SPTarget" typeName="REAL">
+			<comment>Target setpoint before ramp (EU)</comment>
+		</variables>
+		<variables name="Val_PV" typeName="REAL">
+			<comment>Process value (EU)</comment>
+		</variables>
+		<variables name="Val_Err" typeName="REAL">
+			<comment>Error SP - PV (EU)</comment>
+		</variables>
+		<variables name="Sts_Man" typeName="BOOL">
+			<comment>In Manual</comment>
+		</variables>
+		<variables name="Sts_Auto" typeName="BOOL">
+			<comment>In Auto</comment>
+		</variables>
+		<variables name="Sts_Cas" typeName="BOOL">
+			<comment>In Cascade</comment>
+		</variables>
+		<variables name="Sts_Track" typeName="BOOL">
+			<comment>Output tracking</comment>
+		</variables>
+		<variables name="Sts_Intlk" typeName="BOOL">
+			<comment>Interlock active</comment>
+		</variables>
+		<variables name="Sts_WindupHi" typeName="BOOL">
+			<comment>Output at high limit</comment>
+		</variables>
+		<variables name="Sts_WindupLo" typeName="BOOL">
+			<comment>Output at low limit</comment>
+		</variables>
+		<variables name="Sts_SPRamping" typeName="BOOL">
+			<comment>Setpoint ramping</comment>
+		</variables>
+		<variables name="Sts_Mode" typeName="INT">
+			<comment>0=Man 1=Auto 2=Cas 3=Track 4=Intlk</comment>
+		</variables>
+		<variables name="Alm_DevH" typeName="T_AlmLim">
+			<comment>High deviation (PV - SP), EU</comment>
+		</variables>
+		<variables name="Alm_DevL" typeName="T_AlmLim">
+			<comment>Low deviation (SP - PV), EU</comment>
+		</variables>
+		<variables name="Alm_PVBad" typeName="T_Alarm">
+			<comment>PV bad</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

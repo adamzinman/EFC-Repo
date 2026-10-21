@@ -1,0 +1,12 @@
+{
+  "base": {
+    "style": {
+      "fontFamily": "Inter, 'Segoe UI', Roboto, Arial, sans-serif",
+      "color": "#1F1F1F",
+      "fontWeight": 600,
+      "fontSize": "1.157vh",
+      "whiteSpace": "nowrap"
+    }
+  },
+  "variants": []
+}

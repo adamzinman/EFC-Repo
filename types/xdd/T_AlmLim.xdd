@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_AlmLim" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Analog limit alarm: limit + deadband + ISA-18.2 / IEC 62682 alarm</comment>
+	<structure>
+		<variables name="Cfg_Lim" typeName="REAL">
+			<comment>Alarm limit (EU) - from rationalisation / master alarm database</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DB" typeName="REAL">
+			<comment>Deadband for return to normal (EU, ISA-18.2 chattering control)</comment>
+			<variableInit value="0.0"></variableInit>
+		</variables>
+		<variables name="Inp_Cond" typeName="BOOL">
+			<comment>Raw alarm condition (written by owner logic)</comment>
+		</variables>
+		<variables name="Inp_Suppress" typeName="BOOL">
+			<comment>Suppressed-by-design: state-based suppression by logic (ISA-18.2 state G)</comment>
+		</variables>
+		<variables name="Cfg_En" typeName="BOOL">
+			<comment>Alarm enabled - set TRUE once Cfg_Lim is rationalised</comment>
+		</variables>
+		<variables name="Cfg_Latch" typeName="BOOL">
+			<comment>Latching alarm: active until Cmd_Reset after RTN (ISA-18.2 state E)</comment>
+		</variables>
+		<variables name="Cfg_NoAck" typeName="BOOL">
+			<comment>No acknowledge required - use only for alarms rationalised as such</comment>
+		</variables>
+		<variables name="Cfg_OnDly" typeName="TIME">
+			<comment>On-delay (ISA-18.2 chattering control)</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_OffDly" typeName="TIME">
+			<comment>Off-delay (ISA-18.2 chattering control)</comment>
+			<variableInit value="T#0S"></variableInit>
+		</variables>
+		<variables name="Cfg_Priority" typeName="INT">
+			<comment>Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low</comment>
+			<variableInit value="3"></variableInit>
+		</variables>
+		<variables name="Cfg_Class" typeName="INT">
+			<comment>Alarm class (alarm philosophy): 0=General 1=Safety 2=Environmental 3=Quality 4=Asset</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_MaxShelf" typeName="TIME">
+			<comment>Maximum shelve duration (shelving must be time-limited)</comment>
+			<variableInit value="T#8H"></variableInit>
+		</variables>
+		<variables name="Cmd_Ack" typeName="BOOL">
+			<comment>Operator acknowledge (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>Reset latched alarm (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Shelve" typeName="BOOL">
+			<comment>Operator shelve (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Unshelve" typeName="BOOL">
+			<comment>Operator unshelve (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_RemoveSvc" typeName="BOOL">
+			<comment>Remove from service for maintenance (one-shot, permit required)</comment>
+		</variables>
+		<variables name="Cmd_ReturnSvc" typeName="BOOL">
+			<comment>Return to service (one-shot)</comment>
+		</variables>
+		<variables name="Sts_Active" typeName="BOOL">
+			<comment>Alarm active (after delays and latch)</comment>
+		</variables>
+		<variables name="Sts_Unack" typeName="BOOL">
+			<comment>Alarm unacknowledged</comment>
+		</variables>
+		<variables name="Sts_Shelved" typeName="BOOL">
+			<comment>Shelved by operator (ISA-18.2 state F)</comment>
+		</variables>
+		<variables name="Sts_Suppressed" typeName="BOOL">
+			<comment>Suppressed by design (ISA-18.2 state G)</comment>
+		</variables>
+		<variables name="Sts_OOS" typeName="BOOL">
+			<comment>Out of service (ISA-18.2 state H)</comment>
+		</variables>
+		<variables name="Sts_State" typeName="INT">
+			<comment>0=A Normal 1=B Unack 2=C Acked 3=D RTN-Unack 4=E Latched 5=F Shelved 6=G Suppressed-by-design 7=H Out-of-service</comment>
+		</variables>
+		<variables name="Sts_ShelfLeft" typeName="TIME">
+			<comment>Shelve time remaining</comment>
+		</variables>
+		<variables name="Val_Count" typeName="UDINT">
+			<comment>Activation counter (alarm performance KPIs)</comment>
+		</variables>
+		<variables name="Val_LastActive" typeName="DT">
+			<comment>Date/time of last activation</comment>
+		</variables>
+		<variables name="Val_LastRTN" typeName="DT">
+			<comment>Date/time of last return to normal</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

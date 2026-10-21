@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_Tank" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Tank / vessel: level-to-volume, inventory, fill/drain permissives, alarms</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_Product" typeName="STRING[24]">
+			<comment>Stored product</comment>
+		</variables>
+		<variables name="Cfg_LvlEU" typeName="STRING[8]">
+			<comment>Level units text</comment>
+		</variables>
+		<variables name="Cfg_VolEU" typeName="STRING[8]">
+			<comment>Volume units text</comment>
+		</variables>
+		<variables name="Inp_Level" typeName="REAL">
+			<comment>Level (Cfg_LvlEU) from AI Val_PV</comment>
+		</variables>
+		<variables name="Inp_LevelBad" typeName="BOOL">
+			<comment>Level signal bad</comment>
+		</variables>
+		<variables name="Inp_LSHH" typeName="BOOL">
+			<comment>High-high level switch active</comment>
+		</variables>
+		<variables name="Inp_LSLL" typeName="BOOL">
+			<comment>Low-low level switch active</comment>
+		</variables>
+		<variables name="Inp_Temp" typeName="REAL">
+			<comment>Temperature (degC)</comment>
+		</variables>
+		<variables name="Inp_Press" typeName="REAL">
+			<comment>Pressure (EU)</comment>
+		</variables>
+		<variables name="Cfg_MaxLevel" typeName="REAL">
+			<comment>Level at 100% full</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_Capacity" typeName="REAL">
+			<comment>Volume at 100% full</comment>
+			<variableInit value="100.0"></variableInit>
+		</variables>
+		<variables name="Cfg_Shape" typeName="INT">
+			<comment>0=Vertical / linear 1=Horizontal cylinder 2=Strapping table</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cfg_Strap" typeName="ARRAY[0..10] OF REAL">
+			<comment>Strapping table: volume at 0,10..100% level</comment>
+		</variables>
+		<variables name="Cfg_SG" typeName="REAL">
+			<comment>Specific gravity (for mass)</comment>
+			<variableInit value="1.0"></variableInit>
+		</variables>
+		<variables name="Cfg_FillStop" typeName="REAL">
+			<comment>Fill permissive removed above this level</comment>
+			<variableInit value="90.0"></variableInit>
+		</variables>
+		<variables name="Cfg_DrainStop" typeName="REAL">
+			<comment>Drain permissive removed below this level</comment>
+			<variableInit value="5.0"></variableInit>
+		</variables>
+		<variables name="Cfg_RateWindow" typeName="TIME">
+			<comment>Window for net-flow (rate of change) calc</comment>
+			<variableInit value="T#1M"></variableInit>
+		</variables>
+		<variables name="Prog_EqState" typeName="INT">
+			<comment>ISA-88 equipment state request from unit / phase logic</comment>
+		</variables>
+		<variables name="Out_FillPerm" typeName="BOOL">
+			<comment>Filling permitted (wire to inlet pump / valve)</comment>
+		</variables>
+		<variables name="Out_DrainPerm" typeName="BOOL">
+			<comment>Draining permitted (wire to outlet pump / valve)</comment>
+		</variables>
+		<variables name="Val_Volume" typeName="REAL">
+			<comment>Volume (Cfg_VolEU)</comment>
+		</variables>
+		<variables name="Val_PctFull" typeName="REAL">
+			<comment>Volume (% of capacity)</comment>
+		</variables>
+		<variables name="Val_Ullage" typeName="REAL">
+			<comment>Remaining capacity (Cfg_VolEU)</comment>
+		</variables>
+		<variables name="Val_Mass" typeName="REAL">
+			<comment>Mass (t, from volume x SG)</comment>
+		</variables>
+		<variables name="Val_NetFlow" typeName="REAL">
+			<comment>Net in/out flow (Cfg_VolEU per min, + = filling)</comment>
+		</variables>
+		<variables name="Val_MinToFull" typeName="REAL">
+			<comment>Minutes to full at current rate</comment>
+		</variables>
+		<variables name="Val_MinToEmpty" typeName="REAL">
+			<comment>Minutes to empty at current rate</comment>
+		</variables>
+		<variables name="Sts_Filling" typeName="BOOL">
+			<comment>Level rising</comment>
+		</variables>
+		<variables name="Sts_Draining" typeName="BOOL">
+			<comment>Level falling</comment>
+		</variables>
+		<variables name="Sts_EqState" typeName="INT">
+			<comment>ISA-88 equipment state: 0=Available-clean 1=In use 2=Dirty 3=Cleaning (CIP) 4=Sterilising (SIP) 5=Maintenance 6=Out of service</comment>
+		</variables>
+		<variables name="Alm_HH" typeName="T_AlmLim">
+			<comment>High-high level</comment>
+		</variables>
+		<variables name="Alm_H" typeName="T_AlmLim">
+			<comment>High level</comment>
+		</variables>
+		<variables name="Alm_L" typeName="T_AlmLim">
+			<comment>Low level</comment>
+		</variables>
+		<variables name="Alm_LL" typeName="T_AlmLim">
+			<comment>Low-low level</comment>
+		</variables>
+		<variables name="Alm_LSHH" typeName="T_Alarm">
+			<comment>High-high level switch</comment>
+		</variables>
+		<variables name="Alm_LSLL" typeName="T_Alarm">
+			<comment>Low-low level switch</comment>
+		</variables>
+		<variables name="Alm_LvlDisc" typeName="T_Alarm">
+			<comment>Analog level disagrees with level switch</comment>
+		</variables>
+		<variables name="Alm_HiTemp" typeName="T_AlmLim">
+			<comment>High temperature</comment>
+		</variables>
+		<variables name="Alm_HiPress" typeName="T_AlmLim">
+			<comment>High pressure</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

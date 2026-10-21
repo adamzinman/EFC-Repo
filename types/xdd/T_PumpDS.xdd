@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_PumpDS" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Duty/standby/lead-lag coordinator for up to 4 pumps</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Mode" typeName="T_Mode">
+			<comment>Mode block (Auto = Prog_NumReq, Man = Cmd_NumReq)</comment>
+		</variables>
+		<variables name="Inp_Avail" typeName="ARRAY[1..4] OF BOOL">
+			<comment>Pump n available (Motor Sts_Avail)</comment>
+		</variables>
+		<variables name="Inp_Running" typeName="ARRAY[1..4] OF BOOL">
+			<comment>Pump n running</comment>
+		</variables>
+		<variables name="Inp_Fault" typeName="ARRAY[1..4] OF BOOL">
+			<comment>Pump n faulted</comment>
+		</variables>
+		<variables name="Inp_RunHrs" typeName="ARRAY[1..4] OF REAL">
+			<comment>Pump n run hours (for equalisation)</comment>
+		</variables>
+		<variables name="Cfg_NumPumps" typeName="INT">
+			<comment>Number of pumps in group (1-4)</comment>
+			<variableInit value="2"></variableInit>
+		</variables>
+		<variables name="Cfg_Strategy" typeName="INT">
+			<comment>Rotation: 0=Fixed lead 1=Rotate on stop 2=Equalise hours 3=Timed</comment>
+			<variableInit value="1"></variableInit>
+		</variables>
+		<variables name="Cfg_RotateHrs" typeName="REAL">
+			<comment>Timed rotation interval (h)</comment>
+			<variableInit value="168.0"></variableInit>
+		</variables>
+		<variables name="Cfg_StageDly" typeName="TIME">
+			<comment>Delay between staging pumps on/off</comment>
+			<variableInit value="T#10S"></variableInit>
+		</variables>
+		<variables name="Cfg_ChgOnFault" typeName="BOOL">
+			<comment>Automatic changeover to standby on fault</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Cmd_NumReq" typeName="INT">
+			<comment>Operator: number of pumps required (Manual)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Cmd_Lead" typeName="INT">
+			<comment>Operator-selected lead pump (Fixed strategy)</comment>
+			<variableInit value="1"></variableInit>
+		</variables>
+		<variables name="Cmd_Rotate" typeName="BOOL">
+			<comment>Force rotation now (one-shot)</comment>
+		</variables>
+		<variables name="Prog_NumReq" typeName="INT">
+			<comment>Program: number of pumps required (Auto)</comment>
+			<variableInit value="0"></variableInit>
+		</variables>
+		<variables name="Out_RunReq" typeName="ARRAY[1..4] OF BOOL">
+			<comment>Run request to pump n (wire to Prog_Start)</comment>
+		</variables>
+		<variables name="Sts_Order" typeName="ARRAY[1..4] OF INT">
+			<comment>Rank of pump n: 1=Lead 2=Lag1 ...</comment>
+		</variables>
+		<variables name="Sts_Lead" typeName="INT">
+			<comment>Current lead pump</comment>
+		</variables>
+		<variables name="Sts_NumRunning" typeName="INT">
+			<comment>Pumps running</comment>
+		</variables>
+		<variables name="Sts_NumAvail" typeName="INT">
+			<comment>Pumps available</comment>
+		</variables>
+		<variables name="Val_HrsToRotate" typeName="REAL">
+			<comment>Hours until next timed rotation</comment>
+		</variables>
+		<variables name="Alm_NoStandby" typeName="T_Alarm">
+			<comment>No standby pump available</comment>
+		</variables>
+		<variables name="Alm_NoneAvail" typeName="T_Alarm">
+			<comment>Demand present but no pump available</comment>
+		</variables>
+		<variables name="Sts_ChgOver" typeName="BOOL">
+			<comment>Automatic changeover occurred (event, not an alarm - ISA-18.2)</comment>
+		</variables>
+		<variables name="Val_ChgOverCount" typeName="UDINT">
+			<comment>Automatic changeover counter</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

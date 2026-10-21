@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DDTExchangeFile>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-7-17:17:57" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<contentHeader name="PCLib" version="1.00"></contentHeader>
+<DDTSource DDTName="T_ESD" version="1.00" dateTime="dt#2026-10-07-17:17:57">
+	<comment>Emergency shutdown group (BPCS layer): de-energise-to-trip, MOS, first-out</comment>
+	<structure>
+		<variables name="Cfg_Tag" typeName="STRING[20]">
+			<comment>Equipment / instrument tag, e.g. FT-101</comment>
+		</variables>
+		<variables name="Cfg_Desc" typeName="STRING[40]">
+			<comment>Description shown on HMI faceplate</comment>
+		</variables>
+		<variables name="Cfg_Level" typeName="INT">
+			<comment>ESD level, e.g. 0=Plant 1=Unit 2=Equipment</comment>
+			<variableInit value="1"></variableInit>
+		</variables>
+		<variables name="Inp_OK" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Trip input n: TRUE = healthy</comment>
+		</variables>
+		<variables name="Inp_UpstrOK" typeName="BOOL">
+			<comment>Higher-level ESD healthy (cascade)</comment>
+			<variableInit value="TRUE"></variableInit>
+		</variables>
+		<variables name="Inp_ManTripOK" typeName="BOOL">
+			<comment>Field ESD push-button circuit healthy</comment>
+		</variables>
+		<variables name="Inp_ResetPB" typeName="BOOL">
+			<comment>Field reset push-button</comment>
+		</variables>
+		<variables name="Inp_MOSKey" typeName="BOOL">
+			<comment>Maintenance override key switch enabled</comment>
+		</variables>
+		<variables name="Inp_FinalSafe" typeName="BOOL">
+			<comment>All final elements confirmed in safe state</comment>
+		</variables>
+		<variables name="Cfg_Used" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Input n configured</comment>
+		</variables>
+		<variables name="Cfg_InDesc" typeName="ARRAY[0..15] OF STRING[32]">
+			<comment>HMI text for input n</comment>
+		</variables>
+		<variables name="Cfg_MOSAllowed" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Override allowed on input n</comment>
+		</variables>
+		<variables name="Cfg_MOSMax" typeName="TIME">
+			<comment>Maximum override duration</comment>
+			<variableInit value="T#4H"></variableInit>
+		</variables>
+		<variables name="Cfg_FieldReset" typeName="BOOL">
+			<comment>Field reset push-button required to reset</comment>
+		</variables>
+		<variables name="Cfg_SafeTime" typeName="TIME">
+			<comment>Time for final elements to reach safe state</comment>
+			<variableInit value="T#30S"></variableInit>
+		</variables>
+		<variables name="Cmd_ManTrip" typeName="BOOL">
+			<comment>HMI manual trip (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_Reset" typeName="BOOL">
+			<comment>HMI reset (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_MOS" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Apply override on input n (one-shot)</comment>
+		</variables>
+		<variables name="Cmd_MOSOff" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Remove override on input n (one-shot)</comment>
+		</variables>
+		<variables name="Out_Healthy" typeName="BOOL">
+			<comment>TRUE = run permitted (energised); FALSE = trip</comment>
+		</variables>
+		<variables name="Sts_Tripped" typeName="BOOL">
+			<comment>Group tripped</comment>
+		</variables>
+		<variables name="Sts_ResetReady" typeName="BOOL">
+			<comment>All inputs healthy, reset possible</comment>
+		</variables>
+		<variables name="Sts_FirstOut" typeName="INT">
+			<comment>First input to trip (-1 none, 16=manual, 17=upstream)</comment>
+		</variables>
+		<variables name="Sts_MOS" typeName="ARRAY[0..15] OF BOOL">
+			<comment>Override active on input n</comment>
+		</variables>
+		<variables name="Sts_NumMOS" typeName="INT">
+			<comment>Number of active overrides</comment>
+		</variables>
+		<variables name="Sts_InWord" typeName="WORD">
+			<comment>Packed Inp_OK for SCADA</comment>
+		</variables>
+		<variables name="Sts_LatchWord" typeName="WORD">
+			<comment>Packed latched trips for SCADA</comment>
+		</variables>
+		<variables name="Sts_MOSWord" typeName="WORD">
+			<comment>Packed Sts_MOS for SCADA</comment>
+		</variables>
+		<variables name="Val_TripTime" typeName="DT">
+			<comment>Date/time of last trip</comment>
+		</variables>
+		<variables name="Val_TripCount" typeName="UDINT">
+			<comment>Trip counter</comment>
+		</variables>
+		<variables name="Alm_Trip" typeName="T_Alarm">
+			<comment>ESD trip</comment>
+		</variables>
+		<variables name="Alm_FailSafe" typeName="T_Alarm">
+			<comment>Final elements failed to reach safe state</comment>
+		</variables>
+		<variables name="Alm_MOS" typeName="T_Alarm">
+			<comment>Maintenance override active</comment>
+		</variables>
+		<variables name="Alm_MOSLong" typeName="T_Alarm">
+			<comment>Override exceeded Cfg_MOSMax</comment>
+		</variables>
+	</structure>
+</DDTSource>
+</DDTExchangeFile>

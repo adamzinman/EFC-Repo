@@ -40,6 +40,7 @@ mockups/                 HTML design previews
 docs/                    inventory, reference docs, template-review.md, previews/
 archive/                 retired files, kept for reference (not built)
 tools/import_project_zip.py  add or refresh a Designer-built part in imported/
+scripts/ddtsync.py       gateway script: PLC DDTs (M580 via BMENUA0100 OPC UA) -> UDTs, add-only
 ```
 
 `build.py` builds the generated parts in `build/components/`, merges them with `imported/` into `projects/EFC_Library`, and fails if any embedded view, repeater or popup path doesn't resolve. `build/` and `dist/` are ignored by git.
@@ -91,4 +92,16 @@ Parts in `imported/` have no generator here, so edit them in the Designer, expor
 - [`docs/pid-loop-templates.md`](docs/pid-loop-templates.md): PID loop cards and popup.
 - [`docs/screen-layout-standard.md`](docs/screen-layout-standard.md): 16:9 screen layout and graphics conventions.
 - [`docs/station-faceplates.md`](docs/station-faceplates.md): station faceplates, member mapping, dock setup.
+- [`docs/ddt-udt-sync.md`](docs/ddt-udt-sync.md): gateway script that builds or extends UDTs from the DDTs in an M580 over its BMENUA0100 OPC UA card (`scripts/ddtsync.py`).
 - [`docs/design-briefs.md`](docs/design-briefs.md): I/O card and station faceplates, compressor screen, Haskel pump.
+- [`docs/presentations/EFCLib_v1_Engineering_Briefing.pptx`](docs/presentations/EFCLib_v1_Engineering_Briefing.pptx): engineering briefing on the EFCLib v1 styles, symbols, templates and dynamic windows, with speaker notes (source in `docs/presentations/efclib-v1-source/`).
+
+## PCLib: ISA-88 phases and sequence bar
+`PCLib/` holds the phase DFBs for Control Expert Classic V16.2 and their Ignition 8.1 sequence bar. See [`PCLib/README_FB_Phase.md`](PCLib/README_FB_Phase.md).
+- `FB_PhaseCore`: the state machine.
+- `FB_Phase`: the template.
+- `FB_PhXeFill`: one xenon fill sequence for any number of stations (example).
+- `T_SeqBar`: the sequence-bar DDT.
+- `ignition/EFC_XeFill_HMI.zip`: the sequence bar, the EFC Station faceplates and the XeFill overview screen.
+
+Design a new phase with [`PCLib/Sequence_Template.md`](PCLib/Sequence_Template.md).
