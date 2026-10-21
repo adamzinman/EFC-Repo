@@ -195,7 +195,7 @@ def onoff_template(s, demo_path):
     color_props(s, custom, cfg)
     status = 'case({view.custom.state}, 0, "CLOSED", 1, "OPEN", 2, if({view.custom.cmd}, "OPENING", "CLOSING"), 3, "FAULT", "???")'
     cls = 'case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown")'
-    click = script("\tm = 'Cmd_Close' if self.view.custom.cmd else 'Cmd_Open'\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/' + m], [True])")
+    click = script("\tm = 'Cmd_Close' if self.view.custom.cmd else 'Cmd_Open'\n\tefc.ui.cmd(self, m, True, 1)")
     custom["canCmd"] = False
     cfg["custom.canCmd"] = expr("{view.custom.man} && {view.custom.avail} && !{view.custom.local} && !{view.custom.oos} && "
                                 "({view.custom.cmd} || (!{view.custom.permMissing} && !{view.custom.intlk}))")
@@ -266,7 +266,7 @@ def motor_template(s, demo_path):
     cfg["custom.canCmd"] = expr("{view.custom.man} && {view.custom.avail} && !{view.custom.local} && !{view.custom.oos} && "
                                 "({view.custom.cmd} || (!{view.custom.permMissing} && !{view.custom.intlk}))")
     click = script(f"\tm = '{M['stop']}' if self.view.custom.cmd else '{M['start']}'\n"
-                   "\tsystem.tag.writeBlocking([self.view.params.tagPath + '/' + m], [True])")
+                   "\tefc.ui.cmd(self, m, True, 1)")
     pb = {"type": "ia.input.button", "version": 0, "meta": {"name": "PB", "tooltip": {"enabled": True, "text": M["verbs"][0]}},
           "position": frac(L["pb"], L["size"]), "props": {"text": "", "enabled": False, "style": {"classes": "Button/Command"}},
           "propConfig": {"meta.visible": expr("{view.params.useButton} && {view.custom.man}"),

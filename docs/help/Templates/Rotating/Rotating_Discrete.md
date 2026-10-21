@@ -112,7 +112,7 @@ Priority is fault or trip, then running, then stopped, then transition. STARTING
 
 **Touch mode (double-tap).** With `useButton = false` and `dblCmd = true`, a double-click on the symbol calls `efc.ui.dblCmd(self)`. For T_Motor that function acts only when the user is Operator (level 1) or higher, and all of these hold: `Mode/Sts_Man` and `Sts_Avail` are true, and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are false. It then writes `Cmd_Stop` if `Sts_Running` is true, otherwise `Cmd_Start`.
 
-**Security.** The `PB` script does not call `efc.ui.cmd`, so it does not check the user's role level and does not write an audit record. Its only guard is the enable expression. The double-tap path checks for Operator or higher but also writes no audit record. Neither path checks `Sts_Tripped` (see Notes).
+**Security.** The `PB` script calls `efc.ui.cmd(self, m, True, 1)`, which re-checks that the user is Operator (level 1) or higher before writing, with no audit record. The enable expression is a second guard. The double-tap path checks for Operator or higher but also writes no audit record. Neither path checks `Sts_Tripped` (see Notes).
 
 ## Properties reference
 
@@ -264,16 +264,17 @@ Total: **3 event scripts** on every view (identical in all 11), no `customMethod
 ```
 
 3. **`root/PB`**: `events.component.onActionPerformed` on `root/PB`, scope G.
-   Manual Start/Stop button. Writes `True` to `Cmd_Stop` if `Out_Run` is true, else to `Cmd_Start`, directly via `system.tag.writeBlocking`. No role check, no audit.
+   Manual Start/Stop button. Writes `True` to `Cmd_Stop` if `Out_Run` is true, else to `Cmd_Start`, through `efc.ui.cmd(self, m, True, 1)`, which re-checks the Operator level (1) and writes the tag `<tagPath>/<m>`. No audit.
 
 ```python
 	m = 'Cmd_Stop' if self.view.custom.cmd else 'Cmd_Start'
-	system.tag.writeBlocking([self.view.params.tagPath + '/' + m], [True])
+	efc.ui.cmd(self, m, True, 1)
 ```
 
 ### Library functions called by this family (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_Motor` that is `dw_Rotating`, which maps to `Docks/Rotating`. If no window is found, it logs a warning and stops. Otherwise it writes `session.custom.efcDw[pageId] = {path, params:{tagPath: dwTagPath or tagPath}}`. It does not check the user's role and does not write to the tag. The `Docks/Region` view shows this path.
+- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an audit record. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
 - **`efc.ui.dblCmd(component)`**: returns immediately unless all of these hold: `useButton` false, `dblCmd` true, `tType` in `DBL_CMD` (`T_DValve` or `T_Motor`), and the user's level is 1 (Operator) or higher. It then reads `Sts_Running`, `Mode/Sts_Man`, `Sts_Avail`, `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault`. It writes nothing unless `Mode/Sts_Man` and `Sts_Avail` are true and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are all false. When it does write, it sends `Cmd_Stop` if `Sts_Running` is true, else `Cmd_Start`, with `True`. It does not check `Mode/Sts_OOS` or `Sts_Tripped`, and it writes no audit record.
 - **`efc.ui.level`**: the highest index in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` gives 0 to 5. Used by `dblCmd` (`userLevel >= 1`).
 - **`efc.ui.closeDynamic`** is not called from these views. The dock's close button calls it.
@@ -326,7 +327,7 @@ Motor (identical in all 11 views, apart from the `root/Symbol` element count and
 - **`custom.command` is never bound.** In all 11 views `custom.command` keeps its default `-1`, so `custom.head` always equals `custom.fill`. `custom.head` is not referenced anywhere. Either bind `command` or remove `head`.
 - **`custom.mode` is unused** in all 11 views.
 - **`PB` can be enabled in fault or trip.** `custom.canCmd` does not check `fault` or `trip`. With no interlock or permissive-missing, `PB` is enabled, and a click writes `Cmd_Start` even when the drive is tripped or faulted. The double-tap path checks `Sts_Fault` but not `Sts_Tripped`. Confirm this matches the PLC behaviour for start after a trip.
-- **No role check or audit on `PB` or double-tap.** As in the discrete valve templates, `PB` writes directly and is guarded only by its enable expression. `efc.ui.cmd` (role check and optional audit) is not used.
+- **No audit on `PB` or double-tap.** `PB` goes through `efc.ui.cmd` (Operator level check) and the double-tap path checks the same level, but neither passes `audit=True`.
 - **Double-tap also opens the dock.** Browsers fire two `click` events before `dblclick`, so `onClick` (open the dock) runs as well as `onDoubleClick` (command). The dock opens for the same drive.
 - **STARTING and STOPPING depend on the run command.** A drive that has been commanded to run but has no run feedback yet shows STARTING. The T_Motor `Sts_Starting` and `Sts_Stopping` members are not used.
 - **`I` badge position.** Blower and Pump_Centrifugal place the `I` badge at y 0.5345. The other nine views use y 0.1897. Confirm that this is intended for the taller or wider symbols.

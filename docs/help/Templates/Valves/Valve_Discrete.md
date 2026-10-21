@@ -51,7 +51,7 @@ Priority is fault, then opened, then closed, then transition.
 
 **Touch mode (double-tap).** With `useButton = false` and `dblCmd = true`, the `Symbol` double-click calls `efc.ui.dblCmd(self)`. Details are in the Scripts section below.
 
-**Security.** The PB button script does not call `efc.ui.cmd`, so it does not check the user's role level and does not write an audit record. The only guard is the enable expression. The double-tap path does check the role (Operator or higher).
+**Security.** The PB button script calls `efc.ui.cmd(self, m, True, 1)`, which re-checks the Operator level (1) and writes no audit record. The enable expression is a second guard. The double-tap path also checks the role (Operator or higher).
 
 ## Properties reference
 
@@ -107,7 +107,7 @@ None. The components carry no `custom` properties.
 
 ### Session, page and message payloads
 
-None. The template reads no `session.*` or `page.*` values and sends no messages. Its writes are the PB button script and the double-tap path (`efc.ui.dblCmd`), both via `system.tag.writeBlocking`.
+None. The template reads no `session.*` or `page.*` values and sends no messages. Its writes are the PB button script (through `efc.ui.cmd`) and the double-tap path (`efc.ui.dblCmd`).
 
 ## Bindings reference
 
@@ -185,16 +185,17 @@ Total: **3 event scripts**, no `customMethods`, no `messageHandlers`, no propert
 ```
 
 3. **`root/PB`**: `events.component.onActionPerformed` on `root/PB`, scope G.
-   Manual command button. Writes `True` to `Cmd_Close` if `Out_Open` is true, else to `Cmd_Open`, directly via `system.tag.writeBlocking`. No role check, no audit.
+   Manual command button. Writes `True` to `Cmd_Close` if `Out_Open` is true, else to `Cmd_Open`, through `efc.ui.cmd(self, m, True, 1)`, which re-checks the Operator level (1) and writes the tag `<tagPath>/<m>`. No audit.
 
 ```python
 	m = 'Cmd_Close' if self.view.custom.cmd else 'Cmd_Open'
-	system.tag.writeBlocking([self.view.params.tagPath + '/' + m], [True])
+	efc.ui.cmd(self, m, True, 1)
 ```
 
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_DValve` that is `dw_ValveDiscrete`, which maps to `Docks/ValveDiscrete`. If no window is found, logs a warning and stops. Otherwise it writes `session.custom.efcDw[pageId] = {path, params:{tagPath: dwTagPath or tagPath}}`. It does not check the user's role and does not write to the tag. The `Docks/Region` view shows this path.
+- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an audit record. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
 - **`efc.ui.dblCmd(component)`**: returns immediately unless all of these hold: `useButton` false, `dblCmd` true, `tType` in `DBL_CMD` (only `T_DValve` and `T_Motor`), and the user's level is 1 (Operator) or higher. It then reads `Sts_Opened`, `Mode/Sts_Man`, `Sts_Avail`, `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault`. It writes nothing unless `Mode/Sts_Man` and `Sts_Avail` are true and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are all false. When it does write, it sends `Cmd_Close` if `Sts_Opened` is true, else `Cmd_Open`, with `True`. It does not check `Mode/Sts_OOS`. The steward note omits the fault check, which the code does have.
 - **Role levels** (`efc.ui.level`): the highest index in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` gives 0 to 5. Operator is 1. Used by the dock; `dblCmd` uses `userLevel >= 1`.
 - **`efc.ui.closeDynamic`** is not called from this view. The dock's close button calls it.
@@ -248,5 +249,4 @@ The alarm expression reads `<tagPath>/*` through `isAlarmActiveFiltered`, not a 
 - The alarm expression checks one Ignition priority at a time (`minPriority = maxPriority = N`, 4 first) for every alarm under `tagPath/*`. It reads Ignition alarms configured on the tags, not the PLC `Alm_*` members the dock shows. The two only agree if the UDT carries matching Ignition alarm definitions.
 - A double-tap also opens the dock. Browsers fire two `click` events before `dblclick`, so `onClick` (open the dock) runs as well as `onDoubleClick` (command). This is harmless: the dock opens for the same valve.
 - The PB command writes `True` to a one-shot member and never clears it. This relies on the PLC resetting one-shot commands (the PCLib comment says "one-shot").
-- The PB button bypasses `efc.ui.cmd`, so it has no role check and no audit. Compare the dock buttons, which go through `efc.ui.cmd`.
 - The template state (`0` closed, `1` open, `2` transition, `3` fault) is not the PCLib `Sts_State` numbering (`0` transit, `1` closed, `2` open, `3` opening, `4` closing, `5` fault).

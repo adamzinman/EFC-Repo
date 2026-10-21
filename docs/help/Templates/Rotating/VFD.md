@@ -41,7 +41,7 @@ Priority is fault or trip, then running, then stopped, then transition. The spee
 
 **No speed command and no touch mode.** This template does not write a speed reference. Speed setpoint and direction are on the dock (`Cmd_Spd`, `Cmd_Rev`). There is no double-tap event and no `dblCmd` parameter, so with `useButton = false` the template has no command path at all.
 
-**Security.** The `PB` script does not call `efc.ui.cmd`, so it does not check the user's role level and does not write an audit record. Its only guard is the enable expression. `canCmd` does not check `Sts_Fault` or `Sts_Tripped` (see Notes).
+**Security.** The `PB` script calls `efc.ui.cmd(self, m, True, 1)`, which re-checks that the user is Operator (level 1) or higher before writing, with no audit record. The enable expression is a second guard. `canCmd` does not check `Sts_Fault` or `Sts_Tripped` (see Notes).
 
 ## Properties reference
 
@@ -163,16 +163,17 @@ Total: **2 event scripts**, no `customMethods`, no `messageHandlers`, no propert
 ```
 
 2. **`root/PB`**: `events.component.onActionPerformed` on `root/PB`, scope G.
-   Manual Start/Stop button. Writes `True` to `Cmd_Stop` if `cmd` (`Out_Run`) is true, else to `Cmd_Start`, directly via `system.tag.writeBlocking`. No role check, no audit.
+   Manual Start/Stop button. Writes `True` to `Cmd_Stop` if `cmd` (`Out_Run`) is true, else to `Cmd_Start`, through `efc.ui.cmd(self, m, True, 1)`, which re-checks the Operator level (1) and writes the tag `<tagPath>/<m>`. No audit.
 
 ```python
 	m = 'Cmd_Stop' if self.view.custom.cmd else 'Cmd_Start'
-	system.tag.writeBlocking([self.view.params.tagPath + '/' + m], [True])
+	efc.ui.cmd(self, m, True, 1)
 ```
 
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_VFD` that is `dw_VFD`, which maps to `Docks/VFD`. If no window is found, it logs a warning and stops. Otherwise it writes `session.custom.efcDw[pageId] = {path, params:{tagPath: dwTagPath or tagPath}}`. It does not check the user's role and does not write to the tag.
+- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an audit record. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
 - `efc.ui.dblCmd` is not called by this view, and `T_VFD` is not in its `DBL_CMD` table.
 
 ## Tag members used
@@ -222,7 +223,7 @@ The alarm expression reads `<tagPath>/*` through `isAlarmActiveFiltered`, not a 
 ## Notes and open questions
 
 - **`PB` can be enabled in fault or trip.** `custom.canCmd` does not check `fault` or `trip`. With no interlock or permissive-missing, `PB` is enabled, and a click writes `Cmd_Start` even when the drive is tripped or faulted. Confirm this matches the drive logic for start after a trip.
-- **No role check or audit on `PB`.** It writes directly and is guarded only by its enable expression. `efc.ui.cmd` (role check and optional audit) is not used.
+- **No audit on `PB`.** It goes through `efc.ui.cmd` (Operator level check) but does not pass `audit=True`.
 - **`useButton = false` leaves no command path.** `PB` is hidden, there is no double-tap event and no `dblCmd` parameter. Commands are only possible on the dock.
 - **Speed readout only in state 1.** The status line shows speed only while `Sts_Running` is true. A drive that is running at zero speed shows `0.0` plus units. A drive whose `Cfg_SpdEU` is empty shows a trailing space after the number.
 - **Speed is not clamped or checked.** The readout shows `Val_Spd` as-is. No limit, deviation or at-speed indication (`Sts_AtSpd`, `Alm_SpdDev`) is used on the symbol.
