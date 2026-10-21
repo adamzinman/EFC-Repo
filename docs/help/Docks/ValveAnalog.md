@@ -35,13 +35,13 @@ The operator and maintenance dynamic window for an analog control valve (T_CValv
 
 **Trend.** Embeds `Docks/Parts/Trend` with pens `Val_Demand` and `Val_Pos`. The embedded view's `expanded` param starts `false`. It is declared `inout` in `Docks/Parts/Trend`, so the trend part toggles it and the value flows back to this embed. The `position.basis` binding (`{this.props.params.expanded}`) then grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock region (see [Parts/Trend.md](Parts/Trend.md)).
 
-**Configuration** (collapsible; the header click toggles `open_Configuration`, collapsed by default). It holds seven values: Output min, Output max, Rate up, Rate down, Deviation limit, Deviation time and Tight shutoff. Below level 4 each shows as a read-only label. At level 4 and above each has a numeric entry bound bidirectionally to its tag. The entries have the literal enable `true`, so the level 4 rule is enforced only by visibility.
+**Configuration** (collapsible; the header click toggles `open_Configuration`, collapsed by default). It holds seven values: Output min, Output max, Rate up, Rate down, Deviation limit, Deviation time and Tight shutoff. Below level 4 each shows as a read-only label. At level 4 and above each has a numeric entry bound bidirectionally to its tag, except Deviation time (`Cfg_DevTime`, a PCLib TIME in milliseconds), which is shown as `Cfg_DevTime / 1000` seconds and written as `int(round(value * 1000))` by a `props.value` onChange script (only when `origin == 'Browser'`) through `efc.ui.cmd(self, 'Cfg_DevTime', ..., 4, audit=True)`. The entries have the literal enable `true`, so the level 4 rule is enforced only by visibility; the Deviation time entry is also checked in `efc.ui.cmd`.
 
 **Maintenance.** None. This window has no maintenance section, run-hour counters or SIMULATE button. `Sim_En` is not referenced. Simulation shows only as the SIM chip in the banner.
 
-**Role checks.** All role levels come from the Perspective session (`session.props.auth.user.roles`) and are checked in the client. `efc.ui.cmd` returns without writing when the level is too low. The manual position entry and the Configuration entries are bindings that write tags directly. Their only guards are their visibility and enable expressions. Real access control has to be enforced in Perspective security and the PLC logic.
+**Role checks.** All role levels come from the Perspective session (`session.props.auth.user.roles`) and are checked in the client. `efc.ui.cmd` returns without writing when the level is too low. The manual position entry and the Configuration entries (except Deviation time, which goes through `efc.ui.cmd`) are bindings that write tags directly. Their only guards are their visibility and enable expressions. Real access control has to be enforced in Perspective security and the PLC logic.
 
-**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, and the logger as a fallback record) only for calls with `audit=True`, which here means MAINT and OOS. Nothing audits AUTO, MAN, RESET, the presets, ACK, the manual position entry or configuration edits.
+**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, and the logger as a fallback record) only for calls with `audit=True`, which here means MAINT, OOS and Deviation time edits. Nothing audits AUTO, MAN, RESET, the presets, ACK, the manual position entry or the other configuration edits.
 
 ## Properties reference
 
@@ -87,7 +87,7 @@ None.
 
 ## Bindings reference
 
-Total: **124 bindings**: 35 at view root (1 `property` binding with a transform, plus 34 tag mirrors) and 89 on components. Types: 81 `expr`, 42 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 89.
+Total: **124 bindings**: 35 at view root (1 `property` binding with a transform, plus 34 tag mirrors) and 89 on components. Types: 82 `expr`, 41 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 89.
 
 ### View root
 
@@ -215,10 +215,11 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Configuration/Body/E4/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_DevLim` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/E4/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R5 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
-| root/Configuration/Body/R5/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_DevTime}, '#,##0.###')` | Text content |
+| root/Configuration/Body/R5/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_DevTime} / 1000, '#,##0.###')` | Text content |
 | root/Configuration/Body/R5/EU | `props.text` | expr | `'s'` | Text content |
 | root/Configuration/Body/E5 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E5/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_DevTime` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E5/Entry | `props.value` | expr | `{view.custom.m_Cfg_DevTime} / 1000` | Value in seconds (the PLC TIME is in milliseconds) |
+| root/Configuration/Body/E5/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: efc.ui.cmd(self, 'Cfg_DevTime', int(round(currentValue.value * 1000)), 4, audit=True)` | Edit written as milliseconds, Engineer, audited |
 | root/Configuration/Body/E5/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R6 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R6/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_TightShut}, '#,##0.###')` | Text content |
@@ -229,7 +230,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 ## Scripts reference
 
-Total: **14 scripts**: 13 event scripts (12 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). No `customMethods`, no `messageHandlers`, no property-change `onChange` scripts.
+Total: **15 scripts**: 13 event scripts (12 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). 1 property-change `onChange` script (`props.value` of the TIME entries, see the end of the list). No `customMethods`, no `messageHandlers`.
 
 The button handlers below call `efc.ui` functions. Those functions are summarised after the list.
 
@@ -317,6 +318,13 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	return efc.ui.level(value)
 ```
 
+15. **`root/Configuration/Body/E5/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		efc.ui.cmd(self, 'Cfg_DevTime', int(round(currentValue.value * 1000)), 4, audit=True)
+```
+
 ### Explanation of each handler
 
 | Handler | Action | Writes | Role check | Audit |
@@ -334,8 +342,9 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 | `Commands/Presets/P100` (100 %) | `efc.ui.cmd(... 'Cmd_ManPos', 100.0, 1)` | `Cmd_ManPos` | level 1 | no |
 | `Alarms/Ack` | `efc.ui.ackAll` on the three alarms | `Alm_*/Cmd_Ack` where unacked | level 1 | no |
 | `Configuration/Header` (dom click) | toggles `open_Configuration` | none | none | no |
+| `Configuration/Body/E5` (`Cfg_DevTime` entry, onChange) | `efc.ui.cmd(... 'Cfg_DevTime', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_DevTime` (milliseconds) | level 4 | yes
 
-`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`. The Mode buttons, RESET, the presets and ACK therefore use the level check. The manual position entry and the Configuration entries do not, because they are bindings.
+`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`. The Mode buttons, RESET, the presets and ACK therefore use the level check. The Deviation time entry uses the level check (level 4); the manual position entry and the other Configuration entries do not, because they are bindings.
 
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
@@ -384,7 +393,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Cfg_RateUp` | read/write | REAL | Opening rate limit (%/s), 0 = none. |
 | `Cfg_RateDn` | read/write | REAL | Closing rate limit (%/s), 0 = none. |
 | `Cfg_DevLim` | read/write | REAL | Position deviation alarm limit (%). |
-| `Cfg_DevTime` | read/write | TIME | Deviation must persist this long. |
+| `Cfg_DevTime` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Deviation must persist this long. |
 | `Cfg_TightShut` | read/write | REAL | Demand below this (%) forces 0 for tight shut-off. |
 | `Cmd_ManPos` | read/write | REAL | Operator manual demand (%). |
 | `Intlk` | read | T_Intlk | Passed as tagPath to the embedded `Docks/Parts/IntlkList` view |
@@ -546,7 +555,6 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **Position shown without feedback.** The banner's `OPEN nn %` always uses `Val_Pos`, and the PCLib comment says `Val_Pos` is the demand when there is no feedback. The Position row, however, is hidden when `Cfg_HasFbk` is false. Confirm whether the banner percentage should be shown in that case.
 - **Manual position does not check faults.** The entry and presets are enabled by `Mode/Sts_Man && !Sts_Intlk` only. They do not check `Sts_Fault`. The double-tap rule in `efc/ui/code.py` (`READY_FALSE`, which applies to T_DValve and T_Motor only) does check `Sts_Fault`. The discrete dock's OPEN and CLOSE rule does not. T_CValve has no `Sts_Avail`, `Sts_Local` or `Sts_NotPerm`, so none of those are checked here.
 - **The manual position entry bypasses `efc.ui.cmd`.** It is a bidirectional tag binding to `Cmd_ManPos`. Its only role control is visibility (level 1), and it is not audited. The presets use `efc.ui.cmd` (checked, not audited). Both are level 1, so the result is the same in practice, but the two paths differ.
-- **Configuration is not role-checked in script or audited.** The entries write tags directly through bindings, and the view does not validate values (for example Output min against Output max). The enable expression is the literal `true`, so level 4 is enforced only by visibility.
+- **Configuration is not role-checked in script or audited.** The entries (except Deviation time, which uses `efc.ui.cmd` and is audited) write tags directly through bindings, and the view does not validate values (for example Output min against Output max). The enable expression is the literal `true`, so level 4 is enforced only by visibility.
 - **`Cfg_HasFbk` cannot be changed here.** It controls the Position and Deviation rows, but it is not in the Configuration section and is not written by this view.
-- **Units of TIME members.** `Cfg_DevTime` is a TIME member. The dock shows the raw value with unit `s`. Confirm whether the tag delivers seconds or milliseconds before commissioning.
 - **RESET is always enabled, and the mode buttons have no enable.** RESET has no enable expression, so it is clickable at level 1 and above in any state. The four mode buttons also have no enable expression. The position entry and presets are the only manual controls with an enable, and it is `Mode/Sts_Man && !Sts_Intlk`.

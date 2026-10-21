@@ -98,9 +98,18 @@ def row(name, text, value_expr, unit_expr=None, show=None):
 
 def fmt(e, f="#,##0.0"): return f"numberFormat({e}, '{f}')"
 
-def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmtstr="#,##0.0"):
-    """Numeric setpoint bound bidirectionally to the member; hidden below minlvl."""
+TIME_SCALE = 1000        # PLC TIME members arrive in milliseconds; the docks show and edit seconds
+
+def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmtstr="#,##0.0", scale=None):
+    """Numeric setpoint bound bidirectionally to the member; hidden below minlvl.
+    scale (e.g. TIME_SCALE): the tag holds value * scale. The entry then reads the mirror / scale and a props.value
+    onChange script (origin == 'Browser' only) writes int(round(value * scale)) through efc.ui.cmd, Engineer, audited."""
     pc = {"props.value": tag(member, bidi=True), "props.enabled": expr(enabled or "true")}
+    if scale:
+        wr = (f"if origin == 'Browser' and currentValue.value is not None:\n"
+              f"\tefc.ui.cmd(self, {member!r}, int(round(currentValue.value * {scale})), {ENG}, audit=True)")
+        pc["props.value"] = {"binding": expr(f"{vw.m(member)} / {scale}")["binding"],
+                             "onChange": {"enabled": None, "script": "\t" + wr.replace("\n", "\n\t")}}
     num = comp("ia.input.numeric-entry-field", "Entry", {"format": fmtstr, "style": {"classes": "Input/Setpoint"}},
                {"shrink": 0, "basis": v(120)}, pc)
     s = lvl(minlvl) + (f" && ({show})" if show else "")
@@ -201,12 +210,17 @@ def maint(vw, extra=()):
     return section("Maintenance", "Maintenance", kids, show=lvl(MAINT))
 
 def config(vw, entries, name="Configuration", title="Configuration"):
-    """entries: [(text, member, unit)]; values are shown to all (booleans as Yes/No), editable Engineer+ (collapsed by default)."""
+    """entries: [(text, member, unit)]; values are shown to all (booleans as Yes/No), editable Engineer+ (collapsed by default).
+    Member prefixes: "?" boolean (checkbox); "~" PLC TIME in ms, shown and edited in seconds (TIME_SCALE)."""
     kids = []
     for i, (text, mem, unit) in enumerate(entries):
         if mem.startswith("?"):                                    # boolean
             kids.append(row(f"R{i}", text, f"if({vw.m(mem[1:])}, 'Yes', 'No')", show="!(" + lvl(ENG) + ")"))
             kids.append(check(f"C{i}", text, mem[1:], ENG, hide=True))
+        elif mem.startswith("~"):                                  # TIME: ms on the PLC, seconds in the dock
+            mem = mem[1:]
+            kids.append(row(f"R{i}", text, fmt(f"{vw.m(mem)} / {TIME_SCALE}", "#,##0.###"), repr(unit), show="!(" + lvl(ENG) + ")"))
+            kids.append(entry(vw, f"E{i}", text, mem, ENG, unit, fmtstr="#,##0.###", scale=TIME_SCALE))
         else:
             kids.append(row(f"R{i}", text, fmt(vw.m(mem), "#,##0.###"), repr(unit), show="!(" + lvl(ENG) + ")"))
             kids.append(entry(vw, f"E{i}", text, mem, ENG, unit, fmtstr="#,##0.###"))
@@ -261,7 +275,7 @@ def valve_discrete():
                     ("Alm_Uncmd", "Uncommanded move"), ("Alm_IntlkTrip", "Interlock trip")]),
         trend(["Out_Open", "Sts_Opened"]),
         maint(vw),
-        config(vw, [("Travel time", "Cfg_TravelTime", "s"), ("Has open limit", "?Cfg_HasZSO", ""), ("Has closed limit", "?Cfg_HasZSC", "")]),
+        config(vw, [("Travel time", "~Cfg_TravelTime", "s"), ("Has open limit", "?Cfg_HasZSO", ""), ("Has closed limit", "?Cfg_HasZSC", "")]),
     ])
 
 def valve_analog():
@@ -288,7 +302,7 @@ def valve_analog():
         alarms(vw, [("Alm_PosDev", "Position deviation"), ("Alm_FbkBad", "Feedback bad"), ("Alm_IntlkTrip", "Interlock trip")]),
         trend(["Val_Demand", "Val_Pos"]),
         config(vw, [("Output min", "Cfg_OutMin", "%"), ("Output max", "Cfg_OutMax", "%"), ("Rate up", "Cfg_RateUp", "%/s"),
-                    ("Rate down", "Cfg_RateDn", "%/s"), ("Deviation limit", "Cfg_DevLim", "%"), ("Deviation time", "Cfg_DevTime", "s"),
+                    ("Rate down", "Cfg_RateDn", "%/s"), ("Deviation limit", "Cfg_DevLim", "%"), ("Deviation time", "~Cfg_DevTime", "s"),
                     ("Tight shutoff", "Cfg_TightShut", "%")]),
     ])
 
@@ -313,7 +327,7 @@ def motor_like(path, ttype, extra_values, extra_alarms, extra_cmd, extra_cfg, pe
                     ("Alm_EStop", "E-stop"), ("Alm_IntlkTrip", "Interlock trip"), ("Alm_ExcessStarts", "Excess starts")] + extra_alarms),
         trend(pens),
         maint(vw),
-        config(vw, [("Feedback time", "Cfg_FbkTime", "s"), ("Restart delay", "Cfg_RestartDly", "s"), ("Rated current", "Cfg_RatedAmps", "A"),
+        config(vw, [("Feedback time", "~Cfg_FbkTime", "s"), ("Restart delay", "~Cfg_RestartDly", "s"), ("Rated current", "Cfg_RatedAmps", "A"),
                     ("Max starts / hr", "Cfg_MaxStartsHr", ""), ("Auto restart", "?Cfg_AutoRestart", "")] + extra_cfg),
     ])
 
@@ -338,7 +352,7 @@ def vfd():
                       [("Alm_DrvFault", "Drive fault"), ("Alm_DrvWarn", "Drive warning"), ("Alm_CommFail", "Drive comm fail"),
                        ("Alm_SpdDev", "Speed deviation")], cmd,
                       [("Speed min", "Cfg_SpdMin", ""), ("Speed max", "Cfg_SpdMax", ""), ("Speed dev limit", "Cfg_SpdDevLim", ""),
-                       ("Speed dev time", "Cfg_SpdDevTime", "s")], ["Val_Spd", "Val_SpdRef", "Val_Current"])
+                       ("Speed dev time", "~Cfg_SpdDevTime", "s")], ["Val_Spd", "Val_SpdRef", "Val_Current"])
 
 def heater():
     vw = View(); m = vw.m
@@ -365,10 +379,10 @@ def heater():
                     ("Alm_IntlkTrip", "Interlock trip")]),
         trend(["Val_Power", "Val_PwrDemand", "Val_Current"]),
         maint(vw),
-        config(vw, [("Cycle time", "Cfg_CycleTime", "s"), ("Min pulse", "Cfg_MinPulse", "s"), ("Power min", "Cfg_PwrMin", "%"),
+        config(vw, [("Cycle time", "~Cfg_CycleTime", "s"), ("Min pulse", "~Cfg_MinPulse", "s"), ("Power min", "Cfg_PwrMin", "%"),
                     ("Power max", "Cfg_PwrMax", "%"), ("Power rate", "Cfg_PwrRate", "%/s"), ("Rated power", "Cfg_RatedKW", "kW"),
                     ("Rated current", "Cfg_RatedAmps", "A"), ("Load fail", "Cfg_LoadFailPct", "%"), ("Leak current", "Cfg_LeakAmps", "A"),
-                    ("Feedback time", "Cfg_FbkTime", "s")]),
+                    ("Feedback time", "~Cfg_FbkTime", "s")]),
     ])
 
 def heat_transfer():
@@ -434,7 +448,7 @@ def loop():
         intlk("Intlk", "Interlocks", "Intlk"),
         alarms(vw, [("Alm_DevH", "Deviation high"), ("Alm_DevL", "Deviation low"), ("Alm_PVBad", "PV bad")]),
         trend(["Val_PV", "Val_SP", "Out_CV"]),
-        config(vw, [("Gain (Kp)", "Cfg_Kp", ""), ("Integral (Ti)", "Cfg_Ti", "s"), ("Derivative (Td)", "Cfg_Td", "s"),
+        config(vw, [("Gain (Kp)", "Cfg_Kp", ""), ("Integral (Ti)", "~Cfg_Ti", "s"), ("Derivative (Td)", "~Cfg_Td", "s"),
                     ("Deadband", "Cfg_DB", ""), ("SP rate", "Cfg_SPRate", "/s"), ("CV rate", "Cfg_CVRate", "%/s"),
                     ("Direct acting", "?Cfg_DirectAct", "")], name="Tuning", title="Tuning"),
         config(vw, [("Dev high limit", "Alm_DevH/Cfg_Lim", ""), ("Dev low limit", "Alm_DevL/Cfg_Lim", ""), ("SP min", "Cfg_SPMin", ""),

@@ -33,11 +33,11 @@ The operator and maintenance dynamic window for a two-state valve (T_DValve). It
 
 **Maintenance** (level 2 and above). Shows run hours, starts, starts in the last hour, hours since maintenance and whether maintenance is due. `RESET MAINT` writes `Run/Cmd_ResetMaint` (audited). `SIMULATE` toggles `Sim_En` (audited).
 
-**Configuration** (collapsible; the header click toggles `open_Configuration`). Travel time is read-only below level 4 and editable at level 4 and above (bidirectional `Cfg_TravelTime`, unit s). The "Has open limit" and "Has closed limit" settings follow the same pattern: below level 4 each is a read-only row showing `Yes` or `No` from `Cfg_HasZSO` / `Cfg_HasZSC`; at level 4 and above the row is hidden and a checkbox, bidirectional to the tag, is shown (and enabled). The entry and checkboxes write the tag directly through the binding. The only guard is that visibility (the checkboxes' enable is `level >= 4`; the entry's is the literal `true`).
+**Configuration** (collapsible; the header click toggles `open_Configuration`). Travel time is read-only below level 4 and editable at level 4 and above (`Cfg_TravelTime`, unit s; the PLC TIME is in milliseconds, so the row shows `Cfg_TravelTime / 1000` and the entry reads the mirror `/ 1000`; its `props.value` onChange script, only when `origin == 'Browser'`, writes `int(round(value * 1000))` through `efc.ui.cmd(self, 'Cfg_TravelTime', ..., 4, audit=True)`, Engineer and audited). The "Has open limit" and "Has closed limit" settings follow the same pattern: below level 4 each is a read-only row showing `Yes` or `No` from `Cfg_HasZSO` / `Cfg_HasZSC`; at level 4 and above the row is hidden and a checkbox, bidirectional to the tag, is shown (and enabled). The checkboxes write the tag directly through the binding; their only guard is visibility (their enable is `level >= 4`). The travel-time entry is guarded by visibility (its enable is the literal `true`) and by the level check in `efc.ui.cmd`.
 
-**Role checks.** All role levels come from the Perspective session (`session.props.auth.user.roles`) and are checked in the client. `efc.ui.cmd` returns without writing when the level is too low. Bindings do not check the level. Real access control has to be enforced in Perspective security and the PLC logic.
+**Role checks.** All role levels come from the Perspective session (`session.props.auth.user.roles`) and are checked in the client. `efc.ui.cmd` returns without writing when the level is too low. Bindings do not check the level (the Configuration checkboxes write through bindings); the travel-time entry goes through `efc.ui.cmd`. Real access control has to be enforced in Perspective security and the PLC logic.
 
-**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, falling back to the logger) for MAINT, OOS, RESET MAINT and SIMULATE. It does not audit AUTO, MAN, OPEN, CLOSE, RESET or ACK.
+**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, falling back to the logger) for MAINT, OOS, RESET MAINT, SIMULATE and travel-time edits. It does not audit AUTO, MAN, OPEN, CLOSE, RESET or ACK.
 
 ## Properties reference
 
@@ -84,7 +84,7 @@ None.
 
 ## Bindings reference
 
-Total: **107 bindings**: 44 at view root (all `custom.*`, including 1 `property` binding with a transform) and 63 on components. Types: 60 `expr`, 46 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 63.
+Total: **107 bindings**: 44 at view root (all `custom.*`, including 1 `property` binding with a transform) and 63 on components. Types: 61 `expr`, 45 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 63.
 
 ### View root
 
@@ -192,10 +192,11 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Configuration/Header/Chevron | `props.text` | expr | `if({view.custom.open_Configuration}, '▾', '▸')` | Text content |
 | root/Configuration/Body | `position.display` | expr | `{view.custom.open_Configuration}` | Shown while expression is true |
 | root/Configuration/Body/R0 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
-| root/Configuration/Body/R0/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_TravelTime}, '#,##0.###')` | Text content |
+| root/Configuration/Body/R0/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_TravelTime} / 1000, '#,##0.###')` | Text content |
 | root/Configuration/Body/R0/EU | `props.text` | expr | `'s'` | Text content |
 | root/Configuration/Body/E0 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E0/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_TravelTime` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E0/Entry | `props.value` | expr | `{view.custom.m_Cfg_TravelTime} / 1000` | Value in seconds (the PLC TIME is in milliseconds) |
+| root/Configuration/Body/E0/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: efc.ui.cmd(self, 'Cfg_TravelTime', int(round(currentValue.value * 1000)), 4, audit=True)` | Edit written as milliseconds, Engineer, audited |
 | root/Configuration/Body/E0/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R1 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R1/Val | `props.text` | expr | `if({view.custom.m_Cfg_HasZSO}, 'Yes', 'No')` | Text content |
@@ -210,7 +211,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 ## Scripts reference
 
-Total: **13 scripts**: 12 event scripts (11 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). No `customMethods`, no `messageHandlers`, no property-change `onChange` scripts.
+Total: **14 scripts**: 12 event scripts (11 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). 1 property-change `onChange` script (`props.value` of the TIME entries, see the end of the list). No `customMethods`, no `messageHandlers`.
 
 The button handlers below call `efc.ui` functions. Those functions are summarised after the list.
 
@@ -292,6 +293,13 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	return efc.ui.level(value)
 ```
 
+14. **`root/Configuration/Body/E0/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		efc.ui.cmd(self, 'Cfg_TravelTime', int(round(currentValue.value * 1000)), 4, audit=True)
+```
+
 ### Explanation of each handler
 
 | Handler | Action | Writes | Role check | Audit |
@@ -308,8 +316,9 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 | `Maintenance/ResetMaint` | `efc.ui.cmd(... 'Run/Cmd_ResetMaint', True, 2)` | `Run/Cmd_ResetMaint` | level 2 | yes |
 | `Maintenance/Sim` | `efc.ui.cmd(... 'Sim_En', not m_Sim_En, 2)` | `Sim_En` (toggle) | level 2 | yes |
 | `Configuration/Header` (dom click) | toggles `open_Configuration` | none | none | no |
+| `Configuration/Body/E0` (`Cfg_TravelTime` entry, onChange) | `efc.ui.cmd(... 'Cfg_TravelTime', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_TravelTime` (milliseconds) | level 4 | yes
 
-`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`. The Mode, Commands, Ack and Maintenance buttons therefore use the level check; the Configuration bindings do not.
+`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`. The Mode, Commands, Ack and Maintenance buttons and the travel-time entry therefore use the level check; the Configuration checkboxes, which are bindings, do not.
 
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
@@ -367,7 +376,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Run/Val_HrsSinceMaint` | read | REAL | Run hours since last maintenance reset |
 | `Run/Sts_MaintDue` | read | BOOL | Maintenance due |
 | `Sim_En` | read / write (toggle) | BOOL | Simulation: ignore field I/O, logic generates feedback |
-| `Cfg_TravelTime` | read/write (bidirectional) | TIME | Maximum travel time before failure alarm |
+| `Cfg_TravelTime` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Maximum travel time before failure alarm |
 | `Perm` | read | T_Intlk | Passed as tagPath to embedded IntlkList view |
 | `Intlk` | read | T_Intlk | Passed as tagPath to embedded IntlkList view |
 | `Mode/Cmd_Auto` | write | BOOL | Operator request Automatic (one-shot) |
@@ -502,7 +511,6 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **Configuration writes are not role-checked in script.** Their only guard is the UI enable expression. This is a binding-level write, not an `efc.ui` call.
 - **Priority names differ from PCLib.** The dock maps `Cfg_Priority` 1 to `Critical`. The PCLib `T_Alarm` comment says 1 = Emergency. Both use the same style-class name pattern, so the displayed name may be wrong if the comment is the intent.
 - **Trend expand is owned by the Trend part.** `expanded` is an `inout` param of `Docks/Parts/Trend`. This view only seeds it with `false` and resizes the embed from it.
-- **`Cfg_TravelTime` units.** The PCLib member is `TIME`, which is held in milliseconds on the PLC. The dock labels the value `s` and reads and writes the raw tag value. Whether the tag delivers seconds or milliseconds depends on the OPC/tag configuration. Confirm this before commissioning.
 - **Alarm rows** map `Cfg_Priority` through a `case()` with a default of `Medium`. Each row reads `Sts_Active` and `Sts_Unack` directly from its alarm member. The `Perm` and `Intlk` structures are shown by the embedded `IntlkList` views, which are not in this file.
 - **Sts_State is not used.** The PCLib member `Sts_State` is not read by this view. The banner computes its own state from the feedback flags.
 - **Parameter and style class names** (`Alarm/Critical/Unacked` and similar, `Button/Toggle/On`, etc.) are style classes defined elsewhere; their appearance was not checked.

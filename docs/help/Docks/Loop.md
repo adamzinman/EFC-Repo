@@ -32,13 +32,13 @@ The operator, tuning and configuration dynamic window for a PID loop (T_PID). It
 
 **Trend.** Embeds `Docks/Parts/Trend` (see [Parts/Trend](Parts/Trend.md)) with the static pens `["Val_PV", "Val_SP", "Out_CV"]` and `expanded` = `false`. The Trend part declares `expanded` as `inout` and toggles it itself, and the value flows back to this embed. The `position.basis` binding (`{this.props.params.expanded}`) then grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock region. The trend reads tag history through `efc.ui.trend` (`queryTagHistory`), with a range selector inside the Trend part (5 min, 30 min, 1 h, 8 h, 24 h; default 30 min).
 
-**Tuning** (all levels for the read-only rows; collapsible). The header click toggles `open_Tuning`. Rows: Gain (Kp), Integral (Ti, s), Derivative (Td, s), Deadband, SP rate (/s), CV rate (%/s) and a "Direct acting" checkbox (`Cfg_DirectAct`). Below level 4 each row shows its value read-only (Direct acting shows `Yes` or `No`). At level 4 and above the value rows are replaced by numeric entries bound two-way to `Cfg_Kp`, `Cfg_Ti`, `Cfg_Td`, `Cfg_DB`, `Cfg_SPRate`, `Cfg_CVRate`, and the checkbox is shown (level 4 and above; hidden below). The entries have `enabled` = `true`. Their only guard is visibility.
+**Tuning** (all levels for the read-only rows; collapsible). The header click toggles `open_Tuning`. Rows: Gain (Kp), Integral (Ti, s), Derivative (Td, s), Deadband, SP rate (/s), CV rate (%/s) and a "Direct acting" checkbox (`Cfg_DirectAct`). Below level 4 each row shows its value read-only (Direct acting shows `Yes` or `No`). At level 4 and above the value rows are replaced by numeric entries bound two-way to `Cfg_Kp`, `Cfg_DB`, `Cfg_SPRate`, `Cfg_CVRate`, and by entries for `Cfg_Ti` and `Cfg_Td` (PCLib TIME, milliseconds on the PLC) that show `member / 1000` seconds and write `int(round(value * 1000))` from a `props.value` onChange script (only when `origin == 'Browser'`) through `efc.ui.cmd(self, member, ..., 4, audit=True)`, and the checkbox is shown (level 4 and above; hidden below). The entries have `enabled` = `true`. Their only guard is visibility.
 
 **Configuration** (all levels for the read-only rows; collapsible). The header click toggles `open_Configuration`. Rows: Dev high limit (`Alm_DevH/Cfg_Lim`), Dev low limit (`Alm_DevL/Cfg_Lim`), SP min, SP max, CV min (%), CV max (%), PV min and PV max. Editing works as for Tuning: read-only below level 4, bidirectional entries at level 4 and above, `enabled` = `true`.
 
-**Role checks.** Role levels come from the Perspective session (`session.props.auth.user.roles`) and are mapped by `efc.ui.level`. Only the Mode buttons and ACK call a role-checked script function (`efc.ui.cmd` and `efc.ui.ackAll`, both minimum level 1). Setpoint, output, Tuning and Configuration writes are gated by visibility and enable bindings only. Real access control has to be enforced in Perspective security and the PLC logic.
+**Role checks.** Role levels come from the Perspective session (`session.props.auth.user.roles`) and are mapped by `efc.ui.level`. Only the Mode buttons and ACK call a role-checked script function (`efc.ui.cmd` and `efc.ui.ackAll`, both minimum level 1). Setpoint, output, the other Tuning entries and Configuration writes are gated by visibility and enable bindings only; the Ti and Td entries also call `efc.ui.cmd` (level 4). Real access control has to be enforced in Perspective security and the PLC logic.
 
-**Audit.** None. Every button call in this view omits the audit flag, so `efc.ui` writes no audit entry. Setpoint, output, Tuning and Configuration writes are not audited.
+**Audit.** Every button call in this view omits the audit flag. Only the Ti and Td entries call `efc.ui.cmd` with `audit=True`. Setpoint, output, the other Tuning entries and Configuration writes are not audited.
 
 ## Properties reference
 
@@ -77,14 +77,14 @@ None.
 ### Session, page and message payloads
 
 - `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
-- `session.props.auth.user.userName`: not used in this view. Only `efc.ui._audit` reads it, and no call in this view reaches it.
+- `session.props.auth.user.userName`: not bound in this view. `efc.ui._audit` reads it; only the Ti and Td entry onChange scripts reach it.
 - `session.custom.efcDw[pageId]`: written by `efc.ui.openDynamic` and `closeDynamic` in the template and header. Read by `Docks/Region` (not in this file).
 - `page.props.pageId`: read by `efc.ui._state` to key `efcDw`. Reached through the header close.
 - No message handlers. No `customMethods`.
 
 ## Bindings reference
 
-Total: **169 bindings**: 40 at view root (all `custom.*`, including 1 `property` binding with a transform) and 129 on components. Types: 112 `expr`, 56 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 129.
+Total: **169 bindings**: 40 at view root (all `custom.*`, including 1 `property` binding with a transform) and 129 on components. Types: 114 `expr`, 54 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 129.
 
 ### View root
 
@@ -174,16 +174,18 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Tuning/Body/E0/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_Kp` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value (numeric entry) |
 | root/Tuning/Body/E0/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Tuning/Body/R1 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
-| root/Tuning/Body/R1/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_Ti}, '#,##0.###')` | Text content |
+| root/Tuning/Body/R1/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_Ti} / 1000, '#,##0.###')` | Text content |
 | root/Tuning/Body/R1/EU | `props.text` | expr | `'s'` | Text content |
 | root/Tuning/Body/E1 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Tuning/Body/E1/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_Ti` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value (numeric entry) |
+| root/Tuning/Body/E1/Entry | `props.value` | expr | `{view.custom.m_Cfg_Ti} / 1000` | Value in seconds (the PLC TIME is in milliseconds) |
+| root/Tuning/Body/E1/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: efc.ui.cmd(self, 'Cfg_Ti', int(round(currentValue.value * 1000)), 4, audit=True)` | Edit written as milliseconds, Engineer, audited |
 | root/Tuning/Body/E1/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Tuning/Body/R2 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
-| root/Tuning/Body/R2/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_Td}, '#,##0.###')` | Text content |
+| root/Tuning/Body/R2/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_Td} / 1000, '#,##0.###')` | Text content |
 | root/Tuning/Body/R2/EU | `props.text` | expr | `'s'` | Text content |
 | root/Tuning/Body/E2 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Tuning/Body/E2/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_Td` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value (numeric entry) |
+| root/Tuning/Body/E2/Entry | `props.value` | expr | `{view.custom.m_Cfg_Td} / 1000` | Value in seconds (the PLC TIME is in milliseconds) |
+| root/Tuning/Body/E2/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: efc.ui.cmd(self, 'Cfg_Td', int(round(currentValue.value * 1000)), 4, audit=True)` | Edit written as milliseconds, Engineer, audited |
 | root/Tuning/Body/E2/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Tuning/Body/R3 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Tuning/Body/R3/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_DB}, '#,##0.###')` | Text content |
@@ -266,7 +268,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 ## Scripts reference
 
-Total: **8 scripts**: 7 event scripts (5 `component.onActionPerformed`, 2 `dom.onClick`) and 1 transform script (`custom.level`). No `customMethods`, no `messageHandlers`, no property-change `onChange` scripts.
+Total: **10 scripts**: 7 event scripts (5 `component.onActionPerformed`, 2 `dom.onClick`) and 1 transform script (`custom.level`). 2 property-change `onChange` scripts (`props.value` of the TIME entries, see the end of the list). No `customMethods`, no `messageHandlers`.
 
 The button handlers below call `efc.ui` functions. Those functions are summarised after the list.
 
@@ -318,6 +320,20 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	return efc.ui.level(value)
 ```
 
+9. **`root/Tuning/Body/E1/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		efc.ui.cmd(self, 'Cfg_Ti', int(round(currentValue.value * 1000)), 4, audit=True)
+```
+
+10. **`root/Tuning/Body/E2/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		efc.ui.cmd(self, 'Cfg_Td', int(round(currentValue.value * 1000)), 4, audit=True)
+```
+
 ### Explanation of each handler
 
 | Handler | Action | Writes | Role check | Audit |
@@ -330,14 +346,16 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 | `Tuning/Header` (dom click) | toggles `open_Tuning` | none | none | no |
 | `Configuration/Header` (dom click) | toggles `open_Configuration` | none | none | no |
 | `custom.level` transform | `efc.ui.level(value)` | `view.custom.level` | none | no |
+| `Tuning/Body/E1` (`Cfg_Ti` entry, onChange) | `efc.ui.cmd(... 'Cfg_Ti', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_Ti` (milliseconds) | level 4 | yes
+| `Tuning/Body/E2` (`Cfg_Td` entry, onChange) | `efc.ui.cmd(... 'Cfg_Td', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_Td` (milliseconds) | level 4 | yes
 
-`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`. The Mode and ACK buttons therefore use the level check. The Setpoint, Output, Tuning and Configuration entries do not call `efc.ui`, so they have no script-side level check.
+`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`. The Mode and ACK buttons therefore use the level check. The Ti and Td entries call it from their onChange scripts (level 4, audited). The Setpoint, Output, the other Tuning and the Configuration entries do not call `efc.ui`, so they have no script-side level check.
 
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
 - **`efc.ui.closeDynamic(component)`**: writes `efcDw[pageId]` back to the stored `default` path and params. Writes no tags.
-- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: the role-checked write described above. Here it is called with `minLevel` 1 and no audit, so `audit=False` (the default). It writes one tag member with `system.tag.writeBlocking`.
+- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: the role-checked write described above. It is called with `minLevel` 1 and no audit by the Mode buttons, and with `minLevel` 4 and `audit=True` by the Ti and Td entries. It writes one tag member with `system.tag.writeBlocking`.
 - **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms with `system.tag.readBlocking`, then writes `<alarm>/Cmd_Ack` = True for those that are true. Only runs at level 1 and above.
 - **`efc.ui.openDynamic`**, **`efc.ui.trend`**: used by the templates and by `Docks/Parts/Trend`, not by this view.
 
@@ -372,8 +390,8 @@ All paths are relative to `tagPath`. Types and comments come from `types/PCLib_M
 | `Alm_PVBad/Sts_Unack` | read | BOOL | Alarm unacknowledged |
 | `Alm_PVBad/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
 | `Cfg_Kp` | read/write (bidirectional) | REAL | Proportional gain |
-| `Cfg_Ti` | read/write (bidirectional) | TIME | Integral time, T#0S = no integral. Shown with unit `s`. See Notes. |
-| `Cfg_Td` | read/write (bidirectional) | TIME | Derivative time. Shown with unit `s`. See Notes. |
+| `Cfg_Ti` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Integral time, T#0S = no integral. Shown with unit `s`. See Notes. |
+| `Cfg_Td` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Derivative time. Shown with unit `s`. See Notes. |
 | `Cfg_DB` | read/write (bidirectional) | REAL | Error deadband (EU) |
 | `Cfg_SPRate` | read/write (bidirectional) | REAL | Setpoint ramp rate (EU/s), 0 = step |
 | `Cfg_CVRate` | read/write (bidirectional) | REAL | Output rate limit (%/s), 0 = none |
@@ -589,10 +607,9 @@ All paths are relative to `tagPath`. Types and comments come from `types/PCLib_M
 ## Notes and open questions
 
 - **Mode buttons have no enable or state gate.** MAN, AUTO and CAS are clickable at level 1 and above in any state, including INTERLOCKED and TRACKING. Only the PLC checks the request. Compare the valve docks, where OPEN and CLOSE check `Sts_Man` and availability.
-- **Setpoint, output, Tuning and Configuration writes bypass `efc.ui`.** They are direct two-way bindings. Their only guard is visibility and the enable expression. `efc.ui.cmd` is not called, so there is no server-side level re-check and no audit. `steward/DECISIONS.md` decision 27 says writes go through `efc.ui.cmd`, and decision 14 says Tuning and Configuration edits and alarm-limit changes are Engineer+ and audit-logged (old value, new value, user, time). This view meets the level rule only through visibility, and it has no audit. This needs a decision: either move these writes into a role-checked, audited `efc.ui` function, or record the exception in DECISIONS.
+- **Setpoint, output, Tuning (except Ti and Td) and Configuration writes bypass `efc.ui`.** They are direct two-way bindings. Their only guard is visibility and the enable expression. `efc.ui.cmd` is not called, so there is no server-side level re-check and no audit. `steward/DECISIONS.md` decision 27 says writes go through `efc.ui.cmd`, and decision 14 says Tuning and Configuration edits and alarm-limit changes are Engineer+ and audit-logged (old value, new value, user, time). This view meets the level rule only through visibility, and it has no audit, apart from the Ti and Td entries, which now go through `efc.ui.cmd` (level 4, audited). This needs a decision: either move these writes into a role-checked, audited `efc.ui` function, or record the exception in DECISIONS.
 - **Setpoint enable rule.** The setpoint entry is enabled only when `Sts_Cas` is false. It stays enabled in INTERLOCKED and TRACKING, and in MAN. The PLC decides what the setpoint does in those states.
 - **Read-only Tuning and Configuration are shown to every level.** A Guest (level 0) sees the Tuning and Configuration values, because the read-only rows have no level floor. The sections are collapsed by default (`open_Tuning` and `open_Configuration` are `false`). Confirm that read-only visibility at Guest is intended.
-- **Units of Cfg_Ti and Cfg_Td.** PCLib types both as TIME (`T#10S`, `T#0S`). The dock labels them `s` and writes the raw tag value through the numeric entry. Whether the tag holds seconds or milliseconds depends on the tag configuration. Confirm this before commissioning. It is the same question as `Cfg_TravelTime` in `Docks/ValveDiscrete`.
 - **EU labels in Configuration.** The SP min, SP max, PV min, PV max and deviation-limit rows have a blank unit. The Values rows use `Cfg_PVEU`, and the Setpoint entry has a blank unit too. Deviation limits are in EU (the T_AlmLim comment says so). Decide whether these rows should show `Cfg_PVEU`.
 - **Alarm priority names.** Same as `Docks/ValveDiscrete`. The dock maps `Cfg_Priority` 1 to `Critical`. The PCLib `T_Alarm` comment says 1 = Emergency. The style-class pattern is the same, so the displayed name may not match the intent.
 - **Banner ignores `Sts_Mode`.** `Sts_Mode` (INT, 0=Man 1=Auto 2=Cas 3=Track 4=Intlk) is not bound. The banner uses the separate booleans, so a loop with none of `Sts_Man`, `Sts_Auto`, `Sts_Cas`, `Sts_Track` or `Sts_Intlk` set shows UNKNOWN.

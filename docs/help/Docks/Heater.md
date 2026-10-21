@@ -40,11 +40,11 @@ A hint line states "Enabled in MAN, available, permitted, not interlocked, not L
 
 **Maintenance** (level 2 and above). Shows run hours, starts, starts in the last hour, hours since maintenance and whether maintenance is due. `RESET MAINT` writes `Run/Cmd_ResetMaint` (audited). `SIMULATE` toggles `Sim_En` (audited).
 
-**Configuration** (collapsible; collapsed by default; the header click toggles `open_Configuration`). Below level 4 each value is a read-only row. At level 4 and above each value is an editable entry bound bidirectionally to its tag, with an enable expression of the literal `true`; the row is hidden and the entry shown. The entries are: Cycle time (`Cfg_CycleTime`, s), Min pulse (`Cfg_MinPulse`, s), Power min (`Cfg_PwrMin`, %), Power max (`Cfg_PwrMax`, %), Power rate (`Cfg_PwrRate`, %/s), Rated power (`Cfg_RatedKW`, kW), Rated current (`Cfg_RatedAmps`, A), Load fail (`Cfg_LoadFailPct`, %), Leak current (`Cfg_LeakAmps`, A) and Feedback time (`Cfg_FbkTime`, s). The entries write their tags through the binding. The only guard is the UI enable expression. `Cfg_CtrlType` is displayed in Values but has no configuration row here.
+**Configuration** (collapsible; collapsed by default; the header click toggles `open_Configuration`). Below level 4 each value is a read-only row. At level 4 and above each value is an editable entry bound bidirectionally to its tag, with an enable expression of the literal `true`; the row is hidden and the entry shown. The entries are: Cycle time (`Cfg_CycleTime`, s, TIME), Min pulse (`Cfg_MinPulse`, s, TIME), Power min (`Cfg_PwrMin`, %), Power max (`Cfg_PwrMax`, %), Power rate (`Cfg_PwrRate`, %/s), Rated power (`Cfg_RatedKW`, kW), Rated current (`Cfg_RatedAmps`, A), Load fail (`Cfg_LoadFailPct`, %), Leak current (`Cfg_LeakAmps`, A) and Feedback time (`Cfg_FbkTime`, s, TIME). The TIME members are milliseconds on the PLC: their rows show `member / 1000`, their entries read the mirror `/ 1000`, and a `props.value` onChange script (only when `origin == 'Browser'`) writes `int(round(value * 1000))` through `efc.ui.cmd(self, member, ..., 4, audit=True)` (Engineer, audited). The other entries write their tags through the binding. Their only guard is the UI enable expression. `Cfg_CtrlType` is displayed in Values but has no configuration row here.
 
-**Role checks.** All role levels come from the Perspective session (`session.props.auth.user.roles`) and are checked in the client. `efc.ui.cmd` returns without writing when the level is too low. Bindings do not check the level. Real access control has to be enforced in Perspective security and the PLC logic.
+**Role checks.** All role levels come from the Perspective session (`session.props.auth.user.roles`) and are checked in the client. `efc.ui.cmd` returns without writing when the level is too low. Bindings do not check the level, except that the three TIME entries go through `efc.ui.cmd`. Real access control has to be enforced in Perspective security and the PLC logic.
 
-**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, falling back to the logger) for MAINT, OOS, RESET MAINT and SIMULATE. It does not audit AUTO, MAN, ON, OFF, RESET, power-demand changes or ACK.
+**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, falling back to the logger) for MAINT, OOS, RESET MAINT, SIMULATE and edits of Cycle time, Min pulse and Feedback time. It does not audit AUTO, MAN, ON, OFF, RESET, power-demand changes, the other configuration edits or ACK.
 
 ## Properties reference
 
@@ -93,7 +93,7 @@ None.
 
 ## Bindings reference
 
-Total: **182 bindings**: 62 at view root (all `custom.*`, including 1 `property` binding with a transform) and 120 on components. Types: 109 `expr`, 72 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 120.
+Total: **182 bindings**: 62 at view root (all `custom.*`, including 1 `property` binding with a transform) and 120 on components. Types: 112 `expr`, 69 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 120.
 
 ### View root
 
@@ -214,16 +214,18 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Configuration/Header/Chevron | `props.text` | expr | `if({view.custom.open_Configuration}, '▾', '▸')` | Text content |
 | root/Configuration/Body | `position.display` | expr | `{view.custom.open_Configuration}` | Shown while expression is true |
 | root/Configuration/Body/R0 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
-| root/Configuration/Body/R0/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_CycleTime}, '#,##0.###')` | Text content |
+| root/Configuration/Body/R0/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_CycleTime} / 1000, '#,##0.###')` | Text content |
 | root/Configuration/Body/R0/EU | `props.text` | expr | `'s'` | Text content |
 | root/Configuration/Body/E0 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E0/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_CycleTime` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E0/Entry | `props.value` | expr | `{view.custom.m_Cfg_CycleTime} / 1000` | Value in seconds (the PLC TIME is in milliseconds) |
+| root/Configuration/Body/E0/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: efc.ui.cmd(self, 'Cfg_CycleTime', int(round(currentValue.value * 1000)), 4, audit=True)` | Edit written as milliseconds, Engineer, audited |
 | root/Configuration/Body/E0/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R1 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
-| root/Configuration/Body/R1/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_MinPulse}, '#,##0.###')` | Text content |
+| root/Configuration/Body/R1/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_MinPulse} / 1000, '#,##0.###')` | Text content |
 | root/Configuration/Body/R1/EU | `props.text` | expr | `'s'` | Text content |
 | root/Configuration/Body/E1 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E1/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_MinPulse` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E1/Entry | `props.value` | expr | `{view.custom.m_Cfg_MinPulse} / 1000` | Value in seconds (the PLC TIME is in milliseconds) |
+| root/Configuration/Body/E1/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: efc.ui.cmd(self, 'Cfg_MinPulse', int(round(currentValue.value * 1000)), 4, audit=True)` | Edit written as milliseconds, Engineer, audited |
 | root/Configuration/Body/E1/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R2 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R2/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_PwrMin}, '#,##0.###')` | Text content |
@@ -268,16 +270,17 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Configuration/Body/E8/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_LeakAmps` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/E8/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R9 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
-| root/Configuration/Body/R9/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_FbkTime}, '#,##0.###')` | Text content |
+| root/Configuration/Body/R9/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_FbkTime} / 1000, '#,##0.###')` | Text content |
 | root/Configuration/Body/R9/EU | `props.text` | expr | `'s'` | Text content |
 | root/Configuration/Body/E9 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E9/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_FbkTime` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E9/Entry | `props.value` | expr | `{view.custom.m_Cfg_FbkTime} / 1000` | Value in seconds (the PLC TIME is in milliseconds) |
+| root/Configuration/Body/E9/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: efc.ui.cmd(self, 'Cfg_FbkTime', int(round(currentValue.value * 1000)), 4, audit=True)` | Edit written as milliseconds, Engineer, audited |
 | root/Configuration/Body/E9/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 
 
 ## Scripts reference
 
-Total: **13 scripts**: 12 event scripts (11 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). No `customMethods`, no `messageHandlers`, no property-change `onChange` scripts.
+Total: **16 scripts**: 12 event scripts (11 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). 3 property-change `onChange` scripts (`props.value` of the TIME entries, see the end of the list). No `customMethods`, no `messageHandlers`.
 
 The button handlers below call `efc.ui` functions. Those functions are summarised after the list.
 
@@ -360,6 +363,27 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 ```
 
 
+14. **`root/Configuration/Body/E0/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		efc.ui.cmd(self, 'Cfg_CycleTime', int(round(currentValue.value * 1000)), 4, audit=True)
+```
+
+15. **`root/Configuration/Body/E1/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		efc.ui.cmd(self, 'Cfg_MinPulse', int(round(currentValue.value * 1000)), 4, audit=True)
+```
+
+16. **`root/Configuration/Body/E9/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		efc.ui.cmd(self, 'Cfg_FbkTime', int(round(currentValue.value * 1000)), 4, audit=True)
+```
+
 ### Explanation of each handler
 
 | Handler | Action | Writes | Role check | Audit |
@@ -376,8 +400,11 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 | `Maintenance/ResetMaint` | `efc.ui.cmd(... 'Run/Cmd_ResetMaint', True, 2)` | `Run/Cmd_ResetMaint` | level 2 | yes |
 | `Maintenance/Sim` | `efc.ui.cmd(... 'Sim_En', not m_Sim_En, 2)` | `Sim_En` (toggle) | level 2 | yes |
 | `Configuration/Header` (dom click) | toggles `open_Configuration` | none | none | no |
+| `Configuration/Body/E0` (`Cfg_CycleTime` entry, onChange) | `efc.ui.cmd(... 'Cfg_CycleTime', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_CycleTime` (milliseconds) | level 4 | yes
+| `Configuration/Body/E1` (`Cfg_MinPulse` entry, onChange) | `efc.ui.cmd(... 'Cfg_MinPulse', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_MinPulse` (milliseconds) | level 4 | yes
+| `Configuration/Body/E9` (`Cfg_FbkTime` entry, onChange) | `efc.ui.cmd(... 'Cfg_FbkTime', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_FbkTime` (milliseconds) | level 4 | yes
 
-`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`. The Mode, Commands, Ack and Maintenance buttons therefore use the level check. The power-demand entry and the Configuration entries are bound directly and do not use `efc.ui.cmd`.
+`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`. The Mode, Commands, Ack and Maintenance buttons therefore use the level check. The three TIME entries (Cycle time, Min pulse, Feedback time) use the level check (level 4). The power-demand entry and the other Configuration entries are bound directly and do not use `efc.ui.cmd`.
 
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
@@ -444,8 +471,8 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Run/Val_HrsSinceMaint` | read | REAL | Run hours since last maintenance reset |
 | `Run/Sts_MaintDue` | read | BOOL | Maintenance due |
 | `Cmd_Pwr` | read/write (bidirectional) | REAL | Operator power demand (%), Manual mode, types 1 and 2 |
-| `Cfg_CycleTime` | read/write (bidirectional) | TIME | Time-proportioning cycle (type 1): output is ON for Val_Duty % of each cycle |
-| `Cfg_MinPulse` | read/write (bidirectional) | TIME | Shortest ON or OFF pulse (type 1); shorter pulses are skipped |
+| `Cfg_CycleTime` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Time-proportioning cycle (type 1): output is ON for Val_Duty % of each cycle |
+| `Cfg_MinPulse` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Shortest ON or OFF pulse (type 1); shorter pulses are skipped |
 | `Cfg_PwrMin` | read/write (bidirectional) | REAL | Minimum power demand when on (%) |
 | `Cfg_PwrMax` | read/write (bidirectional) | REAL | Maximum power demand (%) |
 | `Cfg_PwrRate` | read/write (bidirectional) | REAL | Power ramp limit (%/s), 0 = none (soft start for cold elements) |
@@ -453,7 +480,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Cfg_RatedAmps` | read/write (bidirectional) | REAL | Heater current at 100 % (A); 0 = no current monitoring |
 | `Cfg_LoadFailPct` | read/write (bidirectional) | REAL | Partial load failure: current below this % of expected while heating |
 | `Cfg_LeakAmps` | read/write (bidirectional) | REAL | Current above this while the output is off = SSR / SCR shorted (A) |
-| `Cfg_FbkTime` | read/write (bidirectional) | TIME | Time allowed for contactor feedback and current to settle |
+| `Cfg_FbkTime` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Time allowed for contactor feedback and current to settle |
 | `Perm` | read (passed as tagPath) | T_Intlk | Permissive group: named conditions, first-out, bypass; Out_OK ANDed with Inp_PermOK |
 | `Intlk` | read (passed as tagPath) | T_Intlk | Interlock group: named conditions, first-out, latch, bypass; Out_OK ANDed with Inp_IntlkOK |
 | `Mode/Cmd_Auto` | write (one-shot) | BOOL | Operator request Automatic (one-shot) |
@@ -678,7 +705,6 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **The hint line is not accurate.** It says the commands are "Enabled in MAN, available, permitted, not interlocked, not LOCAL". That is true for ON and the power-demand entry only. OFF and RESET have no enable.
 - **ON does not check the heater state.** ON is enabled while the heater is on, tripped, faulted or at high limit, so it can write `Cmd_On` in those states. OFF and RESET are clickable at all times at level 1 and above.
 - **Control-type rows.** The power-demand entry, Power demand row and Duty row are shown only when `Cfg_CtrlType` > 0. For an on/off heater (type 0) the dock shows ON, OFF and RESET only. The entry's writes are hidden, not blocked, for type 0.
-- **TIME tags are labelled in seconds.** `Cfg_CycleTime`, `Cfg_MinPulse` and `Cfg_FbkTime` are TIME in PCLib. The view shows the raw value with the unit `s`. The PCLib default for `Cfg_MinPulse` is `T#100MS`. If the tag delivers milliseconds, the default would show as "100 s". Confirm the units of the tag before commissioning. The same question applies to `Docks/VFD` and `Docks/ValveDiscrete`.
 - **Trend pens share one scale and have no legend.** `efc.ui.trend` scales every pen to one minimum and maximum. Power (kW), power demand (%) and current (A) therefore share one axis. The part draws the pens in fixed colours by position (dark, blue, grey) and the view does not label them. See [Parts/Trend.md](Parts/Trend.md).
 - **Unused PCLib members.** `Sts_State`, `Sts_Shorted`, `Sts_LoadFail`, `Sts_Ready`, `Inp_ContactorFbk`, `Inp_Current` and `Val_Energy` are not read by this view. The banner computes its own state from the feedback flags. Shorted and element load failure appear only through their alarms.
 - **Simulate toggle depends on the mirror.** `SIMULATE` writes `not self.view.custom.m_Sim_En`. If the mirror has not yet been read (`None`), `not None` is TRUE, so the first click writes TRUE.

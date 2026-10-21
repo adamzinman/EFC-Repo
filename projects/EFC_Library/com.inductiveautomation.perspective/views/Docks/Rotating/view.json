@@ -3398,7 +3398,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_FbkTime}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Cfg_FbkTime} / 1000, '#,##0.###')"
                           }
                         }
                       }
@@ -3499,16 +3499,14 @@
                     "propConfig": {
                       "props.value": {
                         "binding": {
-                          "type": "tag",
+                          "type": "expr",
                           "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_FbkTime",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
+                            "expression": "{view.custom.m_Cfg_FbkTime} / 1000"
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_FbkTime', int(round(currentValue.value * 1000)), 4, audit=True)"
                         }
                       },
                       "props.enabled": {
@@ -3608,7 +3606,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_RestartDly}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Cfg_RestartDly} / 1000, '#,##0.###')"
                           }
                         }
                       }
@@ -3709,16 +3707,14 @@
                     "propConfig": {
                       "props.value": {
                         "binding": {
-                          "type": "tag",
+                          "type": "expr",
                           "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_RestartDly",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
+                            "expression": "{view.custom.m_Cfg_RestartDly} / 1000"
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_RestartDly', int(round(currentValue.value * 1000)), 4, audit=True)"
                         }
                       },
                       "props.enabled": {
