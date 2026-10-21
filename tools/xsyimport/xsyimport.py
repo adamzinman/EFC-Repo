@@ -42,7 +42,7 @@ ELEMENTARY = {
     "UINT": "Int4", "WORD": "Int4", "DINT": "Int4", "LINT": "Int8",
     "UDINT": "Int8", "DWORD": "Int8",
     "REAL": "Float4", "LREAL": "Float8",
-    "TIME": "Int4",
+    "TIME": "Int4", "DT": "DateTime",
 }
 ARRAY_OF = {  # Ignition array dataType for each element dataType
     "Boolean": "BooleanArray", "Int1": "Int1Array", "Int2": "Int2Array", "Int4": "Int4Array",
@@ -117,15 +117,35 @@ def parse(data):
     return m
 
 
+def _layout_diff(name, exp, lib):
+    """Differences between the export's layout for a type and the EFCLib v1 layout."""
+    out = []
+    ex = dict((m[0], m[1]) for m in exp)
+    lb = dict((m[0], m[1]) for m in lib)
+    for m in lib:
+        if m[0] not in ex:
+            out.append((name, "member %s in EFCLib v1, not in export" % m[0]))
+        elif ex[m[0]].replace(" ", "") != m[1].replace(" ", ""):
+            out.append((name, "member %s is %s in export, %s in EFCLib v1" % (m[0], ex[m[0]], m[1])))
+    for m in exp:
+        if m[0] not in lb:
+            out.append((name, "member %s in export, not in EFCLib v1" % m[0]))
+    return out
+
+
 def _add_library(model, library):
-    """Use a library layout only for a type the export does not define, and only when confirmed."""
+    """EFCLib v1 layouts win over the export. Returns the differences found, for the report."""
+    diffs = []
     for name, entry in (library or {}).items():
-        if name in model.ddts or name in model.fbs:
-            continue
         if entry.get("confidence") != "confirmed":
             continue
-        model.ddts[name] = [(m[0], m[1], m[2]) for m in entry["members"]]
+        lib = [(m[0], m[1], m[2]) for m in entry["members"]]
+        exp = model.ddts.get(name) or model.fbs.get(name)
+        if exp is not None:
+            diffs.extend(_layout_diff(name, exp, lib))
+        model.ddts[name] = lib
         model.from_library.add(name)
+    return diffs
 
 
 # --------------------------------------------------------------------- type rules
@@ -299,6 +319,7 @@ class Plan(object):
         self.not_in_plc = []    # (PLC identity, path): kept, reported
         self.renames = []       # (old path, new name): possible rename, reported
         self.skipped = []       # (variable, reason)
+        self.library = []       # (type, message): export layout differs from EFCLib v1; EFCLib used
 
     def counts(self):
         return {"udt_create": len(self.udt_create), "udt_extend": len(self.udt_extend),
@@ -307,6 +328,7 @@ class Plan(object):
                 "tag_update": len(self.tag_update), "exists": len(self.exists),
                 "conflicts": len(self.conflicts), "duplicates": len(self.duplicates),
                 "not_in_plc": len(self.not_in_plc), "renames": len(self.renames),
+                "library_diffs": len(self.library),
                 "skipped": len(self.skipped)}
 
     def is_noop(self):
@@ -331,7 +353,7 @@ def plan(data, line, tag_tree, types_tree, options=None):
     sync_doc = bool(opts["syncDocumentation"])
 
     model = parse(data)
-    _add_library(model, LIBRARY_TYPES if opts["library"] is None else opts["library"])
+    lib_diffs = _add_library(model, LIBRARY_TYPES if opts["library"] is None else opts["library"])
     builder = _Builder(model, tf, prefix)
     existing_types = types_index(types_tree)
     recs = records(tag_tree, line)
@@ -355,6 +377,7 @@ def plan(data, line, tag_tree, types_tree, options=None):
                 by_identity.setdefault(ident, []).append(r["path"])
 
     p = Plan()
+    p.library = lib_diffs
     imported = "%s/%s" % (line, IMPORTED)
     wanted = set()             # PLC identities the export still exposes
     new_docs = []              # (name, kind, type, documentation) of tags this run creates
@@ -515,6 +538,7 @@ def report_text(p, header):
     section("DUPLICATE (reported, not changed)", p.duplicates, lambda it: "%s: %s" % (it[0], ", ".join(it[1])))
     section("NOT IN PLC (kept, not deleted)", p.not_in_plc, lambda it: "%s -> %s" % it)
     section("POSSIBLE RENAME (not changed)", p.renames, lambda it: "%s -> %s" % it)
+    section("EFCLib v1 DIFFERS FROM EXPORT (EFCLib layout used)", p.library, lambda it: "%s: %s" % it)
     section("CONFLICT (reported, not changed)", p.conflicts, lambda it: "%s: %s" % it)
     section("UDT MEMBER NOT IN PLC (kept, not deleted)", p.udt_stale, lambda it: "%s.%s" % it)
     section("UDT MEMBER DIFFERENCE (reported, not changed)", p.udt_diff, lambda it: "%s.%s: %s" % it)

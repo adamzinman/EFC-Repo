@@ -260,5 +260,37 @@ class LiveExportTests(unittest.TestCase):
             self.assertTrue(fold.startswith("056"))
 
 
+MINI_XSY = b"""<?xml version="1.0"?>
+<VariablesExchangeFile>
+  <DDTSource DDTName="T_Motor">
+    <structure>
+      <variables name="Cfg_Tag" typeName="STRING[20]"/>
+      <variables name="Old_Member" typeName="BOOL"/>
+    </structure>
+  </DDTSource>
+  <dataBlock>
+    <variables name="P101" typeName="T_Motor">
+      <attribute name="IsVariableHMI" value="-1"/>
+    </variables>
+  </dataBlock>
+</VariablesExchangeFile>"""
+
+
+class EFCLibTests(unittest.TestCase):
+    """EFCLib v1 layouts override the export; differences are reported, not hidden."""
+
+    def test_efclib_layout_is_used_and_difference_reported(self):
+        p = X.plan(MINI_XSY, "058", [], [], {"opcServer": SERVER})
+        udt = next(js for _, js in p.udt_create if js["name"] == "T_Motor")
+        names = [t["name"] for t in udt["tags"]]
+        self.assertIn("Mode", names)
+        self.assertNotIn("Old_Member", names)
+        diffs = " ".join(msg for _, msg in p.library)
+        self.assertIn("Old_Member", diffs)
+
+    def test_dt_maps_to_datetime(self):
+        self.assertEqual(X._elem("DT"), "DateTime")
+
+
 if __name__ == "__main__":
     unittest.main()

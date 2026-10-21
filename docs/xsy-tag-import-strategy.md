@@ -94,6 +94,18 @@ layout is entered from the Control Expert project. Anything not confirmed is nev
 - atomic member item path: `{OPC Prefix}{Tag}.{TagName}`, server `{OPC Server}`
 - nested instance: `OPC Prefix` = `{OPC Prefix}`, `OPC Server` = `{OPC Server}`, `Tag` = `{Tag}.<member>`
 
+**EFCLib v1 is the type source (v3).** The data types in the sample export are examples. Where a PLC type is
+an EFCLib v1 `T_*` type, the UDT layout comes from `types/xdd/T_*.xdd` (generated into
+`tools/xsyimport/library_types.py` by `build_library.py`). The export's layout is used only for types EFCLib does
+not define. Any member that differs between the export and EFCLib is listed under *EFCLib v1 DIFFERS FROM
+EXPORT*, and the EFCLib layout is used.
+
+Two conflicts still to decide:
+- **Parameter names.** The generated Ignition JSON in `types/export/` uses `OPCServer`, `PathPrefix`, `BaseTag`.
+  The interface contract v1.0 says `OPC Server`, `OPC Prefix`, `Tag`. The planner uses the contract names.
+- **Type names.** The export's `DDT_*` names do not match EFCLib's `T_*` names, except by stem (`Mode`, `Station`).
+  A mapping from PLC type to EFCLib type is needed for the PLC program to move onto EFCLib.
+
 ## 6. Folders and naming
 
 ```
@@ -168,7 +180,7 @@ The 19 conflicts are the `HMI_SP_*` setpoints. They are reported and not changed
 | Step | State |
 |---|---|
 | 0 Samples under `samples/xsy-import/` | done |
-| 1 Pure planner, parse, rules, report | done, 22 offline tests |
+| 1 Pure planner, parse, rules, report | done, 24 offline tests |
 | 2 Gateway and Designer glue | written, **not yet run on a gateway** (`VERIFY` lines) |
 | 3 Dev gateway test: first import, move a tag, change the export, re-run | next |
 | 4 User guide | `tools/xsyimport/README.md` (short); needs the gateway results |
