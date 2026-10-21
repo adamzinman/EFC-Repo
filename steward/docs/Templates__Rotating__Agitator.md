@@ -1,11 +1,11 @@
 # Templates/Rotating/Agitator
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** P&ID agitator / mixer template bound to EFCLib v1 T_Motor through tagPath: state fill, alarm outline, P/I badges, mode and status line.
 
-**Usage notes:**
+**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_Rotating) in the screen's Docks/Region.
 
-**Gotchas:**
+**Gotchas:** Bound as T_Motor by default; for a drive-controlled unit set tType = T_VFD (opens dw_VFD). Touch mode (useButton = false, dblCmd = true): double-tap toggles the device, Operator+, only in MAN, available, permitted, not interlocked, not LOCAL.
 <!-- keep:end -->
 
 <!-- auto:start -->

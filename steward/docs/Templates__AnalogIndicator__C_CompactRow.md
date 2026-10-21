@@ -1,11 +1,11 @@
 # Templates/AnalogIndicator/C_CompactRow
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Analog indicator card bound to EFCLib v1 T_KPI (tagPath). One-line row (header, chip, value) over a thin zone bar for dense lists. Param: Header = Tag | Desc.
 
-**Usage notes:**
+**Usage notes:** Use on overview / process screens; ideal band from Cfg_IdealLo/Hi. Click opens dw_ProcessValue.
 
-**Gotchas:**
+**Gotchas:** Alarm colors come from the PLC alarm members (Sts_Active / Sts_Unack / Cfg_Priority), not Ignition alarm queries.
 <!-- keep:end -->
 
 <!-- auto:start -->

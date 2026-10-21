@@ -1,11 +1,11 @@
 # Templates/IO/Faceplates/BMXAMO0802
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Full faceplate for the Modicon x80 BMXAMO0802 card, bound to the native PLC device DDT (cardPath).
 
-**Usage notes:**
+**Usage notes:** Opened as a popup from the dw_IOCard window (FULL FACEPLATE).
 
-**Gotchas:**
+**Gotchas:** No PCLib type by design (decision 23): members come straight from the PLC import.
 <!-- keep:end -->
 
 <!-- auto:start -->

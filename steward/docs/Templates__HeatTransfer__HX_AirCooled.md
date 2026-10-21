@@ -1,11 +1,11 @@
 # Templates/HeatTransfer/HX_AirCooled
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Air-cooled exchanger (fan) template, bound as T_Motor for the fan.
 
-**Usage notes:**
+**Usage notes:** Click opens dw_Rotating. For exchanger performance set dockId = dw_HeatTransfer and dwTagPath to the T_HeatEx instance.
 
-**Gotchas:**
+**Gotchas:** Open item: decide whether air coolers default to the fan or the T_HeatEx window.
 <!-- keep:end -->
 
 <!-- auto:start -->

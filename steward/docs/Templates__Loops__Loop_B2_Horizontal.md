@@ -1,11 +1,11 @@
 # Templates/Loops/Loop_B2_Horizontal
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** PID loop card (horizontal PV/SP bar) bound to EFCLib v1 T_PID: PV, SP, output, mode, deviation alarm.
 
-**Usage notes:**
+**Usage notes:** Click opens dw_Loop (mode, SP/CV entry, tuning Engineer+). The LoopConfig popup is retired.
 
-**Gotchas:**
+**Gotchas:** Deviation marks use Val_SP ± Alm_DevH/DevL Cfg_Lim.
 <!-- keep:end -->
 
 <!-- auto:start -->

@@ -1,11 +1,11 @@
 # Templates/AnalogIndicator/A_RangeBar
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Analog indicator card bound to EFCLib v1 T_KPI (tagPath). Full card: tag/description, boxed value, pointer over the zoned bar, min/max and alarm chip. Params: LabelMode, ShowMinMax.
 
-**Usage notes:**
+**Usage notes:** Use on overview / process screens; ideal band from Cfg_IdealLo/Hi. Click opens dw_ProcessValue.
 
-**Gotchas:**
+**Gotchas:** Alarm colors come from the PLC alarm members (Sts_Active / Sts_Unack / Cfg_Priority), not Ignition alarm queries.
 <!-- keep:end -->
 
 <!-- auto:start -->

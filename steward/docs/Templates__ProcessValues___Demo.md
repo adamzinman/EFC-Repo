@@ -1,11 +1,11 @@
 # Templates/ProcessValues/_Demo
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Demo page for the process value cards on the PV_Demo memory tags.
 
-**Usage notes:**
+**Usage notes:** Design-time reference only.
 
-**Gotchas:**
+**Gotchas:** Import tags/PV_Demo_Tags.json first.
 <!-- keep:end -->
 
 <!-- auto:start -->

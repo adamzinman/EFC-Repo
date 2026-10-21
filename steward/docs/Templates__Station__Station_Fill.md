@@ -1,11 +1,11 @@
 # Templates/Station/Station_Fill
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Full station fill panel bound to T_Station (screen content, not a symbol).
 
-**Usage notes:**
+**Usage notes:** Use as a station screen body; no dynamic window.
 
-**Gotchas:**
+**Gotchas:** Station state numbering (Sts_State) is still an assumption.
 <!-- keep:end -->
 
 <!-- auto:start -->

@@ -1,11 +1,11 @@
 # Templates/Loops/Loop_B3_Sparkline
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** PID loop card (bar + 1 min PV/SP sparkline) bound to EFCLib v1 T_PID: PV, SP, output, mode, deviation alarm.
 
-**Usage notes:**
+**Usage notes:** Click opens dw_Loop (mode, SP/CV entry, tuning Engineer+). The LoopConfig popup is retired.
 
-**Gotchas:**
+**Gotchas:** Sparkline/trend needs tag history on Val_PV / Val_SP.
 <!-- keep:end -->
 
 <!-- auto:start -->

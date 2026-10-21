@@ -1,11 +1,11 @@
 # Templates/IO/Parts/AnalogRow_TEMP
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Faceplate part: temperature channel row on the native x80 DDT channel.
 
-**Usage notes:**
+**Usage notes:** Embedded by the card faceplates; not placed on screens.
 
-**Gotchas:**
+**Gotchas:** Channel members follow the PLC DDT (CH_ERROR, VALUE ...).
 <!-- keep:end -->
 
 <!-- auto:start -->

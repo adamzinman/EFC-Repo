@@ -1,11 +1,11 @@
 # Templates/Loops/_Demo
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Demo page for the loop cards on the T_PID_Demo memory tags.
 
-**Usage notes:**
+**Usage notes:** Design-time reference only.
 
-**Gotchas:**
+**Gotchas:** Import tags/PID_Loops/T_PID_Demo_*.json first.
 <!-- keep:end -->
 
 <!-- auto:start -->

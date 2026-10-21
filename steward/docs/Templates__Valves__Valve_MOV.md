@@ -1,11 +1,11 @@
 # Templates/Valves/Valve_MOV
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** P&ID motor-operated valve template bound to EFCLib v1 T_DValve through tagPath: state fill, alarm outline, P/I badges, mode and status line.
 
-**Usage notes:**
+**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_ValveDiscrete) in the screen's Docks/Region.
 
-**Gotchas:**
+**Gotchas:** Touch mode (useButton = false, dblCmd = true): double-tap toggles the device, Operator+, only in MAN, available, permitted, not interlocked, not LOCAL. Limit-switch LEDs follow Cfg_HasZSO / Cfg_HasZSC.
 <!-- keep:end -->
 
 <!-- auto:start -->

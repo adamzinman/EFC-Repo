@@ -1,11 +1,11 @@
 # Templates/Station/_Demo
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Demo page for the station views on T_Station_Demo tags.
 
-**Usage notes:**
+**Usage notes:** Design-time reference only.
 
-**Gotchas:**
+**Gotchas:** Import tags/T_Station_Demo_UDT.json first.
 <!-- keep:end -->
 
 <!-- auto:start -->

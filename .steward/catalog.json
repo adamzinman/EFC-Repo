@@ -8829,11 +8829,11 @@
    ]
   }
  },
- "last_audit_fp": "875740d81e09",
- "last_delta": 5,
+ "last_audit_fp": "a67b5f0b08d1",
+ "last_delta": 0,
  "projects": [
   "EFC_Library"
  ],
- "scanned_at": "2026-10-21 03:56",
+ "scanned_at": "2026-10-21 03:58",
  "upstream": {}
 }

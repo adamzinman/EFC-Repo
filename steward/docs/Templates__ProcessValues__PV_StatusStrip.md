@@ -1,11 +1,11 @@
 # Templates/ProcessValues/PV_StatusStrip
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Process value card (compact value + status strip) bound to EFCLib v1 T_AI (tagPath).
 
-**Usage notes:**
+**Usage notes:** Click opens dw_ProcessValue (trend, limits, simulate).
 
-**Gotchas:**
+**Gotchas:** Alarm state from the T_AI alarm members (Alm_HH .. Alm_LL, Alm_Bad); bad quality from Sts_Bad.
 <!-- keep:end -->
 
 <!-- auto:start -->

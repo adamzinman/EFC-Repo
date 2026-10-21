@@ -1,11 +1,11 @@
 # Templates/IO/Parts/SlotTile
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Rack slot tile: model, rack/slot, module error, from the native x80 device DDT.
 
-**Usage notes:**
+**Usage notes:** Click opens dw_IOCard (params tagPath = cardPath, model).
 
-**Gotchas:**
+**Gotchas:** Empty model = empty slot; the click does nothing.
 <!-- keep:end -->
 
 <!-- auto:start -->

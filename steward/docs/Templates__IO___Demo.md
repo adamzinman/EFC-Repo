@@ -1,11 +1,11 @@
 # Templates/IO/_Demo
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Demo page for the I/O faceplates.
 
-**Usage notes:**
+**Usage notes:** Design-time reference only.
 
-**Gotchas:**
+**Gotchas:** Needs the x80 demo tags.
 <!-- keep:end -->
 
 <!-- auto:start -->

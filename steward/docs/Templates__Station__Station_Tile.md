@@ -1,11 +1,11 @@
 # Templates/Station/Station_Tile
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Fill-station tile bound to EFCLib v1 T_Station: state, net weight, target.
 
-**Usage notes:**
+**Usage notes:** Click opens dw_Station (Docks/Station; setpoints Operator+).
 
-**Gotchas:**
+**Gotchas:** Station state numbering (Sts_State) is still an assumption; confirm against the PLC.
 <!-- keep:end -->
 
 <!-- auto:start -->

@@ -1,11 +1,11 @@
 # Templates/IO/RackOverview
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Rack overview: one SlotTile per slot.
 
-**Usage notes:**
+**Usage notes:** Place on a diagnostics screen; each tile opens dw_IOCard.
 
-**Gotchas:**
+**Gotchas:** Not a symbol; no dynamic window of its own.
 <!-- keep:end -->
 
 <!-- auto:start -->

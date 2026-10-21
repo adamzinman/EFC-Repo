@@ -1,11 +1,11 @@
 # Templates/AnalogIndicator/_Examples
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Examples page for the four analog indicator cards on one T_KPI tag.
 
-**Usage notes:**
+**Usage notes:** Design-time reference only; not for runtime screens.
 
-**Gotchas:**
+**Gotchas:** Point tagPath at a real T_KPI instance.
 <!-- keep:end -->
 
 <!-- auto:start -->

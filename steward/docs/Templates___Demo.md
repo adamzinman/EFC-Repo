@@ -1,11 +1,11 @@
 # Templates/_Demo
 
 <!-- keep:start -->
-**Purpose:** TODO: purpose
+**Purpose:** Demo page for the P&ID device templates on the PID_Demo memory tags (T_*_Demo UDTs).
 
-**Usage notes:**
+**Usage notes:** Design-time reference only.
 
-**Gotchas:**
+**Gotchas:** Import the T_*_Demo tag files first.
 <!-- keep:end -->
 
 <!-- auto:start -->
