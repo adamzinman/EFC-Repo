@@ -294,11 +294,12 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	efc.ui.cmd(self, 'Cmd_Reset', True, 1)
 ```
 
-9. **`root/Commands/Body/Buttons/B3`** (JOG): five `events.dom` scripts, scope G. Press writes TRUE (`onMouseDown`, `onTouchStart`); release writes FALSE (`onMouseUp`, `onMouseLeave`, `onTouchEnd`).
+9. **`root/Commands/Body/Buttons/B3`** (JOG): five `events.dom` scripts, scope G. Press writes TRUE (`onMouseDown`, `onTouchStart`), only while the button is enabled, because DOM events can still fire on a disabled button; release always writes FALSE (`onMouseUp`, `onMouseLeave`, `onTouchEnd`).
 
 ```python
 	# onMouseDown, onTouchStart
-	efc.ui.cmd(self, 'Cmd_Jog', True, 2)
+	if self.props.enabled:
+		efc.ui.cmd(self, 'Cmd_Jog', True, 2)
 ```
 
 ```python

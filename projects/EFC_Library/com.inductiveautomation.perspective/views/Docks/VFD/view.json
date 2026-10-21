@@ -2044,14 +2044,14 @@
                           "type": "script",
                           "scope": "G",
                           "config": {
-                            "script": "\tefc.ui.cmd(self, 'Cmd_Jog', True, 2)"
+                            "script": "\tif self.props.enabled:\n\t\tefc.ui.cmd(self, 'Cmd_Jog', True, 2)"
                           }
                         },
                         "onTouchStart": {
                           "type": "script",
                           "scope": "G",
                           "config": {
-                            "script": "\tefc.ui.cmd(self, 'Cmd_Jog', True, 2)"
+                            "script": "\tif self.props.enabled:\n\t\tefc.ui.cmd(self, 'Cmd_Jog', True, 2)"
                           }
                         },
                         "onMouseUp": {

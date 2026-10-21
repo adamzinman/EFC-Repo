@@ -165,7 +165,9 @@ def commands(vw, buttons, extra=(), hint="Enabled in MAN, available, permitted, 
          for i, (t, mem, cls, lv, en) in enumerate(buttons)]
     for x, (t, mem, cls, lv, en) in zip(b, buttons):
         if mem == "Cmd_Jog":                                       # hold-to-jog: TRUE on press, FALSE on release / leave
-            x["events"] = {"dom": {k: script(f"efc.ui.cmd(self, '{mem}', {val}, {lv})") for k, val in
+            # press writes only while the button is enabled (DOM events can still fire on a disabled button); release always writes
+            x["events"] = {"dom": {k: script((f"if self.props.enabled:\n\tefc.ui.cmd(self, '{mem}', True, {lv})" if val else
+                                              f"efc.ui.cmd(self, '{mem}', False, {lv})")) for k, val in
                                    (("onMouseDown", True), ("onTouchStart", True), ("onMouseUp", False),
                                     ("onMouseLeave", False), ("onTouchEnd", False))}}
     kids = [flex("Buttons", "row", b, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})] + list(extra)
