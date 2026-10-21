@@ -266,26 +266,26 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
 | `Val_LMTD` | read | REAL | Log mean temperature difference (K) |
 | `Val_UA` | read; also read by trend pens | REAL | Actual UA (kW/K) |
 | `Alm_ColdDP/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
-| `Alm_ColdDP/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_ColdDP/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_ColdDP/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_ColdDP/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_ColdDP/Sts_Unack` | read | BOOL | Alarm unacknowledged |
 | `Alm_Fouling/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
-| `Alm_Fouling/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_Fouling/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_Fouling/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_Fouling/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_Fouling/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_HeatBal/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_HeatBal/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_HeatBal/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_HeatBal/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_HeatBal/Sts_Unack` | read | BOOL | Alarm unacknowledged |
 | `Alm_HiOutT/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
-| `Alm_HiOutT/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_HiOutT/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_HiOutT/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_HiOutT/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_HiOutT/Sts_Unack` | read | BOOL | Alarm unacknowledged |
 | `Alm_HotDP/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
-| `Alm_HotDP/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_HotDP/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_HotDP/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_HotDP/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_HotDP/Sts_Unack` | read | BOOL | Alarm unacknowledged |
@@ -439,4 +439,3 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
 - **Members not shown.** `Inp_HotDP`, `Inp_ColdDP`, `Val_DutyHot`, `Val_DutyCold`, `Val_HeatBal`, `Cfg_HotCp`, `Cfg_ColdCp` and `Cfg_CounterFlow` are defined in `T_HeatEx` but not displayed. The dP alarms (`Alm_HotDP`, `Alm_ColdDP`) act on dP values that this view never shows. The heat balance alarm (`Alm_HeatBal`) has no value row and no `Cfg_Lim` row, so its limit cannot be seen or changed from the dock.
 - **Configuration writes are not role-checked in script and not audited.** The only guard is the level 4 visibility of the entries. Design UA and the four alarm limits can be changed with no audit entry. ValveDiscrete audits its maintenance and simulate actions, so this is inconsistent. Confirm whether limit changes must be audited.
 - **Dp limit units.** The hot and cold dP limit rows show no unit. The PLC comment for `Inp_HotDP` gives kPa, but the limit members themselves are documented only as "Alarm limit (EU)". Confirm the units of `Alm_HotDP/Cfg_Lim` and `Alm_ColdDP/Cfg_Lim`.
-- **Priority names.** The dock maps `Cfg_Priority` 1 to "Critical". The PCLib `T_AlmLim` comment says 1 = Emergency. This is the same mismatch as in ValveDiscrete. Confirm which label is intended.

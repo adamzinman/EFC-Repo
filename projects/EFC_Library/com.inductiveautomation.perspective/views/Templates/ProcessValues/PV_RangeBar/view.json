@@ -231,7 +231,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "if(toBoolean(coalesce({view.custom.FLTact}, false)), if(toBoolean(coalesce({view.custom.FLTun}, false)), 10, 0) + coalesce({view.custom.FLTpri}, 2),\n  if(toBoolean(coalesce({view.custom.FLTun}, false)), 20 + coalesce({view.custom.FLTpri}, 2), -1))"
+          "expression": "if(toBoolean(coalesce({view.custom.FLTact}, false)), if(toBoolean(coalesce({view.custom.FLTun}, false)), 10, 0) + case(toInt(coalesce({view.custom.FLTpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),\n  if(toBoolean(coalesce({view.custom.FLTun}, false)), 20 + case(toInt(coalesce({view.custom.FLTpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))"
         }
       }
     },
@@ -278,7 +278,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "if(toBoolean(coalesce({view.custom.HHact}, false)), if(toBoolean(coalesce({view.custom.HHun}, false)), 10, 0) + coalesce({view.custom.HHpri}, 2),\n  if(toBoolean(coalesce({view.custom.HHun}, false)), 20 + coalesce({view.custom.HHpri}, 2), -1))"
+          "expression": "if(toBoolean(coalesce({view.custom.HHact}, false)), if(toBoolean(coalesce({view.custom.HHun}, false)), 10, 0) + case(toInt(coalesce({view.custom.HHpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),\n  if(toBoolean(coalesce({view.custom.HHun}, false)), 20 + case(toInt(coalesce({view.custom.HHpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))"
         }
       }
     },
@@ -325,7 +325,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "if(toBoolean(coalesce({view.custom.Hact}, false)), if(toBoolean(coalesce({view.custom.Hun}, false)), 10, 0) + coalesce({view.custom.Hpri}, 2),\n  if(toBoolean(coalesce({view.custom.Hun}, false)), 20 + coalesce({view.custom.Hpri}, 2), -1))"
+          "expression": "if(toBoolean(coalesce({view.custom.Hact}, false)), if(toBoolean(coalesce({view.custom.Hun}, false)), 10, 0) + case(toInt(coalesce({view.custom.Hpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),\n  if(toBoolean(coalesce({view.custom.Hun}, false)), 20 + case(toInt(coalesce({view.custom.Hpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))"
         }
       }
     },
@@ -372,7 +372,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "if(toBoolean(coalesce({view.custom.Lact}, false)), if(toBoolean(coalesce({view.custom.Lun}, false)), 10, 0) + coalesce({view.custom.Lpri}, 2),\n  if(toBoolean(coalesce({view.custom.Lun}, false)), 20 + coalesce({view.custom.Lpri}, 2), -1))"
+          "expression": "if(toBoolean(coalesce({view.custom.Lact}, false)), if(toBoolean(coalesce({view.custom.Lun}, false)), 10, 0) + case(toInt(coalesce({view.custom.Lpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),\n  if(toBoolean(coalesce({view.custom.Lun}, false)), 20 + case(toInt(coalesce({view.custom.Lpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))"
         }
       }
     },
@@ -419,7 +419,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "if(toBoolean(coalesce({view.custom.LLact}, false)), if(toBoolean(coalesce({view.custom.LLun}, false)), 10, 0) + coalesce({view.custom.LLpri}, 2),\n  if(toBoolean(coalesce({view.custom.LLun}, false)), 20 + coalesce({view.custom.LLpri}, 2), -1))"
+          "expression": "if(toBoolean(coalesce({view.custom.LLact}, false)), if(toBoolean(coalesce({view.custom.LLun}, false)), 10, 0) + case(toInt(coalesce({view.custom.LLpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),\n  if(toBoolean(coalesce({view.custom.LLun}, false)), 20 + case(toInt(coalesce({view.custom.LLpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))"
         }
       }
     },

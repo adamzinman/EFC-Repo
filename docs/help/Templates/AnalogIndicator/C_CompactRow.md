@@ -240,8 +240,7 @@ All paths are relative to `tagPath`. Every member is read. There are no writes a
 9. **Alarm state is shown without the shelve, suppress or out-of-service flags.** The view reads `Sts_Active` and `Sts_Unack` only. It does not read `Sts_Shelved`, `Sts_Suppressed` or `Sts_OOS`. Whether those alarms disappear depends on whether the PLC logic clears `Sts_Active`. Not verified.
 10. **Null handling is not verified.** All 60 custom properties default to `null`. `good` (`q != 2`) and `valText` (`numberFormat(pv, Format)`) have no `coalesce`. Their behaviour before the first read, or when a member is missing, was not tested in Designer.
 11. **Alarm class definitions are not in this repo.** The `Alarm/<Pri>/Fill`, `/Unacked` and `/Outline` classes are used by the chip and the value box. `generator/analog_indicators/gen_analog_indicators.py` defines the `Indicator/Analog/*` classes but not these. `views/Styles/_Catalog/view.json` uses them as samples. Their colours were not checked.
-12. **Priority naming.** `pri` labels priority 1 as `Critical`. The PCLib comment for `Cfg_Priority` calls 1 `Emergency`. The order is consistent, only the label differs.
-13. **No tag label fallback.** The tag label has no fallback to the last segment of `tagPath`, unlike the valve templates. A blank `Cfg_Tag` gives a blank label.
-14. **No acknowledgement or commands.** The view is display-only. Acknowledgement is not available here.
-15. **No role check.** The click does not read the user's role level. Whether `Docks/ProcessValue` enforces roles for its own write entries was not checked here.
-16. **Documentation drift.** `CHANGES-analog-indicators.md` (dated 2026-10-20) says there is no dynamic window yet, and places the views in `projects/EFC_AnalogIndicators/`. The copies checked here are under `projects/EFC_Library/`, and the click does open a window.
+12. **No tag label fallback.** The tag label has no fallback to the last segment of `tagPath`, unlike the valve templates. A blank `Cfg_Tag` gives a blank label.
+13. **No acknowledgement or commands.** The view is display-only. Acknowledgement is not available here.
+14. **No role check.** The click does not read the user's role level. Whether `Docks/ProcessValue` enforces roles for its own write entries was not checked here.
+15. **Documentation drift.** `CHANGES-analog-indicators.md` (dated 2026-10-20) says there is no dynamic window yet, and places the views in `projects/EFC_AnalogIndicators/`. The copies checked here are under `projects/EFC_Library/`, and the click does open a window.

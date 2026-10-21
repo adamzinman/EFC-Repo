@@ -317,32 +317,32 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
 | `Val_ROC` | read | REAL | Rate of change (EU/s, 1 s window) - input to Alm_ROC |
 | `Sim_En` | read/write (bidirectional) | BOOL | Simulation enabled |
 | `Sim_PV` | read/write (bidirectional) | REAL | Simulated PV (EU) |
-| `Alm_Bad/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_Bad/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_Bad/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_Bad/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_Bad/Sts_Unack` | read | BOOL | Alarm unacknowledged |
 | `Alm_H/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
-| `Alm_H/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_H/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_H/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_H/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_H/Sts_Unack` | read | BOOL | Alarm unacknowledged |
 | `Alm_HH/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
-| `Alm_HH/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_HH/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_HH/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_HH/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_HH/Sts_Unack` | read | BOOL | Alarm unacknowledged |
 | `Alm_L/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
-| `Alm_L/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_L/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_L/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_L/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_L/Sts_Unack` | read | BOOL | Alarm unacknowledged |
 | `Alm_LL/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
-| `Alm_LL/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_LL/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_LL/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_LL/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_LL/Sts_Unack` | read | BOOL | Alarm unacknowledged |
 | `Alm_ROC/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
-| `Alm_ROC/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_ROC/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_ROC/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_ROC/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_ROC/Sts_Unack` | read | BOOL | Alarm unacknowledged |
@@ -522,4 +522,3 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
 - **Banner colour for a good value.** A good reading uses the style `State/Stopped` (the stopped style) whatever its value. Confirm that this is intended.
 - **Bad-quality handling is not configurable here.** The banner switches to BAD QUALITY, but the value rows still show `Val_PV`. The alarms still apply. The bad-quality settings (`Cfg_BadAction`, `Cfg_SubstPV`, `Cfg_BadLoPct`, `Cfg_BadHiPct`) and `Sts_Quality` and `Inp_NE107` are not shown in this view. Only the SUBST badge (`Sts_Subst`) is visible. Confirm the intended behaviour.
 - **Trend hides bad quality.** `efc.ui.trend` queries history with `ignoreBadQuality=True`, so periods of bad quality are left out of the plot without any marker. The trend shows `Val_PV` only.
-- **Priority names.** The dock maps `Cfg_Priority` 1 to "Critical". The PCLib `T_AlmLim` and `T_Alarm` comments say 1 = Emergency. This is the same mismatch as in ValveDiscrete. Confirm which label is intended.

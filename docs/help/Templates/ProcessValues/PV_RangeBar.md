@@ -63,11 +63,11 @@ Tag mirrors fall into the groups below. The other 19 properties are expressions 
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
 | `view.custom.tick` | `null` | expr | `now(1000)` | Ticks every 1000 ms (`now(1000)`). Not referenced by any binding in this view. See Notes. |
-| `view.custom.aFLT` | `-1` | expr | `if(toBoolean(coalesce({view.custom.FLTact}, false)), if(toBoolean(coalesce({view.custom.FLTun}, false)), 10, 0) + coalesce({view.custom.FLTpri}, 2),   if(toBoolean(coalesce({view.custom.FLTun}, false)), 20 + coalesce({view.custom.FLTpri}, 2), -1))` | FLT code: -1 none, else state x 10 + priority (state 0 active and acked, 1 active and unacked, 2 cleared and unacked, which adds 20). Priority defaults to 2. |
-| `view.custom.aHH` | `-1` | expr | `if(toBoolean(coalesce({view.custom.HHact}, false)), if(toBoolean(coalesce({view.custom.HHun}, false)), 10, 0) + coalesce({view.custom.HHpri}, 2),   if(toBoolean(coalesce({view.custom.HHun}, false)), 20 + coalesce({view.custom.HHpri}, 2), -1))` | HH code (same encoding as `aFLT`). |
-| `view.custom.aH` | `-1` | expr | `if(toBoolean(coalesce({view.custom.Hact}, false)), if(toBoolean(coalesce({view.custom.Hun}, false)), 10, 0) + coalesce({view.custom.Hpri}, 2),   if(toBoolean(coalesce({view.custom.Hun}, false)), 20 + coalesce({view.custom.Hpri}, 2), -1))` | H code (same encoding as `aFLT`). |
-| `view.custom.aL` | `-1` | expr | `if(toBoolean(coalesce({view.custom.Lact}, false)), if(toBoolean(coalesce({view.custom.Lun}, false)), 10, 0) + coalesce({view.custom.Lpri}, 2),   if(toBoolean(coalesce({view.custom.Lun}, false)), 20 + coalesce({view.custom.Lpri}, 2), -1))` | L code (same encoding as `aFLT`). |
-| `view.custom.aLL` | `-1` | expr | `if(toBoolean(coalesce({view.custom.LLact}, false)), if(toBoolean(coalesce({view.custom.LLun}, false)), 10, 0) + coalesce({view.custom.LLpri}, 2),   if(toBoolean(coalesce({view.custom.LLun}, false)), 20 + coalesce({view.custom.LLpri}, 2), -1))` | LL code (same encoding as `aFLT`). |
+| `view.custom.aFLT` | `-1` | expr | `if(toBoolean(coalesce({view.custom.FLTact}, false)), if(toBoolean(coalesce({view.custom.FLTun}, false)), 10, 0) + case(toInt(coalesce({view.custom.FLTpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),   if(toBoolean(coalesce({view.custom.FLTun}, false)), 20 + case(toInt(coalesce({view.custom.FLTpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))` | FLT code: -1 none, else state x 10 + priority (state 0 active and acked, 1 active and unacked, 2 cleared and unacked, which adds 20). Priority defaults to 2. |
+| `view.custom.aHH` | `-1` | expr | `if(toBoolean(coalesce({view.custom.HHact}, false)), if(toBoolean(coalesce({view.custom.HHun}, false)), 10, 0) + case(toInt(coalesce({view.custom.HHpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),   if(toBoolean(coalesce({view.custom.HHun}, false)), 20 + case(toInt(coalesce({view.custom.HHpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))` | HH code (same encoding as `aFLT`). |
+| `view.custom.aH` | `-1` | expr | `if(toBoolean(coalesce({view.custom.Hact}, false)), if(toBoolean(coalesce({view.custom.Hun}, false)), 10, 0) + case(toInt(coalesce({view.custom.Hpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),   if(toBoolean(coalesce({view.custom.Hun}, false)), 20 + case(toInt(coalesce({view.custom.Hpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))` | H code (same encoding as `aFLT`). |
+| `view.custom.aL` | `-1` | expr | `if(toBoolean(coalesce({view.custom.Lact}, false)), if(toBoolean(coalesce({view.custom.Lun}, false)), 10, 0) + case(toInt(coalesce({view.custom.Lpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),   if(toBoolean(coalesce({view.custom.Lun}, false)), 20 + case(toInt(coalesce({view.custom.Lpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))` | L code (same encoding as `aFLT`). |
+| `view.custom.aLL` | `-1` | expr | `if(toBoolean(coalesce({view.custom.LLact}, false)), if(toBoolean(coalesce({view.custom.LLun}, false)), 10, 0) + case(toInt(coalesce({view.custom.LLpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),   if(toBoolean(coalesce({view.custom.LLun}, false)), 20 + case(toInt(coalesce({view.custom.LLpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))` | LL code (same encoding as `aFLT`). |
 | `view.custom.aOVR` | `-1` | expr | `if(toBoolean(coalesce({view.custom.rOVR}, false)), 0, -1)` | OVR code: 0 when `rOVR` is true, else -1. It has no acknowledge state, so it never blinks. |
 | `view.custom.aUNR` | `-1` | expr | `if(toBoolean(coalesce({view.custom.rUNR}, false)), 0, -1)` | UNR code: 0 when `rUNR` is true, else -1. No acknowledge state. |
 | `view.custom.fltActive` | `false` | expr | `{view.custom.aFLT} >= 0 && {view.custom.aFLT} < 20` | True when `aFLT` is 0 to 19, so an FLT alarm is active (acked or unacked). Drives the strip fault colour. |
@@ -192,7 +192,7 @@ Paths are relative to `tagPath`. Types and comments come from `types/PCLib_Membe
 | `HH/Alarm/Sts_Active`, `HH/Alarm/Sts_Unack`, `HH/Alarm/Cfg_Priority` (same for `H`, `L`, `LL`) | read | (not in T_AI) | Not in T_AI. T_AI has `Alm_HH`, `Alm_H`, `Alm_L`, `Alm_LL` (T_AlmLim). |
 | `Overrange`, `Underrange` | read | (not in T_AI) | Not in T_AI. T_AI has `Sts_ORng` and `Sts_URng` (BOOL). |
 
-Priority (`Cfg_Priority`): see PV_StatusStrip, Tag members used.
+Priority (`Cfg_Priority`): PCLib order, `1=Critical 2=High 3=Medium 4=Low`, converted to the internal rank in the `a*` code bindings; see PV_StatusStrip, Tag members used.
 
 ## Component tree
 
@@ -237,8 +237,7 @@ Indentation shows parent and child. Each entry is `name` (component type).
 3. **Pointer is not exactly on the PV.** The pointer's left edge is `fPV x (1 - 0.09091)`, and its width is 0.09091 of the track. Its centre is `fPV x (1 - 0.09091) + 0.04545`, which equals `fPV` only at 0.5. The two ends of the track are offset by a few per cent.
 4. **`tick` drives nothing.** Same as PV_StatusStrip: `docs/pv-display.md` describes a transform on `tick` that is not in this view.
 5. **OVR and UNR never blink.** Same as PV_StatusStrip.
-6. **Priority numbering may be inverted.** Same as PV_StatusStrip.
-7. **Empty `tagPath` still opens the dock.** Same as PV_StatusStrip.
+6. **Empty `tagPath` still opens the dock.** Same as PV_StatusStrip.
 
 **Open questions**
 

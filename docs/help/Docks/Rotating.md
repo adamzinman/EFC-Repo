@@ -410,28 +410,28 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Mode/Sts_Auto` | read | BOOL | In Automatic (commanded by owner) - MTP Automatic. |
 | `Alm_FailStart/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_FailStart/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
-| `Alm_FailStart/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low. |
+| `Alm_FailStart/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
 | `Alm_FailStop/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_FailStop/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
-| `Alm_FailStop/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low. |
+| `Alm_FailStop/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
 | `Alm_Uncmd/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_Uncmd/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
-| `Alm_Uncmd/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low. |
+| `Alm_Uncmd/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
 | `Alm_EStop/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_EStop/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
-| `Alm_EStop/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low. |
+| `Alm_EStop/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
 | `Alm_IntlkTrip/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_IntlkTrip/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
-| `Alm_IntlkTrip/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low. |
+| `Alm_IntlkTrip/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
 | `Alm_ExcessStarts/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_ExcessStarts/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
-| `Alm_ExcessStarts/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low. |
+| `Alm_ExcessStarts/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
 | `Alm_OL/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_OL/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
-| `Alm_OL/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low. |
+| `Alm_OL/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
 | `Alm_HiCurrent/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_HiCurrent/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
-| `Alm_HiCurrent/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low. |
+| `Alm_HiCurrent/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
 | `Run/Val_RunHrs` | read | REAL | Total run hours (display). |
 | `Run/Val_Starts` | read | UDINT | Total starts / cycles. |
 | `Run/Val_StartsLastHr` | read | INT | Starts in the last 60 min (rolling). |

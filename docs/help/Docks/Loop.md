@@ -382,13 +382,13 @@ All paths are relative to `tagPath`. Types and comments come from `types/PCLib_M
 | `Val_Err` | read | REAL | Error SP - PV (EU) |
 | `Alm_DevH/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_DevH/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_DevH/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_DevH/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_DevL/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_DevL/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_DevL/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_DevL/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_PVBad/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_PVBad/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_PVBad/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_PVBad/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Cfg_Kp` | read/write (bidirectional) | REAL | Proportional gain |
 | `Cfg_Ti` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Integral time, T#0S = no integral. Shown with unit `s`. See Notes. |
 | `Cfg_Td` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Derivative time. Shown with unit `s`. See Notes. |
@@ -611,7 +611,6 @@ All paths are relative to `tagPath`. Types and comments come from `types/PCLib_M
 - **Setpoint enable rule.** The setpoint entry is enabled only when `Sts_Cas` is false. It stays enabled in INTERLOCKED and TRACKING, and in MAN. The PLC decides what the setpoint does in those states.
 - **Read-only Tuning and Configuration are shown to every level.** A Guest (level 0) sees the Tuning and Configuration values, because the read-only rows have no level floor. The sections are collapsed by default (`open_Tuning` and `open_Configuration` are `false`). Confirm that read-only visibility at Guest is intended.
 - **EU labels in Configuration.** The SP min, SP max, PV min, PV max and deviation-limit rows have a blank unit. The Values rows use `Cfg_PVEU`, and the Setpoint entry has a blank unit too. Deviation limits are in EU (the T_AlmLim comment says so). Decide whether these rows should show `Cfg_PVEU`.
-- **Alarm priority names.** Same as `Docks/ValveDiscrete`. The dock maps `Cfg_Priority` 1 to `Critical`. The PCLib `T_Alarm` comment says 1 = Emergency. The style-class pattern is the same, so the displayed name may not match the intent.
 - **Banner ignores `Sts_Mode`.** `Sts_Mode` (INT, 0=Man 1=Auto 2=Cas 3=Track 4=Intlk) is not bound. The banner uses the separate booleans, so a loop with none of `Sts_Man`, `Sts_Auto`, `Sts_Cas`, `Sts_Track` or `Sts_Intlk` set shows UNKNOWN.
 - **Trend history.** The Trend part reads `Val_PV`, `Val_SP` and `Out_CV` through `efc.ui.trend` (`queryTagHistory`, average aggregation). History must be enabled on these members on the gateway, or the trend stays empty. This is not checked from the repo.
 - **T_PID members this view does not use.** Inputs: `Inp_PV`, `Inp_PVBad`, `Inp_CasSP`, `Inp_FF`, `Inp_TrackEn`, `Inp_TrackVal`, `Inp_IntlkOK`. Program and config: `Prog_SP`, `Cfg_ProgSP`, `Cfg_FFGain`, `Cfg_PVTrack`, `Cfg_IntlkCV`, `Cfg_BadPVAction`. Status: `Val_SPTarget`, `Sts_Mode`. This is expected for an operator dock, but `Cfg_PVTrack`, `Cfg_BadPVAction` and `Cfg_IntlkCV` change how the loop behaves on a bad PV or interlock, so the operator cannot see them here.

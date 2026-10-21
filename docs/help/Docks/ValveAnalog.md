@@ -381,13 +381,13 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Sts_NE107` | read | INT | NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M). |
 | `Alm_PosDev/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_PosDev/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
-| `Alm_PosDev/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low. |
+| `Alm_PosDev/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
 | `Alm_FbkBad/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_FbkBad/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
-| `Alm_FbkBad/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low. |
+| `Alm_FbkBad/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
 | `Alm_IntlkTrip/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_IntlkTrip/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
-| `Alm_IntlkTrip/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low. |
+| `Alm_IntlkTrip/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
 | `Cfg_OutMin` | read/write | REAL | Minimum output (%). |
 | `Cfg_OutMax` | read/write | REAL | Maximum output (%). |
 | `Cfg_RateUp` | read/write | REAL | Opening rate limit (%/s), 0 = none. |

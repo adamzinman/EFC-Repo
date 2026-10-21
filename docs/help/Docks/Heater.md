@@ -446,25 +446,25 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Sts_NE107` | read | INT | NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M) |
 | `Alm_HiLimit/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_HiLimit/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_HiLimit/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_HiLimit/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_Shorted/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_Shorted/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_Shorted/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_Shorted/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_LoadFail/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_LoadFail/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_LoadFail/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_LoadFail/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_FailOn/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_FailOn/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_FailOn/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_FailOn/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_FailOff/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_FailOff/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_FailOff/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_FailOff/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_ScrFault/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_ScrFault/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_ScrFault/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_ScrFault/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_IntlkTrip/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_IntlkTrip/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_IntlkTrip/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_IntlkTrip/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Run/Val_RunHrs` | read | REAL | Total run hours (display) |
 | `Run/Val_Starts` | read | UDINT | Total starts / cycles |
 | `Run/Val_StartsLastHr` | read | INT | Starts in the last 60 min (rolling) |
@@ -711,6 +711,5 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **Configuration writes are not role-checked in script.** Their only guard is the UI enable expression. This is a binding-level write, not an `efc.ui` call. Real access control has to be in Perspective security and the PLC.
 - **Mode buttons have no enable binding.** MAN and AUTO can be clicked at level 1 and above in any state. MAINT and OOS can be clicked at level 2 and above in any state. The same applies in `Docks/ValveDiscrete`.
 - **Outside this view, the template bypasses the rules.** The `PB` button on `Templates/HeatTransfer/Heater_Electric` writes `Cmd_On` or `Cmd_Off` directly with `system.tag.writeBlocking`. It has no `efc.ui.cmd` role check and no enable check. Operators using the template symbol can switch the heater on without the level or enable rules in this dock.
-- **Priority names differ from PCLib.** The dock maps `Cfg_Priority` 1 to `Critical`. The PCLib `T_Alarm` comment says 1 = Emergency. Both use the same style-class name pattern, so the displayed name may be wrong if the comment is the intent.
 - **Parameter and style class names** (`Alarm/Critical/Unacked` and similar, `Button/Toggle/On`, `Button/Momentary`, etc.) are style classes defined elsewhere. Their appearance was not checked.
 - **Level thresholds** come from the constants in `efc.ui` (`OPERATOR=1`, `MAINT=2`, `SUPERVISOR=3`, `ENGINEER=4`). The dock uses 4 for Configuration editing, which matches `ENGINEER`.

@@ -20,7 +20,7 @@ A process value card for an analog input (`T_AI`). It shows a coloured status st
 
 **Alarm letters.** The letters are FLT, HH, H, L, LL, OVR, UNR and INH, in that order. A letter is visible when its code is 0 or more (active, or cleared and unacknowledged). At most two letters show. Each further active letter is counted in a `+N` chip, whose tooltip (`Also:`) names the hidden letters. `+N` blinks if a hidden letter is unacknowledged. INH shows when any limit alarm is suppressed (`inh`).
 
-**Alarm codes.** Each alarm has one code: -1 for none; otherwise `state` x 10 + `priority`, where state 0 is active and acknowledged, 1 is active and unacknowledged, and 2 is cleared and unacknowledged (which adds 20 rather than 10). Priority 0 to 4 maps to Diagnostic, Low, Medium, High and Critical in the class names. Blink is applied for 10 to 19, and the cleared modifier for 20 and up.
+**Alarm codes.** Each alarm has one code: -1 for none; otherwise `state` x 10 + `priority`, where state 0 is active and acknowledged, 1 is active and unacknowledged, and 2 is cleared and unacknowledged (which adds 20 rather than 10). `priority` is the template's internal rank, 0 to 4, which maps to Diagnostic, Low, Medium, High and Critical in the class names. The PLC `Cfg_Priority` (PCLib: 1 Critical, 2 High, 3 Medium, 4 Low) is converted to that rank where it is read: `case(toInt(coalesce(pri, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2)`, so a missing or out-of-range value reads as Medium (rank 2). Diagnostic (0) is used only for the range chips. Blink is applied for 10 to 19, and the cleared modifier for 20 and up.
 
 **Value.** The PV shows one decimal, or `---` when PV is null. `badValue` is true when PV is not good, an FLT alarm is active, or `hwFault` (`Sts_Bad`) is true. It adds the `Value/BadQuality` style. It does not change the strip.
 
@@ -58,11 +58,11 @@ Tag mirrors fall into the groups below. The other 14 properties are expressions 
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
 | `view.custom.tick` | `null` | expr | `now(1000)` | Ticks every 1000 ms (`now(1000)`). Not referenced by any binding in this view. See Notes. |
-| `view.custom.aFLT` | `-1` | expr | `if(toBoolean(coalesce({view.custom.FLTact}, false)), if(toBoolean(coalesce({view.custom.FLTun}, false)), 10, 0) + coalesce({view.custom.FLTpri}, 2),   if(toBoolean(coalesce({view.custom.FLTun}, false)), 20 + coalesce({view.custom.FLTpri}, 2), -1))` | FLT code: -1 none, else state x 10 + priority (state 0 active and acked, 1 active and unacked, 2 cleared and unacked, which adds 20). Priority defaults to 2. |
-| `view.custom.aHH` | `-1` | expr | `if(toBoolean(coalesce({view.custom.HHact}, false)), if(toBoolean(coalesce({view.custom.HHun}, false)), 10, 0) + coalesce({view.custom.HHpri}, 2),   if(toBoolean(coalesce({view.custom.HHun}, false)), 20 + coalesce({view.custom.HHpri}, 2), -1))` | HH code (same encoding as `aFLT`). |
-| `view.custom.aH` | `-1` | expr | `if(toBoolean(coalesce({view.custom.Hact}, false)), if(toBoolean(coalesce({view.custom.Hun}, false)), 10, 0) + coalesce({view.custom.Hpri}, 2),   if(toBoolean(coalesce({view.custom.Hun}, false)), 20 + coalesce({view.custom.Hpri}, 2), -1))` | H code (same encoding as `aFLT`). |
-| `view.custom.aL` | `-1` | expr | `if(toBoolean(coalesce({view.custom.Lact}, false)), if(toBoolean(coalesce({view.custom.Lun}, false)), 10, 0) + coalesce({view.custom.Lpri}, 2),   if(toBoolean(coalesce({view.custom.Lun}, false)), 20 + coalesce({view.custom.Lpri}, 2), -1))` | L code (same encoding as `aFLT`). |
-| `view.custom.aLL` | `-1` | expr | `if(toBoolean(coalesce({view.custom.LLact}, false)), if(toBoolean(coalesce({view.custom.LLun}, false)), 10, 0) + coalesce({view.custom.LLpri}, 2),   if(toBoolean(coalesce({view.custom.LLun}, false)), 20 + coalesce({view.custom.LLpri}, 2), -1))` | LL code (same encoding as `aFLT`). |
+| `view.custom.aFLT` | `-1` | expr | `if(toBoolean(coalesce({view.custom.FLTact}, false)), if(toBoolean(coalesce({view.custom.FLTun}, false)), 10, 0) + case(toInt(coalesce({view.custom.FLTpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),   if(toBoolean(coalesce({view.custom.FLTun}, false)), 20 + case(toInt(coalesce({view.custom.FLTpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))` | FLT code: -1 none, else state x 10 + priority (state 0 active and acked, 1 active and unacked, 2 cleared and unacked, which adds 20). A missing or out-of-range `Cfg_Priority` reads as Medium (rank 2). |
+| `view.custom.aHH` | `-1` | expr | `if(toBoolean(coalesce({view.custom.HHact}, false)), if(toBoolean(coalesce({view.custom.HHun}, false)), 10, 0) + case(toInt(coalesce({view.custom.HHpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),   if(toBoolean(coalesce({view.custom.HHun}, false)), 20 + case(toInt(coalesce({view.custom.HHpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))` | HH code (same encoding as `aFLT`). |
+| `view.custom.aH` | `-1` | expr | `if(toBoolean(coalesce({view.custom.Hact}, false)), if(toBoolean(coalesce({view.custom.Hun}, false)), 10, 0) + case(toInt(coalesce({view.custom.Hpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),   if(toBoolean(coalesce({view.custom.Hun}, false)), 20 + case(toInt(coalesce({view.custom.Hpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))` | H code (same encoding as `aFLT`). |
+| `view.custom.aL` | `-1` | expr | `if(toBoolean(coalesce({view.custom.Lact}, false)), if(toBoolean(coalesce({view.custom.Lun}, false)), 10, 0) + case(toInt(coalesce({view.custom.Lpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),   if(toBoolean(coalesce({view.custom.Lun}, false)), 20 + case(toInt(coalesce({view.custom.Lpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))` | L code (same encoding as `aFLT`). |
+| `view.custom.aLL` | `-1` | expr | `if(toBoolean(coalesce({view.custom.LLact}, false)), if(toBoolean(coalesce({view.custom.LLun}, false)), 10, 0) + case(toInt(coalesce({view.custom.LLpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2),   if(toBoolean(coalesce({view.custom.LLun}, false)), 20 + case(toInt(coalesce({view.custom.LLpri}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2), -1))` | LL code (same encoding as `aFLT`). |
 | `view.custom.aOVR` | `-1` | expr | `if(toBoolean(coalesce({view.custom.rOVR}, false)), 0, -1)` | OVR code: 0 when `rOVR` is true, else -1. It has no acknowledge state, so it never blinks. |
 | `view.custom.aUNR` | `-1` | expr | `if(toBoolean(coalesce({view.custom.rUNR}, false)), 0, -1)` | UNR code: 0 when `rUNR` is true, else -1. No acknowledge state. |
 | `view.custom.fltActive` | `false` | expr | `{view.custom.aFLT} >= 0 && {view.custom.aFLT} < 20` | True when `aFLT` is 0 to 19, so an FLT alarm is active (acked or unacked). Drives the strip fault colour. |
@@ -157,7 +157,7 @@ Paths are relative to `tagPath`. Types and comments come from `types/PCLib_Membe
 | `HH/Alarm/Sts_Active`, `HH/Alarm/Sts_Unack`, `HH/Alarm/Cfg_Priority` (same for `H`, `L`, `LL`) | read | (not in T_AI) | Not in T_AI. T_AI has `Alm_HH`, `Alm_H`, `Alm_L`, `Alm_LL` (T_AlmLim) with `Sts_Active`, `Sts_Unack` and `Cfg_Priority`. |
 | `Overrange`, `Underrange` | read | (not in T_AI) | Not in T_AI. T_AI has `Sts_ORng` and `Sts_URng` (BOOL). |
 
-Priority (`Cfg_Priority`): the PCLib comment for T_AlmLim reads `1=Emergency 2=High 3=Medium 4=Low`. The view maps 4 to Critical, 3 to High, 2 to Medium, 1 to Low and 0 to Diagnostic. See Notes.
+Priority (`Cfg_Priority`): PCLib order, `1=Critical 2=High 3=Medium 4=Low`. The view converts it to its internal rank (1 to 4, 2 to 3, 3 to 2, 4 to 1; anything else Medium) in the `a*` code bindings, and the range chips use rank 0 (Diagnostic).
 
 ## Component tree
 
@@ -191,13 +191,11 @@ Indentation shows parent and child. Each entry is `name` (component type).
 2. **FLT, OVR and UNR also bind to paths that T_AI does not have.** FLT reads `Sts_Bad/Sts_Active` and related paths, but `Sts_Bad` is a plain BOOL in T_AI, and the bad-PV alarm is `Alm_Bad`. OVR and UNR read `Overrange` and `Underrange`, but T_AI has `Sts_ORng` and `Sts_URng`. Result: the strip cannot enter the fault state. `hwFault` only feeds `badValue`, so a PV bad flag changes the value style and not the strip.
 3. **OVR and UNR never blink.** `aOVR` is 0 when `rOVR` is true, with no acknowledge state. The chip class is therefore always the Diagnostic class when active, and `anyUnacked` never includes it.
 4. **`tick` drives nothing.** `docs/pv-display.md` says the alarm state is evaluated on `view.custom.tick` by a script transform that calls `system.alarm.queryStatus`. This view has no such transform, and no binding reads `view.custom.tick`. The design note is out of date for these views, or the transform was lost.
-5. **Priority numbering may be inverted.** The view maps `Cfg_Priority` 4 to Critical (Ignition order). The T_AlmLim comment in `types/PCLib_Members.csv` says `1=Emergency 2=High 3=Medium 4=Low`. If the PCLib comment is the rule, the colours are wrong.
-6. **Empty `tagPath` still opens the dock.** `tagPath` defaults to empty. A click then writes an empty `tagPath` to the dock, because `openDynamic` does not check it.
+5. **Empty `tagPath` still opens the dock.** `tagPath` defaults to empty. A click then writes an empty `tagPath` to the dock, because `openDynamic` does not check it.
 
 **Open questions**
 
 - The repo has no `DDT_Process_Value` definition. Is the gateway UDT the same as T_AI in the PCLib CSV? If it has `HH/Alarm/...`, `Overrange` and `Sts_Bad/Sts_Active`, items 1 and 2 are not defects. Not verified on a gateway.
 - Should `hwFault` also make the strip show the fault colour?
-- Which priority numbering is correct for `Cfg_Priority`?
 - Which copy is current: the `EFC_ProcessValues` project from `generator/build_pv.py`, or the EFC_Library `Templates/ProcessValues` views?
 

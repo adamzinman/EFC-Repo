@@ -486,34 +486,34 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Inp_FaultCode` | read | UINT | Drive fault code |
 | `Alm_FailStart/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_FailStart/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_FailStart/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_FailStart/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_FailStop/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_FailStop/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_FailStop/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_FailStop/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_Uncmd/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_Uncmd/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_Uncmd/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_Uncmd/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_EStop/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_EStop/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_EStop/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_EStop/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_IntlkTrip/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_IntlkTrip/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_IntlkTrip/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_IntlkTrip/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_ExcessStarts/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_ExcessStarts/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_ExcessStarts/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_ExcessStarts/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_DrvFault/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_DrvFault/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_DrvFault/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_DrvFault/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_DrvWarn/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_DrvWarn/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_DrvWarn/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_DrvWarn/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_CommFail/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_CommFail/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_CommFail/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_CommFail/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_SpdDev/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_SpdDev/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_SpdDev/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_SpdDev/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Run/Val_RunHrs` | read | REAL | Total run hours (display) |
 | `Run/Val_Starts` | read | UDINT | Total starts / cycles |
 | `Run/Val_StartsLastHr` | read | INT | Starts in the last 60 min (rolling) |
@@ -762,7 +762,6 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **Direction is not shown.** `Sts_Rev` (running in reverse) is not bound. The FWD and REV buttons have no state highlight, so neither the commanded nor the running direction is visible.
 - **Speed unit label is blank.** The unit beside the speed entry is an empty static label with no binding. The Values rows show the unit from `Cfg_SpdEU`.
 - **Trend pens share one scale and have no legend.** `efc.ui.trend` scales every pen to one minimum and maximum. Speed reference, speed (in `Cfg_SpdEU` units) and current (A) therefore share one axis. The part draws the pens in fixed colours by position (dark, blue, grey) and the view does not label them. See [Parts/Trend.md](Parts/Trend.md).
-- **Priority names differ from PCLib.** The dock maps `Cfg_Priority` 1 to `Critical`. The PCLib `T_Alarm` comment says 1 = Emergency. Both use the same style-class name pattern, so the displayed name may be wrong if the comment is the intent.
 - **Unused PCLib members.** `Sts_State`, `Sts_Ready`, `Sts_AtSpd`, `Sts_Rev`, `Sts_CommFail` and `Sts_RestartLeft` are not read by this view. The banner computes its own state from the feedback flags. Communication failure appears only through `Alm_CommFail`.
 - **Simulate toggle depends on the mirror.** `SIMULATE` writes `not self.view.custom.m_Sim_En`. If the mirror has not yet been read (`None`), `not None` is TRUE, so the first click writes TRUE.
 - **Configuration writes are not role-checked in script.** Their only guard is the UI enable expression. This is a binding-level write, not an `efc.ui` call. Real access control has to be in Perspective security and the PLC.

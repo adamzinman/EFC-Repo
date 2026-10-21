@@ -29,7 +29,10 @@ P = dict(card="#F0F0F0", border="#A6A6A6", borderDark="#7F7F7F", text="#1F1F1F",
          readonly="#EDEDED", field="#FFFFFF", fault="#3A3A3A", bandAlarm="#C9C9C9", bandExtreme="#A6A6A6")
 PRI = {"Critical": ("#D50000", "#FFFFFF"), "High": ("#FF7A00", "#1F1F1F"), "Medium": ("#FFD200", "#1F1F1F"),
        "Low": ("#00A3E0", "#1F1F1F"), "Diagnostic": ("#7A7A7A", "#FFFFFF")}
+# The templates rank priorities internally 4 Critical .. 1 Low, 0 Diagnostic (so max() is the worst). The PLC Cfg_Priority is
+# the PCLib order, 1 Critical .. 4 Low, and is converted once where it is read (PRI_RANK); anything else reads as Medium.
 PRI_BY_NUM = {4: "Critical", 3: "High", 2: "Medium", 1: "Low", 0: "Diagnostic"}
+PRI_RANK = lambda p: f"case(toInt(coalesce({p}, 3)), 1, 4, 2, 3, 3, 2, 4, 1, 2)"
 
 # ----------------------------------------------------------------- new style classes
 CLASSES = {}
@@ -139,7 +142,7 @@ def common_custom():
             continue
         pc[f"custom.{k}act"] = b_tag(suffix + "/Sts_Active"); pc[f"custom.{k}un"] = b_tag(suffix + "/Sts_Unack")
         pc[f"custom.{k}pri"] = b_tag(suffix + "/Cfg_Priority")
-        pri = "coalesce({view.custom.%spri}, 2)" % k
+        pri = PRI_RANK("{view.custom.%spri}" % k)       # PCLib 1=Critical .. 4=Low -> internal rank
         pc[f"custom.a{k}"] = b_expr("if(toBoolean(coalesce({view.custom.%sact}, false)), if(toBoolean(coalesce({view.custom.%sun}, false)), 10, 0) + %s,\n"
                                     "  if(toBoolean(coalesce({view.custom.%sun}, false)), 20 + %s, -1))" % (k, k, pri, k, pri))
     codes = ", ".join(C(k) for k, _ in ALARMS if k != "FLT")
@@ -379,7 +382,7 @@ def build_tags():
             mem("DLY", "Int4", 0),
             expr("Alarm", "Boolean", f"{{[.]../PV}} {cmp} {{[.]SP}} && {{[.]Enabled}} && !{{[.]Inhibit}}", alarms=alarm(name, pri)),
         ]}
-    PRI = {"Critical": 4, "High": 3, "Medium": 2, "Low": 1, "Diagnostic": 0}
+    PRI = {"Critical": 1, "High": 2, "Medium": 3, "Low": 4}        # PCLib Cfg_Priority order
     def almlim(name, lim, cmp, pri):
         act = f"{{[.]../Val_PV}} {cmp} {{[.]Cfg_Lim}} && {{[.]Cfg_En}} && !{{[.]Sts_Suppressed}}"
         return {"name": name, "tagType": "Folder", "tags": [
@@ -394,7 +397,7 @@ def build_tags():
         mem("Cfg_EUMin", "Float4", 0.0), mem("Cfg_EUMax", "Float4", 50.0),
         mem("Sts_Bad", "Boolean", False),
         {"name": "Alm_Bad", "tagType": "Folder", "tags": [expr("Sts_Active", "Boolean", "{[.]../Sts_Bad}", alarms=alarm("Bad", "High")),
-                                                         expr("Sts_Unack", "Boolean", "{[.]../Sts_Bad}"), mem("Cfg_Priority", "Int2", 3)]},
+                                                         expr("Sts_Unack", "Boolean", "{[.]../Sts_Bad}"), mem("Cfg_Priority", "Int2", PRI["High"])]},
         expr("Sts_ORng", "Boolean", "{[.]Val_PV} > {[.]Cfg_EUMax}"),
         expr("Sts_URng", "Boolean", "{[.]Val_PV} < {[.]Cfg_EUMin}"),
         almlim("Alm_HH", 42.0, ">=", "Critical"), almlim("Alm_H", 35.0, ">=", "Medium"),

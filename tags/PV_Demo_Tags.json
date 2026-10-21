@@ -88,7 +88,7 @@
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Int2",
-                  "value": 3
+                  "value": 2
                 }
               ]
             },
@@ -129,7 +129,7 @@
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Int2",
-                  "value": 4
+                  "value": 1
                 },
                 {
                   "name": "Sts_Suppressed",
@@ -185,7 +185,7 @@
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Int2",
-                  "value": 2
+                  "value": 3
                 },
                 {
                   "name": "Sts_Suppressed",
@@ -241,7 +241,7 @@
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Int2",
-                  "value": 2
+                  "value": 3
                 },
                 {
                   "name": "Sts_Suppressed",
@@ -297,7 +297,7 @@
                   "tagType": "AtomicTag",
                   "valueSource": "memory",
                   "dataType": "Int2",
-                  "value": 4
+                  "value": 1
                 },
                 {
                   "name": "Sts_Suppressed",

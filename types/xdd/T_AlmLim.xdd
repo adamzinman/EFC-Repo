@@ -37,7 +37,7 @@
 			<variableInit value="T#0S"></variableInit>
 		</variables>
 		<variables name="Cfg_Priority" typeName="INT">
-			<comment>Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low</comment>
+			<comment>Rationalised priority: 1=Critical 2=High 3=Medium 4=Low</comment>
 			<variableInit value="3"></variableInit>
 		</variables>
 		<variables name="Cfg_Class" typeName="INT">

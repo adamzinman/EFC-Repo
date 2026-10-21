@@ -149,8 +149,8 @@
             "bindType": "parameter",
             "binding": "{PathPrefix}{BaseTag}.Cfg_Priority"
           },
-          "documentation": "Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low",
-          "tooltip": "Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low",
+          "documentation": "Rationalised priority: 1=Critical 2=High 3=Medium 4=Low",
+          "tooltip": "Rationalised priority: 1=Critical 2=High 3=Medium 4=Low",
           "dataType": "Int2"
         },
         {
@@ -655,8 +655,8 @@
             "bindType": "parameter",
             "binding": "{PathPrefix}{BaseTag}.Cfg_Priority"
           },
-          "documentation": "Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low",
-          "tooltip": "Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low",
+          "documentation": "Rationalised priority: 1=Critical 2=High 3=Medium 4=Low",
+          "tooltip": "Rationalised priority: 1=Critical 2=High 3=Medium 4=Low",
           "dataType": "Int2"
         },
         {

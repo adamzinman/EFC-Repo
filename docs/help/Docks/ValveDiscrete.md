@@ -357,19 +357,19 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Sts_NE107` | read | INT | NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M) |
 | `Alm_FailOpen/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_FailOpen/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_FailOpen/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_FailOpen/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_FailClose/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_FailClose/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_FailClose/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_FailClose/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_PosConflict/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_PosConflict/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_PosConflict/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_PosConflict/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_Uncmd/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_Uncmd/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_Uncmd/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_Uncmd/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_IntlkTrip/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_IntlkTrip/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_IntlkTrip/Cfg_Priority` | read | INT | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Alm_IntlkTrip/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Run/Val_RunHrs` | read | REAL | Total run hours (display) |
 | `Run/Val_Starts` | read | UDINT | Total starts / cycles |
 | `Run/Val_StartsLastHr` | read | INT | Starts in the last 60 min (rolling) |
@@ -509,7 +509,6 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **RESET is always enabled at level 1 and above**, including outside MAN.
 - **Mode buttons have no enable binding.** Clicking MAN or AUTO is always possible at level 1 and above, whatever the current state.
 - **Configuration writes are not role-checked in script.** Their only guard is the UI enable expression. This is a binding-level write, not an `efc.ui` call.
-- **Priority names differ from PCLib.** The dock maps `Cfg_Priority` 1 to `Critical`. The PCLib `T_Alarm` comment says 1 = Emergency. Both use the same style-class name pattern, so the displayed name may be wrong if the comment is the intent.
 - **Trend expand is owned by the Trend part.** `expanded` is an `inout` param of `Docks/Parts/Trend`. This view only seeds it with `false` and resizes the embed from it.
 - **Alarm rows** map `Cfg_Priority` through a `case()` with a default of `Medium`. Each row reads `Sts_Active` and `Sts_Unack` directly from its alarm member. The `Perm` and `Intlk` structures are shown by the embedded `IntlkList` views, which are not in this file.
 - **Sts_State is not used.** The PCLib member `Sts_State` is not read by this view. The banner computes its own state from the feedback flags.

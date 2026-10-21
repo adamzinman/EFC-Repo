@@ -183,7 +183,7 @@ def build(types, d):
     enums = [
         ("Mode (T\\_Mode.Sts\\_Mode)", "0=OOS (MTP Offline) 1=Maintenance 2=Manual (MTP Operator) 3=Automatic (MTP Automatic)"),
         ("Alarm state (Sts\\_State, ISA-18.2 A--H)", lib.ALARM_STATES),
-        ("Alarm priority (Cfg\\_Priority)", "1=Emergency 2=High 3=Medium 4=Low"),
+        ("Alarm priority (Cfg\\_Priority)", "1=Critical 2=High 3=Medium 4=Low"),
         ("Alarm class (Cfg\\_Class)", "0=General 1=Safety 2=Environmental 3=Quality 4=Asset"),
         ("NAMUR NE107 (Sts\\_NE107)", lib.NE107_TXT),
         ("Phase state (T\\_Phase.Sts\\_State, ISA-88 Part 1)", lib.PHASE_STATES),
