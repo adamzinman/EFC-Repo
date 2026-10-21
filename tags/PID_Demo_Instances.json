@@ -422,6 +422,38 @@
       ]
     },
     {
+      "name": "M601",
+      "tagType": "UdtInstance",
+      "typeId": "T_VFD_Demo",
+      "tags": [
+        {
+          "name": "Out_Run",
+          "tagType": "AtomicTag",
+          "value": true
+        },
+        {
+          "name": "Sts_Running",
+          "tagType": "AtomicTag",
+          "value": true
+        },
+        {
+          "name": "Sts_Stopped",
+          "tagType": "AtomicTag",
+          "value": false
+        },
+        {
+          "name": "Val_Spd",
+          "tagType": "AtomicTag",
+          "value": 45.0
+        },
+        {
+          "name": "Cfg_Tag",
+          "tagType": "AtomicTag",
+          "value": "M-601"
+        }
+      ]
+    },
+    {
       "name": "E401",
       "tagType": "UdtInstance",
       "typeId": "T_Heater_Demo",

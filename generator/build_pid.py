@@ -241,8 +241,9 @@ RUN_MEMBERS = {
     "T_Heater": {"cmd": "Out_Contactor", "on": "Sts_On", "off": "Sts_Off", "trip": "Sts_Tripped", "nofb": None,
                  "start": "Cmd_On", "stop": "Cmd_Off", "words": ("OFF", "ON", "SWITCHING ON", "SWITCHING OFF"), "verbs": ("Switch on", "Switch off")},
 }
+RUN_MEMBERS["T_VFD"] = dict(RUN_MEMBERS["T_Motor"])   # same run/stop members; the status line adds Val_Spd
 def ttype_for(s):
-    return "T_Heater" if s.name == "Heater_Electric" else "T_Motor"
+    return {"Heater_Electric": "T_Heater", "VFD": "T_VFD"}.get(s.name, "T_Motor")
 
 def motor_template(s, demo_path):
     tt = ttype_for(s); M = RUN_MEMBERS[tt]
@@ -255,7 +256,11 @@ def motor_template(s, demo_path):
     common_cfg(custom, cfg)
     color_props(s, custom, cfg)
     w = M["words"]
-    status = f'case({{view.custom.state}}, 0, "{w[0]}", 1, "{w[1]}", 2, if({{view.custom.cmd}}, "{w[2]}", "{w[3]}"), 3, "FAULT", "???")'
+    on_word = f'"{w[1]}"'
+    if tt == "T_VFD":
+        custom.update({"spd": 0.0, "spdEU": ""}); cfg.update({"custom.spd": ftag("Val_Spd"), "custom.spdEU": ftag("Cfg_SpdEU")})
+        on_word = 'numberFormat({view.custom.spd}, "0.0") + " " + {view.custom.spdEU}'
+    status = f'case({{view.custom.state}}, 0, "{w[0]}", 1, {on_word}, 2, if({{view.custom.cmd}}, "{w[2]}", "{w[3]}"), 3, "FAULT", "???")'
     cls = 'case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown")'
     custom["canCmd"] = False
     cfg["custom.canCmd"] = expr("{view.custom.man} && {view.custom.avail} && !{view.custom.local} && !{view.custom.oos} && "
@@ -300,6 +305,8 @@ UDTS = {
     "T_CValve_Demo": _demo_udt([atom("Val_Demand", "Float4", 0.0), atom("Val_Pos", "Float4", 0.0), atom("Cfg_HasFbk", "Boolean", True)], perm=False),
     "T_Motor_Demo":  _demo_udt([atom("Out_Run", "Boolean", False), atom("Sts_Running", "Boolean", False), atom("Sts_Stopped", "Boolean", True),
                                 atom("Sts_Tripped", "Boolean", False)]),
+    "T_VFD_Demo":    _demo_udt([atom("Out_Run", "Boolean", False), atom("Sts_Running", "Boolean", False), atom("Sts_Stopped", "Boolean", True),
+                                atom("Sts_Tripped", "Boolean", False), atom("Val_Spd", "Float4", 0.0), atom("Cfg_SpdEU", "String", "Hz")]),
     "T_Heater_Demo": _demo_udt([atom("Out_Contactor", "Boolean", False), atom("Sts_On", "Boolean", False), atom("Sts_Off", "Boolean", True),
                                 atom("Sts_Tripped", "Boolean", False)]),
 }
@@ -322,6 +329,7 @@ DEMO = [  # instance, UDT, member overrides ("Group/Member" for nested), templat
     ("K202", "T_Motor_Demo", {"Sts_Fault": True, "Cfg_Tag": "K-202"}, "Compressor_Centrifugal"),
     ("B301", "T_Motor_Demo", {"Out_Run": True, "Sts_Stopped": False, "Cfg_Tag": "B-301"}, "Blower"),
     ("PV501", "T_Motor_Demo", {"Out_Run": True, "Sts_Running": True, "Sts_Stopped": False, **_man(), "Cfg_Tag": "PV-501"}, "Pump_Vacuum"),
+    ("M601", "T_VFD_Demo", {"Out_Run": True, "Sts_Running": True, "Sts_Stopped": False, "Val_Spd": 45.0, "Cfg_Tag": "M-601"}, "VFD"),
     ("E401", "T_Heater_Demo", {"Out_Contactor": True, "Sts_On": True, "Sts_Off": False, "Cfg_Tag": "E-401"}, "Heater_Electric"),
 ]
 NO_BUTTON = {"XV103", "PV501"}   # demo instances shown with useButton = false
@@ -361,7 +369,7 @@ def demo_view():
 # ---------------------------------------------------------------- null-safety (live-gateway fix 2026-10-06)
 # Tag-bound customs read null while a member is missing, bad or still loading (e.g. the new Permissive member);
 # null inside && / || / if() puts the dependent bindings in error. Wrap every read of a tag-bound custom in coalesce().
-NULL_DEFAULTS = {"cmd": "false", "opened": "false", "closed": "false", "hasZso": "false", "hasZsc": "false", "fb": "true",
+NULL_DEFAULTS = {"spd": "0.0", "spdEU": "\"\"", "cmd": "false", "opened": "false", "closed": "false", "hasZso": "false", "hasZsc": "false", "fb": "true",
                  "permMissing": "false", "intlk": "false", "man": "false", "oos": "false", "avail": "true", "local": "false",
                  "on": "false", "off": "false", "trip": "false", "fault": "false", "mode": "0", "out": "0", "pos": "0", "firstOut": "-1"}
 def _harden_expr(e):
