@@ -164,6 +164,14 @@ def ackAll(component, alarms):
         system.tag.writeBlocking(paths, [True] * len(paths))
 
 
+def _num(v):
+    """float(v), or None when v is missing or not numeric (so the point is skipped)."""
+    try:
+        return None if v is None else float(v)
+    except (TypeError, ValueError):
+        return None
+
+
 def trend(base, pens, minutes, w, h):
     """Docks/Parts/Trend transform: SVG path per pen over the last `minutes` from tag history."""
     out = {'d': [''] * len(pens), 'lo': '', 'hi': ''}
@@ -173,10 +181,11 @@ def trend(base, pens, minutes, w, h):
         ds = system.tag.queryTagHistory(paths=[base + '/' + m for m in pens], rangeMinutes=int(minutes),
                                         returnSize=200, aggregationMode='Average', returnFormat='Wide',
                                         ignoreBadQuality=True)
-    except Exception:
+    except Exception as e:
+        _log().warn('trend: queryTagHistory failed for %s: %s' % (base, e))
         return out
-    rows = [[ds.getValueAt(r, c + 1) for c in range(len(pens))] for r in range(ds.getRowCount())]
-    vals = [float(v) for row in rows for v in row if v is not None]
+    rows = [[_num(ds.getValueAt(r, c + 1)) for c in range(len(pens))] for r in range(ds.getRowCount())]
+    vals = [v for row in rows for v in row if v is not None]
     if len(rows) < 2 or not vals:
         return out
     lo, hi = min(vals), max(vals)
@@ -184,7 +193,7 @@ def trend(base, pens, minutes, w, h):
     lo, hi = lo - pad, hi + pad
     n = len(rows) - 1
     for c in range(len(pens)):
-        pts = ['%.1f,%.1f' % (w * i / n, h - (float(row[c]) - lo) / (hi - lo) * h)
+        pts = ['%.1f,%.1f' % (w * i / n, h - (row[c] - lo) / (hi - lo) * h)
                for i, row in enumerate(rows) if row[c] is not None]
         out['d'][c] = ('M' + ' L'.join(pts)) if len(pts) > 1 else ''
     out['lo'], out['hi'] = '%.4g' % lo, '%.4g' % hi

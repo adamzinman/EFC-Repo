@@ -120,7 +120,7 @@ Total: **6 event scripts** (`onActionPerformed`) and **1 transform script**. No 
 
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.trend(base, pens, minutes, w, h)`**: returns `{d, lo, hi}`. With no `base` or no `pens`, it returns empty values. Otherwise it calls `system.tag.queryTagHistory` for the paths `base/<pen>` over the last `minutes`, with `returnSize` 200, `aggregationMode` `Average`, `returnFormat` `Wide` and `ignoreBadQuality` True. A query exception returns empty values. Each row becomes a point `x = w * i / n`, `y = h - (value - lo) / (hi - lo) * h`, where `lo` and `hi` are the min and max of all plotted values, padded by 10 % (at least 0.5). The path starts with `M` and joins the points with `L`. It writes no tags and performs no role check.
+- **`efc.ui.trend(base, pens, minutes, w, h)`**: returns `{d, lo, hi}`. With no `base` or no `pens`, it returns empty values. Otherwise it calls `system.tag.queryTagHistory` for the paths `base/<pen>` over the last `minutes`, with `returnSize` 200, `aggregationMode` `Average`, `returnFormat` `Wide` and `ignoreBadQuality` True. A query exception returns empty values and logs a warning through the `efc.ui` logger (`_log().warn`). Values are converted with `float()` one at a time; a missing or non-numeric value is skipped (no point), not raised. Each row becomes a point `x = w * i / n`, `y = h - (value - lo) / (hi - lo) * h`, where `lo` and `hi` are the min and max of all plotted values, padded by 10 % (at least 0.5). The path starts with `M` and joins the points with `L`. It writes no tags and performs no role check.
 
 ## Tag members used
 
@@ -169,8 +169,6 @@ Tag history must be enabled for each pen, or the graph stays blank.
 
 1. **No pen legend or units.** The three pens are drawn in fixed colours (dark, blue, grey), but nothing in the view says which is which. The order follows the host's `pens` list. The units are not shown anywhere.
 2. **Shared scale for BOOL and analog pens.** On the valve hosts (`Out_Open` and `Sts_Opened`) the data is 0 or 1, so the padded axis runs from -0.5 to 1.5. On the loop host, `Val_PV` (EU), `Val_SP` (EU) and `Out_CV` (%) share one scale, so their units do not match and the scale is set by whichever has the widest range.
-3. **A non-numeric pen would fail the transform.** `float()` is applied to every value outside the `try` around the query. A STRING pen would raise an error in the transform, so the graph would not update. No current host passes a string pen.
-4. **Query errors are silent.** `efc.ui.trend` returns empty data when the query raises. Missing history therefore looks like an empty graph, not an error.
-5. **Refresh every 10 seconds.** The `now(10000)` term re-runs the query about every 10 seconds for each open trend, plus on each range change. That is a fixed load on the history provider, independent of the range.
-6. **Resolution.** Up to 200 points are requested for every range, so the 24-hour view has about one point every 7 minutes. Spikes shorter than that are averaged out.
-7. **The `expanded` param drives the host height only in the generated hosts.** Any other host that embeds this view must bind `position.basis` itself, or the expand button will change the param without changing the size.
+3. **Refresh every 10 seconds.** The `now(10000)` term re-runs the query about every 10 seconds for each open trend, plus on each range change. That is a fixed load on the history provider, independent of the range.
+4. **Resolution.** Up to 200 points are requested for every range, so the 24-hour view has about one point every 7 minutes. Spikes shorter than that are averaged out.
+5. **The `expanded` param drives the host height only in the generated hosts.** Any other host that embeds this view must bind `position.basis` itself, or the expand button will change the param without changing the size.
