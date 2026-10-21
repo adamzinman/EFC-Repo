@@ -7,7 +7,7 @@ xsyimport.py is tested offline (test_xsyimport.py).
 
 Install (gateway scripting project, inheritable library):
   Project Library  efc/xsyimport.py      <- copy of tools/xsyimport/xsyimport.py
-  Project Library  efc/library_types.py  <- copy of tools/xsyimport/library_types.py
+  Project Library  efc/library_types.py  <- copy of tools/xsyimport/library_types.py (run build_library.py first)
   Project Library  efc/xsyimport_gw.py   <- this file
   Message handler  name "xsyImport"      -> calls  efc.xsyimport_gw.handle(payload)
 
@@ -49,7 +49,8 @@ def _plan(payload):
     opts = {"opcServer": payload["opcServer"],
             "prefix": payload.get("prefix") or X.DEFAULT_PREFIX,
             "syncDocumentation": payload.get("syncDocumentation", True),
-            "typesFolder": None}
+            "typesFolder": None,
+            "layouts": [base64.b64decode(x) for x in payload.get("layouts") or []]}
     tags = _tree(PROVIDER + line)
     types = _tree(PROVIDER + "_types_/" + line)
     p = X.plan(raw, line, tags, types, opts)
@@ -136,7 +137,15 @@ def designerRun():
         return
     raw = system.file.readFileAsBytes(path)
     data = "".join([chr(b & 0xFF) for b in raw])     # Java byte[] -> raw bytes in Jython
-    payload = {"line": line, "opcServer": opc, "data": base64.b64encode(data), "dryRun": True}
+    layouts = []
+    while system.gui.confirm("Add a layout file for types the export does not define?\n"
+                             "(EFCLib v1 types are built in and never need one.)"):
+        lp = system.file.openFile("")   # VERIFY: no filter = any file type
+        if not lp:
+            break
+        layouts.append(base64.b64encode("".join([chr(b & 0xFF) for b in system.file.readFileAsBytes(lp)])))
+    payload = {"line": line, "opcServer": opc, "data": base64.b64encode(data), "dryRun": True,
+               "layouts": layouts}
 
     res = system.util.sendRequest(PROJECT, HANDLER, payload)   # VERIFY: 8.1 sendRequest signature
     if "error" in res:

@@ -47,6 +47,7 @@ ELEMENTARY = {
 ARRAY_OF = {  # Ignition array dataType for each element dataType
     "Boolean": "BooleanArray", "Int1": "Int1Array", "Int2": "Int2Array", "Int4": "Int4Array",
     "Int8": "Int8Array", "Float4": "Float4Array", "Float8": "Float8Array", "String": "StringArray",
+    "DateTime": "DateTimeArray",
 }
 LINE_RE = re.compile(r"^\d{3}$")
 NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
@@ -59,6 +60,7 @@ DEFAULTS = {
     "syncDocumentation": True,  # a non-empty PLC comment overwrites Ignition Documentation; blank never does
     "typesFolder": None,        # UDT folder under _types_; defaults to the line number
     "library": None,            # library layouts; defaults to library_types.LIBRARY_TYPES
+    "layouts": None,            # extra layout files (bytes) for types the export does not define
 }
 
 
@@ -68,6 +70,10 @@ class ImportRefused(Exception):
 
 # --------------------------------------------------------------------------- XSY
 
+class _Skip(Exception):
+    """A type or variable that cannot be built. Raised, caught, and reported as a skip."""
+
+
 class Model(object):
     def __init__(self):
         self.ddts = {}      # DDT name -> [(member, typeName, comment)]
@@ -75,7 +81,7 @@ class Model(object):
         self.hmi = []       # [(variable, typeName, comment)] for HMI-flagged top-level variables
         self.total = 0
         self.flagged = 0    # variables that carry the HMI attribute at all, any value
-        self.from_library = set()   # type names whose layout came from the library, not the export
+        self.from_layout = set()   # type names defined only by a layout file
 
 
 def _comment(el):
@@ -90,19 +96,23 @@ def _members(el):
             for v in el.findall("variables")]
 
 
-def parse(data):
-    """Parse XSY bytes (utf-8 or str). Refuses an export that has no HMI flags at all."""
-    root = ET.fromstring(data)
-    if root.tag != "VariablesExchangeFile":
-        raise ImportRefused("not a Control Expert variables export (root is %s)" % root.tag)
-    m = Model()
+def _definitions(root, model):
     for s in root.findall("DDTSource"):
-        m.ddts[s.get("DDTName")] = _members(s.find("structure"))
+        model.ddts[s.get("DDTName")] = _members(s.find("structure"))
     for f in root.findall("FBSource"):
         mem = []
         for sec in ("inputParameters", "outputParameters", "publicLocalVariables"):
             mem.extend(_members(f.find(sec)))
-        m.fbs[f.get("nameOfFBType")] = mem
+        model.fbs[f.get("nameOfFBType")] = mem
+
+
+def parse(data):
+    """Parse the export: type definitions plus the HMI-flagged variables. Refuses an export with no HMI flags."""
+    root = ET.fromstring(data)
+    if root.tag != "VariablesExchangeFile":
+        raise ImportRefused("not a Control Expert variables export (root is %s)" % root.tag)
+    m = Model()
+    _definitions(root, m)
     db = root.find("dataBlock")
     for v in (db.findall("variables") if db is not None else []):
         m.total += 1
@@ -115,6 +125,18 @@ def parse(data):
         raise ImportRefused("export has no %s attributes; re-export with attributes included. "
                             "Refusing to import every variable." % HMI_ATTR)
     return m
+
+
+def _add_layouts(model, layouts):
+    """Layout files (any Control Expert export or DDT exchange file) supply types the export lacks."""
+    for data in layouts or []:
+        root = ET.fromstring(data)
+        extra = Model()
+        _definitions(root, extra)
+        for name, mem in list(extra.ddts.items()) + list(extra.fbs.items()):
+            if name not in model.ddts and name not in model.fbs:
+                (model.ddts if name in extra.ddts else model.fbs)[name] = mem
+                model.from_layout.add(name)
 
 
 def _layout_diff(name, exp, lib):
@@ -134,21 +156,26 @@ def _layout_diff(name, exp, lib):
 
 
 def _add_library(model, library):
-    """EFCLib v1 layouts win over the export. Returns the differences found, for the report."""
+    """EFCLib v1 layouts win over the export and any layout file. Returns the differences for the report."""
     diffs = []
     for name, entry in (library or {}).items():
         if entry.get("confidence") != "confirmed":
             continue
         lib = [(m[0], m[1], m[2]) for m in entry["members"]]
         exp = model.ddts.get(name) or model.fbs.get(name)
-        if exp is not None:
+        if exp is not None and name not in model.from_layout:
             diffs.extend(_layout_diff(name, exp, lib))
         model.ddts[name] = lib
-        model.from_library.add(name)
+        model.fbs.pop(name, None)
+        model.from_layout.discard(name)
     return diffs
 
 
 # --------------------------------------------------------------------- type rules
+
+_ARRAY_RE = re.compile(r"^ARRAY\s*\[(.+?)\]\s*OF\s+(.+)$", re.I)
+_RANGE_RE = re.compile(r"^\s*(-?\d+)\s*\.\.\s*(-?\d+)\s*$")
+
 
 def _elem(t):
     if STRING_RE.match(t):
@@ -156,49 +183,55 @@ def _elem(t):
     return ELEMENTARY.get(t.upper())
 
 
-def _kind(tn, model):
-    """-> (kind, value, reason).
+def _classify(tn, model):
+    """-> ('elem', dataType) | ('array', (lo, hi, element type name)) | ('udt', type name). Raises _Skip.
 
-    kind: 'elem' (value = dataType), 'elemarray' (value = array dataType),
-          'udt' (value = type name), 'udtarray' (value = (type name, lo, hi)), 'skip'.
+    Multi-dimensional arrays are read as arrays of arrays: ARRAY[1..2,1..3] OF T -> ARRAY[1..2] OF ARRAY[1..3] OF T.
     """
-    am = ARRAY_RE.match(tn)
-    if am:
-        lo, hi, elem = int(am.group(1)), int(am.group(2)), am.group(3).strip()
-        if hi < lo:
-            return "skip", None, "array %s has an empty range" % tn
-        ek, ev, _ = _kind(elem, model)
-        if ek == "elem" and ev in ARRAY_OF:
-            return "elemarray", ARRAY_OF[ev], None
-        if ek == "udt":
-            return "udtarray", (ev, lo, hi), None
-        return "skip", None, "array of %s is not mapped" % elem
+    m = _ARRAY_RE.match(tn)
+    if m:
+        dims = [d.strip() for d in m.group(1).split(",")]
+        ranges = []
+        for d in dims:
+            r = _RANGE_RE.match(d)
+            if not r:
+                raise _Skip("array %s: dimension %r not readable" % (tn, d))
+            lo, hi = int(r.group(1)), int(r.group(2))
+            if hi < lo:
+                raise _Skip("array %s has an empty range" % tn)
+            ranges.append((lo, hi))
+        elem = m.group(2).strip()
+        if len(dims) > 1:
+            elem = "ARRAY[%s] OF %s" % (",".join(dims[1:]), elem)
+        return "array", (ranges[0][0], ranges[0][1], elem)
     dt = _elem(tn)
     if dt:
-        return "elem", dt, None
+        return "elem", dt
     if tn in model.ddts or tn in model.fbs:
-        return "udt", tn, None
-    return "skip", None, ("type %s is not elementary and not defined in the export or the library" % tn)
+        return "udt", tn
+    raise _Skip("type %s is not elementary and not defined in the export, a layout file or EFCLib v1" % tn)
 
 
-def _atomic_member(name, dt, comment):
+def _atomic(name, dt, comment, suffix):
+    """Atomic member/tag binding. suffix is the path below the owning Tag (the member name for a plain member)."""
+    binding = ITEM_PATH if suffix == name else "{OPC Prefix}{Tag}.%s" % suffix
     return {"name": name, "tagType": "AtomicTag", "valueSource": "opc", "dataType": dt,
             "opcServer": {"bindType": "parameter", "binding": "{OPC Server}"},
-            "opcItemPath": {"bindType": "parameter", "binding": ITEM_PATH},
+            "opcItemPath": {"bindType": "parameter", "binding": binding},
             "documentation": comment}
 
 
-def _nested_member(name, type_id, comment):
+def _nested(name, type_id, comment, suffix):
     return {"name": name, "tagType": "UdtInstance", "typeId": type_id,
             "parameters": {
                 PARAM_PREFIX: {"dataType": "String", "value": {"bindType": "parameter", "binding": "{OPC Prefix}"}},
                 PARAM_SERVER: {"dataType": "String", "value": {"bindType": "parameter", "binding": "{OPC Server}"}},
-                PARAM_TAG: {"dataType": "String", "value": {"bindType": "parameter", "binding": "{Tag}.%s" % name}}},
+                PARAM_TAG: {"dataType": "String", "value": {"bindType": "parameter", "binding": "{Tag}.%s" % suffix}}},
             "documentation": comment}
 
 
-class _Builder(object):
-    """Builds UDT definitions for every DDT/FB reached from the HMI variables."""
+class _Types(object):
+    """UDT definitions for every DDT/FB the import can reach. Built once per type, nested types first."""
 
     def __init__(self, model, folder, prefix):
         self.model = model
@@ -211,24 +244,17 @@ class _Builder(object):
         if name in self.done:
             return self.done[name]
         if name in stack:
-            return None, "recursive type"
+            return None, "recursive type %s" % name
         members = self.model.ddts[name] if name in self.model.ddts else self.model.fbs[name]
         tags, problem = [], None
         for mname, tn, comment in members:
             if not NAME_RE.match(mname or ""):
                 problem = "member %s has a name Ignition does not allow" % mname
                 break
-            kind, val, why = _kind(tn, self.model)
-            if kind in ("elem", "elemarray"):
-                tags.append(_atomic_member(mname, val, comment))
-            elif kind == "udt":
-                sub, why2 = self.udt(val, stack + (name,))
-                if sub is None:
-                    problem = "member %s: %s" % (mname, why2)
-                    break
-                tags.append(_nested_member(mname, "%s/%s" % (self.folder, val), comment))
-            else:
-                problem = "member %s: %s" % (mname, why)
+            try:
+                tags.append(self.member(mname, tn, comment, mname, stack + (name,)))
+            except _Skip as e:
+                problem = "member %s: %s" % (mname, e)
                 break
         if problem:
             res = (None, problem)
@@ -243,6 +269,43 @@ class _Builder(object):
         if res[0] is not None and name not in self.order:
             self.order.append(name)
         return res
+
+    def buildable(self, tn, stack=()):
+        """(True, None) when a tag or member of this type can be built; otherwise (False, reason)."""
+        try:
+            kind, val = _classify(tn, self.model)
+        except _Skip as e:
+            return False, str(e)
+        if kind == "elem":
+            return True, None
+        if kind == "array":
+            lo, hi, et = val
+            ek, ev = _classify(et, self.model) if not _ARRAY_RE.match(et) else ("array", None)
+            if ek == "elem" and ev not in ARRAY_OF:
+                return False, "array of %s is not mapped" % ev
+            return self.buildable(et, stack)
+        js, why = self.udt(val, stack)
+        return js is not None, why
+
+    def member(self, name, tn, comment, suffix, stack):
+        """One UDT member (or one element of an array member). suffix is its path below the owning Tag."""
+        kind, val = _classify(tn, self.model)
+        if kind == "elem":
+            return _atomic(name, val, comment, suffix)
+        if kind == "array":
+            lo, hi, et = val
+            ek, ev = _classify(et, self.model) if not _ARRAY_RE.match(et) else ("array", None)
+            if ek == "elem":
+                if ev not in ARRAY_OF:
+                    raise _Skip("array of %s is not mapped" % ev)
+                return _atomic(name, ARRAY_OF[ev], comment, suffix)
+            children = [self.member("_%d" % i, et, comment, "%s[%d]" % (suffix, i), stack)
+                        for i in range(lo, hi + 1)]
+            return {"name": name, "tagType": "Folder", "tags": children}
+        sub, why = self.udt(val, stack)
+        if sub is None:
+            raise _Skip(why)
+        return _nested(name, "%s/%s" % (self.folder, val), comment, suffix)
 
 
 # ----------------------------------------------------------------- existing state
@@ -313,7 +376,7 @@ class Plan(object):
         self.udt_skipped = []   # (type name, reason)
         self.tag_create = []    # (folder, tag json)
         self.tag_update = []    # (full path, {property: value}) documentation only
-        self.exists = []        # (variable, path): already in Ignition, nothing to do
+        self.exists = []        # (variable or element, path): already in Ignition, nothing to do
         self.conflicts = []     # (variable, message): reported, not changed
         self.duplicates = []    # (PLC identity, [paths]): reported, not changed
         self.not_in_plc = []    # (PLC identity, path): kept, reported
@@ -328,8 +391,7 @@ class Plan(object):
                 "tag_update": len(self.tag_update), "exists": len(self.exists),
                 "conflicts": len(self.conflicts), "duplicates": len(self.duplicates),
                 "not_in_plc": len(self.not_in_plc), "renames": len(self.renames),
-                "library_diffs": len(self.library),
-                "skipped": len(self.skipped)}
+                "library_diffs": len(self.library), "skipped": len(self.skipped)}
 
     def is_noop(self):
         return not (self.udt_create or self.udt_extend or self.tag_create or self.tag_update)
@@ -338,8 +400,10 @@ class Plan(object):
 def plan(data, line, tag_tree, types_tree, options=None):
     """Plan an import of `data` (XSY bytes) into production line `line`.
 
-    tag_tree   children of the provider folder <line> (getConfiguration(..., True))
-    types_tree children of _types_/<typesFolder> (defaults to the line)
+    tag_tree    children of the provider folder <line> (getConfiguration(..., True))
+    types_tree  children of _types_/<typesFolder> (defaults to the line)
+    options     opcServer (required), prefix, syncDocumentation, typesFolder, library,
+                layouts (list of bytes: extra Control Expert exports / DDT files that define types)
     """
     opts = dict(DEFAULTS)
     opts.update(options or {})
@@ -353,18 +417,19 @@ def plan(data, line, tag_tree, types_tree, options=None):
     sync_doc = bool(opts["syncDocumentation"])
 
     model = parse(data)
+    _add_layouts(model, opts["layouts"])
     lib_diffs = _add_library(model, LIBRARY_TYPES if opts["library"] is None else opts["library"])
-    builder = _Builder(model, tf, prefix)
+    types = _Types(model, tf, prefix)
     existing_types = types_index(types_tree)
     recs = records(tag_tree, line)
-    imported_path = "%s/%s" % (line, IMPORTED)
-    inst, atoms, used_names = {}, {}, set()
-    by_identity = {}           # PLC identity -> [path], for duplicate detection
+    imported = "%s/%s" % (line, IMPORTED)
+    inst, atoms, used = {}, {}, {}     # used: name directly under imported/ -> tagType
+    by_identity = {}
     for r in recs:
         if not r["top"]:
             continue
-        if r["path"] == "%s/%s" % (imported_path, r["name"]):   # only names directly under imported/ clash
-            used_names.add(r["name"])
+        if r["path"] == "%s/%s" % (imported, r["name"]):
+            used[r["name"]] = r["tagType"]
         if r["tagType"] == "UdtInstance":
             ident = _pval(r["params"].get(PARAM_TAG))
             if ident:
@@ -378,100 +443,81 @@ def plan(data, line, tag_tree, types_tree, options=None):
 
     p = Plan()
     p.library = lib_diffs
-    imported = "%s/%s" % (line, IMPORTED)
     wanted = set()             # PLC identities the export still exposes
-    new_docs = []              # (name, kind, type, documentation) of tags this run creates
+    new_docs = []              # (name, tagType, type, documentation) of tags this run creates
 
-    def atomic(vname, dt, comment):
-        rec = atoms.get(vname)
-        if rec is None and vname in inst:
-            p.conflicts.append((vname, "UDT instance %s in Ignition, %s in PLC; not changed"
-                                % (inst[vname]["typeId"], dt)))
+    def atomic_here(name, expr, dt, comment, folder):
+        wanted.add(expr)
+        rec = atoms.get(expr)
+        if rec is None and expr in inst:
+            p.conflicts.append((expr, "UDT instance %s in Ignition, %s in PLC; not changed"
+                                % (inst[expr]["typeId"], dt)))
             return
         if rec:
-            p.exists.append((vname, rec["path"]))
+            p.exists.append((expr, rec["path"]))
             if rec["dataType"] and rec["dataType"] != dt:
-                p.conflicts.append((vname, "dataType %s in Ignition, %s in PLC; not changed"
+                p.conflicts.append((expr, "dataType %s in Ignition, %s in PLC; not changed"
                                     % (rec["dataType"], dt)))
             if sync_doc and comment and rec["documentation"] != comment:
                 p.tag_update.append((rec["path"], {"tagType": "AtomicTag", "documentation": comment}))
             return
-        if vname in used_names:
-            p.skipped.append((vname, "name already used by another tag under %s" % line))
+        p.tag_create.append((folder, {
+            "name": name, "tagType": "AtomicTag", "valueSource": "opc", "dataType": dt,
+            "opcServer": server, "opcItemPath": prefix + expr, "documentation": comment}))
+        new_docs.append((name, "AtomicTag", dt, comment))
+
+    def instance_here(name, expr, type_name, comment, folder):
+        wanted.add(expr)
+        rec = inst.get(expr)
+        if rec:
+            p.exists.append((expr, rec["path"]))
+            if _last(rec["typeId"]) != type_name:
+                p.conflicts.append((expr, "type %s in Ignition, %s in PLC; not changed"
+                                    % (rec["typeId"], type_name)))
+            if sync_doc and comment and rec["documentation"] != comment:
+                p.tag_update.append((rec["path"], {"tagType": "UdtInstance", "documentation": comment}))
             return
-        p.tag_create.append((imported, {
-            "name": vname, "tagType": "AtomicTag", "valueSource": "opc", "dataType": dt,
-            "opcServer": server, "opcItemPath": prefix + vname, "documentation": comment}))
-        new_docs.append((vname, "AtomicTag", dt, comment))
+        p.tag_create.append((folder, {
+            "name": name, "tagType": "UdtInstance", "typeId": "%s/%s" % (tf, type_name),
+            "parameters": {PARAM_SERVER: {"dataType": "String", "value": server},
+                           PARAM_TAG: {"dataType": "String", "value": expr}},
+            "documentation": comment}))
+        new_docs.append((name, "UdtInstance", type_name, comment))
+
+    def place(name, tn, comment, expr, folder):
+        """Place one variable (any type, any nesting) under folder. expr is its PLC path, e.g. Station[1][2]."""
+        kind, val = _classify(tn, model)
+        if kind == "elem":
+            atomic_here(name, expr, val, comment, folder)
+        elif kind == "array":
+            lo, hi, et = val
+            ek, ev = _classify(et, model) if not _ARRAY_RE.match(et) else ("array", None)
+            if ek == "elem":
+                atomic_here(name, expr, ARRAY_OF[ev], comment, folder)
+            else:
+                for i in range(lo, hi + 1):
+                    place("_%d" % i, et, comment, "%s[%d]" % (expr, i), "%s/%s" % (folder, name))
+        else:
+            instance_here(name, expr, val, comment, folder)
 
     for vname, tn, comment in model.hmi:
+        wanted.add(vname)            # still exposed by the PLC, even when skipped below
         if not NAME_RE.match(vname or ""):
             p.skipped.append((vname, "name is not allowed in Ignition"))
             continue
-        wanted.add(vname)
-        kind, val, why = _kind(tn, model)
-
-        if kind in ("elem", "elemarray"):
-            atomic(vname, val, comment)
+        ok, why = types.buildable(tn)
+        if not ok:
+            p.skipped.append((vname, why))
             continue
-
-        if kind == "udt":
-            js, why = builder.udt(val)
-            if js is None:
-                p.skipped.append((vname, "type %s: %s" % (val, why)))
-                continue
-            rec = inst.get(vname)
-            if rec:
-                if _last(rec["typeId"]) != val:
-                    p.conflicts.append((vname, "type %s in Ignition, %s in PLC; not changed"
-                                        % (rec["typeId"], val)))
-                p.exists.append((vname, rec["path"]))
-                if sync_doc and comment and rec["documentation"] != comment:
-                    p.tag_update.append((rec["path"], {"tagType": "UdtInstance", "documentation": comment}))
-                continue
-            if vname in used_names:
-                p.skipped.append((vname, "name already used by another tag under %s" % line))
-                continue
-            p.tag_create.append((imported, {
-                "name": vname, "tagType": "UdtInstance", "typeId": "%s/%s" % (tf, val),
-                "parameters": {PARAM_SERVER: {"dataType": "String", "value": server},
-                               PARAM_TAG: {"dataType": "String", "value": vname}},
-                "documentation": comment}))
-            new_docs.append((vname, "UdtInstance", val, comment))
+        matched = vname in atoms or vname in inst
+        if not matched and vname in used and used[vname] != "Folder":
+            p.skipped.append((vname, "name already used by another tag under %s" % line))
             continue
-
-        if kind == "udtarray":
-            elem, lo, hi = val
-            js, why = builder.udt(elem)
-            if js is None:
-                p.skipped.append((vname, "array of %s: %s" % (elem, why)))
-                continue
-            if vname in used_names:
-                p.skipped.append((vname, "name already used by another tag under %s" % line))
-                continue
-            folder = "%s/%s" % (imported, vname)
-            for i in range(lo, hi + 1):
-                ident = "%s[%d]" % (vname, i)
-                wanted.add(ident)
-                rec = inst.get(ident)
-                if rec:
-                    p.exists.append((ident, rec["path"]))
-                    if _last(rec["typeId"]) != elem:
-                        p.conflicts.append((ident, "type %s in Ignition, %s in PLC; not changed"
-                                            % (rec["typeId"], elem)))
-                    continue
-                p.tag_create.append((folder, {
-                    "name": "_%d" % i, "tagType": "UdtInstance", "typeId": "%s/%s" % (tf, elem),
-                    "parameters": {PARAM_SERVER: {"dataType": "String", "value": server},
-                                   PARAM_TAG: {"dataType": "String", "value": ident}},
-                    "documentation": comment}))
-            continue
-
-        p.skipped.append((vname, why))
+        place(vname, tn, comment, vname, imported)
 
     # UDT definitions: create missing types, add missing members, report the rest.
-    for tname in builder.order:
-        js = builder.done[tname][0]
+    for tname in types.order:
+        js = types.done[tname][0]
         if tname not in existing_types:
             p.udt_create.append((tf, js))
             continue
@@ -495,18 +541,18 @@ def plan(data, line, tag_tree, types_tree, options=None):
             if m not in mine:
                 p.udt_stale.append((tname, m))
 
-    for tname, (js, why) in builder.done.items():
+    for tname, (js, why) in types.done.items():
         if js is None:
             p.udt_skipped.append((tname, why))
 
-    p.udt_create.sort(key=lambda item: builder.order.index(item[1]["name"]))
+    p.udt_create.sort(key=lambda item: types.order.index(item[1]["name"]))
 
     # Reports only: duplicates, tags the export no longer exposes, possible renames.
     for ident, paths in sorted(by_identity.items()):
         if len(paths) > 1:
             p.duplicates.append((ident, paths))
     for ident, rec in sorted(list(inst.items()) + list(atoms.items())):
-        if ident not in wanted and not any(ident.startswith(w + "[") for w in wanted):
+        if ident not in wanted:
             p.not_in_plc.append((ident, rec["path"]))
     for ident, path in list(p.not_in_plc):
         rec = inst.get(ident) or atoms.get(ident)

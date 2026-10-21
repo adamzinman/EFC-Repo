@@ -44,11 +44,12 @@ def apply_sim(p, tag_tree, types_tree, line):
         node = next(n for n in types if n.get("name") == tname)
         node.setdefault("tags", []).extend(copy.deepcopy(members))
     for fold, js in p.tag_create:
-        # fold is "<line>/imported": create the folder under the line if needed
-        sub = fold.split("/", 1)[1]
-        if not any(n["name"] == sub for n in tag_tree):
-            tag_tree.append({"name": sub, "tagType": "Folder", "tags": []})
-        nodes = next(n for n in tag_tree if n["name"] == sub)["tags"]
+        # fold is "<line>/imported[/...]": create each folder level under the line if needed
+        nodes = tag_tree
+        for sub in fold.split("/")[1:]:
+            if not any(n["name"] == sub for n in nodes):
+                nodes.append({"name": sub, "tagType": "Folder", "tags": []})
+            nodes = next(n for n in nodes if n["name"] == sub)["tags"]
         nodes.append(copy.deepcopy(js))
     for path, props in p.tag_update:
         name = path.rsplit("/", 1)[-1]
@@ -290,6 +291,121 @@ class EFCLibTests(unittest.TestCase):
 
     def test_dt_maps_to_datetime(self):
         self.assertEqual(X._elem("DT"), "DateTime")
+
+
+GENERIC_XSY = b"""<?xml version="1.0"?>
+<VariablesExchangeFile>
+  <DDTSource DDTName="T_Cell"><structure>
+    <variables name="Open" typeName="BOOL"/>
+    <variables name="Level" typeName="REAL"/>
+  </structure></DDTSource>
+  <DDTSource DDTName="T_Rack"><structure>
+    <variables name="Cells" typeName="ARRAY[1..2] OF T_Cell"/>
+    <variables name="Flags" typeName="ARRAY[1..3] OF BOOL"/>
+    <variables name="Grid" typeName="ARRAY[1..2,1..2] OF INT"/>
+    <variables name="Pairs" typeName="ARRAY[1..2,1..2] OF T_Cell"/>
+  </structure></DDTSource>
+  <DDTSource DDTName="T_Bad"><structure>
+    <variables name="Timer" typeName="TON"/>
+  </structure></DDTSource>
+  <FBSource nameOfFBType="FB_Timer">
+    <inputParameters><variables name="IN" typeName="BOOL"/></inputParameters>
+    <outputParameters><variables name="Q" typeName="BOOL"/></outputParameters>
+  </FBSource>
+  <dataBlock>
+    <variables name="Rack1" typeName="T_Rack"><attribute name="IsVariableHMI" value="-1"/></variables>
+    <variables name="Cell_Arr" typeName="ARRAY[1..2] OF T_Cell"><attribute name="IsVariableHMI" value="-1"/></variables>
+    <variables name="Matrix" typeName="ARRAY[1..2,1..3] OF REAL"><attribute name="IsVariableHMI" value="-1"/></variables>
+    <variables name="Pairs" typeName="ARRAY[1..2,1..2] OF T_Cell"><attribute name="IsVariableHMI" value="-1"/></variables>
+    <variables name="Timer1" typeName="FB_Timer"><attribute name="IsVariableHMI" value="-1"/></variables>
+    <variables name="Bad1" typeName="T_Bad"><attribute name="IsVariableHMI" value="-1"/></variables>
+  </dataBlock>
+</VariablesExchangeFile>"""
+
+
+def _udt(p, name):
+    return next(js for _, js in p.udt_create if js["name"] == name)
+
+
+def _tag(p, folder, name):
+    return next(js for f, js in p.tag_create if f == folder and js["name"] == name)
+
+
+class GenericTests(unittest.TestCase):
+    """Any nesting of DDTs, FBs and arrays is handled by one rule."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.p = X.plan(GENERIC_XSY, "058", [], [], {"opcServer": SERVER})
+
+    def test_array_of_udt_member_becomes_folder_of_instances(self):
+        cells = next(t for t in _udt(self.p, "T_Rack")["tags"] if t["name"] == "Cells")
+        self.assertEqual(cells["tagType"], "Folder")
+        self.assertEqual([c["name"] for c in cells["tags"]], ["_1", "_2"])
+        self.assertEqual(cells["tags"][0]["parameters"]["Tag"]["value"]["binding"], "{Tag}.Cells[1]")
+
+    def test_elementary_array_member_is_one_array_tag(self):
+        flags = next(t for t in _udt(self.p, "T_Rack")["tags"] if t["name"] == "Flags")
+        self.assertEqual(flags["dataType"], "BooleanArray")
+        self.assertEqual(flags["opcItemPath"]["binding"], "{OPC Prefix}{Tag}.{TagName}")
+
+    def test_multidimensional_member_becomes_nested_folders(self):
+        pairs = next(t for t in _udt(self.p, "T_Rack")["tags"] if t["name"] == "Pairs")
+        inner = pairs["tags"][0]
+        self.assertEqual(inner["tagType"], "Folder")
+        self.assertEqual(inner["tags"][1]["parameters"]["Tag"]["value"]["binding"], "{Tag}.Pairs[1][2]")
+
+    def test_multidimensional_elementary_array_is_folder_of_row_arrays(self):
+        grid = next(t for t in _udt(self.p, "T_Rack")["tags"] if t["name"] == "Grid")
+        self.assertEqual(grid["tagType"], "Folder")
+        self.assertEqual([r["dataType"] for r in grid["tags"]], ["Int2Array", "Int2Array"])
+
+    def test_fb_instance_becomes_udt_with_its_public_members(self):
+        fb = _udt(self.p, "FB_Timer")
+        self.assertEqual(sorted(t["name"] for t in fb["tags"]), ["IN", "Q"])
+
+    def test_array_of_udt_top_level_is_folder_of_instances(self):
+        self.assertEqual(_tag(self.p, "058/imported/Cell_Arr", "_2")["parameters"]["Tag"]["value"], "Cell_Arr[2]")
+
+    def test_top_level_multidimensional_elementary_array(self):
+        row = _tag(self.p, "058/imported/Matrix", "_2")
+        self.assertEqual(row["dataType"], "Float4Array")
+        self.assertEqual(row["opcItemPath"], "ns=2;s=0:Matrix[2]")
+
+    def test_top_level_multidimensional_udt_array(self):
+        self.assertEqual(_tag(self.p, "058/imported/Pairs/_2", "_2")["parameters"]["Tag"]["value"], "Pairs[2][2]")
+
+    def test_udt_with_unbuildable_member_is_skipped_with_reason(self):
+        self.assertIn("TON", " ".join(r for _, r in self.p.udt_skipped))
+        self.assertIn("Bad1", [v for v, _ in self.p.skipped])
+        self.assertNotIn("Bad1", [j["name"] for _, j in self.p.tag_create])
+
+    def test_generic_rerun_changes_nothing(self):
+        tags, types = [], []
+        p1 = X.plan(GENERIC_XSY, "058", tags, types, {"opcServer": SERVER})
+        apply_sim(p1, tags, types, "058")
+        p2 = X.plan(GENERIC_XSY, "058", tags, types, {"opcServer": SERVER})
+        self.assertEqual(p2.udt_create, [])
+        self.assertEqual(p2.udt_extend, [])
+        self.assertEqual(p2.tag_create, [])
+        self.assertTrue(p2.exists)
+
+    def test_layout_file_supplies_type_missing_from_export(self):
+        layout = b"""<?xml version="1.0"?><DDTExchangeFile>
+          <DDTSource DDTName="T_Dev"><structure><variables name="CH1" typeName="BOOL"/></structure></DDTSource>
+          </DDTExchangeFile>"""
+        xsy = GENERIC_XSY.replace(b"</dataBlock>", b'<variables name="Dev1" typeName="T_Dev"><attribute name="IsVariableHMI" value="-1"/></variables></dataBlock>')
+        p = X.plan(xsy, "058", [], [], {"opcServer": SERVER, "layouts": [layout]})
+        self.assertEqual([m["name"] for m in _udt(p, "T_Dev")["tags"]], ["CH1"])
+        self.assertIn("Dev1", [j["name"] for _, j in p.tag_create])
+
+    def test_layout_file_cannot_override_efclib(self):
+        layout = b"""<?xml version="1.0"?><DDTExchangeFile>
+          <DDTSource DDTName="T_Motor"><structure><variables name="Other" typeName="BOOL"/></structure></DDTSource>
+          </DDTExchangeFile>"""
+        p = X.plan(MINI_XSY, "058", [], [], {"opcServer": SERVER, "layouts": [layout]})
+        names = [t["name"] for t in _udt(p, "T_Motor")["tags"]]
+        self.assertIn("Mode", names)
 
 
 if __name__ == "__main__":

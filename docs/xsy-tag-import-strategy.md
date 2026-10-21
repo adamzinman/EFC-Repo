@@ -106,6 +106,20 @@ Two conflicts still to decide:
 - **Type names.** The export's `DDT_*` names do not match EFCLib's `T_*` names, except by stem (`Mode`, `Station`).
   A mapping from PLC type to EFCLib type is needed for the PLC program to move onto EFCLib.
 
+**Any UDT, any tag (v3.1).** The planner applies one rule at every level:
+- a DDT or FB becomes a UDT, with each member built by the same rule (nested DDTs become nested UDT instances);
+- an elementary type becomes an atomic tag; a one-dimensional array of an elementary type becomes one array tag
+  (`Int2Array` etc.; `BYTE` maps to `Int2`);
+- an array of anything else becomes a folder with one child per index (`_1`, `_2`, ...). Multi-dimensional arrays
+  become nested folders, one level per dimension (a 2-D array of INT becomes a folder of `Int2Array` row tags);
+- a top-level array's children are instances whose `Tag` is the PLC index path, e.g. `Pairs[2][2]`.
+
+Type sources, in order: EFCLib v1 (always wins), the export itself, then any layout files the user adds. A type
+that is none of these, or a type that needs one of them and cannot be built (for example a standard FB such as
+`TON` inside a DDT), is skipped with the reason. Nothing is written for a partly built variable.
+
+Parameters follow the interface contract: `OPC Prefix`, `OPC Server`, `Tag`.
+
 ## 6. Folders and naming
 
 ```
