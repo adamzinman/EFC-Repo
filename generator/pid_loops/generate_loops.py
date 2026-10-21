@@ -294,7 +294,7 @@ empty = {"pv": "", "sp": ""}
 if not base:
 	return empty
 try:
-	ds = system.tag.queryTagHistory(paths=[base + "/PV", base + "/SP"], rangeMinutes=1, returnSize=40,
+	ds = system.tag.queryTagHistory(paths=[base + "/Val_PV", base + "/Val_SP"], rangeMinutes=1, returnSize=40,
 		aggregationMode="Average", returnFormat="Wide", ignoreBadQuality=True)
 except:
 	return empty
@@ -395,7 +395,7 @@ empty = {"pv": "", "sp": "", "out": ""}
 if not base:
 	return empty
 try:
-	ds = system.tag.queryTagHistory(paths=[base + "/PV", base + "/SP", base + "/OUT"], rangeMinutes=5,
+	ds = system.tag.queryTagHistory(paths=[base + "/Val_PV", base + "/Val_SP", base + "/Out_CV"], rangeMinutes=5,
 		returnSize=120, aggregationMode="Average", returnFormat="Wide", ignoreBadQuality=True)
 except:
 	return empty

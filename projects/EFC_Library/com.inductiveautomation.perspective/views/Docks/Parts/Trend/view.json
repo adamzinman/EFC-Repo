@@ -1,0 +1,563 @@
+{
+  "custom": {
+    "range": 30,
+    "hist": {
+      "d": [
+        "",
+        "",
+        ""
+      ],
+      "lo": "",
+      "hi": ""
+    }
+  },
+  "params": {
+    "tagPath": "",
+    "pens": [],
+    "expanded": false
+  },
+  "propConfig": {
+    "custom.hist": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "{view.custom.range} + toMillis(now(10000)) * 0"
+        },
+        "transforms": [
+          {
+            "type": "script",
+            "code": "\treturn efc.ui.trend(self.view.params.tagPath, list(self.view.params.pens or []), self.view.custom.range, 360, 100)"
+          }
+        ]
+      }
+    },
+    "params.tagPath": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.pens": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.expanded": {
+      "paramDirection": "inout",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 384,
+      "height": 170
+    }
+  },
+  "root": {
+    "type": "ia.container.flex",
+    "version": 0,
+    "meta": {
+      "name": "root"
+    },
+    "position": {
+      "shrink": 0,
+      "grow": 0
+    },
+    "props": {
+      "direction": "column",
+      "alignItems": "stretch",
+      "style": {
+        "classes": "Container/TrendPanel",
+        "gap": "0.185vh"
+      }
+    },
+    "children": [
+      {
+        "type": "ia.container.flex",
+        "version": 0,
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0,
+          "basis": "2.407vh"
+        },
+        "props": {
+          "direction": "row",
+          "alignItems": "center",
+          "style": {
+            "classes": "",
+            "gap": "0.370vh"
+          }
+        },
+        "children": [
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Title"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 1
+            },
+            "props": {
+              "text": "",
+              "style": {
+                "classes": "Text/Subheader Text/Mod/Upper"
+              }
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "'History (' + case({view.custom.range}, 1440, '24 h', 480, '8 h', 60, '1 h', 5, '5 min', '30 min') + ')'"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "ia.container.flex",
+            "version": 0,
+            "meta": {
+              "name": "Ranges"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 0
+            },
+            "props": {
+              "direction": "row",
+              "alignItems": "stretch",
+              "style": {
+                "classes": "",
+                "gap": "0.185vh"
+              }
+            },
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "{view.params.expanded}"
+                  }
+                }
+              }
+            },
+            "children": [
+              {
+                "type": "ia.input.button",
+                "version": 0,
+                "meta": {
+                  "name": "R24h"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.963vh"
+                },
+                "props": {
+                  "text": "24h",
+                  "style": {
+                    "classes": "Button/Small"
+                  }
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "type": "script",
+                      "scope": "G",
+                      "config": {
+                        "script": "\tself.view.custom.range = 1440"
+                      }
+                    }
+                  }
+                },
+                "propConfig": {
+                  "props.style.classes": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.range} = 1440, 'Button/TabActive', 'Button/Tab')"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.input.button",
+                "version": 0,
+                "meta": {
+                  "name": "R8h"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.963vh"
+                },
+                "props": {
+                  "text": "8h",
+                  "style": {
+                    "classes": "Button/Small"
+                  }
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "type": "script",
+                      "scope": "G",
+                      "config": {
+                        "script": "\tself.view.custom.range = 480"
+                      }
+                    }
+                  }
+                },
+                "propConfig": {
+                  "props.style.classes": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.range} = 480, 'Button/TabActive', 'Button/Tab')"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.input.button",
+                "version": 0,
+                "meta": {
+                  "name": "R1h"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.963vh"
+                },
+                "props": {
+                  "text": "1h",
+                  "style": {
+                    "classes": "Button/Small"
+                  }
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "type": "script",
+                      "scope": "G",
+                      "config": {
+                        "script": "\tself.view.custom.range = 60"
+                      }
+                    }
+                  }
+                },
+                "propConfig": {
+                  "props.style.classes": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.range} = 60, 'Button/TabActive', 'Button/Tab')"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.input.button",
+                "version": 0,
+                "meta": {
+                  "name": "R30m"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.963vh"
+                },
+                "props": {
+                  "text": "30m",
+                  "style": {
+                    "classes": "Button/Small"
+                  }
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "type": "script",
+                      "scope": "G",
+                      "config": {
+                        "script": "\tself.view.custom.range = 30"
+                      }
+                    }
+                  }
+                },
+                "propConfig": {
+                  "props.style.classes": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.range} = 30, 'Button/TabActive', 'Button/Tab')"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.input.button",
+                "version": 0,
+                "meta": {
+                  "name": "R5m"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.963vh"
+                },
+                "props": {
+                  "text": "5m",
+                  "style": {
+                    "classes": "Button/Small"
+                  }
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "type": "script",
+                      "scope": "G",
+                      "config": {
+                        "script": "\tself.view.custom.range = 5"
+                      }
+                    }
+                  }
+                },
+                "propConfig": {
+                  "props.style.classes": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.range} = 5, 'Button/TabActive', 'Button/Tab')"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "type": "ia.input.button",
+            "version": 0,
+            "meta": {
+              "name": "Expand"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 0,
+              "basis": "2.963vh"
+            },
+            "props": {
+              "text": "\u2922",
+              "style": {
+                "classes": "Button/Icon"
+              }
+            },
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "type": "script",
+                  "scope": "G",
+                  "config": {
+                    "script": "\tself.view.params.expanded = not self.view.params.expanded"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "ia.shapes.svg",
+        "version": 0,
+        "meta": {
+          "name": "Graph"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 1,
+          "basis": "0px"
+        },
+        "props": {
+          "viewBox": "0 0 360 100",
+          "preserveAspectRatio": "none",
+          "elements": [
+            {
+              "type": "path",
+              "name": "pen0",
+              "d": "",
+              "fill": {
+                "paint": "transparent"
+              },
+              "stroke": {
+                "paint": "#1F1F1F",
+                "width": 1.5
+              }
+            },
+            {
+              "type": "path",
+              "name": "pen1",
+              "d": "",
+              "fill": {
+                "paint": "transparent"
+              },
+              "stroke": {
+                "paint": "#3A6EA5",
+                "width": 1.5
+              }
+            },
+            {
+              "type": "path",
+              "name": "pen2",
+              "d": "",
+              "fill": {
+                "paint": "transparent"
+              },
+              "stroke": {
+                "paint": "#7A7A7A",
+                "width": 1.5
+              }
+            }
+          ],
+          "style": {
+            "classes": "Container/Inset"
+          }
+        },
+        "propConfig": {
+          "props.elements[0].d": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "try({view.custom.hist.d[0]}, '')"
+              }
+            }
+          },
+          "props.elements[1].d": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "try({view.custom.hist.d[1]}, '')"
+              }
+            }
+          },
+          "props.elements[2].d": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "try({view.custom.hist.d[2]}, '')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.container.flex",
+        "version": 0,
+        "meta": {
+          "name": "Axis"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0,
+          "basis": "1.296vh"
+        },
+        "props": {
+          "direction": "row",
+          "alignItems": "stretch",
+          "style": {
+            "classes": ""
+          }
+        },
+        "children": [
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Lo"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 0
+            },
+            "props": {
+              "text": "",
+              "style": {
+                "classes": "Text/Micro"
+              }
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "try({view.custom.hist.lo}, '')"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Span"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 1
+            },
+            "props": {
+              "text": "",
+              "style": {
+                "classes": "Text/Micro Text/Mod/Center"
+              }
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "'-' + case({view.custom.range}, 1440, '24 h', 480, '8 h', 60, '1 h', 5, '5 min', '30 min') + '  ..  now'"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Hi"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 0
+            },
+            "props": {
+              "text": "",
+              "style": {
+                "classes": "Text/Micro"
+              }
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "try({view.custom.hist.hi}, '')"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

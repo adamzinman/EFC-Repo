@@ -8,7 +8,7 @@
     "dw_HeatTransfer": "Docks/HeatTransfer",
     "dw_ProcessValue": "Docks/ProcessValue",
     "dw_Loop": "Docks/Loop",
-    "dw_Station": "Templates/Station/Station_Sidebar",
+    "dw_Station": "Docks/Station",
     "dw_IOCard": "Docks/IOCard",
     "dw_Heater": "Docks/Heater"
   },
@@ -28,7 +28,7 @@
     "Templates/Rotating/Compressor_Centrifugal": "T_Motor|T_VFD",
     "Templates/Rotating/Compressor_Diaphragm": "T_Motor|T_VFD",
     "Templates/Rotating/VFD": "T_VFD",
-    "Templates/HeatTransfer/HX_AirCooled": "T_HeatEx",
+    "Templates/HeatTransfer/HX_AirCooled": "T_Motor",
     "Templates/HeatTransfer/Heater_Electric": "T_Heater",
     "Templates/ProcessValues/PV_RangeBar": "T_AI",
     "Templates/ProcessValues/PV_StatusStrip": "T_AI",
@@ -51,5 +51,10 @@
     "Templates/IO/Faceplates/BMXDDO1602": "native:x80 device DDT",
     "Templates/IO/Faceplates/BMXDDO3202K": "native:x80 device DDT",
     "Templates/IO/Faceplates/BMXDDO6402K": "native:x80 device DDT"
+  },
+  "click_exempt": {
+    "Templates/IO/Faceplates/": "full card faceplate popup, opened from dw_IOCard FULL FACEPLATE",
+    "Templates/IO/RackOverview": "rack container; its SlotTiles open dw_IOCard",
+    "Templates/Station/Station_Fill": "full station panel (screen content, not a symbol)"
   }
 }

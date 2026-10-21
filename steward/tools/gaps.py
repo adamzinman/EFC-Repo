@@ -29,12 +29,14 @@ for item, t in tm["items"].items():
     if gap: n["gaptype"].add(tname)
     txt = open(f).read() if f else ""
     bound = native or (bool(f) and not gap and any(re.search(rf"\b{x}\b", txt) for x in tname.split("|")))
-    wired = "efc.ui.openDynamic" in txt  # embedded-view strategy (decision 24)
+    ex = next((r for k, r in tm.get("click_exempt", {}).items() if item.startswith(k)), None)
+    wired = ex is not None or "efc.ui.openDynamic" in txt  # embedded-view strategy (decision 24)
+    bound = bound or (ex is not None and "{0}/" in txt)   # exempt panels bind members through tagPath only
     d = dock_for(item)
     dexist = vfile(tm["docks"][d]) is not None
     p = prev(item)
     if not f: kind += " (NEW)"; n["new"] += 1
-    rows.append(f"| {item} | {kind} | {('native (x80 device DDT)' if native else 'yes') if bound else ('GAP ' + tname if gap else 'no -> ' + tname)} | {'yes' if wired else 'no'} | {d}: {'yes' if dexist else 'no'} | {'yes' if p else 'no'} |")
+    rows.append(f"| {item} | {kind} | {('native (x80 device DDT)' if native else 'yes') if bound else ('GAP ' + tname if gap else 'no -> ' + tname)} | {('n/a: ' + ex) if ex else ('yes' if wired else 'no')} | {d}: {'yes' if dexist else 'no'} | {'yes' if p else 'no'} |")
     n["items"] += 1; n["type"] += not bound; n["click"] += not wired; n["dock"] += not dexist; n["preview"] += not p
 for d, path in tm["docks"].items():
     e, p = vfile(path) is not None, prev(path)
