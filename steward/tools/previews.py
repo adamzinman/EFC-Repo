@@ -221,7 +221,12 @@ def role(lbl):
     return f'<span class="role" title="visible to {lbl} and higher">{lbl}+</span>'
 
 
+EXPAND = '<button data-c="Button/Icon" class="xp" title="expand graph (about half the screen)">&#x2922;</button>'
+
+
 def grp(title, body, note=""):
+    if title.startswith("HISTORY"):
+        note = note + EXPAND
     return f'<div data-c="Container/GroupBox" class="grp"><div class="gh"><span data-c="Text/Subheader">{title}</span>{note}</div>{body}</div>'
 
 
@@ -241,7 +246,7 @@ def history_strip():
     bar = "".join(f'<div style="flex:{w};background:{col[k]}" title="{k}"></div>' for k, w in segs)
     ev = "".join(f'<div data-c="Table/{"Row" if i % 2 else "RowAlt"}" class="ev"><span>{t}</span><span>{e}</span></div>'
                  for i, (t, e) in enumerate([("10:42:07", "CLOSED"), ("10:41:59", "Cmd Close (op: jsmith)"), ("09:15:30", "OPEN"), ("09:15:22", "Cmd Open (auto)")]))
-    return (f'<div class="strip">{bar}</div><div class="axis"><span>-8 h</span><span>-4 h</span><span>now</span></div>'
+    return (f'<div class="strip">{bar}</div><div class="axis"><span>-30 min</span><span>-15 min</span><span>now</span></div>'
             f'<div class="legend2"><i style="background:#4D4D4D"></i>open <i style="background:#C4C4C4"></i>closed <i style="background:#D50000"></i>fault</div>{ev}')
 
 
@@ -267,7 +272,7 @@ def valve_discrete():
                                    for c, t, s in [("Alarm/High/Fill", "Fail to close", "active, unacked"), ("Alarm/Medium/Fill", "Interlock trip", "active"),
                                                    ("Indicator/LED/Off", "Fail to open", ""), ("Indicator/LED/Off", "Position conflict", ""), ("Indicator/LED/Off", "Uncommanded move", "")])
                  + '<div class="row"><button data-c="Button/Small">ACK</button></div>')
-    hist = grp("HISTORY (8 h)", history_strip())
+    hist = grp("HISTORY (30 min)", history_strip())
     maint = details("MAINTENANCE", '<div class="kv"><span data-c="Text/Label">CYCLES</span><span data-c="Text/Value">12 408</span>'
                 '<span data-c="Text/Label">HRS SINCE MAINT</span><span data-c="Text/Value">1 102</span>'
                 f'<span data-c="Text/Label">MAINT DUE</span><span data-c="Text/Value">no</span></div><div class="row"><button data-c="Button/Small">RESET MAINT</button>{role("Maint")}<button data-c="Button/Small">SIMULATE</button>{role("Maint")}</div>')
@@ -323,7 +328,7 @@ def trend(series, legend, strip=None):
         st = '<div class="strip" style="height:8px">' + "".join(f'<div style="flex:{w};background:{col[k]}"></div>' for k, w in strip) + "</div>"
     lg = '<div class="legend2">' + "".join(f'<i style="background:{c}"></i>{t} ' for t, c in legend) + "</div>"
     return (f'<svg viewBox="0 0 {W} {H}" width="100%" height="{H}" style="border:1px solid #9E9E9E;background:#FAFAFA;display:block">{grid}{paths}</svg>'
-            f'{st}<div class="axis"><span>-8 h</span><span>-4 h</span><span>now</span></div>{lg}')
+            f'{st}<div class="axis"><span>-30 min</span><span>-15 min</span><span>now</span></div>{lg}')
 
 
 def kv(*pairs):
@@ -353,7 +358,7 @@ def valve_analog():
         + grp("INTERLOCKS", cond("ok", "Reactor pressure not HH") + cond("byp", "Agitator running")
               + '<div data-c="Text/Caption">On trip the valve goes to 0 % (Cfg_IntlkPos)</div>', '<span data-c="Indicator/InterlockBadge" class="mini">I</span>')
         + alarm_grp([("Indicator/LED/Off", "Position deviation", ""), ("Indicator/LED/Off", "Feedback bad", ""), ("Indicator/LED/Off", "Interlock trip", "")])
-        + grp("HISTORY (8 h)", trend([(dem, "#1F4E99", True), (pos, "#262626", False)], [("demand", "#1F4E99"), ("position", "#262626")]))
+        + grp("HISTORY (30 min)", trend([(dem, "#1F4E99", True), (pos, "#262626", False)], [("demand", "#1F4E99"), ("position", "#262626")]))
         + grp("MAINTENANCE", kv(("TRAVEL", "18 240 %"), ("REVERSALS", "9 812")))
         + details("CONFIGURATION", "fail position 0 % &middot; interlock position 0 % &middot; output 0-100 % &middot; rate 10 %/s up / 10 %/s down &middot; tight shut-off 2 % &middot; direct acting")
     ) + "</div>"
@@ -393,7 +398,7 @@ def motor_body(vfd=False):
     intl = grp("INTERLOCKS", cond("ok", "Discharge pressure not HH") + cond("byp", "Tank T-200 not LL"), '<span data-c="Indicator/InterlockBadge" class="mini">I</span>')
     cfgtxt = ("speed 0-50 Hz &middot; deviation 2 Hz / 10 s &middot; reversible: no &middot; " if vfd else "") + "auto restart: no &middot; restart delay 5 s &middot; rated 60 A &middot; max 6 starts/h &middot; feedback time 3 s"
     tagdesc = ("P-201", "Circulation pump (VFD)") if vfd else ("P-101", "Transfer pump")
-    return hdr(*tagdesc) + '<div class="body">' + state + fb + restart + mode_row() + cmd + drive + perm + intl + alarm_grp(rows) + grp("HISTORY (8 h)", hist) + maint + details("CONFIGURATION", cfgtxt) + "</div>"
+    return hdr(*tagdesc) + '<div class="body">' + state + fb + restart + mode_row() + cmd + drive + perm + intl + alarm_grp(rows) + grp("HISTORY (30 min)", hist) + maint + details("CONFIGURATION", cfgtxt) + "</div>"
 
 
 def bypass_popup():
@@ -438,11 +443,11 @@ def process_value():
               + '<div data-c="Text/Caption">Blue band = ideal range (T_KPI only)</div>')
     lims = grp("ALARM LIMITS", lim_table([("HH", "90.0", True, "High", ""), ("H", "75.0", True, "Medium", ""), ("L", "15.0", True, "Medium", ""),
                                          ("LL", "5.0", True, "High", ""), ("ROC", "10.0/min", False, "Low", "")])
-               + '<div class="row"><button data-c="Button/Small">APPLY</button>' + role("Sup") + '<span data-c="Text/Caption">limit edits are logged</span></div>')
+               + '<div class="row"><button data-c="Button/Small">APPLY</button>' + role("Eng") + '<span data-c="Text/Caption">limit changes go to the audit log</span></div>')
     alarms = alarm_grp([("Indicator/LED/Off", "PV high-high", ""), ("Indicator/LED/Off", "PV high", ""), ("Indicator/LED/Off", "PV low", ""),
                         ("Indicator/LED/Off", "PV low-low", ""), ("Indicator/LED/Off", "Rate of change", ""), ("Indicator/LED/Off", "Bad PV / channel fault", "")])
-    alarms = alarms.replace('<button data-c="Button/Small">ACK</button>', '<button data-c="Button/Small">ACK</button><button data-c="Button/Small">SHELVE</button>' + role("Sup"))
-    hist = grp("HISTORY (8 h)", trend([(pv, "#262626", False), ([75] * 40, "#E68A00", True), ([15] * 40, "#E68A00", True)], [("PV", "#262626"), ("H / L limits", "#E68A00")]))
+    alarms = alarms.replace('<button data-c="Button/Small">ACK</button>', '<button data-c="Button/Small">ACK</button><button data-c="Button/Small">SHELVE</button>' + role("Sup") + '<span data-c="Text/Caption">shelving is audit-logged</span>')
+    hist = grp("HISTORY (30 min)", trend([(pv, "#262626", False), ([75] * 40, "#E68A00", True), ([15] * 40, "#E68A00", True)], [("PV", "#262626"), ("H / L limits", "#E68A00")]))
     sim = '<div class="row"><button data-c="Button/Small">SIMULATE</button>' + role("Maint") + '<span data-c="Input/Setpoint" class="num">42.7</span></div>'
     cfg = details("CONFIGURATION", "EU 0-100 kPa &middot; raw 0-32000 &middot; filter 1.0 s &middot; square root: no &middot; low cut-off 0 % &middot; bad below -5 % / above 105 % &middot; on bad: hold last &middot; substitute 0.0"
                   + '<div data-c="Text/Caption">Editable by Engineer+</div>')
@@ -465,10 +470,10 @@ def heat_exchanger():
                + bar("CLEAN", "82 %", 82))
     lims = grp("ALARM LIMITS", lim_table([("Fouling (clean <)", "70 %", True, "Low", ""), ("Hot DP >", "0.80 bar", True, "Medium", ""),
                                          ("Cold DP >", "0.80 bar", True, "Medium", ""), ("Heat balance >", "10 %", True, "Low", ""), ("Hot out T >", "50 &#176;C", True, "Medium", "")])
-               + '<div class="row"><button data-c="Button/Small">APPLY</button>' + role("Sup") + "</div>")
+               + '<div class="row"><button data-c="Button/Small">APPLY</button>' + role("Eng") + '<span data-c="Text/Caption">limit changes go to the audit log</span></div>')
     alarms = alarm_grp([("Indicator/LED/Off", "Fouling", ""), ("Indicator/LED/Off", "Hot side DP high", ""), ("Indicator/LED/Off", "Cold side DP high", ""),
                         ("Indicator/LED/Off", "Heat balance", ""), ("Indicator/LED/Off", "Hot outlet temperature high", "")])
-    hist = grp("HISTORY (8 h)", trend([(hot_in, "#B71C1C", False), (hot_out, "#E57373", False), (wave(40, 82, 4, 2.0), "#1F4E99", True)],
+    hist = grp("HISTORY (30 min)", trend([(hot_in, "#B71C1C", False), (hot_out, "#E57373", False), (wave(40, 82, 4, 2.0), "#1F4E99", True)],
                                       [("hot in", "#B71C1C"), ("hot out", "#E57373"), ("cleanliness %", "#1F4E99")]))
     rel = '<div class="row"><span data-c="Text/Label" class="lbl" style="width:auto">RELATED</span><button data-c="Button/Default" style="width:auto;padding:0 8px">FAN P-101 &#x25B8;</button><span data-c="Text/Caption">opens dw_Rotating</span></div>'
     cfg = details("CONFIGURATION", "Cp hot 4.18 / cold 4.18 kJ/kg K &middot; design UA 7.8 kW/K &middot; min flow 1.0 m&#179;/h &middot; calc filter 30 s"
@@ -492,11 +497,82 @@ def loop():
     intl = grp("INTERLOCKS", cond("ok", "Heater E-401 available") + '<div data-c="Text/Caption">On trip the output goes to 0 % (Cfg_IntlkCV)</div>',
                '<span data-c="Indicator/InterlockBadge" class="mini">I</span>')
     alarms = alarm_grp([("Indicator/LED/Off", "Deviation high", ""), ("Indicator/LED/Off", "Deviation low", ""), ("Indicator/LED/Off", "PV bad", "")])
-    hist = grp("HISTORY (8 h)", trend([(pv, "#262626", False), (sp, "#1F4E99", True), (cv, "#8D6E63", False)], [("PV", "#262626"), ("SP", "#1F4E99"), ("CV", "#8D6E63")]))
+    hist = grp("HISTORY (30 min)", trend([(pv, "#262626", False), (sp, "#1F4E99", True), (cv, "#8D6E63", False)], [("PV", "#262626"), ("SP", "#1F4E99"), ("CV", "#8D6E63")]))
     tune = details("TUNING", kv(("KP", "1.20"), ("TI", "45 s"), ("TD", "0 s"), ("ACTION", "reverse"), ("DEADBAND", "0.0"), ("FF GAIN", "0.0"),
                                 ("SP LIMITS", "50-250 &#176;F"), ("CV LIMITS", "0-100 %"), ("SP RATE", "5 &#176;F/min"), ("CV RATE", "10 %/s")).replace('class="kv"', 'class="kv kv4"')
                    + '<div class="row"><button data-c="Button/Small">APPLY</button>' + role("Eng") + '<span data-c="Text/Caption">replaces the LoopConfig popup</span></div>')
     return hdr("TIC-101", "Reactor jacket temperature") + '<div class="body">' + big + bars + mode + intl + alarms + hist + tune + "</div>"
+
+
+def cfg_form(rows, who="Eng"):
+    h = '<div class="cf">'
+    for lbl, val, unit in rows:
+        if val in ("yes", "no"):
+            inp = f'<span data-c="Input/Check" class="chk">{"&#x2611;" if val == "yes" else "&#x2610;"}</span>'
+        elif isinstance(val, list):
+            inp = f'<span data-c="Input/Dropdown" class="dd">{val[0]} &#x25BE;</span>'
+        else:
+            inp = f'<span data-c="Input/Setpoint" class="num">{val}</span>'
+        h += f'<span data-c="Text/Label">{lbl}</span>{inp}<span data-c="Text/Units">{unit}</span>'
+    return (h + '</div><div class="row"><button data-c="Button/Small">APPLY</button>' + role(who)
+            + '<button data-c="Button/Small">REVERT</button><span data-c="Text/Caption">changes go to the audit log (old -> new, user, time)</span></div>')
+
+
+CFG = {
+    "Docks/HeatTransfer": ("CONFIGURATION", [("Hot side Cp", "4.18", "kJ/kg K"), ("Cold side Cp", "4.18", "kJ/kg K"), ("Counter-flow", "yes", ""),
+                                             ("Design UA", "7.80", "kW/K"), ("Min flow for calc", "1.0", "m&#179;/h"), ("Calc filter", "30", "s")]),
+    "Docks/ProcessValue": ("CONFIGURATION", [("EU min", "0.0", "kPa"), ("EU max", "100.0", "kPa"), ("Units", "kPa", ""), ("Raw min", "0", "counts"), ("Raw max", "32000", "counts"),
+                                             ("Filter time constant", "1.0", "s"), ("Square-root extract", "no", ""), ("Low cut-off", "0.0", "%"),
+                                             ("Bad below", "-5.0", "%"), ("Bad above", "105.0", "%"), ("On bad PV", ["Hold last", "Substitute", "Use raw"], ""), ("Substitute value", "0.0", "kPa")]),
+    "Docks/Loop": ("TUNING", [("Gain Kp", "1.20", ""), ("Integral Ti", "45.0", "s"), ("Derivative Td", "0.0", "s"), ("Action", ["Reverse", "Direct"], ""),
+                              ("Deadband", "0.0", "&#176;F"), ("Feedforward gain", "0.0", ""), ("PV range", "0 - 300", "&#176;F"), ("SP low / high limit", "50 / 250", "&#176;F"),
+                              ("CV low / high limit", "0 / 100", "%"), ("SP rate limit", "5.0", "&#176;F/min"), ("CV rate limit", "10.0", "%/s"), ("Interlock CV", "0.0", "%"),
+                              ("PV tracking in MAN", "yes", ""), ("On bad PV", ["Hold CV", "Go to MAN", "Interlock CV"], ""), ("SP from program", "no", "")]),
+    "Docks/Heater": ("CONFIGURATION", [("Control type", ["SSR, time-proportioned", "On/off contactor", "SCR, analog reference"], ""), ("Cycle time", "4.0", "s"),
+                                       ("Minimum pulse", "100", "ms"), ("Power min / max", "0 / 100", "%"), ("Power ramp", "0.0", "%/s"), ("Rated power", "12.0", "kW"),
+                                       ("Rated current", "17.4", "A"), ("Load-failure below", "80", "% of expected"), ("Shorted if off and above", "1.0", "A"), ("Feedback time", "3.0", "s")]),
+}
+
+
+def heater():
+    duty = wave(40, 62, 12, 0.7)
+    cyc = "".join(f'<div style="flex:{w};background:{"#4D4D4D" if on else "#E0E0E0"}"></div>' for on, w in ((1, 62), (0, 38), (1, 62), (0, 38), (1, 62), (0, 38)))
+    return hdr("EH-301", "Jacket heater zone 1") + '<div class="body">' + (
+        '<div class="row st"><span data-c="State/Running" class="big">ON</span><span data-c="Indicator/Badge">HEATING</span><span data-c="Indicator/Badge">NE107 OK</span>'
+        '<span data-c="Indicator/Badge" class="dim">SHORTED</span><span data-c="Indicator/Badge" class="dim">LOAD FAIL</span><span data-c="Mode/Local" class="dim">LOCAL</span></div>'
+        + leds(("On", "Contactor"), ("On", "High limit OK"), ("On", "Supply OK"), ("Off", "SCR alarm"))
+        + mode_row()
+        + '<div class="row"><span data-c="Text/Label" class="lbl">CMD</span><button data-c="Button/Default Button/Toggle/On">ON</button><button data-c="Button/Default">OFF</button><button data-c="Button/Default">RESET</button></div>'
+        + grp("POWER", bar("DEMAND", "62.0 %", 62, entry=True) + bar("APPLIED", "62.0 %", 62)
+              + '<div data-c="Text/Caption">SSR, 4 s cycle: ON 2.5 s / OFF 1.5 s</div><div class="strip" style="height:10px">' + cyc + '</div>'
+              + kv(("POWER", "7.4 kW"), ("CURRENT", "10.8 A"), ("LOAD", "100 % of expected"), ("ENERGY", "3 410 kWh")).replace('class="kv"', 'class="kv kv4"')
+              + '<div data-c="Text/Caption">Demand entry in MAN (SSR and SCR types); on/off type shows ON/OFF only</div>')
+        + grp("PERMISSIVES", cond("ok", "Circulation pump P-301 running"), '<span data-c="Indicator/PermissiveBadge" class="mini">P</span>')
+        + grp("INTERLOCKS", cond("ok", "Jacket temperature not HH") + cond("ok", "Flow switch FS-301 made", byp=True), '<span data-c="Indicator/InterlockBadge" class="mini">I</span>')
+        + alarm_grp([("Indicator/LED/Off", "Excess-temperature limit", ""), ("Indicator/LED/Off", "SSR / SCR shorted", ""), ("Indicator/LED/Off", "Partial load failure", ""),
+                     ("Indicator/LED/Off", "Fail to switch on", ""), ("Indicator/LED/Off", "Fail to switch off", ""), ("Indicator/LED/Off", "SCR controller alarm", ""), ("Indicator/LED/Off", "Interlock trip", "")])
+        + grp("HISTORY (30 min)", trend([(duty, "#262626", False), ([d * 0.95 for d in duty], "#8D6E63", False)], [("applied %", "#262626"), ("current % of rated", "#8D6E63")]))
+        + details("MAINTENANCE", kv(("ON HOURS", "2 940"), ("SWITCH-ONS", "1 204")))
+        + details("CONFIGURATION", "control type SSR &middot; cycle 4 s &middot; rated 12 kW / 17.4 A")
+    ) + "</div>"
+
+
+def trend_expanded():
+    pv, cv = wave(90, 58, 6, 0.4), wave(90, 46, 9, 2.2)
+    W, H = 900, 360
+    def path(pts, c, dash=False):
+        n = len(pts) - 1
+        d = " ".join(f"{'M' if i == 0 else 'L'}{i * W / n:.1f},{H - p * H / 100:.1f}" for i, p in enumerate(pts))
+        return f'<path d="{d}" fill="none" stroke="{c}" stroke-width="2"{" stroke-dasharray=\"6 4\"" if dash else ""}/>'
+    grid = "".join(f'<line x1="0" x2="{W}" y1="{y}" y2="{y}" stroke="#D0D0D0"/>' for y in range(45, H, 45)) + "".join(f'<line y1="0" y2="{H}" x1="{x}" x2="{x}" stroke="#E0E0E0"/>' for x in range(150, W, 150))
+    rng = "".join(f'<button data-c="Button/Small{" Button/Toggle/On" if t == "30 m" else ""}">{t}</button>' for t in ("5 m", "30 m", "1 h", "8 h", "24 h"))
+    return (hdr("TIC-101 &middot; HISTORY", "Reactor jacket temperature").replace("&#x2715;", "&#x2921;").replace("close: back to the screen default dock", "collapse back into the dock")
+            + f'<div class="body"><div class="row"><span data-c="Text/Label">RANGE</span>{rng}<span style="flex:1"></span><button data-c="Button/Small">&#x23F8; PAUSE</button>'
+            '<button data-c="Button/Small">&#x21BB; LIVE</button></div>'
+            f'<svg viewBox="0 0 {W} {H}" width="100%" height="{H}" style="border:1px solid #9E9E9E;background:#FAFAFA">{grid}{path(pv, "#262626")}{path([60] * 90, "#1F4E99", True)}{path(cv, "#8D6E63")}</svg>'
+            '<div class="axis"><span>10:12</span><span>10:17</span><span>10:22</span><span>10:27</span><span>10:32</span><span>10:37</span><span>10:42</span></div>'
+            '<div class="legend2"><i style="background:#262626"></i>PV 118.4 &#176;F <i style="background:#1F4E99"></i>SP 120.0 &#176;F <i style="background:#8D6E63"></i>CV 46.0 %'
+            ' &nbsp; &middot; hover for values, drag to zoom, double-click to reset</div></div>')
 
 
 DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:border-box}.dock2 .hdr{display:flex;align-items:center;gap:6px;padding:6px 8px}
@@ -509,7 +585,7 @@ DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:b
 .strip{display:flex;height:12px;border:1px solid #7F7F7F}.axis{display:flex;justify-content:space-between;font-size:9px;color:#616161}
 .legend2{font-size:9px;color:#424242}.legend2 i{display:inline-block;width:8px;height:8px;margin:0 2px 0 6px}.ev{display:flex;justify-content:space-between;font-size:11px;padding:1px 3px}
 .dock2 details summary{cursor:pointer}.dock2 button[data-c~="Button/Default"]{width:72px;height:30px;padding:0;justify-content:center;text-align:center}.dock2 button[data-c~="Button/Small"]{min-width:64px;height:22px;padding:0 6px;justify-content:center}.dock2 button.preset{min-width:0;width:38px}.dock2 button.gated{outline:1.5px dashed #5E35B1;outline-offset:1px}.barrow{display:flex;align-items:center;gap:5px;margin:2px 0}.bl{width:64px}
-.kv4{grid-template-columns:auto 1fr auto 1fr}.pvbig{font-size:26px !important;font-weight:700 !important;margin:0 4px;line-height:1.1}.lt{display:grid;grid-template-columns:1.4fr 1fr .4fr .8fr .8fr;gap:2px 6px;align-items:center}.lt .num{min-width:0}.rb{margin:16px 0 4px}.rbt{position:relative;height:14px}.mk{position:absolute;top:-4px;bottom:-4px;width:2px;background:#E68A00}.mk span{position:absolute;top:-12px;left:-6px;font-size:9px;color:#595959}.pvsp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}.pvsp>div{display:flex;flex-direction:column;align-items:flex-start}.trk{flex:1;height:10px;position:relative}.num{min-width:62px;text-align:right}"""
+.kv4{grid-template-columns:auto 1fr auto 1fr}.xp{width:22px;height:22px;padding:0;margin-left:4px}.cf{display:grid;grid-template-columns:1.3fr 1.3fr .7fr;gap:4px 6px;align-items:center}.cf .num{min-width:0;text-align:right}.dd{border:1px solid #9E9E9E;background:#fff;padding:1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chk{font-size:16px}.pvbig{font-size:26px !important;font-weight:700 !important;margin:0 4px;line-height:1.1}.lt{display:grid;grid-template-columns:1.4fr 1fr .4fr .8fr .8fr;gap:2px 6px;align-items:center}.lt .num{min-width:0}.rb{margin:16px 0 4px}.rbt{position:relative;height:14px}.mk{position:absolute;top:-4px;bottom:-4px;width:2px;background:#E68A00}.mk span{position:absolute;top:-12px;left:-6px;font-size:9px;color:#595959}.pvsp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}.pvsp>div{display:flex;flex-direction:column;align-items:flex-start}.trk{flex:1;height:10px;position:relative}.num{min-width:62px;text-align:right}"""
 
 
 DOCKS = {
@@ -517,6 +593,7 @@ DOCKS = {
     "dw_ValveAnalog": ("T_CValve", "valve_analog"),
     "dw_Rotating": ("T_Motor", "motor"),
     "dw_VFD": ("T_VFD", "vfd"),
+    "dw_Heater": ("T_Heater", "heater"),
     "dw_HeatTransfer": ("T_HeatEx", "heat_exchanger"),
     "dw_ProcessValue": ("T_AI / T_KPI", "process_value"),
     "dw_Loop": ("T_PID", "loop"),
@@ -527,7 +604,7 @@ DOCKS = {
 def dock_card(did, path, ttype, parts):
     import re as _re
     gate = lambda h: _re.sub(r'<button ([^>]*)>([^<]*)</button><span class="role" title="([^"]*)">[^<]*</span>', r'<button \1 class="gated" title="\3">\2</button>', h)
-    REV2 = {"valve_discrete": valve_discrete, "valve_analog": valve_analog, "motor": motor_body, "vfd": lambda: motor_body(True), "heat_exchanger": heat_exchanger, "process_value": process_value, "loop": loop}
+    REV2 = {"valve_discrete": valve_discrete, "valve_analog": valve_analog, "motor": motor_body, "vfd": lambda: motor_body(True), "heat_exchanger": heat_exchanger, "process_value": process_value, "loop": loop, "heater": heater}
     if isinstance(parts, str) and parts in REV2:  # rev 2 designs
         inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(REV2[parts]())}</div>'
         return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 - design proposal</b> &middot; dashed purple outline = role-gated (hover for role)", maxh=600)
@@ -567,6 +644,16 @@ if __name__ == "__main__":
             frag = template_card(path, "gap:T_Station").replace("click symbol: open dock", "existing dock view; planned: move to <code>Docks/Station</code>, resize 300 to 400 px wide")
         open(f"{OUT}/{slug(path)}.html", "w").write(frag)
         groups.setdefault("Docks (dynamic windows)", []).append(frag)
+    for path, (title, rows) in CFG.items():
+        body = f'<div class="body">{grp(title + " (expanded)", cfg_form(rows))}</div>'
+        f2 = frame(path + " - " + title.lower() + " expanded", f'<div data-c="Container/Faceplate" class="dock2">{body}</div>', 400, 110 + 27 * len(rows) + 22 * sum(isinstance(r[1], list) for r in rows), "review", path.split("/")[1],
+                   "<br>section shown open; collapsed by default", maxh=600)
+        open(f"{OUT}/{slug(path)}_{title.lower()}_expanded.html", "w").write(f2)
+        groups.setdefault("Expanded sections", []).append(f2)
+    f3 = frame("Docks/Parts/TrendExpanded", f'<div data-c="Container/Popup" class="dock2">{trend_expanded()}</div>', 960, 540, "any", "popup",
+               "<br><b>NEW</b> &middot; &#x2922; on any dock graph; about half the screen (960 x 540 at 1080p); default range 30 min", cw=480, maxh=600)
+    open(f"{OUT}/Docks_Parts_TrendExpanded.html", "w").write(f3)
+    groups.setdefault("Expanded sections", []).append(f3)
     fr = frame("Docks/Parts/BypassConfirm", f'<div data-c="Container/Popup" class="dock2">{bypass_popup()}</div>', 400, 330, "T_Intlk", "popup",
                "<br><b>NEW - design proposal</b> &middot; opened by every Bypass button (Supervisor+)", maxh=600)
     open(f"{OUT}/Docks_Parts_BypassConfirm.html", "w").write(fr)

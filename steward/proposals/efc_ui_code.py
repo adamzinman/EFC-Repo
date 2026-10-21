@@ -7,7 +7,7 @@
 
 # Every library dynamic window. All are right-side docks configured in the HMI project's
 # page configuration; only one is open at a time.
-DOCKS = ['dw_ValveDiscrete', 'dw_ValveAnalog', 'dw_Rotating', 'dw_VFD', 'dw_HeatTransfer',
+DOCKS = ['dw_ValveDiscrete', 'dw_ValveAnalog', 'dw_Rotating', 'dw_VFD', 'dw_HeatTransfer', 'dw_Heater',
          'dw_ProcessValue', 'dw_Loop', 'dw_Station', 'dw_IOCard']
 
 # Two-state devices that accept a double-tap command: type -> (state member, cmd if on, cmd if off)

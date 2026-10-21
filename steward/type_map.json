@@ -9,7 +9,8 @@
     "dw_ProcessValue": "Docks/ProcessValue",
     "dw_Loop": "Docks/Loop",
     "dw_Station": "Templates/Station/Station_Sidebar",
-    "dw_IOCard": "Docks/IOCard"
+    "dw_IOCard": "Docks/IOCard",
+    "dw_Heater": "Docks/Heater"
   },
   "items": {
     "Templates/Valves/Valve_Solenoid": "T_DValve",
@@ -28,7 +29,7 @@
     "Templates/Rotating/Compressor_Diaphragm": "T_Motor|T_VFD",
     "Templates/Rotating/VFD": "T_VFD",
     "Templates/HeatTransfer/HX_AirCooled": "T_HeatEx",
-    "Templates/HeatTransfer/Heater_Electric": "gap:T_Heater",
+    "Templates/HeatTransfer/Heater_Electric": "T_Heater",
     "Templates/ProcessValues/PV_RangeBar": "T_AI",
     "Templates/ProcessValues/PV_StatusStrip": "T_AI",
     "EFC/AnalogIndicator/A_RangeBar": "T_KPI",

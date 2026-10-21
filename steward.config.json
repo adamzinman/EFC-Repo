@@ -18,7 +18,8 @@
     "EFC/AnalogIndicator": "dw_ProcessValue",
     "Templates/Loops": "dw_Loop",
     "Templates/Station": "dw_Station",
-    "Templates/IO": "dw_IOCard"
+    "Templates/IO": "dw_IOCard",
+    "Templates/HeatTransfer/Heater_Electric": "dw_Heater"
   },
   "rules": {
     "require_dock": true,

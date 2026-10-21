@@ -355,6 +355,70 @@ T_VFD,Control module,MonAnaDrv,Alm_DrvWarn,T_Alarm,,Drive warning
 T_VFD,Control module,MonAnaDrv,Alm_CommFail,T_Alarm,,Drive comms failure
 T_VFD,Control module,MonAnaDrv,Alm_SpdDev,T_Alarm,,Speed deviation
 T_VFD,Control module,MonAnaDrv,Run,T_RunTime,,Run hours / starts
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_Desc,STRING[40],,Description shown on HMI faceplate
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Mode,T_Mode,,Mode block
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_ContactorFbk,BOOL,,Main / isolating contactor closed (aux contact)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_Remote,BOOL,,Local/Remote switch in REMOTE
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_AvailOK,BOOL,,"Supply available: breaker closed, control power OK"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_HiLimitOK,BOOL,,"Independent excess-temperature limit healthy (hardwired, latching; PLC monitors only)"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_IntlkOK,BOOL,,Interlocks healthy (TRUE = may heat; FALSE trips)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_PermOK,BOOL,,Permissives healthy (TRUE = may switch on)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_IOFault,BOOL,,I/O channel or comms fault
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_Current,REAL,,"Heater current from CT or SCR controller (A), optional"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Inp_ScrAlarm,BOOL,,SCR controller alarm relay (fuse / partial load failure / overtemp)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_CtrlType,INT,0,"0 = on/off (contactor), 1 = time-proportioned SSR on a PLC output, 2 = SCR power controller (analog reference)"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_CycleTime,TIME,T#4S,Time-proportioning cycle (type 1): output is ON for Val_Duty % of each cycle
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_MinPulse,TIME,T#100MS,Shortest ON or OFF pulse (type 1); shorter pulses are skipped
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_ScrFiring,INT,0,"SCR firing mode set in the controller (type 2, documentation): 0 = burst / zero-cross, 1 = single-cycle, 2 = phase angle"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_PwrMin,REAL,0.0,Minimum power demand when on (%)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_PwrMax,REAL,100.0,Maximum power demand (%)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_PwrRate,REAL,0.0,"Power ramp limit (%/s), 0 = none (soft start for cold elements)"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_RatedKW,REAL,0.0,Heater rated power at 100 % (kW)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_RatedAmps,REAL,0.0,Heater current at 100 % (A); 0 = no current monitoring
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_LoadFailPct,REAL,80.0,Partial load failure: current below this % of expected while heating
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_LeakAmps,REAL,1.0,Current above this while the output is off = SSR / SCR shorted (A)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cfg_FbkTime,TIME,T#3S,Time allowed for contactor feedback and current to settle
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cmd_On,BOOL,,Operator on (one-shot)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cmd_Off,BOOL,,Operator off (one-shot)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cmd_Reset,BOOL,,Fault / trip reset (one-shot)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Cmd_Pwr,REAL,,"Operator power demand (%), Manual mode, types 1 and 2"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Prog_On,BOOL,,Program / sequence on request (Auto mode)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Prog_Off,BOOL,,Program / sequence off request (Auto mode)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Prog_Pwr,REAL,,"Program power demand (%), Auto mode, e.g. a T_PID Out_CV"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Out_Contactor,BOOL,,"Main / isolating contactor (opened on trip, high limit or shorted SSR)"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Out_SSR,BOOL,,Time-proportioned output to the SSR (type 1)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Out_PwrRef,REAL,,"Power reference to the SCR controller, 0-100 % (type 2)"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sim_En,BOOL,,"Simulation: ignore field I/O, logic generates feedback"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_On,BOOL,,On: contactor closed and enabled to heat
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_Off,BOOL,,Off
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_Heating,BOOL,,Output conducting now (on/off: on; SSR: inside the ON part of the cycle; SCR: reference > 0)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_Avail,BOOL,,Available to Auto/program control
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_Intlk,BOOL,,Interlock not healthy
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_NotPerm,BOOL,,Permissive not healthy
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_Local,BOOL,,In local control
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_HiLimit,BOOL,,Excess-temperature limit tripped (reset at the limit device)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_LoadFail,BOOL,,"Partial load failure (element, fuse or phase lost)"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_Shorted,BOOL,,"Current while output off: SSR / SCR failed shorted, contactor opened"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_Tripped,BOOL,,Tripped - reset required
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_Fault,BOOL,,Any fault present
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_Sim,BOOL,,Simulation active
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_State,INT,,0=Off 1=Switching on 2=On 3=Switching off 4=Tripped 5=Not available
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Sts_NE107,INT,,NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Val_PwrDemand,REAL,,Power demand after limits and ramp (%)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Val_Duty,REAL,,"Applied duty / power (%): on/off 0 or 100, SSR ON-time fraction, SCR reference"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Val_Power,REAL,,"Estimated power (kW) = Val_Duty x Cfg_RatedKW, or from current"
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Val_Current,REAL,,Heater current (A)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Val_LoadPct,REAL,,Measured current as % of expected at the present duty
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Val_Energy,LREAL,,Energy total (kWh)
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Alm_HiLimit,T_Alarm,,Excess-temperature limit tripped
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Alm_Shorted,T_Alarm,,SSR / SCR shorted - current with output off
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Alm_LoadFail,T_Alarm,,Partial load failure
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Alm_FailOn,T_Alarm,,No contactor feedback / current within Cfg_FbkTime
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Alm_FailOff,T_Alarm,,Contactor feedback still present after off
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Alm_ScrFault,T_Alarm,,SCR controller alarm
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Alm_IntlkTrip,T_Alarm,,Tripped by interlock
+T_Heater,Control module,"MonBinDrv (on/off) / MonAnaDrv (SSR, SCR)",Run,T_RunTime,,On hours / switch-on count
 T_PID,Control module,PIDCtrl,Cfg_Tag,STRING[20],,"Equipment / instrument tag, e.g. FT-101"
 T_PID,Control module,PIDCtrl,Cfg_Desc,STRING[40],,Description shown on HMI faceplate
 T_PID,Control module,PIDCtrl,Cfg_PVEU,STRING[12],,PV engineering units text

@@ -6689,6 +6689,1207 @@
       ]
     },
     {
+      "name": "T_Heater",
+      "tagType": "UdtType",
+      "documentation": "Electric heater: on/off contactor, time-proportioned SSR, or SCR power controller",
+      "parameters": {
+        "OPCServer": {
+          "dataType": "String",
+          "value": ""
+        },
+        "PathPrefix": {
+          "dataType": "String",
+          "value": ""
+        },
+        "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        }
+      },
+      "tags": [
+        {
+          "name": "Cfg_Tag",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_Tag"
+          },
+          "documentation": "Equipment / instrument tag, e.g. FT-101",
+          "tooltip": "Equipment / instrument tag, e.g. FT-101",
+          "dataType": "String"
+        },
+        {
+          "name": "Cfg_Desc",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_Desc"
+          },
+          "documentation": "Description shown on HMI faceplate",
+          "tooltip": "Description shown on HMI faceplate",
+          "dataType": "String"
+        },
+        {
+          "name": "Mode",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib/T_Mode",
+          "documentation": "Mode block",
+          "parameters": {
+            "OPCServer": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{OPCServer}"
+              }
+            },
+            "PathPrefix": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{PathPrefix}"
+              }
+            },
+            "BaseTag": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{BaseTag}.Mode"
+              }
+            }
+          }
+        },
+        {
+          "name": "Inp_ContactorFbk",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Inp_ContactorFbk"
+          },
+          "documentation": "Main / isolating contactor closed (aux contact)",
+          "tooltip": "Main / isolating contactor closed (aux contact)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Inp_Remote",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Inp_Remote"
+          },
+          "documentation": "Local/Remote switch in REMOTE",
+          "tooltip": "Local/Remote switch in REMOTE",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Inp_AvailOK",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Inp_AvailOK"
+          },
+          "documentation": "Supply available: breaker closed, control power OK",
+          "tooltip": "Supply available: breaker closed, control power OK",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Inp_HiLimitOK",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Inp_HiLimitOK"
+          },
+          "documentation": "Independent excess-temperature limit healthy (hardwired, latching; PLC monitors only)",
+          "tooltip": "Independent excess-temperature limit healthy (hardwired, latching; PLC monitors only)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Inp_IntlkOK",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Inp_IntlkOK"
+          },
+          "documentation": "Interlocks healthy (TRUE = may heat; FALSE trips)",
+          "tooltip": "Interlocks healthy (TRUE = may heat; FALSE trips)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Inp_PermOK",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Inp_PermOK"
+          },
+          "documentation": "Permissives healthy (TRUE = may switch on)",
+          "tooltip": "Permissives healthy (TRUE = may switch on)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Inp_IOFault",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Inp_IOFault"
+          },
+          "documentation": "I/O channel or comms fault",
+          "tooltip": "I/O channel or comms fault",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Inp_Current",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Inp_Current"
+          },
+          "documentation": "Heater current from CT or SCR controller (A), optional",
+          "tooltip": "Heater current from CT or SCR controller (A), optional",
+          "dataType": "Float4",
+          "readOnly": true
+        },
+        {
+          "name": "Inp_ScrAlarm",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Inp_ScrAlarm"
+          },
+          "documentation": "SCR controller alarm relay (fuse / partial load failure / overtemp)",
+          "tooltip": "SCR controller alarm relay (fuse / partial load failure / overtemp)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Cfg_CtrlType",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_CtrlType"
+          },
+          "documentation": "0 = on/off (contactor), 1 = time-proportioned SSR on a PLC output, 2 = SCR power controller (analog reference)",
+          "tooltip": "0 = on/off (contactor), 1 = time-proportioned SSR on a PLC output, 2 = SCR power controller (analog reference)",
+          "dataType": "Int2"
+        },
+        {
+          "name": "Cfg_CycleTime",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_CycleTime"
+          },
+          "documentation": "Time-proportioning cycle (type 1): output is ON for Val_Duty % of each cycle",
+          "tooltip": "Time-proportioning cycle (type 1): output is ON for Val_Duty % of each cycle",
+          "dataType": "Int4",
+          "engUnit": "ms"
+        },
+        {
+          "name": "Cfg_MinPulse",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_MinPulse"
+          },
+          "documentation": "Shortest ON or OFF pulse (type 1); shorter pulses are skipped",
+          "tooltip": "Shortest ON or OFF pulse (type 1); shorter pulses are skipped",
+          "dataType": "Int4",
+          "engUnit": "ms"
+        },
+        {
+          "name": "Cfg_ScrFiring",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_ScrFiring"
+          },
+          "documentation": "SCR firing mode set in the controller (type 2, documentation): 0 = burst / zero-cross, 1 = single-cycle, 2 = phase angle",
+          "tooltip": "SCR firing mode set in the controller (type 2, documentation): 0 = burst / zero-cross, 1 = single-cycle, 2 = phase angle",
+          "dataType": "Int2"
+        },
+        {
+          "name": "Cfg_PwrMin",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_PwrMin"
+          },
+          "documentation": "Minimum power demand when on (%)",
+          "tooltip": "Minimum power demand when on (%)",
+          "dataType": "Float4"
+        },
+        {
+          "name": "Cfg_PwrMax",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_PwrMax"
+          },
+          "documentation": "Maximum power demand (%)",
+          "tooltip": "Maximum power demand (%)",
+          "dataType": "Float4"
+        },
+        {
+          "name": "Cfg_PwrRate",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_PwrRate"
+          },
+          "documentation": "Power ramp limit (%/s), 0 = none (soft start for cold elements)",
+          "tooltip": "Power ramp limit (%/s), 0 = none (soft start for cold elements)",
+          "dataType": "Float4"
+        },
+        {
+          "name": "Cfg_RatedKW",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_RatedKW"
+          },
+          "documentation": "Heater rated power at 100 % (kW)",
+          "tooltip": "Heater rated power at 100 % (kW)",
+          "dataType": "Float4"
+        },
+        {
+          "name": "Cfg_RatedAmps",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_RatedAmps"
+          },
+          "documentation": "Heater current at 100 % (A); 0 = no current monitoring",
+          "tooltip": "Heater current at 100 % (A); 0 = no current monitoring",
+          "dataType": "Float4"
+        },
+        {
+          "name": "Cfg_LoadFailPct",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_LoadFailPct"
+          },
+          "documentation": "Partial load failure: current below this % of expected while heating",
+          "tooltip": "Partial load failure: current below this % of expected while heating",
+          "dataType": "Float4"
+        },
+        {
+          "name": "Cfg_LeakAmps",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_LeakAmps"
+          },
+          "documentation": "Current above this while the output is off = SSR / SCR shorted (A)",
+          "tooltip": "Current above this while the output is off = SSR / SCR shorted (A)",
+          "dataType": "Float4"
+        },
+        {
+          "name": "Cfg_FbkTime",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cfg_FbkTime"
+          },
+          "documentation": "Time allowed for contactor feedback and current to settle",
+          "tooltip": "Time allowed for contactor feedback and current to settle",
+          "dataType": "Int4",
+          "engUnit": "ms"
+        },
+        {
+          "name": "Cmd_On",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cmd_On"
+          },
+          "documentation": "Operator on (one-shot)",
+          "tooltip": "Operator on (one-shot)",
+          "dataType": "Boolean"
+        },
+        {
+          "name": "Cmd_Off",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cmd_Off"
+          },
+          "documentation": "Operator off (one-shot)",
+          "tooltip": "Operator off (one-shot)",
+          "dataType": "Boolean"
+        },
+        {
+          "name": "Cmd_Reset",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cmd_Reset"
+          },
+          "documentation": "Fault / trip reset (one-shot)",
+          "tooltip": "Fault / trip reset (one-shot)",
+          "dataType": "Boolean"
+        },
+        {
+          "name": "Cmd_Pwr",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Cmd_Pwr"
+          },
+          "documentation": "Operator power demand (%), Manual mode, types 1 and 2",
+          "tooltip": "Operator power demand (%), Manual mode, types 1 and 2",
+          "dataType": "Float4"
+        },
+        {
+          "name": "Prog_On",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Prog_On"
+          },
+          "documentation": "Program / sequence on request (Auto mode)",
+          "tooltip": "Program / sequence on request (Auto mode)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Prog_Off",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Prog_Off"
+          },
+          "documentation": "Program / sequence off request (Auto mode)",
+          "tooltip": "Program / sequence off request (Auto mode)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Prog_Pwr",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Prog_Pwr"
+          },
+          "documentation": "Program power demand (%), Auto mode, e.g. a T_PID Out_CV",
+          "tooltip": "Program power demand (%), Auto mode, e.g. a T_PID Out_CV",
+          "dataType": "Float4",
+          "readOnly": true
+        },
+        {
+          "name": "Out_Contactor",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Out_Contactor"
+          },
+          "documentation": "Main / isolating contactor (opened on trip, high limit or shorted SSR)",
+          "tooltip": "Main / isolating contactor (opened on trip, high limit or shorted SSR)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Out_SSR",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Out_SSR"
+          },
+          "documentation": "Time-proportioned output to the SSR (type 1)",
+          "tooltip": "Time-proportioned output to the SSR (type 1)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Out_PwrRef",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Out_PwrRef"
+          },
+          "documentation": "Power reference to the SCR controller, 0-100 % (type 2)",
+          "tooltip": "Power reference to the SCR controller, 0-100 % (type 2)",
+          "dataType": "Float4",
+          "readOnly": true
+        },
+        {
+          "name": "Sim_En",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sim_En"
+          },
+          "documentation": "Simulation: ignore field I/O, logic generates feedback",
+          "tooltip": "Simulation: ignore field I/O, logic generates feedback",
+          "dataType": "Boolean"
+        },
+        {
+          "name": "Sts_On",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_On"
+          },
+          "documentation": "On: contactor closed and enabled to heat",
+          "tooltip": "On: contactor closed and enabled to heat",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_Off",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_Off"
+          },
+          "documentation": "Off",
+          "tooltip": "Off",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_Heating",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_Heating"
+          },
+          "documentation": "Output conducting now (on/off: on; SSR: inside the ON part of the cycle; SCR: reference > 0)",
+          "tooltip": "Output conducting now (on/off: on; SSR: inside the ON part of the cycle; SCR: reference > 0)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_Avail",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_Avail"
+          },
+          "documentation": "Available to Auto/program control",
+          "tooltip": "Available to Auto/program control",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_Intlk",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_Intlk"
+          },
+          "documentation": "Interlock not healthy",
+          "tooltip": "Interlock not healthy",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_NotPerm",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_NotPerm"
+          },
+          "documentation": "Permissive not healthy",
+          "tooltip": "Permissive not healthy",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_Local",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_Local"
+          },
+          "documentation": "In local control",
+          "tooltip": "In local control",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_HiLimit",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_HiLimit"
+          },
+          "documentation": "Excess-temperature limit tripped (reset at the limit device)",
+          "tooltip": "Excess-temperature limit tripped (reset at the limit device)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_LoadFail",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_LoadFail"
+          },
+          "documentation": "Partial load failure (element, fuse or phase lost)",
+          "tooltip": "Partial load failure (element, fuse or phase lost)",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_Shorted",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_Shorted"
+          },
+          "documentation": "Current while output off: SSR / SCR failed shorted, contactor opened",
+          "tooltip": "Current while output off: SSR / SCR failed shorted, contactor opened",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_Tripped",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_Tripped"
+          },
+          "documentation": "Tripped - reset required",
+          "tooltip": "Tripped - reset required",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_Fault",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_Fault"
+          },
+          "documentation": "Any fault present",
+          "tooltip": "Any fault present",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_Sim",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_Sim"
+          },
+          "documentation": "Simulation active",
+          "tooltip": "Simulation active",
+          "dataType": "Boolean",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_State",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_State"
+          },
+          "documentation": "0=Off 1=Switching on 2=On 3=Switching off 4=Tripped 5=Not available",
+          "tooltip": "0=Off 1=Switching on 2=On 3=Switching off 4=Tripped 5=Not available",
+          "dataType": "Int2",
+          "readOnly": true
+        },
+        {
+          "name": "Sts_NE107",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Sts_NE107"
+          },
+          "documentation": "NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)",
+          "tooltip": "NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M)",
+          "dataType": "Int2",
+          "readOnly": true
+        },
+        {
+          "name": "Val_PwrDemand",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Val_PwrDemand"
+          },
+          "documentation": "Power demand after limits and ramp (%)",
+          "tooltip": "Power demand after limits and ramp (%)",
+          "dataType": "Float4",
+          "readOnly": true
+        },
+        {
+          "name": "Val_Duty",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Val_Duty"
+          },
+          "documentation": "Applied duty / power (%): on/off 0 or 100, SSR ON-time fraction, SCR reference",
+          "tooltip": "Applied duty / power (%): on/off 0 or 100, SSR ON-time fraction, SCR reference",
+          "dataType": "Float4",
+          "readOnly": true
+        },
+        {
+          "name": "Val_Power",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Val_Power"
+          },
+          "documentation": "Estimated power (kW) = Val_Duty x Cfg_RatedKW, or from current",
+          "tooltip": "Estimated power (kW) = Val_Duty x Cfg_RatedKW, or from current",
+          "dataType": "Float4",
+          "readOnly": true
+        },
+        {
+          "name": "Val_Current",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Val_Current"
+          },
+          "documentation": "Heater current (A)",
+          "tooltip": "Heater current (A)",
+          "dataType": "Float4",
+          "readOnly": true
+        },
+        {
+          "name": "Val_LoadPct",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Val_LoadPct"
+          },
+          "documentation": "Measured current as % of expected at the present duty",
+          "tooltip": "Measured current as % of expected at the present duty",
+          "dataType": "Float4",
+          "readOnly": true
+        },
+        {
+          "name": "Val_Energy",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Val_Energy"
+          },
+          "documentation": "Energy total (kWh)",
+          "tooltip": "Energy total (kWh)",
+          "dataType": "Float8",
+          "readOnly": true
+        },
+        {
+          "name": "Alm_HiLimit",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib/T_Alarm",
+          "documentation": "Excess-temperature limit tripped",
+          "parameters": {
+            "OPCServer": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{OPCServer}"
+              }
+            },
+            "PathPrefix": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{PathPrefix}"
+              }
+            },
+            "BaseTag": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{BaseTag}.Alm_HiLimit"
+              }
+            }
+          }
+        },
+        {
+          "name": "Alm_Shorted",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib/T_Alarm",
+          "documentation": "SSR / SCR shorted - current with output off",
+          "parameters": {
+            "OPCServer": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{OPCServer}"
+              }
+            },
+            "PathPrefix": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{PathPrefix}"
+              }
+            },
+            "BaseTag": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{BaseTag}.Alm_Shorted"
+              }
+            }
+          }
+        },
+        {
+          "name": "Alm_LoadFail",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib/T_Alarm",
+          "documentation": "Partial load failure",
+          "parameters": {
+            "OPCServer": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{OPCServer}"
+              }
+            },
+            "PathPrefix": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{PathPrefix}"
+              }
+            },
+            "BaseTag": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{BaseTag}.Alm_LoadFail"
+              }
+            }
+          }
+        },
+        {
+          "name": "Alm_FailOn",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib/T_Alarm",
+          "documentation": "No contactor feedback / current within Cfg_FbkTime",
+          "parameters": {
+            "OPCServer": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{OPCServer}"
+              }
+            },
+            "PathPrefix": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{PathPrefix}"
+              }
+            },
+            "BaseTag": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{BaseTag}.Alm_FailOn"
+              }
+            }
+          }
+        },
+        {
+          "name": "Alm_FailOff",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib/T_Alarm",
+          "documentation": "Contactor feedback still present after off",
+          "parameters": {
+            "OPCServer": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{OPCServer}"
+              }
+            },
+            "PathPrefix": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{PathPrefix}"
+              }
+            },
+            "BaseTag": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{BaseTag}.Alm_FailOff"
+              }
+            }
+          }
+        },
+        {
+          "name": "Alm_ScrFault",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib/T_Alarm",
+          "documentation": "SCR controller alarm",
+          "parameters": {
+            "OPCServer": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{OPCServer}"
+              }
+            },
+            "PathPrefix": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{PathPrefix}"
+              }
+            },
+            "BaseTag": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{BaseTag}.Alm_ScrFault"
+              }
+            }
+          }
+        },
+        {
+          "name": "Alm_IntlkTrip",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib/T_Alarm",
+          "documentation": "Tripped by interlock",
+          "parameters": {
+            "OPCServer": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{OPCServer}"
+              }
+            },
+            "PathPrefix": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{PathPrefix}"
+              }
+            },
+            "BaseTag": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{BaseTag}.Alm_IntlkTrip"
+              }
+            }
+          }
+        },
+        {
+          "name": "Run",
+          "tagType": "UdtInstance",
+          "typeId": "PCLib/T_RunTime",
+          "documentation": "On hours / switch-on count",
+          "parameters": {
+            "OPCServer": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{OPCServer}"
+              }
+            },
+            "PathPrefix": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{PathPrefix}"
+              }
+            },
+            "BaseTag": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{BaseTag}.Run"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "T_PID",
       "tagType": "UdtType",
       "documentation": "PID loop wrapper (maps onto PIDFF EFB), Man/Auto/Cas, tracking",
