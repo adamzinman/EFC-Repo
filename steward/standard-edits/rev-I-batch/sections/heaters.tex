@@ -1,0 +1,38 @@
+\subsection{Electric Heaters}\label{sec:heaters}\newmark
+Electric heaters (band, cartridge, immersion, jacket and duct heaters) are switched in one of three ways. The method is chosen per heater and set in the \texttt{T\_Heater} data type with \texttt{Cfg\_CtrlType} (Appendix~\ref{app:data-types-future}). The PLC logic, alarms and HMI dynamic window are the same for all three, so the method can be changed later without reworking the program or the screens.
+
+\begin{small}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{2.6cm}P{4.6cm}P{4.4cm}P{4.6cm}@{}}
+\caption{Electric Heater Control Methods}\label{tab:heater-methods} \\
+\toprule
+\rowcolor{tblhead}\textbf{Method} & \textbf{How power is set} & \textbf{Use when} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Method} & \textbf{How power is set} & \textbf{Use when} & \textbf{Notes} \\
+\midrule
+\endhead
+On/off contactor (\texttt{Cfg\_CtrlType = 0}) & Full power or none. A PLC output drives the heater contactor; temperature is held by on/off control with hysteresis. & Large thermal mass, coarse control: trace heating, freeze protection, tank heaters. & Contactors wear with every operation, so set the hysteresis wide enough to keep switching to a few cycles per hour. \\
+Time-proportioned SSR (\texttt{Cfg\_CtrlType = 1}) & Duty cycle. A PLC transistor output drives a zero-cross solid-state relay (SSR). The output is on for the demanded percentage of a fixed cycle time, e.g.\ 62\,\% of a 4~s cycle is 2.5~s on, 1.5~s off. & Most process heaters that need tight temperature control: the PID output sets the duty. & Default cycle time 4~s (range 2--10~s): shorter cycles give smoother temperature but more element thermal cycling. Minimum pulse 100~ms. Use a transistor output, never a relay output. \\
+SCR power controller (\texttt{Cfg\_CtrlType = 2}) & The PLC sends a 0--100\,\% power reference (4--20~mA or network) to an SCR (thyristor) controller, which switches the load itself. & Large loads, multiple zones, fast processes, or where the controller's current limit and load-failure detection are wanted. & Use burst / zero-cross firing by default (low electrical noise). Use phase-angle firing only where the load requires it (infrared lamps, low cold-resistance elements, transformer-coupled loads); it creates harmonics and radio-frequency noise. \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\subsubsection*{Required for every electric heater}
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Independent excess-temperature limit.} A separate limit controller with its own sensor, hardwired so that it opens the heater contactor coil circuit directly, latching, and reset only at the device. The PLC monitors its status (\texttt{Inp\_HiLimitOK}) but is never part of the limit circuit, and the control loop sensor is never used as the limit sensor. Where NFPA~86 applies (ovens, furnaces, process heaters in its scope) the limit controller must be listed for the purpose; confirm the adopted edition and its requirements with the authority having jurisdiction.
+  \item \textbf{Series isolating contactor upstream of every SSR or SCR.} Solid-state switches normally fail shorted, so the heater would stay on regardless of the PLC output. The contactor is opened by the excess-temperature limit, the E-stop, an interlock trip, and by the PLC when it sees heater current with the output off (\texttt{Sts\_Shorted}).
+  \item \textbf{Current monitoring.} A current transformer per heater, or current feedback from the SCR controller, for heaters above \tbd~kW. The PLC compares the current with what is expected at the present duty and raises a partial load failure (a lost element, fuse or phase) when it falls below \texttt{Cfg\_LoadFailPct} (default 80\,\%).
+  \item \textbf{Semiconductor protection and heat.} Protect SSRs and SCR controllers with semiconductor (high-speed) fuses sized to the device's I\textsuperscript{2}t rating, and coordinate them with the panel SCCR (Section~\ref{sec:sccr}). Size SSRs from the manufacturer's derating curve at the panel's maximum internal temperature, mount them on the specified heat sink, and include their dissipation (roughly 1--1.5~W per ampere of load) in the panel heat calculation (Section~\ref{sec:heat}).
+\end{itemize}
+
+\subsubsection*{Control}
+\begin{itemize}[itemsep=2pt]
+  \item A temperature loop (\texttt{T\_PID}) writes its output to the heater's \texttt{Prog\_Pwr}; \texttt{Cfg\_PwrMin}, \texttt{Cfg\_PwrMax} and \texttt{Cfg\_PwrRate} limit it. Do not run a PID loop through an on/off contactor: use an SSR or SCR when proportional control is needed.
+  \item Use \texttt{Cfg\_PwrRate} as a soft start for elements that absorb moisture when idle (mineral-insulated, cartridge, immersion), following the heater manufacturer's start-up instructions.
+  \item On the HMI, the heater's dynamic window shows demand and applied power, the on/off cycle for SSR heaters, current and load percentage, and the limit, shorted and load-failure alarms.
+\end{itemize}
+\note{Open: set the heater size above which current monitoring is required (TBD above). NFPA~86 clause references to be confirmed against the edition adopted at each site.}
