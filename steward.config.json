@@ -1,12 +1,10 @@
 {
   "projects": [
-    "projects/EFC_Library",
-    "projects/EFC_AnalogIndicators"
+    "projects/EFC_Library"
   ],
   "output_dir": "steward",
   "template_folders": [
-    "Templates",
-    "EFC/AnalogIndicator"
+    "Templates"
   ],
   "dock_map": {
     "Templates/Valves": "dw_ValveDiscrete",
@@ -15,7 +13,7 @@
     "Templates/Rotating/VFD": "dw_VFD",
     "Templates/HeatTransfer": "dw_HeatTransfer",
     "Templates/ProcessValues": "dw_ProcessValue",
-    "EFC/AnalogIndicator": "dw_ProcessValue",
+    "Templates/AnalogIndicator": "dw_ProcessValue",
     "Templates/Loops": "dw_Loop",
     "Templates/Station": "dw_Station",
     "Templates/IO": "dw_IOCard",
@@ -39,15 +37,14 @@
   },
   "styles": {
     "projects": [
-      "EFC_Library",
-      "EFC_AnalogIndicators"
+      "EFC_Library"
     ],
     "palette_from_style_classes": true,
     "palette": []
   },
   "deprecated_calls": {},
   "exempt": [
-    "EFC/AnalogIndicator/_Examples",
+    "Templates/AnalogIndicator/_Examples",
     "Styles/_Catalog",
     "Templates/IO/Parts/AnalogRow_AI",
     "Templates/IO/Parts/AnalogRow_AO",

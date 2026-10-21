@@ -36,7 +36,7 @@ for zp in sys.argv[1:]:
         if n.endswith("view.json"):
             v = json.loads(z.read(n))
             for e in exprs(v):
-                for fn in re.findall(r"\b([a-zA-Z]+)\(", re.sub(r'"[^"]*"', "", e)):
+                for fn in re.findall(r"\b([a-zA-Z]+)\(", re.sub(r'"[^"]*"|\'[^\']*\'', "", e)):
                     if fn not in EXPR_81: fail(f"{n}: expression function {fn}() not in 8.1")
             for c in walk(v["root"]):
                 if c.get("type") == "ia.shapes.svg" and c.get("props", {}).get("preserveAspectRatio", "xMidYMid") not in PAR:

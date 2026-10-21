@@ -26,7 +26,7 @@ IMPORTED = os.path.join(ROOT, "imported")
 COMPONENTS = os.path.join(BUILD, "components")
 VERSION = json.load(open(os.path.join(ROOT, "VERSION.json")))
 LIBRARY = "EFC_Library"
-GENERATED_PARTS = ("EFC_Styles", "PID_Symbols", "EFC_ProcessValues", "PID_Loops")
+GENERATED_PARTS = ("EFC_Styles", "PID_Symbols", "EFC_ProcessValues", "PID_Loops", "EFC_AnalogIndicators")
 IMPORTED_PARTS = ("EFC_IOFaceplates", "EFC_StationFaceplates")
 
 # Views that don't already live under Templates/ are moved there in the merged project. Every string that
@@ -106,6 +106,8 @@ def generate(preview):
     shutil.copy(os.path.join(BUILD, "styles", "style_index.md"), os.path.join(ROOT, "docs", "style-class-index.md"))
     run("build_pv.py")                    # EFC_ProcessValues -> projects/, tags/PV_Demo_Tags.json, docs/pv-style-index.md
     run("pid_loops/generate_loops.py")           # PID_Loops -> projects/PID_Loops, tags/PID_Loops/
+    run("analog_indicators/gen_analog_indicators.py", stdout=subprocess.DEVNULL)   # T_KPI cards -> Templates/AnalogIndicator
+    unzip_to(os.path.join(BUILD, "analog", "EFC_AnalogIndicators.zip"), os.path.join(PROJECTS, "EFC_AnalogIndicators"))
     run("nav_connectors/generate_nav_connectors.py")   # symbols/NavConnectors, mockups/nav-connectors.html
     merge_library()
     os.makedirs(os.path.join(ROOT, "mockups"), exist_ok=True)
