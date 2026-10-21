@@ -51,9 +51,9 @@ Tag mirrors fall into the groups below. The other 14 properties are expressions 
 |---|---|---|---|
 | Value and names (tag mirrors) | `pv`, `name`, `desc`, `units`, `hwFault` | `{view.params.tagPath}/` + `Val_PV`, `Cfg_Tag`, `Cfg_Desc`, `Cfg_EU`, `Sts_Bad` | PV, instrument tag, description, units and the bad-PV flag (`hwFault`). |
 | Inhibit flags (tag mirrors) | `inhHH`, `inhH`, `inhL`, `inhLL` | `{view.params.tagPath}/Alm_HH/Sts_Suppressed`, `Alm_H/...`, `Alm_L/...`, `Alm_LL/...` | Suppressed state of each limit alarm. Feed `inh`. |
-| FLT raw alarm (tag mirrors) | `FLTact`, `FLTun`, `FLTpri` | `{view.params.tagPath}/Sts_Bad/Sts_Active`, `Sts_Bad/Sts_Unack`, `Sts_Bad/Cfg_Priority` | Raw FLT state. These paths are not in T_AI (see Notes). |
-| HH, H, L, LL raw alarms (tag mirrors) | `HHact`/`HHun`/`HHpri`, `Hact`/`Hun`/`Hpri`, `Lact`/`Lun`/`Lpri`, `LLact`/`LLun`/`LLpri` | `{view.params.tagPath}/HH/Alarm/Sts_Active`, `.../Sts_Unack`, `.../Cfg_Priority` (same pattern for H, L, LL) | Raw state, unacknowledged flag and priority of each limit alarm. Not in T_AI (see Notes). |
-| OVR and UNR raw flags (tag mirrors) | `rOVR`, `rUNR` | `{view.params.tagPath}/Overrange`, `{view.params.tagPath}/Underrange` | Raw over- and under-range flags. Not in T_AI (see Notes). |
+| FLT raw alarm (tag mirrors) | `FLTact`, `FLTun`, `FLTpri` | `{view.params.tagPath}/Alm_Bad/Sts_Active`, `Alm_Bad/Sts_Unack`, `Alm_Bad/Cfg_Priority` | Raw state, unacknowledged flag and priority of the bad-PV alarm (`Alm_Bad`, T_Alarm). |
+| HH, H, L, LL raw alarms (tag mirrors) | `HHact`/`HHun`/`HHpri`, `Hact`/`Hun`/`Hpri`, `Lact`/`Lun`/`Lpri`, `LLact`/`LLun`/`LLpri` | `{view.params.tagPath}/` + `Alm_HH/Sts_Active`, `Alm_HH/Sts_Unack`, `Alm_HH/Cfg_Priority`, `Alm_H/Sts_Active`, `Alm_H/Sts_Unack`, `Alm_H/Cfg_Priority`, `Alm_L/Sts_Active`, `Alm_L/Sts_Unack`, `Alm_L/Cfg_Priority`, `Alm_LL/Sts_Active`, `Alm_LL/Sts_Unack`, `Alm_LL/Cfg_Priority` | Raw state, unacknowledged flag and priority of each limit alarm (`Alm_HH`, `Alm_H`, `Alm_L`, `Alm_LL`, T_AlmLim). |
+| OVR and UNR raw flags (tag mirrors) | `rOVR`, `rUNR` | `{view.params.tagPath}/Sts_ORng`, `{view.params.tagPath}/Sts_URng` | Raw over- and under-range flags (T_AI BOOL). |
 
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
@@ -143,7 +143,7 @@ It opens the dock for this tag. See the library function below.
 
 ## Tag members used
 
-Paths are relative to `tagPath`. Types and comments come from `types/PCLib_Members.csv` (T_AI, and T_AlmLim for the `Alm_*` limits). Rows marked **not in T_AI** name a path that is absent from that type (see Notes). No member is written.
+Paths are relative to `tagPath`. Types and comments come from `types/PCLib_Members.csv` (T_AI, and T_AlmLim for the `Alm_*` limits). No member is written.
 
 | Member | Access | Data type | Meaning |
 |---|---|---|---|
@@ -153,9 +153,9 @@ Paths are relative to `tagPath`. Types and comments come from `types/PCLib_Membe
 | `Cfg_EU` | read | STRING[12] | Engineering units text |
 | `Sts_Bad` | read | BOOL | PV bad (out of range or channel fault) |
 | `Alm_HH/Sts_Suppressed`, `Alm_H/Sts_Suppressed`, `Alm_L/Sts_Suppressed`, `Alm_LL/Sts_Suppressed` | read | BOOL | Suppressed by design (ISA-18.2 state G) |
-| `Sts_Bad/Sts_Active`, `Sts_Bad/Sts_Unack`, `Sts_Bad/Cfg_Priority` | read | (not in T_AI) | Not in T_AI. T_AI has `Alm_Bad` (T_Alarm) for the bad-PV alarm. |
-| `HH/Alarm/Sts_Active`, `HH/Alarm/Sts_Unack`, `HH/Alarm/Cfg_Priority` (same for `H`, `L`, `LL`) | read | (not in T_AI) | Not in T_AI. T_AI has `Alm_HH`, `Alm_H`, `Alm_L`, `Alm_LL` (T_AlmLim) with `Sts_Active`, `Sts_Unack` and `Cfg_Priority`. |
-| `Overrange`, `Underrange` | read | (not in T_AI) | Not in T_AI. T_AI has `Sts_ORng` and `Sts_URng` (BOOL). |
+| `Alm_Bad/Sts_Active`, `Alm_Bad/Sts_Unack`, `Alm_Bad/Cfg_Priority` | read | BOOL / BOOL / INT | Bad-PV alarm (`Alm_Bad`, T_Alarm): active, unacknowledged, priority. |
+| `Alm_HH/Sts_Active`, `Alm_HH/Sts_Unack`, `Alm_HH/Cfg_Priority`, `Alm_H/Sts_Active`, `Alm_H/Sts_Unack`, `Alm_H/Cfg_Priority`, `Alm_L/Sts_Active`, `Alm_L/Sts_Unack`, `Alm_L/Cfg_Priority`, `Alm_LL/Sts_Active`, `Alm_LL/Sts_Unack`, `Alm_LL/Cfg_Priority` | read | BOOL / BOOL / INT | Limit alarms (T_AlmLim): active, unacknowledged, priority. |
+| `Sts_ORng`, `Sts_URng` | read | BOOL | Over range, under range. |
 
 Priority (`Cfg_Priority`): PCLib order, `1=Critical 2=High 3=Medium 4=Low`. The view converts it to its internal rank (1 to 4, 2 to 3, 3 to 2, 4 to 1; anything else Medium) in the `a*` code bindings, and the range chips use rank 0 (Diagnostic).
 
@@ -187,15 +187,13 @@ Indentation shows parent and child. Each entry is `name` (component type).
 
 **Behaviour to review**
 
-1. **HH, H, L and LL alarm chips bind to paths that T_AI does not have.** The view reads `HH/Alarm/Sts_Active` and the same for H, L and LL. `types/PCLib_Members.csv` defines `Alm_HH`, `Alm_H`, `Alm_L` and `Alm_LL` (T_AlmLim), and `tags/PV_Demo_Tags.json` (`T_AI_Demo`) uses the same `Alm_*` names. `generator/build_pv.py` writes both this view and that UDT, and the two disagree. If the gateway UDT matches T_AI, the codes stay -1, so these chips never show.
-2. **FLT, OVR and UNR also bind to paths that T_AI does not have.** FLT reads `Sts_Bad/Sts_Active` and related paths, but `Sts_Bad` is a plain BOOL in T_AI, and the bad-PV alarm is `Alm_Bad`. OVR and UNR read `Overrange` and `Underrange`, but T_AI has `Sts_ORng` and `Sts_URng`. Result: the strip cannot enter the fault state. `hwFault` only feeds `badValue`, so a PV bad flag changes the value style and not the strip.
-3. **OVR and UNR never blink.** `aOVR` is 0 when `rOVR` is true, with no acknowledge state. The chip class is therefore always the Diagnostic class when active, and `anyUnacked` never includes it.
-4. **`tick` drives nothing.** `docs/pv-display.md` says the alarm state is evaluated on `view.custom.tick` by a script transform that calls `system.alarm.queryStatus`. This view has no such transform, and no binding reads `view.custom.tick`. The design note is out of date for these views, or the transform was lost.
-5. **Empty `tagPath` still opens the dock.** `tagPath` defaults to empty. A click then writes an empty `tagPath` to the dock, because `openDynamic` does not check it.
+1. **`hwFault` does not drive the strip.** `hwFault` (`Sts_Bad`) only feeds `badValue`, so a PV bad flag changes the value style. The strip enters the fault state from the bad-PV alarm (`Alm_Bad/Sts_Active`).
+2. **OVR and UNR never blink.** `aOVR` is 0 when `rOVR` is true, with no acknowledge state. The chip class is therefore always the Diagnostic class when active, and `anyUnacked` never includes it.
+3. **`tick` drives nothing.** `docs/pv-display.md` says the alarm state is evaluated on `view.custom.tick` by a script transform that calls `system.alarm.queryStatus`. This view has no such transform, and no binding reads `view.custom.tick`. The design note is out of date for these views, or the transform was lost.
+4. **Empty `tagPath` still opens the dock.** `tagPath` defaults to empty. A click then writes an empty `tagPath` to the dock, because `openDynamic` does not check it.
 
 **Open questions**
 
-- The repo has no `DDT_Process_Value` definition. Is the gateway UDT the same as T_AI in the PCLib CSV? If it has `HH/Alarm/...`, `Overrange` and `Sts_Bad/Sts_Active`, items 1 and 2 are not defects. Not verified on a gateway.
 - Should `hwFault` also make the strip show the fault colour?
 - Which copy is current: the `EFC_ProcessValues` project from `generator/build_pv.py`, or the EFC_Library `Templates/ProcessValues` views?
 

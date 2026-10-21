@@ -55,9 +55,9 @@ Tag mirrors fall into the groups below. The other 19 properties are expressions 
 |---|---|---|---|
 | Value and names (tag mirrors) | `pv`, `name`, `desc`, `units`, `hwFault` | `{view.params.tagPath}/` + `Val_PV`, `Cfg_Tag`, `Cfg_Desc`, `Cfg_EU`, `Sts_Bad` | PV, instrument tag, description, units and the bad-PV flag (`hwFault`). |
 | Inhibit flags (tag mirrors) | `inhHH`, `inhH`, `inhL`, `inhLL` | `{view.params.tagPath}/Alm_HH/Sts_Suppressed`, `Alm_H/...`, `Alm_L/...`, `Alm_LL/...` | Suppressed state of each limit alarm. Feed `inh`. |
-| FLT raw alarm (tag mirrors) | `FLTact`, `FLTun`, `FLTpri` | `{view.params.tagPath}/Sts_Bad/Sts_Active`, `Sts_Bad/Sts_Unack`, `Sts_Bad/Cfg_Priority` | Raw FLT state. These paths are not in T_AI (see Notes). |
-| HH, H, L, LL raw alarms (tag mirrors) | `HHact`/`HHun`/`HHpri`, `Hact`/`Hun`/`Hpri`, `Lact`/`Lun`/`Lpri`, `LLact`/`LLun`/`LLpri` | `{view.params.tagPath}/HH/Alarm/Sts_Active`, `.../Sts_Unack`, `.../Cfg_Priority` (same pattern for H, L, LL) | Raw state, unacknowledged flag and priority of each limit alarm. Not in T_AI (see Notes). |
-| OVR and UNR raw flags (tag mirrors) | `rOVR`, `rUNR` | `{view.params.tagPath}/Overrange`, `{view.params.tagPath}/Underrange` | Raw over- and under-range flags. Not in T_AI (see Notes). |
+| FLT raw alarm (tag mirrors) | `FLTact`, `FLTun`, `FLTpri` | `{view.params.tagPath}/Alm_Bad/Sts_Active`, `Alm_Bad/Sts_Unack`, `Alm_Bad/Cfg_Priority` | Raw state, unacknowledged flag and priority of the bad-PV alarm (`Alm_Bad`, T_Alarm). |
+| HH, H, L, LL raw alarms (tag mirrors) | `HHact`/`HHun`/`HHpri`, `Hact`/`Hun`/`Hpri`, `Lact`/`Lun`/`Lpri`, `LLact`/`LLun`/`LLpri` | `{view.params.tagPath}/` + `Alm_HH/Sts_Active`, `Alm_HH/Sts_Unack`, `Alm_HH/Cfg_Priority`, `Alm_H/Sts_Active`, `Alm_H/Sts_Unack`, `Alm_H/Cfg_Priority`, `Alm_L/Sts_Active`, `Alm_L/Sts_Unack`, `Alm_L/Cfg_Priority`, `Alm_LL/Sts_Active`, `Alm_LL/Sts_Unack`, `Alm_LL/Cfg_Priority` | Raw state, unacknowledged flag and priority of each limit alarm (`Alm_HH`, `Alm_H`, `Alm_L`, `Alm_LL`, T_AlmLim). |
+| OVR and UNR raw flags (tag mirrors) | `rOVR`, `rUNR` | `{view.params.tagPath}/Sts_ORng`, `{view.params.tagPath}/Sts_URng` | Raw over- and under-range flags (T_AI BOOL). |
 | Limits and range (tag mirrors) | `engMin`, `engMax`, `spLL`, `spL`, `spH`, `spHH` | `Cfg_EUMin`, `Cfg_EUMax`, `Alm_LL/Cfg_Lim`, `Alm_L/Cfg_Lim`, `Alm_H/Cfg_Lim`, `Alm_HH/Cfg_Lim` | Scale minimum and maximum, and the four limits (EU), with defaults 0, 100, 10, 20, 80 and 90. |
 
 | Path | Default | Binding | Source | What it holds / drives |
@@ -175,7 +175,7 @@ It opens the dock for this tag. The library function is the same as PV_StatusStr
 
 ## Tag members used
 
-Paths are relative to `tagPath`. Types and comments come from `types/PCLib_Members.csv`. Rows marked **not in T_AI** name a path that is absent from that type (see Notes). No member is written.
+Paths are relative to `tagPath`. Types and comments come from `types/PCLib_Members.csv`. No member is written.
 
 | Member | Access | Data type | Meaning |
 |---|---|---|---|
@@ -188,9 +188,9 @@ Paths are relative to `tagPath`. Types and comments come from `types/PCLib_Membe
 | `Sts_Bad` | read | BOOL | PV bad (out of range or channel fault) |
 | `Alm_LL/Cfg_Lim`, `Alm_L/Cfg_Lim`, `Alm_H/Cfg_Lim`, `Alm_HH/Cfg_Lim` | read | REAL | Alarm limit (EU) |
 | `Alm_HH/Sts_Suppressed`, `Alm_H/Sts_Suppressed`, `Alm_L/Sts_Suppressed`, `Alm_LL/Sts_Suppressed` | read | BOOL | Suppressed by design (ISA-18.2 state G) |
-| `Sts_Bad/Sts_Active`, `Sts_Bad/Sts_Unack`, `Sts_Bad/Cfg_Priority` | read | (not in T_AI) | Not in T_AI. T_AI has `Alm_Bad` (T_Alarm) for the bad-PV alarm. |
-| `HH/Alarm/Sts_Active`, `HH/Alarm/Sts_Unack`, `HH/Alarm/Cfg_Priority` (same for `H`, `L`, `LL`) | read | (not in T_AI) | Not in T_AI. T_AI has `Alm_HH`, `Alm_H`, `Alm_L`, `Alm_LL` (T_AlmLim). |
-| `Overrange`, `Underrange` | read | (not in T_AI) | Not in T_AI. T_AI has `Sts_ORng` and `Sts_URng` (BOOL). |
+| `Alm_Bad/Sts_Active`, `Alm_Bad/Sts_Unack`, `Alm_Bad/Cfg_Priority` | read | BOOL / BOOL / INT | Bad-PV alarm (`Alm_Bad`, T_Alarm): active, unacknowledged, priority. |
+| `Alm_HH/Sts_Active`, `Alm_HH/Sts_Unack`, `Alm_HH/Cfg_Priority`, `Alm_H/Sts_Active`, `Alm_H/Sts_Unack`, `Alm_H/Cfg_Priority`, `Alm_L/Sts_Active`, `Alm_L/Sts_Unack`, `Alm_L/Cfg_Priority`, `Alm_LL/Sts_Active`, `Alm_LL/Sts_Unack`, `Alm_LL/Cfg_Priority` | read | BOOL / BOOL / INT | Limit alarms (T_AlmLim): active, unacknowledged, priority. |
+| `Sts_ORng`, `Sts_URng` | read | BOOL | Over range, under range. |
 
 Priority (`Cfg_Priority`): PCLib order, `1=Critical 2=High 3=Medium 4=Low`, converted to the internal rank in the `a*` code bindings; see PV_StatusStrip, Tag members used.
 
@@ -232,16 +232,13 @@ Indentation shows parent and child. Each entry is `name` (component type).
 
 **Behaviour to review**
 
-1. **Alarm bindings do not match T_AI.** The findings for PV_StatusStrip apply here: HH, H, L and LL read `HH/Alarm/...` and so on, while T_AI has `Alm_HH` and so on. FLT, OVR and UNR also read paths that T_AI does not have. The track overlays depend on those codes, so they never show as the repo defines the type.
-2. **The track never shows an alarm overlay in practice.** Only the static bands and the pointer are drawn. The overlay classes exist, so this changes once the bindings are fixed.
-3. **Pointer is not exactly on the PV.** The pointer's left edge is `fPV x (1 - 0.09091)`, and its width is 0.09091 of the track. Its centre is `fPV x (1 - 0.09091) + 0.04545`, which equals `fPV` only at 0.5. The two ends of the track are offset by a few per cent.
-4. **`tick` drives nothing.** Same as PV_StatusStrip: `docs/pv-display.md` describes a transform on `tick` that is not in this view.
-5. **OVR and UNR never blink.** Same as PV_StatusStrip.
-6. **Empty `tagPath` still opens the dock.** Same as PV_StatusStrip.
+1. **Pointer is not exactly on the PV.** The pointer's left edge is `fPV x (1 - 0.09091)`, and its width is 0.09091 of the track. Its centre is `fPV x (1 - 0.09091) + 0.04545`, which equals `fPV` only at 0.5. The two ends of the track are offset by a few per cent.
+2. **`tick` drives nothing.** Same as PV_StatusStrip: `docs/pv-display.md` describes a transform on `tick` that is not in this view.
+3. **OVR and UNR never blink.** Same as PV_StatusStrip.
+4. **Empty `tagPath` still opens the dock.** Same as PV_StatusStrip.
 
 **Open questions**
 
-- Confirm the gateway `DDT_Process_Value` members (see PV_StatusStrip, Open questions). Not verified on a gateway.
 - Should the pointer sit exactly on `fPV`, or is keeping it inside the track intended?
 - Which copy is current: the `EFC_ProcessValues` project from `generator/build_pv.py`, or the EFC_Library `Templates/ProcessValues` views?
 

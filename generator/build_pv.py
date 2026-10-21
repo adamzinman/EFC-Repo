@@ -86,8 +86,8 @@ sc("Bar/Frame", "Range-bar outline (drawn over the bands)", {"border": f"{vh(1)}
 # ----------------------------------------------------------------- expression helpers
 TP = "{view.params.tagPath}"
 ALARMS = [  # key, path suffix of the alarm-bearing tag
-    ("FLT", "/Sts_Bad"), ("HH", "/HH/Alarm"), ("H", "/H/Alarm"), ("L", "/L/Alarm"),
-    ("LL", "/LL/Alarm"), ("OVR", "/Overrange"), ("UNR", "/Underrange")]
+    ("FLT", "/Alm_Bad"), ("HH", "/Alm_HH"), ("H", "/Alm_H"), ("L", "/Alm_L"),
+    ("LL", "/Alm_LL"), ("OVR", "/Sts_ORng"), ("UNR", "/Sts_URng")]
 C = lambda k: "{view.custom.a" + k + "}"
 
 def iaf(path, pmin, pmax, cleared, acked):

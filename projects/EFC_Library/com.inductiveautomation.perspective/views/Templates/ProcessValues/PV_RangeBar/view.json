@@ -193,7 +193,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Bad/Sts_Active",
+          "tagPath": "{0}/Alm_Bad/Sts_Active",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -206,7 +206,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Bad/Sts_Unack",
+          "tagPath": "{0}/Alm_Bad/Sts_Unack",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -219,7 +219,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Bad/Cfg_Priority",
+          "tagPath": "{0}/Alm_Bad/Cfg_Priority",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -240,7 +240,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/HH/Alarm/Sts_Active",
+          "tagPath": "{0}/Alm_HH/Sts_Active",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -253,7 +253,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/HH/Alarm/Sts_Unack",
+          "tagPath": "{0}/Alm_HH/Sts_Unack",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -266,7 +266,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/HH/Alarm/Cfg_Priority",
+          "tagPath": "{0}/Alm_HH/Cfg_Priority",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -287,7 +287,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/H/Alarm/Sts_Active",
+          "tagPath": "{0}/Alm_H/Sts_Active",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -300,7 +300,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/H/Alarm/Sts_Unack",
+          "tagPath": "{0}/Alm_H/Sts_Unack",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -313,7 +313,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/H/Alarm/Cfg_Priority",
+          "tagPath": "{0}/Alm_H/Cfg_Priority",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -334,7 +334,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/L/Alarm/Sts_Active",
+          "tagPath": "{0}/Alm_L/Sts_Active",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -347,7 +347,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/L/Alarm/Sts_Unack",
+          "tagPath": "{0}/Alm_L/Sts_Unack",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -360,7 +360,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/L/Alarm/Cfg_Priority",
+          "tagPath": "{0}/Alm_L/Cfg_Priority",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -381,7 +381,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/LL/Alarm/Sts_Active",
+          "tagPath": "{0}/Alm_LL/Sts_Active",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -394,7 +394,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/LL/Alarm/Sts_Unack",
+          "tagPath": "{0}/Alm_LL/Sts_Unack",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -407,7 +407,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/LL/Alarm/Cfg_Priority",
+          "tagPath": "{0}/Alm_LL/Cfg_Priority",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -428,7 +428,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Overrange",
+          "tagPath": "{0}/Sts_ORng",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -449,7 +449,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Underrange",
+          "tagPath": "{0}/Sts_URng",
           "references": {
             "0": "{view.params.tagPath}"
           },
