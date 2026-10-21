@@ -3098,6 +3098,81 @@
                 ]
               },
               {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R1"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "Has open limit",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_Cfg_HasZSO}, 'Yes', 'No')"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
                 "type": "ia.input.checkbox",
                 "version": 0,
                 "meta": {
@@ -3135,8 +3210,91 @@
                         "expression": "{view.custom.level} >= 4"
                       }
                     }
+                  },
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
                   }
                 }
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R2"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "Has closed limit",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_Cfg_HasZSC}, 'Yes', 'No')"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
               },
               {
                 "type": "ia.input.checkbox",
@@ -3170,6 +3328,14 @@
                     }
                   },
                   "props.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  },
+                  "position.display": {
                     "binding": {
                       "type": "expr",
                       "config": {

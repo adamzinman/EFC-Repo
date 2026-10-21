@@ -44,6 +44,7 @@
     "m_Cfg_RawMax": null,
     "m_Cfg_FiltTC": null,
     "m_Cfg_LoCutoff": null,
+    "m_Cfg_SqrtExtract": null,
     "open_Configuration": false
   },
   "params": {
@@ -645,6 +646,20 @@
         "config": {
           "mode": "indirect",
           "tagPath": "{0}/Cfg_LoCutoff",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "bidirectional": false,
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.m_Cfg_SqrtExtract": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Cfg_SqrtExtract",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -4636,6 +4651,81 @@
                 ]
               },
               {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R6"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "Square root",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_Cfg_SqrtExtract}, 'Yes', 'No')"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
                 "type": "ia.input.checkbox",
                 "version": 0,
                 "meta": {
@@ -4667,6 +4757,14 @@
                     }
                   },
                   "props.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  },
+                  "position.display": {
                     "binding": {
                       "type": "expr",
                       "config": {

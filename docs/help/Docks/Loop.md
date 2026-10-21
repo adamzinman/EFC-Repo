@@ -32,7 +32,7 @@ The operator, tuning and configuration dynamic window for a PID loop (T_PID). It
 
 **Trend.** Embeds `Docks/Parts/Trend` (see [Parts/Trend](Parts/Trend.md)) with the static pens `["Val_PV", "Val_SP", "Out_CV"]` and `expanded` = `false`. The Trend part declares `expanded` as `inout` and toggles it itself, and the value flows back to this embed. The `position.basis` binding (`{this.props.params.expanded}`) then grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock region. The trend reads tag history through `efc.ui.trend` (`queryTagHistory`), with a range selector inside the Trend part (5 min, 30 min, 1 h, 8 h, 24 h; default 30 min).
 
-**Tuning** (all levels for the read-only rows; collapsible). The header click toggles `open_Tuning`. Rows: Gain (Kp), Integral (Ti, s), Derivative (Td, s), Deadband, SP rate (/s), CV rate (%/s) and a "Direct acting" checkbox (`Cfg_DirectAct`). Below level 4 each row shows its value read-only. At level 4 and above the value rows are replaced by numeric entries bound two-way to `Cfg_Kp`, `Cfg_Ti`, `Cfg_Td`, `Cfg_DB`, `Cfg_SPRate`, `Cfg_CVRate`, and the checkbox is enabled (level 4 and above). The entries have `enabled` = `true`. Their only guard is visibility.
+**Tuning** (all levels for the read-only rows; collapsible). The header click toggles `open_Tuning`. Rows: Gain (Kp), Integral (Ti, s), Derivative (Td, s), Deadband, SP rate (/s), CV rate (%/s) and a "Direct acting" checkbox (`Cfg_DirectAct`). Below level 4 each row shows its value read-only (Direct acting shows `Yes` or `No`). At level 4 and above the value rows are replaced by numeric entries bound two-way to `Cfg_Kp`, `Cfg_Ti`, `Cfg_Td`, `Cfg_DB`, `Cfg_SPRate`, `Cfg_CVRate`, and the checkbox is shown (level 4 and above; hidden below). The entries have `enabled` = `true`. Their only guard is visibility.
 
 **Configuration** (all levels for the read-only rows; collapsible). The header click toggles `open_Configuration`. Rows: Dev high limit (`Alm_DevH/Cfg_Lim`), Dev low limit (`Alm_DevL/Cfg_Lim`), SP min, SP max, CV min (%), CV max (%), PV min and PV max. Editing works as for Tuning: read-only below level 4, bidirectional entries at level 4 and above, `enabled` = `true`.
 
@@ -61,13 +61,13 @@ Both have `paramDirection: input` and `persistent: true`. No output parameters.
 
 #### Tag mirrors (`custom.m_*`)
 
-There are 38 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The rest of the view reads tag values only through these mirrors.
+There are 39 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The rest of the view reads tag values only through these mirrors.
 
 | Group | Members |
 |---|---|
 | Mode and status | `Sts_Man`, `Sts_Auto`, `Sts_Cas`, `Sts_Track`, `Sts_Intlk`, `Sts_WindupHi`, `Sts_WindupLo`, `Sts_SPRamping` |
 | Values | `Val_PV`, `Val_SP`, `Out_CV`, `Val_Err` |
-| Config | `Cfg_PVEU`, `Cfg_Tag`, `Cfg_Desc`, `Cfg_Kp`, `Cfg_Ti`, `Cfg_Td`, `Cfg_DB`, `Cfg_SPRate`, `Cfg_CVRate`, `Cfg_SPMin`, `Cfg_SPMax`, `Cfg_CVMin`, `Cfg_CVMax`, `Cfg_PVMin`, `Cfg_PVMax` |
+| Config | `Cfg_PVEU`, `Cfg_Tag`, `Cfg_Desc`, `Cfg_Kp`, `Cfg_Ti`, `Cfg_Td`, `Cfg_DB`, `Cfg_SPRate`, `Cfg_CVRate`, `Cfg_SPMin`, `Cfg_SPMax`, `Cfg_CVMin`, `Cfg_CVMax`, `Cfg_PVMin`, `Cfg_PVMax`, `Cfg_DirectAct` |
 | Alarms (per alarm: Sts_Active, Sts_Unack, Cfg_Priority; limits) | `Alm_DevH/Sts_Active`, `Alm_DevH/Sts_Unack`, `Alm_DevH/Cfg_Priority`, `Alm_DevH/Cfg_Lim`, `Alm_DevL/Sts_Active`, `Alm_DevL/Sts_Unack`, `Alm_DevL/Cfg_Priority`, `Alm_DevL/Cfg_Lim`, `Alm_PVBad/Sts_Active`, `Alm_PVBad/Sts_Unack`, `Alm_PVBad/Cfg_Priority` |
 
 ### Component-level custom properties
@@ -84,7 +84,7 @@ None.
 
 ## Bindings reference
 
-Total: **165 bindings**: 39 at view root (all `custom.*`, including 1 `property` binding with a transform) and 126 on components. Types: 109 `expr`, 55 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 126.
+Total: **169 bindings**: 40 at view root (all `custom.*`, including 1 `property` binding with a transform) and 129 on components. Types: 112 `expr`, 56 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 129.
 
 ### View root
 
@@ -203,8 +203,11 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Tuning/Body/E5 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Tuning/Body/E5/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_CVRate` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value (numeric entry) |
 | root/Tuning/Body/E5/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
+| root/Tuning/Body/R6 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
+| root/Tuning/Body/R6/Val | `props.text` | expr | `if({view.custom.m_Cfg_DirectAct}, 'Yes', 'No')` | Text content |
 | root/Tuning/Body/C6 | `props.selected` | tag (indirect) | tag `{0}/Cfg_DirectAct` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write checkbox value |
 | root/Tuning/Body/C6 | `props.enabled` | expr | `{view.custom.level} >= 4` | Enabled while expression is true |
+| root/Tuning/Body/C6 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 
 ### `root/Configuration`
 
@@ -508,6 +511,9 @@ All paths are relative to `tagPath`. Types and comments come from `types/PCLib_M
         - `Lbl` (ia.display.label)
         - `Entry` (ia.input.numeric-entry-field)
         - `EU` (ia.display.label)
+      - `R6` (ia.container.flex)
+        - `Lbl` (ia.display.label)
+        - `Val` (ia.display.label)
       - `C6` (ia.input.checkbox)
   - `Configuration` (ia.container.flex)
     - `Header` (ia.container.flex)

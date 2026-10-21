@@ -107,9 +107,10 @@ def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmts
     return flex(name, "row", [label("Lbl", text, "Text/Caption Text/Mod/Upper", grow=1), num, label("EU", unit, "Text/Units", basis=v(40))],
                 basis=v(28), pc={"position.display": expr(s)}, extra={"alignItems": "center", "style": {"classes": "", "gap": v(6)}})
 
-def check(name, text, member, minlvl):
-    return comp("ia.input.checkbox", name, {"text": text, "style": {"classes": "Input/Check"}}, {"shrink": 0, "basis": v(24)},
-                {"props.selected": tag(member, bidi=True), "props.enabled": expr(lvl(minlvl))})
+def check(name, text, member, minlvl, hide=False):
+    pc = {"props.selected": tag(member, bidi=True), "props.enabled": expr(lvl(minlvl))}
+    if hide: pc["position.display"] = expr(lvl(minlvl))            # hidden, not greyed, below minlvl
+    return comp("ia.input.checkbox", name, {"text": text, "style": {"classes": "Input/Check"}}, {"shrink": 0, "basis": v(24)}, pc)
 
 # ----------------------------------------------------------------- shared window blocks
 def header(vw):
@@ -200,11 +201,12 @@ def maint(vw, extra=()):
     return section("Maintenance", "Maintenance", kids, show=lvl(MAINT))
 
 def config(vw, entries, name="Configuration", title="Configuration"):
-    """entries: [(text, member, unit)]; values are shown to all, editable Engineer+ (collapsed by default)."""
+    """entries: [(text, member, unit)]; values are shown to all (booleans as Yes/No), editable Engineer+ (collapsed by default)."""
     kids = []
     for i, (text, mem, unit) in enumerate(entries):
         if mem.startswith("?"):                                    # boolean
-            kids.append(check(f"C{i}", text, mem[1:], ENG))
+            kids.append(row(f"R{i}", text, f"if({vw.m(mem[1:])}, 'Yes', 'No')", show="!(" + lvl(ENG) + ")"))
+            kids.append(check(f"C{i}", text, mem[1:], ENG, hide=True))
         else:
             kids.append(row(f"R{i}", text, fmt(vw.m(mem), "#,##0.###"), repr(unit), show="!(" + lvl(ENG) + ")"))
             kids.append(entry(vw, f"E{i}", text, mem, ENG, unit, fmtstr="#,##0.###"))

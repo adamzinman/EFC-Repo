@@ -45,7 +45,7 @@ A hint line states "Enabled in MAN, available, permitted, not interlocked, not L
 
 **Maintenance** (level 2 and above). Shows run hours, starts, starts in the last hour, hours since maintenance and whether maintenance is due. `RESET MAINT` writes `Run/Cmd_ResetMaint` (audited). `SIMULATE` toggles `Sim_En` (audited).
 
-**Configuration** (collapsible; collapsed by default; the header click toggles `open_Configuration`). Below level 4 each value is a read-only row. At level 4 and above each value is an editable entry bound bidirectionally to its tag, with an enable expression of the literal `true`; the row is hidden and the entry shown. The entries are: Feedback time (`Cfg_FbkTime`, s), Restart delay (`Cfg_RestartDly`, s), Rated current (`Cfg_RatedAmps`, A), Max starts / hr (`Cfg_MaxStartsHr`), Speed min (`Cfg_SpdMin`), Speed max (`Cfg_SpdMax`), Speed dev limit (`Cfg_SpdDevLim`) and Speed dev time (`Cfg_SpdDevTime`, s). "Auto restart" (`Cfg_AutoRestart`) is a checkbox shown at every level, enabled only at level 4 and above. The entries and checkbox write their tags through the binding. The only guard is the UI enable expression.
+**Configuration** (collapsible; collapsed by default; the header click toggles `open_Configuration`). Below level 4 each value is a read-only row. At level 4 and above each value is an editable entry bound bidirectionally to its tag, with an enable expression of the literal `true`; the row is hidden and the entry shown. The entries are: Feedback time (`Cfg_FbkTime`, s), Restart delay (`Cfg_RestartDly`, s), Rated current (`Cfg_RatedAmps`, A), Max starts / hr (`Cfg_MaxStartsHr`), Speed min (`Cfg_SpdMin`), Speed max (`Cfg_SpdMax`), Speed dev limit (`Cfg_SpdDevLim`) and Speed dev time (`Cfg_SpdDevTime`, s). "Auto restart" (`Cfg_AutoRestart`) follows the same pattern: below level 4 a read-only row shows `Yes` or `No`; at level 4 and above the row is hidden and a checkbox is shown (enabled at level 4 and above). The entries and checkbox write their tags through the binding. The only guard is the UI enable expression.
 
 **Role checks.** All role levels come from the Perspective session (`session.props.auth.user.roles`) and are checked in the client. `efc.ui.cmd` returns without writing when the level is too low. Bindings do not check the level. Real access control has to be enforced in Perspective security and the PLC logic.
 
@@ -71,14 +71,14 @@ Both have `paramDirection: input` and `persistent: true`. No output parameters.
 
 #### Tag mirrors (`custom.m_*`)
 
-There are 71 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The display bindings read tag values through these mirrors. The setpoint and configuration entries bind their tags directly (see Bindings reference).
+There are 72 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The display bindings read tag values through these mirrors. The setpoint and configuration entries bind their tags directly (see Bindings reference).
 
 | Group | Members |
 |---|---|
 | Mode | `Mode/Sts_Man`, `Mode/Sts_OOS`, `Mode/Sts_Maint`, `Mode/Sts_Auto` |
 | Status / other | `Sts_Avail`, `Sts_Intlk`, `Sts_Local`, `Sts_NotPerm`, `Sts_NE107`, `Sts_Tripped`, `Sts_Fault`, `Sts_Starting`, `Sts_Stopping`, `Sts_Running`, `Sts_Stopped`, `Sts_Sim` |
 | Values | `Val_Current`, `Val_LoadPct`, `Val_SpdRef`, `Val_Spd`, `Val_Torque`, `Val_Power` |
-| Config | `Cfg_RatedAmps`, `Cfg_Tag`, `Cfg_Desc`, `Cfg_Reversible`, `Cfg_SpdEU`, `Cfg_FbkTime`, `Cfg_RestartDly`, `Cfg_MaxStartsHr`, `Cfg_SpdMin`, `Cfg_SpdMax`, `Cfg_SpdDevLim`, `Cfg_SpdDevTime` |
+| Config | `Cfg_RatedAmps`, `Cfg_Tag`, `Cfg_Desc`, `Cfg_Reversible`, `Cfg_SpdEU`, `Cfg_FbkTime`, `Cfg_RestartDly`, `Cfg_MaxStartsHr`, `Cfg_SpdMin`, `Cfg_SpdMax`, `Cfg_SpdDevLim`, `Cfg_SpdDevTime`, `Cfg_AutoRestart` |
 | Inputs | `Inp_FaultCode` |
 | Alarms | `Alm_FailStart/Sts_Active`, `Alm_FailStart/Sts_Unack`, `Alm_FailStart/Cfg_Priority`, `Alm_FailStop/Sts_Active`, `Alm_FailStop/Sts_Unack`, `Alm_FailStop/Cfg_Priority`, `Alm_Uncmd/Sts_Active`, `Alm_Uncmd/Sts_Unack`, `Alm_Uncmd/Cfg_Priority`, `Alm_EStop/Sts_Active`, `Alm_EStop/Sts_Unack`, `Alm_EStop/Cfg_Priority`, `Alm_IntlkTrip/Sts_Active`, `Alm_IntlkTrip/Sts_Unack`, `Alm_IntlkTrip/Cfg_Priority`, `Alm_ExcessStarts/Sts_Active`, `Alm_ExcessStarts/Sts_Unack`, `Alm_ExcessStarts/Cfg_Priority`, `Alm_DrvFault/Sts_Active`, `Alm_DrvFault/Sts_Unack`, `Alm_DrvFault/Cfg_Priority`, `Alm_DrvWarn/Sts_Active`, `Alm_DrvWarn/Sts_Unack`, `Alm_DrvWarn/Cfg_Priority`, `Alm_CommFail/Sts_Active`, `Alm_CommFail/Sts_Unack`, `Alm_CommFail/Cfg_Priority`, `Alm_SpdDev/Sts_Active`, `Alm_SpdDev/Sts_Unack`, `Alm_SpdDev/Cfg_Priority` |
 | Runtime | `Run/Val_RunHrs`, `Run/Val_Starts`, `Run/Val_StartsLastHr`, `Run/Val_HrsSinceMaint`, `Run/Sts_MaintDue` |
@@ -99,7 +99,7 @@ None.
 
 ## Bindings reference
 
-Total: **193 bindings**: 72 at view root (all `custom.*`, including 1 `property` binding with a transform) and 121 on components. Types: 111 `expr`, 81 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 121.
+Total: **197 bindings**: 73 at view root (all `custom.*`, including 1 `property` binding with a transform) and 124 on components. Types: 114 `expr`, 82 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 124.
 
 ### View root
 
@@ -254,8 +254,11 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Configuration/Body/E3 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/E3/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_MaxStartsHr` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/E3/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
+| root/Configuration/Body/R4 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
+| root/Configuration/Body/R4/Val | `props.text` | expr | `if({view.custom.m_Cfg_AutoRestart}, 'Yes', 'No')` | Text content |
 | root/Configuration/Body/C4 | `props.selected` | tag (indirect) | tag `{0}/Cfg_AutoRestart` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/C4 | `props.enabled` | expr | `{view.custom.level} >= 4` | Enabled while expression is true |
+| root/Configuration/Body/C4 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/R5 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R5/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_SpdMin}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R5/EU | `props.text` | expr | `''` | Text content |
@@ -679,6 +682,9 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
         - `Lbl` (ia.display.label)
         - `Entry` (ia.input.numeric-entry-field)
         - `EU` (ia.display.label)
+      - `R4` (ia.container.flex)
+        - `Lbl` (ia.display.label)
+        - `Val` (ia.display.label)
       - `C4` (ia.input.checkbox)
       - `R5` (ia.container.flex)
         - `Lbl` (ia.display.label)
@@ -722,7 +728,6 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **START does not check the drive state.** START is enabled while the drive is running, tripped or faulted, so it can write `Cmd_Start` in those states. STOP and RESET have no enable at all, so RESET is clickable outside MAN.
 - **The hint line is not accurate.** It says the commands are "Enabled in MAN, available, permitted, not interlocked, not LOCAL". That is true only for START and JOG. STOP and RESET have no enable, and the speed entry and direction buttons use the looser rule above.
 - **Direction is not shown.** `Sts_Rev` (running in reverse) is not bound. The FWD and REV buttons have no state highlight, so neither the commanded nor the running direction is visible.
-- **Auto restart is handled differently from the other settings.** It is a checkbox visible at every level and disabled below level 4. The numeric settings are hidden below level 4 and replaced by read-only rows. Below level 4 the operator can therefore see the auto-restart state, but cannot see the numeric values in edit form.
 - **TIME tags are labelled in seconds.** `Cfg_FbkTime`, `Cfg_RestartDly` and `Cfg_SpdDevTime` are TIME in PCLib. The view shows the raw value with the unit `s`. Whether the tag delivers seconds or milliseconds depends on the OPC/tag configuration. Confirm before commissioning. The same question applies to `Docks/ValveDiscrete` (`Cfg_TravelTime`).
 - **Speed unit label is blank.** The unit beside the speed entry is an empty static label with no binding. The Values rows show the unit from `Cfg_SpdEU`.
 - **Trend pens share one scale and have no legend.** `efc.ui.trend` scales every pen to one minimum and maximum. Speed reference, speed (in `Cfg_SpdEU` units) and current (A) therefore share one axis. The part draws the pens in fixed colours by position (dark, blue, grey) and the view does not label them. See [Parts/Trend.md](Parts/Trend.md).

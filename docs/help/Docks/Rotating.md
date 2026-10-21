@@ -38,7 +38,7 @@ The operator and maintenance dynamic window for a motor-driven equipment item (T
 
 **Maintenance** (level 2 and above). Shows run hours (`Run/Val_RunHrs`), starts (`Run/Val_Starts`), starts in the last hour (`Run/Val_StartsLastHr`), run hours since maintenance (`Run/Val_HrsSinceMaint`) and whether maintenance is due (`Run/Sts_MaintDue`). `RESET MAINT` writes `Run/Cmd_ResetMaint` (audited). `SIMULATE` toggles `Sim_En` (audited).
 
-**Configuration** (collapsible; the header click toggles `open_Configuration`, collapsed by default). Feedback time, restart delay, rated current, max starts per hour, the auto restart checkbox and the high current alarm limit. Below level 4 the numeric values show as read-only labels. At level 4 and above each numeric value has an entry bound bidirectionally to its tag. The auto restart checkbox (`Cfg_AutoRestart`) is visible at every level and enabled at level 4 and above. The entries have the literal enable `true`, so the level 4 rule is enforced only by visibility.
+**Configuration** (collapsible; the header click toggles `open_Configuration`, collapsed by default). Feedback time, restart delay, rated current, max starts per hour, the auto restart checkbox and the high current alarm limit. Below level 4 the numeric values show as read-only labels. At level 4 and above each numeric value has an entry bound bidirectionally to its tag. Auto restart (`Cfg_AutoRestart`) follows the same pattern: below level 4 a read-only row shows `Yes` or `No`; at level 4 and above the row is hidden and the checkbox is shown. The entries have the literal enable `true`, so the level 4 rule is enforced only by visibility; the checkbox is also hidden below level 4.
 
 **Role checks.** All role levels come from the Perspective session (`session.props.auth.user.roles`) and are checked in the client. `efc.ui.cmd` returns without writing when the level is too low. The Configuration entries and the auto restart checkbox are bindings that write tags directly. Their only guards are their visibility and enable expressions. Real access control has to be enforced in Perspective security and the PLC logic.
 
@@ -64,12 +64,12 @@ Both have `paramDirection: input` and `persistent: true`. No output parameters.
 
 #### Tag mirrors (`custom.m_*`)
 
-There are 55 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The rest of the view reads tag values only through these mirrors. The Configuration entries and the auto restart checkbox are the exceptions: they bind directly to their tags.
+There are 56 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The rest of the view reads tag values only through these mirrors. The Configuration entries and the auto restart checkbox are the exceptions: they also bind directly to their tags.
 
 | Group | Members |
 |---|---|
 | Mode | `Mode/Sts_Man`, `Mode/Sts_OOS`, `Mode/Sts_Maint`, `Mode/Sts_Auto` |
-| Config | `Cfg_RatedAmps`, `Cfg_Tag`, `Cfg_Desc`, `Cfg_FbkTime`, `Cfg_RestartDly`, `Cfg_MaxStartsHr` |
+| Config | `Cfg_RatedAmps`, `Cfg_Tag`, `Cfg_Desc`, `Cfg_FbkTime`, `Cfg_RestartDly`, `Cfg_MaxStartsHr`, `Cfg_AutoRestart` |
 | Values | `Val_Current`, `Val_LoadPct` |
 | Alarms | `Alm_FailStart/Sts_Active`, `Alm_FailStart/Sts_Unack`, `Alm_FailStart/Cfg_Priority`, `Alm_FailStop/Sts_Active`, `Alm_FailStop/Sts_Unack`, `Alm_FailStop/Cfg_Priority`, `Alm_Uncmd/Sts_Active`, `Alm_Uncmd/Sts_Unack`, `Alm_Uncmd/Cfg_Priority`, `Alm_EStop/Sts_Active`, `Alm_EStop/Sts_Unack`, `Alm_EStop/Cfg_Priority`, `Alm_IntlkTrip/Sts_Active`, `Alm_IntlkTrip/Sts_Unack`, `Alm_IntlkTrip/Cfg_Priority`, `Alm_ExcessStarts/Sts_Active`, `Alm_ExcessStarts/Sts_Unack`, `Alm_ExcessStarts/Cfg_Priority`, `Alm_OL/Sts_Active`, `Alm_OL/Sts_Unack`, `Alm_OL/Cfg_Priority`, `Alm_HiCurrent/Sts_Active`, `Alm_HiCurrent/Sts_Unack`, `Alm_HiCurrent/Cfg_Priority`, `Alm_HiCurrent/Cfg_Lim` |
 | Runtime | `Run/Val_RunHrs`, `Run/Val_Starts`, `Run/Val_StartsLastHr`, `Run/Val_HrsSinceMaint`, `Run/Sts_MaintDue` |
@@ -89,7 +89,7 @@ None.
 
 ## Bindings reference
 
-Total: **141 bindings**: 56 at view root (1 `property` binding with a transform, plus 55 tag mirrors) and 85 on components. Types: 79 `expr`, 61 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 85.
+Total: **144 bindings**: 57 at view root (1 `property` binding with a transform, plus 56 tag mirrors) and 88 on components. Types: 82 `expr`, 62 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 88.
 
 ### View root
 
@@ -226,8 +226,11 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Configuration/Body/E3 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/E3/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_MaxStartsHr` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/E3/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
+| root/Configuration/Body/R4 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
+| root/Configuration/Body/R4/Val | `props.text` | expr | `if({view.custom.m_Cfg_AutoRestart}, 'Yes', 'No')` | Text content |
 | root/Configuration/Body/C4 | `props.selected` | tag (indirect) | tag `{0}/Cfg_AutoRestart` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/C4 | `props.enabled` | expr | `{view.custom.level} >= 4` | Enabled while expression is true |
+| root/Configuration/Body/C4 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/R5 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R5/Val | `props.text` | expr | `numberFormat({view.custom.m_Alm_HiCurrent_Cfg_Lim}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R5/EU | `props.text` | expr | `'A'` | Text content |
@@ -569,6 +572,9 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
         - `Lbl` (ia.display.label)
         - `Entry` (ia.input.numeric-entry-field)
         - `EU` (ia.display.label)
+      - `R4` (ia.container.flex)
+        - `Lbl` (ia.display.label)
+        - `Val` (ia.display.label)
       - `C4` (ia.input.checkbox)
       - `R5` (ia.container.flex)
         - `Lbl` (ia.display.label)
@@ -586,7 +592,6 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **JOG enable checks Manual, not Maintenance.** JOG is visible at level 2 and is enabled by the START expression, which requires `Mode/Sts_Man`. The PCLib comment says "Maint mode only". In MAINT, `Sts_Man` should be FALSE, so JOG would be disabled there, and it would be enabled in MAN. This is the reverse of the comment. Confirm the intended mode rule.
 - **START is not blocked by a trip or fault.** START's enable does not include `Sts_Tripped` or `Sts_Fault`. The same is true of the discrete dock's OPEN and CLOSE.
 - **STOP and RESET have no enable.** They are clickable at level 1 and above in any mode and state.
-- **Auto restart is greyed, not hidden.** `Cfg_AutoRestart` is visible at every level and disabled below level 4. The generator's docstring says controls below the user's level are "hidden, not greyed", so the output does not match the stated rule. The same checkbox behaviour applies to the discrete dock's two limit checkboxes.
 - **Restart countdown and readiness are not shown.** `Sts_RestartLeft`, `Sts_Ready` and `Sts_State` are not used. `Cfg_NoFbk` is not shown or editable here.
 - **Units of TIME members.** `Cfg_FbkTime` and `Cfg_RestartDly` are TIME members. The dock shows the raw value with unit `s`. Confirm whether the tag delivers seconds or milliseconds before commissioning.
 - **Zero means no limit, and the dock does not say so.** `Cfg_MaxStartsHr` is 0 for no limit (PCLib comment). The Configuration row shows the raw number with no unit and no label for 0.

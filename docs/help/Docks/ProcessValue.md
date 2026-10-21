@@ -30,7 +30,7 @@ The operator and maintenance window for an analog process value (T_AI). It shows
 
 **Limits** (collapsible, collapsed at start; the header click toggles `open_Limits`). Five alarm limits: high high, high, low, low low and rate of change (`Alm_HH/Cfg_Lim`, `Alm_H/Cfg_Lim`, `Alm_L/Cfg_Lim`, `Alm_LL/Cfg_Lim`, `Alm_ROC/Cfg_Lim`). Below level 4 each is a read-only row. At level 4 and above each is an entry bound bidirectionally to the tag. The units shown are blank for the four PV limits and `/min` for the rate-of-change limit. Writes are not audited.
 
-**Configuration** (collapsible, collapsed at start; the header click toggles `open_Configuration`). Seven items: EU min (`Cfg_EUMin`), EU max (`Cfg_EUMax`), raw min (`Cfg_RawMin`), raw max (`Cfg_RawMax`), filter time constant (`Cfg_FiltTC`, s), low cutoff (`Cfg_LoCutoff`) and square root extraction (`Cfg_SqrtExtract`, checkbox). Below level 4 they are read-only rows. At level 4 and above they are entries or a checkbox bound bidirectionally to the tag. Writes are not audited.
+**Configuration** (collapsible, collapsed at start; the header click toggles `open_Configuration`). Seven items: EU min (`Cfg_EUMin`), EU max (`Cfg_EUMax`), raw min (`Cfg_RawMin`), raw max (`Cfg_RawMax`), filter time constant (`Cfg_FiltTC`, s), low cutoff (`Cfg_LoCutoff`) and square root extraction (`Cfg_SqrtExtract`, checkbox). Below level 4 they are read-only rows (square root extraction shows `Yes` or `No`). At level 4 and above they are entries or a checkbox bound bidirectionally to the tag, and the rows are hidden. Writes are not audited.
 
 **Role checks.** Role levels come from the Perspective session (`session.props.auth.user.roles`), mapped by `efc.ui.level`. Only ACK checks the level in script (inside `efc.ui.ackAll`). The maintenance controls, the limits and the configuration are protected by visibility and enable bindings only. Bindings do not check the level. Real access control has to be enforced in Perspective security and the PLC logic.
 
@@ -57,12 +57,12 @@ Both have `paramDirection: input` and `persistent: true`. No output parameters.
 
 #### Tag mirrors (`custom.m_*`)
 
-There are 42 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The read-only display rows read tag values through these mirrors. The entries, checkboxes and the ACK script read the tags directly.
+There are 43 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The read-only display rows read tag values through these mirrors. The entries, checkboxes and the ACK script read the tags directly (the square root checkbox's read-only row uses a mirror).
 
 | Group | Members |
 |---|---|
 | Identity | `Cfg_Tag`, `Cfg_Desc`, `Cfg_EU` |
-| Scaling | `Cfg_EUMin`, `Cfg_EUMax`, `Cfg_RawMin`, `Cfg_RawMax`, `Cfg_FiltTC`, `Cfg_LoCutoff` |
+| Scaling | `Cfg_EUMin`, `Cfg_EUMax`, `Cfg_RawMin`, `Cfg_RawMax`, `Cfg_FiltTC`, `Cfg_LoCutoff`, `Cfg_SqrtExtract` |
 | Status | `Sts_Bad`, `Sts_Sim`, `Sts_Subst`, `Sts_ORng`, `Sts_URng`, `Sts_NE107` |
 | Values | `Val_PV`, `Val_PVPct`, `Val_ROC` |
 | Simulation | `Sim_En` |
@@ -82,7 +82,7 @@ None.
 
 ## Bindings reference
 
-Total: **148 bindings**: 43 at view root (all `custom.*`, including 1 `property` binding with a transform) and 105 on components (91 `expr`, 14 `tag`). Types overall: 91 `expr`, 56 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only, so they are not counted.
+Total: **154 bindings**: 44 at view root (all `custom.*`, including 1 `property` binding with a transform) and 108 on components (94 `expr`, 14 `tag`). Types overall: 94 `expr`, 57 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only, so they are not counted.
 
 ### View root
 
@@ -230,8 +230,11 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Configuration/Body/E5 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/E5/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_LoCutoff` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/E5/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
+| root/Configuration/Body/R6 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
+| root/Configuration/Body/R6/Val | `props.text` | expr | `if({view.custom.m_Cfg_SqrtExtract}, 'Yes', 'No')` | Text content |
 | root/Configuration/Body/C6 | `props.selected` | tag (indirect) | tag `{0}/Cfg_SqrtExtract` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value (checkbox) |
 | root/Configuration/Body/C6 | `props.enabled` | expr | `{view.custom.level} >= 4` | Enabled while expression is true |
+| root/Configuration/Body/C6 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 
 ## Scripts reference
 
@@ -504,6 +507,9 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
         - `Lbl` (ia.display.label)
         - `Entry` (ia.input.numeric-entry-field)
         - `EU` (ia.display.label)
+      - `R6` (ia.container.flex)
+        - `Lbl` (ia.display.label)
+        - `Val` (ia.display.label)
       - `C6` (ia.input.checkbox)
 
 ```

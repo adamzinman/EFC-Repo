@@ -33,7 +33,7 @@ The operator and maintenance dynamic window for a two-state valve (T_DValve). It
 
 **Maintenance** (level 2 and above). Shows run hours, starts, starts in the last hour, hours since maintenance and whether maintenance is due. `RESET MAINT` writes `Run/Cmd_ResetMaint` (audited). `SIMULATE` toggles `Sim_En` (audited).
 
-**Configuration** (collapsible; the header click toggles `open_Configuration`). Travel time is read-only below level 4 and editable at level 4 and above (bidirectional `Cfg_TravelTime`, unit s). The "Has open limit" and "Has closed limit" checkboxes are bidirectional to `Cfg_HasZSO` and `Cfg_HasZSC`, enabled only at level 4 and above. The entry and checkboxes write the tag directly through the binding. The only guard is the UI enable expression. The entry's enable expression is the literal `true`; its visibility is what limits it to level 4.
+**Configuration** (collapsible; the header click toggles `open_Configuration`). Travel time is read-only below level 4 and editable at level 4 and above (bidirectional `Cfg_TravelTime`, unit s). The "Has open limit" and "Has closed limit" settings follow the same pattern: below level 4 each is a read-only row showing `Yes` or `No` from `Cfg_HasZSO` / `Cfg_HasZSC`; at level 4 and above the row is hidden and a checkbox, bidirectional to the tag, is shown (and enabled). The entry and checkboxes write the tag directly through the binding. The only guard is that visibility (the checkboxes' enable is `level >= 4`; the entry's is the literal `true`).
 
 **Role checks.** All role levels come from the Perspective session (`session.props.auth.user.roles`) and are checked in the client. `efc.ui.cmd` returns without writing when the level is too low. Bindings do not check the level. Real access control has to be enforced in Perspective security and the PLC logic.
 
@@ -84,7 +84,7 @@ None.
 
 ## Bindings reference
 
-Total: **101 bindings**: 44 at view root (all `custom.*`, including 1 `property` binding with a transform) and 57 on components. Types: 54 `expr`, 46 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 57.
+Total: **107 bindings**: 44 at view root (all `custom.*`, including 1 `property` binding with a transform) and 63 on components. Types: 60 `expr`, 46 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 63.
 
 ### View root
 
@@ -197,10 +197,16 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Configuration/Body/E0 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/E0/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_TravelTime` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/E0/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
+| root/Configuration/Body/R1 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
+| root/Configuration/Body/R1/Val | `props.text` | expr | `if({view.custom.m_Cfg_HasZSO}, 'Yes', 'No')` | Text content |
 | root/Configuration/Body/C1 | `props.selected` | tag (indirect) | tag `{0}/Cfg_HasZSO` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/C1 | `props.enabled` | expr | `{view.custom.level} >= 4` | Enabled while expression is true |
+| root/Configuration/Body/C1 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
+| root/Configuration/Body/R2 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
+| root/Configuration/Body/R2/Val | `props.text` | expr | `if({view.custom.m_Cfg_HasZSC}, 'Yes', 'No')` | Text content |
 | root/Configuration/Body/C2 | `props.selected` | tag (indirect) | tag `{0}/Cfg_HasZSC` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
 | root/Configuration/Body/C2 | `props.enabled` | expr | `{view.custom.level} >= 4` | Enabled while expression is true |
+| root/Configuration/Body/C2 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 
 ## Scripts reference
 
@@ -477,7 +483,13 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
         - `Lbl` (ia.display.label)
         - `Entry` (ia.input.numeric-entry-field)
         - `EU` (ia.display.label)
+      - `R1` (ia.container.flex)
+        - `Lbl` (ia.display.label)
+        - `Val` (ia.display.label)
       - `C1` (ia.input.checkbox)
+      - `R2` (ia.container.flex)
+        - `Lbl` (ia.display.label)
+        - `Val` (ia.display.label)
       - `C2` (ia.input.checkbox)
 ```
 
