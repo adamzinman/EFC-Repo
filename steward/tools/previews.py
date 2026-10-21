@@ -273,6 +273,127 @@ def valve_discrete():
     return head + '<div class="body">' + state + mode + cmd + perm + intl + alarms + hist + maint + cfg + "</div>"
 
 
+
+def hdr(tag, desc):
+    return ('<div data-c="Container/PopupHeader" class="hdr"><div style="flex:1;min-width:0">'
+            f'<div data-c="Text/TagName Text/Color/Inverse">{tag}</div><div data-c="Text/Caption Text/Color/Inverse">{desc}</div></div>'
+            '<button data-c="Button/Icon" class="x" title="close: back to the screen default dock">&#x2715;</button></div>')
+
+
+def mode_row():
+    return ('<div class="row"><span data-c="Text/Label" class="lbl">MODE</span><button data-c="Mode/Auto">AUTO</button><button data-c="Mode/Manual">MAN</button>'
+            f'<button data-c="Button/Subtle">MAINT</button><button data-c="Button/Subtle">OOS</button>{role("Maint")}</div>')
+
+
+def leds(*items):
+    return '<div class="row">' + "".join(f'<span data-c="Indicator/LED/{st}" class="led"></span><span data-c="Text/Label" style="margin-right:6px">{t}</span>' for st, t in items) + "</div>"
+
+
+def alarm_grp(rows):
+    act = [r for r in rows if r[2]]
+    ina = [r for r in rows if not r[2]]
+    line = lambda c, t, st: f'<div class="cond"><span data-c="{c}" class="led"></span><span data-c="Text/Body" style="flex:1">{t}</span><span data-c="Text/Caption">{st}</span></div>'
+    body = ("".join(line(*r) for r in act) or '<div data-c="Text/Caption">No active alarms</div>')
+    body += f'<details><summary data-c="Text/Caption">+ {len(ina)} inactive</summary>' + "".join(line(*r) for r in ina) + "</details>"
+    return grp("ALARMS", body + '<div class="row"><button data-c="Button/Default">ACK</button></div>')
+    body = "".join(f'<div class="cond"><span data-c="{c}" class="led"></span><span data-c="Text/Body" style="flex:1">{t}</span><span data-c="Text/Caption">{st}</span></div>' for c, t, st in rows)
+    return grp("ALARMS", body + '<div class="row"><button data-c="Button/Default">ACK</button></div>')
+
+
+def bar(lbl, val, pct, cls="Value/Normal", marker=None, entry=False):
+    m = f'<div style="position:absolute;left:{marker}%;top:-3px;bottom:-3px;width:2px;background:#1F4E99" title="setpoint"></div>' if marker is not None else ""
+    v = f'<span data-c="Input/Setpoint" class="num">{val}</span>' if entry else f'<span data-c="{cls}" class="num">{val}</span>'
+    return (f'<div class="barrow"><span data-c="Text/Label" class="bl">{lbl}</span><div data-c="Bar/Track" class="trk">'
+            f'<div data-c="Bar/Fill" style="width:{pct}%;height:100%"></div>{m}</div>{v}</div>')
+
+
+def trend(series, legend, strip=None):
+    W, H = 360, 70
+    paths = ""
+    for pts, color, dash in series:
+        n = len(pts) - 1
+        d = " ".join(f"{'M' if i == 0 else 'L'}{i * W / n:.1f},{H - p * H / 100:.1f}" for i, p in enumerate(pts))
+        paths += f'<path d="{d}" fill="none" stroke="{color}" stroke-width="1.5"{" stroke-dasharray=\"4 3\"" if dash else ""}/>'
+    grid = "".join(f'<line x1="0" x2="{W}" y1="{y}" y2="{y}" stroke="#D0D0D0" stroke-width="1"/>' for y in (H / 4, H / 2, 3 * H / 4))
+    st = ""
+    if strip:
+        col = {"run": "#4D4D4D", "stop": "#C4C4C4", "fault": "#D50000"}
+        st = '<div class="strip" style="height:8px">' + "".join(f'<div style="flex:{w};background:{col[k]}"></div>' for k, w in strip) + "</div>"
+    lg = '<div class="legend2">' + "".join(f'<i style="background:{c}"></i>{t} ' for t, c in legend) + "</div>"
+    return (f'<svg viewBox="0 0 {W} {H}" width="100%" height="{H}" style="border:1px solid #9E9E9E;background:#FAFAFA;display:block">{grid}{paths}</svg>'
+            f'{st}<div class="axis"><span>-8 h</span><span>-4 h</span><span>now</span></div>{lg}')
+
+
+def kv(*pairs):
+    return '<div class="kv">' + "".join(f'<span data-c="Text/Label">{k}</span><span data-c="Text/Value">{v}</span>' for k, v in pairs) + "</div>"
+
+
+def details(title, body):
+    return f'<details data-c="Container/GroupBox" class="grp"><summary data-c="Text/Subheader">{title}</summary>{body}</details>'
+
+
+def wave(n, base, amp, seed):
+    import math
+    return [max(0, min(100, base + amp * math.sin(i / 3.0 + seed) + amp * 0.4 * math.sin(i * 1.7 + seed))) for i in range(n)]
+
+
+def valve_analog():
+    dem = wave(40, 55, 10, 0.3); pos = [d - 1.2 for d in dem]
+    return hdr("FV-101", "Reactor feed control valve") + '<div class="body">' + (
+        '<div class="row st"><span data-c="State/Running" class="big">54.6 %</span><span data-c="Indicator/Badge">NE107 OK</span>'
+        '<span data-c="Indicator/Badge" class="dim">RATE LIM</span><span data-c="Mode/Simulated" class="dim">SIM</span></div>'
+        + grp("POSITION", bar("DEMAND", "55.0 %", 55) + bar("POSITION", "54.6 %", 54.6) + kv(("DEVIATION", "-0.4 %  (limit 5 %)"))
+              + leds(("On", "Feedback OK"), ("Off", "ZSC closed")))
+        + mode_row()
+        + '<div class="row"><span data-c="Text/Label" class="lbl">MAN</span><span data-c="Input/Setpoint" class="num" style="width:70px">55.0 %</span>'
+          + "".join(f'<button data-c="Button/Small">{v}</button>' for v in ("0", "25", "50", "75", "100")) + '<button data-c="Button/Subtle">RESET</button></div>'
+          '<div data-c="Text/Caption" class="hint">Entry enabled in MAN, not interlocked</div>'
+        + grp("INTERLOCKS", cond("ok", "Reactor pressure not HH") + cond("ok", "Agitator running", byp=True)
+              + '<div data-c="Text/Caption">On trip the valve goes to 0 % (Cfg_IntlkPos)</div>', '<span data-c="Indicator/InterlockBadge" class="mini">I</span>')
+        + alarm_grp([("Indicator/LED/Off", "Position deviation", ""), ("Indicator/LED/Off", "Feedback bad", ""), ("Indicator/LED/Off", "Interlock trip", "")])
+        + grp("HISTORY (8 h)", trend([(dem, "#1F4E99", True), (pos, "#262626", False)], [("demand", "#1F4E99"), ("position", "#262626")]))
+        + grp("MAINTENANCE", kv(("TRAVEL", "18 240 %"), ("REVERSALS", "9 812")))
+        + details("CONFIGURATION", "fail position 0 % &middot; interlock position 0 % &middot; output 0-100 % &middot; rate 10 %/s up / 10 %/s down &middot; tight shut-off 2 % &middot; direct acting")
+    ) + "</div>"
+
+
+def motor_body(vfd=False):
+    cur = wave(40, 62, 6, 1.1)
+    spd = wave(40, 80, 5, 0.5)
+    rows = [("Indicator/LED/Off", "Fail to start", ""), ("Indicator/LED/Off", "Fail to stop", ""), ("Indicator/LED/Off", "Uncommanded run/stop", ""),
+            ("Indicator/LED/Off", "E-stop", ""), ("Indicator/LED/Off", "Interlock trip", ""), ("Indicator/LED/Off", "Excess starts", "")]
+    rows += ([("Indicator/LED/Off", "Drive fault", ""), ("Alarm/Low/Fill", "Drive warning", "active"), ("Indicator/LED/Off", "Comm fail", ""), ("Indicator/LED/Off", "Speed deviation", "")]
+             if vfd else [("Indicator/LED/Off", "Overload", ""), ("Indicator/LED/Off", "High current", "")])
+    badges = ('<span data-c="Indicator/Badge">AT SPEED</span><span data-c="Indicator/Badge" class="dim">REV</span><span data-c="Indicator/Badge" class="dim">COMM FAIL</span>'
+              if vfd else "")
+    state = (f'<div class="row st"><span data-c="State/Running" class="big">RUNNING</span><span data-c="Indicator/Badge">NE107 OK</span>{badges}'
+             '<span data-c="Mode/Simulated" class="dim">SIM</span><span data-c="Mode/Local" class="dim">LOCAL</span></div>')
+    fb = (leds(("On", "Run fbk"), ("On", "Ready"), ("On", "E-stop OK"), ("Off", "Drive fault"), ("Off", "Warn")).replace("</div>", '<span data-c="Text/Label">FAULT CODE 0</span></div>')
+          if vfd else leds(("On", "Run fbk"), ("On", "Ready"), ("On", "E-stop OK"), ("Off", "Overload")))
+    cmd = ('<div class="row"><span data-c="Text/Label" class="lbl">CMD</span><button data-c="Button/Start">START</button><button data-c="Button/Stop">STOP</button>'
+           f'<button data-c="Button/Subtle">RESET</button><button data-c="Button/Momentary">JOG</button>{role("Maint")}</div>')
+    if vfd:
+        cmd += ('<div class="row"><span data-c="Text/Label" class="lbl">DIR</span><button data-c="Button/Toggle/On">FWD</button><button data-c="Button/Toggle/Off">REV</button>'
+                '<span data-c="Text/Caption">shown if Cfg_Reversible</span></div>')
+    cmd += '<div data-c="Text/Caption" class="hint">Enabled in MAN, available, permitted, not interlocked, not LOCAL</div>'
+    if vfd:
+        drive = grp("SPEED", bar("SETPOINT", "48.0 Hz", 80, entry=True) + bar("SPEED", "47.9 Hz", 79.8, marker=80)
+                    + kv(("CURRENT", "61.0 A (71 %)"), ("TORQUE", "64 %"), ("POWER", "28.4 kW"), ("ENERGY", "41 220 kWh")).replace('class="kv"', 'class="kv kv4"'))
+        hist = trend([(spd, "#1F4E99", True), ([x - 0.5 for x in spd], "#262626", False), (cur, "#8D6E63", False)],
+                     [("speed SP", "#1F4E99"), ("speed", "#262626"), ("current", "#8D6E63")], strip=[("stop", 20), ("run", 70), ("stop", 4), ("run", 6)])
+    else:
+        drive = grp("LOAD", bar("CURRENT", "38.2 A", 64) + kv(("RATED", "60 A"), ("LOAD", "64 %")))
+        hist = trend([(cur, "#262626", False)], [("current", "#262626")], strip=[("stop", 20), ("run", 70), ("stop", 4), ("run", 6)])
+    restart = '<div data-c="Text/Caption" class="dim">Restart delay: 0 s left</div>'
+    maint = details("MAINTENANCE", kv(("RUN HOURS", "1 284"), ("STARTS", "3 120"), ("STARTS LAST HR", "2 / 6"), ("HRS SINCE MAINT", "412"), ("MAINT DUE", "no"))
+                + f'<div class="row"><button data-c="Button/Small">RESET MAINT</button>{role("Maint")}<button data-c="Button/Small">SIMULATE</button>{role("Maint")}</div>')
+    perm = grp("PERMISSIVES", cond("ok", "Suction valve XV-201 open") + cond("ok", "Seal flush flow OK"), '<span data-c="Indicator/PermissiveBadge" class="mini">P</span>')
+    intl = grp("INTERLOCKS", cond("ok", "Discharge pressure not HH") + cond("ok", "Tank T-200 not LL", byp=True), '<span data-c="Indicator/InterlockBadge" class="mini">I</span>')
+    cfgtxt = ("speed 0-50 Hz &middot; deviation 2 Hz / 10 s &middot; reversible: no &middot; " if vfd else "") + "auto restart: no &middot; restart delay 5 s &middot; rated 60 A &middot; max 6 starts/h &middot; feedback time 3 s"
+    tagdesc = ("P-201", "Circulation pump (VFD)") if vfd else ("P-101", "Transfer pump")
+    return hdr(*tagdesc) + '<div class="body">' + state + fb + restart + mode_row() + cmd + drive + perm + intl + alarm_grp(rows) + grp("HISTORY (8 h)", hist) + maint + details("CONFIGURATION", cfgtxt) + "</div>"
+
+
 DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:border-box}.dock2 .hdr{display:flex;align-items:center;gap:6px;padding:6px 8px}
 .dock2 .x{width:28px;height:28px}.dock2 .body{flex:1;overflow:hidden;padding:4px 8px;display:flex;flex-direction:column;gap:5px}
 .dock2 .row{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.dock2 .lbl{width:40px}.dock2 .big{font-size:16px;padding:2px 10px}
@@ -282,14 +403,15 @@ DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:b
 .role{font-size:9px;color:#5E35B1;border:1px dashed #5E35B1;border-radius:3px;padding:0 2px}
 .strip{display:flex;height:12px;border:1px solid #7F7F7F}.axis{display:flex;justify-content:space-between;font-size:9px;color:#616161}
 .legend2{font-size:9px;color:#424242}.legend2 i{display:inline-block;width:8px;height:8px;margin:0 2px 0 6px}.ev{display:flex;justify-content:space-between;font-size:11px;padding:1px 3px}
-.dock2 details summary{cursor:pointer}"""
+.dock2 details summary{cursor:pointer}.barrow{display:flex;align-items:center;gap:5px;margin:2px 0}.bl{width:64px}
+.kv4{grid-template-columns:auto 1fr auto 1fr}.trk{flex:1;height:10px;position:relative}.num{min-width:62px;text-align:right}"""
 
 
 DOCKS = {
     "dw_ValveDiscrete": ("T_DValve", "valve_discrete"),
-    "dw_ValveAnalog": ("T_CValve", ["mode", analog(("POSITION SP", "55.0 %", 55, "Input/Setpoint"), ("POSITION FBK", "54.6 %", 54, "Value/Normal")), "perm", "alarms", "trend"]),
-    "dw_Rotating": ("T_Motor", ["mode", STARTSTOP, analog(("CURRENT", "38.2 A", 64, "Value/Normal")), "perm", "alarms", "run"]),
-    "dw_VFD": ("T_VFD", ["mode", STARTSTOP, analog(("SPEED SP", "48.0 Hz", 80, "Input/Setpoint"), ("SPEED", "47.9 Hz", 80, "Value/Normal"), ("CURRENT", "61.0 A", 71, "Value/Normal")), "perm", "alarms", "trend", "run"]),
+    "dw_ValveAnalog": ("T_CValve", "valve_analog"),
+    "dw_Rotating": ("T_Motor", "motor"),
+    "dw_VFD": ("T_VFD", "vfd"),
     "dw_HeatTransfer": ("T_HeatEx", [analog(("T IN", "82.4 &deg;C", 70, "Value/Normal"), ("T OUT", "41.0 &deg;C", 35, "Value/Normal"), ("DUTY", "212 kW", 58, "Value/Normal")), "alarms", "trend"]),
     "dw_ProcessValue": ("T_AI / T_KPI", [analog(("PV", "42.7 kPa", 43, "Value/Normal")), '<div class="kv"><span data-c="Text/Label">HH</span><span data-c="Input/Setpoint">90</span><span data-c="Text/Label">H</span><span data-c="Input/Setpoint">75</span><span data-c="Text/Label">L</span><span data-c="Input/Setpoint">15</span><span data-c="Text/Label">LL</span><span data-c="Input/Setpoint">5</span></div>', "alarms", "trend"]),
     "dw_Loop": ("T_PID", ["mode", analog(("PV", "42.7 kPa", 43, "Value/Normal"), ("SP", "40.0 kPa", 40, "Input/Setpoint"), ("OP", "55 %", 55, "Value/Output")), cmds(("TUNING", "Button/Default"), ("CASCADE", "Button/Subtle")), "alarms", "trend"]),
@@ -298,8 +420,9 @@ DOCKS = {
 
 
 def dock_card(did, path, ttype, parts):
-    if parts == "valve_discrete":  # reviewed design (rev 2)
-        inner = f'<div data-c="Container/Faceplate" class="dock2">{valve_discrete()}</div>'
+    REV2 = {"valve_discrete": valve_discrete, "valve_analog": valve_analog, "motor": motor_body, "vfd": lambda: motor_body(True)}
+    if isinstance(parts, str) and parts in REV2:  # rev 2 designs
+        inner = f'<div data-c="Container/Faceplate" class="dock2">{REV2[parts]()}</div>'
         return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 - design proposal</b> &middot; dashed purple = role-gated", maxh=600)
     body = "".join(SECTIONS.get(p, p) for p in parts)
     head = (f'<div data-c="Container/PopupHeader" class="row"><span data-c="Text/TagName">XV-101</span>'
