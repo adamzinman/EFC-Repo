@@ -441,7 +441,7 @@ section("Values, indicators and loops");
     chip(s, 8.6, y + 0.05, h.split(" ")[0], { w: 0.6, h: 0.4, fill: P.fault, line: P.fault, color: "FFFFFF" });
     T(s, [{ text: h.split(" ").slice(1).join(" "), options: { bold: true, breakLine: true } }, { text: d, options: { color: P.muted, fontSize: 13 } }], { x: 9.35, y, w: 3.35, h: 0.78, fontSize: 15 });
   });
-  bullets(s, ["Setpoint is blue: blue always means \"an operator can change this\"", "The whole card opens dw_Loop; the old LoopConfig popup is retired (decision 15)", "Orange diamond = loop not in its normal mode (e.g. MAN)"], { x: 0.6, y: 5.15, w: 12.1, h: 1.5, fontSize: 14 });
+  bullets(s, ["Setpoint is blue: blue always means \"an operator can change this\"", "The whole card opens dw_Loop; the old LoopConfig popup is retired (decision 15)", "Mode chip, right of the tag: AUTO light gray, MAN dark (abnormal), CAS light blue. Orange diamond and outline = deviation alarm"], { x: 0.6, y: 5.15, w: 12.1, h: 1.5, fontSize: 14 });
   notes(s);
 }
 
