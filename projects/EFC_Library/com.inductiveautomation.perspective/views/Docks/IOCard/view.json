@@ -281,7 +281,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if({view.custom.m_Module_MOD_ERROR}, 'State/Fault', if(true, 'State/Running', 'State/Unknown'))"
+                "expression": "if(isNull({view.custom.m_Module_MOD_ERROR}) || !isGood({view.custom.m_Module_MOD_ERROR}), 'State/Unknown', if({view.custom.m_Module_MOD_ERROR}, 'State/Fault', if(true, 'State/Running', 'State/Unknown')))"
               }
             }
           }
@@ -308,7 +308,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Module_MOD_ERROR}, 'MODULE ERROR', if(true, 'OK', 'UNKNOWN'))"
+                    "expression": "if(isNull({view.custom.m_Module_MOD_ERROR}) || !isGood({view.custom.m_Module_MOD_ERROR}), 'UNKNOWN', if({view.custom.m_Module_MOD_ERROR}, 'MODULE ERROR', if(true, 'OK', 'UNKNOWN')))"
                   }
                 }
               }

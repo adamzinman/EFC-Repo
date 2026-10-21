@@ -268,7 +268,8 @@ def valve_analog():
     presets = [button(f"P{p}", f"{p}%", f"efc.ui.cmd(self, 'Cmd_ManPos', {float(p)}, 1)", cls="Button/Default", enabled=rd) for p in (0, 25, 50, 75, 100)]
     return window("Docks/ValveAnalog", "T_CValve", vw, [
         header(vw),
-        banner(vw, [(m("Sts_Fault"), "FAULT", "State/Fault"), (m("Sts_Intlk"), "INTERLOCKED", "State/Fault"),
+        banner(vw, [(" || ".join(f"isNull({m(x)}) || !isGood({m(x)})" for x in ("Val_Pos", "Sts_Closed")), "UNKNOWN", "State/Unknown"),
+                    (m("Sts_Fault"), "FAULT", "State/Fault"), (m("Sts_Intlk"), "INTERLOCKED", "State/Fault"),
                     (m("Sts_Closed"), "CLOSED", "State/Stopped"), ("true", f"'OPEN ' + {fmt(m('Val_Pos'), '0')} + ' %'", "State/Running")],
                [(m("Sts_Sim"), "SIM"), (m("Sts_RateLim"), "RATE LIM")]),
         mode_section(vw),
@@ -447,7 +448,8 @@ def io_card():
             "\t\ttitle='', showCloseIcon=False, draggable=True, resizable=False, modal=False)")
     blocks = [
         header(vw),
-        banner(vw, [(m("Module/MOD_ERROR"), "MODULE ERROR", "State/Fault"), ("true", "OK", "State/Running")], []),
+        banner(vw, [(f"isNull({m('Module/MOD_ERROR')}) || !isGood({m('Module/MOD_ERROR')})", "UNKNOWN", "State/Unknown"),
+                    (m("Module/MOD_ERROR"), "MODULE ERROR", "State/Fault"), ("true", "OK", "State/Running")], []),
         section("Card", "Card", [row("Model", "Model", "{view.params.model}"), row("Rack", "Rack", m("Rack")), row("Slot", "Slot", m("Slot")),
                                  row("Desc", "Description", m("CardDesc")), row("Diag", "Diagnostic", m("Module/HMI/DiagText")),
                                  button("Full", "FULL FACEPLATE", full, cls="Button/Primary", grow=0)]),

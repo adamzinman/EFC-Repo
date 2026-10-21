@@ -17,7 +17,7 @@ The operator and maintenance dynamic window for an analog control valve (T_CValv
 
 **Header.** Shows `Cfg_Tag` (large) and `Cfg_Desc`.
 
-**Banner.** The state label is chosen by priority: `Sts_Fault` (FAULT), `Sts_Intlk` (INTERLOCKED), `Sts_Closed` (CLOSED), else `OPEN nn %`, where nn is `Val_Pos` rounded to whole percent. The style class follows the same order (`State/Fault`, `State/Fault`, `State/Stopped`, `State/Running`). The last condition is the literal `true`, so the UNKNOWN text and style are never shown. Two chips appear: SIM (`Sts_Sim`) and RATE LIM (`Sts_RateLim`, output is being rate limited).
+**Banner.** The state label is chosen by priority: UNKNOWN first, while `Val_Pos` or `Sts_Closed` is null or has bad quality (`isNull(...) || !isGood(...)`, class `State/Unknown`); then `Sts_Fault` (FAULT), `Sts_Intlk` (INTERLOCKED), `Sts_Closed` (CLOSED), else `OPEN nn %`, where nn is `Val_Pos` rounded to whole percent. The style class follows the same order (`State/Unknown`, `State/Fault`, `State/Fault`, `State/Stopped`, `State/Running`). The last condition is the literal `true`, so the trailing `UNKNOWN` fallback is never reached; UNKNOWN comes from the first case. Two chips appear: SIM (`Sts_Sim`) and RATE LIM (`Sts_RateLim`, output is being rate limited).
 
 **Mode.** As on the discrete valve dock, the mode text shows the highest of OOS, MAINT, MAN, else AUTO. The four toggle buttons highlight the active mode. AUTO and MAN are visible at level 1 and above, and MAINT and OOS at level 2 and above. None of the four has an `enabled` binding, so each is clickable whenever it is visible. Each writes a one-shot `Mode/Cmd_*`. MAINT and OOS are audited.
 
@@ -104,8 +104,8 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
-| root/Banner | `props.style.classes` | expr | `if({view.custom.m_Sts_Fault}, 'State/Fault', if({view.custom.m_Sts_Intlk}, 'State/Fault', if({view.custom.m_Sts_Closed}, 'State/Stopped', if(true, 'State/Running', 'State/Unknown'))))` | CSS class(es) selected by state |
-| root/Banner/State | `props.text` | expr | `if({view.custom.m_Sts_Fault}, 'FAULT', if({view.custom.m_Sts_Intlk}, 'INTERLOCKED', if({view.custom.m_Sts_Closed}, 'CLOSED', if(true, 'OPEN ' + numberFormat({view.custom.m_Val_Pos}, '0') + ' %', 'UNKNOWN'))))` | Text content |
+| root/Banner | `props.style.classes` | expr | `if(isNull({view.custom.m_Val_Pos}) || !isGood({view.custom.m_Val_Pos}) || isNull({view.custom.m_Sts_Closed}) || !isGood({view.custom.m_Sts_Closed}), 'State/Unknown', if({view.custom.m_Sts_Fault}, 'State/Fault', if({view.custom.m_Sts_Intlk}, 'State/Fault', if({view.custom.m_Sts_Closed}, 'State/Stopped', if(true, 'State/Running', 'State/Unknown')))))` | CSS class(es) selected by state |
+| root/Banner/State | `props.text` | expr | `if(isNull({view.custom.m_Val_Pos}) || !isGood({view.custom.m_Val_Pos}) || isNull({view.custom.m_Sts_Closed}) || !isGood({view.custom.m_Sts_Closed}), 'UNKNOWN', if({view.custom.m_Sts_Fault}, 'FAULT', if({view.custom.m_Sts_Intlk}, 'INTERLOCKED', if({view.custom.m_Sts_Closed}, 'CLOSED', if(true, 'OPEN ' + numberFormat({view.custom.m_Val_Pos}, '0') + ' %', 'UNKNOWN')))))` | Text content |
 | root/Banner/Chip0 | `position.display` | expr | `{view.custom.m_Sts_Sim}` | Shown while expression is true |
 | root/Banner/Chip1 | `position.display` | expr | `{view.custom.m_Sts_RateLim}` | Shown while expression is true |
 
@@ -542,7 +542,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 
 ## Notes and open questions
 
-- **Banner fallback shows OPEN.** The last banner case is `true`, so any state that is not FAULT, INTERLOCKED or CLOSED is shown as `OPEN nn %`, including mid-travel and idle states. UNKNOWN is unreachable. T_CValve has no opening or closing member, so travel direction is not shown.
+- **Banner fallback shows OPEN.** The last banner case is `true`, so any state that is not FAULT, INTERLOCKED or CLOSED is shown as `OPEN nn %`, including mid-travel and idle states. T_CValve has no opening or closing member, so travel direction is not shown.
 - **Position shown without feedback.** The banner's `OPEN nn %` always uses `Val_Pos`, and the PCLib comment says `Val_Pos` is the demand when there is no feedback. The Position row, however, is hidden when `Cfg_HasFbk` is false. Confirm whether the banner percentage should be shown in that case.
 - **Manual position does not check faults.** The entry and presets are enabled by `Mode/Sts_Man && !Sts_Intlk` only. They do not check `Sts_Fault`. The double-tap rule in `efc/ui/code.py` (`READY_FALSE`, which applies to T_DValve and T_Motor only) does check `Sts_Fault`. The discrete dock's OPEN and CLOSE rule does not. T_CValve has no `Sts_Avail`, `Sts_Local` or `Sts_NotPerm`, so none of those are checked here.
 - **The manual position entry bypasses `efc.ui.cmd`.** It is a bidirectional tag binding to `Cmd_ManPos`. Its only role control is visibility (level 1), and it is not audited. The presets use `efc.ui.cmd` (checked, not audited). Both are level 1, so the result is the same in practice, but the two paths differ.

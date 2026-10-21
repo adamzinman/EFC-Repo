@@ -7,7 +7,7 @@ Related templates (their help docs are not written yet): `Templates/IO/RackOverv
 
 ## Overview
 
-A read-only summary of one X80 I/O card: model, rack, slot, card description and the module diagnostic text, with a banner that shows MODULE ERROR or OK. The FULL FACEPLATE button opens the card's own faceplate as a popup. The window has no commands and no role-gated controls.
+A read-only summary of one X80 I/O card: model, rack, slot, card description and the module diagnostic text, with a banner that shows MODULE ERROR, OK, or UNKNOWN when the error bit is null or bad quality. The FULL FACEPLATE button opens the card's own faceplate as a popup. The window has no commands and no role-gated controls.
 
 - **Default size:** 400 x 860 (`props.defaultSize`). The root is a scrolling column (`Container/Scroll`).
 - **Parameters:** `tagPath` (the card UDT instance), `tType` (default `native`), and `model` (the card model, for example `BMXDDI1602`).
@@ -19,7 +19,7 @@ A read-only summary of one X80 I/O card: model, rack, slot, card description and
 
 **Header.** The title shows `Rack <n> / slot <n>` from the card's `Rack` and `Slot`. The subtitle shows the model (`params.model`). The X button runs `efc.ui.closeDynamic(self)`, which returns the right region to the screen default.
 
-**Banner.** `MODULE ERROR` (class `State/Fault`) while `Module/MOD_ERROR` is TRUE. Otherwise `OK` (class `State/Running`). The third case in the expression, `UNKNOWN`, cannot be reached (its condition is `true`).
+**Banner.** `UNKNOWN` (class `State/Unknown`) while `Module/MOD_ERROR` is null or has bad quality (`isNull(...) || !isGood(...)`, tested first). Otherwise `MODULE ERROR` (class `State/Fault`) while `Module/MOD_ERROR` is TRUE, else `OK` (class `State/Running`). The trailing `UNKNOWN` in the expression is the unreachable `if(true, ...)` fallback.
 
 **Card section.** Five rows, each label and value:
 
@@ -49,7 +49,7 @@ All three params have `paramDirection: input` and `persistent: true`. There are 
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
 | `view.custom.level` | `0` | property, transform `return efc.ui.level(value)` | `session.props.auth.user.roles` | Highest role level. Not used by any binding or script in this view. |
-| `view.custom.m_Module_MOD_ERROR` | `null` | tag | `{0}/Module/MOD_ERROR` | Module error bit. Drives the banner. |
+| `view.custom.m_Module_MOD_ERROR` | `null` | tag | `{0}/Module/MOD_ERROR` | Module error bit. Drives the banner (null or bad quality shows UNKNOWN). |
 | `view.custom.m_Rack` | `null` | tag | `{0}/Rack` | Rack number. Drives the header and the Rack row. |
 | `view.custom.m_Slot` | `null` | tag | `{0}/Slot` | Slot number. Drives the header and the Slot row. |
 | `view.custom.m_CardDesc` | `null` | tag | `{0}/CardDesc` | Card description. Drives the Description row. |
@@ -84,8 +84,8 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
-| `root/Banner` | `props.style.classes` | expr | `if({view.custom.m_Module_MOD_ERROR}, 'State/Fault', if(true, 'State/Running', 'State/Unknown'))` | Banner colour class. |
-| `root/Banner/State` | `props.text` | expr | `if({view.custom.m_Module_MOD_ERROR}, 'MODULE ERROR', if(true, 'OK', 'UNKNOWN'))` | Banner text. |
+| `root/Banner` | `props.style.classes` | expr | `if(isNull({view.custom.m_Module_MOD_ERROR}) || !isGood({view.custom.m_Module_MOD_ERROR}), 'State/Unknown', if({view.custom.m_Module_MOD_ERROR}, 'State/Fault', if(true, 'State/Running', 'State/Unknown')))` | Banner colour class. |
+| `root/Banner/State` | `props.text` | expr | `if(isNull({view.custom.m_Module_MOD_ERROR}) || !isGood({view.custom.m_Module_MOD_ERROR}), 'UNKNOWN', if({view.custom.m_Module_MOD_ERROR}, 'MODULE ERROR', if(true, 'OK', 'UNKNOWN')))` | Banner text. |
 
 ### `root/Card`
 
@@ -165,10 +165,8 @@ The UDT also has `CardModel`, which this view does not read (it uses `params.mod
 ## Notes and open questions
 
 1. **`custom.level` is bound but unused.** There is no role gating in this window. That is acceptable for a read-only view, but it means the binding does nothing.
-2. **The banner does not test quality.** `if(MOD_ERROR, ...)` reads a null or bad-quality value as FALSE, so a lost OPC connection shows `OK`. The faceplate's health chip shows `COMMS?` for bad quality (IO README). This window does not, so the two views can disagree.
-3. **The `UNKNOWN` branch is unreachable.** Its condition is `true`.
-4. **Channel faults are not summarised.** The window shows only module-level bits. Channel `CH_ERROR` values and per-channel diagnostics are not shown here; they are on the faceplate.
-5. **Diagnostic text lists module bits only.** `Module/HMI/DiagText` names module bits, not channel bits.
-6. **FULL FACEPLATE depends on `model`.** SlotTile only calls `openDynamic` when the tile has a model, so a normal open has one. A window opened from some other caller with a blank model shows no faceplate, and the button does nothing with no message.
-7. **Popup id.** The faceplate popup id is `io_` plus the card path, so opening the same card's faceplate twice uses the same id. How Perspective handles a second open with the same id is not visible in this repository.
-8. **Help for the IO templates is not written.** The `Templates/IO/*` views (rack overview, tile, faceplates) have no files under `docs/help/Templates/IO/` yet, so the faceplate referenced by FULL FACEPLATE is not documented here.
+2. **Channel faults are not summarised.** The window shows only module-level bits. Channel `CH_ERROR` values and per-channel diagnostics are not shown here; they are on the faceplate.
+3. **Diagnostic text lists module bits only.** `Module/HMI/DiagText` names module bits, not channel bits.
+4. **FULL FACEPLATE depends on `model`.** SlotTile only calls `openDynamic` when the tile has a model, so a normal open has one. A window opened from some other caller with a blank model shows no faceplate, and the button does nothing with no message.
+5. **Popup id.** The faceplate popup id is `io_` plus the card path, so opening the same card's faceplate twice uses the same id. How Perspective handles a second open with the same id is not visible in this repository.
+6. **Help for the IO templates is not written.** The `Templates/IO/*` views (rack overview, tile, faceplates) have no files under `docs/help/Templates/IO/` yet, so the faceplate referenced by FULL FACEPLATE is not documented here.
