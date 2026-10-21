@@ -55,3 +55,10 @@ Chapter order (master tex): 1 overview, 2 terminology, 3 design process, 4 contr
 - No MatIEC binary in the container (Q30 not possible here).
 - Raw XDB indentation: variables 3 tabs, pin attribute 4 tabs (reference .md section 8 says 4/5; raw wins).
 - Output pins numbered after inputs in one sequence; outputParameters after inputParameters (unverified).
+
+## Pilot 2a result (2026-10-21): FB_AlmCore.XDB import successful (user report)
+Accepted by the 16.2 import (verified by import, not yet by a re-export):
+- outputParameters block placed after inputParameters; output PositionPins continue the input sequence (16-24).
+- Checksum attributes omitted (only UseNewTplSignAlgo emitted).
+- TIME pins, typed literal T#0S, ST comments (* *), contentHeader name "EFCLib" version "1.0.0".
+Still open: Analyze/Rebuild result, simulator test sheet, re-export of FB_AlmCore, DFB_FmtTest export (Q3).
