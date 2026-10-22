@@ -68,6 +68,8 @@ git commit -am "..."            # 4. commit generator AND generated files togeth
 
 **Option A: import the zip.** Run `python3 build.py --dist`, then in the Gateway web page go to Config → Projects → Import and import `dist/EFC_Library_PROJECT.zip`. Use it on its own, or make it the parent of your HMI project.
 
+Import only `EFC_Library_PROJECT.zip`: `project.json` must sit at the zip root. A GitHub "Download ZIP" of this repo, a zip of `projects/EFC_Library/` that includes the folder itself, or the old v6 zips in `archive/legacy-zips/` will not import.
+
 **Upgrading from v6.x:** EFC_Library replaces EFC_Styles, PID_Symbols, EFC_PID_Library, EFC_ProcessValues, PID_Loops, EFC_IOFaceplates and EFC_StationFaceplates. Re-point any HMI project that inherits from one of them to EFC_Library, then delete the old projects. Two folders moved: `IO/…` is now `Templates/IO/…` and `PID/…` is now `Templates/Loops/…`; update any of your own screens that embed or open those views by path.
 
 **Option B: copy the folder.** `projects/EFC_Library/` uses the gateway's `data/projects/<Name>/` layout. Copy it into `<ignition>/data/projects/`, then run `system.project.requestScan()` from the Script Console or restart the gateway.

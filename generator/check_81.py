@@ -22,7 +22,14 @@ for zp in sys.argv[1:]:
     pj = json.loads(z.read("project.json"))
     for k in ("title", "enabled", "inheritable", "parent"):
         if k not in pj: fail(f"{zp}: project.json lacks {k}")
+    folders = {n.rsplit("/", 1)[0] for n in names if n.endswith("resource.json")}
+    for f in sorted(folders):                           # a resource folder can't hold another resource (e.g. class A/B and A/B/C)
+        p = f.rsplit("/", 1)[0]
+        while "/" in p:
+            if p in folders: fail(f"{zp}: resource {f} is nested inside resource {p}")
+            p = p.rsplit("/", 1)[0]
     for n in names:
+        if "//" in n: fail(f"{n}: empty path segment")
         if n.endswith("resource.json"):
             r = json.loads(z.read(n)); folder = n.rsplit("/", 1)[0]
             for f in r.get("files", []):

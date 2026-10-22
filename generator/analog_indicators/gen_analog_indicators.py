@@ -234,7 +234,7 @@ EXAMPLES = {"custom": {}, "params": {}, "props": {"defaultSize": {"width": 900, 
 # ---------------------------------------------------------------- write
 EXTRA = {}                                    # EFC_Styles classes only: inline layout styles -> Indicator/Analog/<view>/<component>
 for name, vw in list(VIEWS.items()) + [("_Examples", EXAMPLES)]:
-    extract_inline(vw, "Indicator/Analog/" + name.split("_")[0], EXTRA)
+    extract_inline(vw, "Indicator/Analog/" + (name.split("_")[0] or "Examples"), EXTRA)
 for k, st in EXTRA.items():
     CLASSES[k[len(SC):]] = st; DESC[k[len(SC):]] = "Layout (generated from the view)"
 with zipfile.ZipFile(OUT, "w", zipfile.ZIP_DEFLATED) as z:
