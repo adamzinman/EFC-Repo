@@ -255,13 +255,14 @@ const GROUPS = [
   blurb:"adamzinman/EFC-Repo is the git home for the working files behind this map: the library README, CHANGELOG and VERSION, the types/ generators and exports for EFCLib, the steward records (library catalog, review decisions, gaps and the Controls Standard change queue) and the design docs. Links point at main.",
   settled:[
     "Controls Standard text is never edited directly; changes are queued in steward/DOC-QUEUE.md and compiled into one batch (decision 18)",
+    "EFC Repo is the master repo for everything (confirmed Oct 22)",
     "Design-review decisions are logged in steward/DECISIONS.md, 30 as of Oct 21",
     "steward/CATALOG.md is the library catalog: 64 views, 29 UDTs at the Oct 21 snapshot",
     "Every template and dock in steward/GAPS.md is bound to a T_ type and has a dock and a preview; Station_Fill and the I/O faceplates open differently"
   ],
   open:[
     "Three Controls Standard instruction batches are applied but pending review (DOC-QUEUE rows 1 to 3: heaters, HMI rules, library build)",
-    "Confirm the repo's status: the Ignition workstream below says EFC Repo is archived, but this repo still holds the types/, steward/ and docs/ trees"
+    "Copy Controls Standard rev I source (Drive folder) into controls-standard/ in this repo"
   ],
   links:[
     {t:"README", k:"Markdown", u:G("README.md"), d:"What the library contains and how it is built"},
@@ -283,7 +284,7 @@ const GROUPS = [
 },
 {
   id:"ignition", name:"Ignition library and faceplates", sub:"Perspective views, UDTs, popups",
-  blurb:"efc-ignition-library (v7.1) is the one home for importable parts: a single EFC_Library project with every template under Templates/, plus separate part projects (Styles first, then PID, PV, Loops, Station, IO). Built on 8.1 and meant to carry over to 8.3. EFC Repo is archived.",
+  blurb:"efc-ignition-library (v7.1) is the one home for importable parts: a single EFC_Library project with every template under Templates/, plus separate part projects (Styles first, then PID, PV, Loops, Station, IO). Built on 8.1 and meant to carry over to 8.3. The EFC Repo is the master for this library; Drive holds synced copies and release zips.",
   settled:[
     "I/O card UDTs follow the PLC device DDT naming, e.g. PLC0_d0_r0_s8_AMI0810 (T_U_ANA_STD_IN_8)",
     "In Ignition, only the path to the card should need entering",
