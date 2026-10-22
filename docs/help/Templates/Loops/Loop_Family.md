@@ -30,7 +30,7 @@ The four views share the same params, the same view-level custom property defini
 
 **Alarm outline and icon.** `custom.alarm` is true when either deviation alarm is active (`Alm_DevH/Sts_Active` or `Alm_DevL/Sts_Active`). The card border then becomes 2 px orange (`#FF7A00`) and the orange alarm icon shows. No other alarm changes these views. In particular `Alm_PVBad` is not read.
 
-**Mode chip.** The chip shows `MAN`, `AUTO` or `CAS` from `Sts_Mode` (0, 1, 2). MAN has a dark chip with white text. CAS has a light chip with blue text. AUTO and any other code have a light grey chip. Track (3) and Intlk (4) show `---`.
+**Mode chip.** The chip shows `MAN`, `AUTO` or `CAS` from `Sts_Mode` (0, 1, 2). MAN has a dark chip with white text. CAS has a light blue chip (`#DCE6F7`) with blue text. AUTO and any other code have a light grey chip. The chip sits at the right edge of its row (the card root stretches its children). Track (3) and Intlk (4) show `---`.
 
 **PV bar and markers.** `pvPct` is (PV - `Cfg_PVMin`) / (`Cfg_PVMax` - `Cfg_PVMin`) x 100, clamped to 0 to 100. A zero span uses a divisor of 0.000001, so the bar goes to 0 or 100. The high marker sits at `almHi` (SP + `devH`) and the low marker at `almLo` (SP - `devL`), both as percent of scale and clamped. The setpoint triangle sits at SP. If a deviation limit is 0, its marker sits on SP.
 
@@ -129,7 +129,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | `root/header/title/tag` | `props.text` | property | `view.custom.name` (property binding) | Loop name (`custom.name`). |
 | `root/header/title/alarmIcon` | `position.display` | property | `view.custom.alarm` (property binding) | Alarm icon shown while `alarm` is true. |
 | `root/header/mode` | `props.text` | property | `view.custom.modeText` (property binding) | Mode text from `modeText`: MAN, AUTO or CAS; `---` for other codes (Track, Intlk). |
-| `root/header/mode` | `props.style.backgroundColor` | expr | `case({view.custom.mode}, 0, "#3A3A3A", 2, "#E6E6E6", "#EDEDED")` | Mode chip fill: `#3A3A3A` for MAN, `#E6E6E6` for CAS, `#EDEDED` otherwise. |
+| `root/header/mode` | `props.style.backgroundColor` | expr | `case({view.custom.mode}, 0, "#3A3A3A", 2, "#DCE6F7", "#EDEDED")` | Mode chip fill: `#3A3A3A` for MAN, light blue `#DCE6F7` for CAS, `#EDEDED` otherwise. |
 | `root/header/mode` | `props.style.color` | expr | `case({view.custom.mode}, 0, "#FFFFFF", 2, "#1F4E99", "#4D4D4D")` | Mode chip text: `#FFFFFF` for MAN, `#1F4E99` for CAS, `#4D4D4D` otherwise. |
 
 #### `root/body`
@@ -176,7 +176,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | `root/header/title/tag` | `props.text` | property | `view.custom.name` (property binding) | Loop name (`custom.name`). |
 | `root/header/title/alarmIcon` | `position.display` | property | `view.custom.alarm` (property binding) | Alarm icon shown while `alarm` is true. |
 | `root/header/mode` | `props.text` | property | `view.custom.modeText` (property binding) | Mode text from `modeText`: MAN, AUTO or CAS; `---` for other codes (Track, Intlk). |
-| `root/header/mode` | `props.style.backgroundColor` | expr | `case({view.custom.mode}, 0, "#3A3A3A", 2, "#E6E6E6", "#EDEDED")` | Mode chip fill: `#3A3A3A` for MAN, `#E6E6E6` for CAS, `#EDEDED` otherwise. |
+| `root/header/mode` | `props.style.backgroundColor` | expr | `case({view.custom.mode}, 0, "#3A3A3A", 2, "#DCE6F7", "#EDEDED")` | Mode chip fill: `#3A3A3A` for MAN, light blue `#DCE6F7` for CAS, `#EDEDED` otherwise. |
 | `root/header/mode` | `props.style.color` | expr | `case({view.custom.mode}, 0, "#FFFFFF", 2, "#1F4E99", "#4D4D4D")` | Mode chip text: `#FFFFFF` for MAN, `#1F4E99` for CAS, `#4D4D4D` otherwise. |
 
 #### `root/mid`
@@ -219,7 +219,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | `root/header/title/tag` | `props.text` | property | `view.custom.name` (property binding) | Loop name (`custom.name`). |
 | `root/header/title/alarmIcon` | `position.display` | property | `view.custom.alarm` (property binding) | Alarm icon shown while `alarm` is true. |
 | `root/header/mode` | `props.text` | property | `view.custom.modeText` (property binding) | Mode text from `modeText`: MAN, AUTO or CAS; `---` for other codes (Track, Intlk). |
-| `root/header/mode` | `props.style.backgroundColor` | expr | `case({view.custom.mode}, 0, "#3A3A3A", 2, "#E6E6E6", "#EDEDED")` | Mode chip fill: `#3A3A3A` for MAN, `#E6E6E6` for CAS, `#EDEDED` otherwise. |
+| `root/header/mode` | `props.style.backgroundColor` | expr | `case({view.custom.mode}, 0, "#3A3A3A", 2, "#DCE6F7", "#EDEDED")` | Mode chip fill: `#3A3A3A` for MAN, light blue `#DCE6F7` for CAS, `#EDEDED` otherwise. |
 | `root/header/mode` | `props.style.color` | expr | `case({view.custom.mode}, 0, "#FFFFFF", 2, "#1F4E99", "#4D4D4D")` | Mode chip text: `#FFFFFF` for MAN, `#1F4E99` for CAS, `#4D4D4D` otherwise. |
 
 #### `root/body`
@@ -281,7 +281,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | `root/chipRow/mode` | `props.text` | property | `view.custom.modeText` (property binding) | Mode text from `modeText`: MAN, AUTO or CAS; `---` for other codes (Track, Intlk). |
-| `root/chipRow/mode` | `props.style.backgroundColor` | expr | `case({view.custom.mode}, 0, "#3A3A3A", 2, "#E6E6E6", "#EDEDED")` | Mode chip fill: `#3A3A3A` for MAN, `#E6E6E6` for CAS, `#EDEDED` otherwise. |
+| `root/chipRow/mode` | `props.style.backgroundColor` | expr | `case({view.custom.mode}, 0, "#3A3A3A", 2, "#DCE6F7", "#EDEDED")` | Mode chip fill: `#3A3A3A` for MAN, light blue `#DCE6F7` for CAS, `#EDEDED` otherwise. |
 | `root/chipRow/mode` | `props.style.color` | expr | `case({view.custom.mode}, 0, "#FFFFFF", 2, "#1F4E99", "#4D4D4D")` | Mode chip text: `#FFFFFF` for MAN, `#1F4E99` for CAS, `#4D4D4D` otherwise. |
 
 #### `root/pvRow`
