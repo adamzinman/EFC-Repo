@@ -175,7 +175,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if({view.custom.range} = 1440, 'Button/TabActive', 'Button/Tab')"
+                        "expression": "try(if({view.custom.range} = 1440, 'Button/TabActive', 'Button/Tab'), 'Button/Tab')"
                       }
                     }
                   }
@@ -214,7 +214,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if({view.custom.range} = 480, 'Button/TabActive', 'Button/Tab')"
+                        "expression": "try(if({view.custom.range} = 480, 'Button/TabActive', 'Button/Tab'), 'Button/Tab')"
                       }
                     }
                   }
@@ -253,7 +253,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if({view.custom.range} = 60, 'Button/TabActive', 'Button/Tab')"
+                        "expression": "try(if({view.custom.range} = 60, 'Button/TabActive', 'Button/Tab'), 'Button/Tab')"
                       }
                     }
                   }
@@ -292,7 +292,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if({view.custom.range} = 30, 'Button/TabActive', 'Button/Tab')"
+                        "expression": "try(if({view.custom.range} = 30, 'Button/TabActive', 'Button/Tab'), 'Button/Tab')"
                       }
                     }
                   }
@@ -331,7 +331,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "if({view.custom.range} = 5, 'Button/TabActive', 'Button/Tab')"
+                        "expression": "try(if({view.custom.range} = 5, 'Button/TabActive', 'Button/Tab'), 'Button/Tab')"
                       }
                     }
                   }

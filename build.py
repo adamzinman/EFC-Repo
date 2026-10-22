@@ -171,7 +171,31 @@ def merge_library():
         json.dump(project_json(LIBRARY, f"EFC Ignition library v{v} (generated): ISA-101 styles, P&ID device templates, process values, "
                                         "PID loops, x80 I/O card and station faceplates in one project. Import standalone, or make it "
                                         "the parent of an HMI project."), f, indent=2); f.write("\n")
+    guard_window_classes(lib)
     check_view_refs(lib)
+
+
+def guard_window_classes(lib):
+    """Dynamic windows (Docks/): wrap class expressions in try(expr, <the component's static classes>). A missing or
+    bad-quality tag makes an expression error, and an erroring classes binding drops every class on the component."""
+    vroot = os.path.join(lib, "com.inductiveautomation.perspective", "views", "Docks")
+    def walk(c):
+        yield c
+        for ch in c.get("children", []):
+            yield from walk(ch)
+    for d, _, fs in os.walk(vroot):
+        if "view.json" not in fs:
+            continue
+        p = os.path.join(d, "view.json"); v = json.load(open(p, encoding="utf-8")); changed = False
+        for c in walk(v["root"]):
+            cfg = c.get("propConfig", {}).get("props.style.classes", {}).get("binding", {})
+            static = c.get("props", {}).get("style", {}).get("classes")
+            if cfg.get("type") == "expr" and isinstance(static, str) and not cfg["config"]["expression"].lstrip().startswith(("try(", "coalesce(")):
+                cfg["config"]["expression"] = "try(%s, '%s')" % (cfg["config"]["expression"], static.replace("'", "\\'"))
+                changed = True
+        if changed:
+            with open(p, "w", encoding="utf-8") as f:
+                json.dump(v, f, indent=2, ensure_ascii=False); f.write("\n")
 
 
 def check_view_refs(lib):
