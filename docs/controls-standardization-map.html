@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>EFC Controls Standardization Map</title>
+<title>EFC-Repo Map</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
@@ -38,12 +38,11 @@ a{color:var(--link)}
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 64px}
 
-/* Title block, styled like a drawing title block */
 .titleblock{display:grid;grid-template-columns:1fr auto;gap:0;border:2px solid var(--ink);background:var(--surface)}
 .tb-main{padding:18px 20px 16px}
 .tb-main h1{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:clamp(30px,5vw,46px);line-height:1;margin:0 0 6px;letter-spacing:.2px}
-.tb-main p{margin:0;color:var(--muted);max-width:62ch}
-.tb-side{display:grid;grid-template-rows:repeat(3,auto);border-left:2px solid var(--ink);min-width:190px}
+.tb-main p{margin:0;color:var(--muted);max-width:66ch}
+.tb-side{display:grid;grid-template-rows:repeat(3,auto);border-left:2px solid var(--ink);min-width:200px}
 .tb-cell{padding:8px 14px;border-bottom:1px solid var(--line)}
 .tb-cell:last-child{border-bottom:0}
 .tb-cell small{display:block;color:var(--muted);font-size:12.5px}
@@ -60,7 +59,6 @@ a{color:var(--link)}
 
 .layout{display:grid;grid-template-columns:330px 1fr;gap:28px;align-items:start}
 
-/* The trunk: a one-line-diagram bus with taps */
 .trunk{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px)}
 .trunk h2{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:20px;margin:0 0 10px}
 .bus{list-style:none;margin:0;padding:0 0 0 22px;position:relative}
@@ -72,19 +70,17 @@ a{color:var(--link)}
 .node .nm{font-weight:600;line-height:1.25}
 .node .sub{display:block;font-weight:400;font-size:13.5px;color:var(--muted)}
 .node .cnt{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap}
-.node .cnt .o{color:var(--open);font-weight:600}
 .node[aria-current="true"]{background:var(--sel);color:var(--selink);border-color:var(--sel)}
 .node[aria-current="true"] .sub,.node[aria-current="true"] .cnt{color:var(--selink);opacity:.8}
-.node[aria-current="true"] .cnt .o{color:var(--selink)}
-.node.hub{border-left-color:var(--ink);background:var(--raised)}
-.node.hub .nm{font-family:"Barlow Condensed",sans-serif;font-size:21px;font-weight:700}
-.node.warn{border-left-color:var(--open)}
+.node.src{border-left-color:var(--ink)}
+.node.gen{border-left-color:var(--open)}
+.node.rec{border-left-color:var(--done)}
 
-/* Detail panel */
 .panel{background:var(--surface);border:1px solid var(--line);padding:22px 24px 26px;min-height:420px;border-radius:2px}
 .panel h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:34px;line-height:1.05;margin:0 0 6px}
-.panel .blurb{color:var(--muted);margin:0 0 18px;max-width:70ch}
+.panel .blurb{color:var(--muted);margin:0 0 18px;max-width:72ch}
 .panel h3{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:20px;margin:24px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.panel ol{margin:0;padding-left:22px;display:grid;gap:6px}
 .links{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px}
 .links li{background:var(--raised);border:1px solid var(--line);padding:9px 12px;border-radius:2px;min-width:0}
 .links a,.links .nolink{font-weight:600;text-decoration:none;overflow-wrap:anywhere}
@@ -92,25 +88,21 @@ a{color:var(--link)}
 .links .nolink{color:var(--ink)}
 .links .meta{display:block;font-size:13.5px;color:var(--muted);line-height:1.35;margin-top:2px}
 .kind{display:inline-block;font-size:12px;font-weight:600;padding:1px 6px;margin-right:6px;border:1px solid var(--line);border-radius:2px;color:var(--muted);vertical-align:1px}
-
-.notes{margin:0;padding:0;list-style:none;display:grid;gap:6px}
-.notes li{padding:7px 10px 7px 12px;border-left:4px solid var(--done);background:var(--donebg)}
-.notes.open li{border-left-color:var(--open);background:var(--openbg)}
-.notes li .g{font-size:13px;color:var(--muted);margin-left:6px}
+.tag{display:inline-block;font-size:12.5px;font-weight:600;padding:2px 8px;border-radius:2px;margin-bottom:10px;border:1px solid var(--line);color:var(--ink);background:var(--raised)}
+.tag.src{border-color:var(--ink)}
+.tag.gen{background:var(--openbg);border-color:var(--open);color:var(--ink)}
+.tag.rec{background:var(--donebg);border-color:var(--done)}
+.grp{font-size:13px;color:var(--muted)}
+.empty{color:var(--muted)}
 
 table.doc{width:100%;border-collapse:collapse;font-size:15px}
 .tablewrap{overflow-x:auto}
 table.doc th{text-align:left;font-weight:600;color:var(--muted);font-size:13.5px;padding:6px 8px;border-bottom:1px solid var(--line)}
 table.doc td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
-table.doc td.n{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:18px;width:36px}
-table.doc td.f{white-space:nowrap}
-table.doc td.f a{margin-right:10px}
+table.doc td a{overflow-wrap:anywhere}
 table.doc .s{color:var(--muted);font-size:13.5px}
 
-.results h2{font-size:28px}
-.results .grp{font-size:13px;color:var(--muted)}
-.empty{color:var(--muted)}
-.foot{margin-top:28px;color:var(--muted);font-size:13.5px;max-width:80ch}
+.foot{margin-top:28px;color:var(--muted);font-size:13.5px;max-width:84ch}
 
 @media (max-width:860px){
   .layout{grid-template-columns:1fr}
@@ -121,6 +113,7 @@ table.doc .s{color:var(--muted);font-size:13.5px}
   .tb-cell:last-child{border-right:0}
   .panel{padding:18px 16px 22px}
   .panel h2{font-size:28px}
+  table.doc{font-size:14px}
 }
 @media (prefers-reduced-motion:no-preference){
   .panel.swap{animation:show .18s ease-out}
@@ -133,299 +126,313 @@ table.doc .s{color:var(--muted);font-size:13.5px}
 
   <header class="titleblock">
     <div class="tb-main">
-      <h1>Controls Standardization Map</h1>
-      <p>Every workstream behind the EFC Controls Standard, with links to the documents, source files, libraries and Claude artifacts that make it up. Pick a branch off the bus to see what's in it.</p>
+      <h1>EFC-Repo Map</h1>
+      <p>Where everything lives in the master repo, which folders are source and which are generated, and how to make a change. Pick a folder off the bus, or search by file name or part name.</p>
     </div>
     <div class="tb-side">
-      <div class="tb-cell"><small>Current revision</small><b>Rev I</b></div>
-      <div class="tb-cell"><small>Released</small><b>Oct 14, 2026</b></div>
-      <div class="tb-cell"><small>Open items</small><b id="opencount">–</b></div>
+      <div class="tb-cell"><small>Master repo</small><b>adamzinman/EFC-Repo</b></div>
+      <div class="tb-cell"><small>Tracked files</small><b>about 1,500</b></div>
+      <div class="tb-cell"><small>Snapshot</small><b>Oct 22, 2026</b></div>
     </div>
   </header>
 
   <nav class="quick" aria-label="Most used">
-    <a href="https://drive.google.com/file/d/10XC4b9FFIrli5nFKrJQoySLwbC4w6-9r/view" target="_blank" rel="noopener"><span class="k">PDF</span>Read the standard, rev I</a>
-    <a href="https://drive.google.com/drive/folders/1DdMF_X5DnH6t-LyDovtiL4PfjrQ6FcMs" target="_blank" rel="noopener"><span class="k">Folder</span>LaTeX source</a>
-    <a href="https://drive.google.com/drive/folders/14rDGYZw3pS7hQKStIIJrryFw0hwICBmK" target="_blank" rel="noopener"><span class="k">Folder</span>Appendix PDFs</a>
-    <a href="https://drive.google.com/file/d/1tiW6cHVT898Xq2jvPLZOYtoaBPb1OPVJ/view" target="_blank" rel="noopener"><span class="k">Markdown</span>Rev I change log</a>
-    <a href="https://drive.google.com/drive/folders/1pgHXDENVs_EfoshQK2l0xz5hi0vuW-79" target="_blank" rel="noopener"><span class="k">Folder</span>efc-ignition-library</a>
-    <a href="https://claude.ai/artifact/9QaYt9jdpumsSjCJSvwvQQ" target="_blank" rel="noopener"><span class="k">Artifact</span>Template review</a>
     <a href="https://github.com/adamzinman/EFC-Repo" target="_blank" rel="noopener"><span class="k">Repo</span>EFC-Repo on GitHub</a>
-    <a href="https://github.com/adamzinman/EFC-Repo/blob/main/steward/DECISIONS.md" target="_blank" rel="noopener"><span class="k">Log</span>Review decisions</a>
+    <a href="https://github.com/adamzinman/EFC-Repo/blob/main/README.md" target="_blank" rel="noopener"><span class="k">Guide</span>README</a>
+    <a href="https://github.com/adamzinman/EFC-Repo/blob/main/docs/inventory.md" target="_blank" rel="noopener"><span class="k">Status</span>Inventory</a>
+    <a href="https://github.com/adamzinman/EFC-Repo/blob/main/steward/DECISIONS.md" target="_blank" rel="noopener"><span class="k">Log</span>Decisions</a>
+    <a href="https://github.com/adamzinman/EFC-Repo/blob/main/steward/DOC-QUEUE.md" target="_blank" rel="noopener"><span class="k">Queue</span>Standard changes</a>
+    <a href="https://drive.google.com/drive/folders/1DdMF_X5DnH6t-LyDovtiL4PfjrQ6FcMs" target="_blank" rel="noopener"><span class="k">Drive</span>Controls Standard folder</a>
   </nav>
 
   <div class="search" role="search">
-    <input id="q" type="search" placeholder="Search every file and artifact, e.g. Modbus, faceplate, T_DiaComp" aria-label="Search all links">
+    <input id="q" type="search" placeholder="Search folders and files, e.g. T_Heater, gen_pclib, faceplate, DECISIONS" aria-label="Search the repo">
     <button id="clear" type="button" hidden>Clear</button>
   </div>
 
   <div class="layout">
-    <aside class="trunk" aria-label="Workstreams">
-      <h2>Workstreams</h2>
+    <aside class="trunk" aria-label="Folders">
+      <h2>Folders</h2>
       <ul class="bus" id="bus"></ul>
     </aside>
     <main class="panel" id="panel" aria-live="polite"></main>
   </div>
 
-  <p class="foot">Drive links open in Google Drive, GitHub links open the EFC-Repo on GitHub (main unless noted), and artifact links open in Claude. Items marked "Project file" live in the Controls Standardization Claude project and have no shareable link. Snapshot taken October 22, 2026; ask Claude to refresh it after the next revision. Source copy: docs/controls-standardization-map.html in the EFC-Repo.</p>
+  <p class="foot">Links open the EFC-Repo on GitHub, on <code>main</code> unless marked "branch". Items marked branch are on <code>claude/amazing-brahmagupta-h59eke</code> and are not on main yet. Drive and Claude links point outside the repo. Source copy: docs/controls-standardization-map.html. Counts are as of October 22, 2026.</p>
 </div>
 
 <script>
-const D = id => "https://drive.google.com/file/d/" + id + "/view";
-const F = id => "https://drive.google.com/drive/folders/" + id;
+const REPO = "https://github.com/adamzinman/EFC-Repo/";
+const BR = "claude/amazing-brahmagupta-h59eke";
+const D = id => "https://drive.google.com/drive/folders/" + id;
 const A = id => "https://claude.ai/artifact/" + id;
-const G = path => "https://github.com/adamzinman/EFC-Repo/blob/main/" + path;
-const GT = path => "https://github.com/adamzinman/EFC-Repo/tree/main/" + path;
 
-const GROUPS = [
+// kind: Folder or File. b: true = only on the working branch. u: full external URL.
+function url(it){
+  if (it.u) return it.u;
+  const ref = it.b ? BR : "main";
+  return REPO + (it.k === "Folder" ? "tree/" : "blob/") + ref + "/" + encodeURI(it.p);
+}
+
+const SECTIONS = [
 {
-  id:"standard", hub:true, name:"Controls Standard", sub:"The document itself, rev I",
-  blurb:"The formal EFC controls engineering standard, written in LaTeX and built into one full PDF plus a PDF per appendix with build-all.bat. Chapters 0 to 12 cover the full lifecycle from design process to SCADA standards; appendices A to N hold the reference material.",
-  settled:[
-    "Rev I is the current release (Oct 14, 2026); rev H source is archived as a zip",
-    "Source is kept in Google Drive and, per your plan, also in a git repo",
-    "Appendix I is generated from PCLib's UDT Standards.md, never hand-edited",
-    "%claude- comments in the .tex files are instructions for the next edit pass"
+  id:"start", name:"Start here", sub:"What the repo is and how to build", tag:"src", label:"Overview",
+  blurb:"EFC-Repo is the master for the EFC Ignition Perspective library (EFC_Library, Ignition 8.1, ready for 8.3), the PLC data types, the Controls Standard source and the steward records. Sources are edited. Generated folders are rebuilt by one command.",
+  how:[
+    "Edit a generator in generator/, a type in types/, or a part in imported/",
+    "Run python3 build.py --preview to regenerate, merge, check and render",
+    "Review git diff, then commit the generator and the generated files together",
+    "CI (.github/workflows/check.yml) fails if the committed output no longer matches the generator"
   ],
-  open:[
-    "ICONICS version(s) in use",
-    "SMC air prep unit part number",
-    "IND780 vs IND700 (confirm with Mettler Toledo)",
-    "Vendor phone numbers and a \"what we use them for\" column",
-    "Submittal review turnaround and contractor warranty terms",
-    "Appendix A says no Perspective docks, but the dynamic windows now use openDock; update Appendix A or accept the conflict",
-    "Chapter 9 (Accounts) is still a placeholder"
-  ],
-  links:[
-    {t:"Controls Standard rev I", k:"PDF", u:D("10XC4b9FFIrli5nFKrJQoySLwbC4w6-9r"), d:"Full document, current release"},
-    {t:"Controls Standard folder", k:"Folder", u:F("1DdMF_X5DnH6t-LyDovtiL4PfjrQ6FcMs"), d:"LaTeX source root in Drive"},
-    {t:"README", k:"Markdown", u:D("1GcmmZCvJOLlEoxiF6cLOz44Cmxt8JL0h"), d:"Build steps, folder layout, revision rules"},
-    {t:"Rev I change log", k:"Markdown", u:D("1tiW6cHVT898Xq2jvPLZOYtoaBPb1OPVJ"), d:"What changed in I and what is still open"},
-    {t:"Rev H change log", k:"Markdown", u:D("1THCVHgy2lTeCQl322nYT3R_CUfn4asAt"), d:"Previous release notes"},
-    {t:"Controls Standard.tex", k:"LaTeX", u:D("1EuYfNg-Bzr4fQeQRF2y4IZLPuNaN4Qcu"), d:"Master document that inputs every chapter"},
-    {t:"preamble.tex", k:"LaTeX", u:D("1ri-gX6O3uiWRfmzBJciCIRHt6mx7woKR"), d:"Packages and macros (\\note, \\future, \\tbd)"},
-    {t:"revision.tex", k:"LaTeX", u:D("1eUcKBey1KLmhodvswVc2rC6Abo4g6GDa"), d:"Current revision letter"},
-    {t:"build-all.bat", k:"Script", u:D("1Hv1zRa1d80ImiY03CQ3jAntEKh3ehkKQ"), d:"Builds the full PDF and every appendix PDF"},
-    {t:"Appendix PDFs folder", k:"Folder", u:F("14rDGYZw3pS7hQKStIIJrryFw0hwICBmK"), d:"One PDF per appendix, all revisions"},
-    {t:"sections/", k:"Folder", u:F("1-BZPDEw06NJYN120ic-5iPGcAd9AJb_a"), d:"Chapter source files"},
-    {t:"appendices/", k:"Folder", u:F("1eKEgV7bTI_6HpyR59BRbFVqxT8bahfmi"), d:"Appendix source files"},
-    {t:"references/", k:"Folder", u:F("1KjBQAXf_GFuy2uI17dWD6GWGKpsVXR2D"), d:"DDT/DFB extracts, PCLib copy, pricing archive"},
-    {t:"tools/gen_future_appendix.py", k:"Python", u:D("1g58ZPT3srL5B1FvS_d0MPG5BTmjw1Mrm"), d:"Regenerates Appendix I from PCLib"},
-    {t:"Controls Standard rev H", k:"PDF", u:D("1zEkoHrFGuIWux8ZTJgBd_xo4RL9bphW8"), d:"Previous release"},
-    {t:"Controls-Standard-rev-H.zip", k:"Zip", u:D("1DXac70yvowJTwjcETG4MaFG3gdhn0Dfr"), d:"Archived rev H source"},
-    {t:"Rev H with your markup applied", k:"PDF", u:D("1WWCiCbb6wjKLLpjDPCg3a0Uvul6wojWc"), d:"Claude outputs folder"},
-    {t:"Chapter 3 table options", k:"PDF", u:D("1XWUj5tCuWjl4oDnszLLXjFZIvMRYIH9p"), d:"Layout options for the design-process table"},
-    {t:"Chapter 3 table option A revised", k:"PDF", u:D("1rasNFfT8jsh-gPWNNptM3rn71WhrfuXL"), d:"The option carried forward"},
-    {t:"Claude outputs folder", k:"Folder", u:F("1Mf5ock8FXpPvW8LdHij8o0B6I5KRi-17"), d:"Drafts and previews Claude produced"}
-  ],
-  chapters:[
-    ["0","Front matter","Title, revision history","1rhuwyfU31aqYVYlgS_c8FCsEavbpYKLc"],
-    ["1","Overview","Purpose and scope","1PXfZNRq8eYI8K-WwFaX8pMTXGQQinWIe"],
-    ["2","Terminology","Interlock, permissive, alarm and other defined terms","1fXcmky7SaglcJdrA1msynOrbMZtsa_8o"],
-    ["3","Design process","Stages, System Layout drawing, hardware spreadsheet as Stage 1 input","1gzurpuJWg8HTTRDeTyLdcWlalkWAME2E"],
-    ["4","Working with contractors","Roles, submittals, packaged equipment, FAT/SAT, turnover (expanded in rev I)","1e9WqdSr6LfAnD25PKRJyvDnd12fOKhFa"],
-    ["5","Process definition","","1N5rdv65cfnV96QsuyksTRb_YKHPHzyZt"],
-    ["6","Hardware","Standard parts: M580, P2-622, WAGO TOPJOB S, SMC SS5Y3-10S","1OUrl5OcCURbEzMAblI-ayCPYc8ZWthQ3"],
-    ["7","Software","Control Expert Classic 16.2, Studio 5000 v38, Ignition","166NfzhBxCJo2wvpSgUGP2F4gam1787jF"],
-    ["8","Networking","Plant network, OPC UA via NUA, remote access","1OWwIJD1gSLipcpqfUtA0vZMmGN9NNp2O"],
-    ["9","Accounts","Placeholder pointing to credential management","1MYIIUFhNB2d91QquJdqMorjlTlO80CNT"],
-    ["10","PLC standards","Programming conventions, DDTs, PDC compressor","1eRbK9Z77MZF0Y7qDxPTEyNRdQxMFo-fs"],
-    ["11","SCADA standards","Ignition version, PLC connections, alarm priority and ack","1YP90jwF6AzJzvnR6X-6cbzVvmyy52exy"],
-    ["12","Reference material","Internal references, manufacturer docs, ISA reading, training","1B5BXt-HxD-9beR8s3Om0jzSWcKL9aFdh"]
-  ],
-  appendices:[
-    ["A","Perspective Screen Design Standard","1on5fHQ546r_z95ex8dI4gXE1Be5gtv-X","1Bxk5XeuxitvA2k3ThGkhgkPJChRlkqyi"],
-    ["B","Perspective vs Edge Panel","13uDNu9kVEby1ZYa-TRogJP4kX6LdXLwS","1BLAaGAfVLhfOYe5JApaZplx3MxMb4wkQ"],
-    ["C","Important Equations","1kCZduhLpmBF_z6FwLnNh7J84QPxKa0aO","11QD3l1yio8oLC_jUtCSLoCahcNBwsYZn"],
-    ["D","Electrical Drawing Package","1LGe4Z3UWezaaU9FKmvoD2_8PBdHimjXX","1ZxZot05EfJ_nMkzDaGoQix7S145chMZ4"],
-    ["E","Class I Div 2 Panel Design","1mMZ7XutzCEA3tedISYl3Uw0PnLp_K1I-","1lQiIcFvomgz8Gd62yKs0rhRf4UTBsIDb"],
-    ["F","Modbus Addressing","1qsFs6Gmy5213eQy99Ifq5iCQDktFkctC","1U-Y3rv5Tny8yn1ukbZI7qEMrl7vjMQ6s"],
-    ["G","Alarm List and Documentation","1USUN-T2_SrdFwn5StFHoqAo3d50u2MWa","1qGB7P2h3xMbwR3-bRQ0Fycd8mGiRqXz0"],
-    ["H","PLC Data Type Reference (Current)","1xZ_8-a8XooBToA9EgmGjohky8TQEEG0j","1vODZFgfGZJPrjSNCP_kFJm6LJYX9qOCJ"],
-    ["I","PLC Data Type Reference (Future, PCLib)","1-gpJRFA6s6c1UTWGb0gnQbEXT_yRE_Jk","1CC21EgExIe3Sr3Uq2o-7rC_dfzupOd3Y"],
-    ["J","Function Block Reference","1FnxpujdT9dbDnY4hY6krLQ-PNSlnbW7L","1wjtGLry1Ow8Mh-FO21dtGfhoQEMYOLDU"],
-    ["K","Software Version Control with Git","1yo58ef2rdy0F0zW9nQejaKK3ntQTNglJ","1EoguP8NV_t7eCuX_Z_MC0ELGrEzIsQEh"],
-    ["L","Change Test Record","1lp6FJD8V8NOw4Vq98Bx1ALOUIVOaOTfr","1aTy8vWy6XwcrycFy2Np1Y5c3UDZZylOQ"],
-    ["M","Sample FAT Document","1qPdBJYBwgBY1lm9ZxkPe865a2hW-bANa","142xySi1CJC-F63yWDNBYDkt0kivn8VzX"],
-    ["N","Cato and Claroty","1-tQYT80myGbCkmxK4H7IZAWBtpxOrKq5","1gzXkwL7CLKO1jhbRMLXJUuf3VxNeaC0C"]
+  files:[
+    {t:"README.md", k:"File", p:"README.md", d:"Repo guide: layout, workflow, gateway import"},
+    {t:"docs/inventory.md", k:"File", p:"docs/inventory.md", d:"Every design, version, status and location"},
+    {t:"build.py", k:"File", p:"build.py", d:"One command: regenerate, merge, check, package"},
+    {t:"VERSION.json", k:"File", p:"VERSION.json", d:"Library version and release date"},
+    {t:"CHANGELOG.md", k:"File", p:"CHANGELOG.md", d:"What changed in each version"},
+    {t:"CHANGES-analog-indicators.md", k:"File", p:"CHANGES-analog-indicators.md", d:"Analog indicator change notes"},
+    {t:"CI workflow", k:"File", p:".github/workflows/check.yml", d:"Rebuilds on every push; fails on drift"},
+    {t:"steward.config.json", k:"File", p:"steward.config.json", d:"Steward configuration"}
   ]
 },
 {
-  id:"repo", name:"EFC repo (GitHub)", sub:"Generators, steward records, docs",
-  blurb:"adamzinman/EFC-Repo is the git home for the working files behind this map: the library README, CHANGELOG and VERSION, the types/ generators and exports for EFCLib, the steward records (library catalog, review decisions, gaps and the Controls Standard change queue) and the design docs. Links point at main.",
-  settled:[
-    "Controls Standard text is never edited directly; changes are queued in steward/DOC-QUEUE.md and compiled into one batch (decision 18)",
-    "EFC Repo is the master repo for everything (confirmed Oct 22)",
-    "Design-review decisions are logged in steward/DECISIONS.md, 30 as of Oct 21",
-    "steward/CATALOG.md is the library catalog: 64 views, 29 UDTs at the Oct 21 snapshot",
-    "Every template and dock in steward/GAPS.md is bound to a T_ type and has a dock and a preview; Station_Fill and the I/O faceplates open differently"
+  id:"generators", name:"Generators", sub:"Source for every built template", tag:"src", label:"Source",
+  blurb:"Python that writes the library. Change these, never the output. Shared helpers are in common.py and pid_common.py.",
+  how:[
+    "Edit the generator for the part you are changing",
+    "Run python3 build.py --preview, then look at docs/previews/templates.png",
+    "Commit the generator and the regenerated output together"
   ],
-  open:[
-    "Three Controls Standard instruction batches are applied but pending review (DOC-QUEUE rows 1 to 3: heaters, HMI rules, library build)",
-    "Copy Controls Standard rev I source (Drive folder) into controls-standard/ in this repo"
-  ],
-  links:[
-    {t:"README", k:"Markdown", u:G("README.md"), d:"What the library contains and how it is built"},
-    {t:"CHANGELOG.md", k:"Markdown", u:G("CHANGELOG.md"), d:"What changed in each library version"},
-    {t:"VERSION.json", k:"JSON", u:G("VERSION.json"), d:"Current library version and release date"},
-    {t:"steward/CATALOG.md", k:"Markdown", u:G("steward/CATALOG.md"), d:"Library catalog: every view, PCLib binding and UDT"},
-    {t:"steward/DECISIONS.md", k:"Markdown", u:G("steward/DECISIONS.md"), d:"Approved design-review decisions 1 to 30"},
-    {t:"steward/GAPS.md", k:"Markdown", u:G("steward/GAPS.md"), d:"Template, dock and preview coverage"},
-    {t:"steward/DOC-QUEUE.md", k:"Markdown", u:G("steward/DOC-QUEUE.md"), d:"Pending Controls Standard changes"},
-    {t:"steward/type_map.json", k:"JSON", u:G("steward/type_map.json"), d:"Which T_ type each view binds to"},
-    {t:"types/ (generators and exports)", k:"Folder", u:GT("types"), d:"gen_pclib.py, gen_dfb.py, XDD and Ignition exports"},
-    {t:"types/UDT Standards.md", k:"Markdown", u:G("types/UDT%20Standards.md"), d:"Type definitions that drive Appendix I"},
-    {t:"types/PCLib_Members.csv", k:"CSV", u:G("types/PCLib_Members.csv"), d:"Every member of every type"},
-    {t:"docs/inventory.md", k:"Markdown", u:G("docs/inventory.md"), d:"Every design and its status"},
-    {t:"docs/screen-layout-standard.md", k:"Markdown", u:G("docs/screen-layout-standard.md"), d:"Shell and dock sizes"},
-    {t:"docs/library-reference.md", k:"Markdown", u:G("docs/library-reference.md"), d:"Library reference"},
-    {t:"This map (source copy)", k:"HTML", u:"https://github.com/adamzinman/EFC-Repo/blob/claude/amazing-brahmagupta-h59eke/docs/controls-standardization-map.html", d:"Edit here, then republish the artifact from this file"}
+  files:[
+    {t:"build_styles.py", k:"File", p:"generator/build_styles.py", d:"EFC_Styles classes and the ISA-101 palette"},
+    {t:"build_pid.py", k:"File", p:"generator/build_pid.py", d:"Controlled-device templates: valves, rotating, heat transfer"},
+    {t:"build_pv.py", k:"File", p:"generator/build_pv.py", d:"Process-value templates and PV demo tags"},
+    {t:"common.py", k:"File", p:"generator/common.py", d:"Shared helpers, including inline-style extraction"},
+    {t:"pid_loops/", k:"Folder", p:"generator/pid_loops", d:"PID loop cards B1 to B4, popup, UDT and demo tags"},
+    {t:"analog_indicators/", k:"Folder", p:"generator/analog_indicators", d:"Analog indicator templates A to D"},
+    {t:"nav_connectors/", k:"Folder", p:"generator/nav_connectors", d:"Off-page connector SVG options"},
+    {t:"docks/", k:"Folder", p:"generator/docks", d:"Dynamic-window docks"},
+    {t:"render_views.py", k:"File", p:"generator/render_views.py", d:"Renders every view to docs/previews"},
+    {t:"make_project_zip.py", k:"File", p:"generator/make_project_zip.py", d:"Packages the project for import"},
+    {t:"v2/", k:"Folder", p:"generator/v2", d:"Second generator set; check before use"}
   ]
 },
 {
-  id:"ignition", name:"Ignition library and faceplates", sub:"Perspective views, UDTs, popups",
-  blurb:"efc-ignition-library (v7.1) is the one home for importable parts: a single EFC_Library project with every template under Templates/, plus separate part projects (Styles first, then PID, PV, Loops, Station, IO). Built on 8.1 and meant to carry over to 8.3. The EFC Repo is the master for this library; Drive holds synced copies and release zips.",
-  settled:[
-    "I/O card UDTs follow the PLC device DDT naming, e.g. PLC0_d0_r0_s8_AMI0810 (T_U_ANA_STD_IN_8)",
-    "In Ignition, only the path to the card should need entering",
-    "Every template opens a dynamic window in the right dock on long-press (pointer down/up timer, about 500 ms); Close returns to the screen overview",
-    "Similar equipment shares a window: discrete valves, analog valves, single-speed, VFD",
-    "Every template, faceplate and dynamic window gets a review preview; new items are mocked up and approved as one batch before building",
-    "The repo is hosted on GitHub; Drive holds the synced working copy and release zips"
+  id:"generated", name:"Generated output", sub:"Rebuilt by build.py. Do not edit", tag:"gen", label:"Generated",
+  blurb:"Output of build.py. A hand edit here is overwritten by the next build, and CI fails if it drifts from the generator. Import these into Ignition; do not change them by hand.",
+  how:[
+    "Change the generator or imported/ instead",
+    "Import tags/ into the Tag Browser to try the demos",
+    "Copy projects/EFC_Library into the gateway's data/projects folder, or import the release zip"
   ],
-  open:[
-    "BMXAMO0802 faceplate lists 8 channels; the card has 2",
-    "PID loop card headers collapse (column containers need alignItems: stretch)",
-    "I/O card UDT and demo tag files are missing from the repo",
-    "Rebind every template and build the dynamic windows on EFCLib v1",
-    "The Drive copy of efc-ignition-library is still v6.3: unzip v7.1 (keep types/), then apply the analog-indicator and T_KPI drop-ins"
+  files:[
+    {t:"projects/EFC_Library", k:"Folder", p:"projects/EFC_Library", d:"The merged Perspective project, 761 files, gateway folder layout"},
+    {t:"tags/", k:"Folder", p:"tags", d:"UDT JSON and demo tag instances for the Tag Browser"},
+    {t:"symbols/", k:"Folder", p:"symbols", d:"214 plain P&ID SVGs"},
+    {t:"docs/previews/", k:"Folder", p:"docs/previews", d:"Rendered review images for every view"},
+    {t:"templates.png", k:"File", p:"docs/previews/templates.png", d:"Contact sheet of the templates"}
+  ]
+},
+{
+  id:"imported", name:"Designer-built parts", sub:"Source for parts made in the Designer", tag:"src", label:"Source",
+  blurb:"Parts that have no generator. Edit them in the Ignition Designer, export, and re-import with the tool. A new part also needs its name added to IMPORTED_PARTS in build.py.",
+  how:[
+    "python3 tools/import_project_zip.py <export>.zip",
+    "python3 build.py --preview && git add -A && git commit",
+    "New part: add its name to IMPORTED_PARTS in build.py first"
   ],
-  links:[
-    {t:"efc-ignition-library", k:"Folder", u:F("1pgHXDENVs_EfoshQK2l0xz5hi0vuW-79"), d:"Git repo: generators, imported parts, tags, types/, docs"},
-    {t:"EFC_Library_PROJECT.zip", k:"Zip", u:D("1lHJjUae0k2dxDGk2b6E3a1QKzoKHSGIF"), d:"Single importable project (v7.0 copy in Drive)"},
-    {t:"efc-ignition-library-v7.0.zip", k:"Zip", u:D("1Fl5yIFTM3RjQjjy_PPeqK78Qcog0Z1bf"), d:"Repo snapshot with git history; v7.1 to replace it"},
-    {t:"EFC Library Template Review (v7.0)", k:"Artifact", u:A("9QaYt9jdpumsSjCJSvwvQQ"), d:"One rendered image per template, two flagged bugs"},
-    {t:"Dynamic windows (canvas)", k:"Artifact", u:A("6LGwRff6hF4DjrjVYhLxEa"), d:"Right-dock window per equipment family, mapping and scripts"},
-    {t:"_Archive (2026-10-19)", k:"Folder", u:F("12A-M4QGu3yI0pUv4NQGoXc5Gfk-IO86-"), d:"Retired EFC Repo and pre-v7.0 copies"},
-    {t:"Analog indicators drop-in", k:"Zip", u:D("1rb2JpRY4E-ypoJGYDvkZU5UEcx98p9vr"), d:"New analog indicator templates (Oct 20)"},
-    {t:"T_KPI drop-in", k:"Zip", u:D("1aElPPHeQRmIHOlst2fofX4elhAqLpzJ7"), d:"T_KPI type for the analog indicators (Oct 20)"},
-    {t:"Perspective-Fluid-Text-Styles.css", k:"CSS", u:D("1kiH2aY-4hELDOpwfww6ow4B8cZMuhjbI"), d:"Fluid text scaling styles"},
-    {t:"Station Faceplate Redesign", k:"Artifact", u:A("W2TrBqie9DsgisxLZEvURC"), d:"Latest version (Oct 6)"},
-    {t:"Station Faceplate Redesign (earlier)", k:"Artifact", u:A("8QdKVmVNkrwQ46yCqRWMwg"), d:"Earlier pass"},
-    {t:"Scale Station Faceplates", k:"Artifact", u:A("87z75kWF8Bo8zwMEKdJDZT"), d:"Scale station variants"},
-    {t:"PL Faceplate Mockups", k:"Artifact", u:A("Pbvsm42sxpMFd5vA34WAtv"), d:"Faceplate mockups"},
-    {t:"Analog Value Indicator Options", k:"Artifact", u:A("4996rNVToeq6UL1Mtgif6F"), d:"Indicator style options"}
+  files:[
+    {t:"EFC_IOFaceplates/", k:"Folder", p:"imported/EFC_IOFaceplates", d:"I/O card faceplates, parts and rack overview"},
+    {t:"EFC_StationFaceplates/", k:"Folder", p:"imported/EFC_StationFaceplates", d:"Station faceplates and fill and tile templates"},
+    {t:"import_project_zip.py", k:"File", p:"tools/import_project_zip.py", d:"Adds or refreshes a Designer-built part"},
+    {t:"build.py (IMPORTED_PARTS)", k:"File", p:"build.py", d:"The list of imported parts the build merges"}
   ]
 },
 {
-  id:"hmi", name:"HMI style and ISA guidance", sub:"ISA-101 palette, screen design, ISA-88",
-  blurb:"How screens should look and how equipment is modeled: the ISA-101 color palette, the Perspective screen design standard (Appendix A), the P&ID symbol set and the ISA-88 breakdown for the M580/Ignition stack.",
-  settled:[],
-  open:[],
-  links:[
-    {t:"EFC ISA-101 Color Palette", k:"Artifact", u:A("3KK3g918W4Vo5HPcLE9JAY"), d:"Palette reference, Oct 14"},
-    {t:"isa101-color-palette.md", k:"Markdown", u:D("1ZWjio9UnUt4C6zhl8a_Si9-XH0oIoW6j"), d:"Archived copy; now docs/isa101-color-palette.md in the repo"},
-    {t:"Design System", k:"Artifact", u:A("DwmBPS2vG8Eq6YKRTmA5iE"), d:"Shared look for decks and designs"},
-    {t:"P&ID Symbol Library", k:"Artifact", u:A("3BqrQ3x6MxzorkGYA2aoZz"), d:"Symbol set"},
-    {t:"Appendix A: Perspective Screen Design Standard", k:"PDF", u:D("1on5fHQ546r_z95ex8dI4gXE1Be5gtv-X"), d:"Rev I"},
-    {t:"Perspective_Screen_Design_Standard.pdf", k:"PDF", u:D("1m4qdL0G-zDMQOZRm5fBUn-OEPk8ZCnZy"), d:"Original source document"},
-    {t:"ISA-88 Breakdown for the M580 / Ignition Stack", k:"Artifact", u:A("55K9LUzzAsSUsnGZJcGLBd"), d:"Physical and procedural model mapping"},
-    {t:"ISA_88_and_106.pdf", k:"Project file", u:null, d:"In this Claude project"},
-    {t:"reference_ISA-white-papers-reference.md", k:"Project file", u:null, d:"In this Claude project"}
-  ]
-},
-{
-  id:"network", name:"Network and remote access", sub:"Subnet move, OPC UA, Modbus, Cato",
-  blurb:"The plant controls network and how systems talk: the planned move off 172.16.1.x, M580s into central Ignition over OPC UA through the BMENUA0100, Modbus conventions, edge panels at larger machines, and the parent company's Cato and Claroty remote access.",
-  settled:[
-    "M580s connect to central Ignition via OPC UA on the BMENUA0100",
-    "Larger systems get an Ignition Edge panel at the machine",
-    "Part of the plant is Class I Div 2"
+  id:"types", name:"PLC data types", sub:"T_ types for Control Expert and Ignition", tag:"src", label:"Source",
+  blurb:"gen_pclib.py is the source of truth for the T_ types. It writes the Control Expert import file and the Ignition import file together, so the PLC and SCADA definitions match member for member. The Appendix I text is generated from UDT Standards.md.",
+  how:[
+    "Edit the type in types/gen_pclib.py, then re-run it",
+    "Never hand-edit the xdd, export or JSON files",
+    "gen_pclib_NeedsUpdate.py holds T_Station and T_Heater, marked NEEDS UPDATE"
   ],
-  open:["New subnet range for the plant move is not decided"],
-  links:[
-    {t:"Chapter 8: Networking", k:"LaTeX", u:D("1OWwIJD1gSLipcpqfUtA0vZMmGN9NNp2O"), d:"Standard chapter source"},
-    {t:"Appendix F: Modbus Addressing", k:"PDF", u:D("1qsFs6Gmy5213eQy99Ifq5iCQDktFkctC"), d:"Rev I"},
-    {t:"Appendix N: Cato and Claroty", k:"PDF", u:D("1-tQYT80myGbCkmxK4H7IZAWBtpxOrKq5"), d:"Rev I"},
-    {t:"Appendix B: Perspective vs Edge Panel", k:"PDF", u:D("13uDNu9kVEby1ZYa-TRogJP4kX6LdXLwS"), d:"Rev I"},
-    {t:"Appendix E: Class I Div 2 Panel Design", k:"PDF", u:D("1mMZ7XutzCEA3tedISYl3Uw0PnLp_K1I-"), d:"Rev I"},
-    {t:"Modbus Guide: M580 and Ignition Perspective", k:"Artifact", u:A("8kTsoXQNWELUq3JLLXGoRH"), d:"Working guide"},
-    {t:"Ignition Perspective vs. Edge Panel guide", k:"Artifact", u:A("7PHGnajcF8NEQejjuh4Ekb"), d:"Differences and integration, 8.1 / 8.3"},
-    {t:"Ignition SSO Integration — Overview for IT", k:"Artifact", u:A("53tteoMuWKoXTTooJjcHQg"), d:"For the IT conversation"},
-    {t:"standard_appendix_modbus.tex", k:"Project file", u:null, d:"In this Claude project"},
-    {t:"reference_modicon-m580-resources.md", k:"Project file", u:null, d:"In this Claude project"}
+  files:[
+    {t:"gen_pclib.py", k:"File", p:"types/gen_pclib.py", d:"Generates every T_ type for both platforms"},
+    {t:"gen_pclib_NeedsUpdate.py", k:"File", p:"types/gen_pclib_NeedsUpdate.py", d:"T_Station and T_Heater, marked NEEDS UPDATE"},
+    {t:"gen_dfb.py", k:"File", p:"types/gen_dfb.py", d:"Generates the DFBs"},
+    {t:"gen_tex.py", k:"File", p:"types/gen_tex.py", d:"LaTeX type tables for the Standard"},
+    {t:"UDT Standards.md", k:"File", p:"types/UDT Standards.md", d:"Type definitions that drive Appendix I"},
+    {t:"PCLib_Members.csv", k:"File", p:"types/PCLib_Members.csv", d:"Every member of every type"},
+    {t:"README.md", k:"File", p:"types/README.md", d:"How to import the types into each platform"},
+    {t:"export/", k:"Folder", p:"types/export", d:"Import-ready files for Control Expert and Ignition"},
+    {t:"xdd/", k:"Folder", p:"types/xdd", d:"One DDT per file for Control Expert"},
+    {t:"dfb/", k:"Folder", p:"types/dfb", d:"DFB source, including FB_AI"},
+    {t:"T_KPI/", k:"Folder", p:"types/T_KPI", d:"T_KPI type for the analog indicators"}
   ]
 },
 {
-  id:"electrical", name:"Hardware and electrical", sub:"Parts, panels, drawings, contractors",
-  blurb:"Standard hardware, panel and drawing requirements, and the templates you hand to panel builders and electrical contractors. Schematic reviews follow NFPA 79 and UL508A; AutoCAD LT means drawings come in as PDF or DXF.",
-  settled:[
-    "Terminal blocks: WAGO TOPJOB S",
-    "Solenoid bank: SMC SS5Y3-10S on EtherNet/IP",
-    "Low-cost PLC: AutomationDirect P2-622 alongside Modicon M580"
+  id:"pclib", name:"PCLib phase DFBs", sub:"ISA-88 phases and the sequence bar", tag:"src", label:"Source",
+  blurb:"Phase function blocks for Control Expert Classic V16.2 and their Ignition 8.1 sequence bar.",
+  how:[
+    "Design a new phase from Sequence_Template.md",
+    "Read README_FB_Phase.md for the state machine",
+    "Tests are in PCLib/tests"
   ],
-  open:[],
-  links:[
-    {t:"Chapter 6: Hardware", k:"LaTeX", u:D("1OUrl5OcCURbEzMAblI-ayCPYc8ZWthQ3"), d:"Standard parts and selection rules"},
-    {t:"Chapter 4: Working with contractors", k:"LaTeX", u:D("1e9WqdSr6LfAnD25PKRJyvDnd12fOKhFa"), d:"Roles, submittals, turnover"},
-    {t:"Appendix D: Electrical Drawing Package", k:"PDF", u:D("1LGe4Z3UWezaaU9FKmvoD2_8PBdHimjXX"), d:"Rev I"},
-    {t:"Appendix C: Important Equations", k:"PDF", u:D("1kCZduhLpmBF_z6FwLnNh7J84QPxKa0aO"), d:"Rev I"},
-    {t:"Appendix M: Sample FAT Document", k:"PDF", u:D("1qPdBJYBwgBY1lm9ZxkPe865a2hW-bANa"), d:"Rev I"},
-    {t:"Appendix L: Change Test Record", k:"PDF", u:D("1lp6FJD8V8NOw4Vq98Bx1ALOUIVOaOTfr"), d:"Rev I"},
-    {t:"modicon-hardware-pricing-archive.csv", k:"CSV", u:D("12BYEticby7J9y1gtqGHE-M3iBfaodQEu"), d:"Past Modicon pricing"},
-    {t:"Electrical Schematic Drawing Template", k:"Artifact", u:A("Q78V5KAov5NPatuB74TE27"), d:"Drawing template"},
-    {t:"Standard Proposal Template – Panel Contractor Work", k:"Artifact", u:A("4cnLw7SjZrcQcduYXKQvk5"), d:"Proposal template for contractors"}
+  files:[
+    {t:"README_FB_Phase.md", k:"File", p:"PCLib/README_FB_Phase.md", d:"The phase DFBs and the sequence bar"},
+    {t:"Sequence_Template.md", k:"File", p:"PCLib/Sequence_Template.md", d:"Template for designing a new phase"},
+    {t:"dfb/", k:"Folder", p:"PCLib/dfb", d:"Phase DFBs, including FB_PhaseCore and FB_Phase"},
+    {t:"export/", k:"Folder", p:"PCLib/export", d:"Control Expert and Ignition import files"},
+    {t:"ignition/", k:"Folder", p:"PCLib/ignition", d:"EFC_XeFill_HMI.zip: sequence bar, station faceplates, XeFill overview"},
+    {t:"examples/", k:"Folder", p:"PCLib/examples", d:"Worked examples, including FB_PhXeFill"},
+    {t:"tests/", k:"Folder", p:"PCLib/tests", d:"Tests for the phase blocks"}
   ]
 },
 {
-  id:"platform", name:"Platform, training and R&D", sub:"Ignition 8.3, training, future work",
-  blurb:"Keeping the platform current and the team trained: the Ignition 8.1 to 8.3 upgrade planned for Q1 2027, the Perspective training series, and the R&D tracker for ideas not ready for the standard.",
-  settled:["Ignition 8.3 upgrade targeted for Q1 2027"],
-  open:[],
-  links:[
-    {t:"Ignition 8.1 → 8.3 Upgrade Procedure", k:"Artifact", u:A("2sNdLhZsG6gktaxLPXe9Mu"), d:"Step-by-step upgrade plan"},
-    {t:"R&D Plans Tracker", k:"Artifact", u:A("BhvGZnmgGAtXu42LhPH5wW"), d:"Future R&D items"},
-    {t:"Ignition Perspective 8.1 Training Plan", k:"Artifact", u:A("KxQ9mRLMjhVWB2VtSCBYY2"), d:"Training outline"},
-    {t:"Perspective Training — Combined Summary", k:"Artifact", u:A("Rx5BSwuJR7Co5TGaBynHaN"), d:"Both sessions in one"},
-    {t:"Perspective Training — Session Notes", k:"Artifact", u:A("75NNTkk8SstcnT8NnovaWa"), d:"Session 1"},
-    {t:"Perspective Training — Session 2 Notes", k:"Artifact", u:A("KXuC6shN2uTbJQi1a5Yf1j"), d:"Session 2"},
-    {t:"Appendix K: Software Version Control with Git", k:"PDF", u:D("1yo58ef2rdy0F0zW9nQejaKK3ntQTNglJ"), d:"Rev I"},
-    {t:"Chapter 7: Software", k:"LaTeX", u:D("166NfzhBxCJo2wvpSgUGP2F4gam1787jF"), d:"Software platforms and versions"}
+  id:"standard", name:"Controls Standard", sub:"Rev I source, partial copy", tag:"src", label:"Source, partial", b:true,
+  blurb:"LaTeX source for the EFC Controls Standard. The repo has the master file and the rev I PDF so far. The chapters, appendices, preamble and build script are still in the Drive folder. This is on the working branch only, until it merges to main.",
+  how:[
+    "Copy the remaining Drive files into controls-standard/ (the map's open item)",
+    "Do not edit the Standard text directly; queue the change in steward/DOC-QUEUE.md (DECISIONS 18)",
+    "Build with build-all.bat once the source is complete"
+  ],
+  files:[
+    {t:"Controls Standard.tex", k:"File", p:"controls-standard/Controls Standard.tex", d:"Master file: inputs each chapter and appendix", b:true},
+    {t:"Controls Standard rev-I.pdf", k:"File", p:"controls-standard/pdf/Controls Standard rev-I.pdf", d:"Rev I as released, October 14, 2026", b:true},
+    {t:"controls-standard/", k:"Folder", p:"controls-standard", d:"Where the rest of the source goes", b:true},
+    {t:"DOC-QUEUE.md", k:"File", p:"steward/DOC-QUEUE.md", d:"Pending Standard changes, compiled into one batch"},
+    {t:"Standard in Drive", k:"Link", u:D("1DdMF_X5DnH6t-LyDovtiL4PfjrQ6FcMs"), d:"The full folder: chapters, appendices, build-all.bat"}
   ]
 },
 {
-  id:"projects", name:"Projects driving the standard", sub:"R23 columns, Krypton, Rover Cart",
-  blurb:"Live jobs used to test the standard against reality. The R23 columns project is the main proving ground; the others feed hardware, contractor and FAT sections.",
-  settled:["R23 columns is the reference project for validating the standard"],
-  open:[],
-  links:[
-    {t:"Columns Project — Running Log", k:"Artifact", u:A("VgFHpYAasXykZnKUYtRLvW"), d:"R23 columns notes"},
-    {t:"Rare Gas Column Schedule", k:"Artifact", u:A("81U3wC2ENJrCRLxcjjRgfC"), d:"Schedule"},
-    {t:"Proposal — 008 Krypton Recovery Control Panel", k:"Artifact", u:A("Du7Gb8y1Ae12b16eDQ9FDv"), d:"MDCI Automation proposal"},
-    {t:"Krypton Recovery Schedule", k:"Artifact", u:A("FtfpuVQuUjeCymdLoUaamQ"), d:"Schedule"},
-    {t:"Rover Cart 1", k:"Folder", u:F("10O7N9RGeBPhTHbDAXX6Azw0CgVJKCjHE"), d:"Project files"},
-    {t:"Rover Cart 1 Punch List", k:"Artifact", u:A("CPxLZs76uQCGhcdNiV3ToJ"), d:"Punch list"},
-    {t:"013 - Clean Room: Notes Log", k:"Artifact", u:A("CTSobHfjJ8QTTozJZZ72zs"), d:"Notes"},
-    {t:"Controls Schedule Planner", k:"Artifact", u:A("4sABFFmMJUULuaj23aF8iu"), d:"Cross-project schedule"},
-    {t:"Controls Engineering Brief — Oct 12", k:"Artifact", u:A("1ppbwv6NdLV4b4xCDXg8fK"), d:"Weekly brief"},
-    {t:"Controls Engineering Year in Review", k:"Artifact", u:A("VyNF8owBn2zrreexkrKP4u"), d:"Oct 2025 to Sep 2026"}
+  id:"docs", name:"Design docs", sub:"Reference and how-to", tag:"rec", label:"Docs",
+  blurb:"How the library works, what each template does and why. Style indexes are generated from the library.",
+  how:[
+    "Start with inventory.md for status",
+    "library-reference.md for templates, UDT mapping and colors",
+    "design-notes.md for why a choice was made (notes 1 to 42)"
+  ],
+  files:[
+    {t:"inventory.md", k:"File", p:"docs/inventory.md", d:"Every design, version, status and location"},
+    {t:"library-reference.md", k:"File", p:"docs/library-reference.md", d:"Templates, UDT mapping, status logic, colors, 8.1 compatibility"},
+    {t:"design-notes.md", k:"File", p:"docs/design-notes.md", d:"Design decisions, notes 1 to 42, and open items"},
+    {t:"template-review.md", k:"File", p:"docs/template-review.md", d:"Findings from the rendered review images"},
+    {t:"isa101-audit.md", k:"File", p:"docs/isa101-audit.md", d:"ISA-101 and ISA-18.2 audit and documented deviations"},
+    {t:"isa101-color-palette.md", k:"File", p:"isa101-color-palette.md", d:"The ISA-101 palette"},
+    {t:"style-library.md", k:"File", p:"docs/style-library.md", d:"How to use EFC_Styles"},
+    {t:"style-class-index.md", k:"File", p:"docs/style-class-index.md", d:"Every style class (generated)"},
+    {t:"pv-display.md", k:"File", p:"docs/pv-display.md", d:"Process-value templates"},
+    {t:"pid-loop-templates.md", k:"File", p:"docs/pid-loop-templates.md", d:"PID loop cards and popup"},
+    {t:"screen-layout-standard.md", k:"File", p:"docs/screen-layout-standard.md", d:"16:9 screen layout and graphics conventions"},
+    {t:"station-faceplates.md", k:"File", p:"docs/station-faceplates.md", d:"Station faceplates, member mapping, dock setup"},
+    {t:"design-briefs.md", k:"File", p:"docs/design-briefs.md", d:"I/O card and station faceplates, compressor screen, Haskel pump"},
+    {t:"ddt-udt-sync.md", k:"File", p:"docs/ddt-udt-sync.md", d:"The gateway DDT-to-UDT sync"},
+    {t:"xsy-tag-import-strategy.md", k:"File", p:"docs/xsy-tag-import-strategy.md", d:"Strategy for importing tags from a Control Expert export (not built yet)"},
+    {t:"EFCLib v1 briefing (pptx)", k:"File", p:"docs/presentations/EFCLib_v1_Engineering_Briefing.pptx", d:"Engineering briefing with speaker notes", b:true},
+    {t:"previews/", k:"Folder", p:"docs/previews", d:"Rendered review images"}
+  ]
+},
+{
+  id:"records", name:"Steward records", sub:"Decisions, gaps, catalog, queue", tag:"rec", label:"Records",
+  blurb:"Working records for the library: what was decided, what is missing, what the library contains, and which Standard changes are pending.",
+  how:[
+    "Log a decision as a new numbered row in DECISIONS.md",
+    "Check coverage in GAPS.md",
+    "Queue a Controls Standard change in DOC-QUEUE.md. The queue is compiled into one batch at the end of library work"
+  ],
+  files:[
+    {t:"DECISIONS.md", k:"File", p:"steward/DECISIONS.md", d:"Approved design-review decisions, 1 to 30"},
+    {t:"GAPS.md", k:"File", p:"steward/GAPS.md", d:"Template, dock and preview coverage"},
+    {t:"CATALOG.md", k:"File", p:"steward/CATALOG.md", d:"Library catalog: views, PCLib bindings, UDTs (generated)"},
+    {t:"DOC-QUEUE.md", k:"File", p:"steward/DOC-QUEUE.md", d:"Pending Controls Standard changes"},
+    {t:"type_map.json", k:"File", p:"steward/type_map.json", d:"Which T_ type each view binds to"},
+    {t:"AUDIT.md", k:"File", p:"steward/AUDIT.md", d:"Library audit"},
+    {t:"AUDIT-SUMMARY.md", k:"File", p:"steward/AUDIT-SUMMARY.md", d:"Audit summary"},
+    {t:"CHANGES.md", k:"File", p:"steward/CHANGES.md", d:"Steward changes"},
+    {t:"IDEAS.md", k:"File", p:"steward/IDEAS.md", d:"Ideas not yet scheduled"},
+    {t:"previews/", k:"Folder", p:"steward/previews", d:"Review previews for each template, faceplate and window"},
+    {t:"proposals/", k:"Folder", p:"steward/proposals", d:"Standard instruction files and proposals"},
+    {t:"standard-edits/", k:"Folder", p:"steward/standard-edits", d:"The rev I edit batch"},
+    {t:"skill-updates/", k:"Folder", p:"steward/skill-updates", d:"The controls-standard skill and its scripts"},
+    {t:"docs/", k:"Folder", p:"steward/docs", d:"Per-template notes"},
+    {t:"tools/", k:"Folder", p:"steward/tools", d:"Steward scripts, including fix_station_styles.py and gaps.py"}
+  ]
+},
+{
+  id:"tools", name:"Gateway scripts and tools", sub:"Imports, PLC sync, packaging", tag:"src", label:"Tools",
+  blurb:"Scripts that run outside the build: the gateway DDT-to-UDT sync and the Designer import helper.",
+  how:[
+    "Designer part: run tools/import_project_zip.py on the export",
+    "PLC types into the gateway: run scripts/ddtsync.py inside the gateway, add-only",
+    "See docs/ddt-udt-sync.md before running the sync against a live PLC"
+  ],
+  files:[
+    {t:"ddtsync.py", k:"File", p:"scripts/ddtsync.py", d:"Gateway script: M580 DDTs over OPC UA into UDTs, add-only"},
+    {t:"import_project_zip.py", k:"File", p:"tools/import_project_zip.py", d:"Adds or refreshes a Designer-built part"},
+    {t:"ddt-udt-sync.md", k:"File", p:"docs/ddt-udt-sync.md", d:"How the DDT sync works"}
+  ]
+},
+{
+  id:"mockups", name:"Mockups and symbols", sub:"HTML previews and P&ID symbols", tag:"gen", label:"Previews",
+  blurb:"HTML design previews, and the plain P&ID SVG set that the templates embed.",
+  how:[
+    "Mockups are design previews and do not feed the build",
+    "Symbols are generated; change them through the generator"
+  ],
+  files:[
+    {t:"mockups/", k:"Folder", p:"mockups", d:"HTML design previews"},
+    {t:"symbols/", k:"Folder", p:"symbols", d:"214 plain SVGs: valves, instruments, vessels, rotating, fittings"},
+    {t:"symbols/Valves/", k:"Folder", p:"symbols/Valves", d:"Valve symbols"}
+  ]
+},
+{
+  id:"archive", name:"Archive", sub:"Retired, not built", tag:"rec", label:"Archive",
+  blurb:"Kept for reference only. Nothing here is built, and the build does not read it.",
+  how:["Read archive/ARCHIVED.md for what was retired and why"],
+  files:[
+    {t:"ARCHIVED.md", k:"File", p:"archive/ARCHIVED.md", d:"What was retired and why"},
+    {t:"archive/", k:"Folder", p:"archive", d:"Retired generators, projects, docs, tags, symbols, mockups"}
+  ]
+},
+{
+  id:"outside", name:"Outside the repo", sub:"Drive and Claude artifacts", tag:"rec", label:"Outside",
+  blurb:"Items that live outside the repo but feed it or describe it. The repo is the master; these are copies or review pages.",
+  how:[
+    "Drive efc-ignition-library is a synced working copy. The repo is the master",
+    "Review pages in Claude show the rendered templates and dynamic windows"
+  ],
+  files:[
+    {t:"Controls Standard folder (Drive)", k:"Link", u:D("1DdMF_X5DnH6t-LyDovtiL4PfjrQ6FcMs"), d:"Full Standard source, chapters and build script"},
+    {t:"efc-ignition-library folder (Drive)", k:"Link", u:D("1pgHXDENVs_EfoshQK2l0xz5hi0vuW-79"), d:"Synced working copy; the repo is the master"},
+    {t:"EFC Library Template Review (v7.0)", k:"Link", u:A("9QaYt9jdpumsSjCJSvwvQQ"), d:"One rendered image per template, two flagged bugs"},
+    {t:"Dynamic windows (canvas)", k:"Link", u:A("6LGwRff6hF4DjrjVYhLxEa"), d:"Right-dock window per equipment family"}
   ]
 }
 ];
 
-// Build the aggregate open-items node
-const ALL_OPEN = [];
-GROUPS.forEach(g => (g.open||[]).forEach(o => ALL_OPEN.push({t:o, g:g.name, gid:g.id})));
-GROUPS.push({id:"open", warn:true, name:"Open items", sub:"Decisions still needed", blurb:"Everything waiting on a decision or a missing detail, collected from every workstream. Most come from the rev I change log.", settled:[], open:[], links:[], aggregate:true});
+// "Where do I...?" finder. folder: true = a folder, else a file.
+const FINDER = [
+  {task:"Change a template, style or PID loop card", sec:"generators", p:"generator/", folder:true, note:"Edit the generator, then python3 build.py --preview"},
+  {task:"Add or refresh a Designer-built part", sec:"imported", p:"tools/import_project_zip.py", folder:false, note:"Export from Designer, import with the tool, add to IMPORTED_PARTS if new"},
+  {task:"Add or change a PLC data type (T_)", sec:"types", p:"types/gen_pclib.py", folder:false, note:"Edit the definition and re-run. Never hand-edit the outputs"},
+  {task:"Load tags or UDTs into the gateway", sec:"generated", p:"tags/", folder:true, note:"Tag Browser > Data Types > Import"},
+  {task:"Put the library on a gateway", sec:"start", p:"README.md", folder:false, note:"Import the release zip, or copy projects/EFC_Library"},
+  {task:"See what is built and its status", sec:"docs", p:"docs/inventory.md", folder:false, note:""},
+  {task:"Log a design decision", sec:"records", p:"steward/DECISIONS.md", folder:false, note:"Add a numbered row"},
+  {task:"Check coverage gaps", sec:"records", p:"steward/GAPS.md", folder:false, note:""},
+  {task:"Queue a Controls Standard text change", sec:"records", p:"steward/DOC-QUEUE.md", folder:false, note:"The Standard text is never edited directly"},
+  {task:"Read the Controls Standard source", sec:"standard", p:"controls-standard", folder:true, note:"Partial copy, on the working branch"},
+  {task:"Look at a rendered view before committing", sec:"generated", p:"docs/previews", folder:true, note:"Check the image before you commit a visual change"},
+  {task:"Release a version", sec:"start", p:"VERSION.json", folder:false, note:"Bump, CHANGELOG entry, build.py --dist, tag"},
+  {task:"Sync DDTs from the M580 into UDTs", sec:"tools", p:"scripts/ddtsync.py", folder:false, note:"Gateway script, add-only"},
+  {task:"Design a new ISA-88 phase", sec:"pclib", p:"PCLib/Sequence_Template.md", folder:false, note:""},
+  {task:"Find retired material", sec:"archive", p:"archive/ARCHIVED.md", folder:false, note:"Not built"}
+];
 
-document.getElementById("opencount").textContent = ALL_OPEN.length;
-
-// Searchable index (chapters and appendices included)
-const INDEX = [];
-GROUPS.forEach(g => {
-  g.links.forEach(l => INDEX.push({...l, g:g.name}));
-  (g.chapters||[]).forEach(c => INDEX.push({t:"Chapter "+c[0]+": "+c[1], k:"LaTeX", u:D(c[3]), d:c[2], g:g.name}));
-  (g.appendices||[]).forEach(a => INDEX.push({t:"Appendix "+a[0]+": "+a[1], k:"PDF", u:D(a[2]), d:"Rev I PDF", g:g.name}));
+// Counts for the bus: tracked-file totals per folder come from the snapshot.
+const ALL = [];
+SECTIONS.forEach(s => {
+  s.files.forEach(f => ALL.push({...f, sec:s.name, secId:s.id}));
 });
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -434,92 +441,98 @@ const panel = document.getElementById("panel");
 const q = document.getElementById("q");
 const clearBtn = document.getElementById("clear");
 
-let current = "standard";
-try { const s = localStorage.getItem("csmap-node"); if (s && GROUPS.some(g => g.id === s)) current = s; } catch(e) {}
+const NAV = [...SECTIONS.map(s => ({id:s.id, name:s.name, sub:s.sub, tag:s.tag, cnt:s.files.length + " items"})),
+  {id:"find", name:"Where do I...?", sub:"Task to folder finder", tag:"src", cnt:FINDER.length + " tasks"}];
 
-function count(g){
-  if (g.aggregate) return ALL_OPEN.length + " to close";
-  const n = g.links.length + (g.chapters||[]).length + (g.appendices||[]).length;
-  const o = (g.open||[]).length;
-  return n + " items" + (o ? '<br><span class="o">' + o + ' open</span>' : "");
-}
+let current = "start";
+try { const s = localStorage.getItem("efcmap-node"); if (s && NAV.some(n => n.id === s)) current = s; } catch(e) {}
 
 function renderBus(){
-  bus.innerHTML = GROUPS.map(g =>
-    '<li><button class="node' + (g.hub?" hub":"") + (g.warn?" warn":"") + '" data-id="' + g.id + '" aria-current="' + (g.id===current && !q.value ? "true":"false") + '">' +
-    '<span><span class="nm">' + esc(g.name) + '</span><span class="sub">' + esc(g.sub) + '</span></span>' +
-    '<span class="cnt">' + count(g) + '</span></button></li>'
+  bus.innerHTML = NAV.map(n =>
+    '<li><button class="node ' + (n.tag || "") + '" data-id="' + n.id + '" aria-current="' + (n.id === current && !q.value ? "true" : "false") + '">' +
+    '<span><span class="nm">' + esc(n.name) + '</span><span class="sub">' + esc(n.sub) + '</span></span>' +
+    '<span class="cnt">' + esc(n.cnt) + '</span></button></li>'
   ).join("");
 }
 
-function linkItem(l, showGroup){
-  const title = l.u
-    ? '<a href="' + esc(l.u) + '" target="_blank" rel="noopener">' + esc(l.t) + '</a>'
-    : '<span class="nolink">' + esc(l.t) + '</span>';
-  return '<li><span class="kind">' + esc(l.k) + '</span>' + title +
-    '<span class="meta">' + esc(l.d || "") + (showGroup ? ' <span class="grp">in ' + esc(l.g) + '</span>' : '') + '</span></li>';
+function linkItem(it, showGroup){
+  const title = it.u === undefined && !it.p && !it.k
+    ? '<span class="nolink">' + esc(it.t) + '</span>'
+    : '<a href="' + esc(url(it)) + '" target="_blank" rel="noopener">' + esc(it.t) + '</a>';
+  const branch = it.b ? ' <span class="grp">(branch)</span>' : "";
+  return '<li><span class="kind">' + esc(it.k) + '</span>' + title + branch +
+    '<span class="meta">' + esc(it.d || "") + (showGroup ? ' <span class="grp">in ' + esc(it.sec) + '</span>' : '') + '</span></li>';
 }
 
-function renderGroup(id){
-  const g = GROUPS.find(x => x.id === id);
-  let h = '<h2>' + esc(g.name) + '</h2><p class="blurb">' + esc(g.blurb) + '</p>';
-  if (g.aggregate){
-    const byG = {};
-    ALL_OPEN.forEach(o => (byG[o.g] = byG[o.g] || []).push(o));
-    Object.keys(byG).forEach(k => {
-      const gid = byG[k][0].gid;
-      h += '<h3>' + esc(k) + '</h3><ul class="notes open">' + byG[k].map(o => '<li>' + esc(o.t) + '</li>').join("") + '</ul>';
-    });
-    h += '<p class="blurb" style="margin-top:18px">Source: <a href="' + D("1tiW6cHVT898Xq2jvPLZOYtoaBPb1OPVJ") + '" target="_blank" rel="noopener">Rev I change log</a></p>';
-  } else {
-    if (g.open && g.open.length) h += '<h3>Still open</h3><ul class="notes open">' + g.open.map(o => '<li>' + esc(o) + '</li>').join("") + '</ul>';
-    if (g.settled && g.settled.length) h += '<h3>Settled</h3><ul class="notes">' + g.settled.map(o => '<li>' + esc(o) + '</li>').join("") + '</ul>';
-    if (g.chapters){
-      h += '<h3>Chapters</h3><div class="tablewrap"><table class="doc"><thead><tr><th>#</th><th>Chapter</th><th>Source</th></tr></thead><tbody>' +
-        g.chapters.map(c => '<tr><td class="n">' + c[0] + '</td><td>' + esc(c[1]) + (c[2] ? '<div class="s">' + esc(c[2]) + '</div>' : '') + '</td><td class="f"><a href="' + D(c[3]) + '" target="_blank" rel="noopener">.tex</a></td></tr>').join("") +
-        '</tbody></table></div>';
-    }
-    if (g.appendices){
-      h += '<h3>Appendices</h3><div class="tablewrap"><table class="doc"><thead><tr><th></th><th>Appendix</th><th>Files</th></tr></thead><tbody>' +
-        g.appendices.map(a => '<tr><td class="n">' + a[0] + '</td><td>' + esc(a[1]) + '</td><td class="f"><a href="' + D(a[2]) + '" target="_blank" rel="noopener">PDF</a><a href="' + D(a[3]) + '" target="_blank" rel="noopener">.tex</a></td></tr>').join("") +
-        '</tbody></table></div>';
-    }
-    if (g.links.length) h += '<h3>Files and artifacts</h3><ul class="links">' + g.links.map(l => linkItem(l,false)).join("") + '</ul>';
-  }
+function renderSection(id){
+  const s = SECTIONS.find(x => x.id === id);
+  const tagLabel = s.label;
+  let h = '<h2>' + esc(s.name) + '</h2>' +
+    '<span class="tag ' + s.tag + '">' + esc(tagLabel) + '</span>' +
+    '<p class="blurb">' + esc(s.blurb) + '</p>';
+  h += '<h3>How to work here</h3><ol>' + s.how.map(x => '<li>' + esc(x) + '</li>').join("") + '</ol>';
+  h += '<h3>Key files and folders</h3><ul class="links">' + s.files.map(f => linkItem(f, false)).join("") + '</ul>';
+  return h;
+}
+
+function renderFinder(){
+  const rows = FINDER.map(f => {
+    const sec = SECTIONS.find(x => x.id === f.sec);
+    const it = {t:f.p, k:f.folder ? "Folder" : "File", p:f.p, b: f.p.indexOf("controls-standard") === 0};
+    return '<tr><td>' + esc(f.task) + '</td>' +
+      '<td><a href="' + esc(url(it)) + '" target="_blank" rel="noopener">' + esc(f.p) + '</a></td>' +
+      '<td class="s">' + esc(f.note) + '</td></tr>';
+  }).join("");
+  return '<h2>Where do I...?</h2><p class="blurb">Find the folder for a task. The path links to GitHub; the section name is in the bus on the left.</p>' +
+    '<div class="tablewrap"><table class="doc"><thead><tr><th>Task</th><th>Go to</th><th>Note</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+}
+
+function renderPanel(id){
   panel.className = "panel";
   void panel.offsetWidth;
   panel.className = "panel swap";
-  panel.innerHTML = h;
+  panel.innerHTML = id === "find" ? renderFinder() : renderSection(id);
 }
 
 function renderSearch(term){
   const t = term.toLowerCase();
-  const hits = INDEX.filter(l => (l.t + " " + (l.d||"") + " " + l.k + " " + l.g).toLowerCase().includes(t));
+  const hits = ALL.filter(l => (l.t + " " + (l.d||"") + " " + l.k + " " + l.sec + " " + (l.p||"")).toLowerCase().includes(t));
+  const fhits = FINDER.filter(f => (f.task + " " + f.p + " " + f.note).toLowerCase().includes(t));
   panel.className = "panel results";
-  panel.innerHTML = '<h2>' + hits.length + ' match' + (hits.length===1?'':'es') + ' for "' + esc(term) + '"</h2>' +
-    (hits.length ? '<ul class="links" style="margin-top:14px">' + hits.map(l => linkItem(l,true)).join("") + '</ul>'
-                 : '<p class="empty">Nothing matches. Try a file type like PDF, a part number, or a type name like T_DiaComp.</p>');
+  let h = '<h2>' + (hits.length + fhits.length) + ' match' + ((hits.length + fhits.length) === 1 ? '' : 'es') + ' for "' + esc(term) + '"</h2>';
+  if (fhits.length) h += '<h3>Tasks</h3><ul class="links">' + fhits.map(f => '<li><a href="#" data-goto="find">' + esc(f.task) + '</a><span class="meta">' + esc(f.p) + '</span></li>').join("") + '</ul>';
+  if (hits.length) h += '<h3>Files and folders</h3><ul class="links">' + hits.map(l => linkItem(l, true)).join("") + '</ul>';
+  if (!hits.length && !fhits.length) h += '<p class="empty">Nothing matches. Try a file name like gen_pclib, a type like T_Heater, or a word like faceplate.</p>';
+  panel.innerHTML = h;
 }
 
 bus.addEventListener("click", e => {
   const b = e.target.closest(".node"); if (!b) return;
   current = b.dataset.id;
-  try { localStorage.setItem("csmap-node", current); } catch(e) {}
+  try { localStorage.setItem("efcmap-node", current); } catch(e) {}
   q.value = ""; clearBtn.hidden = true;
-  renderBus(); renderGroup(current);
+  renderBus(); renderPanel(current);
   if (window.matchMedia("(max-width:860px)").matches) panel.scrollIntoView({behavior:"smooth", block:"start"});
+});
+
+panel.addEventListener("click", e => {
+  const a = e.target.closest("a[data-goto]"); if (!a) return;
+  e.preventDefault();
+  current = a.dataset.goto;
+  q.value = ""; clearBtn.hidden = true;
+  renderBus(); renderPanel(current);
 });
 
 q.addEventListener("input", () => {
   const v = q.value.trim();
   clearBtn.hidden = !v;
   renderBus();
-  if (v) renderSearch(v); else renderGroup(current);
+  if (v) renderSearch(v); else renderPanel(current);
 });
-clearBtn.addEventListener("click", () => { q.value=""; clearBtn.hidden = true; renderBus(); renderGroup(current); q.focus(); });
+clearBtn.addEventListener("click", () => { q.value=""; clearBtn.hidden = true; renderBus(); renderPanel(current); q.focus(); });
 
 renderBus();
-renderGroup(current);
+renderPanel(current);
 </script>
 </body>
 </html>
