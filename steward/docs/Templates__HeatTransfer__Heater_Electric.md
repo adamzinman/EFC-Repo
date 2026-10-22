@@ -3,7 +3,7 @@
 <!-- keep:start -->
 **Purpose:** P&ID electric heater template bound to EFCLib v1 T_Heater through tagPath: state fill, alarm outline, P/I badges, mode and status line. Works for on/off and power-controlled (SSR/SCR) heaters (Cfg_CtrlType).
 
-**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_Heater) in the screen's Docks/Region.
+**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_Heater) in the page's right dock (efcDynamic, decision 31).
 
 **Gotchas:** No double-tap command (only T_DValve / T_Motor take one). Power demand is set in the window.
 <!-- keep:end -->

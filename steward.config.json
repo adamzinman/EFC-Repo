@@ -65,5 +65,5 @@
     "Templates/_Demo"
   ],
   "upstream_check_days": 30,
-  "_note": "require_dock off: dynamic windows are an embedded view switched by efc.ui.openDynamic (decision 24); wiring is checked by steward/tools/gaps.py."
+  "_note": "require_dock off: templates do not call openDock themselves; efc.ui.openDynamic opens the shared right dock efcDynamic (decision 31); wiring is checked by steward/tools/gaps.py."
 }

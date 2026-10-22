@@ -19,12 +19,9 @@ The only parameter on each view is **`tagPath`**: the DDT_Station instance, e.g.
    - Tag Browser → Data Types → import `tags/T_Station_Demo_UDT.json`.
    - Tags root → import `tags/Station_Demo_Instances.json`.
    - Open `Templates/Station/_Demo`.
-3. Sidebar dock: in Page Configuration on the overview page, add a **right dock**:
-   - id `StationSidebar`
-   - view `Templates/Station/Station_Sidebar`
-   - size 300, display "onDemand", content "push" or "cover"
+3. Sidebar dock: in the merged EFC_Library the sidebar is the `dw_Station` dynamic window, view `Docks/Station` (decision 4), resized to 400 px wide. It opens in the page's shared right dock, Dock ID `efcDynamic` (view `Docks/Host`, content "push"; decision 31), set up as in [`dock-setup.md`](dock-setup.md). No separate `StationSidebar` dock is needed.
 
-   The tile's onClick calls `system.perspective.openDock("StationSidebar", params={"tagPath": …})`, and the sidebar's ✕ closes it. Change both scripts if you wire it differently.
+   The tile's onClick calls `efc.ui.openDynamic(self)` (tType `T_Station`), which runs `system.perspective.openDock("efcDynamic", params={"path": "Docks/Station", "tagPath": …, "model": ""})`. The sidebar's ✕ calls `efc.ui.closeDynamic(self)`, which returns the dock to the screen's default view. The standalone `EFC_StationFaceplates` export (`Templates/Station/Station_Sidebar`, 300 px) predates this; use the library views.
 
 ## Member mapping
 **Displays**

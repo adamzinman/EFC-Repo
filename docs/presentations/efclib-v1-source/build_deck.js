@@ -448,32 +448,32 @@ section("Values, indicators and loops");
 // ================================================================ 17 Shell
 section("Dynamic windows");
 {
-  const s = slide("The screen shell and the dynamic-window region", "DYNAMIC WINDOWS");
+  const s = slide("The screen shell and the right dock", "DYNAMIC WINDOWS");
   const r = img(s, IMG("Screen_Layout_normal"), 0.6, 1.6, { w: 8.9, alt: "1920x1080 screen shell with a P-101 dynamic window open on the right" });
   s.addShape(pres.shapes.RECTANGLE, { x: r.x, y: r.y, w: r.w, h: r.h, fill: { type: "none" }, line: { color: P.border, width: 0.75 }, objectName: "shell frame" });
   T(s, "Regions at 1920 x 1080", { x: 9.85, y: 1.6, w: 2.9, h: 0.4, fontSize: 16, bold: true });
   [["Header", "1920 x 80"], ["Left menu", "120 x 860"], ["Process area", "1400 x 860"], ["Dynamic window", "400 x 860"], ["Alarm bar", "1920 x 140"]].forEach(([a, b], i) => {
     T(s, [{ text: a, options: { bold: true, breakLine: true } }, { text: b + " px", options: { color: P.muted } }], { x: 9.85, y: 2.1 + i * 0.68, w: 2.9, h: 0.62, fontSize: 14 });
   });
-  T(s, "Everything doubles at 3840 x 2160. The window is 37.04 vh x 79.63 vh.", { x: 9.85, y: 5.6, w: 2.9, h: 1.0, fontSize: 13, italic: true, color: P.muted });
+  T(s, "Everything doubles at 3840 x 2160. The window is a right dock in push mode, Size 400 px (800 px at 4K).", { x: 9.85, y: 5.6, w: 2.9, h: 1.0, fontSize: 13, italic: true, color: P.muted });
   notes(s);
 }
 
 // ================================================================ 18 Open/close flow
 {
   const s = slide("How a dynamic window opens and closes", "DYNAMIC WINDOWS");
-  const steps = [["Click symbol", "operator clicks a template"], ["efc.ui.openDynamic", "picks the window from tType or dockId"], ["Session value", "efcDw[pageId] = path + tagPath"], ["Docks/Region", "embedded view swaps to the window"]];
+  const steps = [["Click symbol", "operator clicks a template"], ["efc.ui.openDynamic", "picks the window from tType or dockId"], ["openDock", "efcDynamic: path + tagPath"], ["Docks/Host", "right dock shows the window"]];
   steps.forEach(([h, d], i) => {
     const x = 0.6 + i * 3.1;
     card(s, x, 1.65, 2.6, 1.35, { fill: i === 3 ? P.fault : P.card, line: i === 3 ? P.fault : "D0D0D0", name: "step " + h });
     T(s, [{ text: h, options: { bold: true, breakLine: true } }, { text: d, options: { fontSize: 12, color: i === 3 ? "E0E0E0" : P.muted } }], { x: x + 0.15, y: 1.78, w: 2.3, h: 1.15, fontSize: 15, color: i === 3 ? "FFFFFF" : P.text });
     if (i < 3) s.addShape(pres.shapes.RIGHT_ARROW, { x: x + 2.65, y: 2.17, w: 0.4, h: 0.32, fill: { color: P.borderDark }, line: { color: P.borderDark }, objectName: "arrow " + i });
   });
-  T(s, "Close (X) calls efc.ui.closeDynamic and returns the region to the screen's defaultDock view. One window per page; a second click replaces it.", { x: 0.6, y: 3.2, w: 12.1, h: 0.6, fontSize: 14, color: P.muted });
+  T(s, "Close (X) calls efc.ui.closeDynamic and returns the dock to the screen's default view (defaultPath). One window per page; a second click replaces it.", { x: 0.6, y: 3.2, w: 12.1, h: 0.6, fontSize: 14, color: P.muted });
   table(s, [["Type", "Window"], ["T_DValve", "dw_ValveDiscrete"], ["T_CValve", "dw_ValveAnalog"], ["T_Motor", "dw_Rotating"], ["T_VFD", "dw_VFD"], ["T_Heater", "dw_Heater"]], { fs: 12, opts: { x: 0.6, y: 4.0, w: 4.0, colW: [1.6, 2.4], rowH: 0.42 } });
   table(s, [["Type", "Window"], ["T_HeatEx", "dw_HeatTransfer"], ["T_AI, T_KPI", "dw_ProcessValue"], ["T_PID", "dw_Loop"], ["T_Station", "dw_Station"], ["x80 card DDT", "dw_IOCard"]], { fs: 12, opts: { x: 4.85, y: 4.0, w: 4.0, colW: [1.6, 2.4], rowH: 0.42 } });
-  card(s, 9.15, 4.0, 3.55, 2.55, { name: "why embedded" });
-  T(s, [{ text: "Why an embedded view, not Perspective docks?", options: { bold: true, breakLine: true } }, { text: "The region is a fixed part of the shell, so the process area never shifts or gets covered, and it matches the Controls Standard screen appendix (decision 24).", options: { color: P.muted, fontSize: 13 } }], { x: 9.35, y: 4.12, w: 3.2, h: 2.35, fontSize: 14 });
+  card(s, 9.15, 4.0, 3.55, 2.55, { name: "why dock" });
+  T(s, [{ text: "Why a Perspective right dock in push mode?", options: { bold: true, breakLine: true } }, { text: "The dock takes its own column, so the process area shrinks and is never covered, and the window uses built-in openDock / closeDock (decision 31, supersedes 24).", options: { color: P.muted, fontSize: 13 } }], { x: 9.35, y: 4.12, w: 3.2, h: 2.35, fontSize: 14 });
   notes(s);
 }
 
@@ -549,7 +549,7 @@ section("Dynamic windows");
     "The expand button fills the window below its header, about 400 x 760 at 1080p",
     "Range buttons 5 m / 30 m / 1 h / 8 h / 24 h and collapse; pause / live and a last-events list are approved but not built yet",
     "The other sections hide while expanded and come back on collapse",
-    "The region never widens, so the process area is never covered (decision 26)",
+    "The dock never widens, so the process area is never covered (decision 26)",
     "Expand state is local to the window, not a session value"], { x: 4.2, y: 1.6, w: 8.5, h: 3.0, fontSize: 16 });
   card(s, 4.2, 4.75, 8.5, 0.95, { name: "history prereq" });
   T(s, "Requires tag history on the pens the window trends (PV, SP, CV, position, current).", { x: 4.45, y: 4.85, w: 8.1, h: 0.75, fontSize: 14, valign: "middle" });

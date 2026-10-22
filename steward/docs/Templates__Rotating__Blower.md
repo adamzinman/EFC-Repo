@@ -3,7 +3,7 @@
 <!-- keep:start -->
 **Purpose:** P&ID blower / fan template bound to EFCLib v1 T_Motor through tagPath: state fill, alarm outline, P/I badges, mode and status line.
 
-**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_Rotating) in the screen's Docks/Region.
+**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_Rotating) in the page's right dock (efcDynamic, decision 31).
 
 **Gotchas:** Touch mode (useButton = false, dblCmd = true): double-tap toggles the device, Operator+, only in MAN, available, permitted, not interlocked, not LOCAL.
 <!-- keep:end -->

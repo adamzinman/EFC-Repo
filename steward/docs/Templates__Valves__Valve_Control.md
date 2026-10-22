@@ -3,7 +3,7 @@
 <!-- keep:start -->
 **Purpose:** P&ID control valve template bound to EFCLib v1 T_CValve through tagPath: state fill, alarm outline, P/I badges, mode and status line. Position bar shows Val_Pos (Val_Demand when Cfg_HasFbk is false).
 
-**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_ValveAnalog) in the screen's Docks/Region.
+**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_ValveAnalog) in the page's right dock (efcDynamic, decision 31).
 
 **Gotchas:** No Perm member on T_CValve; the P badge stays hidden. No double-tap command (only T_DValve / T_Motor take one).
 <!-- keep:end -->

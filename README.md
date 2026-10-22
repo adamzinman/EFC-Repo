@@ -11,6 +11,7 @@ Everything ships as **one Perspective project, `EFC_Library`** (no parent). Its 
 | `Templates/Loops` | PID loop cards B1–B4 and `Popups/LoopConfig` | `generator/pid_loops/` |
 | `Templates/Station` | DDT_Station sidebar, fill and tile faceplates | `imported/EFC_StationFaceplates/` |
 | `Templates/IO` | Modicon x80 I/O card faceplates, parts and `RackOverview` | `imported/EFC_IOFaceplates/` |
+| `Docks/*`, `Docks/Parts/*`, `Docks/Host` + script library `efc.ui` | Dynamic windows (400 px wide) shown in a Perspective right dock in push mode, Dock ID `efcDynamic` (decision 31; screen setup in [`docs/dock-setup.md`](docs/dock-setup.md)) | `generator/docks/build_docks.py` |
 | `Styles/_Catalog` + style classes + stylesheet | EFC_Styles: 166 ISA-101 classes, light-gray scheme, vh-scaled | `generator/build_styles.py` |
 
 Also in the repo: 214 plain P&ID SVGs in `symbols/`, nav-connector options A–D, tags (UDTs and demo instances) in `tags/`, HTML mockups in `mockups/`, and one rendered image per view in `docs/previews/templates/`. Retired material is in `archive/` (see `archive/ARCHIVED.md`).
@@ -91,6 +92,7 @@ Parts in `imported/` have no generator here, so edit them in the Designer, expor
 - [`docs/pv-display.md`](docs/pv-display.md) / [`docs/pv-style-index.md`](docs/pv-style-index.md): process-value templates.
 - [`docs/pid-loop-templates.md`](docs/pid-loop-templates.md): PID loop cards and popup.
 - [`docs/screen-layout-standard.md`](docs/screen-layout-standard.md): 16:9 screen layout and graphics conventions.
+- [`docs/dock-setup.md`](docs/dock-setup.md): Page Configuration steps for the `efcDynamic` right dock (dynamic windows, push mode); not yet verified in a gateway.
 - [`docs/station-faceplates.md`](docs/station-faceplates.md): station faceplates, member mapping, dock setup.
 - [`docs/ddt-udt-sync.md`](docs/ddt-udt-sync.md): gateway script that builds or extends UDTs from the DDTs in an M580 over its BMENUA0100 OPC UA card (`scripts/ddtsync.py`).
 - [`docs/design-briefs.md`](docs/design-briefs.md): I/O card and station faceplates, compressor screen, Haskel pump.

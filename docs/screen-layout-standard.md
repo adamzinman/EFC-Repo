@@ -10,10 +10,10 @@ Screens scale at 16:9 from **1920×1080 to 3840×2160**. Text inside templates m
 | Header | 1920 × 80 | 3840 × 160 | Title, navigation, status |
 | Left menu | 120 × 860 | 240 × 1720 | Screen navigation |
 | Main process area | 1400 × 860 | 2800 × 1720 | P&ID templates (PID_Symbols, PV, loops) |
-| Trends / dynamic window | 400 × 860 (37.04 vh × 79.63 vh) | 800 × 1720 | Right region between header and alarm bar; an Embedded View switched by `efc.ui` (dynamic windows, trends). Expands to about 50 % for an expanded graph. |
+| Trends / dynamic window | 400 × 860 (dock Size 400 px; content 37.04 vh × 79.63 vh) | 800 × 1720 (dock Size 800 px) | Perspective right dock in push mode, Dock ID `efcDynamic`, view `Docks/Host` (decision 31). It takes its own column; the process area shrinks, nothing is covered. Shows the screen's default view (trends) or the dynamic window opened by `efc.ui`. An expanded graph grows inside the window (about 400 × 760); the dock never changes width. Setup: [`dock-setup.md`](dock-setup.md). |
 | Alarm bar | 1920 × 140 | 3840 × 280 | Most-recent alarms (about four rows plus a header row) |
 
-Sizes match the Controls Standard screen design appendix (Perspective Screen Design Standard). All regions scale down proportionally on smaller displays.
+Sizes match the Controls Standard screen design appendix (Perspective Screen Design Standard). All regions scale down proportionally on smaller displays, except the right dock: a Perspective dock Size is in px, not vh, so the screen owner sets 400 px for 1920 × 1080 and 800 px for 3840 × 2160 (see [`dock-setup.md`](dock-setup.md)). The appendix still describes the right region as an Embedded View; that text change is queued (`steward/DOC-QUEUE.md` row 4).
 
 ## Graphics conventions
 - **ISA-101 high-performance grayscale:**

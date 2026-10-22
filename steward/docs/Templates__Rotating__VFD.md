@@ -3,7 +3,7 @@
 <!-- keep:start -->
 **Purpose:** P&ID motor-on-VFD template bound to EFCLib v1 T_VFD through tagPath: state fill, alarm outline, P/I badges, mode and status line. Running status shows Val_Spd + Cfg_SpdEU.
 
-**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_VFD) in the screen's Docks/Region.
+**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_VFD) in the page's right dock (efcDynamic, decision 31).
 
 **Gotchas:** No double-tap command (only T_DValve / T_Motor take one). Speed is set from the window (Operator+, MAN).
 <!-- keep:end -->
