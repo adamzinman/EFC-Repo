@@ -108,7 +108,7 @@ def generate(preview):
     run("pid_loops/generate_loops.py")           # PID_Loops -> projects/PID_Loops, tags/PID_Loops/
     run("analog_indicators/gen_analog_indicators.py", stdout=subprocess.DEVNULL)   # T_KPI cards -> Templates/AnalogIndicator
     unzip_to(os.path.join(BUILD, "analog", "EFC_AnalogIndicators.zip"), os.path.join(PROJECTS, "EFC_AnalogIndicators"))
-    run("docks/build_docks.py")                  # EFC_Docks: dynamic windows, parts, Docks/Region, efc.ui script library
+    run("docks/build_docks.py")                  # EFC_Docks: dynamic windows, parts, Docks/Host (right dock), efc.ui script library
     run("nav_connectors/generate_nav_connectors.py")   # symbols/NavConnectors, mockups/nav-connectors.html
     merge_library()
     os.makedirs(os.path.join(ROOT, "mockups"), exist_ok=True)

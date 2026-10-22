@@ -1,36 +1,61 @@
 {
   "custom": {
-    "dw": {
+    "default": {
+      "path": "",
+      "params": {}
+    },
+    "show": {
       "path": "",
       "params": {}
     }
   },
   "params": {
-    "defaultDock": "",
+    "path": "",
+    "tagPath": "",
+    "model": "",
+    "defaultPath": "",
     "defaultParams": {}
   },
   "propConfig": {
-    "custom.dw": {
-      "binding": {
-        "type": "property",
-        "config": {
-          "path": "session.custom.efcDw"
-        },
-        "transforms": [
-          {
-            "type": "script",
-            "code": "\treturn efc.ui.region(value, self.page.props.pageId)"
-          }
-        ]
+    "params.path": {
+      "paramDirection": "input",
+      "persistent": true,
+      "onChange": {
+        "enabled": null,
+        "script": "\tefc.ui.dockSync(self)"
       }
     },
-    "params.defaultDock": {
+    "params.tagPath": {
       "paramDirection": "input",
-      "persistent": true
+      "persistent": true,
+      "onChange": {
+        "enabled": null,
+        "script": "\tefc.ui.dockSync(self)"
+      }
+    },
+    "params.model": {
+      "paramDirection": "input",
+      "persistent": true,
+      "onChange": {
+        "enabled": null,
+        "script": "\tefc.ui.dockSync(self)"
+      }
+    },
+    "params.defaultPath": {
+      "paramDirection": "input",
+      "persistent": true,
+      "onChange": {
+        "enabled": null,
+        "script": "\tefc.ui.dockSync(self)"
+      }
     },
     "params.defaultParams": {
       "paramDirection": "input",
-      "persistent": true
+      "persistent": true,
+      "onChange": {
+        "enabled": null,
+        "script": "\tefc.ui.dockSync(self)"
+      }
     }
   },
   "props": {
@@ -79,28 +104,16 @@
             "binding": {
               "type": "property",
               "config": {
-                "path": "view.custom.dw"
-              },
-              "transforms": [
-                {
-                  "type": "script",
-                  "code": "\treturn (value or {}).get('path') or ''"
-                }
-              ]
+                "path": "view.custom.show.path"
+              }
             }
           },
           "props.params": {
             "binding": {
               "type": "property",
               "config": {
-                "path": "view.custom.dw"
-              },
-              "transforms": [
-                {
-                  "type": "script",
-                  "code": "\treturn dict((value or {}).get('params') or {})"
-                }
-              ]
+                "path": "view.custom.show.params"
+              }
             }
           }
         }
@@ -112,7 +125,7 @@
           "type": "script",
           "scope": "G",
           "config": {
-            "script": "\tefc.ui.setDefaultDock(self, self.view.params.defaultDock, self.view.params.defaultParams)"
+            "script": "\tefc.ui.dockSync(self.view)"
           }
         }
       }
