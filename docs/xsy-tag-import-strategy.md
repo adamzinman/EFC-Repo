@@ -1,7 +1,7 @@
 # XSY → Ignition tag import (Control Expert Classic V16.2 → Ignition 8.1)
 
 **Status (v2, 2026-10-21):** planner and gateway glue built in `tools/xsyimport/`. The planner is tested offline
-against the sample export (22 tests). The gateway glue has **not run on a gateway** yet; its `VERIFY` lines
+against the sample export (47 tests). The gateway glue has **not run on a gateway** yet; its `VERIFY` lines
 need checking on the dev gateway. Samples are in `samples/xsy-import/`.
 
 Code: [`tools/xsyimport/`](../tools/xsyimport/README.md) (`xsyimport.py`, `gateway.py`, `test_xsyimport.py`).
@@ -13,11 +13,11 @@ Related: [`scripts/ddtsync.py`](../scripts/ddtsync.py) is merged on `main`. It a
 | # | Requirement | Met by |
 |---|---|---|
 | R1 | Script lives on the gateway and runs from the Designer | `gateway.py` (`designerRun`, gateway `handle`) |
-| R2 | Prompts for the production line number (three digits, kept as text) | §4 step 1 |
+| R2 | Prompts for the tag provider (one provider per project; no line folder) | §4 step 1 |
 | R3 | Lists the new UDTs and new tags before writing anything | dry run and report, §4 |
-| R4 | New UDTs go in `_types_/<line>/`; each line has its own copy | §6 |
+| R4 | New UDTs go flat in the provider's `_types_` folder | §6 |
 | R5 | Opens a file browser; a required location is the fallback | §4 step 3 |
-| R6 | New tags go in `<line>/imported/`; moved by hand for now | §6 |
+| R6 | New tags go in group folders by UDT type under the provider root | §6 |
 | R7 | Only variables with **HMI Variable** set in the PLC | §5 |
 | R8 | Re-runnable; updates existing tags and UDTs safely | §7 |
 | R9 | **OPC server name is asked for at run time** | §4 step 2 |
@@ -27,10 +27,10 @@ Related: [`scripts/ddtsync.py`](../scripts/ddtsync.py) is merged on `main`. It a
 ```
 Designer                                   Gateway (xsyimport_gw.handle)
 ────────                                   ─────────────────────────────
-line no. (R2)
+tag provider (R2)
 OPC server name (R9)
 pick .XSY (R5)
-sendRequest(dryRun) ──────────────────────▶ read <line>/ and _types_/<line>/
+sendRequest(dryRun) ──────────────────────▶ read [prov] and [prov]_types_
                                             parse XSY, plan (pure, tested)
 report saved next to .XSY  ◀──────────────  report + counts (nothing written)
 confirm
@@ -55,13 +55,15 @@ Ignition is the state. There is no state file. Running twice in a row changes no
 
 ## 4. Run flow
 
-1. **Line** (R2): three digits, e.g. `058`. Refused otherwise.
+1. **Tag provider** (R2): each project has its own provider. The Designer reads `system.tag.getProviders()` and
+   asks with `system.gui.inputBox`, listing the available names. A name not in the list is refused. Every path in
+   the run is built from `[provider]`. (VERIFY: return type of `getProviders()` on 8.1.)
 2. **OPC server** (R9): the OPC UA connection name, typed each run. Written into every new tag and every UDT
    instance's `OPC Server` parameter. Never guessed.
 3. **File** (R5): `system.file.openFile` in the Designer. The bytes are sent base64 in the payload. A fallback
    gateway folder for runs without a Designer is still to be built (open point).
 4. **Dry run:** the report goes to the Designer console and is saved as
-   `<name>_<line>_<date>_report.txt` next to the file. Counts are shown in the confirm box.
+   `<name>_<provider>_<date>_report.txt` next to the file. Counts are shown in the confirm box.
 5. **Apply** (only after confirm, and only for users with the `Engineering` role): `system.tag.configure` with
    `"i"` (never overwrite) for creates and extends, `"m"` for documentation. The gateway re-reads and reports
    what is left.
@@ -70,10 +72,10 @@ Ignition is the state. There is no state file. Running twice in a row changes no
 
 | XSY | Ignition | Where |
 |---|---|---|
-| DDT `X` (used by an HMI variable) | UDT `X`: members from `structure`; atomic members; nested DDTs as nested UDT instances | `_types_/<line>/X` |
-| FB `F` (used by an HMI variable) | UDT `F` from input, output and public variables | `_types_/<line>/F` |
-| HMI variable of DDT/FB type | UDT instance, `typeId` `<line>/X`, parameters `OPC Server` and `Tag` only | `<line>/imported/` |
-| HMI variable of elementary type | atomic OPC tag, `opcItemPath` = `ns=2;s=0:<name>`, `opcServer` = the prompt | `<line>/imported/` |
+| DDT `X` (used by an HMI variable) | UDT `X`: members from `structure`; atomic members; nested DDTs as nested UDT instances | `[prov]_types_/X` (flat) |
+| FB `F` (used by an HMI variable) | UDT `F` from input, output and public variables | `[prov]_types_/F` (flat) |
+| HMI variable of DDT/FB type | UDT instance, `typeId` `X` (plain name), parameters `OPC Server` and `Tag` only | `<group(X)>/` |
+| HMI variable of elementary type | atomic OPC tag, `opcItemPath` = `ns=2;s=0:<name>`, `opcServer` = the prompt | `Other/` |
 | Comment | Documentation | same object |
 
 Elementary types (contract v1.0): BOOL/EBOOL → Boolean, INT → Int2, UINT/WORD/DINT → Int4,
@@ -82,7 +84,7 @@ UDINT/DWORD → Int8, REAL → Float4, STRING[n] → String, TIME → Int4.
 **Arrays (v2):** an array of an elementary type becomes one array tag (`Int2Array` etc.); a `BYTE` maps to
 `Int2` (unsigned 8-bit values stay intact, as in `ddtsync`), and `SINT`, `USINT`, `LINT` and `LREAL` map
 similarly. An array of a DDT (`Station`, `Scale`, `Spare_Valve`) becomes a folder of instances, one per index:
-`imported/Station/_1` … `_6`, with `Tag` = `Station[1]`. Arrays inside a UDT member that are not elementary
+`Stations/Station/_1` … `_6`, with `Tag` = `Station[1]`. Arrays inside a UDT member that are not elementary
 (an array of structures) are still skipped and reported.
 
 **I/O card types (v2):** the `T_U_*` device types are not in the export. The web lookup did not confirm a
@@ -122,21 +124,61 @@ Parameters follow the interface contract: `OPC Prefix`, `OPC Server`, `Tag`.
 
 ## 6. Folders and naming
 
+Each project has its own tag provider, so there is no line folder. Paths are relative to the provider root.
+
 ```
-[EFC]_types_/
-  058/                 one copy per line
-    DDT_Valve            typeId "058/DDT_Valve"
-    DFB_TMR
-[EFC]058/
-  imported/            all new tags (R6)
-    PT101                AtomicTag, opcItemPath ns=2;s=0:PT101
-    Station_1            UdtInstance, typeId 058/DDT_Station, Tag = Station_1
-  Valves/              folders created by hand; moved tags are still found
+[Proj]_types_/                   UDT definitions, flat (typeId is the plain name)
+  T_Motor
+  DDT_Valve
+  DFB_TMR
+[Proj]                           provider root
+  Motors/                        group folders, created if missing
+    P101                           UdtInstance, typeId T_Motor, Tag = P101
+  Valves/
+    XV1                            UdtInstance, typeId DDT_Valve
+    Spare_Valve/                   array of DDT_Valve: folder named for the variable
+      _1  _2  ...
+  Stations/
+    Station/_1 ... _6
+  Other/                         atomic tags, arrays of elementary types, UDT types no group matches
+    PT101                          AtomicTag, opcItemPath ns=2;s=0:PT101
 ```
 
+**Grouping.** The `groups` option is an ordered list of `(regex, folder)` pairs. Each regex is matched
+(`re.match`, case-sensitive) against the UDT type name; the first match wins. Default list:
+
+| Folder | UDT type names (regex, `re.match`, case-sensitive, first match wins) |
+|---|---|
+| Process Values | `^(T_AI\|DDT_Process_Value\|AI_Sensors\|PV_.*)$` |
+| Motors | `^(T_Motor\|T_VFD)$` |
+| Valves | `^(T_DValve\|T_CValve\|DDT_Valve\|Valve)$` |
+| Digital Inputs | `^(T_DI\|DI_Sensors\|DDT_Discrete)$` |
+| Pumps | `^(T_PumpDS\|T_PumpProt\|T_DosePump\|Vacuum)$` |
+| Stations | `^(T_Station\|DDT_Station\|FillStn)$` |
+| Scales | `^(T_Scale\|DDT_Scale\|Scale)$` |
+| Tanks | `^T_Tank$` |
+| Heaters | `^(T_Heater\|T_HeatEx)$` |
+| Compressors | `^T_Compressor$` |
+| Devices | `^(DDT_Device\|DevCtrl)$` |
+| Sequences | `^(DDT_Seq\|T_Phase)$` |
+| Setpoints | `^Setpoint$` |
+| Units | `^(Unit\|T_Unit)$` |
+| Variables | `^Variables` |
+| Other | everything else: unmatched UDT types, atomic tags, arrays of elementary types |
+
+- A UDT instance of type X goes to `<group(X)>/<name>`.
+- An array of UDT goes to `<group(element type)>/<name>/_i`.
+- Atomic tags and arrays of elementary types go to `Other/<name>`.
+- Elementary arrays and nested UDTs inside UDT definitions are unchanged.
+- The gateway glue creates the group folder (and any nested folder) if it does not exist.
+
+**Rules**
 - Nested UDTs are created before their parents.
-- An existing `_types_/<line>/X` is extended, never recreated.
-- A name already used by another tag under `<line>` is skipped and reported, never duplicated.
+- An existing `_types_/X` is extended, never recreated.
+- **Name clash:** a tag with the same name directly in the same group folder that is not the same PLC variable.
+  The variable is skipped and reported, never duplicated. Used names are tracked per folder (for example
+  `Valves` -> {`DDT_V1`: `UdtInstance`}), not per provider. A folder of that name is not a clash for an array.
+- Duplicate and not-in-PLC detection covers the whole provider.
 
 ## 7. Updates (R8)
 
@@ -153,37 +195,39 @@ Parameters follow the interface contract: `OPC Prefix`, `OPC Server`, `Tag`.
 | UDT exists, member differs or is no longer in the PLC | reported; never changed or deleted |
 | Tag moved or renamed by hand | still found by PLC identity (instance `Tag`, or the atomic's OPC item name) |
 
-Found means: anywhere under `<line>/`. A tag in the line's `Valves/` folder counts as found.
+Found means: anywhere in the provider. A tag moved into any folder, group or not, counts as found.
 
 **Policy (agreed):** when a UDT already exists and the PLC adds members, the new members are added. Members that
 the PLC no longer has are never deleted; they are listed. Duplicates, not-in-PLC tags and possible renames are
 listed and never changed. A rename is never applied automatically; a deletion is never applied automatically.
 
 **Not done:** changing a UDT member's data type on an existing UDT, changing an instance's type, updating OPC
-bindings on existing atomic tags, and re-routing tags into type folders. All are reported only.
+bindings on existing atomic tags, and re-routing tags that were moved out of their group folder. All are reported only.
 
-## 8. Current results (dry run against the sample export)
+## 8. Current results (dry run against the sample export, 47 offline tests)
 
-| Line | UDTs to create | Tags to create | Found | Documentation updates | Conflicts | Skipped tags / UDTs |
+| Provider state | UDTs to create | Tags to create | Found | Documentation updates | Conflicts | Skipped tags / UDTs |
 |---|---|---|---|---|---|---|
-| 058, RGTCR tags as the line's tags | 13 | 95 | 88 | 0 | 19 (`Setpoint` UDT instance vs REAL) | 15 / 6 |
-| 058, empty line | 13 | 203 | 0 | 0 | 0 | 14 / 6 |
-| 058, RGTCR tags as the line's tags (v2) | 22 | 115 | 94 | 0 | 19 (`Setpoint`) | 7 / 0 (1 duplicate, 21 not in PLC) |
+| empty provider | 22 | 228 | 0 | 0 | 0 | 7 / 0 |
+| RGTCR tags as the provider's tags | 22 | 115 | 94 | 0 | 19 (`Setpoint` UDT instance vs REAL) | 7 / 0 (1 duplicate, 21 not in PLC) |
 
-The 19 conflicts are the `HMI_SP_*` setpoints. They are reported and not changed, as agreed.
+Group folders for the 228 new tags on an empty provider: Other 117, Valves 40, Process Values 32, Scales 12,
+Digital Inputs 11, Stations 6, Sequences 6, Devices 4. The 19 conflicts are the `HMI_SP_*` setpoints. They are
+reported and not changed, as agreed. The earlier per-line numbers (v2) no longer apply: there is no line folder,
+and not-in-PLC and duplicate detection now cover the whole provider.
 
 ## 9. Open points
 
 1. **UDT naming.** The XSY uses `DDT_*` and `Valve` names. The interface contract says `T_` names and
    retires `DDT_`. The import currently uses the XSY name. Decide: use the XSY name, or rename on both sides.
-2. **UDT folder.** The contract says `_types_/EFCLib v1/`. The user decided `_types_/<line>/`. The planner
-   follows the user. The contract wording needs updating.
+2. **UDT folder.** The contract says `_types_/EFCLib v1/`. The user decided one provider per project with UDTs flat
+   at the `_types_` root. The planner follows the user. The contract wording needs updating.
 3. **OPC item path.** `ns=2;s=0:<name>` (contract) versus the live `nsu=http://www.unifiedautomation.com/CustomServer/;s=0:<name>`
    on some tags. Confirm which the M580 publishes for each line. The `prefix` option changes it.
 4. **DFB instances as UDTs.** The planner does this (`DFB_TMR`). Confirm, and confirm that the FB's
    internal members should be exposed.
-5. **Arrays of DDTs.** Reported, not built. Needs a rule, e.g. indexed instances `Station/_1` … `Station/_6`.
-6. **Fallback folder** for runs without the Designer (`<Ignition install>/data/efc/xsy-import/<line>/`). Not built.
+5. **Arrays of DDTs.** Built as a folder of instances, `<group>/<name>/_i`.
+6. **Fallback folder** for runs without the Designer (`<Ignition install>/data/efc/xsy-import/<provider>/`). Not built.
 7. **Role check.** The gateway trusts the `user` field from the Designer. Confirm how the sendRequest user is
    taken on the target gateway before relying on the `Engineering` role check.
 8. **Performance.** Creates and updates are one `configure` call per tag, about 300 calls for a full line.
@@ -194,11 +238,11 @@ The 19 conflicts are the `HMI_SP_*` setpoints. They are reported and not changed
 | Step | State |
 |---|---|
 | 0 Samples under `samples/xsy-import/` | done |
-| 1 Pure planner, parse, rules, report | done, 24 offline tests |
+| 1 Pure planner, parse, rules, grouping, report | done, 47 offline tests |
 | 2 Gateway and Designer glue | written, **not yet run on a gateway** (`VERIFY` lines) |
 | 3 Dev gateway test: first import, move a tag, change the export, re-run | next |
 | 4 User guide | `tools/xsyimport/README.md` (short); needs the gateway results |
-| 5 Later: folder routing by type, fallback folder, arrays, shared module with `ddtsync` | not started |
+| 5 Later: fallback folder, arrays, shared module with `ddtsync` | not started |
 
 ## 11. Relation to `ddtsync`
 

@@ -4,10 +4,13 @@
 Pure logic: no system.* calls, so the same file runs in Jython 2.7 (gateway
 scripting project, as efc/xsyimport.py) and in CPython (tests).
 
-    plan(xsy_bytes, line, tag_tree, types_tree, options) -> Plan
+    plan(xsy_bytes, tag_tree, types_tree, options) -> Plan
 
 Nothing is written here. gateway.py applies a Plan with system.tag.configure.
 Rules: docs/xsy-tag-import-strategy.md, shared interface contract v1.0.
+
+Each project has its own tag provider: no line folder. Tag paths are relative to the provider root, UDT
+definitions are written flat at the root of _types_, and new tags are grouped into folders by UDT type.
 
 Policy:
   * every HMI-flagged variable is imported (all tags shown on the HMI)
@@ -31,7 +34,7 @@ PARAM_PREFIX = "OPC Prefix"
 PARAM_SERVER = "OPC Server"
 PARAM_TAG = "Tag"
 DEFAULT_PREFIX = "ns=2;s=0:"
-IMPORTED = "imported"
+DEFAULT_GROUP = "Other"      # folder for atomic tags and for UDT types no group matches
 ITEM_PATH = "{OPC Prefix}{Tag}.{TagName}"
 
 # Control Expert elementary type -> Ignition dataType. The first block is contract v1.0.
@@ -49,16 +52,35 @@ ARRAY_OF = {  # Ignition array dataType for each element dataType
     "Int8": "Int8Array", "Float4": "Float4Array", "Float8": "Float8Array", "String": "StringArray",
     "DateTime": "DateTimeArray",
 }
-LINE_RE = re.compile(r"^\d{3}$")
 NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 STRING_RE = re.compile(r"^STRING(\[\d+\])?$", re.I)
 ARRAY_RE = re.compile(r"^ARRAY\s*\[\s*(-?\d+)\s*\.\.\s*(-?\d+)\s*\]\s*OF\s+(.+)$", re.I)
+
+# Ordered (regex, folder) pairs. The regex is matched (re.match, case-sensitive) against a UDT type name.
+# The first match wins.
+GROUPS = [
+    (r"^(T_AI|DDT_Process_Value|AI_Sensors|PV_.*)$", "Process Values"),
+    (r"^(T_Motor|T_VFD)$", "Motors"),
+    (r"^(T_DValve|T_CValve|DDT_Valve|Valve)$", "Valves"),
+    (r"^(T_DI|DI_Sensors|DDT_Discrete)$", "Digital Inputs"),
+    (r"^(T_PumpDS|T_PumpProt|T_DosePump|Vacuum)$", "Pumps"),
+    (r"^(T_Station|DDT_Station|FillStn)$", "Stations"),
+    (r"^(T_Scale|DDT_Scale|Scale)$", "Scales"),
+    (r"^T_Tank$", "Tanks"),
+    (r"^(T_Heater|T_HeatEx)$", "Heaters"),
+    (r"^T_Compressor$", "Compressors"),
+    (r"^(DDT_Device|DevCtrl)$", "Devices"),
+    (r"^(DDT_Seq|T_Phase)$", "Sequences"),
+    (r"^Setpoint$", "Setpoints"),
+    (r"^(Unit|T_Unit)$", "Units"),
+    (r"^Variables", "Variables"),
+]
 
 DEFAULTS = {
     "opcServer": None,          # required: the OPC UA connection name, asked at run time
     "prefix": DEFAULT_PREFIX,   # OPC item prefix for elementary tags and UDT members
     "syncDocumentation": True,  # a non-empty PLC comment overwrites Ignition Documentation; blank never does
-    "typesFolder": None,        # UDT folder under _types_; defaults to the line number
+    "groups": GROUPS,           # ordered (regex, folder) pairs: UDT type name -> folder under the provider root
     "library": None,            # library layouts; defaults to library_types.LIBRARY_TYPES
     "layouts": None,            # extra layout files (bytes) for types the export does not define
 }
@@ -233,9 +255,8 @@ def _nested(name, type_id, comment, suffix):
 class _Types(object):
     """UDT definitions for every DDT/FB the import can reach. Built once per type, nested types first."""
 
-    def __init__(self, model, folder, prefix):
+    def __init__(self, model, prefix):
         self.model = model
-        self.folder = folder        # the _types_ folder, e.g. "058"
         self.prefix = prefix
         self.done = {}              # type name -> (udt json or None, reason or None)
         self.order = []             # successfully built names, nested types first
@@ -305,7 +326,7 @@ class _Types(object):
         sub, why = self.udt(val, stack)
         if sub is None:
             raise _Skip(why)
-        return _nested(name, "%s/%s" % (self.folder, val), comment, suffix)
+        return _nested(name, val, comment, suffix)
 
 
 # ----------------------------------------------------------------- existing state
@@ -326,8 +347,11 @@ def _plc_key(item):
     return m.group(1) if m else None
 
 
-def records(nodes, base):
-    """Flatten a getConfiguration() tree under `base`. 'top' is False for anything inside a UDT instance."""
+def records(nodes, base=""):
+    """Flatten a getConfiguration() tree under `base` ("" = the provider root, so paths are relative to it).
+
+    'top' is False for anything inside a UDT instance. 'parent' is the folder path the node sits in.
+    """
     out = []
 
     def walk(items, parent, in_udt):
@@ -335,9 +359,9 @@ def records(nodes, base):
             name = n.get("name")
             if not name:
                 continue
-            path = parent + "/" + name
+            path = parent + "/" + name if parent else name
             tt = n.get("tagType")
-            out.append({"path": path, "name": name, "tagType": tt, "typeId": n.get("typeId"),
+            out.append({"path": path, "parent": parent, "name": name, "tagType": tt, "typeId": n.get("typeId"),
                         "dataType": n.get("dataType"),
                         "opcItemPath": _binding_text(n.get("opcItemPath")),
                         "documentation": n.get("documentation") or "",
@@ -350,7 +374,7 @@ def records(nodes, base):
 
 
 def types_index(nodes):
-    """{UDT name: {member: {tagType, dataType, typeId}}} for the children of _types_/<folder>."""
+    """{UDT name: {member: {tagType, dataType, typeId}}} for the children of _types_ (flat)."""
     out = {}
     for n in nodes or []:
         if n.get("tagType") != "UdtType":
@@ -369,12 +393,12 @@ def _last(path):
 
 class Plan(object):
     def __init__(self):
-        self.udt_create = []    # (types folder, udt json), nested types first
+        self.udt_create = []    # ("" = _types_ root, udt json), nested types first
         self.udt_extend = []    # (type name, [member json]) new members added to an existing UDT
         self.udt_stale = []     # (type name, member) in Ignition, not in the PLC: kept and reported
         self.udt_diff = []      # (type name, member, message): reported, not changed
         self.udt_skipped = []   # (type name, reason)
-        self.tag_create = []    # (folder, tag json)
+        self.tag_create = []    # (folder relative to the provider root, tag json)
         self.tag_update = []    # (full path, {property: value}) documentation only
         self.exists = []        # (variable or element, path): already in Ignition, nothing to do
         self.conflicts = []     # (variable, message): reported, not changed
@@ -397,39 +421,51 @@ class Plan(object):
         return not (self.udt_create or self.udt_extend or self.tag_create or self.tag_update)
 
 
-def plan(data, line, tag_tree, types_tree, options=None):
-    """Plan an import of `data` (XSY bytes) into production line `line`.
+def _group_of(tn, model, groups):
+    """Folder for a variable of type name `tn`: the group of its UDT (or of an array's element UDT), else Other."""
+    for _ in range(16):
+        kind, val = _classify(tn, model)
+        if kind == "array":
+            tn = val[2]
+            continue
+        if kind == "udt":
+            for rx, folder in groups:
+                if rx.match(val):
+                    return folder
+        return DEFAULT_GROUP
+    return DEFAULT_GROUP
 
-    tag_tree    children of the provider folder <line> (getConfiguration(..., True))
-    types_tree  children of _types_/<typesFolder> (defaults to the line)
-    options     opcServer (required), prefix, syncDocumentation, typesFolder, library,
+
+def plan(data, tag_tree, types_tree, options=None):
+    """Plan an import of `data` (XSY bytes) into one tag provider.
+
+    tag_tree    children of the provider root (getConfiguration("[prov]", True)); paths are relative to it
+    types_tree  children of _types_, the root of the provider's UDT folder (UDTs are written flat there)
+    options     opcServer (required), prefix, syncDocumentation, groups, library,
                 layouts (list of bytes: extra Control Expert exports / DDT files that define types)
     """
     opts = dict(DEFAULTS)
     opts.update(options or {})
-    if not LINE_RE.match(line or ""):
-        raise ImportRefused("production line must be three digits, e.g. 058 (got %r)" % (line,))
     if not (opts["opcServer"] or "").strip():
         raise ImportRefused("OPC server name is required")
-    tf = opts["typesFolder"] or line
     prefix = opts["prefix"]
     server = opts["opcServer"].strip()
     sync_doc = bool(opts["syncDocumentation"])
+    groups = [(re.compile(rx), folder) for rx, folder in opts["groups"]]
 
     model = parse(data)
     _add_layouts(model, opts["layouts"])
     lib_diffs = _add_library(model, LIBRARY_TYPES if opts["library"] is None else opts["library"])
-    types = _Types(model, tf, prefix)
+    types = _Types(model, prefix)
     existing_types = types_index(types_tree)
-    recs = records(tag_tree, line)
-    imported = "%s/%s" % (line, IMPORTED)
-    inst, atoms, used = {}, {}, {}     # used: name directly under imported/ -> tagType
+    # a provider-root browse can include the _types_ folder itself: it holds no tags
+    recs = records([n for n in (tag_tree or []) if n.get("name") != "_types_"], "")
+    inst, atoms, used = {}, {}, {}     # used: folder path -> {name: tagType} for the tags directly in that folder
     by_identity = {}
     for r in recs:
         if not r["top"]:
             continue
-        if r["path"] == "%s/%s" % (imported, r["name"]):
-            used[r["name"]] = r["tagType"]
+        used.setdefault(r["parent"], {})[r["name"]] = r["tagType"]
         if r["tagType"] == "UdtInstance":
             ident = _pval(r["params"].get(PARAM_TAG))
             if ident:
@@ -478,7 +514,7 @@ def plan(data, line, tag_tree, types_tree, options=None):
                 p.tag_update.append((rec["path"], {"tagType": "UdtInstance", "documentation": comment}))
             return
         p.tag_create.append((folder, {
-            "name": name, "tagType": "UdtInstance", "typeId": "%s/%s" % (tf, type_name),
+            "name": name, "tagType": "UdtInstance", "typeId": type_name,
             "parameters": {PARAM_SERVER: {"dataType": "String", "value": server},
                            PARAM_TAG: {"dataType": "String", "value": expr}},
             "documentation": comment}))
@@ -510,16 +546,17 @@ def plan(data, line, tag_tree, types_tree, options=None):
             p.skipped.append((vname, why))
             continue
         matched = vname in atoms or vname in inst
-        if not matched and vname in used and used[vname] != "Folder":
-            p.skipped.append((vname, "name already used by another tag under %s" % line))
+        folder = _group_of(tn, model, groups)
+        if not matched and used.get(folder, {}).get(vname, "Folder") != "Folder":
+            p.skipped.append((vname, "name already used by another tag under %s" % folder))
             continue
-        place(vname, tn, comment, vname, imported)
+        place(vname, tn, comment, vname, folder)
 
     # UDT definitions: create missing types, add missing members, report the rest.
     for tname in types.order:
         js = types.done[tname][0]
         if tname not in existing_types:
-            p.udt_create.append((tf, js))
+            p.udt_create.append(("", js))
             continue
         cur = existing_types[tname]
         missing = []
@@ -575,10 +612,10 @@ def report_text(p, header):
             lines.append("  " + fmt(it))
 
     section("NEW UDT", p.udt_create,
-            lambda it: "%s/%s  (%d members)" % (it[0], it[1]["name"], len(it[1]["tags"])))
+            lambda it: "_types_/%s  (%d members)" % (it[1]["name"], len(it[1]["tags"])))
     section("EXTENDED UDT (new members added)", p.udt_extend,
             lambda it: "%s: + %s" % (it[0], ", ".join(t["name"] for t in it[1])))
-    section("NEW TAG", p.tag_create, lambda it: "%s/%s  (%s)" % (it[0], it[1]["name"], it[1]["tagType"]))
+    section("NEW TAG", p.tag_create, lambda it: "%s  (%s)" % (it[0] + "/" + it[1]["name"] if it[0] else it[1]["name"], it[1]["tagType"]))
     section("DOCUMENTATION UPDATE", p.tag_update, lambda it: "%s" % it[0])
     section("UP TO DATE", p.exists, lambda it: "%s -> %s" % (it[0], it[1]))
     section("DUPLICATE (reported, not changed)", p.duplicates, lambda it: "%s: %s" % (it[0], ", ".join(it[1])))

@@ -1,11 +1,11 @@
 # XSY tag import (Control Expert V16.2 -> Ignition 8.1)
 
-Imports the variables that have **HMI Variable** ticked in Control Expert into the `[EFC]` tag
-provider for one production line. Design and rules: [`docs/xsy-tag-import-strategy.md`](../../docs/xsy-tag-import-strategy.md).
+Imports the variables that have **HMI Variable** ticked in Control Expert into the project's own tag
+provider (one provider per project, no line folder). Design and rules: [`docs/xsy-tag-import-strategy.md`](../../docs/xsy-tag-import-strategy.md).
 
 | File | What it is | Tested |
 |---|---|---|
-| `xsyimport.py` | Pure planner: parse the XSY, decide what to create/extend/update/skip. No `system.*` calls. Runs in Jython 2.7 and CPython. | offline, `test_xsyimport.py` (22 tests) |
+| `xsyimport.py` | Pure planner: parse the XSY, decide what to create/extend/update/skip. No `system.*` calls. Runs in Jython 2.7 and CPython. | offline, `test_xsyimport.py` (47 tests) |
 | `gateway.py` | Designer prompts, file picker, dry run, confirm, gateway apply and re-read. Jython 2.7. | **not on a gateway yet**. Lines marked `VERIFY` need checking. |
 | `test_xsyimport.py` | Tests against `samples/xsy-import/` (the 2026 RGTCR export and its tag export). | run it |
 
@@ -29,27 +29,56 @@ blanking Ignition text.
 
 ## Run
 
-1. Enter the production line (three digits, e.g. `058`).
-2. Enter the OPC server name for that line.
-3. Pick the `.XSY` (the report is saved next to it as `<name>_<line>_<date>_report.txt`).
+1. Pick the tag provider from the list the Designer shows (`system.tag.getProviders()`). Anything not in the list is refused.
+2. Enter the OPC server name for the project.
+3. Pick the `.XSY` (the report is saved next to it as `<name>_<provider>_<date>_report.txt`).
 4. Read the report. Nothing has been written yet.
 5. Confirm. The gateway applies the plan and re-reads it. The summary shows anything left.
 
 ## Rules the planner follows
 
 - **Only HMI variables** are imported. A DDT variable brings its whole structure.
-- **New tags** go to `<line>/imported/`. Moving them by hand is fine: they are found by PLC name next run.
-- **New UDTs** go to `_types_/<line>/`. Each line has its own copies. Nested types are created first.
+- **New tags** go to a group folder under the provider root, chosen by UDT type (table below). Moving them by hand
+  is fine: they are found by PLC identity next run.
+- **New UDTs** go flat at the `_types_` root of the provider; an instance's `typeId` is the plain UDT name
+  (`T_Motor`). Nested types are created first.
 - **Existing UDTs** are extended only: missing members are added. Members that differ, or that are no longer in the
   PLC, are reported, never changed or deleted.
 - **Existing tags** are matched by PLC identity (instance `Tag` parameter, or the atomic OPC item name), anywhere
-  under `<line>/`. Type or data-type differences are reported as conflicts and not changed.
+  in the provider. Type or data-type differences are reported as conflicts and not changed.
+- **Name clash:** a tag with the same name already directly in the same group folder that is not the same PLC variable
+  is skipped and reported. Names are tracked per folder, not per provider. A folder of that name is not a clash for an array.
 - **Documentation:** a non-empty PLC comment overwrites the Ignition description. A blank comment never does.
-- **Skipped, with a reason:** arrays (not mapped in v1), I/O card types (`T_U_*`, not defined in the export),
-  types outside the v1 mapping (BYTE, LREAL, ...), and any UDT that depends on a skipped type.
+- **Skipped, with a reason:** types that are neither elementary nor defined in the export, a layout file or EFCLib v1
+  (for example the I/O card types `T_U_*`), and any variable or UDT that depends on such a type.
+
+## Grouping
+
+A UDT instance of type `X` goes to `<group(X)>/<name>`. An array of UDT goes to `<group(element type)>/<name>/_i`.
+Atomic tags and arrays of elementary types go to `Other/<name>`. Group folders are created if missing. Change the
+rules with the `groups` option: an ordered list of `(regex, folder)` pairs (default `xsyimport.GROUPS`).
+
+| Folder | UDT type names (regex, `re.match`, case-sensitive, first match wins) |
+|---|---|
+| Process Values | `^(T_AI\|DDT_Process_Value\|AI_Sensors\|PV_.*)$` |
+| Motors | `^(T_Motor\|T_VFD)$` |
+| Valves | `^(T_DValve\|T_CValve\|DDT_Valve\|Valve)$` |
+| Digital Inputs | `^(T_DI\|DI_Sensors\|DDT_Discrete)$` |
+| Pumps | `^(T_PumpDS\|T_PumpProt\|T_DosePump\|Vacuum)$` |
+| Stations | `^(T_Station\|DDT_Station\|FillStn)$` |
+| Scales | `^(T_Scale\|DDT_Scale\|Scale)$` |
+| Tanks | `^T_Tank$` |
+| Heaters | `^(T_Heater\|T_HeatEx)$` |
+| Compressors | `^T_Compressor$` |
+| Devices | `^(DDT_Device\|DevCtrl)$` |
+| Sequences | `^(DDT_Seq\|T_Phase)$` |
+| Setpoints | `^Setpoint$` |
+| Units | `^(Unit\|T_Unit)$` |
+| Variables | `^Variables` |
+| Other | everything else: unmatched UDT types, atomic tags, arrays of elementary types |
 
 ## Open points (see the strategy doc)
 
 - UDT name is the XSY DDT name. The interface contract says `T_` names. Decision needed.
 - OPC item path is `ns=2;s=0:<name>`. The live tags also use `nsu=...;s=0:<name>`. Confirm.
-- Arrays of DDTs (`Station`, `Scale`, `Spare_Valve`) are reported, not built.
+- Arrays of DDTs (`Station`, `Scale`, `Spare_Valve`) are built as `<group>/<name>/_i`.

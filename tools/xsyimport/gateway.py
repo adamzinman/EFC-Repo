@@ -15,7 +15,7 @@ Run from the Designer Script Console:
   from efc import xsyimport_gw
   xsyimport_gw.designerRun()
 
-Flow: ask line + OPC server, pick the .XSY, dry run on the gateway, save the report
+Flow: ask tag provider + OPC server, pick the .XSY, dry run on the gateway, save the report
 next to the file, confirm, apply, re-read and report what is left.
 """
 import base64
@@ -23,11 +23,9 @@ import datetime
 
 from efc import xsyimport as X
 
-PROVIDER = "[EFC]"
 PROJECT = "EFC_Tools"        # VERIFY: gateway scripting project that holds this library
 HANDLER = "xsyImport"        # VERIFY: message handler name registered in that project
 REQUIRED_ROLE = "Engineering"
-IMPORTED = X.IMPORTED
 
 log = system.util.getLogger("XsyImport")
 
@@ -43,47 +41,49 @@ def _ensure_folder(parent, name):
     system.tag.configure(parent, [{"name": name, "tagType": "Folder"}], "i")
 
 
+def _provider(payload):
+    """'[name]' for the payload's tag provider. Every tag and type path is built from this."""
+    return "[" + payload["provider"] + "]"
+
+
 def _plan(payload):
     raw = base64.b64decode(payload["data"])
-    line = payload["line"]
+    PROVIDER = _provider(payload)
     opts = {"opcServer": payload["opcServer"],
             "prefix": payload.get("prefix") or X.DEFAULT_PREFIX,
             "syncDocumentation": payload.get("syncDocumentation", True),
-            "typesFolder": None,
             "layouts": [base64.b64decode(x) for x in payload.get("layouts") or []]}
-    tags = _tree(PROVIDER + line)
-    types = _tree(PROVIDER + "_types_/" + line)
-    p = X.plan(raw, line, tags, types, opts)
-    header = ["XSY tag import, line %s, OPC server %s" % (line, opts["opcServer"]),
-              "Provider %s, UDT folder _types_/%s, tag folder %s/%s" % (PROVIDER, line, line, IMPORTED),
+    tags = _tree(PROVIDER)                 # tag provider root, recursive
+    types = _tree(PROVIDER + "_types_")    # UDT definitions, flat under _types_
+    p = X.plan(raw, tags, types, opts)
+    header = ["XSY tag import, provider %s, OPC server %s" % (PROVIDER, opts["opcServer"]),
+              "UDTs flat in %s_types_, tags grouped by UDT under the provider root" % PROVIDER,
               "Planner version %s" % X.VERSION, ""]
     return p, X.report_text(p, header)
 
 
-def _apply(p, line):
-    """Write a Plan. Creates are 'i' (never overwrite), extends are 'i', doc updates are 'm'."""
+def _apply(p, PROVIDER):
+    """Write a Plan under PROVIDER ('[name]'). Creates are 'i' (never overwrite), extends are 'i', doc updates are 'm'."""
     bad = []
     typesRoot = PROVIDER + "_types_"
-    if p.udt_create or p.udt_extend:
-        _ensure_folder(typesRoot, line)
-    for folder, js in p.udt_create:               # nested types were ordered first by the planner
-        for q in system.tag.configure(typesRoot + "/" + folder, [js], "i"):
+    for folder, js in p.udt_create:               # flat at the _types_ root; nested types were ordered first
+        for q in system.tag.configure(typesRoot, [js], "i"):
             if not q.isGood():
                 bad.append("UDT %s: %s" % (js["name"], q))
     for tname, members in p.udt_extend:
-        for q in system.tag.configure(typesRoot + "/" + line + "/" + tname, members, "i"):
+        for q in system.tag.configure(typesRoot + "/" + tname, members, "i"):
             if not q.isGood():
                 bad.append("UDT member %s.*: %s" % (tname, q))
     made = set()
-    for folder, js in p.tag_create:                # create imported/ and imported/<array> as needed
-        parts = folder.split("/")
+    for folder, js in p.tag_create:                # create group folders (and array folders) as needed
+        parts = [x for x in folder.split("/") if x]
         for depth in range(1, len(parts) + 1):
             sub = "/".join(parts[:depth])
             if sub not in made:
-                _ensure_folder(PROVIDER + "/".join(parts[:depth - 1]) if depth > 1 else PROVIDER + "", parts[depth - 1])
+                _ensure_folder(PROVIDER + "/".join(parts[:depth - 1]), parts[depth - 1])
                 made.add(sub)
     for folder, js in p.tag_create:
-        for q in system.tag.configure(PROVIDER + folder, [js], "i"):
+        for q in system.tag.configure(PROVIDER + folder, [js], "i"):    # "[prov]" + "Valves"
             if not q.isGood():
                 bad.append("tag %s: %s" % (js["name"], q))
     for path, props in p.tag_update:
@@ -115,20 +115,52 @@ def handle(payload):
         return {"error": str(e)}
     if dry:
         return {"report": text, "counts": p.counts()}
-    bad = _apply(p, payload["line"])
+    bad = _apply(p, _provider(payload))
     p2, _ = _plan(payload)
-    log.info("XSY import line %s by %s: %s; errors %d"
-             % (payload["line"], payload.get("user", "?"), p.counts(), len(bad)))
+    log.info("XSY import provider %s by %s: %s; errors %d"
+             % (payload["provider"], payload.get("user", "?"), p.counts(), len(bad)))
     return {"report": text, "counts": p.counts(), "errors": bad, "remaining": p2.counts()}
 
 
 # ------------------------------------------------------------------- Designer side
 
+def _provider_names(ds):
+    """Provider names from system.tag.getProviders(). VERIFY: return type and column name on 8.1.
+
+    Handles a Dataset (a 'Name' column, else the first column), a list of strings, or a list of dicts.
+    """
+    names = []
+    try:
+        if hasattr(ds, "getRowCount"):
+            col = 0
+            for i in range(ds.getColumnCount()):
+                if str(ds.getColumnName(i)).lower() == "name":
+                    col = i
+            names = [ds.getValueAt(r, col) for r in range(ds.getRowCount())]
+        else:
+            for item in ds or []:
+                names.append(item.get("name") if isinstance(item, dict) else item)
+    except Exception:
+        log.warn("could not read tag providers from %r" % (ds,))
+    return [unicode(n) for n in names if n]    # noqa: F821 (Jython 2.7 only; this file never runs in CPython)
+
+
 def designerRun():
-    line = (system.gui.inputBox("Production line number (three digits, e.g. 058):", "") or "").strip()
-    if not line:
+    # VERIFY: on 8.1 system.tag.getProviders() returns a dataset-like object (not a list of strings);
+    # confirm the return type and the column holding the provider name on the dev gateway.
+    ds = system.tag.getProviders()
+    names = _provider_names(ds)
+    if not names:
+        system.gui.messageBox("No tag providers found.")
         return
-    opc = (system.gui.inputBox("OPC server name for this line, as used by the UDT OPC Server parameter:", "")
+    provider = (system.gui.inputBox("Tag provider for this project. Available: %s" % ", ".join(names), "")
+                or "").strip().strip("[]")
+    if not provider:
+        return
+    if provider not in names:
+        system.gui.messageBox("'%s' is not a tag provider. Available: %s" % (provider, ", ".join(names)))
+        return
+    opc = (system.gui.inputBox("OPC server name for this project, as used by the UDT OPC Server parameter:", "")
            or "").strip()
     if not opc:
         return
@@ -144,7 +176,7 @@ def designerRun():
         if not lp:
             break
         layouts.append(base64.b64encode("".join([chr(b & 0xFF) for b in system.file.readFileAsBytes(lp)])))
-    payload = {"line": line, "opcServer": opc, "data": base64.b64encode(data), "dryRun": True,
+    payload = {"provider": provider, "opcServer": opc, "data": base64.b64encode(data), "dryRun": True,
                "layouts": layouts}
 
     res = system.util.sendRequest(PROJECT, HANDLER, payload)   # VERIFY: 8.1 sendRequest signature
@@ -152,7 +184,7 @@ def designerRun():
         system.gui.messageBox(res["error"])
         return
     stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M")
-    reportPath = "%s_%s_%s_report.txt" % (path.rsplit(".", 1)[0], line, stamp)
+    reportPath = "%s_%s_%s_report.txt" % (path.rsplit(".", 1)[0], provider, stamp)
     system.file.writeFile(reportPath, res["report"])
     print(res["report"])
     print("Report saved to %s" % reportPath)
