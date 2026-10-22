@@ -162,7 +162,7 @@ MTP services use a PackML-derived state model (Execute, Completing, Unholding...
 | [`T_DValve`](#t_dvalve) | Control module | MonBinVlv | 43 | T_Alarm, T_Intlk, T_Mode, T_RunTime |
 | [`T_CValve`](#t_cvalve) | Control module | MonAnaVlv | 43 | T_Alarm, T_Intlk, T_Mode |
 | [`T_Motor`](#t_motor) | Control module | MonBinDrv | 54 | T_Alarm, T_AlmLim, T_Intlk, T_Mode, T_RunTime |
-| [`T_VFD`](#t_vfd) | Control module | MonAnaDrv | 84 | T_Alarm, T_Intlk, T_Mode, T_RunTime |
+| [`T_VFD`](#t_vfd) | Control module | MonAnaDrv | 85 | T_Alarm, T_Intlk, T_Mode, T_RunTime |
 | [`T_Heater`](#t_heater) | Control module | MonBinDrv (on/off) / MonAnaDrv (SSR, SCR) | 66 | T_Alarm, T_Intlk, T_Mode, T_RunTime |
 | [`T_PID`](#t_pid) | Control module | PIDCtrl | 52 | T_Alarm, T_AlmLim, T_Intlk |
 | [`T_PumpProt`](#t_pumpprot) | Control module | - | 29 | T_Alarm, T_AlmLim, T_Intlk |
@@ -623,6 +623,7 @@ Variable speed drive (fieldbus or hardwired).
 | `Val_SpdRef` | `REAL` |  | Active speed reference |
 | `Val_Spd` | `REAL` |  | Speed |
 | `Val_Current` | `REAL` |  | Motor current (A) |
+| `Val_LoadPct` | `REAL` |  | Load (% of Cfg_RatedAmps) |
 | `Val_Torque` | `REAL` |  | Torque (%) |
 | `Val_Power` | `REAL` |  | Power (kW) |
 | `Val_Energy` | `LREAL` |  | Energy (kWh), integrated from power |

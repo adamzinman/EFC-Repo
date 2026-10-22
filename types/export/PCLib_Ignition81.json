@@ -9305,6 +9305,23 @@
           "readOnly": true
         },
         {
+          "name": "Val_LoadPct",
+          "tagType": "AtomicTag",
+          "valueSource": "opc",
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPCServer}"
+          },
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{PathPrefix}{BaseTag}.Val_LoadPct"
+          },
+          "documentation": "Load (% of Cfg_RatedAmps)",
+          "tooltip": "Load (% of Cfg_RatedAmps)",
+          "dataType": "Float4",
+          "readOnly": true
+        },
+        {
           "name": "Val_Torque",
           "tagType": "AtomicTag",
           "valueSource": "opc",
