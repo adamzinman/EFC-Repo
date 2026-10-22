@@ -3,6 +3,7 @@
 Newest first. Versions match `VERSION.json` and the git tags (`v5.1`, `v6.0`, ...).
 
 - **Unreleased:**
+  - **Fix (loop cards B1–B4):** the MAN / AUTO / CAS chip now matches the option B mockup: right-aligned in the header and a light blue fill for CAS (`#DCE6F7`, was gray). Root cause: the card root column had no `alignItems`, so Perspective's default `flex-start` shrank the header and OUT rows to their content and `space-between` had no effect (it also fixes the OUT row, which ran together as "OUT46.0"). Loop preview PNGs re-rendered.
   - **Library build (steward/finish-library):** every template binds an EFCLib v1 T_ type (T_DValve, T_CValve, T_Motor, T_VFD, T_Heater, T_AI, T_KPI, T_PID, T_Station; I/O on the native x80 DDTs). Click on a symbol opens its dynamic window; double-tap commands T_DValve / T_Motor in touch mode.
   - **Dynamic windows:** new `generator/docks/` part: Docks/ValveDiscrete, ValveAnalog, Rotating, VFD, Heater, HeatTransfer, ProcessValue, Loop, IOCard (400 x 860), parts IntlkList / BypassConfirm / Trend, the screen region `Docks/Region`, and the `efc.ui` project script library. Role-gated controls (Operator, Maintenance+, Supervisor+ bypass with reason + audit, Engineer+ limits/config/tuning). Station sidebar moved to `Docks/Station`.
   - **New template** `Templates/Rotating/VFD`. **Folded in** EFC_AnalogIndicators as `Templates/AnalogIndicator` (generated). **Retired** the LoopConfig popup (dw_Loop replaces it).
