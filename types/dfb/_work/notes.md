@@ -63,3 +63,11 @@ Accepted by the 16.2 import (verified by import, not yet by a re-export):
 - TIME pins, typed literal T#0S, ST comments (* *), contentHeader name "EFCLib" version "1.0.0".
 Re-export received: _reference/FB_AlmCore_reexport_16.2.XDB = generated file except header dates, contentHeader (no dateTime) and CE-computed checksums. Recorded in XDB_FORMAT_REFERENCE.md section 12.
 Still open: Analyze/Rebuild result, simulator test sheet, DFB_FmtTest export (Q3).
+
+## ON HOLD (2026-10-22, user away a few days). Resume here.
+State: step 2a (FB_AlmCore) imported OK and re-export verified. Pilot not "passed" until:
+1. User reports Analyze Project / Rebuild All result and the 30 cases in tests/FB_AlmCore_tests.md.
+2. Then step 3: write types/dfb/CONVENTIONS.md (<= 1 page) from the pilot.
+3. Stage 2b (FB_Alarm, FB_AlmLim, FB_AI) blocked on the DFB_FmtTest export + its .XDD (spec/QUESTIONS.md Q3).
+4. Then step 4 batches: discrete (FB_DI, FB_DO after T_DO approval) -> motors/valves -> FB_Intlk, FB_Mode, FB_RunTime as needed.
+Also pending: queue the Q23 standard conflicts to doc-steward; T_DO approval (Q5).
