@@ -85,7 +85,7 @@ TAGS = {}
 # ([default]IO_Demo/Rack0) with the member names the faceplates read. Not an Ignition tag export.
 IO_CARDS = [("R0S2", "BMXDDI1602", 2, 16, "16 DI, 24 VDC"), ("R0S3", "BMXDDO1602", 3, 16, "16 DO, 24 VDC"),
             ("R0S4", "BMXDDI3202K", 4, 32, "32 DI, 24 VDC"), ("R0S5", "BMXAMI0810", 5, 8, "8 AI, 4-20 mA"),
-            ("R0S6", "BMXAMO0802", 6, 2, "2 AO, 4-20 mA"), ("R0S7", "BMXART0814", 7, 8, "8 TC/RTD"),
+            ("R0S6", "BMXAMO0802", 6, 8, "8 AO, 4-20 mA"), ("R0S7", "BMXART0814", 7, 8, "8 TC/RTD"),
             ("R0S8", "BMXDDO3202K", 8, 32, "32 DO, 24 VDC"), ("R0S9", "BMXDDO6402K", 9, 64, "64 DO, 24 VDC")]
 AI_DOC = [("PT-101", "N2 header pressure", "psig", 0, 300, 142.6), ("PT-102", "Ar header pressure", "psig", 0, 300, 118.2),
           ("FT-110", "Product flow", "slpm", 0, 500, 212.0), ("LT-120", "Dewar level", "%", 0, 100, 63.4),
@@ -104,7 +104,9 @@ def io_fixture():
             c = f"{folder}/CH{ch:02d}"
             if analog:
                 if model == "BMXAMO0802":
-                    doc = [("FCV-201", "Inlet control valve", "%", 0, 100, 46.0), ("PCV-202", "Back-pressure valve", "%", 0, 100, 18.5)][ch]
+                    doc = [("FCV-201", "Inlet control valve", "%", 0, 100, 46.0), ("PCV-202", "Back-pressure valve", "%", 0, 100, 18.5)] \
+                          + [(None, None, None, None, None, None)] * 6                                 # 8 AO channels, 6 spare
+                    doc = doc[ch]
                 elif model == "BMXART0814":
                     doc = [("TT-301", "Compressor 1st stage discharge", "°F", 0, 400, 212.4), ("TT-302", "Compressor 2nd stage discharge", "°F", 0, 400, 236.9),
                            ("TT-303", "Aftercooler outlet", "°F", 0, 200, 88.1), ("TT-304", "Oil sump", "°F", 0, 250, 131.0),

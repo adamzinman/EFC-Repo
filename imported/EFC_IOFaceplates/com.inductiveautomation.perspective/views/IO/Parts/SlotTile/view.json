@@ -133,7 +133,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "\"Open faceplate\" + if(len(if(isNull({view.custom.diag}), \"\", toStr({view.custom.diag}))) > 0, \"\\nModule: \" + {view.custom.diag}, \"\")"
+                "expression": "\"Open card window\" + if(len(if(isNull({view.custom.diag}), \"\", toStr({view.custom.diag}))) > 0, \"\\nModule: \" + {view.custom.diag}, \"\")"
               }
             }
           }

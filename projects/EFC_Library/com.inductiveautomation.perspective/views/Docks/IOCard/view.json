@@ -27,34 +27,6 @@
         ]
       }
     },
-    "custom.m_Cfg_Tag": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Tag",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Desc": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Desc",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
     "custom.m_Module_MOD_ERROR": {
       "binding": {
         "type": "tag",
@@ -309,7 +281,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if({view.custom.m_Module_MOD_ERROR}, 'State/Fault', if(true, 'State/Running', 'State/Unknown'))"
+                "expression": "if(isNull({view.custom.m_Module_MOD_ERROR}) || !isGood({view.custom.m_Module_MOD_ERROR}), 'State/Unknown', if({view.custom.m_Module_MOD_ERROR}, 'State/Fault', if(true, 'State/Running', 'State/Unknown')))"
               }
             }
           }
@@ -336,7 +308,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Module_MOD_ERROR}, 'MODULE ERROR', if(true, 'OK', 'UNKNOWN'))"
+                    "expression": "if(isNull({view.custom.m_Module_MOD_ERROR}) || !isGood({view.custom.m_Module_MOD_ERROR}), 'UNKNOWN', if({view.custom.m_Module_MOD_ERROR}, 'MODULE ERROR', if(true, 'OK', 'UNKNOWN')))"
                   }
                 }
               }

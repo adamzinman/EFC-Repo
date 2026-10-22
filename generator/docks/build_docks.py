@@ -98,18 +98,28 @@ def row(name, text, value_expr, unit_expr=None, show=None):
 
 def fmt(e, f="#,##0.0"): return f"numberFormat({e}, '{f}')"
 
-def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmtstr="#,##0.0"):
-    """Numeric setpoint bound bidirectionally to the member; hidden below minlvl."""
+TIME_SCALE = 1000        # PLC TIME members arrive in milliseconds; the docks show and edit seconds
+
+def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmtstr="#,##0.0", scale=None):
+    """Numeric setpoint bound bidirectionally to the member; hidden below minlvl.
+    scale (e.g. TIME_SCALE): the tag holds value * scale. The entry then reads the mirror / scale and a props.value
+    onChange script (origin == 'Browser' only) writes int(round(value * scale)) through efc.ui.cmd, Engineer, audited."""
     pc = {"props.value": tag(member, bidi=True), "props.enabled": expr(enabled or "true")}
+    if scale:
+        wr = (f"if origin == 'Browser' and currentValue.value is not None:\n"
+              f"\tefc.ui.cmd(self, {member!r}, int(round(currentValue.value * {scale})), {ENG}, audit=True)")
+        pc["props.value"] = {"binding": expr(f"{vw.m(member)} / {scale}")["binding"],
+                             "onChange": {"enabled": None, "script": "\t" + wr.replace("\n", "\n\t")}}
     num = comp("ia.input.numeric-entry-field", "Entry", {"format": fmtstr, "style": {"classes": "Input/Setpoint"}},
                {"shrink": 0, "basis": v(120)}, pc)
     s = lvl(minlvl) + (f" && ({show})" if show else "")
     return flex(name, "row", [label("Lbl", text, "Text/Caption Text/Mod/Upper", grow=1), num, label("EU", unit, "Text/Units", basis=v(40))],
                 basis=v(28), pc={"position.display": expr(s)}, extra={"alignItems": "center", "style": {"classes": "", "gap": v(6)}})
 
-def check(name, text, member, minlvl):
-    return comp("ia.input.checkbox", name, {"text": text, "style": {"classes": "Input/Check"}}, {"shrink": 0, "basis": v(24)},
-                {"props.selected": tag(member, bidi=True), "props.enabled": expr(lvl(minlvl))})
+def check(name, text, member, minlvl, hide=False):
+    pc = {"props.selected": tag(member, bidi=True), "props.enabled": expr(lvl(minlvl))}
+    if hide: pc["position.display"] = expr(lvl(minlvl))            # hidden, not greyed, below minlvl
+    return comp("ia.input.checkbox", name, {"text": text, "style": {"classes": "Input/Check"}}, {"shrink": 0, "basis": v(24)}, pc)
 
 # ----------------------------------------------------------------- shared window blocks
 def header(vw):
@@ -153,6 +163,13 @@ def commands(vw, buttons, extra=(), hint="Enabled in MAN, available, permitted, 
     """buttons: [(TEXT, member, class, minlvl, enabled_expr or None)] - uniform size, one row of up to four."""
     b = [button(f"B{i}", t, f"efc.ui.cmd(self, '{mem}', True, {lv})", cls=cls, show=lvl(lv), enabled=en)
          for i, (t, mem, cls, lv, en) in enumerate(buttons)]
+    for x, (t, mem, cls, lv, en) in zip(b, buttons):
+        if mem == "Cmd_Jog":                                       # hold-to-jog: TRUE on press, FALSE on release / leave
+            # press writes only while the button is enabled (DOM events can still fire on a disabled button); release always writes
+            x["events"] = {"dom": {k: script((f"if self.props.enabled:\n\tefc.ui.cmd(self, '{mem}', True, {lv})" if val else
+                                              f"efc.ui.cmd(self, '{mem}', False, {lv})")) for k, val in
+                                   (("onMouseDown", True), ("onTouchStart", True), ("onMouseUp", False),
+                                    ("onMouseLeave", False), ("onTouchEnd", False))}}
     kids = [flex("Buttons", "row", b, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})] + list(extra)
     if hint:
         kids.append(label("Hint", hint, "Text/Micro Text/Color/Muted"))
@@ -200,11 +217,17 @@ def maint(vw, extra=()):
     return section("Maintenance", "Maintenance", kids, show=lvl(MAINT))
 
 def config(vw, entries, name="Configuration", title="Configuration"):
-    """entries: [(text, member, unit)]; values are shown to all, editable Engineer+ (collapsed by default)."""
+    """entries: [(text, member, unit)]; values are shown to all (booleans as Yes/No), editable Engineer+ (collapsed by default).
+    Member prefixes: "?" boolean (checkbox); "~" PLC TIME in ms, shown and edited in seconds (TIME_SCALE)."""
     kids = []
     for i, (text, mem, unit) in enumerate(entries):
         if mem.startswith("?"):                                    # boolean
-            kids.append(check(f"C{i}", text, mem[1:], ENG))
+            kids.append(row(f"R{i}", text, f"if({vw.m(mem[1:])}, 'Yes', 'No')", show="!(" + lvl(ENG) + ")"))
+            kids.append(check(f"C{i}", text, mem[1:], ENG, hide=True))
+        elif mem.startswith("~"):                                  # TIME: ms on the PLC, seconds in the dock
+            mem = mem[1:]
+            kids.append(row(f"R{i}", text, fmt(f"{vw.m(mem)} / {TIME_SCALE}", "#,##0.###"), repr(unit), show="!(" + lvl(ENG) + ")"))
+            kids.append(entry(vw, f"E{i}", text, mem, ENG, unit, fmtstr="#,##0.###", scale=TIME_SCALE))
         else:
             kids.append(row(f"R{i}", text, fmt(vw.m(mem), "#,##0.###"), repr(unit), show="!(" + lvl(ENG) + ")"))
             kids.append(entry(vw, f"E{i}", text, mem, ENG, unit, fmtstr="#,##0.###"))
@@ -259,7 +282,7 @@ def valve_discrete():
                     ("Alm_Uncmd", "Uncommanded move"), ("Alm_IntlkTrip", "Interlock trip")]),
         trend(["Out_Open", "Sts_Opened"]),
         maint(vw),
-        config(vw, [("Travel time", "Cfg_TravelTime", "s"), ("Has open limit", "?Cfg_HasZSO", ""), ("Has closed limit", "?Cfg_HasZSC", "")]),
+        config(vw, [("Travel time", "~Cfg_TravelTime", "s"), ("Has open limit", "?Cfg_HasZSO", ""), ("Has closed limit", "?Cfg_HasZSC", "")]),
     ])
 
 def valve_analog():
@@ -268,7 +291,8 @@ def valve_analog():
     presets = [button(f"P{p}", f"{p}%", f"efc.ui.cmd(self, 'Cmd_ManPos', {float(p)}, 1)", cls="Button/Default", enabled=rd) for p in (0, 25, 50, 75, 100)]
     return window("Docks/ValveAnalog", "T_CValve", vw, [
         header(vw),
-        banner(vw, [(m("Sts_Fault"), "FAULT", "State/Fault"), (m("Sts_Intlk"), "INTERLOCKED", "State/Fault"),
+        banner(vw, [(" || ".join(f"isNull({m(x)}) || !isGood({m(x)})" for x in ("Val_Pos", "Sts_Closed")), "UNKNOWN", "State/Unknown"),
+                    (m("Sts_Fault"), "FAULT", "State/Fault"), (m("Sts_Intlk"), "INTERLOCKED", "State/Fault"),
                     (m("Sts_Closed"), "CLOSED", "State/Stopped"), ("true", f"'OPEN ' + {fmt(m('Val_Pos'), '0')} + ' %'", "State/Running")],
                [(m("Sts_Sim"), "SIM"), (m("Sts_RateLim"), "RATE LIM")]),
         mode_section(vw),
@@ -285,7 +309,7 @@ def valve_analog():
         alarms(vw, [("Alm_PosDev", "Position deviation"), ("Alm_FbkBad", "Feedback bad"), ("Alm_IntlkTrip", "Interlock trip")]),
         trend(["Val_Demand", "Val_Pos"]),
         config(vw, [("Output min", "Cfg_OutMin", "%"), ("Output max", "Cfg_OutMax", "%"), ("Rate up", "Cfg_RateUp", "%/s"),
-                    ("Rate down", "Cfg_RateDn", "%/s"), ("Deviation limit", "Cfg_DevLim", "%"), ("Deviation time", "Cfg_DevTime", "s"),
+                    ("Rate down", "Cfg_RateDn", "%/s"), ("Deviation limit", "Cfg_DevLim", "%"), ("Deviation time", "~Cfg_DevTime", "s"),
                     ("Tight shutoff", "Cfg_TightShut", "%")]),
     ])
 
@@ -302,15 +326,16 @@ def motor_like(path, ttype, extra_values, extra_alarms, extra_cmd, extra_cfg, pe
                common_chips(vw) + [(m("Sts_NotPerm"), "NOT PERM")]),
         mode_section(vw),
         commands(vw, [("START", "Cmd_Start", "Button/Start", OP, rd), ("STOP", "Cmd_Stop", "Button/Stop", OP, None),
-                      ("RESET", "Cmd_Reset", "Button/Default", OP, None), ("JOG", "Cmd_Jog", "Button/Momentary", MAINT, rd)],
-                 extra=extra_cmd(vw) if extra_cmd else ()),
+                      ("RESET", "Cmd_Reset", "Button/Default", OP, None), ("JOG", "Cmd_Jog", "Button/Momentary", MAINT, f"{m('Mode/Sts_Maint')} && " + ready_expr(vw, mode=False))],   # JOG: MAINT only, hold to jog
+                 extra=extra_cmd(vw) if extra_cmd else (),
+                 hint="Enabled in MAN, available, permitted, not interlocked, not LOCAL. JOG: hold, MAINT mode only"),
         section("Values", "Values", vals + (extra_values(vw) if extra_values else [])),
         intlk("Perm", "Permissives", "Perm"), intlk("Intlk", "Interlocks", "Intlk"),
         alarms(vw, [("Alm_FailStart", "Fail to start"), ("Alm_FailStop", "Fail to stop"), ("Alm_Uncmd", "Uncommanded run/stop"),
                     ("Alm_EStop", "E-stop"), ("Alm_IntlkTrip", "Interlock trip"), ("Alm_ExcessStarts", "Excess starts")] + extra_alarms),
         trend(pens),
         maint(vw),
-        config(vw, [("Feedback time", "Cfg_FbkTime", "s"), ("Restart delay", "Cfg_RestartDly", "s"), ("Rated current", "Cfg_RatedAmps", "A"),
+        config(vw, [("Feedback time", "~Cfg_FbkTime", "s"), ("Restart delay", "~Cfg_RestartDly", "s"), ("Rated current", "Cfg_RatedAmps", "A"),
                     ("Max starts / hr", "Cfg_MaxStartsHr", ""), ("Auto restart", "?Cfg_AutoRestart", "")] + extra_cfg),
     ])
 
@@ -335,12 +360,13 @@ def vfd():
                       [("Alm_DrvFault", "Drive fault"), ("Alm_DrvWarn", "Drive warning"), ("Alm_CommFail", "Drive comm fail"),
                        ("Alm_SpdDev", "Speed deviation")], cmd,
                       [("Speed min", "Cfg_SpdMin", ""), ("Speed max", "Cfg_SpdMax", ""), ("Speed dev limit", "Cfg_SpdDevLim", ""),
-                       ("Speed dev time", "Cfg_SpdDevTime", "s")], ["Val_Spd", "Val_SpdRef", "Val_Current"])
+                       ("Speed dev time", "~Cfg_SpdDevTime", "s")], ["Val_Spd", "Val_SpdRef", "Val_Current"])
 
 def heater():
     vw = View(); m = vw.m
     rd = ready_expr(vw)
     pwr = f"{m('Cfg_CtrlType')} > 0"
+    amps = f"{m('Cfg_RatedAmps')} > 0"                 # Cfg_RatedAmps = 0 means no current monitoring
     ctype = f"case(toInt({m('Cfg_CtrlType')}), 0, 'On/off', 1, 'Time-proportioned (SSR)', 2, 'SCR phase angle', '?')"
     return window("Docks/Heater", "T_Heater", vw, [
         header(vw),
@@ -351,10 +377,12 @@ def heater():
         mode_section(vw),
         commands(vw, [("ON", "Cmd_On", "Button/Start", OP, rd), ("OFF", "Cmd_Off", "Button/Stop", OP, None),
                       ("RESET", "Cmd_Reset", "Button/Default", OP, None)],
-                 extra=[entry(vw, "Pwr", "Power demand", "Cmd_Pwr", OP, "%", enabled=rd, show=pwr)]),
+                 extra=[label("ResetHint", "High-limit trip resets at the limit device.", "Text/Micro Text/Color/Muted"),
+                        entry(vw, "Pwr", "Power demand", "Cmd_Pwr", OP, "%", enabled=rd, show=pwr)]),
         section("Values", "Values", [row("Type", "Control", ctype), row("Dem", "Power demand", fmt(m("Val_PwrDemand")), "'%'", show=pwr),
                                      row("Duty", "Duty", fmt(m("Val_Duty")), "'%'", show=pwr), row("Pwr", "Power", fmt(m("Val_Power")), "'kW'"),
-                                     row("Cur", "Current", fmt(m("Val_Current")), "'A'"), row("Load", "Load", fmt(m("Val_LoadPct"), "0"), "'%'"),
+                                     row("Cur", "Current", fmt(m("Val_Current")), "'A'", show=amps), row("Load", "Load", fmt(m("Val_LoadPct"), "0"), "'%'", show=amps),
+                                     row("HiLim", "High limit OK", f"if({m('Inp_HiLimitOK')}, 'Yes', 'No')"),
                                      row("NE107", "Diagnostics", ne107(vw))]),
         intlk("Perm", "Permissives", "Perm"), intlk("Intlk", "Interlocks", "Intlk"),
         alarms(vw, [("Alm_HiLimit", "High-limit trip"), ("Alm_Shorted", "Shorted SSR/SCR"), ("Alm_LoadFail", "Element load failure"),
@@ -362,10 +390,10 @@ def heater():
                     ("Alm_IntlkTrip", "Interlock trip")]),
         trend(["Val_Power", "Val_PwrDemand", "Val_Current"]),
         maint(vw),
-        config(vw, [("Cycle time", "Cfg_CycleTime", "s"), ("Min pulse", "Cfg_MinPulse", "s"), ("Power min", "Cfg_PwrMin", "%"),
+        config(vw, [("Cycle time", "~Cfg_CycleTime", "s"), ("Min pulse", "~Cfg_MinPulse", "s"), ("Power min", "Cfg_PwrMin", "%"),
                     ("Power max", "Cfg_PwrMax", "%"), ("Power rate", "Cfg_PwrRate", "%/s"), ("Rated power", "Cfg_RatedKW", "kW"),
                     ("Rated current", "Cfg_RatedAmps", "A"), ("Load fail", "Cfg_LoadFailPct", "%"), ("Leak current", "Cfg_LeakAmps", "A"),
-                    ("Feedback time", "Cfg_FbkTime", "s")]),
+                    ("Feedback time", "~Cfg_FbkTime", "s")]),
     ])
 
 def heat_transfer():
@@ -379,7 +407,7 @@ def heat_transfer():
                                      t("HF", "Hot flow", "Inp_HotFlow", ""), t("CF", "Cold flow", "Inp_ColdFlow", ""),
                                      t("Duty", "Duty", "Val_Duty", "kW"), t("LMTD", "LMTD", "Val_LMTD", "K"), t("UA", "UA", "Val_UA", "kW/K"),
                                      t("Clean", "Cleanliness", "Val_Clean", "%"), t("App", "Approach", "Val_Approach", "K"),
-                                     t("Eff", "Effectiveness", "Val_Effect", "%")]),
+                                     row("Eff", "Effectiveness", fmt(m("Val_Effect") + " * 100"), repr("%"))]),   # PCLib Val_Effect is 0-1: show as %
         alarms(vw, [("Alm_Fouling", "Fouling"), ("Alm_HotDP", "Hot side dP high"), ("Alm_ColdDP", "Cold side dP high"),
                     ("Alm_HeatBal", "Heat balance error"), ("Alm_HiOutT", "Outlet temperature high")]),
         trend(["Val_Clean", "Val_UA"]),
@@ -398,7 +426,7 @@ def process_value():
                     ("true", f"{fmt(m('Val_PV'))} + ' ' + {eu}", "State/Stopped")],
                [(m("Sts_Sim"), "SIM"), (m("Sts_Subst"), "SUBST"), (m("Sts_ORng"), "OVER"), (m("Sts_URng"), "UNDER")]),
         section("Values", "Values", [row("PV", "Value", fmt(m("Val_PV")), eu), row("Pct", "Of range", fmt(m("Val_PVPct"), "0"), "'%'"),
-                                     row("ROC", "Rate of change", fmt(m("Val_ROC"), "#,##0.###"), eu + " + '/min'"),
+                                     row("ROC", "Rate of change", fmt(m("Val_ROC"), "#,##0.###"), eu + " + '/s'"),
                                      row("Rng", "Range", f"{fmt(m('Cfg_EUMin'), '#,##0.##')} + ' .. ' + {fmt(m('Cfg_EUMax'), '#,##0.##')}", eu),
                                      row("NE107", "Diagnostics", ne107(vw))]),
         alarms(vw, [("Alm_HH", "High high"), ("Alm_H", "High"), ("Alm_L", "Low"), ("Alm_LL", "Low low"),
@@ -406,7 +434,7 @@ def process_value():
         trend(["Val_PV"]),
         section("Maintenance", "Maintenance", [check("Sim", "Simulate", "Sim_En", MAINT),
                                                entry(vw, "SimPV", "Simulated value", "Sim_PV", MAINT, "", show=m("Sim_En"))], show=lvl(MAINT)),
-        config(vw, lim + [("ROC limit", "Alm_ROC/Cfg_Lim", "/min")], name="Limits", title="Alarm limits"),
+        config(vw, lim + [("ROC limit", "Alm_ROC/Cfg_Lim", "/s")], name="Limits", title="Alarm limits"),
         config(vw, [("EU min", "Cfg_EUMin", ""), ("EU max", "Cfg_EUMax", ""), ("Raw min", "Cfg_RawMin", ""), ("Raw max", "Cfg_RawMax", ""),
                     ("Filter TC", "Cfg_FiltTC", "s"), ("Low cutoff", "Cfg_LoCutoff", ""), ("Square root", "?Cfg_SqrtExtract", "")]),
     ])
@@ -431,7 +459,7 @@ def loop():
         intlk("Intlk", "Interlocks", "Intlk"),
         alarms(vw, [("Alm_DevH", "Deviation high"), ("Alm_DevL", "Deviation low"), ("Alm_PVBad", "PV bad")]),
         trend(["Val_PV", "Val_SP", "Out_CV"]),
-        config(vw, [("Gain (Kp)", "Cfg_Kp", ""), ("Integral (Ti)", "Cfg_Ti", "s"), ("Derivative (Td)", "Cfg_Td", "s"),
+        config(vw, [("Gain (Kp)", "Cfg_Kp", ""), ("Integral (Ti)", "~Cfg_Ti", "s"), ("Derivative (Td)", "~Cfg_Td", "s"),
                     ("Deadband", "Cfg_DB", ""), ("SP rate", "Cfg_SPRate", "/s"), ("CV rate", "Cfg_CVRate", "%/s"),
                     ("Direct acting", "?Cfg_DirectAct", "")], name="Tuning", title="Tuning"),
         config(vw, [("Dev high limit", "Alm_DevH/Cfg_Lim", ""), ("Dev low limit", "Alm_DevL/Cfg_Lim", ""), ("SP min", "Cfg_SPMin", ""),
@@ -445,15 +473,17 @@ def io_card():
     full = ("model = self.view.params.model\nif model:\n\tp = self.view.params.tagPath\n"
             "\tsystem.perspective.openPopup('io_' + p, 'Templates/IO/Faceplates/' + model, params={'cardPath': p},\n"
             "\t\ttitle='', showCloseIcon=False, draggable=True, resizable=False, modal=False)")
-    path, view = window("Docks/IOCard", "native", vw, [
+    blocks = [
         header(vw),
-        banner(vw, [(m("Module/MOD_ERROR"), "MODULE ERROR", "State/Fault"), ("true", "OK", "State/Running")], []),
+        banner(vw, [(f"isNull({m('Module/MOD_ERROR')}) || !isGood({m('Module/MOD_ERROR')})", "UNKNOWN", "State/Unknown"),
+                    (m("Module/MOD_ERROR"), "MODULE ERROR", "State/Fault"), ("true", "OK", "State/Running")], []),
         section("Card", "Card", [row("Model", "Model", "{view.params.model}"), row("Rack", "Rack", m("Rack")), row("Slot", "Slot", m("Slot")),
                                  row("Desc", "Description", m("CardDesc")), row("Diag", "Diagnostic", m("Module/HMI/DiagText")),
                                  button("Full", "FULL FACEPLATE", full, cls="Button/Primary", grow=0)]),
-    ])
+    ]
     for k in ("Cfg_Tag", "Cfg_Desc"):                       # native DDTs have no Cfg_Tag / Cfg_Desc: show the card instead
-        vw.custom.pop("m_" + k); vw.pc.pop("custom.m_" + k)
+        vw.custom.pop("m_" + k); vw.pc.pop("custom.m_" + k)   # must happen before window() copies vw.pc
+    path, view = window("Docks/IOCard", "native", vw, blocks)
     hdr = view["root"]["children"][0]["children"][0]["children"]
     hdr[0]["propConfig"]["props.text"] = expr("'Rack ' + " + m("Rack") + " + ' / slot ' + " + m("Slot"))
     hdr[1]["propConfig"]["props.text"] = expr("{view.params.model}")
@@ -485,7 +515,7 @@ def intlk_list():
                                                                       "props.style.classes": expr(f"if({m('Out_OK')}, 'Indicator/Permissive', 'Indicator/Interlock')")})],
              extra={"alignItems": "center"}),
         *rows,
-        button("Reset", "RESET", "system.tag.writeBlocking([self.view.params.tagPath + '/Cmd_Reset'], [True])", cls="Button/Default",
+        button("Reset", "RESET", "efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)", cls="Button/Default",
                show=f"{lvl(MAINT)} && {m('Sts_ResetReq')}", grow=0),
     ], extra={"style": {"classes": "Container/GroupBox", "gap": v(2)}})
     params = {"tagPath": "", "title": ""}

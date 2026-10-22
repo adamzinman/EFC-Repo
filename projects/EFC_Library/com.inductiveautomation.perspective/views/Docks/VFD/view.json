@@ -68,6 +68,7 @@
     "m_Cfg_FbkTime": null,
     "m_Cfg_RestartDly": null,
     "m_Cfg_MaxStartsHr": null,
+    "m_Cfg_AutoRestart": null,
     "m_Cfg_SpdMin": null,
     "m_Cfg_SpdMax": null,
     "m_Cfg_SpdDevLim": null,
@@ -1023,6 +1024,20 @@
         "config": {
           "mode": "indirect",
           "tagPath": "{0}/Cfg_MaxStartsHr",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "bidirectional": false,
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.m_Cfg_AutoRestart": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Cfg_AutoRestart",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -2018,18 +2033,46 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}"
+                            "expression": "{view.custom.m_Mode_Sts_Maint} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}"
                           }
                         }
                       }
                     },
                     "events": {
-                      "component": {
-                        "onActionPerformed": {
+                      "dom": {
+                        "onMouseDown": {
                           "type": "script",
                           "scope": "G",
                           "config": {
-                            "script": "\tefc.ui.cmd(self, 'Cmd_Jog', True, 2)"
+                            "script": "\tif self.props.enabled:\n\t\tefc.ui.cmd(self, 'Cmd_Jog', True, 2)"
+                          }
+                        },
+                        "onTouchStart": {
+                          "type": "script",
+                          "scope": "G",
+                          "config": {
+                            "script": "\tif self.props.enabled:\n\t\tefc.ui.cmd(self, 'Cmd_Jog', True, 2)"
+                          }
+                        },
+                        "onMouseUp": {
+                          "type": "script",
+                          "scope": "G",
+                          "config": {
+                            "script": "\tefc.ui.cmd(self, 'Cmd_Jog', False, 2)"
+                          }
+                        },
+                        "onMouseLeave": {
+                          "type": "script",
+                          "scope": "G",
+                          "config": {
+                            "script": "\tefc.ui.cmd(self, 'Cmd_Jog', False, 2)"
+                          }
+                        },
+                        "onTouchEnd": {
+                          "type": "script",
+                          "scope": "G",
+                          "config": {
+                            "script": "\tefc.ui.cmd(self, 'Cmd_Jog', False, 2)"
                           }
                         }
                       }
@@ -2264,7 +2307,7 @@
                   "grow": 0
                 },
                 "props": {
-                  "text": "Enabled in MAN, available, permitted, not interlocked, not LOCAL",
+                  "text": "Enabled in MAN, available, permitted, not interlocked, not LOCAL. JOG: hold, MAINT mode only",
                   "style": {
                     "classes": "Text/Micro Text/Color/Muted"
                   }
@@ -4341,7 +4384,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_FbkTime}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Cfg_FbkTime} / 1000, '#,##0.###')"
                           }
                         }
                       }
@@ -4442,16 +4485,14 @@
                     "propConfig": {
                       "props.value": {
                         "binding": {
-                          "type": "tag",
+                          "type": "expr",
                           "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_FbkTime",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
+                            "expression": "{view.custom.m_Cfg_FbkTime} / 1000"
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_FbkTime', int(round(currentValue.value * 1000)), 4, audit=True)"
                         }
                       },
                       "props.enabled": {
@@ -4551,7 +4592,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_RestartDly}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Cfg_RestartDly} / 1000, '#,##0.###')"
                           }
                         }
                       }
@@ -4652,16 +4693,14 @@
                     "propConfig": {
                       "props.value": {
                         "binding": {
-                          "type": "tag",
+                          "type": "expr",
                           "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_RestartDly",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
+                            "expression": "{view.custom.m_Cfg_RestartDly} / 1000"
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_RestartDly', int(round(currentValue.value * 1000)), 4, audit=True)"
                         }
                       },
                       "props.enabled": {
@@ -5115,6 +5154,81 @@
                 ]
               },
               {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R4"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "Auto restart",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_Cfg_AutoRestart}, 'Yes', 'No')"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
                 "type": "ia.input.checkbox",
                 "version": 0,
                 "meta": {
@@ -5146,6 +5260,14 @@
                     }
                   },
                   "props.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  },
+                  "position.display": {
                     "binding": {
                       "type": "expr",
                       "config": {
@@ -5852,7 +5974,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_SpdDevTime}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Cfg_SpdDevTime} / 1000, '#,##0.###')"
                           }
                         }
                       }
@@ -5953,16 +6075,14 @@
                     "propConfig": {
                       "props.value": {
                         "binding": {
-                          "type": "tag",
+                          "type": "expr",
                           "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_SpdDevTime",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
+                            "expression": "{view.custom.m_Cfg_SpdDevTime} / 1000"
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_SpdDevTime', int(round(currentValue.value * 1000)), 4, audit=True)"
                         }
                       },
                       "props.enabled": {

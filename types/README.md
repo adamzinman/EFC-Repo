@@ -198,7 +198,7 @@ Discrete alarm, ISA-18.2 / IEC 62682 state model, shelving, suppression, out-of-
 | `Cfg_NoAck` | `BOOL` |  | No acknowledge required - use only for alarms rationalised as such |
 | `Cfg_OnDly` | `TIME` | T#0S | On-delay (ISA-18.2 chattering control) |
 | `Cfg_OffDly` | `TIME` | T#0S | Off-delay (ISA-18.2 chattering control) |
-| `Cfg_Priority` | `INT` | 3 | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Cfg_Priority` | `INT` | 3 | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Cfg_Class` | `INT` | 0 | Alarm class (alarm philosophy): 0=General 1=Safety 2=Environmental 3=Quality 4=Asset |
 | `Cfg_MaxShelf` | `TIME` | T#8H | Maximum shelve duration (shelving must be time-limited) |
 | `Cmd_Ack` | `BOOL` |  | Operator acknowledge (one-shot) |
@@ -235,7 +235,7 @@ Analog limit alarm: limit + deadband + ISA-18.2 / IEC 62682 alarm.
 | `Cfg_NoAck` | `BOOL` |  | No acknowledge required - use only for alarms rationalised as such |
 | `Cfg_OnDly` | `TIME` | T#0S | On-delay (ISA-18.2 chattering control) |
 | `Cfg_OffDly` | `TIME` | T#0S | Off-delay (ISA-18.2 chattering control) |
-| `Cfg_Priority` | `INT` | 3 | Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low |
+| `Cfg_Priority` | `INT` | 3 | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Cfg_Class` | `INT` | 0 | Alarm class (alarm philosophy): 0=General 1=Safety 2=Environmental 3=Quality 4=Asset |
 | `Cfg_MaxShelf` | `TIME` | T#8H | Maximum shelve duration (shelving must be time-limited) |
 | `Cmd_Ack` | `BOOL` |  | Operator acknowledge (one-shot) |

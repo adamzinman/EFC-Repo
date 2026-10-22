@@ -52,7 +52,7 @@ DERIVED = {
  "span": f"max({c('max')} - {c('min')}, 0.000001)",
  "p": pct("pv"), "pLL": pct("ll"), "pL": pct("l"), "pH": pct("h"), "pHH": pct("hh"),
  "pIL": f"if({IDEAL}, {pct('iLo')}, {c('pL')})", "pIH": f"if({IDEAL}, {pct('iHi')}, {c('pL')})",
- # active limit alarm, worst first; PLC Cfg_Priority 1=Emergency 2=High 3=Medium 4=Low
+ # active limit alarm, worst first; PLC Cfg_Priority 1=Critical 2=High 3=Medium 4=Low
  "lvl": f"if({c('hhA')}, 'HH', if({c('llA')}, 'LL', if({c('hA')}, 'H', if({c('lA')}, 'L', ''))))",
  "almUnack": f"case({c('lvl')}, 'HH', {c('hhU')}, 'LL', {c('llU')}, 'H', {c('hU')}, 'L', {c('lU')}, false)",
  "almPri": f"case({c('lvl')}, 'HH', {c('hhP')}, 'LL', {c('llP')}, 'H', {c('hP')}, 'L', {c('lP')}, 3)",

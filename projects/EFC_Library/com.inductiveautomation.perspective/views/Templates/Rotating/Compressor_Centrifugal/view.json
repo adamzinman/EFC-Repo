@@ -720,7 +720,7 @@
               "type": "script",
               "scope": "G",
               "config": {
-                "script": "\tm = 'Cmd_Stop' if self.view.custom.cmd else 'Cmd_Start'\n\tsystem.tag.writeBlocking([self.view.params.tagPath + '/' + m], [True])"
+                "script": "\tm = 'Cmd_Stop' if self.view.custom.cmd else 'Cmd_Start'\n\tefc.ui.cmd(self, m, True, 1)"
               }
             }
           }

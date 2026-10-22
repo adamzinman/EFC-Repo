@@ -31,6 +31,7 @@
     "m_Cfg_DB": null,
     "m_Cfg_SPRate": null,
     "m_Cfg_CVRate": null,
+    "m_Cfg_DirectAct": null,
     "open_Tuning": false,
     "m_Alm_DevH_Cfg_Lim": null,
     "m_Alm_DevL_Cfg_Lim": null,
@@ -473,6 +474,20 @@
         "config": {
           "mode": "indirect",
           "tagPath": "{0}/Cfg_CVRate",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "bidirectional": false,
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.m_Cfg_DirectAct": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Cfg_DirectAct",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -2502,7 +2517,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_Ti}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Cfg_Ti} / 1000, '#,##0.###')"
                           }
                         }
                       }
@@ -2603,16 +2618,14 @@
                     "propConfig": {
                       "props.value": {
                         "binding": {
-                          "type": "tag",
+                          "type": "expr",
                           "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_Ti",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
+                            "expression": "{view.custom.m_Cfg_Ti} / 1000"
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_Ti', int(round(currentValue.value * 1000)), 4, audit=True)"
                         }
                       },
                       "props.enabled": {
@@ -2712,7 +2725,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_Td}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Cfg_Td} / 1000, '#,##0.###')"
                           }
                         }
                       }
@@ -2813,16 +2826,14 @@
                     "propConfig": {
                       "props.value": {
                         "binding": {
-                          "type": "tag",
+                          "type": "expr",
                           "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_Td",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
+                            "expression": "{view.custom.m_Cfg_Td} / 1000"
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_Td', int(round(currentValue.value * 1000)), 4, audit=True)"
                         }
                       },
                       "props.enabled": {
@@ -3486,6 +3497,81 @@
                 ]
               },
               {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R6"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "Direct acting",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_Cfg_DirectAct}, 'Yes', 'No')"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
                 "type": "ia.input.checkbox",
                 "version": 0,
                 "meta": {
@@ -3517,6 +3603,14 @@
                     }
                   },
                   "props.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  },
+                  "position.display": {
                     "binding": {
                       "type": "expr",
                       "config": {

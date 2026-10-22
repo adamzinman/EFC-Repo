@@ -52,7 +52,7 @@ ALARM_CORE = [
     M("Cfg_NoAck", "BOOL", "No acknowledge required - use only for alarms rationalised as such"),
     M("Cfg_OnDly", "TIME", "On-delay (ISA-18.2 chattering control)", "T#0S"),
     M("Cfg_OffDly", "TIME", "Off-delay (ISA-18.2 chattering control)", "T#0S"),
-    M("Cfg_Priority", "INT", "Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low", "3"),
+    M("Cfg_Priority", "INT", "Rationalised priority: 1=Critical 2=High 3=Medium 4=Low", "3"),
     M("Cfg_Class", "INT", "Alarm class (alarm philosophy): 0=General 1=Safety 2=Environmental 3=Quality 4=Asset", "0"),
     M("Cfg_MaxShelf", "TIME", "Maximum shelve duration (shelving must be time-limited)", "T#8H"),
     M("Cmd_Ack", "BOOL", "Operator acknowledge (one-shot)"),

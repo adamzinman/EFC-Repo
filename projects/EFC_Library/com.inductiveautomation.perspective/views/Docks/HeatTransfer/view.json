@@ -1945,7 +1945,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Val_Effect}, '#,##0.0')"
+                            "expression": "numberFormat({view.custom.m_Val_Effect} * 100, '#,##0.0')"
                           }
                         }
                       }

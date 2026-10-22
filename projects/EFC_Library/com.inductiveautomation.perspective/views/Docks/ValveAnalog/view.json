@@ -5,9 +5,9 @@
     "m_Sts_Intlk": null,
     "m_Cfg_Tag": null,
     "m_Cfg_Desc": null,
-    "m_Sts_Fault": null,
-    "m_Sts_Closed": null,
     "m_Val_Pos": null,
+    "m_Sts_Closed": null,
+    "m_Sts_Fault": null,
     "m_Sts_Sim": null,
     "m_Sts_RateLim": null,
     "m_Mode_Sts_OOS": null,
@@ -112,12 +112,12 @@
         }
       }
     },
-    "custom.m_Sts_Fault": {
+    "custom.m_Val_Pos": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Fault",
+          "tagPath": "{0}/Val_Pos",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -140,12 +140,12 @@
         }
       }
     },
-    "custom.m_Val_Pos": {
+    "custom.m_Sts_Fault": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Val_Pos",
+          "tagPath": "{0}/Sts_Fault",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -712,7 +712,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if({view.custom.m_Sts_Fault}, 'State/Fault', if({view.custom.m_Sts_Intlk}, 'State/Fault', if({view.custom.m_Sts_Closed}, 'State/Stopped', if(true, 'State/Running', 'State/Unknown'))))"
+                "expression": "if(isNull({view.custom.m_Val_Pos}) || !isGood({view.custom.m_Val_Pos}) || isNull({view.custom.m_Sts_Closed}) || !isGood({view.custom.m_Sts_Closed}), 'State/Unknown', if({view.custom.m_Sts_Fault}, 'State/Fault', if({view.custom.m_Sts_Intlk}, 'State/Fault', if({view.custom.m_Sts_Closed}, 'State/Stopped', if(true, 'State/Running', 'State/Unknown')))))"
               }
             }
           }
@@ -739,7 +739,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Fault}, 'FAULT', if({view.custom.m_Sts_Intlk}, 'INTERLOCKED', if({view.custom.m_Sts_Closed}, 'CLOSED', if(true, 'OPEN ' + numberFormat({view.custom.m_Val_Pos}, '0') + ' %', 'UNKNOWN'))))"
+                    "expression": "if(isNull({view.custom.m_Val_Pos}) || !isGood({view.custom.m_Val_Pos}) || isNull({view.custom.m_Sts_Closed}) || !isGood({view.custom.m_Sts_Closed}), 'UNKNOWN', if({view.custom.m_Sts_Fault}, 'FAULT', if({view.custom.m_Sts_Intlk}, 'INTERLOCKED', if({view.custom.m_Sts_Closed}, 'CLOSED', if(true, 'OPEN ' + numberFormat({view.custom.m_Val_Pos}, '0') + ' %', 'UNKNOWN')))))"
                   }
                 }
               }
@@ -3778,7 +3778,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_DevTime}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Cfg_DevTime} / 1000, '#,##0.###')"
                           }
                         }
                       }
@@ -3879,16 +3879,14 @@
                     "propConfig": {
                       "props.value": {
                         "binding": {
-                          "type": "tag",
+                          "type": "expr",
                           "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_DevTime",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
+                            "expression": "{view.custom.m_Cfg_DevTime} / 1000"
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_DevTime', int(round(currentValue.value * 1000)), 4, audit=True)"
                         }
                       },
                       "props.enabled": {

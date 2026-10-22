@@ -6,7 +6,7 @@ T_Alarm,Support (alarm object),Alarm/Warning/Tolerance limit attributes,Cfg_Latc
 T_Alarm,Support (alarm object),Alarm/Warning/Tolerance limit attributes,Cfg_NoAck,BOOL,,No acknowledge required - use only for alarms rationalised as such
 T_Alarm,Support (alarm object),Alarm/Warning/Tolerance limit attributes,Cfg_OnDly,TIME,T#0S,On-delay (ISA-18.2 chattering control)
 T_Alarm,Support (alarm object),Alarm/Warning/Tolerance limit attributes,Cfg_OffDly,TIME,T#0S,Off-delay (ISA-18.2 chattering control)
-T_Alarm,Support (alarm object),Alarm/Warning/Tolerance limit attributes,Cfg_Priority,INT,3,Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low
+T_Alarm,Support (alarm object),Alarm/Warning/Tolerance limit attributes,Cfg_Priority,INT,3,Rationalised priority: 1=Critical 2=High 3=Medium 4=Low
 T_Alarm,Support (alarm object),Alarm/Warning/Tolerance limit attributes,Cfg_Class,INT,0,Alarm class (alarm philosophy): 0=General 1=Safety 2=Environmental 3=Quality 4=Asset
 T_Alarm,Support (alarm object),Alarm/Warning/Tolerance limit attributes,Cfg_MaxShelf,TIME,T#8H,Maximum shelve duration (shelving must be time-limited)
 T_Alarm,Support (alarm object),Alarm/Warning/Tolerance limit attributes,Cmd_Ack,BOOL,,Operator acknowledge (one-shot)
@@ -34,7 +34,7 @@ T_AlmLim,Support (alarm object),e.g. VAHLim / VAHEn / VAHAct,Cfg_Latch,BOOL,,Lat
 T_AlmLim,Support (alarm object),e.g. VAHLim / VAHEn / VAHAct,Cfg_NoAck,BOOL,,No acknowledge required - use only for alarms rationalised as such
 T_AlmLim,Support (alarm object),e.g. VAHLim / VAHEn / VAHAct,Cfg_OnDly,TIME,T#0S,On-delay (ISA-18.2 chattering control)
 T_AlmLim,Support (alarm object),e.g. VAHLim / VAHEn / VAHAct,Cfg_OffDly,TIME,T#0S,Off-delay (ISA-18.2 chattering control)
-T_AlmLim,Support (alarm object),e.g. VAHLim / VAHEn / VAHAct,Cfg_Priority,INT,3,Rationalised priority: 1=Emergency 2=High 3=Medium 4=Low
+T_AlmLim,Support (alarm object),e.g. VAHLim / VAHEn / VAHAct,Cfg_Priority,INT,3,Rationalised priority: 1=Critical 2=High 3=Medium 4=Low
 T_AlmLim,Support (alarm object),e.g. VAHLim / VAHEn / VAHAct,Cfg_Class,INT,0,Alarm class (alarm philosophy): 0=General 1=Safety 2=Environmental 3=Quality 4=Asset
 T_AlmLim,Support (alarm object),e.g. VAHLim / VAHEn / VAHAct,Cfg_MaxShelf,TIME,T#8H,Maximum shelve duration (shelving must be time-limited)
 T_AlmLim,Support (alarm object),e.g. VAHLim / VAHEn / VAHAct,Cmd_Ack,BOOL,,Operator acknowledge (one-shot)

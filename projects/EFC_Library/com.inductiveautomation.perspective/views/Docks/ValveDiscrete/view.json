@@ -2954,7 +2954,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_TravelTime}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Cfg_TravelTime} / 1000, '#,##0.###')"
                           }
                         }
                       }
@@ -3055,16 +3055,14 @@
                     "propConfig": {
                       "props.value": {
                         "binding": {
-                          "type": "tag",
+                          "type": "expr",
                           "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_TravelTime",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
+                            "expression": "{view.custom.m_Cfg_TravelTime} / 1000"
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_TravelTime', int(round(currentValue.value * 1000)), 4, audit=True)"
                         }
                       },
                       "props.enabled": {
@@ -3092,6 +3090,81 @@
                       "text": "s",
                       "style": {
                         "classes": "Text/Units"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R1"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "Has open limit",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_Cfg_HasZSO}, 'Yes', 'No')"
+                          }
+                        }
                       }
                     }
                   }
@@ -3135,8 +3208,91 @@
                         "expression": "{view.custom.level} >= 4"
                       }
                     }
+                  },
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
                   }
                 }
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R2"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "Has closed limit",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_Cfg_HasZSC}, 'Yes', 'No')"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
               },
               {
                 "type": "ia.input.checkbox",
@@ -3170,6 +3326,14 @@
                     }
                   },
                   "props.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  },
+                  "position.display": {
                     "binding": {
                       "type": "expr",
                       "config": {
