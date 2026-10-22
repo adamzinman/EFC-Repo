@@ -8,6 +8,7 @@ imported projects in imported/ (EFC_IOFaceplates, EFC_StationFaceplates), merged
     python3 build.py --preview    also render docs/previews/templates.png and one PNG per view in
                                   docs/previews/templates/ (needs Playwright + Chromium)
     python3 build.py --dist       also write importable zips to dist/ (gitignored)
+Every run also refreshes EFC_Library_PROJECT.zip at the repo root: the tracked, ready-to-import download.
     python3 build.py --check      check the committed projects/ only (no regeneration); used by CI
 
 The generator (generator/) and imported/ are the sources. projects/EFC_Library is generated: the merged project
@@ -219,6 +220,19 @@ def make_dist():
     return out
 
 
+def zip_contents(zp):
+    with zipfile.ZipFile(zp) as z:
+        return [(i.filename, z.read(i)) for i in z.infolist()]
+
+
+def publish(zp):
+    """Copy the checked library zip to the repo root, only when its contents changed (zip bytes vary by zlib build)."""
+    dst = os.path.join(ROOT, f"{LIBRARY}_PROJECT.zip")
+    if not os.path.exists(dst) or zip_contents(dst) != zip_contents(zp):
+        shutil.copyfile(zp, dst)
+        print(f"updated {os.path.basename(dst)}")
+
+
 def check(zips):
     run("check_81.py", *zips)
 
@@ -238,6 +252,7 @@ def main():
         DIST = tempfile.mkdtemp()
         zips = make_dist()
     check(zips)
+    publish(next(z for z in zips if os.path.basename(z) == f"{LIBRARY}_PROJECT.zip"))
     print(f"v{VERSION['version']} OK" + (f"  ->  {DIST}" if a.dist else ""))
 
 
