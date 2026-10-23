@@ -67,11 +67,12 @@ def userLevel(component):
 
 
 def _state(component):
-    """This page's dock state: {'default': {'path', 'params'}}."""
+    """This screen's dock state: {'default': {'path', 'params'}}, keyed by tab and screen (pageId survives
+    navigate(), so a default set on one screen must not leak into the next)."""
     s = component.session.custom
     if getattr(s, 'efcDw', None) is None:
         s.efcDw = {}
-    pid = component.page.props.pageId
+    pid = '%s|%s' % (component.page.props.pageId, component.page.props.path)
     st = dict(s.efcDw.get(pid) or {})
     return s, pid, st
 
