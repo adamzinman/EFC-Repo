@@ -9,7 +9,7 @@
 <!-- keep:end -->
 
 <!-- auto:start -->
-_Auto-generated 2026-10-21 03:38 from EFC_Library:view:Templates/Rotating/Motor. Do not edit this section._
+_Auto-generated 2026-10-23 20:15 from EFC_Library:view:Templates/Rotating/Motor. Do not edit this section._
 
 | Param | Direction | Default |
 |---|---|---|
@@ -25,6 +25,6 @@ _Auto-generated 2026-10-21 03:38 from EFC_Library:view:Templates/Rotating/Motor.
 - Style classes: Button/Command, Indicator/InterlockBadge, Indicator/PermissiveBadge, State/Stopped, Text/Mod/Center, Text/Mod/NoWrap, Text/TagName, Util/Collapsed, Util/Pointer (+2 bound)
 - Inline style props: 0
 - Popups opened: 0
-- system.* calls: system.tag.writeBlocking
+- system.* calls: none
 - Last modified: 2026-10-19T00:00:00Z by efc-ignition-library
 <!-- auto:end -->

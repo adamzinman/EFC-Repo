@@ -2,7 +2,7 @@
 
 Covers `Templates/Loops/Loop_B1_Bar`, `Templates/Loops/Loop_B2_Horizontal`, `Templates/Loops/Loop_B3_Sparkline` and `Templates/Loops/Loop_B4_Column`.
 Sources: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/<name>/view.json`
-Dynamic window they open: `Docks/Loop` (dock `dw_Loop`, chosen from `tType` `T_PID`; see [Loop](../../Docks/Loop.md)).
+Dynamic window they open: `Templates/Dynamic Window/Loops/Loop` (dock `dw_Loop`, chosen from `tType` `T_PID`; see [Loop](../Dynamic%20Window/Loops/Loop.md)).
 
 ## Overview
 
@@ -10,7 +10,7 @@ These four views are single-loop symbols for a PID controller (`T_PID`). Each sh
 
 - **Default sizes** (`props.defaultSize`): B1 150 x 156, B2 260 x 92, B3 172 x 184, B4 104 x 196.
 - **Bound to:** one T_PID instance through `params.tagPath`.
-- **Opening the dock:** a single click runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_PID`) through `BY_TYPE` to `dw_Loop`, then writes `session.custom.efcDw[pageId] = {path: 'Docks/Loop', params: {tagPath}}`. The screen's `Docks/Region` shows that path. `dwTagPath` replaces `tagPath` when it is set, and `dockId` overrides the window.
+- **Opening the dock:** a single click runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_PID`) through `BY_TYPE` to `dw_Loop`, then writes `session.custom.efcDw[pageId] = {path: 'Templates/Dynamic Window/Loops/Loop', params: {tagPath}}`. The screen's `Docks/Region` shows that path. `dwTagPath` replaces `tagPath` when it is set, and `dockId` overrides the window.
 - **Generated view:** these views are written by `generator/pid_loops/generate_loops.py`. That script writes `PID/Templates/Loop_B1_Bar` to `Loop_B4_Column` under `projects/PID_Loops/`, not `Templates/Loops/` in EFC_Library. Check which copy is current before editing either (see Open questions).
 
 ### Differences between the views
@@ -375,7 +375,7 @@ Step by step: (1) take the tag path from `self.view.params.tagPath`; if it is em
 
 ### Library function called (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.openDynamic(component)`**: reads `dockId`, else `BY_TYPE[tType]`. `BY_TYPE` maps `T_PID` to `dw_Loop`, and `WINDOWS` maps `dw_Loop` to `Docks/Loop`. If the chosen id is not in `WINDOWS` it logs a warning and stops. Otherwise it sets the path to the window and the params to `{tagPath: dwTagPath or tagPath}` (plus `model`, if set) in `session.custom.efcDw` for this page id. It does not check the user's role, does not write a tag and does not write an audit record.
+- **`efc.ui.openDynamic(component)`**: reads `dockId`, else `BY_TYPE[tType]`. `BY_TYPE` maps `T_PID` to `dw_Loop`, and `WINDOWS` maps `dw_Loop` to `Templates/Dynamic Window/Loops/Loop`. If the chosen id is not in `WINDOWS` it logs a warning and stops. Otherwise it sets the path to the window and the params to `{tagPath: dwTagPath or tagPath}` (plus `model`, if set) in `session.custom.efcDw` for this page id. It does not check the user's role, does not write a tag and does not write an audit record.
 
 ## Tag members used
 

@@ -2,7 +2,7 @@
 
 Covers `Templates/IO/Parts/AnalogRow_AI`, `AnalogRow_AO` and `AnalogRow_TEMP`. Each is one channel row of an analog card faceplate. The three differ in which cells they show and how the value is formatted.
 Sources: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Parts/AnalogRow_<AI|AO|TEMP>/view.json`.
-Used by: [Analog_Cards](../Faceplates/Analog_Cards.md) (`Rows` repeater). Dock: [IOCard](../../../Docks/IOCard.md) (the card-level dock; the row itself does not open anything).
+Used by: [Analog_Cards](../Faceplates/Analog_Cards.md) (`Rows` repeater). Dock: [IOCard](../../Dynamic%20Window/IO/IOCard.md) (the card-level dock; the row itself does not open anything).
 
 ## Overview
 

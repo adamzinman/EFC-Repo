@@ -3,7 +3,7 @@
 Covers `Templates/Rotating/Agitator`, `Templates/Rotating/Blower`, `Templates/Rotating/Compressor_Centrifugal`, `Templates/Rotating/Compressor_Diaphragm`, `Templates/Rotating/Motor`, `Templates/Rotating/Pump_Centrifugal`, `Templates/Rotating/Pump_Diaphragm`, `Templates/Rotating/Pump_PD_Rotary`, `Templates/Rotating/Pump_Reciprocating`, `Templates/Rotating/Pump_Vacuum` and `Templates/HeatTransfer/HX_AirCooled`.
 Sources: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/<name>/view.json` and `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/HeatTransfer/HX_AirCooled/view.json`.
 Reference view: `Templates/Rotating/Motor`. Sections below describe Motor. The differences table lists how each other view differs.
-Dynamic window they open: `Docks/Rotating` (see [Rotating](../../Docks/Rotating.md)).
+Dynamic window they open: `Templates/Dynamic Window/Rotating/Rotating` (see [Rotating](../Dynamic%20Window/Rotating/Rotating.md)).
 
 ## Overview
 
@@ -11,9 +11,9 @@ These are single-device symbols for a two-state drive (T_Motor): start/stop with
 
 - **Default size:** 120 x 116 (`props.defaultSize`) for all 11 views.
 - **Bound to:** one T_Motor instance through `params.tagPath`. The default `tagPath` is per view (see the table).
-- **Opening the dock:** a single click on the symbol runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_Motor`, via BY_TYPE) to `dw_Rotating`, then writes `session.custom.efcDw[pageId] = {path, params:{tagPath}}`. The screen's `Docks/Region` embedded view shows `Docks/Rotating`. Only `tagPath` is passed on; `dwTagPath` overrides it when set.
+- **Opening the dock:** a single click on the symbol runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_Motor`, via BY_TYPE) to `dw_Rotating`, then writes `session.custom.efcDw[pageId] = {path, params:{tagPath}}`. The screen's `Docks/Region` embedded view shows `Templates/Dynamic Window/Rotating/Rotating`. Only `tagPath` is passed on; `dwTagPath` overrides it when set.
 - **Touch mode:** with `useButton = false` and `dblCmd = true`, a double-tap runs `efc.ui.dblCmd(self)`. See How it operates.
-- **Generated view:** `Docks/Rotating` is written by `generator/docks/build_docks.py` (`rotating()`). The templates in this family are not generated.
+- **Generated view:** `Templates/Dynamic Window/Rotating/Rotating` is written by `generator/docks/build_docks.py` (`rotating()`). The templates in this family are not generated.
 
 ### Differences between the views
 
@@ -273,7 +273,7 @@ Total: **3 event scripts** on every view (identical in all 11), no `customMethod
 
 ### Library functions called by this family (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_Motor` that is `dw_Rotating`, which maps to `Docks/Rotating`. If no window is found, it logs a warning and stops. Otherwise it writes `session.custom.efcDw[pageId] = {path, params:{tagPath: dwTagPath or tagPath}}`. It does not check the user's role and does not write to the tag. The `Docks/Region` view shows this path.
+- **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_Motor` that is `dw_Rotating`, which maps to `Templates/Dynamic Window/Rotating/Rotating`. If no window is found, it logs a warning and stops. Otherwise it writes `session.custom.efcDw[pageId] = {path, params:{tagPath: dwTagPath or tagPath}}`. It does not check the user's role and does not write to the tag. The `Docks/Region` view shows this path.
 - **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an audit record. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
 - **`efc.ui.dblCmd(component)`**: returns immediately unless all of these hold: `useButton` false, `dblCmd` true, `tType` in `DBL_CMD` (`T_DValve` or `T_Motor`), and the user's level is 1 (Operator) or higher. It then reads `Sts_Running`, `Mode/Sts_Man`, `Sts_Avail`, `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault`. It writes nothing unless `Mode/Sts_Man` and `Sts_Avail` are true and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are all false. When it does write, it sends `Cmd_Stop` if `Sts_Running` is true, else `Cmd_Start`, with `True`. It does not check `Mode/Sts_OOS` or `Sts_Tripped`, and it writes no audit record.
 - **`efc.ui.level`**: the highest index in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` gives 0 to 5. Used by `dblCmd` (`userLevel >= 1`).
@@ -323,7 +323,7 @@ Motor (identical in all 11 views, apart from the `root/Symbol` element count and
 
 ## Notes and open questions
 
-- **HX_AirCooled uses a motor type.** Its `tType` default is `T_Motor`, so `efc.ui.openDynamic` picks `dw_Rotating` and opens `Docks/Rotating`. Its bindings are the T_Motor members (`Sts_Running`, `Out_Run`, `Cmd_Start`, `Cmd_Stop`). `efc.ui.BY_TYPE` maps `T_HeatEx` to `dw_HeatTransfer` (`Docks/HeatTransfer`), which is the dock for a heat exchanger. Confirm whether this view is meant to be a fan drive (motor type, in which case the name is misleading) or a heat exchanger (in which case `tType` and the bindings are wrong).
+- **HX_AirCooled uses a motor type.** Its `tType` default is `T_Motor`, so `efc.ui.openDynamic` picks `dw_Rotating` and opens `Templates/Dynamic Window/Rotating/Rotating`. Its bindings are the T_Motor members (`Sts_Running`, `Out_Run`, `Cmd_Start`, `Cmd_Stop`). `efc.ui.BY_TYPE` maps `T_HeatEx` to `dw_HeatTransfer` (`Templates/Dynamic Window/HeatTransfer/HeatTransfer`), which is the dock for a heat exchanger. Confirm whether this view is meant to be a fan drive (motor type, in which case the name is misleading) or a heat exchanger (in which case `tType` and the bindings are wrong).
 - **`custom.command` is never bound.** In all 11 views `custom.command` keeps its default `-1`, so `custom.head` always equals `custom.fill`. `custom.head` is not referenced anywhere. Either bind `command` or remove `head`.
 - **`custom.mode` is unused** in all 11 views.
 - **`PB` can be enabled in fault or trip.** `custom.canCmd` does not check `fault` or `trip`. With no interlock or permissive-missing, `PB` is enabled, and a click writes `Cmd_Start` even when the drive is tripped or faulted. The double-tap path checks `Sts_Fault` but not `Sts_Tripped`. Confirm this matches the PLC behaviour for start after a trip.

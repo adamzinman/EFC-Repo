@@ -2,7 +2,7 @@
 
 Covers `Templates/IO/Parts/DiscreteTile`: one channel of a discrete card (LED, loop tag, description, fault state).
 Source: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Parts/DiscreteTile/view.json`.
-Used by: the `Tiles*` repeaters of the five discrete faceplates, see [Discrete_Cards](../Faceplates/Discrete_Cards.md). Dock: [IOCard](../../../Docks/IOCard.md) (the card-level dock; the tile does not open anything).
+Used by: the `Tiles*` repeaters of the five discrete faceplates, see [Discrete_Cards](../Faceplates/Discrete_Cards.md). Dock: [IOCard](../../Dynamic%20Window/IO/IOCard.md) (the card-level dock; the tile does not open anything).
 
 ## Overview
 

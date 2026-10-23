@@ -1,7 +1,7 @@
 # Analog indicator: B_PointerScale
 
 Source: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/AnalogIndicator/B_PointerScale/view.json`
-Dynamic window it opens: `Docks/ProcessValue` (see [ProcessValue](../../Docks/ProcessValue.md)).
+Dynamic window it opens: `Templates/Dynamic Window/ProcessValues/ProcessValue` (see [ProcessValue](../Dynamic%20Window/ProcessValues/ProcessValue.md)).
 
 ## Overview
 
@@ -9,7 +9,7 @@ A vertical pointer scale for one KPI value. The track runs from low at the botto
 
 - **Default size:** 128 x 330 (`props.defaultSize`).
 - **Bound to:** one T_KPI instance through `params.tagPath`. The default is `[default]KPI/KPI_101`, which is not in `tags/` (see Notes).
-- **Opening the dock:** a single click on the whole view runs `efc.ui.openDynamic(self)`. `tType` defaults to `T_KPI`, and `efc.ui.BY_TYPE` maps `T_KPI` to `dw_ProcessValue`, which `efc.ui.WINDOWS` maps to `Docks/ProcessValue`. The screen's `Docks/Region` shows that dock with `tagPath` (or `dwTagPath` when set).
+- **Opening the dock:** a single click on the whole view runs `efc.ui.openDynamic(self)`. `tType` defaults to `T_KPI`, and `efc.ui.BY_TYPE` maps `T_KPI` to `dw_ProcessValue`, which `efc.ui.WINDOWS` maps to `Templates/Dynamic Window/ProcessValues/ProcessValue`. The screen's `Docks/Region` shows that dock with `tagPath` (or `dwTagPath` when set).
 - **Generated view:** this view is written by `generator/analog_indicators/gen_analog_indicators.py`, which builds `build/analog/EFC_AnalogIndicators.zip`. Change the generator, not `view.json`, or the next build replaces the edit.
 - **Siblings:** the other three templates (A to D) share the same view-level custom properties, tag mirrors, and click script. Only the params and the component tree differ (checked by diffing the four `view.json` files).
 
@@ -31,7 +31,7 @@ A vertical pointer scale for one KPI value. The track runs from low at the botto
 
 **Ideal band, range and clamping.** Same as A.
 
-**Click.** A single click opens `Docks/ProcessValue` through `efc.ui.openDynamic`, which writes the page's `session.custom.efcDw` entry shown by `Docks/Region` (see Scripts). No role level is checked, nothing is audited, and no tag is written.
+**Click.** A single click opens `Templates/Dynamic Window/ProcessValues/ProcessValue` through `efc.ui.openDynamic`, which writes the page's `session.custom.efcDw` entry shown by `Docks/Region` (see Scripts). No role level is checked, nothing is audited, and no tag is written.
 
 **Acknowledgement.** The view shows `Sts_Unack` but binds no `Cmd_Ack`, `Cmd_Reset` or `Cmd_Shelve`. It does not write to the tag. An unacknowledged level uses the `/Unacked` alarm class on the chip, and an acknowledged one uses `/Fill`.
 
@@ -106,7 +106,7 @@ None. No component in this view carries a `custom` property.
 
 ### Session, page and message payloads
 
-- **Writes:** `session.custom.efcDw[<pageId>]` = `{path, params}` through `efc.ui.openDynamic`, on click only. The `path` is `Docks/ProcessValue` and `params` holds `tagPath`.
+- **Writes:** `session.custom.efcDw[<pageId>]` = `{path, params}` through `efc.ui.openDynamic`, on click only. The `path` is `Templates/Dynamic Window/ProcessValues/ProcessValue` and `params` holds `tagPath`.
 - **Reads:** none. The template reads no `session.*` or `page.*` value.
 - **Messages:** none sent or handled.
 
@@ -188,7 +188,7 @@ Total: **1 event script**, no `customMethods`, no `messageHandlers`, no property
 
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.openDynamic(component)`**: uses `dockId` if set, else `BY_TYPE[tType]`. With the default `tType` `T_KPI` that is `dw_ProcessValue`, which maps to `Docks/ProcessValue`. If no window is found, it logs a warning and returns. Otherwise it takes the tag path from `dwTagPath`, then `tagPath`, then `cardPath`, and calls `_write`. `_write` updates `session.custom.efcDw[pageId]` with `path` and `params:{tagPath}`. `openDynamic` adds `model` to `params` only when that param is set. The existing `default` entry for the page is kept. It does not read the user's role, does not write a tag, and does not audit.
+- **`efc.ui.openDynamic(component)`**: uses `dockId` if set, else `BY_TYPE[tType]`. With the default `tType` `T_KPI` that is `dw_ProcessValue`, which maps to `Templates/Dynamic Window/ProcessValues/ProcessValue`. If no window is found, it logs a warning and returns. Otherwise it takes the tag path from `dwTagPath`, then `tagPath`, then `cardPath`, and calls `_write`. `_write` updates `session.custom.efcDw[pageId]` with `path` and `params:{tagPath}`. `openDynamic` adds `model` to `params` only when that param is set. The existing `default` entry for the page is kept. It does not read the user's role, does not write a tag, and does not audit.
 - **`efc.ui.level` / `userLevel`**: not called by this view.
 - **`efc.ui.closeDynamic`**: not called by this view. The dock's close button calls it.
 
@@ -266,7 +266,7 @@ All paths are relative to `tagPath`. Every member is read. There are no writes a
 1. **Limit label spacers can go negative.** `G1` to `G4` subtract a fixed 0.556vh or 1.111vh from a percentage (`calc(... % - 1.111vh)`). When two limits are at the same position, the result is negative, which CSS may ignore. Not checked in a browser.
 2. **Scale labels ignore `Format`.** The limit values use `#,##0.##`, as in A. The value uses `Format`.
 3. **Chip text differs from C and D.** This view uses `HIHI`, `LOLO` and `BAD Q`, as A does.
-4. **Dock mismatch (likely defect).** `Docks/ProcessValue`, which this view opens, binds `Cfg_RawMin`, `Cfg_RawMax` and `Val_ROC` (read), and `Sim_PV`, `Cfg_RawMin` and `Cfg_RawMax` as bidirectional entries (write). `types/T_KPI/T_KPI_Ignition81.json` defines none of `Cfg_RawMin`, `Cfg_RawMax`, `Val_ROC` or `Sim_PV`. It has `Sim_Value` and no raw-channel members. For a KPI tag those dock bindings have no member to read, and the entries cannot write. This was checked from the dock JSON only. The dock's own help page (`docs/help/Docks/ProcessValue.md`) records the same problem in its Notes.
+4. **Dock mismatch (likely defect).** `Templates/Dynamic Window/ProcessValues/ProcessValue`, which this view opens, binds `Cfg_RawMin`, `Cfg_RawMax` and `Val_ROC` (read), and `Sim_PV`, `Cfg_RawMin` and `Cfg_RawMax` as bidirectional entries (write). `types/T_KPI/T_KPI_Ignition81.json` defines none of `Cfg_RawMin`, `Cfg_RawMax`, `Val_ROC` or `Sim_PV`. It has `Sim_Value` and no raw-channel members. For a KPI tag those dock bindings have no member to read, and the entries cannot write. This was checked from the dock JSON only. The dock's own help page (`docs/help/Templates/Dynamic Window/ProcessValues/ProcessValue.md`) records the same problem in its Notes.
 5. **Default tag path.** `[default]KPI/KPI_101` is a placeholder. Nothing under `tags/` defines a KPI instance.
 6. **T_KPI is preliminary.** `types/T_KPI/README.md` calls it proposed, and the JSON is marked preliminary. It is not in `types/PCLib_Members.csv`. Its FB (`FB_KPI`), which would write `Val_PV`, `Sts_Quality` and the alarm flags, is still to be written. `Cfg_ShortDesc` is documented as max 11 characters in the JSON and as `STRING[12]` in the README.
 7. **Zone widths are not checked.** Nothing checks that LL <= L <= H <= HH, or that the ideal band lies between L and H. If the ideal low limit (`Cfg_IdealLo`) is below the L limit, the zone widths sum to more than 100%, by `pL - pIL`. If the ideal high limit (`Cfg_IdealHi`) is above the H limit, they sum to more, by `pIH - pH`. How the browser renders this overflow was not checked.
@@ -276,5 +276,5 @@ All paths are relative to `tagPath`. Every member is read. There are no writes a
 11. **Alarm class definitions are not in this repo.** The `Alarm/<Pri>/Fill`, `/Unacked` and `/Outline` classes are used by the chip and the value box. `generator/analog_indicators/gen_analog_indicators.py` defines the `Indicator/Analog/*` classes but not these. `views/Styles/_Catalog/view.json` uses them as samples. Their colours were not checked.
 12. **No tag label fallback.** The tag label has no fallback to the last segment of `tagPath`, unlike the valve templates. A blank `Cfg_Tag` gives a blank label.
 13. **No acknowledgement or commands.** The view is display-only. Acknowledgement is not available here.
-14. **No role check.** The click does not read the user's role level. Whether `Docks/ProcessValue` enforces roles for its own write entries was not checked here.
+14. **No role check.** The click does not read the user's role level. Whether `Templates/Dynamic Window/ProcessValues/ProcessValue` enforces roles for its own write entries was not checked here.
 15. **Documentation drift.** `CHANGES-analog-indicators.md` (dated 2026-10-20) says there is no dynamic window yet, and places the views in `projects/EFC_AnalogIndicators/`. The copies checked here are under `projects/EFC_Library/`, and the click does open a window.

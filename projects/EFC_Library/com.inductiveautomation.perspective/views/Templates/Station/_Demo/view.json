@@ -370,7 +370,7 @@
               "shrink": 0
             },
             "props": {
-              "path": "Docks/Station",
+              "path": "Templates/Dynamic Window/Station/Station",
               "params": {
                 "tagPath": "[default]Station_Demo/Station_1"
               },

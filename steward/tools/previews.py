@@ -13,7 +13,7 @@ tm = json.load(open(f"{R}/steward/type_map.json"))
 cfg = json.load(open(f"{R}/steward.config.json"))
 CARD_W = 240  # px, width of a template card; docks use DOCK_W
 DOCK_DW, DOCK_DH = 400, 860  # dynamic window per decision 25: 400 x 860 at 1080p = 37.04 vh x 79.63 vh (800 x 1720 at 4K)
-slug = lambda p: p.replace("/", "_")
+slug = lambda p: p.replace(" ", "").replace("/", "_")
 esc = html.escape
 
 
@@ -519,16 +519,16 @@ def cfg_form(rows, who="Eng"):
 
 
 CFG = {
-    "Docks/HeatTransfer": ("CONFIGURATION", [("Hot side Cp", "4.18", "kJ/kg K"), ("Cold side Cp", "4.18", "kJ/kg K"), ("Counter-flow", "yes", ""),
+    "Templates/Dynamic Window/HeatTransfer/HeatTransfer": ("CONFIGURATION", [("Hot side Cp", "4.18", "kJ/kg K"), ("Cold side Cp", "4.18", "kJ/kg K"), ("Counter-flow", "yes", ""),
                                              ("Design UA", "7.80", "kW/K"), ("Min flow for calc", "1.0", "m&#179;/h"), ("Calc filter", "30", "s")]),
-    "Docks/ProcessValue": ("CONFIGURATION", [("EU min", "0.0", "kPa"), ("EU max", "100.0", "kPa"), ("Units", "kPa", ""), ("Raw min", "0", "counts"), ("Raw max", "32000", "counts"),
+    "Templates/Dynamic Window/ProcessValues/ProcessValue": ("CONFIGURATION", [("EU min", "0.0", "kPa"), ("EU max", "100.0", "kPa"), ("Units", "kPa", ""), ("Raw min", "0", "counts"), ("Raw max", "32000", "counts"),
                                              ("Filter time constant", "1.0", "s"), ("Square-root extract", "no", ""), ("Low cut-off", "0.0", "%"),
                                              ("Bad below", "-5.0", "%"), ("Bad above", "105.0", "%"), ("On bad PV", ["Hold last", "Substitute", "Use raw"], ""), ("Substitute value", "0.0", "kPa")]),
-    "Docks/Loop": ("TUNING", [("Gain Kp", "1.20", ""), ("Integral Ti", "45.0", "s"), ("Derivative Td", "0.0", "s"), ("Action", ["Reverse", "Direct"], ""),
+    "Templates/Dynamic Window/Loops/Loop": ("TUNING", [("Gain Kp", "1.20", ""), ("Integral Ti", "45.0", "s"), ("Derivative Td", "0.0", "s"), ("Action", ["Reverse", "Direct"], ""),
                               ("Deadband", "0.0", "&#176;F"), ("Feedforward gain", "0.0", ""), ("PV range", "0 - 300", "&#176;F"), ("SP low / high limit", "50 / 250", "&#176;F"),
                               ("CV low / high limit", "0 / 100", "%"), ("SP rate limit", "5.0", "&#176;F/min"), ("CV rate limit", "10.0", "%/s"), ("Interlock CV", "0.0", "%"),
                               ("PV tracking in MAN", "yes", ""), ("On bad PV", ["Hold CV", "Go to MAN", "Interlock CV"], ""), ("SP from program", "no", "")]),
-    "Docks/Heater": ("CONFIGURATION", [("Control type", ["SSR, time-proportioned", "On/off contactor", "SCR, analog reference"], ""), ("Cycle time", "4.0", "s"),
+    "Templates/Dynamic Window/HeatTransfer/Heater": ("CONFIGURATION", [("Control type", ["SSR, time-proportioned", "On/off contactor", "SCR, analog reference"], ""), ("Cycle time", "4.0", "s"),
                                        ("Minimum pulse", "100", "ms"), ("Power min / max", "0 / 100", "%"), ("Power ramp", "0.0", "%/s"), ("Rated power", "12.0", "kW"),
                                        ("Rated current", "17.4", "A"), ("Load-failure below", "80", "% of expected"), ("Shorted if off and above", "1.0", "A"), ("Feedback time", "3.0", "s")]),
 }
@@ -667,7 +667,7 @@ def layout_card():
         sc = (MH - 56 - 66) / DOCK_DH
         inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(motor_body())}</div>'
         win = (f'<div style="position:absolute;left:0;top:56px;width:{RW}px;height:{DOCK_DH}px;transform:scale({sc:.4f});transform-origin:0 0">{inner}</div>')
-        note = "dw_Rotating (Docks/Rotating)"
+        note = "dw_Rotating (Templates/Dynamic Window/Rotating/Rotating)"
     wtxt = "37.04 vh"
     right = (f'<div data-c="Container/TrendPanel" class="reg ev" style="left:{W - RW}px;top:{HEAD}px;width:{RW}px;height:{MH}px">'
              f'<div class="rl evl">{EV_LABEL}</div>{win}'
@@ -718,22 +718,22 @@ if __name__ == "__main__":
             t, parts = DOCKS[did]
             frag = dock_card(did, path, t, parts)
         else:  # existing dock view: draw it like a template
-            frag = template_card(path, "gap:T_Station").replace("click symbol: open dynamic window", "existing dock view; planned: move to <code>Docks/Station</code>, resize 300 x 800 to 400 x 860 (decision 25)")
+            frag = template_card(path, "gap:T_Station").replace("click symbol: open dynamic window", "existing dock view; planned: move to <code>Templates/Dynamic Window/Station/Station</code>, resize 300 x 800 to 400 x 860 (decision 25)")
         open(f"{OUT}/{slug(path)}.html", "w").write(frag)
         groups.setdefault("Dynamic windows", []).append(frag)
     for path, (title, rows) in CFG.items():
         body = f'<div class="body">{grp(title + " (expanded)", cfg_form(rows))}</div>'
-        f2 = frame(path + " - " + title.lower() + " expanded", f'<div data-c="Container/Faceplate" class="dock2">{body}</div>', 400, 110 + 27 * len(rows) + 22 * sum(isinstance(r[1], list) for r in rows), "review", path.split("/")[1],
+        f2 = frame(path + " - " + title.lower() + " expanded", f'<div data-c="Container/Faceplate" class="dock2">{body}</div>', 400, 110 + 27 * len(rows) + 22 * sum(isinstance(r[1], list) for r in rows), "review", path.rsplit("/", 1)[1],
                    "<br>section shown open; collapsed by default", maxh=600)
         open(f"{OUT}/{slug(path)}_{title.lower()}_expanded.html", "w").write(f2)
         groups.setdefault("Expanded sections", []).append(f2)
-    f3 = frame("Docks/Parts/TrendExpanded", f'<div data-c="Container/Popup" class="dock2">{trend_expanded()}</div>', 400, 860, "any", "popup",
+    f3 = frame("Templates/Dynamic Window/Parts/TrendExpanded", f'<div data-c="Container/Popup" class="dock2">{trend_expanded()}</div>', 400, 860, "any", "popup",
                "<br><b>NEW</b> &middot; expanded graph: fills the dynamic window; window stays 400 x 860; other sections hidden until collapsed (decision 26)", cw=400, maxh=860)
-    open(f"{OUT}/Docks_Parts_TrendExpanded.html", "w").write(f3)
+    open(f"{OUT}/{slug('Templates/Dynamic Window/Parts/TrendExpanded')}.html", "w").write(f3)
     groups.setdefault("Expanded sections", []).append(f3)
-    fr = frame("Docks/Parts/BypassConfirm", f'<div data-c="Container/Popup" class="dock2">{bypass_popup()}</div>', 400, 330, "T_Intlk", "popup",
+    fr = frame("Templates/Dynamic Window/Parts/BypassConfirm", f'<div data-c="Container/Popup" class="dock2">{bypass_popup()}</div>', 400, 330, "T_Intlk", "popup",
                "<br><b>NEW - design proposal</b> &middot; opened by every Bypass button (Supervisor+)", maxh=600)
-    open(f"{OUT}/Docks_Parts_BypassConfirm.html", "w").write(fr)
+    open(f"{OUT}/{slug('Templates/Dynamic Window/Parts/BypassConfirm')}.html", "w").write(fr)
     groups.setdefault("Dynamic windows", []).append(fr)
     for _ in (0,):
         nm, fg = layout_card()

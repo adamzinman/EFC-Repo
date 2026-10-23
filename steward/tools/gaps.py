@@ -17,7 +17,7 @@ def dock_for(item):
     best = max((k for k in cfg["dock_map"] if item.startswith(k)), key=len, default=None)
     return cfg["dock_map"].get(best)
 
-slug = lambda p: p.replace("/", "_")
+slug = lambda p: p.replace(" ", "").replace("/", "_")
 prev = lambda p: os.path.exists(f"{R}/steward/previews/{slug(p)}.html")
 rows, n = [], {"items": 0, "type": 0, "click": 0, "dock": 0, "preview": 0, "new": 0, "gaptype": set()}
 for item, t in tm["items"].items():

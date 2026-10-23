@@ -2,7 +2,7 @@
 
 Covers `Templates/Valves/Valve_Solenoid`, `Templates/Valves/Valve_MOV` and `Templates/Valves/Valve_OnOff_Pneumatic`.
 Sources: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Valves/<name>/view.json`
-Dynamic window they open: `Docks/ValveDiscrete` (see [ValveDiscrete](../../Docks/ValveDiscrete.md)).
+Dynamic window they open: `Templates/Dynamic Window/Valves/ValveDiscrete` (see [ValveDiscrete](../Dynamic%20Window/Valves/ValveDiscrete.md)).
 
 ## Overview
 
@@ -194,7 +194,7 @@ Total: **3 event scripts**, no `customMethods`, no `messageHandlers`, no propert
 
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_DValve` that is `dw_ValveDiscrete`, which maps to `Docks/ValveDiscrete`. If no window is found, logs a warning and stops. Otherwise it writes `session.custom.efcDw[pageId] = {path, params:{tagPath: dwTagPath or tagPath}}`. It does not check the user's role and does not write to the tag. The `Docks/Region` view shows this path.
+- **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_DValve` that is `dw_ValveDiscrete`, which maps to `Templates/Dynamic Window/Valves/ValveDiscrete`. If no window is found, logs a warning and stops. Otherwise it writes `session.custom.efcDw[pageId] = {path, params:{tagPath: dwTagPath or tagPath}}`. It does not check the user's role and does not write to the tag. The `Docks/Region` view shows this path.
 - **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an audit record. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
 - **`efc.ui.dblCmd(component)`**: returns immediately unless all of these hold: `useButton` false, `dblCmd` true, `tType` in `DBL_CMD` (only `T_DValve` and `T_Motor`), and the user's level is 1 (Operator) or higher. It then reads `Sts_Opened`, `Mode/Sts_Man`, `Sts_Avail`, `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault`. It writes nothing unless `Mode/Sts_Man` and `Sts_Avail` are true and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are all false. When it does write, it sends `Cmd_Close` if `Sts_Opened` is true, else `Cmd_Open`, with `True`. It does not check `Mode/Sts_OOS`. The steward note omits the fault check, which the code does have.
 - **Role levels** (`efc.ui.level`): the highest index in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` gives 0 to 5. Operator is 1. Used by the dock; `dblCmd` uses `userLevel >= 1`.

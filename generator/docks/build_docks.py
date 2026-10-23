@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-EFC_Docks: the dynamic windows (Docks/*), their shared parts (Docks/Parts/*), the screen region (Docks/Region)
+EFC_Docks: the dynamic windows (Templates/Dynamic Window/*), their shared parts (Templates/Dynamic Window/Parts/*), the screen region (Docks/Region)
 and the efc.ui script library. Merged into EFC_Library by build.py.
 
 Every window is 400 x 860 at 1080p (37.04vh x 79.63vh, decision 25), binds one EFCLib v1 T_ type through
@@ -176,8 +176,8 @@ def commands(vw, buttons, extra=(), hint="Enabled in MAN, available, permitted, 
     return section("Commands", "Commands", kids, show=lvl(OP))
 
 def intlk(name, title, sub):
-    """Embedded Docks/Parts/IntlkList for the T_Intlk member `sub` (Perm or Intlk)."""
-    return comp("ia.display.view", name, {"path": "Docks/Parts/IntlkList", "useDefaultViewHeight": True,
+    """Embedded Templates/Dynamic Window/Parts/IntlkList for the T_Intlk member `sub` (Perm or Intlk)."""
+    return comp("ia.display.view", name, {"path": "Templates/Dynamic Window/Parts/IntlkList", "useDefaultViewHeight": True,
                                           "params": {"tagPath": "", "title": title}}, {"shrink": 0},
                 {"props.params.tagPath": expr(f"{{view.params.tagPath}} + '/{sub}'")})
 
@@ -198,9 +198,9 @@ def alarms(vw, items):
         button("Ack", "ACK", f"efc.ui.ackAll(self, {names!r})", cls="Button/Default", show=lvl(OP), grow=0)])
 
 def trend(pens, title="History"):
-    """Embedded Docks/Parts/Trend; its expanded param (in/out) grows the graph to about 400 x 760 inside the window
+    """Embedded Templates/Dynamic Window/Parts/Trend; its expanded param (in/out) grows the graph to about 400 x 760 inside the window
     (decision 26: never wider; the window scrolls to the sections below)."""
-    return comp("ia.display.view", "Trend", {"path": "Docks/Parts/Trend", "params": {"tagPath": "", "pens": pens, "expanded": False}},
+    return comp("ia.display.view", "Trend", {"path": "Templates/Dynamic Window/Parts/Trend", "params": {"tagPath": "", "pens": pens, "expanded": False}},
                 {"shrink": 0, "basis": v(170)},
                 {"props.params.tagPath": expr("{view.params.tagPath}"),
                  "position.basis": expr(f"if({{this.props.params.expanded}}, '{v(760)}', '{v(170)}')")})
@@ -266,7 +266,7 @@ def ne107(vw):
 def valve_discrete():
     vw = View(); m = vw.m
     rd = ready_expr(vw)
-    return window("Docks/ValveDiscrete", "T_DValve", vw, [
+    return window("Templates/Dynamic Window/Valves/ValveDiscrete", "T_DValve", vw, [
         header(vw),
         banner(vw, [(m("Sts_Fault"), "FAULT", "State/Fault"), (m("Sts_Opening"), "OPENING", "State/Transition"),
                     (m("Sts_Closing"), "CLOSING", "State/Transition"), (m("Sts_Opened"), "OPEN", "State/Running"),
@@ -289,7 +289,7 @@ def valve_analog():
     vw = View(); m = vw.m
     rd = f"{m('Mode/Sts_Man')} && !{m('Sts_Intlk')}"
     presets = [button(f"P{p}", f"{p}%", f"efc.ui.cmd(self, 'Cmd_ManPos', {float(p)}, 1)", cls="Button/Default", enabled=rd) for p in (0, 25, 50, 75, 100)]
-    return window("Docks/ValveAnalog", "T_CValve", vw, [
+    return window("Templates/Dynamic Window/Valves/ValveAnalog", "T_CValve", vw, [
         header(vw),
         banner(vw, [(" || ".join(f"isNull({m(x)}) || !isGood({m(x)})" for x in ("Val_Pos", "Sts_Closed")), "UNKNOWN", "State/Unknown"),
                     (m("Sts_Fault"), "FAULT", "State/Fault"), (m("Sts_Intlk"), "INTERLOCKED", "State/Fault"),
@@ -340,7 +340,7 @@ def motor_like(path, ttype, extra_values, extra_alarms, extra_cmd, extra_cfg, pe
     ])
 
 def rotating():
-    return motor_like("Docks/Rotating", "T_Motor", None,
+    return motor_like("Templates/Dynamic Window/Rotating/Rotating", "T_Motor", None,
                       [("Alm_OL", "Overload"), ("Alm_HiCurrent", "High current")], None,
                       [("High current limit", "Alm_HiCurrent/Cfg_Lim", "A")], ["Val_Current", "Sts_Running"])
 
@@ -356,7 +356,7 @@ def vfd():
         return [row("Ref", "Speed ref", fmt(m("Val_SpdRef")), eu), row("Spd", "Speed", fmt(m("Val_Spd")), eu),
                 row("Trq", "Torque", fmt(m("Val_Torque")), "'%'"), row("Pwr", "Power", fmt(m("Val_Power")), "'kW'"),
                 row("Code", "Drive fault code", fmt(m("Inp_FaultCode"), "0"), show=m("Sts_Fault"))]
-    return motor_like("Docks/VFD", "T_VFD", vals,
+    return motor_like("Templates/Dynamic Window/Rotating/VFD", "T_VFD", vals,
                       [("Alm_DrvFault", "Drive fault"), ("Alm_DrvWarn", "Drive warning"), ("Alm_CommFail", "Drive comm fail"),
                        ("Alm_SpdDev", "Speed deviation")], cmd,
                       [("Speed min", "Cfg_SpdMin", ""), ("Speed max", "Cfg_SpdMax", ""), ("Speed dev limit", "Cfg_SpdDevLim", ""),
@@ -368,7 +368,7 @@ def heater():
     pwr = f"{m('Cfg_CtrlType')} > 0"
     amps = f"{m('Cfg_RatedAmps')} > 0"                 # Cfg_RatedAmps = 0 means no current monitoring
     ctype = f"case(toInt({m('Cfg_CtrlType')}), 0, 'On/off', 1, 'Time-proportioned (SSR)', 2, 'SCR phase angle', '?')"
-    return window("Docks/Heater", "T_Heater", vw, [
+    return window("Templates/Dynamic Window/HeatTransfer/Heater", "T_Heater", vw, [
         header(vw),
         banner(vw, [(m("Sts_HiLimit"), "HIGH LIMIT", "State/Fault"), (m("Sts_Tripped"), "TRIPPED", "State/Fault"),
                     (m("Sts_Fault"), "FAULT", "State/Fault"), (m("Sts_Heating"), "HEATING", "State/Running"),
@@ -399,7 +399,7 @@ def heater():
 def heat_transfer():
     vw = View(); m = vw.m
     t = lambda n, txt, mem, u: row(n, txt, fmt(m(mem)), repr(u))
-    return window("Docks/HeatTransfer", "T_HeatEx", vw, [
+    return window("Templates/Dynamic Window/HeatTransfer/HeatTransfer", "T_HeatEx", vw, [
         header(vw),
         banner(vw, [(m("Sts_CalcValid"), "CALC VALID", "State/Running"), ("true", "CALC INVALID", "State/Unknown")], []),
         section("Values", "Values", [t("HI", "Hot in", "Inp_HotInT", "°C"), t("HO", "Hot out", "Inp_HotOutT", "°C"),
@@ -420,7 +420,7 @@ def process_value():
     vw = View(); m = vw.m
     eu = m("Cfg_EU")
     lim = [(f"{k} limit", f"Alm_{k}/Cfg_Lim", "") for k in ("HH", "H", "L", "LL")]
-    return window("Docks/ProcessValue", "T_AI", vw, [
+    return window("Templates/Dynamic Window/ProcessValues/ProcessValue", "T_AI", vw, [
         header(vw),
         banner(vw, [(m("Sts_Bad"), "BAD QUALITY", "State/Fault"),
                     ("true", f"{fmt(m('Val_PV'))} + ' ' + {eu}", "State/Stopped")],
@@ -446,7 +446,7 @@ def loop():
     b = []
     for n, t, mem, sts in (("Man", "MAN", "Cmd_Man", "Sts_Man"), ("Auto", "AUTO", "Cmd_Auto", "Sts_Auto"), ("Cas", "CAS", "Cmd_Cas", "Sts_Cas")):
         x = mb(n, t, mem, sts); x["propConfig"]["props.style.classes"] = expr(f"if({m(sts)}, 'Button/Toggle/On', 'Button/Toggle/Off')"); b.append(x)
-    return window("Docks/Loop", "T_PID", vw, [
+    return window("Templates/Dynamic Window/Loops/Loop", "T_PID", vw, [
         header(vw),
         banner(vw, [(m("Sts_Intlk"), "INTERLOCKED", "State/Fault"), (m("Sts_Track"), "TRACKING", "State/Transition"),
                     (m("Sts_Cas"), "CASCADE", "State/Running"), (m("Sts_Auto"), "AUTO", "State/Running"), (m("Sts_Man"), "MANUAL", "State/Stopped")],
@@ -483,7 +483,7 @@ def io_card():
     ]
     for k in ("Cfg_Tag", "Cfg_Desc"):                       # native DDTs have no Cfg_Tag / Cfg_Desc: show the card instead
         vw.custom.pop("m_" + k); vw.pc.pop("custom.m_" + k)   # must happen before window() copies vw.pc
-    path, view = window("Docks/IOCard", "native", vw, blocks)
+    path, view = window("Templates/Dynamic Window/IO/IOCard", "native", vw, blocks)
     hdr = view["root"]["children"][0]["children"][0]["children"]
     hdr[0]["propConfig"]["props.text"] = expr("'Rack ' + " + m("Rack") + " + ' / slot ' + " + m("Slot"))
     hdr[1]["propConfig"]["props.text"] = expr("{view.params.model}")
@@ -492,7 +492,7 @@ def io_card():
 
 # ----------------------------------------------------------------- parts
 def intlk_list():
-    """Docks/Parts/IntlkList: one T_Intlk (16 conditions). Bypass/unbypass Supervisor+ (reason, audit); reset Maint+."""
+    """Templates/Dynamic Window/Parts/IntlkList: one T_Intlk (16 conditions). Bypass/unbypass Supervisor+ (reason, audit); reset Maint+."""
     vw = View()
     m = vw.m
     rows = []
@@ -505,7 +505,7 @@ def intlk_list():
             led, label("Desc", "", "Text/Caption Text/Mod/Ellipsis", grow=1, pc={"props.text": expr(desc)}),
             label("Left", "", "Indicator/Badge", pc={"props.text": expr(f"'BYPASSED ' + toInt({left} / 60000) + ' min'"),
                                                      "position.display": expr(byp)}),
-            button("Byp", "BYPASS", f"system.perspective.openPopup('efcBypass', 'Docks/Parts/BypassConfirm', params={{'tagPath': self.view.params.tagPath, 'idx': {i}, 'desc': self.view.custom.m_Cfg_CondDesc_{i}}}, modal=True, showCloseIcon=False)",
+            button("Byp", "BYPASS", f"system.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={{'tagPath': self.view.params.tagPath, 'idx': {i}, 'desc': self.view.custom.m_Cfg_CondDesc_{i}}}, modal=True, showCloseIcon=False)",
                    cls="Button/Small", show=f"{lvl(SUP)} && {bpa} && !{byp}", grow=0),
             button("Unbyp", "UNBYP", f"efc.ui.unbypass(self, self.view.params.tagPath, {i})", cls="Button/Small", show=f"{lvl(SUP)} && {byp}", grow=0),
         ], basis=v(24), pc={"position.display": expr(used)}, extra={"alignItems": "center", "style": {"classes": "", "gap": v(4)}}))
@@ -520,7 +520,7 @@ def intlk_list():
     ], extra={"style": {"classes": "Container/GroupBox", "gap": v(2)}})
     params = {"tagPath": "", "title": ""}
     pc = dict(vw.pc, **{"params." + p: {"paramDirection": "input", "persistent": True} for p in params})
-    return "Docks/Parts/IntlkList", {"custom": vw.custom, "params": params, "propConfig": pc,
+    return "Templates/Dynamic Window/Parts/IntlkList", {"custom": vw.custom, "params": params, "propConfig": pc,
                                      "props": {"defaultSize": {"width": W - 16, "height": 120}}, "root": root}
 
 def bypass_confirm():
@@ -542,12 +542,12 @@ def bypass_confirm():
     vw.custom["reason"] = ""
     params = {"tagPath": "", "idx": 0, "desc": ""}
     pc = dict(vw.pc, **{"params." + p: {"paramDirection": "input", "persistent": True} for p in params})
-    return "Docks/Parts/BypassConfirm", {"custom": vw.custom, "params": params, "propConfig": pc,
+    return "Templates/Dynamic Window/Parts/BypassConfirm", {"custom": vw.custom, "params": params, "propConfig": pc,
                                          "props": {"defaultSize": {"width": 360, "height": 260}}, "root": root}
 
 RANGES = [("24h", 1440), ("8h", 480), ("1h", 60), ("30m", 30), ("5m", 5)]
 def trend_part():
-    """Docks/Parts/Trend: history of the pens, default 30 min. The expand toggle is an in/out param the window
+    """Templates/Dynamic Window/Parts/Trend: history of the pens, default 30 min. The expand toggle is an in/out param the window
     uses to grow the graph vertically (never wider, decision 26); the range box shows while expanded."""
     sw, sh = 360, 100
     tr = {"type": "script", "code": "\treturn efc.ui.trend(self.view.params.tagPath, list(self.view.params.pens or []), self.view.custom.range, %d, %d)" % (sw, sh)}
@@ -574,7 +574,7 @@ def trend_part():
                                       pc={"props.text": expr("'-' + case({view.custom.range}, 1440, '24 h', 480, '8 h', 60, '1 h', 5, '5 min', '30 min') + '  ..  now'")}),
                                 label("Hi", "", "Text/Micro", pc={"props.text": expr("try({view.custom.hist.hi}, '')")})], basis=v(14))
     root = flex("root", "column", [head, svg, axis], extra={"style": {"classes": "Container/TrendPanel", "gap": v(2)}})
-    return "Docks/Parts/Trend", {"custom": custom, "params": {"tagPath": "", "pens": [], "expanded": False}, "propConfig": pc,
+    return "Templates/Dynamic Window/Parts/Trend", {"custom": custom, "params": {"tagPath": "", "pens": [], "expanded": False}, "propConfig": pc,
                                  "props": {"defaultSize": {"width": W - 16, "height": 170}}, "root": root}
 
 def region():

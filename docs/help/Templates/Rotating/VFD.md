@@ -2,7 +2,7 @@
 
 Covers `Templates/Rotating/VFD`.
 Source: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Rotating/VFD/view.json`
-Dynamic window it opens: `Docks/VFD` (see [VFD](../../Docks/VFD.md)).
+Dynamic window it opens: `Templates/Dynamic Window/Rotating/VFD` (see [VFD](../Dynamic%20Window/Rotating/VFD.md)).
 
 ## Overview
 
@@ -10,8 +10,8 @@ A single-device symbol for a variable frequency drive (T_VFD). It shows the run 
 
 - **Default size:** 120 x 116 (`props.defaultSize`).
 - **Bound to:** one T_VFD instance through `params.tagPath` (default `[default]PID_Demo/M601`).
-- **Opening the dock:** a single click on the symbol runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_VFD`, via BY_TYPE) to `dw_VFD`, then writes `session.custom.efcDw[pageId] = {path, params:{tagPath}}`. The screen's `Docks/Region` embedded view shows `Docks/VFD`. Only `tagPath` is passed on; `dwTagPath` overrides it when set.
-- **Generated view:** `Docks/VFD` is written by `generator/docks/build_docks.py` (`vfd()`). This template is not generated.
+- **Opening the dock:** a single click on the symbol runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_VFD`, via BY_TYPE) to `dw_VFD`, then writes `session.custom.efcDw[pageId] = {path, params:{tagPath}}`. The screen's `Docks/Region` embedded view shows `Templates/Dynamic Window/Rotating/VFD`. Only `tagPath` is passed on; `dwTagPath` overrides it when set.
+- **Generated view:** `Templates/Dynamic Window/Rotating/VFD` is written by `generator/docks/build_docks.py` (`vfd()`). This template is not generated.
 - **Writes:** only the `PB` button. The symbol click opens the dock and writes nothing.
 
 ## How it operates
@@ -172,7 +172,7 @@ Total: **2 event scripts**, no `customMethods`, no `messageHandlers`, no propert
 
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_VFD` that is `dw_VFD`, which maps to `Docks/VFD`. If no window is found, it logs a warning and stops. Otherwise it writes `session.custom.efcDw[pageId] = {path, params:{tagPath: dwTagPath or tagPath}}`. It does not check the user's role and does not write to the tag.
+- **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_VFD` that is `dw_VFD`, which maps to `Templates/Dynamic Window/Rotating/VFD`. If no window is found, it logs a warning and stops. Otherwise it writes `session.custom.efcDw[pageId] = {path, params:{tagPath: dwTagPath or tagPath}}`. It does not check the user's role and does not write to the tag.
 - **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an audit record. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
 - `efc.ui.dblCmd` is not called by this view, and `T_VFD` is not in its `DBL_CMD` table.
 
