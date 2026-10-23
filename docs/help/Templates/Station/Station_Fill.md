@@ -13,6 +13,157 @@ The filling view for one T_Station instance: the station header with the select 
 - **Opening or embedding:** no `efc.ui` function opens this view, and it has no embedded views (`ia.display.view`). A screen places it with `tagPath` set. `Templates/Station/_Demo` does this in `Left/Fills` for stations 1 to 4. `docs/station-faceplates.md` describes it as the filling screen.
 - **Dock:** none. It is not a dynamic window.
 
+## Start here: what `t` and `s` are
+
+Almost everything on this view reads two view custom properties with one-letter names:
+
+- **`t` = tags.** The raw values read from the PLC. It holds 36 members, each a tag binding to `{tagPath}/<member>`.
+- **`s` = state.** The display-ready values the screen shows: formatted text, style class names, bar positions and lock flags. It is one property binding on `view.custom.t` with a script transform. Every calculation on this view lives in that transform.
+
+Data flows one way:
+
+**PLC tags → `t` → script transform → `s` → screen elements**
+
+To find them in the Designer, select the view root and open **Custom** in the Property Editor. To see the calculations, open the binding on `custom.s` and read its Script transform.
+
+Three things that make the view harder to follow than it looks:
+
+- **`t` uses the old station popup's names, not the PLC names.** The table below maps them. For example, `t.NetWeight` reads `Val_Net` and `t.SamplePress` reads `Prm_PrefillPress`.
+- **A missing or bad tag silently becomes `false`, `0` or blank** inside the transform. A bad value does not raise an error on screen. It shows as a normal 0, off or blank state. Only the quality marker on `custom.t` in the Designer shows it.
+- **Not every `s` key is shown.** The view binds 26 of the 51 keys. The other 25 are computed and unused here (the Tag section and the Notes say which are unused).
+
+The transform is identical to the one in [Docks/Station](../../Docks/Station.md) and in [Station_Tile](Station_Tile.md). It is the same code in three places.
+
+### `t`: raw tag values
+
+Each key is a read-only indirect tag binding (`{0}` = `{view.params.tagPath}`). The four setpoint entries on the view are separate bidirectional bindings and are not in this list.
+
+| `t` key | PLC member |
+|---|---|
+| `Active` | `Sts_Active` |
+| `Complete` | `Sts_Complete` |
+| `Deadband` | `Prm_Deadband` |
+| `Disabled` | `Sts_Disabled` |
+| `Failed` | `Sts_Failed` |
+| `Filling` | `Sts_Filling` |
+| `GrossWeight` | `Val_Gross` |
+| `InletCMD` | `Out_InletCmd` |
+| `InletREQ` | `Sts_InletReq` |
+| `Msg` | `Sts_Msg` |
+| `NetWeight` | `Val_Net` |
+| `PT` | `Val_PT` |
+| `PT_Diff` | `Val_PTDiff` |
+| `PT_Valid` | `Inp_PTValid` |
+| `Press_Balanced` | `Sts_PressBalanced` |
+| `Press_Max` | `Prm_MaxPress` |
+| `ReadyToFill` | `Sts_ReadyToFill` |
+| `ReadyToStart` | `Sts_ReadyToStart` |
+| `Recovering` | `Sts_Recovering` |
+| `SampleCMD` | `Out_SampleCmd` |
+| `SamplePress` | `Prm_PrefillPress` |
+| `SampleREQ` | `Sts_SampleReq` |
+| `SampleWeight` | `Prm_SampleWt` |
+| `ScaleName` | `Cfg_ScaleName` |
+| `Selected` | `Sts_Selected` |
+| `StationName` | `Cfg_Desc` |
+| `TareWeight` | `Val_Tare` |
+| `TargetWeight` | `Prm_TargetWt` |
+| `TotalWeight` | `Val_Total` |
+| `Units` | `Cfg_EU` |
+| `VacuumCMD` | `Out_VacuumCmd` |
+| `VacuumREQ` | `Sts_VacuumReq` |
+| `Vacuumed` | `Sts_Vacuumed` |
+| `Vacuuming` | `Sts_Vacuuming` |
+| `Venting` | `Sts_Venting` |
+| `Vessel_Present` | `Inp_VesselPresent` |
+
+### `s`: how each key is calculated
+
+The derived-state transform is the same code as in `Docks/Station`. The tables below are copied from [Docks/Station](../../Docks/Station.md), where they were checked against the transform.
+
+Bound on this view (26 keys): `chip`, `dbW`, `dbX`, `dis`, `fillCls`, `fillW`, `gross`, `hiCls`, `msg`, `name`, `net`, `pct`, `pt`, `ptSmallCls`, `rem`, `resetLocked`, `scale`, `selCls`, `selText`, `tare`, `target`, `tgtX`, `total`, `tzLocked`, `units`, `word`. The other 25 keys (`sel`, `busy`, `db`, `steps`, `stepText`, `permLed`, `permTxt`, `inReq`, `inCmd`, `inIlk`, `smReq`, `smCmd`, `smIlk`, `vaReq`, `vaCmd`, `vaIlk`, `ptCls`, `ptd`, `ptW`, `preX`, `maxX`, `pre`, `pmax`, `ptBad`, `foot`) are computed and not bound.
+
+**Header and selection**
+
+| `s` member | Calculation |
+|---|---|
+| `name`, `scale` | `StationName` (or "Station" if blank), `ScaleName` |
+| `units` | `Units`; blank, `---`, `null` or `None` becomes `kg` |
+| `sel`, `selText`, `selCls`, `hiCls` | From `Selected`: button text SELECTED or SELECT, button style on or off, and the `Util/Highlight` class on the status panel |
+| `dis` | `Disabled` |
+
+**Status chip and message (`word`, `chip`, `msg`, `busy`)**
+
+The transform takes the first of these that is true:
+
+| Order | `t` member | Chip text (`word`) | Chip style (`chip`) |
+|---|---|---|---|
+| 1 | `Disabled` | DISABLED | `State/OutOfService` |
+| 2 | `Failed` | FAULT | `State/Fault` |
+| 3 | `Complete` | COMPLETE | `State/Stopped` |
+| 4 | `Filling` | FILLING | `State/Running` |
+| 5 | `SampleCMD` | SAMPLING | `State/Running` |
+| 6 | `Vacuuming` | VACUUMING | `State/Transition` |
+| 7 | `Venting` | VENTING | `State/Transition` |
+| 8 | `Recovering` | RECOVERING | `State/Transition` |
+| 9 | `Active` | ACTIVE | `State/Running` |
+| 10 | `ReadyToStart` or `ReadyToFill` | READY | `State/Stopped` |
+| none | | IDLE | `State/Stopped` |
+
+- `msg` is the PLC's `Msg` text, or a default sentence for the state (for example "Filling primary vessel") when `Msg` is blank.
+- `busy` is true when the chip is `State/Running` or `State/Transition`.
+
+**Weight**
+
+| `s` member | Calculation |
+|---|---|
+| `net`, `target`, `db`, `gross`, `tare`, `total` | The tag value as text, 3 decimals |
+| `rem` | target − net, never below 0 |
+| `pct` | net ÷ target × 100, 1 decimal. "OVER " in front when net > target + deadband. "-" when the target is 0 |
+| `fillCls` | `Bar/FillAlarm` when over, otherwise `Bar/Fill` |
+| `fillW`, `tgtX`, `dbX`, `dbW` | Bar positions as 0–1 fractions of a bar that spans 108 % of target: fill = net, marker = target, deadband band = target ± deadband (minimum width 0.012) |
+
+**Pressure**
+
+| `s` member | Calculation |
+|---|---|
+| `pt` | `PT` as `#,##0.0`, or `-----` when `PT_Valid` is false |
+| `ptBad`, `ptCls`, `ptSmallCls` | `Value/BadQuality` styling and the BAD QUALITY label when `PT_Valid` is false |
+| `ptd` | "dP x.x psi" from `PT_Diff` |
+| `ptW`, `preX`, `maxX` | Bar positions on a bar that spans 110 % of `Press_Max`: fill = `PT` (0 when invalid), markers at the prefill pressure and at `Press_Max` |
+| `pre`, `pmax` | Prefill and maximum pressure as `#,##0.0` |
+
+**Step strip (`steps`, `stepText`)**
+
+Each of the six steps is Pending, Active, Done or Fault. `steps[n]` is the segment class (`Station/Step/*`) and `stepText[n]` is the caption class.
+
+| Step | Done when | Active when |
+|---|---|---|
+| Vessel | `Vessel_Present` | never |
+| Vac | `Vacuumed` | `Vacuuming` |
+| Prefill | `Press_Balanced` | `Active` and `Vacuumed` and not `Filling` |
+| Fill | `Complete` or `SampleCMD` | `Filling` |
+| Sample | `Complete` | `SampleCMD` |
+| Done | `Complete` | never |
+
+When `Disabled`, every step is Pending. When `Failed`, the first step that is not Done is drawn as Fault.
+
+**Permissives and valves**
+
+| `s` member | Calculation |
+|---|---|
+| `permLed[0..4]`, `permTxt[0..4]` | LED on or off, and darker text when true, for `Vessel_Present`, `PT_Valid`, `Press_Balanced`, `ReadyToStart`, `ReadyToFill` |
+| `inReq`/`inCmd`, `smReq`/`smCmd`, `vaReq`/`vaCmd` | LED for each valve's request and command (Inlet, Sample, Vacuum) |
+| `inIlk`, `smIlk`, `vaIlk` | The `I` badge: request on and command off |
+
+**Commands**
+
+| `s` member | Calculation |
+|---|---|
+| `tzLocked` | `busy` or `Disabled`. Locks Tare and Zero |
+| `resetLocked` | not (`Complete` or `Failed`). Locks Reset |
+| `foot` | "Station disabled: commands unavailable", else "Tare and Zero locked while active" when `tzLocked`, else blank |
+
 ## How it operates
 
 **State word, chip and header.** The `custom.s` transform works out the state word and chip exactly as the overview tile does. The condition order is Disabled, Failed, Complete, Filling, SampleCMD (SAMPLING), Vacuuming, Venting, Recovering, Active, ReadyToStart or ReadyToFill (READY), and IDLE otherwise. Chip classes: DISABLED `State/OutOfService`; FAULT `State/Fault`; COMPLETE, READY and IDLE `State/Stopped`; FILLING, SAMPLING and ACTIVE `State/Running`; VACUUMING, VENTING and RECOVERING `State/Transition`. When the station is selected, the header adds `Util/Highlight`.

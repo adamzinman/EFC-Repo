@@ -326,3 +326,4 @@ Tree of `AnalogRow_AI`. AO has no `Flags` and TEMP has no `BarCell`.
 - **Null limit defaults differ.** The Value text uses `EngMax` default 100 (AI only), while the bar fill uses `EngMax` default 1 and `EngMin` default 0. A missing `EngMax` therefore gives a different number format and a different bar scale. Open question.
 - **Empty card path.** `chPath` is built without a guard. With a blank `cardPath` it becomes "/CHnn" and the tags would be unresolved. Not run. Expected to show bad quality (COMMS?).
 - **Missing cells are intentional.** The AO row has no Limit cell and the TEMP row has no Range cell, which matches the headers in the faceplates. Not a defect.
+- **`emin` and `emax` are unused in AnalogRow_TEMP.** The TEMP row has no bar, so its tag mirrors for `Doc/EngMin` and `Doc/EngMax` are defined and bound but never read. They are kept only because the three variants share one custom-property set.

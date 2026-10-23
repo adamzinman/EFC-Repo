@@ -16,6 +16,156 @@ A one-station overview tile for a T_Station instance. It shows the station name,
 - **Embedded views:** none. This view has no `ia.display.view` component.
 - **Where it is used:** `Templates/Station/_Demo` places four instances (`[default]Station_Demo/Station_1` to `Station_4`) with `tagPath` set, next to the four `Station_Fill` instances.
 
+## Start here: what `t` and `s` are
+
+This tile reads the same two custom properties as the station faceplates, with one-letter names:
+
+- **`t` = tags.** The raw values read from the PLC. It holds 35 mirrored members, each a tag binding to `{tagPath}/<member>`.
+- **`s` = state.** The display-ready values. It is one property binding on `view.custom.t` with a script transform. The tile binds 13 of its 51 keys.
+
+Data flows one way:
+
+**PLC tags → `t` → script transform → `s` → screen elements**
+
+To find them in the Designer, select the view root and open **Custom** in the Property Editor. To see the calculations, open the binding on `custom.s` and read its Script transform.
+
+Three things that make this view harder to follow than it looks:
+
+- **Every key the transform reads is mirrored.** Until 2026-10-23 the tile mirrored only 20 of the 35 keys, so 15 (weights, pressures, message, permissives, valve lamps) silently took their defaults. All 35 are now mirrored, so any `s` key can be bound on the tile and will show the real value. `SampleWeight` is the only `Station_Fill` mirror not added, because the transform never reads it.
+- **A missing or bad tag silently becomes `false`, `0` or blank** inside the transform, as on the faceplate.
+- **`custom.pendingCmd` is defined but unused.** It has the default `""` and no binding or script. The tile has no commands. It is a leftover from the faceplate.
+
+The transform is identical to the one in [Docks/Station](../../Docks/Station.md) and in [Station_Fill](Station_Fill.md).
+
+### `t`: raw tag values
+
+The 35 mirrored members. Each is a read-only indirect tag binding (`{0}` = `{view.params.tagPath}`).
+
+| `t` key | PLC member |
+|---|---|
+| `Active` | `Sts_Active` |
+| `Complete` | `Sts_Complete` |
+| `Deadband` | `Prm_Deadband` |
+| `Disabled` | `Sts_Disabled` |
+| `Failed` | `Sts_Failed` |
+| `Filling` | `Sts_Filling` |
+| `NetWeight` | `Val_Net` |
+| `PT` | `Val_PT` |
+| `PT_Valid` | `Inp_PTValid` |
+| `ReadyToFill` | `Sts_ReadyToFill` |
+| `ReadyToStart` | `Sts_ReadyToStart` |
+| `Recovering` | `Sts_Recovering` |
+| `SampleCMD` | `Out_SampleCmd` |
+| `ScaleName` | `Cfg_ScaleName` |
+| `Selected` | `Sts_Selected` |
+| `StationName` | `Cfg_Desc` |
+| `TargetWeight` | `Prm_TargetWt` |
+| `Units` | `Cfg_EU` |
+| `Vacuuming` | `Sts_Vacuuming` |
+| `Venting` | `Sts_Venting` |
+| `GrossWeight` | `Val_Gross` |
+| `TareWeight` | `Val_Tare` |
+| `TotalWeight` | `Val_Total` |
+| `Msg` | `Sts_Msg` |
+| `PT_Diff` | `Val_PTDiff` |
+| `Press_Max` | `Prm_MaxPress` |
+| `SamplePress` | `Prm_PrefillPress` |
+| `Press_Balanced` | `Sts_PressBalanced` |
+| `Vacuumed` | `Sts_Vacuumed` |
+| `Vessel_Present` | `Inp_VesselPresent` |
+| `InletREQ` | `Sts_InletReq` |
+| `InletCMD` | `Out_InletCmd` |
+| `SampleREQ` | `Sts_SampleReq` |
+| `VacuumREQ` | `Sts_VacuumReq` |
+| `VacuumCMD` | `Out_VacuumCmd` |
+
+### `s`: how each key is calculated
+
+The tables below are copied from [Docks/Station](../../Docks/Station.md), where they were checked against the transform. This view is the same code.
+
+Bound on this view (13 keys): `name`, `scale`, `units`, `word`, `chip`, `net`, `target`, `pct`, `pt`, `fillW`, `fillCls`, `tgtX`, `hiCls`. All 35 keys the transform reads are mirrored, so every key is computed from live values.
+
+**Header and selection**
+
+| `s` member | Calculation |
+|---|---|
+| `name`, `scale` | `StationName` (or "Station" if blank), `ScaleName` |
+| `units` | `Units`; blank, `---`, `null` or `None` becomes `kg` |
+| `sel`, `selText`, `selCls`, `hiCls` | From `Selected`: button text SELECTED or SELECT, button style on or off, and the `Util/Highlight` class on the status panel |
+| `dis` | `Disabled` |
+
+**Status chip and message (`word`, `chip`, `msg`, `busy`)**
+
+The transform takes the first of these that is true:
+
+| Order | `t` member | Chip text (`word`) | Chip style (`chip`) |
+|---|---|---|---|
+| 1 | `Disabled` | DISABLED | `State/OutOfService` |
+| 2 | `Failed` | FAULT | `State/Fault` |
+| 3 | `Complete` | COMPLETE | `State/Stopped` |
+| 4 | `Filling` | FILLING | `State/Running` |
+| 5 | `SampleCMD` | SAMPLING | `State/Running` |
+| 6 | `Vacuuming` | VACUUMING | `State/Transition` |
+| 7 | `Venting` | VENTING | `State/Transition` |
+| 8 | `Recovering` | RECOVERING | `State/Transition` |
+| 9 | `Active` | ACTIVE | `State/Running` |
+| 10 | `ReadyToStart` or `ReadyToFill` | READY | `State/Stopped` |
+| none | | IDLE | `State/Stopped` |
+
+- `msg` is the PLC's `Msg` text, or a default sentence for the state (for example "Filling primary vessel") when `Msg` is blank.
+- `busy` is true when the chip is `State/Running` or `State/Transition`.
+
+**Weight**
+
+| `s` member | Calculation |
+|---|---|
+| `net`, `target`, `db`, `gross`, `tare`, `total` | The tag value as text, 3 decimals |
+| `rem` | target − net, never below 0 |
+| `pct` | net ÷ target × 100, 1 decimal. "OVER " in front when net > target + deadband. "-" when the target is 0 |
+| `fillCls` | `Bar/FillAlarm` when over, otherwise `Bar/Fill` |
+| `fillW`, `tgtX`, `dbX`, `dbW` | Bar positions as 0–1 fractions of a bar that spans 108 % of target: fill = net, marker = target, deadband band = target ± deadband (minimum width 0.012) |
+
+**Pressure**
+
+| `s` member | Calculation |
+|---|---|
+| `pt` | `PT` as `#,##0.0`, or `-----` when `PT_Valid` is false |
+| `ptBad`, `ptCls`, `ptSmallCls` | `Value/BadQuality` styling and the BAD QUALITY label when `PT_Valid` is false |
+| `ptd` | "dP x.x psi" from `PT_Diff` |
+| `ptW`, `preX`, `maxX` | Bar positions on a bar that spans 110 % of `Press_Max`: fill = `PT` (0 when invalid), markers at the prefill pressure and at `Press_Max` |
+| `pre`, `pmax` | Prefill and maximum pressure as `#,##0.0` |
+
+**Step strip (`steps`, `stepText`)**
+
+Each of the six steps is Pending, Active, Done or Fault. `steps[n]` is the segment class (`Station/Step/*`) and `stepText[n]` is the caption class.
+
+| Step | Done when | Active when |
+|---|---|---|
+| Vessel | `Vessel_Present` | never |
+| Vac | `Vacuumed` | `Vacuuming` |
+| Prefill | `Press_Balanced` | `Active` and `Vacuumed` and not `Filling` |
+| Fill | `Complete` or `SampleCMD` | `Filling` |
+| Sample | `Complete` | `SampleCMD` |
+| Done | `Complete` | never |
+
+When `Disabled`, every step is Pending. When `Failed`, the first step that is not Done is drawn as Fault.
+
+**Permissives and valves**
+
+| `s` member | Calculation |
+|---|---|
+| `permLed[0..4]`, `permTxt[0..4]` | LED on or off, and darker text when true, for `Vessel_Present`, `PT_Valid`, `Press_Balanced`, `ReadyToStart`, `ReadyToFill` |
+| `inReq`/`inCmd`, `smReq`/`smCmd`, `vaReq`/`vaCmd` | LED for each valve's request and command (Inlet, Sample, Vacuum) |
+| `inIlk`, `smIlk`, `vaIlk` | The `I` badge: request on and command off |
+
+**Commands**
+
+| `s` member | Calculation |
+|---|---|
+| `tzLocked` | `busy` or `Disabled`. Locks Tare and Zero |
+| `resetLocked` | not (`Complete` or `Failed`). Locks Reset |
+| `foot` | "Station disabled: commands unavailable", else "Tare and Zero locked while active" when `tzLocked`, else blank |
+
 ## How it operates
 
 **State word and colour.** The `s` transform (see Scripts reference) takes the first true condition in this order: Disabled, Failed, Complete, Filling, SampleCMD, Vacuuming, Venting, Recovering, Active, then ReadyToStart or ReadyToFill. If none is true the word is IDLE. The chip class is the state colour plus `Station/Fill/Chip`.
@@ -68,17 +218,18 @@ All four params have `paramDirection: input` and `persistent: true`. There are n
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
 | `view.custom.s` | dict of 51 keys (sample values, for example `name` = `"Station 1"`) | property on `view.custom.t`, with a script transform | Script transform (see Scripts reference) | Display model. The bindings read 13 of its keys (see Bindings reference). The other 38 are computed but not bound. |
-| `view.custom.t` | dict of 20 keys, each `null` | none on the dict itself. Each key has its own tag binding. | Tag members, listed below | Raw values mirrored from the station tag. It is the only input to the `s` transform. |
+| `view.custom.t` | dict of 35 keys, each `null` | none on the dict itself. Each key has its own tag binding. | Tag members, listed below | Raw values mirrored from the station tag. It is the only input to the `s` transform. |
+| `view.custom.pendingCmd` | `""` | none | none | Defined on the view but never bound or read by any script. The tile has no commands. Unused. |
 
-**Tag mirrors.** The 20 keys of `view.custom.t` each take their value from one T_Station member through an indirect tag binding (`mode: indirect`, `{0}` = `{view.params.tagPath}`, fallback delay 2.5 s). The bindings are read-only. Their defaults are `null`.
+**Tag mirrors.** The 35 keys of `view.custom.t` each take their value from one T_Station member through an indirect tag binding (`mode: indirect`, `{0}` = `{view.params.tagPath}`, fallback delay 2.5 s). The bindings are read-only. Their defaults are `null`.
 
 | Group | Members (`custom.t.<key>` = PCLib member) |
 |---|---|
-| Config | StationName = `Cfg_Desc`; ScaleName = `Cfg_ScaleName`; Units = `Cfg_EU` |
-| Setpoint | TargetWeight = `Prm_TargetWt`; Deadband = `Prm_Deadband` |
-| Weight and pressure | NetWeight = `Val_Net`; PT = `Val_PT`; PT_Valid = `Inp_PTValid` |
-| Status | Active = `Sts_Active`; Complete = `Sts_Complete`; Disabled = `Sts_Disabled`; Failed = `Sts_Failed`; Filling = `Sts_Filling`; ReadyToFill = `Sts_ReadyToFill`; ReadyToStart = `Sts_ReadyToStart`; Recovering = `Sts_Recovering`; Selected = `Sts_Selected`; Vacuuming = `Sts_Vacuuming`; Venting = `Sts_Venting` |
-| Command | SampleCMD = `Out_SampleCmd` |
+| Config and text | StationName = `Cfg_Desc`; ScaleName = `Cfg_ScaleName`; Units = `Cfg_EU`; Msg = `Sts_Msg` |
+| Setpoint | TargetWeight = `Prm_TargetWt`; Deadband = `Prm_Deadband`; Press_Max = `Prm_MaxPress`; SamplePress = `Prm_PrefillPress` |
+| Weight and pressure | NetWeight = `Val_Net`; GrossWeight = `Val_Gross`; TareWeight = `Val_Tare`; TotalWeight = `Val_Total`; PT = `Val_PT`; PT_Diff = `Val_PTDiff`; PT_Valid = `Inp_PTValid` |
+| Status | Active = `Sts_Active`; Complete = `Sts_Complete`; Disabled = `Sts_Disabled`; Failed = `Sts_Failed`; Filling = `Sts_Filling`; ReadyToFill = `Sts_ReadyToFill`; ReadyToStart = `Sts_ReadyToStart`; Recovering = `Sts_Recovering`; Selected = `Sts_Selected`; Vacuuming = `Sts_Vacuuming`; Vacuumed = `Sts_Vacuumed`; Venting = `Sts_Venting`; Press_Balanced = `Sts_PressBalanced`; Vessel_Present = `Inp_VesselPresent` |
+| Valve requests and commands | InletREQ = `Sts_InletReq`; InletCMD = `Out_InletCmd`; SampleREQ = `Sts_SampleReq`; SampleCMD = `Out_SampleCmd`; VacuumREQ = `Sts_VacuumReq`; VacuumCMD = `Out_VacuumCmd` |
 
 ### Component-level custom properties
 
@@ -92,7 +243,7 @@ None. The components carry no `custom` properties.
 
 ## Bindings reference
 
-Total: **34 bindings**. 21 are at the view root and 13 are on components. By type: 20 `tag`, 11 `property` and 3 `expr`.
+Total: **49 bindings**. 36 are at the view root and 13 are on components. By type: 35 `tag`, 11 `property` and 3 `expr`.
 
 ### View root
 
@@ -150,7 +301,7 @@ Total: **1 event script** and **1 transform script**. There are no custom method
 
    The code calls `efc.ui.openDynamic(self)`. The comment before it still names a `StationSidebar` dock and a `Templates/Station/Station_Sidebar` view. That is stale (see Notes). The call itself opens `Docks/Station`.
 
-2. **`view.custom.s`**: script transform on the property binding from `view.custom.t`. Trigger: runs whenever any of the 20 mirrored values changes. It returns the whole display dict. Code:
+2. **`view.custom.s`**: script transform on the property binding from `view.custom.t`. Trigger: runs whenever any of the 35 mirrored values changes. It returns the whole display dict. Code:
 
 ```python
 	t = value
@@ -301,6 +452,21 @@ All members are read by the view. Each is relative to `tagPath`. Types and comme
 | `Sts_Selected` | read | BOOL | Station selected |
 | `Sts_Vacuuming` | read | BOOL | Evacuating the vessel |
 | `Sts_Venting` | read | BOOL | Venting |
+| `Val_Gross` | read | REAL | Gross weight (Cfg_EU) |
+| `Val_Tare` | read | REAL | Tare weight (Cfg_EU) |
+| `Val_Total` | read | REAL | Total filled this cycle (Cfg_EU) |
+| `Sts_Msg` | read | STRING[40] | Status message for the HMI |
+| `Val_PTDiff` | read | REAL | Vessel minus header pressure |
+| `Prm_MaxPress` | read | REAL | Maximum vessel pressure during fill (operator setpoint) |
+| `Prm_PrefillPress` | read | REAL | Prefill pressure (operator setpoint) |
+| `Sts_PressBalanced` | read | BOOL | Vessel and header pressures balanced |
+| `Sts_Vacuumed` | read | BOOL | Vessel evacuated |
+| `Inp_VesselPresent` | read | BOOL | Vessel detected on the station |
+| `Sts_InletReq` | read | BOOL | Sequence requests the inlet valve open |
+| `Out_InletCmd` | read | BOOL | Inlet valve command |
+| `Sts_SampleReq` | read | BOOL | Sequence requests the sample valve open |
+| `Sts_VacuumReq` | read | BOOL | Sequence requests the vacuum valve open |
+| `Out_VacuumCmd` | read | BOOL | Vacuum valve command |
 | `Out_SampleCmd` | read | BOOL | Sample valve command |
 
 ## Component tree
@@ -332,8 +498,11 @@ All members are read by the view. Each is relative to `tagPath`. Types and comme
 ## Notes and open questions
 
 - **Stale dock reference (comment and docs).** The click script's comment says the tile opens a right-side dock with id `StationSidebar`, view `Templates/Station/Station_Sidebar`, 300 x 800. `docs/station-faceplates.md` says the same. The code does not do that: it calls `efc.ui.openDynamic`, which opens `Docks/Station`. `Docks/Station` is 400 x 860, the same size as the imported `Station_Sidebar`. `Station_Sidebar` is not in `projects/EFC_Library`. `build.py` rewrites view paths only where they follow a quote or backslash, so the comment text is not rewritten and keeps the stale name in the built project. This is a documentation defect with no runtime effect.
-- **Inputs the transform reads but the tile does not mirror.** 15 keys are read by the transform but are not in `custom.t`: GrossWeight, TareWeight, TotalWeight, Msg, PT_Diff, Press_Max, SamplePress, Press_Balanced, Vacuumed, Vessel_Present, InletREQ, InletCMD, SampleREQ, VacuumREQ and VacuumCMD. They default to 0, false or empty. The tile shows no value they drive, so nothing wrong is visible today. The transform still computes 38 keys that the tile never binds. Any future tile field that uses one of the 15 would show the default silently.
+- **All transform inputs are mirrored.** The tile now mirrors all 35 keys the transform reads (15 were added on 2026-10-23). The transform still computes 38 keys the tile never binds; they now carry live values if a future tile field binds them.
 - **Pressure quality style.** The transform provides `ptCls` and `ptSmallCls` for bad quality, but the tile binds only the text of `Pt`. A bad pressure reading shows `-----` with no bad-quality style.
 - **Target of 0 or less.** The bar scale falls back to 1.0 (`scale = tgt * 1.08 if tgt > 0 else 1.0`). So any net of 1.0 or more fills the bar, whatever the units. Whether the bar should be hidden in that case is not defined in the repo.
 - **Fixed units text.** The pressure unit `psig` is fixed in the view. The weight fallback `kg` is used when `Cfg_EU` is empty, even though the PCLib comment lists `kg, lb`.
 - **Naming.** `docs/station-faceplates.md` calls the instance type `DDT_Station`. The PCLib type and the `efc.ui` mapping use `T_Station`.
+
+- **Resolved: unmirrored keys.** The tile mirrored only 20 of the 35 keys the transform reads. The 15 missing mirrors were added in `imported/EFC_StationFaceplates` (copied from `Station_Fill`), so the tile is now safe to extend.
+- **`pendingCmd` is unused.** See the custom properties table above.
