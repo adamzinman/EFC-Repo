@@ -13,6 +13,142 @@ The operator dynamic window for a fill station (T_Station). It is the full stati
 - **Built view:** this view is not written by `generator/docks/build_docks.py`. `build.py` copies the imported Designer project `imported/EFC_StationFaceplates` into the merged library and relocates `Templates/Station/Station_Sidebar` to `Docks/Station` (its `RELOCATE` table). `steward/tools/fix_station.py` maps the DDT_Station member names to T_Station, adds the dynamic-window params to the tile and sets the window to 400 x 860 (`steward/DECISIONS.md`, decisions 4 and 25). Make changes in the imported source and rebuild. Edits made directly to `Docks/Station/view.json` are replaced on the next build.
 - **How it closes:** the header icon (`Util/Pointer`) runs `efc.ui.closeDynamic(self)` on click, which restores the screen default set by `efc.ui.setDefaultDock` on `Docks/Region` startup. That startup script is not in this view.
 
+## Start here: what `s` and `t` are
+
+Almost everything on this faceplate reads from two view custom properties with one-letter names:
+
+- **`t` = tags.** The raw values read from the PLC. It holds 36 members, each a tag binding to `{tagPath}/<member>`.
+- **`s` = state.** The display-ready values the screen shows: formatted text, style class names, bar positions and lock flags. It is one property binding on `view.custom.t` with a script transform. Every calculation on this page lives in that transform.
+
+Data flows one way:
+
+**PLC tags → `t` → script transform → `s` → screen elements**
+
+To find them in the Designer, select the view root and open **Custom** in the Property Editor. To see the calculations, open the binding on `custom.s` and read its Script transform.
+
+Three things that make the view harder to follow than it looks:
+
+- **`t` uses the old station popup's names, not the PLC names.** The table below maps them. For example, `t.NetWeight` reads `Val_Net` and `t.SamplePress` reads `Prm_PrefillPress`.
+- **A missing or bad tag silently becomes `false`, `0` or blank** inside the transform. A member that doesn't exist on the station (`Bad_NodeIdUnknown`) shows only as a red quality marker on `custom.t` in the Designer. On screen it looks like a normal 0 or off.
+- **The data is read in three ways, not one.** Displays go tags → `t` → `s`. The five setpoint entries bind straight to the `Prm_*` tags and skip `t` and `s`. The command buttons write tags from scripts.
+
+### `t`: raw tag values
+
+| `t` member | PLC tag | | `t` member | PLC tag |
+|---|---|---|---|---|
+| `StationName` | `Cfg_Desc` | | `Active` | `Sts_Active` |
+| `ScaleName` | `Cfg_ScaleName` | | `Disabled` | `Sts_Disabled` |
+| `Units` | `Cfg_EU` | | `Failed` | `Sts_Failed` |
+| `NetWeight` | `Val_Net` | | `Complete` | `Sts_Complete` |
+| `GrossWeight` | `Val_Gross` | | `Filling` | `Sts_Filling` |
+| `TareWeight` | `Val_Tare` | | `Vacuuming` | `Sts_Vacuuming` |
+| `TotalWeight` | `Val_Total` | | `Vacuumed` | `Sts_Vacuumed` |
+| `TargetWeight` | `Prm_TargetWt` | | `Venting` | `Sts_Venting` |
+| `Deadband` | `Prm_Deadband` | | `Recovering` | `Sts_Recovering` |
+| `SampleWeight` | `Prm_SampleWt` (read, never used) | | `Selected` | `Sts_Selected` |
+| `Press_Max` | `Prm_MaxPress` | | `ReadyToStart` | `Sts_ReadyToStart` |
+| `SamplePress` | `Prm_PrefillPress` | | `ReadyToFill` | `Sts_ReadyToFill` |
+| `PT` | `Val_PT` | | `Press_Balanced` | `Sts_PressBalanced` |
+| `PT_Diff` | `Val_PTDiff` | | `Vessel_Present` | `Inp_VesselPresent` |
+| `PT_Valid` | `Inp_PTValid` | | `Msg` | `Sts_Msg` |
+| `InletREQ` / `InletCMD` | `Sts_InletReq` / `Out_InletCmd` | | `SampleREQ` / `SampleCMD` | `Sts_SampleReq` / `Out_SampleCmd` |
+| `VacuumREQ` / `VacuumCMD` | `Sts_VacuumReq` / `Out_VacuumCmd` | | | |
+
+### `s`: how each member is calculated
+
+**Header and selection**
+
+| `s` member | Calculation |
+|---|---|
+| `name`, `scale` | `StationName` (or "Station" if blank), `ScaleName` |
+| `units` | `Units`; blank, `---`, `null` or `None` becomes `kg` |
+| `sel`, `selText`, `selCls`, `hiCls` | From `Selected`: button text SELECTED or SELECT, button style on or off, and the `Util/Highlight` class on the status panel |
+| `dis` | `Disabled` |
+
+**Status chip and message (`word`, `chip`, `msg`, `busy`)**
+
+The transform takes the first of these that is true:
+
+| Order | `t` member | Chip text (`word`) | Chip style (`chip`) |
+|---|---|---|---|
+| 1 | `Disabled` | DISABLED | `State/OutOfService` |
+| 2 | `Failed` | FAULT | `State/Fault` |
+| 3 | `Complete` | COMPLETE | `State/Stopped` |
+| 4 | `Filling` | FILLING | `State/Running` |
+| 5 | `SampleCMD` | SAMPLING | `State/Running` |
+| 6 | `Vacuuming` | VACUUMING | `State/Transition` |
+| 7 | `Venting` | VENTING | `State/Transition` |
+| 8 | `Recovering` | RECOVERING | `State/Transition` |
+| 9 | `Active` | ACTIVE | `State/Running` |
+| 10 | `ReadyToStart` or `ReadyToFill` | READY | `State/Stopped` |
+| none | | IDLE | `State/Stopped` |
+
+- `msg` is the PLC's `Msg` text, or a default sentence for the state (for example "Filling primary vessel") when `Msg` is blank.
+- `busy` is true when the chip is `State/Running` or `State/Transition`.
+
+**Weight**
+
+| `s` member | Calculation |
+|---|---|
+| `net`, `target`, `db`, `gross`, `tare`, `total` | The tag value as text, 3 decimals |
+| `rem` | target − net, never below 0 |
+| `pct` | net ÷ target × 100, 1 decimal. "OVER " in front when net > target + deadband. "-" when the target is 0 |
+| `fillCls` | `Bar/FillAlarm` when over, otherwise `Bar/Fill` |
+| `fillW`, `tgtX`, `dbX`, `dbW` | Bar positions as 0–1 fractions of a bar that spans 108 % of target: fill = net, marker = target, deadband band = target ± deadband (minimum width 0.012) |
+
+**Pressure**
+
+| `s` member | Calculation |
+|---|---|
+| `pt` | `PT` as `#,##0.0`, or `-----` when `PT_Valid` is false |
+| `ptBad`, `ptCls`, `ptSmallCls` | `Value/BadQuality` styling and the BAD QUALITY label when `PT_Valid` is false |
+| `ptd` | "dP x.x psi" from `PT_Diff` |
+| `ptW`, `preX`, `maxX` | Bar positions on a bar that spans 110 % of `Press_Max`: fill = `PT` (0 when invalid), markers at the prefill pressure and at `Press_Max` |
+| `pre`, `pmax` | Prefill and maximum pressure as `#,##0.0` |
+
+**Step strip (`steps`, `stepText`)**
+
+Each of the six steps is Pending, Active, Done or Fault. `steps[n]` is the segment class (`Station/Step/*`) and `stepText[n]` is the caption class.
+
+| Step | Done when | Active when |
+|---|---|---|
+| Vessel | `Vessel_Present` | never |
+| Vac | `Vacuumed` | `Vacuuming` |
+| Prefill | `Press_Balanced` | `Active` and `Vacuumed` and not `Filling` |
+| Fill | `Complete` or `SampleCMD` | `Filling` |
+| Sample | `Complete` | `SampleCMD` |
+| Done | `Complete` | never |
+
+When `Disabled`, every step is Pending. When `Failed`, the first step that is not Done is drawn as Fault.
+
+**Permissives and valves**
+
+| `s` member | Calculation |
+|---|---|
+| `permLed[0..4]`, `permTxt[0..4]` | LED on or off, and darker text when true, for `Vessel_Present`, `PT_Valid`, `Press_Balanced`, `ReadyToStart`, `ReadyToFill` |
+| `inReq`/`inCmd`, `smReq`/`smCmd`, `vaReq`/`vaCmd` | LED for each valve's request and command (Inlet, Sample, Vacuum) |
+| `inIlk`, `smIlk`, `vaIlk` | The `I` badge: request on and command off |
+
+**Commands**
+
+| `s` member | Calculation |
+|---|---|
+| `tzLocked` | `busy` or `Disabled`. Locks Tare and Zero |
+| `resetLocked` | not (`Complete` or `Failed`). Locks Reset |
+| `foot` | "Station disabled: commands unavailable", else "Tare and Zero locked while active" when `tzLocked`, else blank |
+
+The view's two other custom properties are `level`, the user's role level (1 or higher enables the controls), and `pendingCmd`, the command waiting for Confirm or Cancel. Both are described under Properties reference.
+
+### PLC members that already provide some of `s`
+
+`T_Station` calculates some of these values in the PLC, but the view doesn't read them:
+
+- **`Sts_State`** (0=Idle, 1=Selected, 2=Vacuum, 3=Prefill, 4=Fill, 5=Sample, 6=Complete, 7=Failed, 8=Disabled) carries the same information as the status priority table and the step strip.
+- **`Val_Remaining`** and **`Val_PctDone`** are `rem` and `pct`.
+- **`Perm`** (`T_Intlk`) holds up to 16 permissive conditions, each with its own description text (`Cfg_CondDesc[n]`), state (`Inp_Cond[n]`), used, bypassed and first-out flags. The view hard-codes five permissive labels instead.
+
+Reading these directly would remove most of the transform. Each element could then bind straight to a PLC tag by its real name. First confirm that the plant's station tags include these members.
+
 ## How it operates
 
 **Header.** The name is `custom.s.name` (`Cfg_Desc`, or "Station" when blank). The scale is `custom.s.scale` (`Cfg_ScaleName`).
@@ -60,7 +196,7 @@ The operator dynamic window for a fill station (T_Station). It is the full stati
 
 #### Derived state (`custom.s`)
 
-`custom.s` is one property binding on `view.custom.t` with a script transform. Every time the transform runs it returns a single dictionary of the keys below. Components bind to individual keys (for example `view.custom.s.word`, `view.custom.s.steps[0]`). The transform is explained in the Scripts reference.
+`custom.s` is one property binding on `view.custom.t` with a script transform. Every time the transform runs it returns a single dictionary of the keys below. Components bind to individual keys (for example `view.custom.s.word`, `view.custom.s.steps[0]`). How each key is calculated is in [Start here](#start-here-what-s-and-t-are); the transform code is in the Scripts reference.
 
 Keys: `name`, `scale`, `word`, `chip`, `msg`, `units`, `busy`, `dis`, `sel`, `selText`, `selCls`, `hiCls`, `net`, `target`, `rem`, `db`, `gross`, `tare`, `total`, `pct`, `fillCls`, `fillW`, `tgtX`, `dbX`, `dbW`, `pt`, `ptBad`, `ptCls`, `ptSmallCls`, `ptd`, `ptW`, `preX`, `maxX`, `pre`, `pmax`, `steps`, `stepText`, `permLed`, `permTxt`, `inReq`, `inCmd`, `inIlk`, `smReq`, `smCmd`, `smIlk`, `vaReq`, `vaCmd`, `vaIlk`, `tzLocked`, `resetLocked`, `foot`.
 
@@ -675,6 +811,9 @@ All paths are relative to `tagPath`. Types and comments come from `types/PCLib_M
 - **Derived state refresh.** All derived values come from one property binding on `custom.t`. `docs/station-faceplates.md` lists as an open item whether the binding recalculates when one member changes. The view file cannot show this. Confirm on the gateway.
 - **Stale faceplate doc.** `docs/station-faceplates.md` describes a 300 x 800 sidebar opened with `system.perspective.openDock("StationSidebar")`, command pulses named `TareCMD`, `ZeroCMD`, `HMI_Reset` and `HMI_Select`, and a `DDT_Station` type. The built dock is 400 x 860, opened by `efc.ui.openDynamic` as `dw_Station`, and writes the T_Station members `Cmd_Tare`, `Cmd_Zero`, `Cmd_Reset` and `Cmd_Select`. Update that document.
 - **Prefill setpoint naming.** The view binds `custom.t.SamplePress` to `Prm_PrefillPress`, and the Prefill setpoint writes that member. The PCLib comment says `Prm_PrefillPress` is the prefill pressure, which matches the label. The `SamplePress` name in `station-faceplates.md` is a leftover; the open item there is resolved by the PCLib comment, but the gateway tag mapping still needs checking.
+- **Permissive and valve labels overlap.** `Body/PermIO` is a row of two columns, `Perms` and `Valves`, each `basis: 0px, grow: 1`, so each gets half the width. The permissive labels (`Perm0`–`Perm4/Txt`) are `Text/Mod/NoWrap` with `shrink: 0`, and the longer ones ("Vessel present", "Press balanced", "Ready to start") are wider than half the faceplate. They run into the Valves column, so "Vessel present" is cut off where "Inlet" starts. Ignition then puts scrollbars on the overflowing containers, and the scrollbars push the 1.481vh rows onto each other. The `Req` and `Cmd` lamp cells in the Valves column are squeezed the same way and show scroll arrows. Fix: stack Permissives above Valves at full width, or keep two columns with a wider Permissives column and shorter labels.
+- **Missing members are invisible on screen.** On the plant tag `[EFC]RGTCR/Stations/Station 2`, one `custom.t` binding reports `Bad_NodeIdUnknown`: that member does not exist on the station's tags. The transform turns it into `false`/`0`, so the screen shows a normal-looking value. To find which member it is, expand `custom.t` in the Designer and look for the flagged row. In the demo tags, `tags/Station_Demo_Instances.json` does not define `Cfg_EU`, `Out_SampleCmd`, `Out_VacuumCmd`, `Sts_Recovering`, `Sts_SampleReq`, `Sts_VacuumReq`, `Sts_Vacuuming` or `Sts_Venting` on any instance.
+- **Valves on the station.** `T_Station` is described as "vessel on a scale, inlet / sample / vacuum valves", and the faceplate shows their REQ and CMD lamps. If the plant stations have no valves, remove the Valves block here and the valve members from `T_Station` (`types/gen_pclib.py`). The proposal is to use the space for the station alarms (`Alm_Failed`, `Alm_OverFill`, `Alm_PressHi`, `Alm_ScaleFault`).
 - **No scroll on the root.** The root has `Util/Clip` and no `Container/Scroll`. At 860 px, any content taller than that is clipped. Check the layout on the gateway at 1080p.
 - **Built from the imported project.** Edits belong in `imported/EFC_StationFaceplates`, followed by `steward/tools/fix_station.py` and a `build.py` run. The `build_station.py` generator named in `station-faceplates.md` is not in the repo.
 - **Related help pages.** The Overview links `Templates/Station/Station_Tile.md`, which exists in `docs/help`. `Station_Fill.md` is not linked from this file.
