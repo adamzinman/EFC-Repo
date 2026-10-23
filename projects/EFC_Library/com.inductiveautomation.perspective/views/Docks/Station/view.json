@@ -834,7 +834,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "(\"Container/Faceplate\" + {view.custom.s.hiCls}) + ' Station/Sidebar/Status'"
+                    "expression": "try((\"Container/Faceplate\" + {view.custom.s.hiCls}) + ' Station/Sidebar/Status', 'Container/Faceplate Station/Sidebar/Status')"
                   }
                 }
               }
@@ -891,7 +891,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "({view.custom.s.chip}) + ' Station/Fill/Chip'"
+                            "expression": "try(({view.custom.s.chip}) + ' Station/Fill/Chip', 'State/Stopped Station/Fill/Chip')"
                           }
                         }
                       }
@@ -945,7 +945,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.s.selCls}"
+                            "expression": "try({view.custom.s.selCls}, 'Button/Toggle/Off')"
                           }
                         }
                       },
@@ -1064,7 +1064,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.steps[0]}"
+                                "expression": "try({view.custom.s.steps[0]}, 'Station/Step/Pending')"
                               }
                             }
                           }
@@ -1092,7 +1092,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.stepText[0]}"
+                                "expression": "try({view.custom.s.stepText[0]}, 'Text/Caption Text/Mod/Center')"
                               }
                             }
                           }
@@ -1143,7 +1143,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.steps[1]}"
+                                "expression": "try({view.custom.s.steps[1]}, 'Station/Step/Pending')"
                               }
                             }
                           }
@@ -1171,7 +1171,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.stepText[1]}"
+                                "expression": "try({view.custom.s.stepText[1]}, 'Text/Caption Text/Mod/Center')"
                               }
                             }
                           }
@@ -1222,7 +1222,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.steps[2]}"
+                                "expression": "try({view.custom.s.steps[2]}, 'Station/Step/Pending')"
                               }
                             }
                           }
@@ -1250,7 +1250,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.stepText[2]}"
+                                "expression": "try({view.custom.s.stepText[2]}, 'Text/Caption Text/Mod/Center')"
                               }
                             }
                           }
@@ -1301,7 +1301,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.steps[3]}"
+                                "expression": "try({view.custom.s.steps[3]}, 'Station/Step/Pending')"
                               }
                             }
                           }
@@ -1329,7 +1329,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.stepText[3]}"
+                                "expression": "try({view.custom.s.stepText[3]}, 'Text/Caption Text/Mod/Center')"
                               }
                             }
                           }
@@ -1380,7 +1380,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.steps[4]}"
+                                "expression": "try({view.custom.s.steps[4]}, 'Station/Step/Pending')"
                               }
                             }
                           }
@@ -1408,7 +1408,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.stepText[4]}"
+                                "expression": "try({view.custom.s.stepText[4]}, 'Text/Caption Text/Mod/Center')"
                               }
                             }
                           }
@@ -1459,7 +1459,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.steps[5]}"
+                                "expression": "try({view.custom.s.steps[5]}, 'Station/Step/Pending')"
                               }
                             }
                           }
@@ -1487,7 +1487,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.stepText[5]}"
+                                "expression": "try({view.custom.s.stepText[5]}, 'Text/Caption Text/Mod/Center')"
                               }
                             }
                           }
@@ -1809,7 +1809,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.s.fillCls}"
+                            "expression": "try({view.custom.s.fillCls}, 'Bar/Fill')"
                           }
                         }
                       }
@@ -2458,7 +2458,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.s.ptCls}"
+                            "expression": "try({view.custom.s.ptCls}, 'Text/ValueLarge')"
                           }
                         }
                       }
@@ -2875,7 +2875,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "({view.custom.s.permLed[0]}) + ' Station/Sidebar/Led'"
+                                "expression": "try(({view.custom.s.permLed[0]}) + ' Station/Sidebar/Led', 'Indicator/LED/Off Station/Sidebar/Led')"
                               }
                             }
                           }
@@ -2903,7 +2903,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.permTxt[0]}"
+                                "expression": "try({view.custom.s.permTxt[0]}, 'Text/Label Text/Mod/NoWrap')"
                               }
                             }
                           }
@@ -2954,7 +2954,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "({view.custom.s.permLed[1]}) + ' Station/Sidebar/Led'"
+                                "expression": "try(({view.custom.s.permLed[1]}) + ' Station/Sidebar/Led', 'Indicator/LED/Off Station/Sidebar/Led')"
                               }
                             }
                           }
@@ -2982,7 +2982,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.permTxt[1]}"
+                                "expression": "try({view.custom.s.permTxt[1]}, 'Text/Label Text/Mod/NoWrap')"
                               }
                             }
                           }
@@ -3033,7 +3033,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "({view.custom.s.permLed[2]}) + ' Station/Sidebar/Led'"
+                                "expression": "try(({view.custom.s.permLed[2]}) + ' Station/Sidebar/Led', 'Indicator/LED/Off Station/Sidebar/Led')"
                               }
                             }
                           }
@@ -3061,7 +3061,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.permTxt[2]}"
+                                "expression": "try({view.custom.s.permTxt[2]}, 'Text/Label Text/Mod/NoWrap')"
                               }
                             }
                           }
@@ -3112,7 +3112,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "({view.custom.s.permLed[3]}) + ' Station/Sidebar/Led'"
+                                "expression": "try(({view.custom.s.permLed[3]}) + ' Station/Sidebar/Led', 'Indicator/LED/Off Station/Sidebar/Led')"
                               }
                             }
                           }
@@ -3140,7 +3140,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.permTxt[3]}"
+                                "expression": "try({view.custom.s.permTxt[3]}, 'Text/Label Text/Mod/NoWrap')"
                               }
                             }
                           }
@@ -3191,7 +3191,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "({view.custom.s.permLed[4]}) + ' Station/Sidebar/Led'"
+                                "expression": "try(({view.custom.s.permLed[4]}) + ' Station/Sidebar/Led', 'Indicator/LED/Off Station/Sidebar/Led')"
                               }
                             }
                           }
@@ -3219,7 +3219,7 @@
                             "binding": {
                               "type": "expr",
                               "config": {
-                                "expression": "{view.custom.s.permTxt[4]}"
+                                "expression": "try({view.custom.s.permTxt[4]}, 'Text/Label Text/Mod/NoWrap')"
                               }
                             }
                           }
@@ -3482,7 +3482,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "({view.custom.s.inReq}) + ' Station/Sidebar/Led'"
+                                    "expression": "try(({view.custom.s.inReq}) + ' Station/Sidebar/Led', 'Indicator/LED/Off Station/Sidebar/Led')"
                                   }
                                 }
                               }
@@ -3533,7 +3533,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "({view.custom.s.inCmd}) + ' Station/Sidebar/Led'"
+                                    "expression": "try(({view.custom.s.inCmd}) + ' Station/Sidebar/Led', 'Indicator/LED/Off Station/Sidebar/Led')"
                                   }
                                 }
                               }
@@ -3680,7 +3680,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "({view.custom.s.smReq}) + ' Station/Sidebar/Led'"
+                                    "expression": "try(({view.custom.s.smReq}) + ' Station/Sidebar/Led', 'Indicator/LED/Off Station/Sidebar/Led')"
                                   }
                                 }
                               }
@@ -3731,7 +3731,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "({view.custom.s.smCmd}) + ' Station/Sidebar/Led'"
+                                    "expression": "try(({view.custom.s.smCmd}) + ' Station/Sidebar/Led', 'Indicator/LED/Off Station/Sidebar/Led')"
                                   }
                                 }
                               }
@@ -3878,7 +3878,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "({view.custom.s.vaReq}) + ' Station/Sidebar/Led'"
+                                    "expression": "try(({view.custom.s.vaReq}) + ' Station/Sidebar/Led', 'Indicator/LED/Off Station/Sidebar/Led')"
                                   }
                                 }
                               }
@@ -3929,7 +3929,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "({view.custom.s.vaCmd}) + ' Station/Sidebar/Led'"
+                                    "expression": "try(({view.custom.s.vaCmd}) + ' Station/Sidebar/Led', 'Indicator/LED/Off Station/Sidebar/Led')"
                                   }
                                 }
                               }

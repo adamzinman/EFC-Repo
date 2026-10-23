@@ -1,0 +1,7 @@
+{
+  "title": "XSYImport",
+  "description": "Import Control Expert XSY HMI variables into the project's tag provider. Needs the EFC_Tools gateway scripts (see tools/xsyimport/README.md).",
+  "parent": "",
+  "enabled": true,
+  "inheritable": false
+}

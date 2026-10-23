@@ -1598,7 +1598,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Out_OK}, 'Indicator/Permissive', 'Indicator/Interlock')"
+                    "expression": "try(if({view.custom.m_Out_OK}, 'Indicator/Permissive', 'Indicator/Interlock'), 'Indicator/Interlock')"
                   }
                 }
               }
@@ -1656,7 +1656,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_0}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_0}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_0}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_0}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -1854,7 +1854,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_1}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_1}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_1}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_1}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -2052,7 +2052,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_2}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_2}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_2}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_2}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -2250,7 +2250,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_3}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_3}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_3}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_3}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -2448,7 +2448,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_4}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_4}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_4}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_4}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -2646,7 +2646,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_5}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_5}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_5}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_5}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -2844,7 +2844,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_6}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_6}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_6}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_6}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -3042,7 +3042,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_7}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_7}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_7}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_7}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -3240,7 +3240,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_8}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_8}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_8}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_8}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -3438,7 +3438,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_9}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_9}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_9}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_9}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -3636,7 +3636,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_10}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_10}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_10}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_10}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -3834,7 +3834,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_11}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_11}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_11}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_11}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -4032,7 +4032,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_12}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_12}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_12}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_12}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -4230,7 +4230,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_13}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_13}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_13}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_13}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -4428,7 +4428,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_14}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_14}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_14}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_14}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }
@@ -4626,7 +4626,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_15}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_15}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
+                    "expression": "try(if({view.custom.m_Sts_Bypassed_15}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_15}, 'Indicator/LED/On', 'Indicator/LED/Fault')), 'Indicator/LED/Unknown')"
                   }
                 }
               }

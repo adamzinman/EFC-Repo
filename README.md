@@ -34,6 +34,7 @@ generator/               SOURCE OF TRUTH for the generated parts
   pid_common.py, active.py, v2/, check_81.py, preview*.py, make_project_zip.py
 imported/                SOURCE for parts built in the Designer (EFC_IOFaceplates, EFC_StationFaceplates)
 projects/EFC_Library/    GENERATED: the single merged project, gateway folder layout. Don't hand-edit.
+EFC_Library_PROJECT.zip  GENERATED: the same project as a ready-to-import zip (the main download)
 tags/                    UDTs + demo instances (Tag Browser import JSON)
 symbols/                 GENERATED: 214 plain SVGs
 mockups/                 HTML design previews
@@ -53,7 +54,7 @@ Requires Python 3.9 or later, with no packages needed. Previews also need `pip i
 # 1. edit generator/*.py
 python3 build.py --preview      # 2. regenerate projects/, tags/, symbols/, docs/ and render the preview
 git diff --stat                 # 3. review: every template/style change is a JSON diff under projects/
-git commit -am "..."            # 4. commit generator AND generated files together
+git add -A && git commit -m "..."  # 4. commit generator AND generated files (incl. EFC_Library_PROJECT.zip) together
 ```
 
 - **Don't hand-edit `projects/`.** The next build overwrites it. Change the generator, or re-import the Designer export into `imported/`.
@@ -62,11 +63,13 @@ git commit -am "..."            # 4. commit generator AND generated files togeth
   1. Bump `VERSION.json` and add a `CHANGELOG.md` entry.
   2. Run `python3 build.py --dist`.
   3. Tag the commit (`git tag v7.1`) and attach the `dist/*.zip` files to the release.
-- **CI** (`.github/workflows/check.yml`): rebuilds on every push and fails if the committed `projects/` doesn't match the generator and `imported/`, or if the 8.1 import check fails.
+- **CI** (`.github/workflows/check.yml`): rebuilds on every push and fails if the committed `projects/` or `EFC_Library_PROJECT.zip` doesn't match the generator and `imported/`, or if the 8.1 import check fails.
 
 ## Getting it onto a gateway
 
-**Option A: import the zip.** Run `python3 build.py --dist`, then in the Gateway web page go to Config → Projects → Import and import `dist/EFC_Library_PROJECT.zip`. Use it on its own, or make it the parent of your HMI project.
+**Option A: import the zip.** Download [`EFC_Library_PROJECT.zip`](EFC_Library_PROJECT.zip) from the repo root. In the Gateway web page go to Config → Projects → Import and import it. Use it on its own, or make it the parent of your HMI project.
+
+`build.py` refreshes this zip on every run, so it always matches `projects/EFC_Library` in the same commit, and CI fails if it doesn't. Import only this file, because `project.json` must sit at the zip root. A GitHub "Download ZIP" of this repo, a zip of `projects/EFC_Library/` that includes the folder itself, or the old v6 zips in `archive/legacy-zips/` will not import.
 
 **Upgrading from v6.x:** EFC_Library replaces EFC_Styles, PID_Symbols, EFC_PID_Library, EFC_ProcessValues, PID_Loops, EFC_IOFaceplates and EFC_StationFaceplates. Re-point any HMI project that inherits from one of them to EFC_Library, then delete the old projects. Two folders moved: `IO/…` is now `Templates/IO/…` and `PID/…` is now `Templates/Loops/…`; update any of your own screens that embed or open those views by path.
 

@@ -780,7 +780,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "Util/Gap/M"
+            "classes": "State/Unknown Util/Gap/M"
           }
         },
         "propConfig": {
@@ -788,7 +788,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if({view.custom.m_Sts_Intlk}, 'State/Fault', if({view.custom.m_Sts_Track}, 'State/Transition', if({view.custom.m_Sts_Cas}, 'State/Running', if({view.custom.m_Sts_Auto}, 'State/Running', if({view.custom.m_Sts_Man}, 'State/Stopped', 'State/Unknown')))))"
+                "expression": "try(if({view.custom.m_Sts_Intlk}, 'State/Fault', if({view.custom.m_Sts_Track}, 'State/Transition', if({view.custom.m_Sts_Cas}, 'State/Running', if({view.custom.m_Sts_Auto}, 'State/Running', if({view.custom.m_Sts_Man}, 'State/Stopped', 'State/Unknown'))))), 'State/Unknown')"
               }
             }
           }
@@ -1036,7 +1036,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Sts_Man}, 'Button/Toggle/On', 'Button/Toggle/Off')"
+                            "expression": "try(if({view.custom.m_Sts_Man}, 'Button/Toggle/On', 'Button/Toggle/Off'), 'Button/Toggle/Off')"
                           }
                         }
                       }
@@ -1083,7 +1083,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Sts_Auto}, 'Button/Toggle/On', 'Button/Toggle/Off')"
+                            "expression": "try(if({view.custom.m_Sts_Auto}, 'Button/Toggle/On', 'Button/Toggle/Off'), 'Button/Toggle/Off')"
                           }
                         }
                       }
@@ -1130,7 +1130,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Sts_Cas}, 'Button/Toggle/On', 'Button/Toggle/Off')"
+                            "expression": "try(if({view.custom.m_Sts_Cas}, 'Button/Toggle/On', 'Button/Toggle/Off'), 'Button/Toggle/Off')"
                           }
                         }
                       }
@@ -1983,7 +1983,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_DevH_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_DevH_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_DevH_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_DevH_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "try(if({view.custom.m_Alm_DevH_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_DevH_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_DevH_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_DevH_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
                           }
                         }
                       }
@@ -2010,7 +2010,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_DevL_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_DevL_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_DevL_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_DevL_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "try(if({view.custom.m_Alm_DevL_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_DevL_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_DevL_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_DevL_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
                           }
                         }
                       }
@@ -2037,7 +2037,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_PVBad_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_PVBad_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_PVBad_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_PVBad_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "try(if({view.custom.m_Alm_PVBad_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_PVBad_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_PVBad_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_PVBad_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
                           }
                         }
                       }

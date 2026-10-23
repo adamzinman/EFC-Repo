@@ -1,0 +1,49 @@
+# FB_AlmCore - interface for tools/st2xdb.py
+# ISA-18.2 / IEC 62682 alarm state machine shared by FB_Alarm and FB_AlmLim.
+# Comments are documentation only; st2xdb does not emit them unless --var-comments.
+name: FB_AlmCore
+version: "1.00"
+sections:
+  - {name: Main, file: FB_AlmCore.st}
+
+inputs:
+  - {name: Cond,      type: BOOL, comment: Raw alarm condition}
+  - {name: Supp,      type: BOOL, comment: Suppressed by design (state G)}
+  - {name: OOSIn,     type: BOOL, comment: Owner device Out of Service (state H)}
+  - {name: Enabled,   type: BOOL, comment: Alarm configured / enabled}
+  - {name: LatchCfg,  type: BOOL, comment: Latching alarm (state E)}
+  - {name: NoAck,     type: BOOL, comment: No acknowledge required}
+  - {name: OnDly,     type: TIME, comment: On-delay}
+  - {name: OffDly,    type: TIME, comment: Off-delay}
+  - {name: MaxShelf,  type: TIME, comment: Maximum shelve time}
+  - {name: Ack,       type: BOOL, comment: Acknowledge command}
+  - {name: Rst,       type: BOOL, comment: Reset latched alarm command}
+  - {name: Shelve,    type: BOOL, comment: Shelve command}
+  - {name: Unshelve,  type: BOOL, comment: Unshelve command}
+  - {name: RemoveSvc, type: BOOL, comment: Remove from service command}
+  - {name: ReturnSvc, type: BOOL, comment: Return to service command}
+
+outputs:
+  - {name: Active,     type: BOOL, comment: Alarm active (after delays and latch)}
+  - {name: Unack,      type: BOOL, comment: Unacknowledged}
+  - {name: Shelved,    type: BOOL, comment: Shelved (state F)}
+  - {name: Suppressed, type: BOOL, comment: Suppressed by design (state G)}
+  - {name: OOS,        type: BOOL, comment: Out of service (state H)}
+  - {name: State,      type: INT,  comment: 0=A Normal 1=B Unack 2=C Acked 3=D RTN-Unack 4=E Latched 5=F Shelved 6=G Suppressed 7=H OOS}
+  - {name: ShelfLeft,  type: TIME, comment: Shelve time remaining}
+  - {name: EvtActive,  type: BOOL, comment: One-scan pulse - alarm became active}
+  - {name: EvtRTN,     type: BOOL, comment: One-scan pulse - alarm returned to normal}
+
+private:
+  - {name: xInitDone,   type: BOOL, comment: FALSE until the first scan after a cold start has run}
+  - {name: xOOS,        type: BOOL, comment: Removed-from-service memory}
+  - {name: xShelved,    type: BOOL, comment: Shelved memory}
+  - {name: xInhibit,    type: BOOL, comment: OOS, shelved, suppressed or disabled}
+  - {name: xCond,       type: BOOL, comment: Condition after on/off delays}
+  - {name: xLatch,      type: BOOL, comment: Latched memory}
+  - {name: xActive,     type: BOOL, comment: Active}
+  - {name: xActivePrev, type: BOOL, comment: Active on the previous scan (edge detection)}
+  - {name: xUnack,      type: BOOL, comment: Unacknowledged memory}
+  - {name: tonShelf,    type: TON,  comment: Shelve timer}
+  - {name: tonOn,       type: TON,  comment: On-delay timer}
+  - {name: tofOff,      type: TOF,  comment: Off-delay timer}

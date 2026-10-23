@@ -273,7 +273,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "Util/Gap/M"
+            "classes": "State/Unknown Util/Gap/M"
           }
         },
         "propConfig": {
@@ -281,7 +281,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if(isNull({view.custom.m_Module_MOD_ERROR}) || !isGood({view.custom.m_Module_MOD_ERROR}), 'State/Unknown', if({view.custom.m_Module_MOD_ERROR}, 'State/Fault', if(true, 'State/Running', 'State/Unknown')))"
+                "expression": "try(if(isNull({view.custom.m_Module_MOD_ERROR}) || !isGood({view.custom.m_Module_MOD_ERROR}), 'State/Unknown', if({view.custom.m_Module_MOD_ERROR}, 'State/Fault', if(true, 'State/Running', 'State/Unknown'))), 'State/Unknown')"
               }
             }
           }

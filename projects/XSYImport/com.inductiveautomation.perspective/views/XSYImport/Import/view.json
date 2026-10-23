@@ -1,0 +1,251 @@
+{
+  "custom": {
+    "providers": [],
+    "provider": null,
+    "opcServer": "",
+    "fileB64": null,
+    "report": "",
+    "counts": "",
+    "canApply": false,
+    "payload": null
+  },
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 900,
+      "height": 700
+    },
+    "style": {
+      "padding": "16px"
+    }
+  },
+  "root": {
+    "type": "ia.container.flex",
+    "version": 0,
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column",
+      "gap": "10px"
+    },
+    "events": {
+      "component": {
+        "onStartup": {
+          "type": "script",
+          "config": {
+            "script": "from efc import xsyimport_gw as g\nrows = g._provider_names(system.tag.getProviders())   # VERIFY: return type on 8.1\nself.view.custom.providers = [{\"label\": n, \"value\": n} for n in rows]\nself.view.custom.report = \"Pick a provider, the OPC server name and a .XSY file, then Dry run.\"\nself.view.custom.canApply = False\n"
+          }
+        }
+      }
+    },
+    "children": [
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "Title"
+        },
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "props": {
+          "text": "XSY tag import",
+          "style": {
+            "fontSize": "20px",
+            "fontWeight": "bold"
+          }
+        }
+      },
+      {
+        "type": "ia.input.dropdown",
+        "version": 0,
+        "meta": {
+          "name": "Provider"
+        },
+        "props": {
+          "placeholder": "Tag provider"
+        },
+        "propConfig": {
+          "props.options": {
+            "binding": {
+              "type": "property",
+              "config": {
+                "path": "view.custom.providers"
+              }
+            }
+          },
+          "props.value": {
+            "binding": {
+              "type": "property",
+              "config": {
+                "path": "view.custom.provider"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.input.text-field",
+        "version": 0,
+        "meta": {
+          "name": "OPC"
+        },
+        "props": {
+          "placeholder": "OPC server name for this project"
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "property",
+              "config": {
+                "path": "view.custom.opcServer"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.input.file-upload",
+        "version": 0,
+        "meta": {
+          "name": "XsyFile"
+        },
+        "props": {
+          "accept": ".xsy,.XSY"
+        },
+        "events": {
+          "component": {
+            "onFileUploaded": {
+              "type": "script",
+              "config": {
+                "script": "# VERIFY: name of the FileUpload event and where the uploaded bytes arrive on 8.1\nimport base64\nself.view.custom.fileB64 = base64.b64encode(event.file.read()) if hasattr(event, \"file\") else None\n"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.container.flex",
+        "version": 0,
+        "meta": {
+          "name": "Actions"
+        },
+        "props": {
+          "direction": "row",
+          "gap": "10px"
+        },
+        "children": [
+          {
+            "type": "ia.input.button",
+            "version": 0,
+            "meta": {
+              "name": "DryRun"
+            },
+            "position": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "props": {
+              "text": "Dry run"
+            },
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "type": "script",
+                  "config": {
+                    "script": "from efc import xsyimport_gw as g\nc = self.view.custom\nif not c.provider or not c.opcServer or not c.fileB64:\n    c.report = \"Provider, OPC server name and an XSY file are all required.\"\n    c.canApply = False\nelse:\n    payload = {\"provider\": c.provider, \"opcServer\": c.opcServer, \"data\": c.fileB64,\n               \"dryRun\": True, \"user\": session.props.auth.user.userName,   # VERIFY: userName property\n               \"layouts\": []}\n    res = g.handle(payload)\n    if \"error\" in res:\n        c.report = res[\"error\"]\n        c.canApply = False\n    else:\n        c.report = res[\"report\"]\n        c.counts = \"%d UDT, %d tags, %d conflicts, %d skipped\" % (\n            res[\"counts\"][\"udt_create\"], res[\"counts\"][\"tag_create\"],\n            res[\"counts\"][\"conflicts\"], res[\"counts\"][\"skipped\"])\n        c.payload = payload\n        c.canApply = True\n"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "ia.input.button",
+            "version": 0,
+            "meta": {
+              "name": "Apply"
+            },
+            "position": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "props": {
+              "text": "Apply"
+            },
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "type": "script",
+                  "config": {
+                    "script": "from efc import xsyimport_gw as g\nc = self.view.custom\nif not c.canApply or not c.payload:\n    c.report = \"Run a dry run first.\"\nelse:\n    payload = dict(c.payload)\n    payload[\"dryRun\"] = False\n    res = g.handle(payload)\n    if \"error\" in res:\n        c.report = res[\"error\"]\n    else:\n        errs = res.get(\"errors\", [])\n        c.report = res[\"report\"] + \"\\n\\nApplied. Errors: %d. Left after re-read: %s\" % (len(errs), res.get(\"remaining\"))\n        if errs:\n            c.report += \"\\n\" + \"\\n\".join(errs[:50])\n    c.canApply = False\n    c.payload = None\n"
+                  }
+                }
+              }
+            },
+            "propConfig": {
+              "props.enabled": {
+                "binding": {
+                  "type": "property",
+                  "config": {
+                    "path": "view.custom.canApply"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "Counts"
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "property",
+              "config": {
+                "path": "view.custom.counts"
+              }
+            }
+          }
+        },
+        "props": {
+          "text": ""
+        }
+      },
+      {
+        "type": "ia.input.text-area",
+        "version": 0,
+        "meta": {
+          "name": "Report"
+        },
+        "props": {
+          "readOnly": true,
+          "style": {
+            "fontFamily": "monospace"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "property",
+              "config": {
+                "path": "view.custom.report"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

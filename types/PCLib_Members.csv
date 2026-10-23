@@ -375,6 +375,7 @@ T_VFD,Control module,MonAnaDrv,Sts_CommFail,BOOL,,Communication failure
 T_VFD,Control module,MonAnaDrv,Val_SpdRef,REAL,,Active speed reference
 T_VFD,Control module,MonAnaDrv,Val_Spd,REAL,,Speed
 T_VFD,Control module,MonAnaDrv,Val_Current,REAL,,Motor current (A)
+T_VFD,Control module,MonAnaDrv,Val_LoadPct,REAL,,Load (% of Cfg_RatedAmps)
 T_VFD,Control module,MonAnaDrv,Val_Torque,REAL,,Torque (%)
 T_VFD,Control module,MonAnaDrv,Val_Power,REAL,,Power (kW)
 T_VFD,Control module,MonAnaDrv,Val_Energy,LREAL,,"Energy (kWh), integrated from power"

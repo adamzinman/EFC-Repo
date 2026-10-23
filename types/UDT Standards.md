@@ -617,6 +617,7 @@ Variable speed drive (fieldbus or hardwired).
 | `Val_SpdRef` | `REAL` |  | Active speed reference |
 | `Val_Spd` | `REAL` |  | Speed |
 | `Val_Current` | `REAL` |  | Motor current (A) |
+| `Val_LoadPct` | `REAL` |  | Load (% of Cfg_RatedAmps) |
 | `Val_Torque` | `REAL` |  | Torque (%) |
 | `Val_Power` | `REAL` |  | Power (kW) |
 | `Val_Energy` | `LREAL` |  | Energy (kWh), integrated from power |

@@ -8,3 +8,13 @@
 *.zip  binary
 # generated Perspective resources: collapse in GitHub PR diffs (still diffable locally)
 projects/**/*.json linguist-generated=true
+# Control Expert exchange files must keep their CRLF line endings byte-for-byte
+*.xdb  -text
+*.XDB  -text
+*.xdd  -text
+*.XDD  -text
+*.xsy  -text
+*.XSY  -text
+*.xef  -text
+*.st   -text
+*.zef  binary

@@ -21,7 +21,7 @@
       "direction": "row",
       "alignItems": "flex-start",
       "style": {
-        "classes": "Container/Screen Indicator/Analog//root"
+        "classes": "Container/Screen Indicator/Analog/Examples/root"
       }
     },
     "children": [
@@ -122,7 +122,7 @@
           "direction": "column",
           "alignItems": "stretch",
           "style": {
-            "classes": "Indicator/Analog//C"
+            "classes": "Indicator/Analog/Examples/C"
           }
         },
         "children": [
@@ -181,7 +181,7 @@
           "direction": "row",
           "alignItems": "flex-start",
           "style": {
-            "classes": "Indicator/Analog//D"
+            "classes": "Indicator/Analog/Examples/D"
           }
         },
         "children": [

@@ -475,6 +475,7 @@ T("VFD", "Variable speed drive (fieldbus or hardwired)", HDR + [
     M("Val_SpdRef", "REAL", "Active speed reference"),
     M("Val_Spd", "REAL", "Speed"),
     M("Val_Current", "REAL", "Motor current (A)"),
+    M("Val_LoadPct", "REAL", "Load (% of Cfg_RatedAmps)"),
     M("Val_Torque", "REAL", "Torque (%)"),
     M("Val_Power", "REAL", "Power (kW)"),
     M("Val_Energy", "LREAL", "Energy (kWh), integrated from power"),

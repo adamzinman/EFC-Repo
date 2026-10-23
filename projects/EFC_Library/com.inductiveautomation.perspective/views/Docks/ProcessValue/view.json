@@ -840,7 +840,7 @@
           "direction": "row",
           "alignItems": "center",
           "style": {
-            "classes": "Util/Gap/M"
+            "classes": "State/Unknown Util/Gap/M"
           }
         },
         "propConfig": {
@@ -848,7 +848,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if({view.custom.m_Sts_Bad}, 'State/Fault', if(true, 'State/Stopped', 'State/Unknown'))"
+                "expression": "try(if({view.custom.m_Sts_Bad}, 'State/Fault', if(true, 'State/Stopped', 'State/Unknown')), 'State/Unknown')"
               }
             }
           }
@@ -1644,7 +1644,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_HH_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_HH_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_HH_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_HH_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "try(if({view.custom.m_Alm_HH_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_HH_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_HH_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_HH_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
                           }
                         }
                       }
@@ -1671,7 +1671,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_H_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_H_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_H_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_H_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "try(if({view.custom.m_Alm_H_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_H_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_H_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_H_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
                           }
                         }
                       }
@@ -1698,7 +1698,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_L_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_L_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_L_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_L_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "try(if({view.custom.m_Alm_L_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_L_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_L_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_L_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
                           }
                         }
                       }
@@ -1725,7 +1725,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_LL_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_LL_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_LL_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_LL_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "try(if({view.custom.m_Alm_LL_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_LL_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_LL_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_LL_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
                           }
                         }
                       }
@@ -1752,7 +1752,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_ROC_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_ROC_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_ROC_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_ROC_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "try(if({view.custom.m_Alm_ROC_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_ROC_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_ROC_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_ROC_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
                           }
                         }
                       }
@@ -1779,7 +1779,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_Bad_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_Bad_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_Bad_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_Bad_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "try(if({view.custom.m_Alm_Bad_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_Bad_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_Bad_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_Bad_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
                           }
                         }
                       }
