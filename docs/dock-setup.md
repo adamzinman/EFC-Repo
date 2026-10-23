@@ -30,7 +30,7 @@ Dynamic windows open in a built-in Perspective **right dock in push mode**. The 
    | View Parameters | `defaultPath` = the screen's trend view, for example `Screens/<Area>/Trends`; `defaultParams` = that view's params as an object (or `{}`); leave `path`, `tagPath` and `model` empty |
 
 5. **Trend dock:** there's no separate trend dock. The screen's trends are the default view of `efcDynamic` (`defaultPath`), so the right column shows the trends until an operator opens a dynamic window, and goes back to them on close.
-6. **Shell:** take the right-hand trends / dynamic-window region out of the screen shell. The primary view becomes the header, left menu, main process area (1400 × 860) and alarm bar. If the shell's percent-mode root has its aspect ratio locked to 16:9, adjust it, because the dock now uses 400 px of the page width. Check whether the right dock runs the full page height or sits between the header and the alarm bar. The Ignition docs don't say this for East docks. If the header and alarm bar must span the full width, try moving them to top and bottom docks. This hasn't been verified.
+6. **Shell:** the dynamic window sits **between the header and the alarm bar**. So the header is a full-width **top** dock (80 px tall at 1080p), the alarm bar is a full-width **bottom** dock (140 px tall), and the primary view is the left menu and main process area (1400 × 860). The right dock `efcDynamic` fills the height between them, 860 px at 1080p. Take the old right-hand trends / dynamic-window region out of the shell. If the shell's percent-mode root has its aspect ratio locked to 16:9, adjust it, because the dock now uses 37.04 vh of the page width. This layout relies on Perspective's top, bottom and East dock placement, which hasn't been verified on a gateway.
 7. **Remove the old wiring** from earlier builds: any `Docks/Region` embedded view, the `session.custom.efcDw` session property, and any screen `onStartup` call to `efc.ui.setDefaultDock`. Templates need no change, because they still call `efc.ui.openDynamic(self)`, `efc.ui.closeDynamic(self)` and `efc.ui.dblCmd(self)`.
 
 ## Width
@@ -42,6 +42,7 @@ The dock is sized from the screen height, so it matches the windows at every dis
 
 ## Check in a gateway (8.1 and 8.3)
 - [ ] The page opens with the trends in the right column, and the process area is not covered.
+- [ ] The header is a full-width top dock and the alarm bar a full-width bottom dock. The dynamic window fills the height between them, at 1080p and at 2160p.
 - [ ] Clicking a valve, motor or PV symbol shows its window in the dock, and a second click on another symbol replaces it.
 - [ ] ✕ returns the dock to the trends. On a page with no `defaultPath`, ✕ closes the dock and the process area grows back.
 - [ ] The trend expand grows the graph inside the window, and the dock width does not change.

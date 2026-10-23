@@ -67,7 +67,8 @@ Old, Size and position (line 36 of the working copy):
 New:
 
 ```latex
-  \item \textbf{Size and position.} The dynamic window is the right dock \texttt{efcDynamic} in push mode: its own column on the right edge, with the process area beside it. The dock width is 37.04\,vh, which is 400 px at 1920 $	imes$ 1080 and 800 px at 3840 $	imes$ 2160 (Appendix~ef{app:screen-design}), set at runtime by 	exttt{efc.ui.sizeDock}. The window content inside the dock is sized in viewport height: 37.04\,vh wide and 79.63\,vh tall at 1920 $\times$ 1080. The runtime sizing is open item A and is not verified in a gateway. Whether the dock runs the full height or sits between the header and the alarm bar is open item B.
+  \item \textbf{Size and position.} The dynamic window is the right dock \texttt{efcDynamic} in push mode: its own column on the right edge, with the process area beside it. The dock width is 37.04\,vh, which is 400 px at 1920 $	imes$ 1080 and 800 px at 3840 $	imes$ 2160 (Appendix~
+ef{app:screen-design}), set at runtime by 	exttt{efc.ui.sizeDock}. The window content inside the dock is sized in viewport height: 37.04\,vh wide and 79.63\,vh tall at 1920 $\times$ 1080. The runtime sizing is open item A and is not verified in a gateway. Whether the dock runs the full height or sits between the header and the alarm bar is open item B.
 ```
 
 Old, Closing (line 38 of the working copy):
@@ -145,7 +146,7 @@ Add to item 13, at the end of the item, one sentence: `Right dock efcDynamic (de
 ## Still open (need Adam; not resolved by this file)
 
 - **A. Dock width from the viewport.** The dock width is set at runtime to 37.04 % of the viewport height, so it scales with the window content (400 px at 1080p, 800 px at 2160p). `efc.ui.sizeDock` calls `alterDock` (8.1.19+). The viewport binding (`page.props.dimensions.viewport.height`) is not verified in a gateway. Confirm on 1080p and 2160p before this text is applied.
-- **B. Full height or between header and alarm bar.** Decision 25 says the window fills the full height between the header and the alarm bar. An East dock may run the full height of the page instead, which would move the header and alarm bar. Option: header and alarm bar as top and bottom docks. Not verified in Ignition documentation.
+- **B. Resolved: between header and alarm bar.** The window sits between the header and the alarm bar (decision 25). The header becomes a full-width top dock and the alarm bar a full-width bottom dock, and the East dock `efcDynamic` fills the height between them. Not yet verified on a gateway.
 - **C. Shell aspect lock.** The shell root is locked to 16:9 (Container Settings table). With the dock outside the primary view, the locked shell does not include the 400 px (or 800 px at 4K) column. Whether the lock stays, moves, or is removed is open.
 - **D. Gateway verification.** None of the dock steps have been tested on an 8.1 or 8.3 gateway. The checklist is in `docs/dock-setup.md`. Until it passes, the text should not be called verified.
 - **E. Dock view container settings.** The Container Settings table does not list `Docks/Host` or the `Docks/*` windows. Their root container, mode and aspect ratio are not defined here. Add a row only after A is closed.
