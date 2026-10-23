@@ -278,3 +278,4 @@ All paths are relative to `tagPath`. Every member is read. There are no writes a
 13. **No acknowledgement or commands.** The view is display-only. Acknowledgement is not available here.
 14. **No role check.** The click does not read the user's role level. Whether `Docks/ProcessValue` enforces roles for its own write entries was not checked here.
 15. **Documentation drift.** `CHANGES-analog-indicators.md` (dated 2026-10-20) says there is no dynamic window yet, and places the views in `projects/EFC_AnalogIndicators/`. The copies checked here are under `projects/EFC_Library/`, and the click does open a window.
+16. **`sdesc` is bound but never read.** `custom.sdesc` mirrors `Cfg_ShortDesc` (see the tag mirror table), but no binding or script in this view uses it. The short description is used by C_CompactRow and D_MiniColumn only. Bind it to the header here, or drop the mirror.

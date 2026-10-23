@@ -236,6 +236,7 @@ Indentation shows parent and child. Each entry is `name` (component type).
 2. **`tick` drives nothing.** Same as PV_StatusStrip: `docs/pv-display.md` describes a transform on `tick` that is not in this view.
 3. **OVR and UNR never blink.** Same as PV_StatusStrip.
 4. **Empty `tagPath` still opens the dock.** Same as PV_StatusStrip.
+5. **`activePri`, `clearedPri` and `anyUnacked` are computed but never read.** Each is an expression over the four alarm levels (`aHH`, `aH`, `aL`, `aLL` and `aFLT`), but no binding or script in this view uses any of them. `anyUnacked` is read only by PV_StatusStrip.
 
 **Open questions**
 
