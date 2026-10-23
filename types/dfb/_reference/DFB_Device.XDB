@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FBExchangeFile>
+	<fileHeader company="Schneider Automation" product="Control Expert V16.2 - 250430" dateTime="date_and_time#2026-10-21-14:6:8" content="Function Block source file" DTDVersion="41"></fileHeader>
+	<contentHeader name="RGTCR" version="0.0.379" dateTime="date_and_time#2026-2-4-12:11:13"></contentHeader>
+	<FBSource nameOfFBType="DFB_Device" version="0.28" dateTime="dt#2026-03-12-15:26:01">
+		<attribute name="TypeCodeCheckSumString" value="088A"></attribute>
+		<attribute name="TypeSignatureCheckSumString" value="FB2C"></attribute>
+		<attribute name="UseNewTplSignAlgo" value="TRUE"></attribute>
+		<inputParameters>
+			<variables name="Interlock" typeName="BOOL">
+				<attribute name="PositionPin" value="3"></attribute>
+			</variables>
+			<variables name="Estop" typeName="BOOL">
+				<attribute name="PositionPin" value="4"></attribute>
+			</variables>
+			<variables name="FB_Enb" typeName="BOOL">
+				<attribute name="PositionPin" value="5"></attribute>
+			</variables>
+			<variables name="Sys_Auto" typeName="BOOL">
+				<attribute name="PositionPin" value="6"></attribute>
+			</variables>
+			<variables name="Sys_Man" typeName="BOOL">
+				<attribute name="PositionPin" value="7"></attribute>
+			</variables>
+			<variables name="Sys_Off" typeName="BOOL">
+				<attribute name="PositionPin" value="8"></attribute>
+			</variables>
+		</inputParameters>
+		<inOutParameters>
+			<variables name="DEV" typeName="DDT_Device">
+				<attribute name="PositionPin" value="1"></attribute>
+			</variables>
+		</inOutParameters>
+		<publicLocalVariables>
+			<variables name="HMI_CMD" typeName="BOOL"></variables>
+			<variables name="Mode" typeName="INT"></variables>
+			<variables name="Runtime" typeName="REAL"></variables>
+			<variables name="Reset_Runtime" typeName="BOOL"></variables>
+			<variables name="Motor_Stalled" typeName="BOOL"></variables>
+		</publicLocalVariables>
+		<privateLocalVariables>
+			<variables name="Run_Hour" typeName="REAL"></variables>
+			<variables name="Run_Min" typeName="REAL"></variables>
+			<variables name="Run_Sec" typeName="REAL"></variables>
+			<variables name="Stall_TMR" typeName="TON"></variables>
+			<variables name="ModeEnum" typeName="DDT_Mode"></variables>
+			<variables name="TON_0" typeName="TON"></variables>
+			<variables name="TOF_0" typeName="TOF"></variables>
+		</privateLocalVariables>
+		<FBProgram name="Runtime_Tracking">
+			<STSource>
+IF %S6 AND DEV.YI THEN
+	IF DEV.Run_Sec &lt; 59.0 THEN
+		DEV.Run_Sec := DEV.Run_Sec + 1.0;
+	ELSE
+		DEV.Run_Sec := 0.0;
+
+		IF DEV.Run_Min &lt; 59.0 THEN
+			DEV.Run_Min := Run_Min + 1.0;
+		ELSE
+			DEV.Run_Min := 0.0;
+			DEV.Run_Hour := Run_Hour + 1.0;
+		END_IF;
+	END_IF;
+END_IF;
+
+DEV.Runtime := DEV.Run_Hour + (DEV.Run_Min/60.0);
+
+IF DEV.Reset_Runtime THEN
+	DEV.Runtime := 0.0;
+	DEV.Reset_Runtime:=FALSE;
+END_IF;
+</STSource>
+		</FBProgram>
+		<FBProgram name="Commands">
+			<LDSource nbColumns="11">
+				<networkLD>
+					<typeLine>
+						<emptyLine nbRows="1"></emptyLine>
+					</typeLine>
+					<typeLine>
+						<contact typeContact="closedContact" contactVariableName="Estop"></contact>
+						<contact typeContact="closedContact" contactVariableName="Interlock"></contact>
+						<shortCircuit>
+							<VLink></VLink>
+							<HLink nbCells="5"></HLink>
+						</shortCircuit>
+						<HLink nbCells="3"></HLink>
+						<coil typeCoil="coil" coilVariableName="Dev.Auto_Perm"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="6"></emptyCell>
+						<VLink></VLink>
+						<emptyCell nbCells="4"></emptyCell>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="7"></emptyCell>
+						<HLink nbCells="3"></HLink>
+						<coil typeCoil="coil" coilVariableName="Dev.Man_Perm"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyLine nbRows="1"></emptyLine>
+					</typeLine>
+					<typeLine>
+						<shortCircuit>
+							<VLink></VLink>
+							<contact typeContact="PContact" contactVariableName="Dev.HMI_Auto"></contact>
+						</shortCircuit>
+						<shortCircuit>
+							<VLink></VLink>
+							<HLink nbCells="9"></HLink>
+						</shortCircuit>
+						<coil typeCoil="setCoil" coilVariableName="Dev.Auto"></coil>
+					</typeLine>
+					<typeLine>
+						<contact typeContact="PContact" contactVariableName="Sys_Auto"></contact>
+						<emptyCell nbCells="8"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.Manual"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="9"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.Off"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="9"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.LockedOut"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="10"></emptyCell>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.HMI_CMD"></coil>
+					</typeLine>
+					<typeLine>
+						<shortCircuit>
+							<VLink></VLink>
+							<contact typeContact="PContact" contactVariableName="Dev.HMI_Manual"></contact>
+						</shortCircuit>
+						<shortCircuit>
+							<VLink></VLink>
+							<HLink nbCells="9"></HLink>
+						</shortCircuit>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.Auto"></coil>
+					</typeLine>
+					<typeLine>
+						<contact typeContact="PContact" contactVariableName="Sys_Man"></contact>
+						<emptyCell nbCells="8"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="setCoil" coilVariableName="Dev.Manual"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="9"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.Off"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="9"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.LockedOut"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="10"></emptyCell>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.Req"></coil>
+					</typeLine>
+					<typeLine>
+						<shortCircuit>
+							<VLink></VLink>
+							<contact typeContact="PContact" contactVariableName="Dev.HMI_Off"></contact>
+						</shortCircuit>
+						<shortCircuit>
+							<VLink></VLink>
+							<HLink nbCells="9"></HLink>
+						</shortCircuit>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.Auto"></coil>
+					</typeLine>
+					<typeLine>
+						<contact typeContact="PContact" contactVariableName="Sys_Off"></contact>
+						<emptyCell nbCells="8"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.Manual"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="9"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="setCoil" coilVariableName="Dev.Off"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="9"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.LockedOut"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="9"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.HMI_CMD"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="10"></emptyCell>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.Req"></coil>
+					</typeLine>
+					<typeLine>
+						<contact typeContact="PContact" contactVariableName="Dev.HMI_Lockout"></contact>
+						<shortCircuit>
+							<VLink></VLink>
+							<HLink nbCells="9"></HLink>
+						</shortCircuit>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.Auto"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="9"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.Manual"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="9"></emptyCell>
+						<VLink></VLink>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.Off"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="10"></emptyCell>
+						<coil typeCoil="setCoil" coilVariableName="Dev.LockedOut"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyLine nbRows="1"></emptyLine>
+					</typeLine>
+					<typeLine>
+						<contact typeContact="openContact" contactVariableName="Dev.Req"></contact>
+						<contact typeContact="openContact" contactVariableName="Dev.Auto"></contact>
+						<shortCircuit>
+							<VLink></VLink>
+							<contact typeContact="openContact" contactVariableName="Dev.Auto_Perm"></contact>
+						</shortCircuit>
+						<contact typeContact="closedContact" contactVariableName="Interlock"></contact>
+						<contact typeContact="closedContact" contactVariableName="Estop"></contact>
+						<HLink nbCells="5"></HLink>
+						<coil typeCoil="coil" coilVariableName="Dev.CMD"></coil>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="2"></emptyCell>
+						<VLink></VLink>
+						<emptyCell nbCells="8"></emptyCell>
+					</typeLine>
+					<typeLine>
+						<emptyCell nbCells="2"></emptyCell>
+						<VLink></VLink>
+						<emptyCell nbCells="8"></emptyCell>
+					</typeLine>
+					<typeLine>
+						<contact typeContact="openContact" contactVariableName="Dev.HMI_CMD"></contact>
+						<contact typeContact="openContact" contactVariableName="Dev.Manual"></contact>
+						<contact typeContact="openContact" contactVariableName="Dev.Man_Perm"></contact>
+						<emptyCell nbCells="8"></emptyCell>
+					</typeLine>
+					<typeLine>
+						<shortCircuit>
+							<VLink></VLink>
+							<contact typeContact="openContact" contactVariableName="Interlock"></contact>
+						</shortCircuit>
+						<HLink nbCells="9"></HLink>
+						<coil typeCoil="resetCoil" coilVariableName="Dev.HMI_CMD"></coil>
+					</typeLine>
+					<typeLine>
+						<contact typeContact="openContact" contactVariableName="Estop"></contact>
+						<emptyCell nbCells="10"></emptyCell>
+					</typeLine>
+					<typeLine>
+						<emptyLine nbRows="68"></emptyLine>
+					</typeLine>
+					<textBox width="8" height="1">This takes the request from either manual or auto and if the logic is satisfied then issue the command to the device.<objPosition posX="1" posY="25"></objPosition>
+					</textBox>
+					<textBox width="8" height="1">Mode control for the Device<objPosition posX="1" posY="4"></objPosition>
+					</textBox>
+					<textBox width="8" height="1">Permissive Control<objPosition posX="1" posY="0"></objPosition>
+					</textBox>
+				</networkLD>
+			</LDSource>
+		</FBProgram>
+	</FBSource>
+	<DDTSource DDTName="DDT_Device" version="0.09" dateTime="dt#2026-02-11-11:08:12">
+		<attribute name="TypeSignatureCheckSumString" value="40A7"></attribute>
+		<structure>
+			<variables name="REQ" typeName="BOOL"></variables>
+			<variables name="Auto_Perm" typeName="BOOL"></variables>
+			<variables name="Man_Perm" typeName="BOOL"></variables>
+			<variables name="HMI_Auto" typeName="BOOL"></variables>
+			<variables name="HMI_Manual" typeName="BOOL"></variables>
+			<variables name="HMI_Off" typeName="BOOL"></variables>
+			<variables name="HMI_Lockout" typeName="BOOL"></variables>
+			<variables name="CMD" typeName="BOOL"></variables>
+			<variables name="YI" typeName="BOOL"></variables>
+			<variables name="YIF" typeName="BOOL"></variables>
+			<variables name="HMI_CMD" typeName="BOOL"></variables>
+			<variables name="Interlock" typeName="BOOL"></variables>
+			<variables name="FB_Enb" typeName="BOOL"></variables>
+			<variables name="Alarm" typeName="BOOL"></variables>
+			<variables name="Warning" typeName="BOOL"></variables>
+			<variables name="Auto" typeName="BOOL"></variables>
+			<variables name="Manual" typeName="BOOL"></variables>
+			<variables name="Off" typeName="BOOL"></variables>
+			<variables name="LockedOut" typeName="BOOL"></variables>
+			<variables name="Run_Sec" typeName="REAL"></variables>
+			<variables name="Run_Min" typeName="REAL"></variables>
+			<variables name="Run_Hour" typeName="REAL"></variables>
+			<variables name="Runtime" typeName="REAL"></variables>
+			<variables name="Reset_Runtime" typeName="BOOL"></variables>
+			<variables name="Enable_Stalling" typeName="BOOL"></variables>
+			<variables name="Comp_Ratio" typeName="REAL"></variables>
+			<variables name="Curr_Comp_Ratio" typeName="REAL"></variables>
+			<variables name="Stall_Time" typeName="INT"></variables>
+			<variables name="Stalled" typeName="BOOL"></variables>
+		</structure>
+	</DDTSource>
+	<DDTSource DDTName="DDT_Mode" version="0.03" dateTime="dt#2025-11-20-11:17:59">
+		<attribute name="TypeSignatureCheckSumString" value="08B5"></attribute>
+		<structure>
+			<variables name="Off" typeName="INT"></variables>
+			<variables name="Auto" typeName="INT"></variables>
+			<variables name="Manual" typeName="INT"></variables>
+		</structure>
+	</DDTSource>
+</FBExchangeFile>
