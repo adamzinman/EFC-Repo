@@ -24,7 +24,7 @@ Dynamic windows open in a built-in Perspective **right dock in push mode**. The 
    | Dock ID | `efcDynamic` (exactly this, because `efc.ui.DOCK_ID` uses it) |
    | Display | `visible` |
    | Content | `push` |
-   | Size | `400` on 1920 × 1080 clients; `800` on 3840 × 2160 clients (see [Width](#width)) |
+   | Size | `400` (starting value; `efc.ui.sizeDock` resizes it to 37.04 % of the viewport height, see [Width](#width)) |
    | Resizable? | off |
    | Handle | `Hide` |
    | View Parameters | `defaultPath` = the screen's trend view, for example `Screens/<Area>/Trends`; `defaultParams` = that view's params as an object (or `{}`); leave `path`, `tagPath` and `model` empty |
@@ -34,11 +34,11 @@ Dynamic windows open in a built-in Perspective **right dock in push mode**. The 
 7. **Remove the old wiring** from earlier builds: any `Docks/Region` embedded view, the `session.custom.efcDw` session property, and any screen `onStartup` call to `efc.ui.setDefaultDock`. Templates need no change, because they still call `efc.ui.openDynamic(self)`, `efc.ui.closeDynamic(self)` and `efc.ui.dblCmd(self)`.
 
 ## Width
-A Perspective dock **Size is in pixels**, not vh. The windows inside are sized in vh (37.04 vh = 400 px at 1080p, 800 px at 2160p), so the dock Size has to match the display class:
-- 1920 × 1080: Size 400
-- 3840 × 2160: Size 800
+The dock is sized from the screen height, so it matches the windows at every display size. `Docks/Host` binds `view.custom.viewportH` to `{page.props.dimensions.viewport.height}`. Its change script, `efc.ui.sizeDock`, calls `system.perspective.alterDock('efcDynamic', {'size': …})` with 37.04 % of that height. That gives 400 px at 1920 × 1080 and 800 px at 3840 × 2160. The windows are 37.04 vh wide, so they match.
 
-This repo doesn't solve the case of one page serving both display classes. The options are separate pages or page configurations per display class, or a script that sets the size at runtime with `system.perspective.alterDock("efcDynamic", {"size": …})`, which needs 8.1.19 or later. The screen owner needs to decide between them and test the result.
+- `alterDock` needs **8.1.19 or later**. On older versions the dock keeps the Size set in Page Configuration (set it to 400 for 1080p).
+- The viewport binding and `page.props.dimensions.viewport` are **not verified in a gateway**. They come from Inductiveautomation forum posts, not the docs. Test the dock at 1080p and 2160p before relying on it.
+- The Page Configuration Size is only the starting value, so set it to 400 and the runtime sizing takes over.
 
 ## Check in a gateway (8.1 and 8.3)
 - [ ] The page opens with the trends in the right column, and the process area is not covered.

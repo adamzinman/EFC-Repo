@@ -4,7 +4,7 @@ Instructions for an agent working on the EFC Controls Standard (LaTeX, Google Dr
 
 **Ordering:** this file depends on `CS-REV-I-hmi-rules-instructions.md` (DOC-QUEUE row 2) and `CS-REV-I-library-build-instructions.md` (row 3). The quoted old text is the text as it stands after rows 1-3 (working copies in `steward/standard-edits/rev-I-batch/`, which already contain the row 2 and 3 edits). The Drive rev I copies are the pre-batch text and do not contain it. Apply the row 2 and 3 edits first, or merge this file into the batch.
 
-**Why:** decision 31 (`steward/DECISIONS.md`, 2026-10-22) supersedes decision 24. Dynamic windows are no longer an Embedded View in the shell's right region. Every screen page now has a built-in Perspective right (East) docked view in push mode: Dock ID `efcDynamic`, view `Docks/Host`, Content `push`, Display `visible`, Size 400 px at 1920 x 1080 (800 px at 3840 x 2160), not resizable, handle hidden. The dock takes its own column, the process area shrinks, and nothing is covered. `efc.ui.openDynamic` opens the dock with the window's path, tag path and model. `efc.ui.closeDynamic` reopens it with an empty path, so the screen's default view returns (the dock's View Parameters `defaultPath` / `defaultParams`, set per page in Page Configuration). `session.custom.efcDw`, `Docks/Region` and `efc.ui.setDefaultDock` are removed. The within-window trend expand (decision 26) stays. Setup steps for screen owners: `docs/dock-setup.md` (status: not verified in a gateway). Decision 25 (window height 860 px, 37.04 vh) still holds for the content inside the dock.
+**Why:** decision 31 (`steward/DECISIONS.md`, 2026-10-22) supersedes decision 24. Dynamic windows are no longer an Embedded View in the shell's right region. Every screen page now has a built-in Perspective right (East) docked view in push mode: Dock ID `efcDynamic`, view `Docks/Host`, Content `push`, Display `visible`, width 37.04 vh (400 px at 1920 x 1080, 800 px at 3840 x 2160) set at runtime by `efc.ui.sizeDock`, not resizable by the operator, handle hidden. The dock takes its own column, the process area shrinks, and nothing is covered. `efc.ui.openDynamic` opens the dock with the window's path, tag path and model. `efc.ui.closeDynamic` reopens it with an empty path, so the screen's default view returns (the dock's View Parameters `defaultPath` / `defaultParams`, set per page in Page Configuration). `session.custom.efcDw`, `Docks/Region` and `efc.ui.setDefaultDock` are removed. The within-window trend expand (decision 26) stays. Setup steps for screen owners: `docs/dock-setup.md` (status: not verified in a gateway). Decision 25 (window height 860 px, 37.04 vh) still holds for the content inside the dock.
 
 **Source:** EFC-Repo branch `claude/loving-bohr-e99ok5`, DOC-QUEUE row 4. Anchors are taken from the rev I working copies (rows 1-3 applied) and checked against `revision.tex` in Drive, which reads `\documentrevision{I}`. The three source files were fetched from Drive but not byte-compared; re-check the anchors in the batch compile.
 
@@ -15,13 +15,13 @@ Replace the two sentences that start `Each screen region (header, menu, main are
 Old:
 
 ```latex
-Each screen region (header, menu, main area, trends, alarm bar) is an Embedded View placed in the shell. Perspective docks are not used for these regions, because docks are sized in fixed pixels and would not stay aligned with the scaled content.
+Each screen region (header, menu, main area, trends, alarm bar) is an Embedded View placed in the shell. Perspective docks are not used for these regions.
 ```
 
 New:
 
 ```latex
-Each screen region (header, menu, main area, alarm bar) is an Embedded View placed in the shell. The dynamic window is the one exception: it is a built-in Perspective right dock in push mode (Dock ID \texttt{efcDynamic}), outside the percent-mode root. The process area shrinks to make room for it, and nothing is covered. Docks are sized in fixed pixels, so the dock Size is set per display class (Section~\ref{sec:hmi-dw-open}).
+Each screen region (header, menu, main area, alarm bar) is an Embedded View placed in the shell. The dynamic window is the one exception: it is a built-in Perspective right dock in push mode (Dock ID \texttt{efcDynamic}), outside the percent-mode root. The process area shrinks to make room for it, and nothing is covered. The dock width is 37.04\,vh, set at runtime from the viewport height, so it scales with the window content (Section~\ref{sec:hmi-dw-open}).
 ```
 
 ## Edit 2: `appendices/perspective-screen-design.tex`, Container Settings table, row `Region views`
@@ -51,7 +51,7 @@ Replace the whole paragraph (it is the only paragraph in the Navigation and Dyna
 New:
 
 ```latex
-\textbf{Trends / dynamic window.} The right-hand dock of each screen page is a built-in Perspective view on the East edge, Dock ID \texttt{efcDynamic}, view \texttt{Docks/Host}, in push mode. It shows the screen's default view (normally the trends) or the open dynamic window. A click on a template symbol calls \texttt{openDynamic}, which opens the dock with that window's path, tag path and model. The close button calls \texttt{closeDynamic}, which reopens the dock with an empty path, so the default view returns. Each screen page sets its default view in the dock's View Parameters in Page Configuration (\texttt{defaultPath}, \texttt{defaultParams}). If the page has no default view, the dock is closed and the process area takes the full width. An expanded trend graph fills the dynamic window below its header; the window keeps its size and the dock never changes width. The dock Size is in pixels, not viewport height (Section~\ref{sec:hmi-dw-open}). The window content inside the dock is sized in viewport height, 37.04\,vh wide and 79.63\,vh tall at 1920 $\times$ 1080. What the dynamic window shows and how it opens and closes is set in Section~\ref{sec:hmi-dynamic-windows}. \newmark
+\textbf{Trends / dynamic window.} The right-hand dock of each screen page is a built-in Perspective view on the East edge, Dock ID \texttt{efcDynamic}, view \texttt{Docks/Host}, in push mode. It shows the screen's default view (normally the trends) or the open dynamic window. A click on a template symbol calls \texttt{openDynamic}, which opens the dock with that window's path, tag path and model. The close button calls \texttt{closeDynamic}, which reopens the dock with an empty path, so the default view returns. Each screen page sets its default view in the dock's View Parameters in Page Configuration (\texttt{defaultPath}, \texttt{defaultParams}). If the page has no default view, the dock is closed and the process area takes the full width. An expanded trend graph fills the dynamic window below its header; the window keeps its size and the dock never changes width. The dock width is set at runtime to 37.04\,vh (Section~\ref{sec:hmi-dw-open}). The window content inside the dock is sized in viewport height, 37.04\,vh wide and 79.63\,vh tall at 1920 $\times$ 1080. What the dynamic window shows and how it opens and closes is set in Section~\ref{sec:hmi-dynamic-windows}. \newmark
 ```
 
 ## Edit 4: `sections/hmi-dynamic-windows.tex`, `Size and position` and `Closing` items
@@ -67,7 +67,7 @@ Old, Size and position (line 36 of the working copy):
 New:
 
 ```latex
-  \item \textbf{Size and position.} The dynamic window is the right dock \texttt{efcDynamic} in push mode: its own column on the right edge, with the process area beside it. The dock Size is 400 px at 1920 $\times$ 1080 and 800 px at 3840 $\times$ 2160 (Appendix~\ref{app:screen-design}). Dock Size is in pixels, not viewport height. The window content inside the dock is sized in viewport height: 37.04\,vh wide and 79.63\,vh tall at 1920 $\times$ 1080. How one page serves both display classes is open item A. Whether the dock runs the full height or sits between the header and the alarm bar is open item B.
+  \item \textbf{Size and position.} The dynamic window is the right dock \texttt{efcDynamic} in push mode: its own column on the right edge, with the process area beside it. The dock width is 37.04\,vh, which is 400 px at 1920 $	imes$ 1080 and 800 px at 3840 $	imes$ 2160 (Appendix~ef{app:screen-design}), set at runtime by 	exttt{efc.ui.sizeDock}. The window content inside the dock is sized in viewport height: 37.04\,vh wide and 79.63\,vh tall at 1920 $\times$ 1080. The runtime sizing is open item A and is not verified in a gateway. Whether the dock runs the full height or sits between the header and the alarm bar is open item B.
 ```
 
 Old, Closing (line 38 of the working copy):
@@ -144,7 +144,7 @@ Add to item 13, at the end of the item, one sentence: `Right dock efcDynamic (de
 
 ## Still open (need Adam; not resolved by this file)
 
-- **A. Dock size in px, not vh.** The dock Size is in pixels, but the window content is in vh (37.04 vh = 400 px at 1080p; 800 px at 2160p). One page cannot serve both display classes with one fixed Size. Options recorded in `docs/dock-setup.md`: separate pages or page configurations per display class, or `system.perspective.alterDock("efcDynamic", {"size": ...})` at runtime (needs 8.1.19 or later). Not decided.
+- **A. Dock width from the viewport.** The dock width is set at runtime to 37.04 % of the viewport height, so it scales with the window content (400 px at 1080p, 800 px at 2160p). `efc.ui.sizeDock` calls `alterDock` (8.1.19+). The viewport binding (`page.props.dimensions.viewport.height`) is not verified in a gateway. Confirm on 1080p and 2160p before this text is applied.
 - **B. Full height or between header and alarm bar.** Decision 25 says the window fills the full height between the header and the alarm bar. An East dock may run the full height of the page instead, which would move the header and alarm bar. Option: header and alarm bar as top and bottom docks. Not verified in Ignition documentation.
 - **C. Shell aspect lock.** The shell root is locked to 16:9 (Container Settings table). With the dock outside the primary view, the locked shell does not include the 400 px (or 800 px at 4K) column. Whether the lock stays, moves, or is removed is open.
 - **D. Gateway verification.** None of the dock steps have been tested on an 8.1 or 8.3 gateway. The checklist is in `docs/dock-setup.md`. Until it passes, the text should not be called verified.

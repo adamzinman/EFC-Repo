@@ -7,7 +7,8 @@
     "show": {
       "path": "",
       "params": {}
-    }
+    },
+    "viewportH": 0
   },
   "params": {
     "path": "",
@@ -55,6 +56,18 @@
       "onChange": {
         "enabled": null,
         "script": "\tefc.ui.dockSync(self)"
+      }
+    },
+    "custom.viewportH": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "{page.props.dimensions.viewport.height}"
+        }
+      },
+      "onChange": {
+        "enabled": true,
+        "script": "\tefc.ui.sizeDock(self.view)"
       }
     }
   },
@@ -125,7 +138,7 @@
           "type": "script",
           "scope": "G",
           "config": {
-            "script": "\tefc.ui.dockSync(self.view)"
+            "script": "\tefc.ui.dockSync(self.view)\n\tefc.ui.sizeDock(self.view)"
           }
         }
       }

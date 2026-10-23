@@ -455,7 +455,7 @@ section("Dynamic windows");
   [["Header", "1920 x 80"], ["Left menu", "120 x 860"], ["Process area", "1400 x 860"], ["Dynamic window", "400 x 860"], ["Alarm bar", "1920 x 140"]].forEach(([a, b], i) => {
     T(s, [{ text: a, options: { bold: true, breakLine: true } }, { text: b + " px", options: { color: P.muted } }], { x: 9.85, y: 2.1 + i * 0.68, w: 2.9, h: 0.62, fontSize: 14 });
   });
-  T(s, "Everything doubles at 3840 x 2160. The window is a right dock in push mode, Size 400 px (800 px at 4K).", { x: 9.85, y: 5.6, w: 2.9, h: 1.0, fontSize: 13, italic: true, color: P.muted });
+  T(s, "Everything doubles at 3840 x 2160. The window is a right dock in push mode, 37.04 vh wide (400 px at 1080p, 800 px at 4K).", { x: 9.85, y: 5.6, w: 2.9, h: 1.0, fontSize: 13, italic: true, color: P.muted });
   notes(s);
 }
 

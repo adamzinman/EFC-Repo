@@ -558,11 +558,14 @@ def host():
               {"props.path": {"binding": {"type": "property", "config": {"path": "view.custom.show.path"}}},
                "props.params": {"binding": {"type": "property", "config": {"path": "view.custom.show.params"}}}})
     root = flex("root", "column", [dw], extra={"style": {"classes": "Container/Panel"}},
-                events={"system": {"onStartup": script("efc.ui.dockSync(self.view)")}})
+                events={"system": {"onStartup": script("efc.ui.dockSync(self.view)\nefc.ui.sizeDock(self.view)")}})
     params = {"path": "", "tagPath": "", "model": "", "defaultPath": "", "defaultParams": {}}
     pc = {f"params.{k}": {"paramDirection": "input", "persistent": True, "onChange": {"enabled": None, "script": "\t" + sync}}
           for k in params}
-    return "Docks/Host", {"custom": {"default": {"path": "", "params": {}}, "show": {"path": "", "params": {}}},
+    # viewportH follows the page height, so the dock width (37.04 vh, efc.ui.sizeDock) tracks the display size
+    pc["custom.viewportH"] = {**expr("{page.props.dimensions.viewport.height}"),
+                              "onChange": {"enabled": True, "script": "\tefc.ui.sizeDock(self.view)"}}
+    return "Docks/Host", {"custom": {"default": {"path": "", "params": {}}, "show": {"path": "", "params": {}}, "viewportH": 0},
                           "params": params, "propConfig": pc, "props": {"defaultSize": {"width": W, "height": H}}, "root": root}
 
 # ----------------------------------------------------------------- write

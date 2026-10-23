@@ -8,9 +8,12 @@
 #   template symbol onDoubleClick:  efc.ui.dblCmd(self)
 #   window close button:            efc.ui.closeDynamic(self)
 #   Docks/Host onStartup, onChange: efc.ui.dockSync(self.view) / efc.ui.dockSync(self)
+#   Docks/Host onStartup, viewportH onChange: efc.ui.sizeDock(self.view)
 
 # Dock ID of the right docked view on every screen page (Page Configuration)
 DOCK_ID = 'efcDynamic'
+# Dock width / viewport height: 400 / 1080 = 37.04 vh (decision 25), so 400 px at 1080p and 800 px at 2160p
+DOCK_RATIO = 400.0 / 1080
 
 # Dynamic-window id -> view path
 WINDOWS = {
@@ -116,6 +119,19 @@ def dockSync(view):
     view.custom.show = show
     if not show['path']:
         hideDock(view)
+
+
+def sizeDock(view):
+    """Docks/Host onStartup and viewportH onChange: scale the dock with the screen, so it stays 37.04 vh wide at
+    every display size. view.custom.viewportH is bound to the page viewport height. alterDock needs 8.1.19+; on older
+    versions the dock keeps its Page Configuration Size (400 px)."""
+    h = _p(view.custom, 'viewportH', 0)
+    if not h:
+        return
+    try:
+        system.perspective.alterDock(DOCK_ID, {'size': int(round(h * DOCK_RATIO))})
+    except Exception as e:
+        _log().warn('alterDock %s failed (needs 8.1.19+): %s' % (DOCK_ID, e))
 
 
 def _audit(component, action, target, value=''):
