@@ -7,20 +7,35 @@
       "Disabled": null,
       "Failed": null,
       "Filling": null,
+      "GrossWeight": null,
+      "InletCMD": null,
+      "InletREQ": null,
+      "Msg": null,
       "NetWeight": null,
+      "Press_Balanced": null,
+      "Press_Max": null,
       "PT": null,
+      "PT_Diff": null,
       "PT_Valid": null,
       "ReadyToFill": null,
       "ReadyToStart": null,
       "Recovering": null,
       "SampleCMD": null,
+      "SamplePress": null,
+      "SampleREQ": null,
       "ScaleName": null,
       "Selected": null,
       "StationName": null,
+      "TareWeight": null,
       "TargetWeight": null,
+      "TotalWeight": null,
       "Units": null,
+      "VacuumCMD": null,
+      "Vacuumed": null,
       "Vacuuming": null,
-      "Venting": null
+      "VacuumREQ": null,
+      "Venting": null,
+      "Vessel_Present": null
     },
     "s": {
       "name": "Station 1",
@@ -206,6 +221,58 @@
         }
       }
     },
+    "custom.t.GrossWeight": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Val_Gross",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.t.InletCMD": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Out_InletCmd",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.t.InletREQ": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Sts_InletReq",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.t.Msg": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Sts_Msg",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
     "custom.t.NetWeight": {
       "binding": {
         "type": "tag",
@@ -219,12 +286,51 @@
         }
       }
     },
+    "custom.t.Press_Balanced": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Sts_PressBalanced",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.t.Press_Max": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Prm_MaxPress",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
     "custom.t.PT": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
           "tagPath": "{0}/Val_PT",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.t.PT_Diff": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Val_PTDiff",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -297,6 +403,32 @@
         }
       }
     },
+    "custom.t.SamplePress": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Prm_PrefillPress",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.t.SampleREQ": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Sts_SampleReq",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
     "custom.t.ScaleName": {
       "binding": {
         "type": "tag",
@@ -336,12 +468,38 @@
         }
       }
     },
+    "custom.t.TareWeight": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Val_Tare",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
     "custom.t.TargetWeight": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
           "tagPath": "{0}/Prm_TargetWt",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.t.TotalWeight": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Val_Total",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -362,6 +520,32 @@
         }
       }
     },
+    "custom.t.VacuumCMD": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Out_VacuumCmd",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.t.Vacuumed": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Sts_Vacuumed",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
     "custom.t.Vacuuming": {
       "binding": {
         "type": "tag",
@@ -375,12 +559,38 @@
         }
       }
     },
+    "custom.t.VacuumREQ": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Sts_VacuumReq",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
     "custom.t.Venting": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
           "tagPath": "{0}/Sts_Venting",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.t.Vessel_Present": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Inp_VesselPresent",
           "references": {
             "0": "{view.params.tagPath}"
           },
