@@ -26,6 +26,9 @@ def comp(t, name, props=None, pos=None, pc=None, children=None, events=None):
     return d
 
 def expr(e): return {"binding": {"type": "expr", "config": {"expression": e}}}
+def cls_expr(e, fallback):
+    """Class binding that keeps a style when a tag is missing or bad quality (an erroring binding drops every class)."""
+    return expr(f"try({e}, '{fallback}')")
 def tag(member, ref="{view.params.tagPath}", bidi=False):
     return {"binding": {"type": "tag", "config": {"mode": "indirect", "tagPath": "{0}/" + member, "references": {"0": ref},
                                                   "bidirectional": bidi, "fallbackDelay": 2.5}}}
@@ -137,8 +140,8 @@ def banner(vw, cases, chips):
     kids = [label("State", "", "Text/Status Text/Size/L", grow=1, pc={"props.text": expr(t)})]
     for i, (cond, text) in enumerate(chips):
         kids.append(label(f"Chip{i}", text, "Indicator/Badge", pc={"position.display": expr(cond)}))
-    return flex("Banner", "row", kids, basis=v(40), pc={"props.style.classes": expr(c)},
-                extra={"alignItems": "center", "style": {"classes": "", "gap": v(6)}})
+    return flex("Banner", "row", kids, basis=v(40), pc={"props.style.classes": cls_expr(c, "State/Unknown")},
+                extra={"alignItems": "center", "style": {"classes": "State/Unknown", "gap": v(6)}})
 
 def mode_section(vw, base="Mode/"):
     m = lambda x: vw.m(base + x)
@@ -148,7 +151,7 @@ def mode_section(vw, base="Mode/"):
     b = [btn("Auto", "AUTO", "Cmd_Auto", OP, "Sts_Auto"), btn("Man", "MAN", "Cmd_Man", OP, "Sts_Man"),
          btn("Maint", "MAINT", "Cmd_Maint", MAINT, "Sts_Maint"), btn("OOS", "OOS", "Cmd_OOS", MAINT, "Sts_OOS")]
     for x, s in zip(b, ["Sts_Auto", "Sts_Man", "Sts_Maint", "Sts_OOS"]):
-        x["propConfig"]["props.style.classes"] = expr(f"if({m(s)}, 'Button/Toggle/On', 'Button/Toggle/Off')")
+        x["propConfig"]["props.style.classes"] = cls_expr(f"if({m(s)}, 'Button/Toggle/On', 'Button/Toggle/Off')", "Button/Toggle/Off")
     return section("Mode", "Mode", [row("Current", "Mode", cur), flex("Buttons", "row", b, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})])
 
 def ready_expr(vw, perm=True, avail=True, mode=True):
@@ -189,7 +192,7 @@ def alarms(vw, items):
         p = vw.m(mem + "/Cfg_Priority")
         pri = f"case(toInt({p}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium')"
         cls = f"if({a}, 'Alarm/' + {pri} + if({u}, '/Unacked', '/Fill'), if({u}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
-        rows.append(label(f"A{i}", text, "Text/Caption", pc={"props.style.classes": expr(cls)}))
+        rows.append(label(f"A{i}", text, "Text/Caption", pc={"props.style.classes": cls_expr(cls, "Text/Caption Text/Color/Muted")}))
     names = [m for m, _ in items]
     any_a = " || ".join(vw.m(m + "/Sts_Active") for m in names)
     return section("Alarms", "Alarms", [
@@ -445,7 +448,7 @@ def loop():
     mb = lambda n, t, mem, sts: button(n, t, f"efc.ui.cmd(self, '{mem}', True, 1)", cls="Button/Toggle/Off", show=lvl(OP))
     b = []
     for n, t, mem, sts in (("Man", "MAN", "Cmd_Man", "Sts_Man"), ("Auto", "AUTO", "Cmd_Auto", "Sts_Auto"), ("Cas", "CAS", "Cmd_Cas", "Sts_Cas")):
-        x = mb(n, t, mem, sts); x["propConfig"]["props.style.classes"] = expr(f"if({m(sts)}, 'Button/Toggle/On', 'Button/Toggle/Off')"); b.append(x)
+        x = mb(n, t, mem, sts); x["propConfig"]["props.style.classes"] = cls_expr(f"if({m(sts)}, 'Button/Toggle/On', 'Button/Toggle/Off')", "Button/Toggle/Off"); b.append(x)
     return window("Docks/Loop", "T_PID", vw, [
         header(vw),
         banner(vw, [(m("Sts_Intlk"), "INTERLOCKED", "State/Fault"), (m("Sts_Track"), "TRACKING", "State/Transition"),
@@ -500,7 +503,7 @@ def intlk_list():
         used, ok, byp = m(f"Cfg_Used/{i}"), m(f"Inp_Cond/{i}"), m(f"Sts_Bypassed/{i}")
         desc, bpa, left = m(f"Cfg_CondDesc/{i}"), m(f"Cfg_Bypassable/{i}"), m(f"Sts_BypLeft/{i}")
         led = comp("ia.display.label", "LED", {"text": "", "style": {"classes": "Indicator/LED/Off"}}, {"shrink": 0, "basis": v(12)},
-                   {"props.style.classes": expr(f"if({byp}, 'Indicator/LED/Unknown', if({ok}, 'Indicator/LED/On', 'Indicator/LED/Fault'))")})
+                   {"props.style.classes": cls_expr(f"if({byp}, 'Indicator/LED/Unknown', if({ok}, 'Indicator/LED/On', 'Indicator/LED/Fault'))", "Indicator/LED/Unknown")})
         rows.append(flex(f"C{i}", "row", [
             led, label("Desc", "", "Text/Caption Text/Mod/Ellipsis", grow=1, pc={"props.text": expr(desc)}),
             label("Left", "", "Indicator/Badge", pc={"props.text": expr(f"'BYPASSED ' + toInt({left} / 60000) + ' min'"),
@@ -512,7 +515,7 @@ def intlk_list():
     root = flex("root", "column", [
         flex("Header", "row", [label("Title", "", "Text/Subheader Text/Mod/Upper", grow=1, pc={"props.text": expr("{view.params.title}")}),
                                label("Ok", "", "Indicator/Badge", pc={"props.text": expr(f"if({m('Out_OK')}, 'OK', 'NOT OK')"),
-                                                                      "props.style.classes": expr(f"if({m('Out_OK')}, 'Indicator/Permissive', 'Indicator/Interlock')")})],
+                                                                      "props.style.classes": cls_expr(f"if({m('Out_OK')}, 'Indicator/Permissive', 'Indicator/Interlock')", "Indicator/Interlock")})],
              extra={"alignItems": "center"}),
         *rows,
         button("Reset", "RESET", "efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)", cls="Button/Default",
@@ -562,7 +565,7 @@ def trend_part():
                {f"props.elements[{i}].d": expr(f"try({{view.custom.hist.d[{i}]}}, '')") for i in range(3)})
     rng = [button(f"R{n}", n, f"self.view.custom.range = {mins}", cls="Button/Small", grow=0) for n, mins in RANGES]
     for b, (n, mins) in zip(rng, RANGES):
-        b.setdefault("propConfig", {})["props.style.classes"] = expr(f"if({{view.custom.range}} = {mins}, 'Button/TabActive', 'Button/Tab')")
+        b.setdefault("propConfig", {})["props.style.classes"] = cls_expr(f"if({{view.custom.range}} = {mins}, 'Button/TabActive', 'Button/Tab')", "Button/Tab")
     head = flex("Header", "row", [
         label("Title", "", "Text/Subheader Text/Mod/Upper", grow=1,
               pc={"props.text": expr("'History (' + case({view.custom.range}, 1440, '24 h', 480, '8 h', 60, '1 h', 5, '5 min', '30 min') + ')'")}),

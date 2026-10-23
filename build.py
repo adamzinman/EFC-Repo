@@ -8,6 +8,7 @@ imported projects in imported/ (EFC_IOFaceplates, EFC_StationFaceplates), merged
     python3 build.py --preview    also render docs/previews/templates.png and one PNG per view in
                                   docs/previews/templates/ (needs Playwright + Chromium)
     python3 build.py --dist       also write importable zips to dist/ (gitignored)
+Every run also refreshes EFC_Library_PROJECT.zip at the repo root: the tracked, ready-to-import download.
     python3 build.py --check      check the committed projects/ only (no regeneration); used by CI
 
 The generator (generator/) and imported/ are the sources. projects/EFC_Library is generated: the merged project
@@ -170,7 +171,31 @@ def merge_library():
         json.dump(project_json(LIBRARY, f"EFC Ignition library v{v} (generated): ISA-101 styles, P&ID device templates, process values, "
                                         "PID loops, x80 I/O card and station faceplates in one project. Import standalone, or make it "
                                         "the parent of an HMI project."), f, indent=2); f.write("\n")
+    guard_window_classes(lib)
     check_view_refs(lib)
+
+
+def guard_window_classes(lib):
+    """Dynamic windows (Docks/): wrap class expressions in try(expr, <the component's static classes>). A missing or
+    bad-quality tag makes an expression error, and an erroring classes binding drops every class on the component."""
+    vroot = os.path.join(lib, "com.inductiveautomation.perspective", "views", "Docks")
+    def walk(c):
+        yield c
+        for ch in c.get("children", []):
+            yield from walk(ch)
+    for d, _, fs in os.walk(vroot):
+        if "view.json" not in fs:
+            continue
+        p = os.path.join(d, "view.json"); v = json.load(open(p, encoding="utf-8")); changed = False
+        for c in walk(v["root"]):
+            cfg = c.get("propConfig", {}).get("props.style.classes", {}).get("binding", {})
+            static = c.get("props", {}).get("style", {}).get("classes")
+            if cfg.get("type") == "expr" and isinstance(static, str) and not cfg["config"]["expression"].lstrip().startswith(("try(", "coalesce(")):
+                cfg["config"]["expression"] = "try(%s, '%s')" % (cfg["config"]["expression"], static.replace("'", "\\'"))
+                changed = True
+        if changed:
+            with open(p, "w", encoding="utf-8") as f:
+                json.dump(v, f, indent=2, ensure_ascii=False); f.write("\n")
 
 
 def check_view_refs(lib):
@@ -219,6 +244,19 @@ def make_dist():
     return out
 
 
+def zip_contents(zp):
+    with zipfile.ZipFile(zp) as z:
+        return [(i.filename, z.read(i)) for i in z.infolist()]
+
+
+def publish(zp):
+    """Copy the checked library zip to the repo root, only when its contents changed (zip bytes vary by zlib build)."""
+    dst = os.path.join(ROOT, f"{LIBRARY}_PROJECT.zip")
+    if not os.path.exists(dst) or zip_contents(dst) != zip_contents(zp):
+        shutil.copyfile(zp, dst)
+        print(f"updated {os.path.basename(dst)}")
+
+
 def check(zips):
     run("check_81.py", *zips)
 
@@ -238,6 +276,7 @@ def main():
         DIST = tempfile.mkdtemp()
         zips = make_dist()
     check(zips)
+    publish(next(z for z in zips if os.path.basename(z) == f"{LIBRARY}_PROJECT.zip"))
     print(f"v{VERSION['version']} OK" + (f"  ->  {DIST}" if a.dist else ""))
 
 

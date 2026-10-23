@@ -1920,7 +1920,7 @@ def write_project(path, now):
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("project.json", json.dumps({"title": PROJECT, "description": "PCLib xenon fill: sequence bar, "
                                                "station faceplates and overview",
-                                               "parent": "EFC_Styles", "enabled": True, "inheritable": True}, indent=2))
+                                               "parent": "EFC_Library", "enabled": True, "inheritable": True}, indent=2))
         views = [("Templates/Sequence/SequenceBar", seqbar_view()), ("Templates/Sequence/_Demo", demo_view()),
                  ("Templates/Station/Station_Tile", station_tile_view()),
                  ("Templates/XeFill/Overview", xefill_overview_view())]

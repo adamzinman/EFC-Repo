@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DDTExchangeFile>
-<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-21-3:36:12" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
+<fileHeader company="Schneider Automation" product="EcoStruxure Control Expert Classic V16.2" dateTime="date_and_time#2026-10-22-17:41:20" content="Derived Data Type source file" DTDVersion="41"></fileHeader>
 <contentHeader name="PCLib" version="1.00"></contentHeader>
-<DDTSource DDTName="T_Alarm" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Alarm" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Discrete alarm, ISA-18.2 / IEC 62682 state model, shelving, suppression, out-of-service</comment>
 	<structure>
 		<variables name="Inp_Cond" typeName="BOOL">
@@ -91,7 +91,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_AlmLim" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_AlmLim" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Analog limit alarm: limit + deadband + ISA-18.2 / IEC 62682 alarm</comment>
 	<structure>
 		<variables name="Cfg_Lim" typeName="REAL">
@@ -187,7 +187,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Mode" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Mode" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Control-module mode and ISA-88 ownership (arbitration); maps to MTP OpMode</comment>
 	<structure>
 		<variables name="Cmd_Auto" typeName="BOOL">
@@ -253,7 +253,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_RunTime" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_RunTime" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Run-hours, starts and maintenance counters</comment>
 	<structure>
 		<variables name="Inp_Running" typeName="BOOL">
@@ -292,7 +292,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Intlk" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Intlk" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Interlock / permissive group: 16 conditions, first-out, timed bypass</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -379,7 +379,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_AI" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_AI" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Analog input: scaling, filtering, NE43 range check, alarms, sim</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -501,7 +501,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_DI" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_DI" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Digital input: invert, debounce, sim, optional state alarm</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -566,7 +566,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_DValve" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_DValve" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>On/off valve: single or dual solenoid, limit switches, travel alarms</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -703,7 +703,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_CValve" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_CValve" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Modulating control valve: limits, rate limit, positioner feedback</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -851,7 +851,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Motor" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Motor" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Direct-on-line / star-delta / soft-start motor</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1022,7 +1022,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_VFD" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_VFD" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Variable speed drive (fieldbus or hardwired)</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1247,6 +1247,9 @@
 		<variables name="Val_Current" typeName="REAL">
 			<comment>Motor current (A)</comment>
 		</variables>
+		<variables name="Val_LoadPct" typeName="REAL">
+			<comment>Load (% of Cfg_RatedAmps)</comment>
+		</variables>
 		<variables name="Val_Torque" typeName="REAL">
 			<comment>Torque (%)</comment>
 		</variables>
@@ -1291,7 +1294,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Heater" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Heater" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Electric heater: on/off contactor, time-proportioned SSR, or SCR power controller</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1506,7 +1509,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_PID" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_PID" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>PID loop wrapper (maps onto PIDFF EFB), Man/Auto/Cas, tracking</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1685,7 +1688,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_PumpProt" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_PumpProt" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Pump protection layer: dry run, low flow, deadhead, seal, bearing</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1783,7 +1786,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_PumpDS" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_PumpDS" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Duty/standby/lead-lag coordinator for up to 4 pumps</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -1874,7 +1877,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Agitator" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Agitator" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Agitator / mixer: VFD + submergence, seal and gearbox protection</comment>
 	<structure>
 		<variables name="Drv" typeName="T_VFD">
@@ -1930,7 +1933,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Compressor" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Compressor" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Compressor / blower: load-unload, anti-cycle, lube and thermal protection</comment>
 	<structure>
 		<variables name="Drv" typeName="T_VFD">
@@ -2031,7 +2034,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Conveyor" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Conveyor" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Belt / screw conveyor: start warning, zero-speed, pull-cord, alignment</comment>
 	<structure>
 		<variables name="Prot" typeName="T_Intlk">
@@ -2126,7 +2129,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Tank" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Tank" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Tank / vessel: level-to-volume, inventory, fill/drain permissives, alarms</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2261,7 +2264,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Totalizer" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Totalizer" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Flow totalizer + batch delivery: analog or pulse, day/hour totals</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2398,7 +2401,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_HeatEx" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_HeatEx" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Heat exchanger performance monitor: duty, LMTD, UA, fouling, DP</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2502,7 +2505,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_DosePump" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_DosePump" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Chemical dosing / metering pump: manual, flow-paced, trim, batch</comment>
 	<structure>
 		<variables name="Prot" typeName="T_Intlk">
@@ -2613,7 +2616,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Analyzer" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Analyzer" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Process analyzer (pH, ORP, conductivity, DO, turbidity, Cl2 ...)</comment>
 	<structure>
 		<variables name="AI" typeName="T_AI">
@@ -2708,7 +2711,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_GasDet" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_GasDet" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Fixed gas detector (4-20mA): latching A1/A2/A3, inhibit, fault</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2840,7 +2843,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_ESD" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_ESD" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Emergency shutdown group (BPCS layer): de-energise-to-trip, MOS, first-out</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -2951,7 +2954,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Station" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Station" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>Weigh-fill station: vessel on a scale, inlet / sample / vacuum valves, net-weight fill to target</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -3125,7 +3128,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Phase" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>ISA-88 equipment phase: Part 1 state model, commands, modes, parameters, reports</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
@@ -3257,7 +3260,7 @@
 		</variables>
 	</structure>
 </DDTSource>
-<DDTSource DDTName="T_Unit" version="1.00" dateTime="dt#2026-10-21-03:36:12">
+<DDTSource DDTName="T_Unit" version="1.00" dateTime="dt#2026-10-22-17:41:20">
 	<comment>ISA-88 unit: allocation, batch identity, procedural and equipment state</comment>
 	<structure>
 		<variables name="Cfg_Tag" typeName="STRING[20]">
