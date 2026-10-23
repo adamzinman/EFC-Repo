@@ -88,7 +88,7 @@ None.
 
 ### Session, page and message payloads
 
-None read. The click writes `session.custom.efcDw[<pageId>]` through `efc.ui.openDynamic`. See Scripts.
+None read. The click loads the window into the `dw_Right` dock through `efc.ui.openDynamic`. See Scripts.
 
 ## Bindings reference
 

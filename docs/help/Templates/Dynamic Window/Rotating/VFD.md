@@ -5,13 +5,13 @@ Opened from: the VFD template (`Rotating/VFD`; see [Rotating VFD template](../..
 
 ## Overview
 
-The operator and maintenance dynamic window for a variable frequency drive (T_VFD). It opens in the screen's right-hand region (`Docks/Region`), not as a popup. It shows state, interlock and permissive detail, mode, start/stop/jog and direction commands, a speed reference, drive values, alarms, a trend, maintenance counters and configuration.
+The operator and maintenance dynamic window for a variable frequency drive (T_VFD). It opens in the page's right dock (`dw_Right`), not as a popup. It shows state, interlock and permissive detail, mode, start/stop/jog and direction commands, a speed reference, drive values, alarms, a trend, maintenance counters and configuration.
 
 - **Default size:** 400 x 860 (`props.defaultSize`). The root is a scrolling column.
 - **Parameters:** `tagPath` (the T_VFD instance) and `tType` (default `T_VFD`).
-- **How it is opened:** the template's single click runs `efc.ui.openDynamic(self)`. The template's `tType` is `T_VFD` and its `dockId` is empty, so `efc.ui.openDynamic` maps it to `dw_VFD` and writes `session.custom.efcDw[pageId] = {path: 'Templates/Dynamic Window/Rotating/VFD', params: {tagPath: ...}}`. `Docks/Region` then displays this view. `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the dock always runs with its default `T_VFD`. Nothing in this view uses `tType`.
+- **How it is opened:** the template's single click runs `efc.ui.openDynamic(self)`. The template's `tType` is `T_VFD` and its `dockId` is empty, so `efc.ui.openDynamic` maps it to `dw_VFD` and loads `Templates/Dynamic Window/Rotating/VFD` into the page's `dw_Right` dock with params `{tagPath: ...}` (`system.perspective.alterDock`) and opens the dock. `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the dock always runs with its default `T_VFD`. Nothing in this view uses `tType`.
 - **Generated view:** this view is written by `generator/docks/build_docks.py` (function `vfd()`, which uses the shared `motor_like()` layout). Change the generator, not `view.json`, or the next build overwrites the edit.
-- **How it closes:** the header `X` runs `efc.ui.closeDynamic(self)`, which restores the screen default set by `efc.ui.setDefaultDock` on `Docks/Region` startup. That startup script is not in this view.
+- **How it closes:** the header `X` runs `efc.ui.closeDynamic(self)`, which puts the page's default view back in the `dw_Right` dock (set by `efc.ui.setDefaultDock` in the screen's onStartup), or closes the dock if the page has no default. That startup script is not in this view.
 
 ## How it operates
 
@@ -41,7 +41,7 @@ A hint line states "Enabled in MAN, available, permitted, not interlocked, not L
 
 **Alarms** (all levels). Ten rows: fail to start, fail to stop, uncommanded run/stop, E-stop, interlock trip, excess starts, drive fault, drive warning, drive comm fail, speed deviation. A row is coloured when its alarm is active, using the alarm's `Cfg_Priority`: 1 `Critical`, 2 `High`, 3 `Medium`, 4 `Low`, anything else `Medium`. The class adds `/Unacked` or `/Fill`. An inactive but unacknowledged alarm uses `Alarm/Status/ClearedUnacked`. An inactive, acknowledged alarm uses `Text/Caption Text/Color/Muted`. "No active alarms" is shown when none is active. **ACK** (level 1 and above) calls `efc.ui.ackAll` with all ten alarm names. It writes `Cmd_Ack` only for those whose `Sts_Unack` is true.
 
-**Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` with pens `Val_Spd`, `Val_SpdRef` and `Val_Current` over the tagPath. The embedded view's `expanded` param starts `false`. It is declared `inout` in `Templates/Dynamic Window/Parts/Trend`, so the Trend part toggles it itself and the value flows back to this embed. The `position.basis` binding (`{this.props.params.expanded}`) then grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock region. See [Parts/Trend.md](../Parts/Trend.md).
+**Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` with pens `Val_Spd`, `Val_SpdRef` and `Val_Current` over the tagPath. The embedded view's `expanded` param starts `false`. It is declared `inout` in `Templates/Dynamic Window/Parts/Trend`, so the Trend part toggles it itself and the value flows back to this embed. The `position.basis` binding (`{this.props.params.expanded}`) then grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock. See [Parts/Trend.md](../Parts/Trend.md).
 
 **Maintenance** (level 2 and above). Shows run hours, starts, starts in the last hour, hours since maintenance and whether maintenance is due. `RESET MAINT` writes `Run/Cmd_ResetMaint` (audited). `SIMULATE` toggles `Sim_En` (audited).
 
@@ -93,7 +93,7 @@ None.
 
 - `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
 - `session.props.auth.user.userName`: read by `efc.ui._audit` (not bound in this view).
-- `session.custom.efcDw[pageId]`: written by `efc.ui.openDynamic` and `closeDynamic` in the template and header; read by `Docks/Region` (not in this file).
+- `session.custom.efcDw[pageId]`: holds only the page's default dock view, written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
 - `page.props.pageId`: read by `efc.ui._state` to key `efcDw`.
 - No message handlers. No `customMethods`.
 
@@ -423,7 +423,7 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 
 | Handler | Action | Writes | Role check | Audit |
 |---|---|---|---|---|
-| `Header/Close` | `efc.ui.closeDynamic` restores default region view | none | none | no |
+| `Header/Close` | `efc.ui.closeDynamic` restores the default dock view or closes the dock | none | none | no |
 | `Mode/Auto` | `efc.ui.cmd(... 'Mode/Cmd_Auto', True, 1)` | `Mode/Cmd_Auto` | level 1 | no |
 | `Mode/Man` | `efc.ui.cmd(... 'Mode/Cmd_Man', True, 1)` | `Mode/Cmd_Man` | level 1 | no |
 | `Mode/Maint` | `efc.ui.cmd(... 'Mode/Cmd_Maint', True, 2)` | `Mode/Cmd_Maint` | level 2 | yes |
@@ -447,7 +447,7 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
-- **`efc.ui.closeDynamic(component)`**: writes `efcDw[pageId]` back to the stored `default` path and params. Writes no tags.
+- **`efc.ui.closeDynamic(component)`**: loads the page's stored `default` view and params (`session.custom.efcDw[pageId]`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - **`efc.ui.cmd(component, member, value, minLevel, audit)`**: the role-checked write described above. Audits when `audit=True`.
 - **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true, only at level 1 and above.
 - **`efc.ui.bypass` / `unbypass`**: not called from this view. They are called from the embedded `IntlkList` views and the `BypassConfirm` popup.

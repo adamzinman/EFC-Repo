@@ -5,13 +5,13 @@ Built from: `imported/EFC_StationFaceplates/com.inductiveautomation.perspective/
 
 ## Overview
 
-The operator dynamic window for a fill station (T_Station). It is the full station faceplate: header, status chip and step strip, net, gross, tare and total weights with the target bar, vessel pressure, permissives, valve REQ and CMD lamps, setpoints, and the Tare, Zero and Reset commands. It opens in the screen's right-hand region (`Docks/Region`), not as a popup.
+The operator dynamic window for a fill station (T_Station). It is the full station faceplate: header, status chip and step strip, net, gross, tare and total weights with the target bar, vessel pressure, permissives, valve REQ and CMD lamps, setpoints, and the Tare, Zero and Reset commands. It opens in the page's right dock (`dw_Right`), not as a popup.
 
 - **Default size:** 400 x 860 (`props.defaultSize`). The root column uses `Container/Popup Util/Clip` and has no scroll class, so content taller than the window is clipped, not scrolled (the `Util/Clip` class is defined in EFC_Styles and was not checked).
 - **Parameters:** `tagPath` only (the T_Station instance). The view has no `tType` param, and `efc.ui.openDynamic` passes only `tagPath`.
-- **How it is opened:** the tile's click runs `efc.ui.openDynamic(self)`. That function writes `session.custom.efcDw[pageId] = {path: 'Templates/Dynamic Window/Station/Station', params: {tagPath: ...}}`. `Docks/Region` then displays this view.
+- **How it is opened:** the tile's click runs `efc.ui.openDynamic(self)`. That function loads `Templates/Dynamic Window/Station/Station` into the page's `dw_Right` dock with params `{tagPath: ...}` (`system.perspective.alterDock`) and opens the dock.
 - **Built view:** this view is not written by `generator/docks/build_docks.py`. `build.py` copies the imported Designer project `imported/EFC_StationFaceplates` into the merged library and relocates `Templates/Station/Station_Sidebar` to `Templates/Dynamic Window/Station/Station` (its `RELOCATE` table). `steward/tools/fix_station.py` maps the DDT_Station member names to T_Station, adds the dynamic-window params to the tile and sets the window to 400 x 860 (`steward/DECISIONS.md`, decisions 4 and 25). Make changes in the imported source and rebuild. Edits made directly to `Templates/Dynamic Window/Station/Station/view.json` are replaced on the next build.
-- **How it closes:** the header icon (`Util/Pointer`) runs `efc.ui.closeDynamic(self)` on click, which restores the screen default set by `efc.ui.setDefaultDock` on `Docks/Region` startup. That startup script is not in this view.
+- **How it closes:** the header icon (`Util/Pointer`) runs `efc.ui.closeDynamic(self)` on click, which puts the page's default view back in the `dw_Right` dock (set by `efc.ui.setDefaultDock` in the screen's onStartup), or closes the dock if the page has no default. That startup script is not in this view.
 
 ## How it operates
 
@@ -85,7 +85,7 @@ None.
 ### Session, page and message payloads
 
 - `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
-- `session.custom.efcDw[pageId]`: written by `efc.ui.openDynamic` (tile) and `efc.ui.closeDynamic` (header icon). Read by `Docks/Region` (not in this file).
+- `session.custom.efcDw[pageId]`: holds only the page's default dock view, written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
 - `page.props.pageId`: read by `efc.ui._state` to key `efcDw`. Reached through the header icon.
 - `session.props.auth.user.userName`: not used in this view.
 - No message handlers. No `customMethods`.
@@ -407,7 +407,7 @@ The button handlers below call no `efc.ui` command functions. The Tare, Zero, Re
 
 | Handler | Action | Writes | Role check | Audit |
 |---|---|---|---|---|
-| `Header/Close` (dom click) | `efc.ui.closeDynamic` restores the default region view | none | none | no |
+| `Header/Close` (dom click) | `efc.ui.closeDynamic` restores the default dock view or closes the dock | none | none | no |
 | `Status/ChipRow/Select` | pulses `Cmd_Select`: True now, False after 1 s, on a background thread | `Cmd_Select` | enable only: level 1 and not `Disabled` | no |
 | `Commands/Buttons/Tare` | sets `pendingCmd` = `Tare`, which shows the confirm strip | none (confirm writes) | enable only: level 1 and not `tzLocked` | no |
 | `Commands/Buttons/Zero` | sets `pendingCmd` = `Zero` | none (confirm writes) | enable only: level 1 and not `tzLocked` | no |
@@ -432,7 +432,7 @@ The button handlers below call no `efc.ui` command functions. The Tare, Zero, Re
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
-- **`efc.ui.closeDynamic(component)`**: writes `efcDw[pageId]` back to the stored `default` path and params. Writes no tags.
+- **`efc.ui.closeDynamic(component)`**: loads the page's stored `default` view and params (`session.custom.efcDw[pageId]`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - Not used by this view: `efc.ui.cmd` and `efc.ui.ackAll`. The command and setpoint writes are direct tag writes (see the notes).
 - Ignition built-ins used directly: `system.tag.writeBlocking`, `system.util.invokeAsynchronous`, and Python `time.sleep` on the release thread.
 

@@ -11,7 +11,7 @@ These are single-device symbols for a two-state drive (T_Motor): start/stop with
 
 - **Default size:** 120 x 116 (`props.defaultSize`) for all 11 views.
 - **Bound to:** one T_Motor instance through `params.tagPath`. The default `tagPath` is per view (see the table).
-- **Opening the dock:** a single click on the symbol runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_Motor`, via BY_TYPE) to `dw_Rotating`, then writes `session.custom.efcDw[pageId] = {path, params:{tagPath}}`. The screen's `Docks/Region` embedded view shows `Templates/Dynamic Window/Rotating/Rotating`. Only `tagPath` is passed on; `dwTagPath` overrides it when set.
+- **Opening the dock:** a single click on the symbol runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_Motor`, via BY_TYPE) to `dw_Rotating`, then loads that window into the page's `dw_Right` dock with `params:{tagPath}` and opens the dock. The `dw_Right` dock then shows `Templates/Dynamic Window/Rotating/Rotating`. Only `tagPath` is passed on; `dwTagPath` overrides it when set.
 - **Touch mode:** with `useButton = false` and `dblCmd = true`, a double-tap runs `efc.ui.dblCmd(self)`. See How it operates.
 - **Generated view:** `Templates/Dynamic Window/Rotating/Rotating` is written by `generator/docks/build_docks.py` (`rotating()`). The templates in this family are not generated.
 
@@ -168,7 +168,7 @@ None. The components carry no `custom` properties.
 
 ### Session, page and message payloads
 
-None. The views read no `session.*` or `page.*` values and send no messages. Their only use of `session` is inside `efc.ui.openDynamic` and `efc.ui.closeDynamic`, which write `session.custom.efcDw` (see the Scripts section). The PB and the double-tap path write tags only.
+None. The views read no `session.*` or `page.*` values and send no messages. `efc.ui.openDynamic` changes the page's `dw_Right` dock (see the Scripts section). The PB and the double-tap path write tags only.
 
 ## Bindings reference
 
@@ -273,7 +273,7 @@ Total: **3 event scripts** on every view (identical in all 11), no `customMethod
 
 ### Library functions called by this family (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_Motor` that is `dw_Rotating`, which maps to `Templates/Dynamic Window/Rotating/Rotating`. If no window is found, it logs a warning and stops. Otherwise it writes `session.custom.efcDw[pageId] = {path, params:{tagPath: dwTagPath or tagPath}}`. It does not check the user's role and does not write to the tag. The `Docks/Region` view shows this path.
+- **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_Motor` that is `dw_Rotating`, which maps to `Templates/Dynamic Window/Rotating/Rotating`. If no window is found, it logs a warning and stops. Otherwise it loads it into the page's `dw_Right` dock with `params:{tagPath: dwTagPath or tagPath}` and opens the dock (`efc.ui.showDock`). It does not check the user's role and does not write to the tag.
 - **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an audit record. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
 - **`efc.ui.dblCmd(component)`**: returns immediately unless all of these hold: `useButton` false, `dblCmd` true, `tType` in `DBL_CMD` (`T_DValve` or `T_Motor`), and the user's level is 1 (Operator) or higher. It then reads `Sts_Running`, `Mode/Sts_Man`, `Sts_Avail`, `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault`. It writes nothing unless `Mode/Sts_Man` and `Sts_Avail` are true and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are all false. When it does write, it sends `Cmd_Stop` if `Sts_Running` is true, else `Cmd_Start`, with `True`. It does not check `Mode/Sts_OOS` or `Sts_Tripped`, and it writes no audit record.
 - **`efc.ui.level`**: the highest index in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` gives 0 to 5. Used by `dblCmd` (`userLevel >= 1`).

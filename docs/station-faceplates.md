@@ -4,9 +4,9 @@ Three faceplates for the `DDT_Station` UDT in ISA-101 light gray. They use EFC_S
 
 | View | Size @1080p | Use |
 |---|---|---|
-| `Templates/Station/Station_Sidebar` | 300 × 800 | Type 1: full faceplate, opened as a right-side dock from the overview |
+| `Templates/Station/Station_Sidebar` | 300 × 800 | Type 1: full faceplate. In EFC_Library it is the `dw_Station` dynamic window `Templates/Dynamic Window/Station/Station`, opened in the page's `dw_Right` dock |
 | `Templates/Station/Station_Fill` | 300 × 400 | Type 2: filling screen, with live fill data and setpoint entry |
-| `Templates/Station/Station_Tile` | 220 × 96 | Type 3: overview tile. Clicking it opens the sidebar. |
+| `Templates/Station/Station_Tile` | 220 × 96 | Type 3: overview tile. Clicking it opens the station window in the `dw_Right` dock. |
 | `Templates/Station/_Demo` | 1920 × 1080 | All three bound to the demo tags |
 
 The only parameter on each view is **`tagPath`**: the DDT_Station instance, e.g. `[default]FillStn/Station_1`.
@@ -19,12 +19,12 @@ The only parameter on each view is **`tagPath`**: the DDT_Station instance, e.g.
    - Tag Browser → Data Types → import `tags/T_Station_Demo_UDT.json`.
    - Tags root → import `tags/Station_Demo_Instances.json`.
    - Open `Templates/Station/_Demo`.
-3. Sidebar dock: in Page Configuration on the overview page, add a **right dock**:
-   - id `StationSidebar`
-   - view `Templates/Station/Station_Sidebar`
-   - size 300, display "onDemand", content "push" or "cover"
+3. Dock: in Page Configuration on the overview page, add the library's **right dock** (the same on every page, see [library-reference](library-reference.md#page-setup-the-dw_right-dock)):
+   - id `dw_Right`
+   - view: any window view as the initial view, e.g. `Templates/Dynamic Window/Station/Station`
+   - size 400 px at 1080p (37.04 vh), display "onDemand", content "push" or "cover", handle "hide"
 
-   The tile's onClick calls `system.perspective.openDock("StationSidebar", params={"tagPath": …})`, and the sidebar's ✕ closes it. Change both scripts if you wire it differently.
+   The tile's onClick calls `efc.ui.openDynamic(self)`, which loads `Templates/Dynamic Window/Station/Station` with `{"tagPath": …}` into `dw_Right` and opens it (Ignition 8.1.19+). The window's ✕ calls `efc.ui.closeDynamic(self)`, which puts the page's default view back (`efc.ui.setDefaultDock` in the screen's onStartup) or closes the dock.
 
 ## Member mapping
 **Displays**

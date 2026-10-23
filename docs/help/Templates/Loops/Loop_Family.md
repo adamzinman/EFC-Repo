@@ -10,7 +10,7 @@ These four views are single-loop symbols for a PID controller (`T_PID`). Each sh
 
 - **Default sizes** (`props.defaultSize`): B1 150 x 156, B2 260 x 92, B3 172 x 184, B4 104 x 196.
 - **Bound to:** one T_PID instance through `params.tagPath`.
-- **Opening the dock:** a single click runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_PID`) through `BY_TYPE` to `dw_Loop`, then writes `session.custom.efcDw[pageId] = {path: 'Templates/Dynamic Window/Loops/Loop', params: {tagPath}}`. The screen's `Docks/Region` shows that path. `dwTagPath` replaces `tagPath` when it is set, and `dockId` overrides the window.
+- **Opening the dock:** a single click runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_PID`) through `BY_TYPE` to `dw_Loop`, then loads `Templates/Dynamic Window/Loops/Loop` into the page's `dw_Right` dock with params `{tagPath}` (`system.perspective.alterDock`) and opens the dock. `dwTagPath` replaces `tagPath` when it is set, and `dockId` overrides the window.
 - **Generated view:** these views are written by `generator/pid_loops/generate_loops.py`. That script writes `PID/Templates/Loop_B1_Bar` to `Loop_B4_Column` under `projects/PID_Loops/`, not `Templates/Loops/` in EFC_Library. Check which copy is current before editing either (see Open questions).
 
 ### Differences between the views
@@ -99,7 +99,7 @@ None. No component in these views has a `custom` property.
 
 ### Session, page and message payloads
 
-The views read no session, page or message values. The click writes `session.custom.efcDw[<pageId>]` through `efc.ui.openDynamic`. See Scripts.
+The views read no session, page or message values. The click loads the window into the `dw_Right` dock through `efc.ui.openDynamic`. See Scripts.
 
 ## Bindings reference
 
@@ -375,7 +375,7 @@ Step by step: (1) take the tag path from `self.view.params.tagPath`; if it is em
 
 ### Library function called (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.openDynamic(component)`**: reads `dockId`, else `BY_TYPE[tType]`. `BY_TYPE` maps `T_PID` to `dw_Loop`, and `WINDOWS` maps `dw_Loop` to `Templates/Dynamic Window/Loops/Loop`. If the chosen id is not in `WINDOWS` it logs a warning and stops. Otherwise it sets the path to the window and the params to `{tagPath: dwTagPath or tagPath}` (plus `model`, if set) in `session.custom.efcDw` for this page id. It does not check the user's role, does not write a tag and does not write an audit record.
+- **`efc.ui.openDynamic(component)`**: reads `dockId`, else `BY_TYPE[tType]`. `BY_TYPE` maps `T_PID` to `dw_Loop`, and `WINDOWS` maps `dw_Loop` to `Templates/Dynamic Window/Loops/Loop`. If the chosen id is not in `WINDOWS` it logs a warning and stops. Otherwise it loads the window into the `dw_Right` dock with params `{tagPath: dwTagPath or tagPath}` (plus `model`, if set) and opens the dock. It does not check the user's role, does not write a tag and does not write an audit record.
 
 ## Tag members used
 

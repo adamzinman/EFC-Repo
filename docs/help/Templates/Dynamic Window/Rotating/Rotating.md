@@ -5,13 +5,13 @@ Opened from: the motor-type rotating templates (`Templates/Rotating/` symbols wi
 
 ## Overview
 
-The operator and maintenance dynamic window for a motor-driven equipment item (T_Motor): start/stop control, feedback, permissives and interlocks, alarms, run counters and motor configuration. It opens in the screen's right-hand region (`Docks/Region`), not as a popup.
+The operator and maintenance dynamic window for a motor-driven equipment item (T_Motor): start/stop control, feedback, permissives and interlocks, alarms, run counters and motor configuration. It opens in the page's right dock (`dw_Right`), not as a popup.
 
 - **Default size:** 400 x 860 (`props.defaultSize`). The root is a scrolling column.
 - **Parameters:** `tagPath` (the T_Motor instance) and `tType` (default `T_Motor`).
-- **How it is opened:** the template's single click runs `efc.ui.openDynamic(self)`. The template's `dockId` is empty, so the function uses `BY_TYPE` in `efc/ui/code.py`, which maps `T_Motor` to `dw_Rotating`. It then writes `session.custom.efcDw[pageId] = {path: 'Templates/Dynamic Window/Rotating/Rotating', params: {tagPath: ...}}`. `Docks/Region` then displays this view. `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the dock always runs with its default `T_Motor`. Nothing in this view uses `tType`. The VFD symbols (`T_VFD`) open `Templates/Dynamic Window/Rotating/VFD` instead.
+- **How it is opened:** the template's single click runs `efc.ui.openDynamic(self)`. The template's `dockId` is empty, so the function uses `BY_TYPE` in `efc/ui/code.py`, which maps `T_Motor` to `dw_Rotating`. It then loads `Templates/Dynamic Window/Rotating/Rotating` into the page's `dw_Right` dock with params `{tagPath: ...}` (`system.perspective.alterDock`) and opens the dock. `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the dock always runs with its default `T_Motor`. Nothing in this view uses `tType`. The VFD symbols (`T_VFD`) open `Templates/Dynamic Window/Rotating/VFD` instead.
 - **Generated view:** this view is written by `generator/docks/build_docks.py` (function `rotating()`, which calls `motor_like()`). Change the generator, not `view.json`, or the next build overwrites the edit.
-- **How it closes:** the header `X` runs `efc.ui.closeDynamic(self)`, which restores the screen default set by `efc.ui.setDefaultDock` on `Docks/Region` startup. That startup script is not in this view.
+- **How it closes:** the header `X` runs `efc.ui.closeDynamic(self)`, which puts the page's default view back in the `dw_Right` dock (set by `efc.ui.setDefaultDock` in the screen's onStartup), or closes the dock if the page has no default. That startup script is not in this view.
 
 ## How it operates
 
@@ -34,7 +34,7 @@ The operator and maintenance dynamic window for a motor-driven equipment item (T
 
 **Alarms** (all levels). Eight rows: fail to start (`Alm_FailStart`), fail to stop (`Alm_FailStop`), uncommanded run/stop (`Alm_Uncmd`), E-stop (`Alm_EStop`), interlock trip (`Alm_IntlkTrip`), excess starts (`Alm_ExcessStarts`), overload (`Alm_OL`) and high current (`Alm_HiCurrent`). A row is coloured when its alarm is active, using the alarm's `Cfg_Priority`: 1 `Critical`, 2 `High`, 3 `Medium`, 4 `Low`, anything else `Medium`. The class adds `/Unacked` or `/Fill`. An inactive but unacknowledged alarm uses `Alarm/Status/ClearedUnacked`. An inactive, acknowledged alarm uses `Text/Caption Text/Color/Muted`. "No active alarms" is shown when none is active. **ACK** (level 1 and above) calls `efc.ui.ackAll` with all eight alarms, which writes `Cmd_Ack` only for those whose `Sts_Unack` is true.
 
-**Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` with pens `Val_Current` and `Sts_Running`. The embedded view's `expanded` param starts `false`. It is declared `inout` in `Templates/Dynamic Window/Parts/Trend`, so the trend part toggles it and the value flows back to this embed. The `position.basis` binding (`{this.props.params.expanded}`) then grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock region (see [Parts/Trend.md](../Parts/Trend.md)).
+**Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` with pens `Val_Current` and `Sts_Running`. The embedded view's `expanded` param starts `false`. It is declared `inout` in `Templates/Dynamic Window/Parts/Trend`, so the trend part toggles it and the value flows back to this embed. The `position.basis` binding (`{this.props.params.expanded}`) then grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock (see [Parts/Trend.md](../Parts/Trend.md)).
 
 **Maintenance** (level 2 and above). Shows run hours (`Run/Val_RunHrs`), starts (`Run/Val_Starts`), starts in the last hour (`Run/Val_StartsLastHr`), run hours since maintenance (`Run/Val_HrsSinceMaint`) and whether maintenance is due (`Run/Sts_MaintDue`). `RESET MAINT` writes `Run/Cmd_ResetMaint` (audited). `SIMULATE` toggles `Sim_En` (audited).
 
@@ -83,7 +83,7 @@ None.
 
 - `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
 - `session.props.auth.user.userName`: read by `efc.ui._audit` (not bound in this view).
-- `session.custom.efcDw[pageId]`: written by `efc.ui.openDynamic` and `closeDynamic` in the template and header; read by `Docks/Region` (not in this file).
+- `session.custom.efcDw[pageId]`: holds only the page's default dock view, written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
 - `page.props.pageId`: read by `efc.ui._state` to key `efcDw`.
 - No message handlers. No `customMethods`.
 
@@ -355,7 +355,7 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 
 | Handler | Action | Writes | Role check | Audit |
 |---|---|---|---|---|
-| `Header/Close` | `efc.ui.closeDynamic` restores default region view | none | none | no |
+| `Header/Close` | `efc.ui.closeDynamic` restores the default dock view or closes the dock | none | none | no |
 | `Mode/Auto` | `efc.ui.cmd(... 'Mode/Cmd_Auto', True, 1)` | `Mode/Cmd_Auto` | level 1 | no |
 | `Mode/Man` | `efc.ui.cmd(... 'Mode/Cmd_Man', True, 1)` | `Mode/Cmd_Man` | level 1 | no |
 | `Mode/Maint` | `efc.ui.cmd(... 'Mode/Cmd_Maint', True, 2)` | `Mode/Cmd_Maint` | level 2 | yes |
@@ -376,10 +376,10 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
-- **`efc.ui.closeDynamic(component)`**: writes `efcDw[pageId]` back to the stored `default` path and params. Writes no tags.
+- **`efc.ui.closeDynamic(component)`**: loads the page's stored `default` view and params (`session.custom.efcDw[pageId]`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - **`efc.ui.cmd(component, member, value, minLevel, audit)`**: the role-checked write described above. It writes the value once with `writeBlocking` and does not write it back. One-shot members depend on the PLC behaviour; `Cmd_Jog` is written TRUE on press and FALSE on release. Audits when `audit=True`.
 - **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true, at level 1 and above.
-- **`efc.ui.openDynamic`** (called from the template, not from this view): maps the template's type to a window and writes the region state.
+- **`efc.ui.openDynamic`** (called from the template, not from this view): maps the template's type to a window and loads it into the `dw_Right` dock.
 - **`efc.ui.bypass` / `unbypass`**: exist in the module but are not called from this view. Interlock bypass is handled in the embedded `IntlkList` views, which are not in this file.
 
 ## Tag members used

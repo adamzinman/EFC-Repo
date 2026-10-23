@@ -5,13 +5,13 @@ Opened from: the PID loop templates `Templates/Loops/Loop_B1_Bar`, `Loop_B2_Hori
 
 ## Overview
 
-The operator, tuning and configuration dynamic window for a PID loop (T_PID). It opens in the screen's right-hand region (`Docks/Region`), not as a popup. It shows the mode, PV, SP, output and error, the setpoint and output entries, interlocks, alarms, a trend, tuning values and alarm and range configuration.
+The operator, tuning and configuration dynamic window for a PID loop (T_PID). It opens in the page's right dock (`dw_Right`), not as a popup. It shows the mode, PV, SP, output and error, the setpoint and output entries, interlocks, alarms, a trend, tuning values and alarm and range configuration.
 
 - **Default size:** 400 x 860 (`props.defaultSize`). The root is a scrolling column (`Container/Scroll`).
 - **Parameters:** `tagPath` (the T_PID instance) and `tType` (default `T_PID`).
-- **How it is opened:** the template's click runs `efc.ui.openDynamic(self)`. That function writes `session.custom.efcDw[pageId] = {path: 'Templates/Dynamic Window/Loops/Loop', params: {tagPath: ...}}`. `Docks/Region` then displays this view. `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the dock always runs with its default `T_PID`. No binding in this view reads `view.params.tType`.
+- **How it is opened:** the template's click runs `efc.ui.openDynamic(self)`. That function loads `Templates/Dynamic Window/Loops/Loop` into the page's `dw_Right` dock with params `{tagPath: ...}` (`system.perspective.alterDock`) and opens the dock. `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the dock always runs with its default `T_PID`. No binding in this view reads `view.params.tType`.
 - **Generated view:** this view is written by `generator/docks/build_docks.py` (function `loop()`, listed in `VIEWS`). Change the generator, not `view.json`, or the next build overwrites the edit.
-- **How it closes:** the header `X` runs `efc.ui.closeDynamic(self)`, which restores the screen default set by `efc.ui.setDefaultDock` on `Docks/Region` startup. That startup script is not in this view.
+- **How it closes:** the header `X` runs `efc.ui.closeDynamic(self)`, which puts the page's default view back in the `dw_Right` dock (set by `efc.ui.setDefaultDock` in the screen's onStartup), or closes the dock if the page has no default. That startup script is not in this view.
 
 ## How it operates
 
@@ -30,7 +30,7 @@ The operator, tuning and configuration dynamic window for a PID loop (T_PID). It
 
 **Alarms** (all levels). Three rows: Deviation high (`Alm_DevH`), Deviation low (`Alm_DevL`) and PV bad (`Alm_PVBad`). An active row takes `Alarm/<priority>/Unacked` or `Alarm/<priority>/Fill`. The priority comes from `Cfg_Priority`: 1 `Critical`, 2 `High`, 3 `Medium`, 4 `Low`, anything else `Medium`. An inactive, unacknowledged row uses `Alarm/Status/ClearedUnacked`. An inactive, acknowledged row uses `Text/Caption Text/Color/Muted`. "No active alarms" shows when none is active. **ACK** (level 1 and above) calls `efc.ui.ackAll`, which writes `Cmd_Ack` only for the alarms whose `Sts_Unack` is true.
 
-**Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` (see [Parts/Trend](../Parts/Trend.md)) with the static pens `["Val_PV", "Val_SP", "Out_CV"]` and `expanded` = `false`. The Trend part declares `expanded` as `inout` and toggles it itself, and the value flows back to this embed. The `position.basis` binding (`{this.props.params.expanded}`) then grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock region. The trend reads tag history through `efc.ui.trend` (`queryTagHistory`), with a range selector inside the Trend part (5 min, 30 min, 1 h, 8 h, 24 h; default 30 min).
+**Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` (see [Parts/Trend](../Parts/Trend.md)) with the static pens `["Val_PV", "Val_SP", "Out_CV"]` and `expanded` = `false`. The Trend part declares `expanded` as `inout` and toggles it itself, and the value flows back to this embed. The `position.basis` binding (`{this.props.params.expanded}`) then grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock. The trend reads tag history through `efc.ui.trend` (`queryTagHistory`), with a range selector inside the Trend part (5 min, 30 min, 1 h, 8 h, 24 h; default 30 min).
 
 **Tuning** (all levels for the read-only rows; collapsible). The header click toggles `open_Tuning`. Rows: Gain (Kp), Integral (Ti, s), Derivative (Td, s), Deadband, SP rate (/s), CV rate (%/s) and a "Direct acting" checkbox (`Cfg_DirectAct`). Below level 4 each row shows its value read-only (Direct acting shows `Yes` or `No`). At level 4 and above the value rows are replaced by numeric entries bound two-way to `Cfg_Kp`, `Cfg_DB`, `Cfg_SPRate`, `Cfg_CVRate`, and by entries for `Cfg_Ti` and `Cfg_Td` (PCLib TIME, milliseconds on the PLC) that show `member / 1000` seconds and write `int(round(value * 1000))` from a `props.value` onChange script (only when `origin == 'Browser'`) through `efc.ui.cmd(self, member, ..., 4, audit=True)`, and the checkbox is shown (level 4 and above; hidden below). The entries have `enabled` = `true`. Their only guard is visibility.
 
@@ -78,7 +78,7 @@ None.
 
 - `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
 - `session.props.auth.user.userName`: not bound in this view. `efc.ui._audit` reads it; only the Ti and Td entry onChange scripts reach it.
-- `session.custom.efcDw[pageId]`: written by `efc.ui.openDynamic` and `closeDynamic` in the template and header. Read by `Docks/Region` (not in this file).
+- `session.custom.efcDw[pageId]`: holds only the page's default dock view, written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
 - `page.props.pageId`: read by `efc.ui._state` to key `efcDw`. Reached through the header close.
 - No message handlers. No `customMethods`.
 
@@ -338,7 +338,7 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 
 | Handler | Action | Writes | Role check | Audit |
 |---|---|---|---|---|
-| `Header/Close` | `efc.ui.closeDynamic` restores the default region view | none | none | no |
+| `Header/Close` | `efc.ui.closeDynamic` restores the default dock view or closes the dock | none | none | no |
 | `Mode/Man` | `efc.ui.cmd(self, 'Cmd_Man', True, 1)` | `Cmd_Man` | level 1 | no |
 | `Mode/Auto` | `efc.ui.cmd(self, 'Cmd_Auto', True, 1)` | `Cmd_Auto` | level 1 | no |
 | `Mode/Cas` | `efc.ui.cmd(self, 'Cmd_Cas', True, 1)` | `Cmd_Cas` | level 1 | no |
@@ -354,7 +354,7 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
-- **`efc.ui.closeDynamic(component)`**: writes `efcDw[pageId]` back to the stored `default` path and params. Writes no tags.
+- **`efc.ui.closeDynamic(component)`**: loads the page's stored `default` view and params (`session.custom.efcDw[pageId]`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - **`efc.ui.cmd(component, member, value, minLevel, audit)`**: the role-checked write described above. It is called with `minLevel` 1 and no audit by the Mode buttons, and with `minLevel` 4 and `audit=True` by the Ti and Td entries. It writes one tag member with `system.tag.writeBlocking`.
 - **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms with `system.tag.readBlocking`, then writes `<alarm>/Cmd_Ack` = True for those that are true. Only runs at level 1 and above.
 - **`efc.ui.openDynamic`**, **`efc.ui.trend`**: used by the templates and by `Templates/Dynamic Window/Parts/Trend`, not by this view.

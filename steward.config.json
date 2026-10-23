@@ -60,7 +60,11 @@
     "Templates/Loops/Popups/LoopConfig",
     "Templates/Loops/_Demo",
     "Templates/ProcessValues/_Demo",
-    "Templates/Station/Station_Sidebar",
+    "Templates/Dynamic Window/IO/IOCard",
+    "Templates/Dynamic Window/Parts/BypassConfirm",
+    "Templates/Dynamic Window/Parts/IntlkList",
+    "Templates/Dynamic Window/Parts/Trend",
+    "Templates/Dynamic Window/Station/Station",
     "Templates/Station/_Demo",
     "Templates/_Demo"
   ],

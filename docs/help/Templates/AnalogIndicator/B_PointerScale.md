@@ -9,7 +9,7 @@ A vertical pointer scale for one KPI value. The track runs from low at the botto
 
 - **Default size:** 128 x 330 (`props.defaultSize`).
 - **Bound to:** one T_KPI instance through `params.tagPath`. The default is `[default]KPI/KPI_101`, which is not in `tags/` (see Notes).
-- **Opening the dock:** a single click on the whole view runs `efc.ui.openDynamic(self)`. `tType` defaults to `T_KPI`, and `efc.ui.BY_TYPE` maps `T_KPI` to `dw_ProcessValue`, which `efc.ui.WINDOWS` maps to `Templates/Dynamic Window/ProcessValues/ProcessValue`. The screen's `Docks/Region` shows that dock with `tagPath` (or `dwTagPath` when set).
+- **Opening the dock:** a single click on the whole view runs `efc.ui.openDynamic(self)`. `tType` defaults to `T_KPI`, and `efc.ui.BY_TYPE` maps `T_KPI` to `dw_ProcessValue`, which `efc.ui.WINDOWS` maps to `Templates/Dynamic Window/ProcessValues/ProcessValue`. The `dw_Right` dock then shows that window with `tagPath` (or `dwTagPath` when set).
 - **Generated view:** this view is written by `generator/analog_indicators/gen_analog_indicators.py`, which builds `build/analog/EFC_AnalogIndicators.zip`. Change the generator, not `view.json`, or the next build replaces the edit.
 - **Siblings:** the other three templates (A to D) share the same view-level custom properties, tag mirrors, and click script. Only the params and the component tree differ (checked by diffing the four `view.json` files).
 
@@ -31,7 +31,7 @@ A vertical pointer scale for one KPI value. The track runs from low at the botto
 
 **Ideal band, range and clamping.** Same as A.
 
-**Click.** A single click opens `Templates/Dynamic Window/ProcessValues/ProcessValue` through `efc.ui.openDynamic`, which writes the page's `session.custom.efcDw` entry shown by `Docks/Region` (see Scripts). No role level is checked, nothing is audited, and no tag is written.
+**Click.** A single click opens `Templates/Dynamic Window/ProcessValues/ProcessValue` through `efc.ui.openDynamic`, which loads it into the page's `dw_Right` dock (see Scripts). No role level is checked, nothing is audited, and no tag is written.
 
 **Acknowledgement.** The view shows `Sts_Unack` but binds no `Cmd_Ack`, `Cmd_Reset` or `Cmd_Shelve`. It does not write to the tag. An unacknowledged level uses the `/Unacked` alarm class on the chip, and an acknowledged one uses `/Fill`.
 
@@ -106,7 +106,7 @@ None. No component in this view carries a `custom` property.
 
 ### Session, page and message payloads
 
-- **Writes:** `session.custom.efcDw[<pageId>]` = `{path, params}` through `efc.ui.openDynamic`, on click only. The `path` is `Templates/Dynamic Window/ProcessValues/ProcessValue` and `params` holds `tagPath`.
+- **Writes:** no tag or session value. On click only, `efc.ui.openDynamic` loads `Templates/Dynamic Window/ProcessValues/ProcessValue` into the page's `dw_Right` dock with `params` holding `tagPath`.
 - **Reads:** none. The template reads no `session.*` or `page.*` value.
 - **Messages:** none sent or handled.
 
@@ -180,7 +180,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 Total: **1 event script**, no `customMethods`, no `messageHandlers`, no property-change scripts, no script transforms. `view.scripts` is absent.
 
 1. **`root`**: `events.dom.onClick` on `root`, scope G.
-   Opens the dynamic window for this tag. Calls `efc.ui.openDynamic`, which writes `session.custom.efcDw` (see below). No tag writes, no role check, no audit.
+   Opens the dynamic window for this tag. Calls `efc.ui.openDynamic`, which loads the window into the `dw_Right` dock (see below). No tag writes, no role check, no audit.
 
 ```python
 	efc.ui.openDynamic(self)
@@ -188,7 +188,7 @@ Total: **1 event script**, no `customMethods`, no `messageHandlers`, no property
 
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.openDynamic(component)`**: uses `dockId` if set, else `BY_TYPE[tType]`. With the default `tType` `T_KPI` that is `dw_ProcessValue`, which maps to `Templates/Dynamic Window/ProcessValues/ProcessValue`. If no window is found, it logs a warning and returns. Otherwise it takes the tag path from `dwTagPath`, then `tagPath`, then `cardPath`, and calls `_write`. `_write` updates `session.custom.efcDw[pageId]` with `path` and `params:{tagPath}`. `openDynamic` adds `model` to `params` only when that param is set. The existing `default` entry for the page is kept. It does not read the user's role, does not write a tag, and does not audit.
+- **`efc.ui.openDynamic(component)`**: uses `dockId` if set, else `BY_TYPE[tType]`. With the default `tType` `T_KPI` that is `dw_ProcessValue`, which maps to `Templates/Dynamic Window/ProcessValues/ProcessValue`. If no window is found, it logs a warning and returns. Otherwise it takes the tag path from `dwTagPath`, then `tagPath`, then `cardPath`, and calls `efc.ui.openWindow`. That builds `params:{tagPath}` (plus `model`, only when that param is set) and calls `efc.ui.showDock`, which runs `system.perspective.alterDock('dw_Right', ...)` then `openDock`. The page's stored default is not changed. It does not read the user's role, does not write a tag, and does not audit.
 - **`efc.ui.level` / `userLevel`**: not called by this view.
 - **`efc.ui.closeDynamic`**: not called by this view. The dock's close button calls it.
 

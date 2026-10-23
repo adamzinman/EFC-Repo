@@ -10,7 +10,7 @@ A single-device P&ID symbol for a modulating (analog) control valve (T_CValve). 
 
 - **Default size:** 120 x 100 (`props.defaultSize`).
 - **Bound to:** one T_CValve instance through `params.tagPath` (default `[default]PID_Demo/FV101`).
-- **Opening the dock:** a single click on the symbol runs `efc.ui.openDynamic(self)`. It maps `tType` (or `dockId`) to a window (`T_CValve` gives `dw_ValveAnalog`), then writes `session.custom.efcDw[pageId] = {path, params:{tagPath}}`. The screen's `Docks/Region` embedded view shows that path. Only `tagPath` is passed on; `dwTagPath` overrides it when set.
+- **Opening the dock:** a single click on the symbol runs `efc.ui.openDynamic(self)`. It maps `tType` (or `dockId`) to a window (`T_CValve` gives `dw_ValveAnalog`), then loads that window into the page's `dw_Right` dock with `params:{tagPath}` and opens the dock. Only `tagPath` is passed on; `dwTagPath` overrides it when set.
 - **Writes:** none. This template writes no tag and checks no role. The dock does the writes.
 - **Generated view:** the dock `Templates/Dynamic Window/Valves/ValveAnalog` is written by `generator/docks/build_docks.py`. This template is not generated.
 
@@ -95,7 +95,7 @@ None. The components carry no `custom` properties.
 
 ### Session, page and message payloads
 
-None. The template reads no `session.*` or `page.*` values and sends no messages. Its only use of `session` is inside `efc.ui.openDynamic`, which writes `session.custom.efcDw` (see the Scripts section).
+None. The template reads no `session.*` or `page.*` values and sends no messages. `efc.ui.openDynamic` changes the page's `dw_Right` dock (see the Scripts section).
 
 ## Bindings reference
 
@@ -165,7 +165,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 Total: **1 event script**, no `customMethods`, no `messageHandlers`, no property-change scripts, no script transforms. `view.scripts` is absent.
 
 1. **`root/Symbol`**: `events.dom.onClick` on `root/Symbol`, scope G.
-   Opens the dynamic window for this tag. Calls `efc.ui.openDynamic`, which writes `session.custom.efcDw` (see below). No tag writes.
+   Opens the dynamic window for this tag. Calls `efc.ui.openDynamic`, which loads the window into the `dw_Right` dock (see below). No tag writes.
 
 ```python
 	efc.ui.openDynamic(self)
@@ -173,7 +173,7 @@ Total: **1 event script**, no `customMethods`, no `messageHandlers`, no property
 
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_CValve` that is `dw_ValveAnalog`, which maps to `Templates/Dynamic Window/Valves/ValveAnalog`. If no window is found, it logs a warning and stops. Otherwise it writes `session.custom.efcDw[pageId] = {path, params:{tagPath: dwTagPath or tagPath}}`. It does not check the user's role and does not write to the tag.
+- **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_CValve` that is `dw_ValveAnalog`, which maps to `Templates/Dynamic Window/Valves/ValveAnalog`. If no window is found, it logs a warning and stops. Otherwise it loads it into the page's `dw_Right` dock with `params:{tagPath: dwTagPath or tagPath}` and opens the dock (`efc.ui.showDock`). It does not check the user's role and does not write to the tag.
 
 ## Tag members used
 

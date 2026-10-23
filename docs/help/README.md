@@ -66,7 +66,6 @@ Not covered: the `_Demo` and `_Examples` screens, which are demonstration pages 
 | `Templates/Dynamic Window/Parts/IntlkList` | [Templates/Dynamic Window/Parts/IntlkList.md](Templates/Dynamic%20Window/Parts/IntlkList.md) |
 | `Templates/Dynamic Window/Parts/Trend` | [Templates/Dynamic Window/Parts/Trend.md](Templates/Dynamic%20Window/Parts/Trend.md) |
 | `Templates/Dynamic Window/ProcessValues/ProcessValue` | [Templates/Dynamic Window/ProcessValues/ProcessValue.md](Templates/Dynamic%20Window/ProcessValues/ProcessValue.md) |
-| `Docks/Region` | [Docks/Region.md](Docks/Region.md) |
 | `Templates/Dynamic Window/Rotating/Rotating` | [Templates/Dynamic Window/Rotating/Rotating.md](Templates/Dynamic%20Window/Rotating/Rotating.md) |
 | `Templates/Dynamic Window/Station/Station` | [Templates/Dynamic Window/Station/Station.md](Templates/Dynamic%20Window/Station/Station.md) |
 | `Templates/Dynamic Window/Rotating/VFD` | [Templates/Dynamic Window/Rotating/VFD.md](Templates/Dynamic%20Window/Rotating/VFD.md) |

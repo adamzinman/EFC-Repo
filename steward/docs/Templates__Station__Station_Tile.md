@@ -9,7 +9,7 @@
 <!-- keep:end -->
 
 <!-- auto:start -->
-_Auto-generated 2026-10-21 03:56 from EFC_Library:view:Templates/Station/Station_Tile. Do not edit this section._
+_Auto-generated 2026-10-23 20:21 from EFC_Library:view:Templates/Station/Station_Tile. Do not edit this section._
 
 | Param | Direction | Default |
 |---|---|---|

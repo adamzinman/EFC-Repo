@@ -6,13 +6,13 @@ Opened from: the process value templates [PV_RangeBar](../../ProcessValues/PV_Ra
 
 ## Overview
 
-The operator and maintenance window for an analog process value (T_AI). It shows the value in engineering units, the percent of span, the rate of change and the range, six alarms, a trend, simulation, the alarm limits and the scaling configuration. It has no commands, no mode buttons and no interlock lists. It opens in the screen's right-hand region (`Docks/Region`), not as a popup.
+The operator and maintenance window for an analog process value (T_AI). It shows the value in engineering units, the percent of span, the rate of change and the range, six alarms, a trend, simulation, the alarm limits and the scaling configuration. It has no commands, no mode buttons and no interlock lists. It opens in the page's right dock (`dw_Right`), not as a popup.
 
 - **Default size:** 400 x 860 (`props.defaultSize`). The root is a scrolling column.
 - **Parameters:** `tagPath` (the T_AI instance) and `tType` (default `T_AI`).
-- **How it is opened:** the template's single click runs `efc.ui.openDynamic(self)`. That function writes `session.custom.efcDw[pageId] = {path: 'Templates/Dynamic Window/ProcessValues/ProcessValue', params: {tagPath: ...}}`, and `Docks/Region` displays this view. `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the window always runs with its default `T_AI`. Nothing in this view uses `tType`.
+- **How it is opened:** the template's single click runs `efc.ui.openDynamic(self)`. That function loads `Templates/Dynamic Window/ProcessValues/ProcessValue` into the page's `dw_Right` dock with params `{tagPath: ...}` (`system.perspective.alterDock`) and opens the dock. `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the window always runs with its default `T_AI`. Nothing in this view uses `tType`.
 - **Generated view:** this view is written by `generator/docks/build_docks.py` (function `process_value()`). Running that function in memory reproduces the committed `view.json` exactly. Change the generator, not `view.json`, or the next build overwrites the edit.
-- **How it closes:** the header `X` runs `efc.ui.closeDynamic(self)`, which restores the screen default set by `efc.ui.setDefaultDock` on `Docks/Region` startup. That startup script is not in this view.
+- **How it closes:** the header `X` runs `efc.ui.closeDynamic(self)`, which puts the page's default view back in the `dw_Right` dock (set by `efc.ui.setDefaultDock` in the screen's onStartup), or closes the dock if the page has no default. That startup script is not in this view.
 
 ## How it operates
 
@@ -24,7 +24,7 @@ The operator and maintenance window for an analog process value (T_AI). It shows
 
 **Alarms** (all levels). Six rows: high high (`Alm_HH`), high (`Alm_H`), low (`Alm_L`), low low (`Alm_LL`), rate of change (`Alm_ROC`) and bad quality (`Alm_Bad`). A row is coloured when its alarm is active, using the alarm's `Cfg_Priority`: 1 `Critical`, 2 `High`, 3 `Medium`, 4 `Low`, anything else `Medium`. The class adds `/Unacked` or `/Fill`. An inactive but unacknowledged alarm uses `Alarm/Status/ClearedUnacked`. An inactive, acknowledged alarm uses `Text/Caption Text/Color/Muted`. "No active alarms" is shown when none is active. **ACK** (level 1 and above) calls `efc.ui.ackAll`, which writes `Cmd_Ack` only for the alarms whose `Sts_Unack` is true.
 
-**Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` ([Parts/Trend](../Parts/Trend.md)) with pen `Val_PV`, over the window's tag. The embedded view's `expanded` param starts `false`. The Trend part toggles it itself, and the `position.basis` binding grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock region.
+**Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` ([Parts/Trend](../Parts/Trend.md)) with pen `Val_PV`, over the window's tag. The embedded view's `expanded` param starts `false`. The Trend part toggles it itself, and the `position.basis` binding grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock.
 
 **Maintenance** (level 2 and above). Two controls. **Simulate** is a checkbox bound bidirectionally to `Sim_En`, enabled at level 2. **Simulated value** is an entry bound bidirectionally to `Sim_PV`, shown only while `Sim_En` is true. Neither goes through `efc.ui.cmd`, so neither is audited.
 
@@ -76,7 +76,7 @@ None.
 
 - `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
 - `session.props.auth.user.userName`: read by `efc.ui._audit` (not bound in this view).
-- `session.custom.efcDw[pageId]`: written by `efc.ui.openDynamic` and `closeDynamic` in the template and header; read by `Docks/Region` (not in this file).
+- `session.custom.efcDw[pageId]`: holds only the page's default dock view, written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
 - `page.props.pageId`: read by `efc.ui._state` to key `efcDw`.
 - No message handlers. No `customMethods`.
 
@@ -276,7 +276,7 @@ The button handlers call `efc.ui` functions, which are summarised after the list
 
 | Handler | Action | Writes | Role check | Audit |
 |---|---|---|---|---|
-| `Header/Close` | `efc.ui.closeDynamic` restores the default region view | none | none | no |
+| `Header/Close` | `efc.ui.closeDynamic` restores the default dock view or closes the dock | none | none | no |
 | `Alarms/Ack` | `efc.ui.ackAll` on the six alarms | `Alm_*/Cmd_Ack`, only where `Sts_Unack` is true | level 1 (in `efc.ui.ackAll`) | no |
 | `Limits/Header` (dom click) | toggles `open_Limits` | none | none | no |
 | `Configuration/Header` (dom click) | toggles `open_Configuration` | none | none | no |
@@ -286,7 +286,7 @@ This view has no `efc.ui.cmd` calls. The simulate checkbox, the simulated value 
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
-- **`efc.ui.closeDynamic(component)`**: writes `efcDw[pageId]` back to the stored `default` path and params. Writes no tags.
+- **`efc.ui.closeDynamic(component)`**: loads the page's stored `default` view and params (`session.custom.efcDw[pageId]`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - **`efc.ui.ackAll(component, alarms)`**: returns unless the user is at level 1 or above. Reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true. No audit.
 - **`efc.ui.cmd`, `bypass`, `unbypass`, `dblCmd`**: not called from this view. `efc.ui.trend` is called by the Trend part, not here.
 

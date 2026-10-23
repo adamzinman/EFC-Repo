@@ -462,18 +462,18 @@ section("Dynamic windows");
 // ================================================================ 18 Open/close flow
 {
   const s = slide("How a dynamic window opens and closes", "DYNAMIC WINDOWS");
-  const steps = [["Click symbol", "operator clicks a template"], ["efc.ui.openDynamic", "picks the window from tType or dockId"], ["Session value", "efcDw[pageId] = path + tagPath"], ["Docks/Region", "embedded view swaps to the window"]];
+  const steps = [["Click symbol", "operator clicks a template"], ["efc.ui.openDynamic", "picks the window from tType or dockId"], ["alterDock", "dw_Right view = window + tagPath"], ["openDock", "the page's right dock dw_Right opens"]];
   steps.forEach(([h, d], i) => {
     const x = 0.6 + i * 3.1;
     card(s, x, 1.65, 2.6, 1.35, { fill: i === 3 ? P.fault : P.card, line: i === 3 ? P.fault : "D0D0D0", name: "step " + h });
     T(s, [{ text: h, options: { bold: true, breakLine: true } }, { text: d, options: { fontSize: 12, color: i === 3 ? "E0E0E0" : P.muted } }], { x: x + 0.15, y: 1.78, w: 2.3, h: 1.15, fontSize: 15, color: i === 3 ? "FFFFFF" : P.text });
     if (i < 3) s.addShape(pres.shapes.RIGHT_ARROW, { x: x + 2.65, y: 2.17, w: 0.4, h: 0.32, fill: { color: P.borderDark }, line: { color: P.borderDark }, objectName: "arrow " + i });
   });
-  T(s, "Close (X) calls efc.ui.closeDynamic and returns the region to the screen's defaultDock view. One window per page; a second click replaces it.", { x: 0.6, y: 3.2, w: 12.1, h: 0.6, fontSize: 14, color: P.muted });
+  T(s, "Close (X) calls efc.ui.closeDynamic: the page's default view (efc.ui.setDefaultDock) comes back, or the dock closes. One window per page; a second click replaces it.", { x: 0.6, y: 3.2, w: 12.1, h: 0.6, fontSize: 14, color: P.muted });
   table(s, [["Type", "Window"], ["T_DValve", "dw_ValveDiscrete"], ["T_CValve", "dw_ValveAnalog"], ["T_Motor", "dw_Rotating"], ["T_VFD", "dw_VFD"], ["T_Heater", "dw_Heater"]], { fs: 12, opts: { x: 0.6, y: 4.0, w: 4.0, colW: [1.6, 2.4], rowH: 0.42 } });
   table(s, [["Type", "Window"], ["T_HeatEx", "dw_HeatTransfer"], ["T_AI, T_KPI", "dw_ProcessValue"], ["T_PID", "dw_Loop"], ["T_Station", "dw_Station"], ["x80 card DDT", "dw_IOCard"]], { fs: 12, opts: { x: 4.85, y: 4.0, w: 4.0, colW: [1.6, 2.4], rowH: 0.42 } });
   card(s, 9.15, 4.0, 3.55, 2.55, { name: "why embedded" });
-  T(s, [{ text: "Why an embedded view, not Perspective docks?", options: { bold: true, breakLine: true } }, { text: "The region is a fixed part of the shell, so the process area never shifts or gets covered, and it matches the Controls Standard screen appendix (decision 24).", options: { color: P.muted, fontSize: 13 } }], { x: 9.35, y: 4.12, w: 3.2, h: 2.35, fontSize: 14 });
+  T(s, [{ text: "Why a Perspective dock?", options: { bold: true, breakLine: true } }, { text: "One right dock, dw_Right, in every page config: 400 px at 1080p, onDemand. It replaced the embedded-view region Docks/Region (decision 31). Needs Ignition 8.1.19+.", options: { color: P.muted, fontSize: 13 } }], { x: 9.35, y: 4.12, w: 3.2, h: 2.35, fontSize: 14 });
   notes(s);
 }
 
@@ -549,7 +549,7 @@ section("Dynamic windows");
     "The expand button fills the window below its header, about 400 x 760 at 1080p",
     "Range buttons 5 m / 30 m / 1 h / 8 h / 24 h and collapse; pause / live and a last-events list are approved but not built yet",
     "The other sections hide while expanded and come back on collapse",
-    "The region never widens, so the process area is never covered (decision 26)",
+    "The right dock never widens; an expanded graph fills the window (decision 26)",
     "Expand state is local to the window, not a session value"], { x: 4.2, y: 1.6, w: 8.5, h: 3.0, fontSize: 16 });
   card(s, 4.2, 4.75, 8.5, 0.95, { name: "history prereq" });
   T(s, "Requires tag history on the pens the window trends (PV, SP, CV, position, current).", { x: 4.45, y: 4.85, w: 8.1, h: 0.75, fontSize: 14, valign: "middle" });

@@ -3,7 +3,7 @@
 <!-- keep:start -->
 **Purpose:** P&ID pneumatic on/off valve template bound to EFCLib v1 T_DValve through tagPath: state fill, alarm outline, P/I badges, mode and status line.
 
-**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_ValveDiscrete) in the screen's Docks/Region.
+**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_ValveDiscrete) in the page's dw_Right dock.
 
 **Gotchas:** Touch mode (useButton = false, dblCmd = true): double-tap toggles the device, Operator+, only in MAN, available, permitted, not interlocked, not LOCAL. Limit-switch LEDs follow Cfg_HasZSO / Cfg_HasZSC.
 <!-- keep:end -->

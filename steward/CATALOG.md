@@ -1,12 +1,11 @@
-# Library catalog (2026-10-23 20:15)
+# Library catalog (2026-10-23 20:23)
 
-64 views, 1 script modules, 314 style classes, 29 UDTs
+63 views, 1 script modules, 314 style classes, 29 UDTs
 
 ## Views
 
 | View | Params | PCLib | Dock | Classes | Inline | Changed |
 |---|---|---|---|---|---|---|
-| EFC_Library:Docks/Region | defaultDock,defaultParams | - | - | 1 | 0 | 2026-10-21 |
 | EFC_Library:Styles/_Catalog | - | - | - | 170 | 146 | 2026-10-21 |
 | EFC_Library:Templates/AnalogIndicator/A_RangeBar | tagPath,LabelMode,ShowMinMax,Format,tType,dockId,dwTagPath | T_KPI | - | 14 | 0 | 2026-10-21 |
 | EFC_Library:Templates/AnalogIndicator/B_PointerScale | tagPath,ShowLimitType,ShowLimitValue,Format,tType,dockId,dwTagPath | T_KPI | - | 16 | 0 | 2026-10-21 |
@@ -63,7 +62,7 @@
 | EFC_Library:Templates/Rotating/Pump_Vacuum | tagPath,useButton,tType,dockId,dwTagPath,dblCmd | T_Motor | - | 9 | 0 | 2026-10-23 |
 | EFC_Library:Templates/Rotating/VFD | tagPath,useButton,tType,dockId,dwTagPath | T_VFD | - | 9 | 0 | 2026-10-23 |
 | EFC_Library:Templates/Station/Station_Fill | tagPath | - | - | 42 | 0 | 2026-10-21 |
-| EFC_Library:Templates/Station/Station_Tile | tagPath,tType,dockId,dwTagPath | T_Station | - | 21 | 0 | 2026-10-21 |
+| EFC_Library:Templates/Station/Station_Tile | tagPath,tType,dockId,dwTagPath | T_Station | - | 21 | 0 | 2026-10-23 |
 | EFC_Library:Templates/Station/_Demo | - | - | - | 10 | 0 | 2026-10-23 |
 | EFC_Library:Templates/Valves/Valve_Control | tagPath,tType,dockId,dwTagPath | T_CValve | - | 8 | 0 | 2026-10-21 |
 | EFC_Library:Templates/Valves/Valve_MOV | tagPath,useButton,tType,dockId,dwTagPath,dblCmd | T_DValve | - | 9 | 0 | 2026-10-23 |
@@ -73,7 +72,7 @@
 
 ## Script modules
 
-- efc/ui: _log, _p, level, userLevel, _state, _write, region, openDynamic, setDefaultDock, closeDynamic, _audit, cmd, bypass, unbypass, ackAll, _num, trend, dblCmd
+- efc/ui: _log, _p, level, userLevel, _state, _write, showDock, openWindow, openDynamic, setDefaultDock, closeDynamic, _audit, cmd, bypass, unbypass, ackAll, _num, trend, dblCmd
 
 ## PCLib UDTs
 

@@ -15,8 +15,8 @@
    }
   },
   "EFC_Library:script:efc/ui": {
-   "bytes": 9204,
-   "changed_at": "2026-10-23 20:15",
+   "bytes": 9870,
+   "changed_at": "2026-10-23 20:23",
    "first_seen": "2026-10-21 03:53",
    "functions": [
     "_log()",
@@ -25,7 +25,8 @@
     "userLevel(component)",
     "_state(component)",
     "_write(component, **changes)",
-    "region(value, pageId)",
+    "showDock(path, params=None)",
+    "openWindow(dw, tagPath, model=None)",
     "openDynamic(component)",
     "setDefaultDock(component, viewPath, params=None)",
     "closeDynamic(component)",
@@ -38,9 +39,12 @@
     "trend(base, pens, minutes, w, h)",
     "dblCmd(component)"
    ],
-   "hash": "8eabc864f8bd",
+   "hash": "d82d6f865d89",
    "kind": "script",
    "system_calls": [
+    "system.perspective.alterDock",
+    "system.perspective.closeDock",
+    "system.perspective.openDock",
     "system.tag.queryTagHistory",
     "system.tag.readBlocking",
     "system.tag.writeBlocking",
@@ -3251,42 +3255,6 @@
    "first_seen": "2026-10-21 00:35",
    "hash": "a8c462118b94",
    "kind": "style"
-  },
-  "EFC_Library:view:Docks/Region": {
-   "bound_classes": 0,
-   "bytes": 2573,
-   "changed_at": "2026-10-21 03:53",
-   "classes": [
-    "Container/Panel"
-   ],
-   "colors": [],
-   "default_size": {
-    "height": 860,
-    "width": 400
-   },
-   "docks": [],
-   "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Docks/Region/view.json",
-   "first_seen": "2026-10-21 03:53",
-   "hash": "25879969e3cb",
-   "inline_styles": 0,
-   "inline_where": [],
-   "kind": "view",
-   "last_modified": "2026-10-19T00:00:00Z",
-   "modified_by": "efc-ignition-library",
-   "params": {
-    "defaultDock": {
-     "default": "",
-     "dir": "input"
-    },
-    "defaultParams": {
-     "default": "dict",
-     "dir": "input"
-    }
-   },
-   "pclib_types": [],
-   "popups": 0,
-   "resource_version": 1,
-   "system_calls": []
   },
   "EFC_Library:view:Styles/_Catalog": {
    "bound_classes": 0,
@@ -6945,8 +6913,8 @@
   },
   "EFC_Library:view:Templates/Station/Station_Tile": {
    "bound_classes": 3,
-   "bytes": 28551,
-   "changed_at": "2026-10-21 03:56",
+   "bytes": 28460,
+   "changed_at": "2026-10-23 20:21",
    "classes": [
     "Bar/Fill",
     "Bar/Marker",
@@ -6975,11 +6943,11 @@
     "height": 96,
     "width": 220
    },
-   "doc_hash": "66a7bb76aa5b",
+   "doc_hash": "c04aceed5851",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/Station_Tile/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "66a7bb76aa5b",
+   "hash": "c04aceed5851",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -7012,8 +6980,8 @@
   },
   "EFC_Library:view:Templates/Station/_Demo": {
    "bound_classes": 0,
-   "bytes": 10748,
-   "changed_at": "2026-10-23 20:15",
+   "bytes": 10767,
+   "changed_at": "2026-10-23 20:21",
    "classes": [
     "Container/Screen",
     "Station/_Demo/Left",
@@ -7031,11 +6999,11 @@
     "height": 1080,
     "width": 1920
    },
-   "doc_hash": "51bae45e97b2",
+   "doc_hash": "8011f7f86dce",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Station/_Demo/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "51bae45e97b2",
+   "hash": "8011f7f86dce",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -8814,11 +8782,11 @@
    ]
   }
  },
- "last_audit_fp": "72627c6dedab",
- "last_delta": 54,
+ "last_audit_fp": "5aec66161f1a",
+ "last_delta": 1,
  "projects": [
   "EFC_Library"
  ],
- "scanned_at": "2026-10-23 20:15",
+ "scanned_at": "2026-10-23 20:23",
  "upstream": {}
 }
