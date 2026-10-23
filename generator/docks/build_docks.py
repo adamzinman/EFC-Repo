@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-EFC_Docks: the dynamic windows (Templates/Dynamic Window/*), their shared parts (Templates/Dynamic Window/Parts/*), the screen region (Docks/Region)
-and the efc.ui script library. Merged into EFC_Library by build.py.
+EFC_Docks: the dynamic windows (Templates/Dynamic Window/*), their shared parts (Templates/Dynamic Window/Parts/*),
+and the efc.ui script library (windows open in the right dock dw_Right, decision 31). Merged into EFC_Library by build.py.
 
 Every window is 400 x 860 at 1080p (37.04vh x 79.63vh, decision 25), binds one EFCLib v1 T_ type through
 view.params.tagPath and uses EFC_Styles classes only. Role levels (efc.ui.ROLES): 1 Operator commands and
@@ -577,33 +577,15 @@ def trend_part():
     return "Templates/Dynamic Window/Parts/Trend", {"custom": custom, "params": {"tagPath": "", "pens": [], "expanded": False}, "propConfig": pc,
                                  "props": {"defaultSize": {"width": W - 16, "height": 170}}, "root": root}
 
-def region():
-    """Docks/Region: the screen's right region (400 x 860). Put one on each screen and set defaultDock to that
-    screen's default view; templates replace it with their dynamic window, close returns to the default."""
-    tr = {"type": "script", "code": "\treturn efc.ui.region(value, self.page.props.pageId)"}
-    dw = comp("ia.display.view", "Window", {"path": "", "params": {}, "useDefaultViewWidth": False, "useDefaultViewHeight": False},
-              {"shrink": 0, "grow": 1, "basis": "0px"},
-              {"props.path": {"binding": {"type": "property", "config": {"path": "view.custom.dw"}, "transforms": [
-                  {"type": "script", "code": "\treturn (value or {}).get('path') or ''"}]}},
-               "props.params": {"binding": {"type": "property", "config": {"path": "view.custom.dw"}, "transforms": [
-                   {"type": "script", "code": "\treturn dict((value or {}).get('params') or {})"}]}}})
-    root = flex("root", "column", [dw], extra={"style": {"classes": "Container/Panel"}},
-                events={"system": {"onStartup": script("efc.ui.setDefaultDock(self, self.view.params.defaultDock, self.view.params.defaultParams)")}})
-    pc = {"custom.dw": {"binding": {"type": "property", "config": {"path": "session.custom.efcDw"}, "transforms": [tr]}},
-          "params.defaultDock": {"paramDirection": "input", "persistent": True},
-          "params.defaultParams": {"paramDirection": "input", "persistent": True}}
-    return "Docks/Region", {"custom": {"dw": {"path": "", "params": {}}}, "params": {"defaultDock": "", "defaultParams": {}},
-                            "propConfig": pc, "props": {"defaultSize": {"width": W, "height": H}}, "root": root}
-
 # ----------------------------------------------------------------- write
 VIEWS = [valve_discrete, valve_analog, rotating, vfd, heater, heat_transfer, process_value, loop, io_card,
-         intlk_list, bypass_confirm, trend_part, region]
+         intlk_list, bypass_confirm, trend_part]
 
 def build():
     proj = project_dir(PROJECT)
     if os.path.exists(proj):
         import shutil; shutil.rmtree(proj)
-    write(os.path.join(proj, "project.json"), project_json(PROJECT, "EFC dynamic windows, parts, screen region and efc.ui"))
+    write(os.path.join(proj, "project.json"), project_json(PROJECT, "EFC dynamic windows, parts and efc.ui"))
     for fn in VIEWS:
         path, view = fn()
         classify(view["root"])

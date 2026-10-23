@@ -108,7 +108,7 @@ def generate(preview):
     run("pid_loops/generate_loops.py")           # PID_Loops -> projects/PID_Loops, tags/PID_Loops/
     run("analog_indicators/gen_analog_indicators.py", stdout=subprocess.DEVNULL)   # T_KPI cards -> Templates/AnalogIndicator
     unzip_to(os.path.join(BUILD, "analog", "EFC_AnalogIndicators.zip"), os.path.join(PROJECTS, "EFC_AnalogIndicators"))
-    run("docks/build_docks.py")                  # EFC_Docks: dynamic windows, parts, Docks/Region, efc.ui script library
+    run("docks/build_docks.py")                  # EFC_Docks: dynamic windows, parts, efc.ui script library
     run("nav_connectors/generate_nav_connectors.py")   # symbols/NavConnectors, mockups/nav-connectors.html
     merge_library()
     os.makedirs(os.path.join(ROOT, "mockups"), exist_ok=True)
@@ -174,7 +174,7 @@ def merge_library():
 
 
 def check_view_refs(lib):
-    """Every embedded view, repeater and literal openPopup path must name a view that exists in the library."""
+    """Every embedded view, repeater, literal openPopup path and efc.ui dynamic window must name a view in the library."""
     vroot = os.path.join(lib, "com.inductiveautomation.perspective", "views")
     views = {os.path.relpath(d, vroot).replace(os.sep, "/") for d, _, fs in os.walk(vroot) if "view.json" in fs}
     bad = []
@@ -190,6 +190,11 @@ def check_view_refs(lib):
         for p in prefixes:
             if not any(x.startswith(p) for x in views):
                 bad.append(f"{v} -> {p}*")
+    ui = os.path.join(lib, "ignition", "script-python", "efc", "ui", "code.py")     # efc.ui dynamic windows (dw_Right dock)
+    if os.path.isfile(ui):
+        for r in re.findall(r"'dw_\w+': '([^']+)'", open(ui).read()):
+            if r not in views:
+                bad.append(f"efc.ui WINDOWS -> {r}")
     if bad:
         sys.exit("broken view references:\n  " + "\n  ".join(sorted(set(bad))))
     print(f"{LIBRARY}: {len(views)} views, all view references resolve")
