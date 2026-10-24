@@ -22,7 +22,7 @@ Every template takes **`tagPath`** (the UDT instance). Valve and running-equipme
 - the mode letter and P/I badges come from the mode, permissive and interlock members
 - the alarm outline is the **highest active alarm priority on any member of the instance** (`isAlarmActiveFiltered` on `tagPath/*`, priorities 1–4; shelved alarms ignored)
 
-The symbol is **embedded in the template as a Perspective Drawing** (`ia.shapes.svg`): every SVG shape lives in the view JSON, and each shape's fill, outline color and outline weight is bound to the state, command and alarm properties, so the fills change in place as the state changes. There's no image link or data URI. There are no nested symbol views. Clicking the symbol does nothing yet (faceplates to follow).
+The symbol is **embedded in the template as a Perspective Drawing** (`ia.shapes.svg`): every SVG shape lives in the view JSON, and each shape's fill, outline color and outline weight is bound to the state, command and alarm properties, so the fills change in place as the state changes. There's no image link or data URI. There are no nested symbol views. Clicking the symbol opens the device's dynamic window in the page's `dw_Right` dock (see [Page setup: the dw_Right dock](#page-setup-the-dw_right-dock)).
 
 | Template | Size @1080p | UDT | Button |
 |---|---|---|---|
@@ -90,6 +90,21 @@ Point `tagPath` at an instance of the existing discrete-valve UDT (OPC tags `{OP
 - Toggle Cmd on the **rising edge** of PB, and ignore open/start requests when not permitted.
 - The PLC must enforce permissives and interlocks itself; the HMI badges are information only.
 - A very fast click can produce a short pulse. If your scan could miss it, have the PLC reset PB and delete the release events on the button.
+
+## Page setup: the dw_Right dock
+Dynamic windows (`Templates/Dynamic Window/<category>/`) open in one right-side Perspective dock per page, id `dw_Right` (decision 31). A template click runs `efc.ui.openDynamic(self)`, which loads the window into that dock with `system.perspective.alterDock` and opens it with `system.perspective.openDock`. This needs **Ignition 8.1.19 or later** (the library minimum is 8.1.22).
+
+In each page's **Page Configuration**, add a **right dock**:
+- id `dw_Right`
+- view: the page's trends overview as the initial view (shown when the page loads; a click replaces it with the device's window)
+- size 400 px at 1080p (37.04 vh equivalent; the window is 400 x 860, decision 25)
+- display "visible": the dock is always present (decision 32)
+- content "cover": the dock covers the right-hand section of the shell
+- handle "hide"
+
+To make the trends overview the view a window's close button returns to, call `efc.ui.setDefaultDock(self, viewPath, params)` in the screen's root `onStartup`. A window's close button then puts that view back. Without a default, the close button closes the dock.
+
+Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=None)` opens a window by its id (`dw_ValveDiscrete`, `dw_Loop`, ...), and `efc.ui.showDock(path, params)` loads any view.
 
 ## Symbols & colors
 | State | Fill | Notes |

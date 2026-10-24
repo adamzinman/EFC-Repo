@@ -655,7 +655,7 @@
       "dom": {
         "onClick": {
           "config": {
-            "script": "\t# Opens the Type 1 sidebar. Create a right-side dock in Page Configuration with id \"StationSidebar\",\n\t# view Templates/Station/Station_Sidebar, size 300 x 800, display \"onDemand\".\n\tefc.ui.openDynamic(self)"
+            "script": "\t# Opens the dw_Station dynamic window in the page's right dock dw_Right (efc.ui, decision 31).\n\tefc.ui.openDynamic(self)"
           },
           "scope": "G",
           "type": "script"

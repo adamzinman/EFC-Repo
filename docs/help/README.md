@@ -58,17 +58,16 @@ Not covered: the `_Demo` and `_Examples` screens, which are demonstration pages 
 
 | View | Help file |
 |---|---|
-| `Docks/HeatTransfer` | [Docks/HeatTransfer.md](Docks/HeatTransfer.md) |
-| `Docks/Heater` | [Docks/Heater.md](Docks/Heater.md) |
-| `Docks/IOCard` | [Docks/IOCard.md](Docks/IOCard.md) |
-| `Docks/Loop` | [Docks/Loop.md](Docks/Loop.md) |
-| `Docks/Parts/BypassConfirm` | [Docks/Parts/BypassConfirm.md](Docks/Parts/BypassConfirm.md) |
-| `Docks/Parts/IntlkList` | [Docks/Parts/IntlkList.md](Docks/Parts/IntlkList.md) |
-| `Docks/Parts/Trend` | [Docks/Parts/Trend.md](Docks/Parts/Trend.md) |
-| `Docks/ProcessValue` | [Docks/ProcessValue.md](Docks/ProcessValue.md) |
-| `Docks/Region` | [Docks/Region.md](Docks/Region.md) |
-| `Docks/Rotating` | [Docks/Rotating.md](Docks/Rotating.md) |
-| `Docks/Station` | [Docks/Station.md](Docks/Station.md) |
-| `Docks/VFD` | [Docks/VFD.md](Docks/VFD.md) |
-| `Docks/ValveAnalog` | [Docks/ValveAnalog.md](Docks/ValveAnalog.md) |
-| `Docks/ValveDiscrete` | [Docks/ValveDiscrete.md](Docks/ValveDiscrete.md) |
+| `Templates/Dynamic Window/HeatTransfer/HeatTransfer` | [Templates/Dynamic Window/HeatTransfer/HeatTransfer.md](Templates/Dynamic%20Window/HeatTransfer/HeatTransfer.md) |
+| `Templates/Dynamic Window/HeatTransfer/Heater` | [Templates/Dynamic Window/HeatTransfer/Heater.md](Templates/Dynamic%20Window/HeatTransfer/Heater.md) |
+| `Templates/Dynamic Window/IO/IOCard` | [Templates/Dynamic Window/IO/IOCard.md](Templates/Dynamic%20Window/IO/IOCard.md) |
+| `Templates/Dynamic Window/Loops/Loop` | [Templates/Dynamic Window/Loops/Loop.md](Templates/Dynamic%20Window/Loops/Loop.md) |
+| `Templates/Dynamic Window/Parts/BypassConfirm` | [Templates/Dynamic Window/Parts/BypassConfirm.md](Templates/Dynamic%20Window/Parts/BypassConfirm.md) |
+| `Templates/Dynamic Window/Parts/IntlkList` | [Templates/Dynamic Window/Parts/IntlkList.md](Templates/Dynamic%20Window/Parts/IntlkList.md) |
+| `Templates/Dynamic Window/Parts/Trend` | [Templates/Dynamic Window/Parts/Trend.md](Templates/Dynamic%20Window/Parts/Trend.md) |
+| `Templates/Dynamic Window/ProcessValues/ProcessValue` | [Templates/Dynamic Window/ProcessValues/ProcessValue.md](Templates/Dynamic%20Window/ProcessValues/ProcessValue.md) |
+| `Templates/Dynamic Window/Rotating/Rotating` | [Templates/Dynamic Window/Rotating/Rotating.md](Templates/Dynamic%20Window/Rotating/Rotating.md) |
+| `Templates/Dynamic Window/Station/Station` | [Templates/Dynamic Window/Station/Station.md](Templates/Dynamic%20Window/Station/Station.md) |
+| `Templates/Dynamic Window/Rotating/VFD` | [Templates/Dynamic Window/Rotating/VFD.md](Templates/Dynamic%20Window/Rotating/VFD.md) |
+| `Templates/Dynamic Window/Valves/ValveAnalog` | [Templates/Dynamic Window/Valves/ValveAnalog.md](Templates/Dynamic%20Window/Valves/ValveAnalog.md) |
+| `Templates/Dynamic Window/Valves/ValveDiscrete` | [Templates/Dynamic Window/Valves/ValveDiscrete.md](Templates/Dynamic%20Window/Valves/ValveDiscrete.md) |

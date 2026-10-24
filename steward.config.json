@@ -60,10 +60,14 @@
     "Templates/Loops/Popups/LoopConfig",
     "Templates/Loops/_Demo",
     "Templates/ProcessValues/_Demo",
-    "Templates/Station/Station_Sidebar",
+    "Templates/Dynamic Window/IO/IOCard",
+    "Templates/Dynamic Window/Parts/BypassConfirm",
+    "Templates/Dynamic Window/Parts/IntlkList",
+    "Templates/Dynamic Window/Parts/Trend",
+    "Templates/Dynamic Window/Station/Station",
     "Templates/Station/_Demo",
     "Templates/_Demo"
   ],
   "upstream_check_days": 30,
-  "_note": "require_dock off: dynamic windows are an embedded view switched by efc.ui.openDynamic (decision 24); wiring is checked by steward/tools/gaps.py."
+  "_note": "require_dock off: templates call efc.ui.openDynamic, which opens the dynamic window in the dw_Right dock via alterDock + openDock (decision 31); wiring is checked by steward/tools/gaps.py."
 }

@@ -13,7 +13,7 @@ tm = json.load(open(f"{R}/steward/type_map.json"))
 cfg = json.load(open(f"{R}/steward.config.json"))
 CARD_W = 240  # px, width of a template card; docks use DOCK_W
 DOCK_DW, DOCK_DH = 400, 860  # dynamic window per decision 25: 400 x 860 at 1080p = 37.04 vh x 79.63 vh (800 x 1720 at 4K)
-slug = lambda p: p.replace("/", "_")
+slug = lambda p: p.replace(" ", "").replace("/", "_")
 esc = html.escape
 
 
@@ -252,7 +252,7 @@ def history_strip():
 
 def valve_discrete():
     head = ('<div data-c="Container/PopupHeader" class="hdr"><div style="flex:1;min-width:0"><div data-c="Text/TagName Text/Color/Inverse">XV-101</div>'
-            '<div data-c="Text/Caption Text/Color/Inverse">Feed tank inlet valve</div></div><button data-c="Button/Icon" class="x" title="close returns the right region to the screen&#39;s default view">&#x2715;</button></div>')
+            '<div data-c="Text/Caption Text/Color/Inverse">Feed tank inlet valve</div></div><button data-c="Button/Icon" class="x" title="close returns the dw_Right dock to the page&#39;s default view or closes it">&#x2715;</button></div>')
     state = ('<div class="row st"><span data-c="State/Stopped" class="big">CLOSED</span><span data-c="Indicator/Badge">NE107 OK</span>'
              '<span data-c="Mode/Simulated" class="dim">SIM</span><span data-c="Mode/Local" class="dim">LOCAL</span></div>'
              '<div class="row"><span data-c="Indicator/LED/Off" class="led"></span><span data-c="Text/Label">ZSO open</span>'
@@ -284,7 +284,7 @@ def valve_discrete():
 def hdr(tag, desc):
     return ('<div data-c="Container/PopupHeader" class="hdr"><div style="flex:1;min-width:0">'
             f'<div data-c="Text/TagName Text/Color/Inverse">{tag}</div><div data-c="Text/Caption Text/Color/Inverse">{desc}</div></div>'
-            '<button data-c="Button/Icon" class="x" title="close returns the right region to the screen&#39;s default view">&#x2715;</button></div>')
+            '<button data-c="Button/Icon" class="x" title="close returns the dw_Right dock to the page&#39;s default view or closes it">&#x2715;</button></div>')
 
 
 def mode_row():
@@ -519,16 +519,16 @@ def cfg_form(rows, who="Eng"):
 
 
 CFG = {
-    "Docks/HeatTransfer": ("CONFIGURATION", [("Hot side Cp", "4.18", "kJ/kg K"), ("Cold side Cp", "4.18", "kJ/kg K"), ("Counter-flow", "yes", ""),
+    "Templates/Dynamic Window/HeatTransfer/HeatTransfer": ("CONFIGURATION", [("Hot side Cp", "4.18", "kJ/kg K"), ("Cold side Cp", "4.18", "kJ/kg K"), ("Counter-flow", "yes", ""),
                                              ("Design UA", "7.80", "kW/K"), ("Min flow for calc", "1.0", "m&#179;/h"), ("Calc filter", "30", "s")]),
-    "Docks/ProcessValue": ("CONFIGURATION", [("EU min", "0.0", "kPa"), ("EU max", "100.0", "kPa"), ("Units", "kPa", ""), ("Raw min", "0", "counts"), ("Raw max", "32000", "counts"),
+    "Templates/Dynamic Window/ProcessValues/ProcessValue": ("CONFIGURATION", [("EU min", "0.0", "kPa"), ("EU max", "100.0", "kPa"), ("Units", "kPa", ""), ("Raw min", "0", "counts"), ("Raw max", "32000", "counts"),
                                              ("Filter time constant", "1.0", "s"), ("Square-root extract", "no", ""), ("Low cut-off", "0.0", "%"),
                                              ("Bad below", "-5.0", "%"), ("Bad above", "105.0", "%"), ("On bad PV", ["Hold last", "Substitute", "Use raw"], ""), ("Substitute value", "0.0", "kPa")]),
-    "Docks/Loop": ("TUNING", [("Gain Kp", "1.20", ""), ("Integral Ti", "45.0", "s"), ("Derivative Td", "0.0", "s"), ("Action", ["Reverse", "Direct"], ""),
+    "Templates/Dynamic Window/Loops/Loop": ("TUNING", [("Gain Kp", "1.20", ""), ("Integral Ti", "45.0", "s"), ("Derivative Td", "0.0", "s"), ("Action", ["Reverse", "Direct"], ""),
                               ("Deadband", "0.0", "&#176;F"), ("Feedforward gain", "0.0", ""), ("PV range", "0 - 300", "&#176;F"), ("SP low / high limit", "50 / 250", "&#176;F"),
                               ("CV low / high limit", "0 / 100", "%"), ("SP rate limit", "5.0", "&#176;F/min"), ("CV rate limit", "10.0", "%/s"), ("Interlock CV", "0.0", "%"),
                               ("PV tracking in MAN", "yes", ""), ("On bad PV", ["Hold CV", "Go to MAN", "Interlock CV"], ""), ("SP from program", "no", "")]),
-    "Docks/Heater": ("CONFIGURATION", [("Control type", ["SSR, time-proportioned", "On/off contactor", "SCR, analog reference"], ""), ("Cycle time", "4.0", "s"),
+    "Templates/Dynamic Window/HeatTransfer/Heater": ("CONFIGURATION", [("Control type", ["SSR, time-proportioned", "On/off contactor", "SCR, analog reference"], ""), ("Cycle time", "4.0", "s"),
                                        ("Minimum pulse", "100", "ms"), ("Power min / max", "0 / 100", "%"), ("Power ramp", "0.0", "%/s"), ("Rated power", "12.0", "kW"),
                                        ("Rated current", "17.4", "A"), ("Load-failure below", "80", "% of expected"), ("Shorted if off and above", "1.0", "A"), ("Feedback time", "3.0", "s")]),
 }
@@ -568,7 +568,7 @@ def trend_expanded():
     rng = "".join(f'<button data-c="Button/Small{" Button/Toggle/On" if t == "30 m" else ""}">{t}</button>' for t in ("5 m", "30 m", "1 h", "8 h", "24 h"))
     pens = "".join(f'<div class="row"><i style="display:inline-block;width:14px;height:4px;background:{c}"></i><span data-c="Text/Label">{n}</span><span data-c="Text/Body">{v}</span></div>'
                    for n, c, v in (("PV", "#262626", "118.4 &#176;F"), ("SP", "#1F4E99", "120.0 &#176;F"), ("CV", "#8D6E63", "46.0 %")))
-    return (hdr("dw_Loop &middot; TIC-101", "Reactor jacket temperature").replace("close returns the right region to the screen&#39;s default view", "close returns the right region to the screen&#39;s default view")
+    return (hdr("dw_Loop &middot; TIC-101", "Reactor jacket temperature").replace("close returns the dw_Right dock to the page&#39;s default view or closes it", "close returns the dw_Right dock to the page&#39;s default view or closes it")
             + f'<div class="body"><div class="row">{rng}<span style="flex:1"></span><button data-c="Button/Icon" class="xp" title="collapse graph">&#x2921;</button></div>'
             '<div class="row"><button data-c="Button/Small">&#x23F8; PAUSE</button><button data-c="Button/Small">&#x21BB; LIVE</button></div>'
             f'<svg viewBox="0 0 {W} {H}" width="100%" height="{H}" style="border:1px solid #9E9E9E;background:#FAFAFA">{grid}{path(pv, "#262626")}{path([60] * 90, "#1F4E99", True)}{path(cv, "#8D6E63")}</svg>'
@@ -634,14 +634,14 @@ def dock_card(did, path, ttype, parts):
         return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 - design proposal</b> &middot; 400 x 860 at 1080p (37.04 vh x 79.63 vh; 800 x 1720 at 4K) &middot; dashed purple outline = role-gated (hover for role)" + ("<br>binds to the Modicon x80 device DDT imported from Control Expert" if parts == "io_card" else ""), maxh=600)
     body = "".join(SECTIONS.get(p, p) for p in parts)
     head = (f'<div data-c="Container/PopupHeader" class="row"><span data-c="Text/TagName">XV-101</span>'
-            f'<span data-c="Text/Caption" style="flex:1">Description</span><button data-c="Button/Icon" title="close returns the right region to the screen&#39;s default view">&#x2715;</button></div>'
+            f'<span data-c="Text/Caption" style="flex:1">Description</span><button data-c="Button/Icon" title="close returns the dw_Right dock to the page&#39;s default view or closes it">&#x2715;</button></div>'
             f'<div class="row"><span data-c="State/Stopped">CLOSED</span><span data-c="Text/Caption">NE107: OK</span></div>')
     inner = f'<div data-c="Container/Faceplate" class="dock">{head}{body}</div>'
-    return frame(path, inner, DOCK_DW, DOCK_DH, ttype.replace("GAP ", "gap:"), did, "<br><b>NEW - design proposal</b> &middot; 400 x 860 at 1080p (800 x 1720 at 4K) &middot; close &#x2715; returns the right region to the screen's default view", maxh=600)
+    return frame(path, inner, DOCK_DW, DOCK_DH, ttype.replace("GAP ", "gap:"), did, "<br><b>NEW - design proposal</b> &middot; 400 x 860 at 1080p (800 x 1720 at 4K) &middot; close &#x2715; returns the dw_Right dock to the page's default view or closes it", maxh=600)
 
 
-# ---------- screen layout (decision 24: embedded-view strategy) ----------
-EV_LABEL = "Embedded View: path/params from session.custom.efcDw[pageId] (efc.ui)"
+# ---------- screen layout (decision 31: dw_Right dock) ----------
+EV_LABEL = "Perspective dock dw_Right: view/params set by efc.ui.openDynamic (alterDock + openDock)"
 SYMS = [("Rotating/Pump_Centrifugal", 40, 120, True), ("Valves/Valve_OnOff_Pneumatic", 360, 120, False), ("Valves/Valve_Control", 640, 120, False),
         ("Rotating/Blower", 40, 480, False), ("Rotating/Motor", 360, 480, False)]
 
@@ -659,7 +659,7 @@ def layout_card():
             continue
         syms += (f'<img src="../../docs/previews/templates/{rel}.png" style="position:absolute;left:{x}px;top:{y}px;width:160px;height:auto"'
                  f'{" class=hit" if sel else ""}>')
-    sel_note = '<div class="rl" style="left:20px;top:300px;color:#00A3E0">click symbol: efc.ui.openDynamic writes the page\'s dynamic-window path + tagPath</div>'
+    sel_note = '<div class="rl" style="left:20px;top:300px;color:#00A3E0">click symbol: efc.ui.openDynamic loads the window + tagPath into the dw_Right dock</div>'
     proc = (f'<div data-c="Container/ProcessArea" class="reg" style="left:{MENU}px;top:{HEAD}px;width:{PW}px;height:{MH}px">{pipes}{syms}{sel_note}'
             + lab(f"Process area &middot; {PW} x {MH} px at 1080p &middot; {2 * PW} x {2 * MH} px at 4K", "left:20px;bottom:10px"))
     proc += "</div>"
@@ -667,11 +667,11 @@ def layout_card():
         sc = (MH - 56 - 66) / DOCK_DH
         inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(motor_body())}</div>'
         win = (f'<div style="position:absolute;left:0;top:56px;width:{RW}px;height:{DOCK_DH}px;transform:scale({sc:.4f});transform-origin:0 0">{inner}</div>')
-        note = "dw_Rotating (Docks/Rotating)"
+        note = "dw_Rotating (Templates/Dynamic Window/Rotating/Rotating)"
     wtxt = "37.04 vh"
     right = (f'<div data-c="Container/TrendPanel" class="reg ev" style="left:{W - RW}px;top:{HEAD}px;width:{RW}px;height:{MH}px">'
              f'<div class="rl evl">{EV_LABEL}</div>{win}'
-             + lab(f"Dynamic window region &middot; {RW} x {MH} px at 1080p ({wtxt}) &middot; {2 * RW} x {2 * MH} px at 4K &middot; {note}", f"left:0;right:0;bottom:0;border:none;border-top:1px solid #7F7F7F;font-size:19px;height:66px"))
+             + lab(f"Right dock dw_Right &middot; {RW} x {MH} px at 1080p ({wtxt}) &middot; {2 * RW} x {2 * MH} px at 4K &middot; {note}", f"left:0;right:0;bottom:0;border:none;border-top:1px solid #7F7F7F;font-size:19px;height:66px"))
     right += "</div>"
     head = (f'<div data-c="Container/Header" class="reg" style="left:0;top:0;width:{W}px;height:{HEAD}px;display:flex;align-items:center;gap:20px;padding:0 20px;box-sizing:border-box">'
             '<span data-c="Text/TagName">EFC &middot; Reactor area</span><span data-c="Text/Caption" style="flex:1">Screen header</span>'
@@ -686,8 +686,8 @@ def layout_card():
              + lab(f"Alarm bar &middot; {W} x {ALARM} px at 1080p &middot; 3840 x 280 px at 4K", "position:static;margin-left:auto") + "</div>")
     shell = f'<div style="position:relative;width:{W}px;height:{H}px;background:#fff">{head}{menu}{proc}{right}{alarm}</div>'
     name = "Screen_Layout_normal"
-    cap = ("Normal: 400 x 860 right region (37.04 vh x 79.63 vh; 800 x 1720 at 4K) shows the open dynamic window (here dw_Rotating, drawn scaled to leave room for the labels); close returns the right region to the screen's default view. "
-           "Dynamic windows are an Embedded View, not a Perspective dock (decision 24). The region never changes width; an expanded graph fills the window (decision 26). All shell sizes double at 4K.")
+    cap = ("Normal: 400 x 860 right dock dw_Right (37.04 vh x 79.63 vh; 800 x 1720 at 4K) shows the open dynamic window (here dw_Rotating, drawn scaled to leave room for the labels); close returns the dock to the page's default view or closes it. "
+           "Dynamic windows open in one right-side Perspective dock, id dw_Right, always visible, covering the right section (decisions 31, 32; Ignition 8.1.19+). The dock never changes width; an expanded graph fills the window (decision 26). All shell sizes double at 4K.")
     fig = (f'<figure class="card wide" id="{name}"><div class="view" style="width:960px;height:540px"><div class="stage" style="width:{W}px;height:{H}px;transform:scale(0.5)">{shell}</div></div>'
            f'<figcaption><code>{name.replace("_", " ")}</code><br><b class="ok">1920 x 1080 shell</b> &middot; normal<br>{cap}</figcaption></figure>')
     return name, fig
@@ -718,22 +718,22 @@ if __name__ == "__main__":
             t, parts = DOCKS[did]
             frag = dock_card(did, path, t, parts)
         else:  # existing dock view: draw it like a template
-            frag = template_card(path, "gap:T_Station").replace("click symbol: open dynamic window", "existing dock view; planned: move to <code>Docks/Station</code>, resize 300 x 800 to 400 x 860 (decision 25)")
+            frag = template_card(path, "gap:T_Station").replace("click symbol: open dynamic window", "existing dock view; planned: move to <code>Templates/Dynamic Window/Station/Station</code>, resize 300 x 800 to 400 x 860 (decision 25)")
         open(f"{OUT}/{slug(path)}.html", "w").write(frag)
         groups.setdefault("Dynamic windows", []).append(frag)
     for path, (title, rows) in CFG.items():
         body = f'<div class="body">{grp(title + " (expanded)", cfg_form(rows))}</div>'
-        f2 = frame(path + " - " + title.lower() + " expanded", f'<div data-c="Container/Faceplate" class="dock2">{body}</div>', 400, 110 + 27 * len(rows) + 22 * sum(isinstance(r[1], list) for r in rows), "review", path.split("/")[1],
+        f2 = frame(path + " - " + title.lower() + " expanded", f'<div data-c="Container/Faceplate" class="dock2">{body}</div>', 400, 110 + 27 * len(rows) + 22 * sum(isinstance(r[1], list) for r in rows), "review", path.rsplit("/", 1)[1],
                    "<br>section shown open; collapsed by default", maxh=600)
         open(f"{OUT}/{slug(path)}_{title.lower()}_expanded.html", "w").write(f2)
         groups.setdefault("Expanded sections", []).append(f2)
-    f3 = frame("Docks/Parts/TrendExpanded", f'<div data-c="Container/Popup" class="dock2">{trend_expanded()}</div>', 400, 860, "any", "popup",
+    f3 = frame("Templates/Dynamic Window/Parts/TrendExpanded", f'<div data-c="Container/Popup" class="dock2">{trend_expanded()}</div>', 400, 860, "any", "popup",
                "<br><b>NEW</b> &middot; expanded graph: fills the dynamic window; window stays 400 x 860; other sections hidden until collapsed (decision 26)", cw=400, maxh=860)
-    open(f"{OUT}/Docks_Parts_TrendExpanded.html", "w").write(f3)
+    open(f"{OUT}/{slug('Templates/Dynamic Window/Parts/TrendExpanded')}.html", "w").write(f3)
     groups.setdefault("Expanded sections", []).append(f3)
-    fr = frame("Docks/Parts/BypassConfirm", f'<div data-c="Container/Popup" class="dock2">{bypass_popup()}</div>', 400, 330, "T_Intlk", "popup",
+    fr = frame("Templates/Dynamic Window/Parts/BypassConfirm", f'<div data-c="Container/Popup" class="dock2">{bypass_popup()}</div>', 400, 330, "T_Intlk", "popup",
                "<br><b>NEW - design proposal</b> &middot; opened by every Bypass button (Supervisor+)", maxh=600)
-    open(f"{OUT}/Docks_Parts_BypassConfirm.html", "w").write(fr)
+    open(f"{OUT}/{slug('Templates/Dynamic Window/Parts/BypassConfirm')}.html", "w").write(fr)
     groups.setdefault("Dynamic windows", []).append(fr)
     for _ in (0,):
         nm, fg = layout_card()

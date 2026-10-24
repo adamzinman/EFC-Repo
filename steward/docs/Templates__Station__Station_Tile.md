@@ -3,13 +3,13 @@
 <!-- keep:start -->
 **Purpose:** Fill-station tile bound to EFCLib v1 T_Station: state, net weight, target.
 
-**Usage notes:** Click opens dw_Station (Docks/Station; setpoints Operator+).
+**Usage notes:** Click opens dw_Station (Templates/Dynamic Window/Station/Station; setpoints Operator+).
 
 **Gotchas:** Station state numbering (Sts_State) is still an assumption; confirm against the PLC.
 <!-- keep:end -->
 
 <!-- auto:start -->
-_Auto-generated 2026-10-21 03:56 from EFC_Library:view:Templates/Station/Station_Tile. Do not edit this section._
+_Auto-generated 2026-10-23 20:21 from EFC_Library:view:Templates/Station/Station_Tile. Do not edit this section._
 
 | Param | Direction | Default |
 |---|---|---|

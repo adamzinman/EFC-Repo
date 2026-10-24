@@ -2,7 +2,7 @@
 
 Covers `Templates/ProcessValues/PV_StatusStrip` (design A1 in the PV design note).
 Source: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/ProcessValues/PV_StatusStrip/view.json`
-Dynamic window it opens: `Docks/ProcessValue` (dock `dw_ProcessValue`, chosen from `tType` `T_AI`; see [ProcessValue](../../Docks/ProcessValue.md)).
+Dynamic window it opens: `Templates/Dynamic Window/ProcessValues/ProcessValue` (dock `dw_ProcessValue`, chosen from `tType` `T_AI`; see [ProcessValue](../Dynamic%20Window/ProcessValues/ProcessValue.md)).
 Context: [PV display design note](../../../pv-display.md). The sibling template is [PV_RangeBar](PV_RangeBar.md).
 
 ## Overview
@@ -11,7 +11,7 @@ A process value card for an analog input (`T_AI`). It shows a coloured status st
 
 - **Default size** (`props.defaultSize`): 104 x 54. The card is 100 x 50 inside the view, so the shell margin keeps the shadow from clipping (per the design note).
 - **Bound to:** one T_AI instance through `params.tagPath`. The bindings use the T_AI member names listed under Tag members used.
-- **Opening the dock:** a single click runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_AI`) through `BY_TYPE` to `dw_ProcessValue` and writes `session.custom.efcDw[pageId] = {path: 'Docks/ProcessValue', params: {tagPath}}`. `dwTagPath` replaces `tagPath` when set, and `dockId` overrides the window.
+- **Opening the dock:** a single click runs `efc.ui.openDynamic(self)`. It maps `tType` (`T_AI`) through `BY_TYPE` to `dw_ProcessValue` and loads `Templates/Dynamic Window/ProcessValues/ProcessValue` into the page's `dw_Right` dock with params `{tagPath}` (`system.perspective.alterDock`) and opens the dock. `dwTagPath` replaces `tagPath` when set, and `dockId` overrides the window.
 - **Generated view:** written by `generator/build_pv.py`, which writes the project to `projects/EFC_ProcessValues/`, not to `projects/EFC_Library/`. Check which copy is current before editing (see Notes).
 
 ## How it operates
@@ -78,7 +78,7 @@ None.
 
 ### Session, page and message payloads
 
-None read. The click writes `session.custom.efcDw[<pageId>]` through `efc.ui.openDynamic`. See Scripts.
+None read. The click loads the window into the `dw_Right` dock through `efc.ui.openDynamic`. See Scripts.
 
 ## Bindings reference
 
@@ -139,7 +139,7 @@ It opens the dock for this tag. See the library function below.
 
 ### Library function called (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.openDynamic(component)`**: uses `dockId`, or else `BY_TYPE['T_AI']`, which is `dw_ProcessValue`. `WINDOWS` maps that to `Docks/ProcessValue`. If the id is not in `WINDOWS` it logs a warning and stops. Otherwise it writes the path and `{tagPath: dwTagPath or tagPath}` to `session.custom.efcDw` for this page. It does not check the role, does not write a tag and does not write an audit record.
+- **`efc.ui.openDynamic(component)`**: uses `dockId`, or else `BY_TYPE['T_AI']`, which is `dw_ProcessValue`. `WINDOWS` maps that to `Templates/Dynamic Window/ProcessValues/ProcessValue`. If the id is not in `WINDOWS` it logs a warning and stops. Otherwise it loads the window into the `dw_Right` dock with `{tagPath: dwTagPath or tagPath}` and opens the dock. It does not check the role, does not write a tag and does not write an audit record.
 
 ## Tag members used
 

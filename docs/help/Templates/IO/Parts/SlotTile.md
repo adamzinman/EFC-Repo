@@ -2,20 +2,20 @@
 
 Covers `Templates/IO/Parts/SlotTile`: one card tile in a rack overview. It shows the slot, model, description and module health, and opens the card dock on click.
 Source: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/Parts/SlotTile/view.json`.
-Used by: [RackOverview](../RackOverview.md) (the `Slots` repeater). Dock opened: [IOCard](../../../Docks/IOCard.md) (via `efc.ui.openDynamic`, window `dw_IOCard`).
+Used by: [RackOverview](../RackOverview.md) (the `Slots` repeater). Dock opened: [IOCard](../../Dynamic%20Window/IO/IOCard.md) (via `efc.ui.openDynamic`, window `dw_IOCard`).
 
 ## Overview
 
 - **Default size:** 132 x 150 (`props.defaultSize`).
 - **How it is embedded:** by the `Slots` flex repeater of [RackOverview](../RackOverview.md). The repeater passes `cardPath`, `model` and `slot` as the instance dict, from the rack browse. `tType` and `dockId` are not passed, so they keep their defaults (`native`, `dw_IOCard`).
 - **Generated view:** no.
-- **Opening:** a single click runs `efc.ui.openDynamic(self)` when `model` is set. That shows `Docks/IOCard` for this card in the screen region (the `Docks/Region` view). The faceplate itself opens from the dock (see below).
+- **Opening:** a single click runs `efc.ui.openDynamic(self)` when `model` is set. That shows `Templates/Dynamic Window/IO/IOCard` for this card in the page's `dw_Right` dock. The faceplate itself opens from the dock (see below).
 
 ## How it operates
 
 - **Layout.** "Slot n" at the top, the model name, the card description, the instance name (last part of `cardPath`), and the health word at the bottom.
 - **Health.** "COMMS?" when the MOD_ERROR quality is bad, "FAULT" when it is true (`State/Fault` outline too), otherwise "HEALTHY".
-- **Click.** When `model` is set, the click writes this card into the screen dynamic-window state (`session.custom.efcDw`) with the dock path `Docks/IOCard`, `tagPath` = the card path, and `model`. This writes no tag and checks no role.
+- **Click.** When `model` is set, the click loads `Templates/Dynamic Window/IO/IOCard` into the page's `dw_Right` dock with `tagPath` = the card path and `model`. This writes no tag and no session value, and checks no role.
 - **Empty model.** With no model the click does nothing, and the tile shows no model name.
 - **Writes.** None.
 
@@ -50,7 +50,7 @@ None.
 
 ### Session, page and message payloads
 
-- **Writes:** `session.custom.efcDw[<pageId>]` (path and params), by `efc.ui.openDynamic`. This is the screen dynamic-window state, not a tag.
+- **Writes:** no tag or session value. `efc.ui.openDynamic` changes the page's `dw_Right` dock (view and params).
 - **Reads:** none directly. The library function reads `view.params` and the page id.
 - **Messages:** none.
 
@@ -88,10 +88,10 @@ Explanation: if `model` is not blank, call `efc.ui.openDynamic(self)`. Otherwise
 
 Library call, `efc.ui.openDynamic(component)` (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`), for this view:
 
-- Chooses the window: `dockId` ("dw_IOCard") first, else `BY_TYPE[tType]`. `dw_IOCard` maps to `Docks/IOCard`. If the window is unknown it logs a warning and stops.
+- Chooses the window: `dockId` ("dw_IOCard") first, else `BY_TYPE[tType]`. `dw_IOCard` maps to `Templates/Dynamic Window/IO/IOCard`. If the window is unknown it logs a warning and stops.
 - Picks the tag path: `dwTagPath`, else `tagPath`, else `cardPath`. This view has no `tagPath`, so the card path is used.
 - Builds the dock params: `tagPath` (the card path), plus `model` when it is set. `slot` is not passed.
-- Writes `session.custom.efcDw[pageId] = {path: "Docks/IOCard", params: {...}}`. The screen `Docks/Region` embedded view then shows that dock.
+- Loads `Templates/Dynamic Window/IO/IOCard` into the page's `dw_Right` dock with `params: {...}` (`efc.ui.showDock`) and opens the dock. It writes no session value.
 - It does not check the user role, does not write a tag and does not write an audit record.
 
 ## Tag members used

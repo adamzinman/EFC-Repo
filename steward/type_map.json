@@ -1,16 +1,16 @@
 {
   "_doc": "Item -> EFCLib v1 T_ type and dynamic window. 'gap:' = type not in types/. 'native:' = binds to the PLC's own (Control Expert) data type, imported directly into Ignition.",
   "docks": {
-    "dw_ValveDiscrete": "Docks/ValveDiscrete",
-    "dw_ValveAnalog": "Docks/ValveAnalog",
-    "dw_Rotating": "Docks/Rotating",
-    "dw_VFD": "Docks/VFD",
-    "dw_HeatTransfer": "Docks/HeatTransfer",
-    "dw_ProcessValue": "Docks/ProcessValue",
-    "dw_Loop": "Docks/Loop",
-    "dw_Station": "Docks/Station",
-    "dw_IOCard": "Docks/IOCard",
-    "dw_Heater": "Docks/Heater"
+    "dw_ValveDiscrete": "Templates/Dynamic Window/Valves/ValveDiscrete",
+    "dw_ValveAnalog": "Templates/Dynamic Window/Valves/ValveAnalog",
+    "dw_Rotating": "Templates/Dynamic Window/Rotating/Rotating",
+    "dw_VFD": "Templates/Dynamic Window/Rotating/VFD",
+    "dw_HeatTransfer": "Templates/Dynamic Window/HeatTransfer/HeatTransfer",
+    "dw_ProcessValue": "Templates/Dynamic Window/ProcessValues/ProcessValue",
+    "dw_Loop": "Templates/Dynamic Window/Loops/Loop",
+    "dw_Station": "Templates/Dynamic Window/Station/Station",
+    "dw_IOCard": "Templates/Dynamic Window/IO/IOCard",
+    "dw_Heater": "Templates/Dynamic Window/HeatTransfer/Heater"
   },
   "items": {
     "Templates/Valves/Valve_Solenoid": "T_DValve",

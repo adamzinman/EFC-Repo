@@ -1,6 +1,8 @@
-# Audit summary (2026-10-21 03:58)
+# Audit summary (2026-10-23 20:23)
 
-10 findings: ERROR 0, WARN 10, INFO 0
+22 findings: ERROR 0, WARN 14, INFO 8
 Upstream check: DUE (last: never)
 
 - WARN no-pclib x10: Templates/IO/Faceplates/BMXAMI0810, Templates/IO/Faceplates/BMXAMO0802, Templates/IO/Faceplates/BMXART0814 ...
+- WARN off-palette x4: Templates/Loops/Loop_B1_Bar, Templates/Loops/Loop_B2_Horizontal, Templates/Loops/Loop_B3_Sparkline ...
+- INFO no-purpose x8: Templates/Dynamic Window/HeatTransfer/HeatTransfer, Templates/Dynamic Window/HeatTransfer/Heater, Templates/Dynamic Window/Loops/Loop ...

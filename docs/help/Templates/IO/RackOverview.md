@@ -2,7 +2,7 @@
 
 Covers `Templates/IO/RackOverview`: one rack, shown as a row of card tiles (SlotTile), one per card found in the rack.
 Source: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/IO/RackOverview/view.json`.
-Tiles: [SlotTile](Parts/SlotTile.md). Dock opened by a tile: [IOCard](../../Docks/IOCard.md). Faceplates: [Discrete_Cards](Faceplates/Discrete_Cards.md), [Analog_Cards](Faceplates/Analog_Cards.md).
+Tiles: [SlotTile](Parts/SlotTile.md). Dock opened by a tile: [IOCard](../Dynamic%20Window/IO/IOCard.md). Faceplates: [Discrete_Cards](Faceplates/Discrete_Cards.md), [Analog_Cards](Faceplates/Analog_Cards.md).
 
 ## Overview
 

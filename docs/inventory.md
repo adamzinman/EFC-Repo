@@ -13,6 +13,7 @@ Since v7.0 all designs ship as **one Perspective project, `EFC_Library`** (no pa
 | PID_Loops: loop cards B1–B4 + LoopConfig popup | built 2026-10-05; not gateway-tested | `Templates/Loops/` (was `PID/Templates/`), `Templates/Loops/Popups/LoopConfig` (was `PID/Popups/`), `Templates/Loops/_Demo` | `generator/pid_loops/generate_loops.py` | [pid-loop-templates](pid-loop-templates.md) |
 | EFC_StationFaceplates: DDT_Station sidebar / fill / tile | export of 2026-10-06 (imported) | `Templates/Station/` | `imported/EFC_StationFaceplates/` (edit in Designer) | [station-faceplates](station-faceplates.md) |
 | EFC_IOFaceplates: Modicon x80 I/O card faceplates | export of 2026-10-07 (imported) | `Templates/IO/` (was `IO/`): 8 card faceplates, `Parts/`, `RackOverview`, `_Demo` | `imported/EFC_IOFaceplates/` (edit in Designer) | [design-briefs](design-briefs.md) |
+| Dynamic windows (efc.ui) | decision 31: open in each page's `dw_Right` dock (Ignition 8.1.19+) | `Templates/Dynamic Window/<category>/` (10 windows), `Templates/Dynamic Window/Parts/`, script `efc/ui` | `generator/docks/build_docks.py`, `efc_ui.py`; Station window from `imported/EFC_StationFaceplates/` | [help](help/README.md), [library-reference](library-reference.md#page-setup-the-dw_right-dock) |
 
 ## Outside the project
 | Design | Version | Files | Source |

@@ -1,7 +1,7 @@
 """Rule: bind the Station faceplates (imported/, Designer-built) to EFCLib v1 T_Station and the dynamic-window scheme.
 - DDT_Station member names -> T_Station members (bindings, write scripts, command map)
 - Station_Tile click -> efc.ui.openDynamic(self) (tType T_Station); Sidebar close -> efc.ui.closeDynamic(self)
-- Station_Sidebar (moved to Docks/Station by build.py) sized 400 x 860 (decision 25)
+- Station_Sidebar (moved to Templates/Dynamic Window/Station/Station by build.py) sized 400 x 860 (decision 25)
 Usage: python3 -I steward/tools/fix_station.py <viewtools dir> [apply]
 """
 import json, re, sys
