@@ -687,7 +687,7 @@ def layout_card():
     shell = f'<div style="position:relative;width:{W}px;height:{H}px;background:#fff">{head}{menu}{proc}{right}{alarm}</div>'
     name = "Screen_Layout_normal"
     cap = ("Normal: 400 x 860 right dock dw_Right (37.04 vh x 79.63 vh; 800 x 1720 at 4K) shows the open dynamic window (here dw_Rotating, drawn scaled to leave room for the labels); close returns the dock to the page's default view or closes it. "
-           "Dynamic windows open in one right-side Perspective dock, id dw_Right, display onDemand (decision 31; Ignition 8.1.19+). The dock never changes width; an expanded graph fills the window (decision 26). All shell sizes double at 4K.")
+           "Dynamic windows open in one right-side Perspective dock, id dw_Right, always visible, covering the right section (decisions 31, 32; Ignition 8.1.19+). The dock never changes width; an expanded graph fills the window (decision 26). All shell sizes double at 4K.")
     fig = (f'<figure class="card wide" id="{name}"><div class="view" style="width:960px;height:540px"><div class="stage" style="width:{W}px;height:{H}px;transform:scale(0.5)">{shell}</div></div>'
            f'<figcaption><code>{name.replace("_", " ")}</code><br><b class="ok">1920 x 1080 shell</b> &middot; normal<br>{cap}</figcaption></figure>')
     return name, fig

@@ -96,13 +96,13 @@ Dynamic windows (`Templates/Dynamic Window/<category>/`) open in one right-side 
 
 In each page's **Page Configuration**, add a **right dock**:
 - id `dw_Right`
-- view: any window view as the initial view, e.g. `Templates/Dynamic Window/ProcessValues/ProcessValue` (the click replaces it)
+- view: the page's trends overview as the initial view (shown when the page loads; a click replaces it with the device's window)
 - size 400 px at 1080p (37.04 vh equivalent; the window is 400 x 860, decision 25)
-- display "onDemand"
-- content "cover" or "push", per project
+- display "visible": the dock is always present (decision 32)
+- content "cover": the dock covers the right-hand section of the shell
 - handle "hide"
 
-Optional: to show a default view in the dock when the page opens, call `efc.ui.setDefaultDock(self, viewPath, params)` in the screen's root `onStartup`. A window's close button then puts that view back. Without a default, the close button closes the dock.
+To make the trends overview the view a window's close button returns to, call `efc.ui.setDefaultDock(self, viewPath, params)` in the screen's root `onStartup`. A window's close button then puts that view back. Without a default, the close button closes the dock.
 
 Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=None)` opens a window by its id (`dw_ValveDiscrete`, `dw_Loop`, ...), and `efc.ui.showDock(path, params)` loads any view.
 

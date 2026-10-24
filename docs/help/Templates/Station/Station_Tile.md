@@ -143,12 +143,11 @@ Total: **1 event script** and **1 transform script**. There are no custom method
 1. **`root`**: `events.dom.onClick` on `root`, scope G. Trigger: a single click on the tile. It opens the station dock. Code:
 
 ```python
-	# Opens the Type 1 sidebar. Create a right-side dock in Page Configuration with id "StationSidebar",
-	# view Templates/Station/Station_Sidebar, size 300 x 800, display "onDemand".
+	# Opens the dw_Station dynamic window in the page's right dock dw_Right (efc.ui, decision 31).
 	efc.ui.openDynamic(self)
 ```
 
-   The code calls `efc.ui.openDynamic(self)`. The comment before it still names a `StationSidebar` dock and a `Templates/Station/Station_Sidebar` view. That is stale (see Notes). The call itself opens `Templates/Dynamic Window/Station/Station`.
+   The code calls `efc.ui.openDynamic(self)`, which opens `Templates/Dynamic Window/Station/Station` in the page's `dw_Right` dock.
 
 2. **`view.custom.s`**: script transform on the property binding from `view.custom.t`. Trigger: runs whenever any of the 20 mirrored values changes. It returns the whole display dict. Code:
 
@@ -331,7 +330,6 @@ All members are read by the view. Each is relative to `tagPath`. Types and comme
 
 ## Notes and open questions
 
-- **Stale dock reference (comment and docs).** The click script's comment says the tile opens a right-side dock with id `StationSidebar`, view `Templates/Station/Station_Sidebar`, 300 x 800. `docs/station-faceplates.md` says the same. The code does not do that: it calls `efc.ui.openDynamic`, which opens `Templates/Dynamic Window/Station/Station`. `Templates/Dynamic Window/Station/Station` is 400 x 860, the same size as the imported `Station_Sidebar`. `Station_Sidebar` is not in `projects/EFC_Library`. `build.py` rewrites view paths only where they follow a quote or backslash, so the comment text is not rewritten and keeps the stale name in the built project. This is a documentation defect with no runtime effect.
 - **Inputs the transform reads but the tile does not mirror.** 15 keys are read by the transform but are not in `custom.t`: GrossWeight, TareWeight, TotalWeight, Msg, PT_Diff, Press_Max, SamplePress, Press_Balanced, Vacuumed, Vessel_Present, InletREQ, InletCMD, SampleREQ, VacuumREQ and VacuumCMD. They default to 0, false or empty. The tile shows no value they drive, so nothing wrong is visible today. The transform still computes 38 keys that the tile never binds. Any future tile field that uses one of the 15 would show the default silently.
 - **Pressure quality style.** The transform provides `ptCls` and `ptSmallCls` for bad quality, but the tile binds only the text of `Pt`. A bad pressure reading shows `-----` with no bad-quality style.
 - **Target of 0 or less.** The bar scale falls back to 1.0 (`scale = tgt * 1.08 if tgt > 0 else 1.0`). So any net of 1.0 or more fills the bar, whatever the units. Whether the bar should be hidden in that case is not defined in the repo.

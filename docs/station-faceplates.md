@@ -22,7 +22,7 @@ The only parameter on each view is **`tagPath`**: the DDT_Station instance, e.g.
 3. Dock: in Page Configuration on the overview page, add the library's **right dock** (the same on every page, see [library-reference](library-reference.md#page-setup-the-dw_right-dock)):
    - id `dw_Right`
    - view: any window view as the initial view, e.g. `Templates/Dynamic Window/Station/Station`
-   - size 400 px at 1080p (37.04 vh), display "onDemand", content "push" or "cover", handle "hide"
+   - size 400 px at 1080p (37.04 vh), display "visible", content "cover", handle "hide" (decision 32)
 
    The tile's onClick calls `efc.ui.openDynamic(self)`, which loads `Templates/Dynamic Window/Station/Station` with `{"tagPath": …}` into `dw_Right` and opens it (Ignition 8.1.19+). The window's ✕ calls `efc.ui.closeDynamic(self)`, which puts the page's default view back (`efc.ui.setDefaultDock` in the screen's onStartup) or closes the dock.
 

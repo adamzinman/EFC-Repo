@@ -473,7 +473,7 @@ section("Dynamic windows");
   table(s, [["Type", "Window"], ["T_DValve", "dw_ValveDiscrete"], ["T_CValve", "dw_ValveAnalog"], ["T_Motor", "dw_Rotating"], ["T_VFD", "dw_VFD"], ["T_Heater", "dw_Heater"]], { fs: 12, opts: { x: 0.6, y: 4.0, w: 4.0, colW: [1.6, 2.4], rowH: 0.42 } });
   table(s, [["Type", "Window"], ["T_HeatEx", "dw_HeatTransfer"], ["T_AI, T_KPI", "dw_ProcessValue"], ["T_PID", "dw_Loop"], ["T_Station", "dw_Station"], ["x80 card DDT", "dw_IOCard"]], { fs: 12, opts: { x: 4.85, y: 4.0, w: 4.0, colW: [1.6, 2.4], rowH: 0.42 } });
   card(s, 9.15, 4.0, 3.55, 2.55, { name: "why embedded" });
-  T(s, [{ text: "Why a Perspective dock?", options: { bold: true, breakLine: true } }, { text: "One right dock, dw_Right, in every page config: 400 px at 1080p, onDemand. It replaced the embedded-view region Docks/Region (decision 31). Needs Ignition 8.1.19+.", options: { color: P.muted, fontSize: 13 } }], { x: 9.35, y: 4.12, w: 3.2, h: 2.35, fontSize: 14 });
+  T(s, [{ text: "Why a Perspective dock?", options: { bold: true, breakLine: true } }, { text: "One right dock, dw_Right, in every page config: 400 px at 1080p, always visible. It replaced the embedded-view region Docks/Region (decision 31). Needs Ignition 8.1.19+.", options: { color: P.muted, fontSize: 13 } }], { x: 9.35, y: 4.12, w: 3.2, h: 2.35, fontSize: 14 });
   notes(s);
 }
 
