@@ -15,8 +15,8 @@
    }
   },
   "EFC_Library:script:efc/ui": {
-   "bytes": 9870,
-   "changed_at": "2026-10-23 20:23",
+   "bytes": 11171,
+   "changed_at": "2026-10-24 04:54",
    "first_seen": "2026-10-21 03:53",
    "functions": [
     "_log()",
@@ -25,6 +25,8 @@
     "userLevel(component)",
     "_state(component)",
     "_write(component, **changes)",
+    "dockSize(viewportHeight)",
+    "sizeDock(component)",
     "showDock(path, params=None)",
     "openWindow(dw, tagPath, model=None)",
     "openDynamic(component)",
@@ -39,7 +41,7 @@
     "trend(base, pens, minutes, w, h)",
     "dblCmd(component)"
    ],
-   "hash": "d82d6f865d89",
+   "hash": "228c907cb651",
    "kind": "script",
    "system_calls": [
     "system.perspective.alterDock",
@@ -8783,10 +8785,10 @@
   }
  },
  "last_audit_fp": "5aec66161f1a",
- "last_delta": 1,
+ "last_delta": 0,
  "projects": [
   "EFC_Library"
  ],
- "scanned_at": "2026-10-23 20:23",
+ "scanned_at": "2026-10-24 04:56",
  "upstream": {}
 }

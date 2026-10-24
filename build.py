@@ -88,8 +88,6 @@ def generate(preview):
     v = VERSION["version"]
     run("build_styles.py", stdout=subprocess.DEVNULL)
     run("build_pid.py")
-    if preview:
-        run("preview_pid.py")
 
     # build the generated parts (EFC_Styles, PID_Symbols) in projects/; merge_library() moves them to build/components/
     unzip_to(os.path.join(BUILD, "styles", "EFC_Styles.zip"), os.path.join(PROJECTS, "EFC_Styles"))
@@ -116,7 +114,8 @@ def generate(preview):
     if preview:
         run("render_views.py")            # docs/previews/templates/<Category>/<Name>.png, one per view
         os.makedirs(os.path.join(ROOT, "docs", "previews"), exist_ok=True)
-        shutil.copy(os.path.join(BUILD, "pid", "preview.png"), os.path.join(ROOT, "docs", "previews", "templates.png"))
+        # templates.png is the render of the real Templates/_Demo view (preview_pid.py mirrored the retired PID_* UDTs)
+        shutil.copy(os.path.join(ROOT, "docs", "previews", "templates", "_Demo.png"), os.path.join(ROOT, "docs", "previews", "templates.png"))
 
 
 def relocate(part, rel):

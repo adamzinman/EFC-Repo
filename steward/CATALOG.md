@@ -1,4 +1,4 @@
-# Library catalog (2026-10-23 20:23)
+# Library catalog (2026-10-24 04:56)
 
 63 views, 1 script modules, 314 style classes, 29 UDTs
 
@@ -72,7 +72,7 @@
 
 ## Script modules
 
-- efc/ui: _log, _p, level, userLevel, _state, _write, showDock, openWindow, openDynamic, setDefaultDock, closeDynamic, _audit, cmd, bypass, unbypass, ackAll, _num, trend, dblCmd
+- efc/ui: _log, _p, level, userLevel, _state, _write, dockSize, sizeDock, showDock, openWindow, openDynamic, setDefaultDock, closeDynamic, _audit, cmd, bypass, unbypass, ackAll, _num, trend, dblCmd
 
 ## PCLib UDTs
 
