@@ -16,6 +16,8 @@ from pid_common import (expr, prop, tag, pin, script, label, frac, status_group,
 from active import resolve as resolve_role
 _hex = lambda e: e   # v5.1: colors are plain #RRGGBB (bound straight onto Drawing element paints, no data URI)
 from active import SYMS, BY, colors
+import legacy_types as LT
+LEGACY = LT.ENABLED   # legacy-ddt build: bind DDT_Valve / DDT_Device / PID_ControlValve instead of the T_ types (see legacy_types.py)
 
 OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "build", "pid")   # gitignored build output
 
@@ -166,9 +168,9 @@ def common_cfg(custom, cfg, perm=True):
                 "custom.mode": expr("if({view.custom.man}, 1, 0)")})
     if perm: cfg["custom.permMissing"] = ftag("Sts_NotPerm")
 
-def dw_params(params, ttype, dbl):
+def dw_params(params, ttype, dbl, dock=""):
     """Dynamic-window parameters: tType picks the window (efc.ui), dockId / dwTagPath override it; dblCmd enables double-tap."""
-    params.update({"tType": ttype, "dockId": "", "dwTagPath": ""})
+    params.update({"tType": ttype, "dockId": dock, "dwTagPath": ""})
     if dbl: params["dblCmd"] = True
 
 def symbol(s, L, custom, dbl):
@@ -284,9 +286,120 @@ def motor_template(s, demo_path):
     return v
 
 def template_for(s):
+    if LEGACY:
+        return {"onoff": onoff_legacy, "control": control_legacy}.get(s.kind, motor_legacy)
     if s.kind == "onoff":   return onoff_template
     if s.kind == "control": return control_template
     return motor_template
+
+# ---------------------------------------------------------------- legacy-ddt build (generator/legacy_types.py)
+# The pre-e710de8 bindings (DDT_Valve verified on a live gateway, design note 39) on the current template structure:
+# symbol click opens the dynamic window, double-tap toggles two-state devices, the PB button goes through efc.ui.cmd.
+# Legacy commands are LEVELS (HMI_CMD) and mode requests are rising-edge pulses (HMI_Auto / HMI_Manual / HMI_Off).
+ILIST_TIP = ('\t# InterlockList is a MEM_Interlock_List document: {Status[], Description[], InterlockName[], Used[]}\n'
+             '\thead = "Interlock active - %s blocked"\n\ttry:\n\t\tnames = list(value["InterlockName"] or [])\n'
+             '\t\tused = list(value["Used"] or [])\n\t\tdesc = list(value["Description"] or [])\n\t\titems = []\n'
+             '\t\tfor i in range(len(names)):\n\t\t\tif i < len(used) and used[i] and names[i]:\n'
+             '\t\t\t\td = desc[i] if i < len(desc) and desc[i] else ""\n\t\t\t\titems.append(str(names[i]) + (" - " + str(d) if d else ""))\n'
+             '\t\treturn head + (":\\n" + "\\n".join(items) if items else "")\n\texcept:\n\t\treturn head')
+
+def legacy_common(custom, cfg, perm_member):
+    """Identity, mode and blocking members shared by DDT_Valve and DDT_Device (same HMI_* / Auto / Manual / Off / LockedOut scheme)."""
+    custom.update({"name": "", "desc": "", "man": False, "auto": False, "oos": False, "locked": False, "intlk": False,
+                   "permMissing": False, "avail": True, "mode": 0})
+    cfg.update({"custom.name": ftag("Name"), "custom.desc": ftag("Description"), "custom.man": ftag("Manual"), "custom.auto": ftag("Auto"),
+                "custom.oos": ftag("Off"), "custom.locked": ftag("LockedOut"), "custom.intlk": ftag("Interlock"),
+                "custom.avail": expr("!{view.custom.locked}"), "custom.mode": expr("if({view.custom.man}, 1, 0)")})
+    if perm_member == "Permissive":                       # DDT_Valve: TRUE = permissive missing
+        cfg["custom.permMissing"] = ftag("Permissive")
+    else:                                                 # DDT_Device: per-mode permissive OK bits
+        custom.update({"manPerm": True, "autoPerm": True})
+        cfg.update({"custom.manPerm": ftag("Man_Perm"), "custom.autoPerm": ftag("Auto_Perm"),
+                    "custom.permMissing": expr("!if({view.custom.man}, {view.custom.manPerm}, {view.custom.autoPerm})")})
+    # canCmd: Manual, not locked out, not Off; a running/open device may always be commanded off/closed
+    custom["canCmd"] = False
+    cfg["custom.canCmd"] = expr("{view.custom.man} && !{view.custom.locked} && !{view.custom.oos} && "
+                                "({view.custom.cmd} || (!{view.custom.permMissing} && !{view.custom.intlk}))")
+
+LEGACY_PB_TIP = 'if({view.custom.locked}, "Locked out", if(!{view.custom.man}, "Manual mode required", if({view.custom.cmd}, "%s", "%s")))'
+def legacy_click():   # HMI_CMD is a level: write the opposite of the current command (Operator re-check in efc.ui.cmd)
+    return script("\tefc.ui.cmd(self, 'HMI_CMD', not bool(self.view.custom.cmd), 1)")
+
+def onoff_legacy(s, demo_path):
+    L = valve_layout(s, LAYOUT["AutoValve"])
+    custom = {"cmd": False, "zso": False, "zsc": True, "fb": True, "ilist": None, "state": 0, "command": 0}
+    cfg = {"custom.cmd": ftag("CMD"), "custom.zso": ftag("ZSO"), "custom.zsc": ftag("ZSC"), "custom.fb": ftag("Feedback_Enabled"),
+           "custom.ilist": ftag("InterlockList"),
+           "custom.state": expr("if({view.custom.zso} && {view.custom.zsc}, 3, if(!{view.custom.fb}, if({view.custom.cmd}, 1, 0), "
+                                "if({view.custom.zso}, 1, if({view.custom.zsc}, 0, 2))))"),
+           "custom.command": expr("if({view.custom.fb}, if({view.custom.cmd}, 1, 0), -1)")}
+    legacy_common(custom, cfg, "Permissive")
+    color_props(s, custom, cfg)
+    status = 'case({view.custom.state}, 0, "CLOSED", 1, "OPEN", 2, if({view.custom.cmd}, "OPENING", "CLOSING"), 3, "FAULT", "???")'
+    cls = 'case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown")'
+    btn = {"type": "ia.input.button", "version": 0, "meta": {"name": "PB", "tooltip": {"enabled": True, "text": "Open"}},
+           "position": frac(L["pb"], L["size"]), "props": {"text": "", "enabled": False, "style": {"classes": "Button/Command"}},
+           "propConfig": {"meta.visible": expr("{view.params.useButton} && {view.custom.man}"),
+                          "props.enabled": expr("{view.custom.canCmd}"),
+                          "meta.tooltip.text": expr(LEGACY_PB_TIP % ("Close", "Open"))},
+           "events": {"component": {"onActionPerformed": legacy_click()}}}
+    kids = [tag_label(L), symbol(s, L, custom, True)] + badges(L, p_vis="{view.custom.permMissing}", i_vis="{view.custom.intlk}") + \
+           [status_label(L, status, cls, m_vis="!{view.params.useButton} && {view.custom.man}"), btn]
+    for k in kids:   # I tooltip: names of the used entries of the InterlockList document
+        if k["meta"]["name"] == "I":
+            k["propConfig"]["meta.tooltip.text"] = {"binding": {"type": "property", "config": {"path": "view.custom.ilist"},
+                                                                 "transforms": [{"type": "script", "code": ILIST_TIP % "open"}]}}
+    v = view(demo_path, custom, cfg, kids, L["size"], use_button=True)
+    dw_params(v["params"], "DDT_Valve", True); v["propConfig"].update({f"params.{k}": pin() for k in v["params"]})
+    return v
+
+def control_legacy(s, demo_path):
+    L = valve_layout(s, LAYOUT["ControlValve"])
+    custom = {"out": 0.0, "pos": 0.0, "fb": True, "perm": True, "intlk": False, "fault": False, "mode": 0, "man": False,
+              "name": "", "desc": "", "state": 0, "command": 0}
+    cfg = {"custom.out": ftag("Out"), "custom.pos": ftag("Pos"), "custom.fb": ftag("Feedback_Enabled"), "custom.perm": ftag("PermOK"),
+           "custom.intlk": ftag("Intlk"), "custom.fault": ftag("Fault"), "custom.mode": ftag("Mode"),
+           "custom.man": expr("{view.custom.mode} = 1"),
+           "custom.name": ftag("Name"), "custom.desc": ftag("Description"),
+           "custom.state": expr("if({view.custom.fault}, 3, if((if({view.custom.fb}, {view.custom.pos}, {view.custom.out})) > 1, 1, 0))"),
+           "custom.command": expr("if({view.custom.fb}, if({view.custom.out} > 1, 1, 0), -1)")}
+    color_props(s, custom, cfg)
+    status = 'if({view.custom.state} = 3, "FAULT", numberFormat(if({view.custom.fb}, {view.custom.pos}, {view.custom.out}), "0") + " %")'
+    cls = 'case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown") + " Text/Mod/Tabular"'
+    custom.update({"posC": 0.0, "outC": 0.0})
+    cfg.update({"custom.posC": expr("max(0, min(100, coalesce({view.custom.pos}, 0)))"),
+                "custom.outC": expr("max(0, min(100, coalesce({view.custom.out}, 0)))")})
+    kids = [tag_label(L), symbol(s, L, custom, False)] + badges(L, p_vis="!{view.custom.perm}", i_vis="{view.custom.intlk}") + \
+           [status_label(L, status, cls, m_vis="{view.custom.man}"), position_bar(L)]
+    v = view(demo_path, custom, cfg, kids, L["size"])
+    dw_params(v["params"], "PID_ControlValve", False); v["propConfig"].update({f"params.{k}": pin() for k in v["params"]})
+    return v
+
+def motor_legacy(s, demo_path):
+    tt = ttype_for(s); M = RUN_MEMBERS[tt]
+    L = dict(LAYOUT["Motor"])
+    if s.badge_i == "low": L["I"] = L["I_low"]
+    custom = {"cmd": False, "run": False, "fb": True, "fault": False, "state": 0, "command": -1}
+    cfg = {"custom.cmd": ftag("CMD"), "custom.run": ftag("YI"), "custom.fb": ftag("FB_Enb"), "custom.fault": ftag("Alarm"),
+           "custom.state": expr("if({view.custom.fault}, 3, if(!{view.custom.fb}, if({view.custom.cmd}, 1, 0), "
+                                "if({view.custom.run} && {view.custom.cmd}, 1, if(!{view.custom.run} && !{view.custom.cmd}, 0, 2))))")}
+    legacy_common(custom, cfg, "Man_Perm")
+    color_props(s, custom, cfg)
+    w = M["words"]
+    status = f'case({{view.custom.state}}, 0, "{w[0]}", 1, "{w[1]}", 2, if({{view.custom.cmd}}, "{w[2]}", "{w[3]}"), 3, "FAULT", "???")'
+    cls = 'case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown")'
+    pb = {"type": "ia.input.button", "version": 0, "meta": {"name": "PB", "tooltip": {"enabled": True, "text": M["verbs"][0]}},
+          "position": frac(L["pb"], L["size"]), "props": {"text": "", "enabled": False, "style": {"classes": "Button/Command"}},
+          "propConfig": {"meta.visible": expr("{view.params.useButton} && {view.custom.man}"),
+                         "props.enabled": expr("{view.custom.canCmd}"),
+                         "meta.tooltip.text": expr(LEGACY_PB_TIP % (M["verbs"][1], M["verbs"][0]))},
+          "events": {"component": {"onActionPerformed": legacy_click()}}}
+    kids = [tag_label(L), symbol(s, L, custom, True)] + badges(L, p_vis="{view.custom.permMissing}", i_vis="{view.custom.intlk}") + \
+           [status_label(L, status, cls, m_vis="!{view.params.useButton} && {view.custom.man}"), pb]
+    v = view(demo_path, custom, cfg, kids, L["size"], use_button=True)
+    dock = {"T_VFD": "dw_VFD", "T_Heater": "dw_Heater"}.get(tt, "")     # same DDT_Device data; the window keeps the device's words
+    dw_params(v["params"], "DDT_Device", True, dock); v["propConfig"].update({f"params.{k}": pin() for k in v["params"]})
+    return v
 
 # ---------------------------------------------------------------- demo tags: memory stand-ins with the EFCLib v1 member names
 # (the real types are in types/export/PCLib_Ignition81.json; point templates at real instances instead)
@@ -333,6 +446,47 @@ DEMO = [  # instance, UDT, member overrides ("Group/Member" for nested), templat
     ("E401", "T_Heater_Demo", {"Out_Contactor": True, "Sts_On": True, "Sts_Off": False, "Cfg_Tag": "E-401"}, "Heater_Electric"),
 ]
 NO_BUTTON = {"XV103", "PV501"}   # demo instances shown with useButton = false
+
+if LEGACY:   # memory stand-ins with the legacy member names (real types: tags/legacy/*.json)
+    def _bools(*names): return [atom(n, "Boolean", False) for n in names]
+    _ILIST = {"name": "InterlockList", "tagType": "AtomicTag", "valueSource": "memory", "dataType": "Document",
+              "value": {"Status": [False] * 4, "Description": ["", "", "", ""], "InterlockName": ["", "", "", ""], "Used": [False] * 4}}
+    UDTS = {
+        "DDT_Valve_Demo": _bools("Auto", "Auto_Perm", "CMD", "HMI_Auto", "HMI_CMD", "HMI_Lockout", "HMI_Manual", "HMI_Off", "Interlock",
+                                 "LockedOut", "Man_Perm", "Manual", "Off", "Permissive", "REQ", "Reset_Count", "ZSO") +
+                          [atom("ZSC", "Boolean", True), atom("Feedback_Enabled", "Boolean", True), atom("Cycle_Count", "Int4", 0),
+                           atom("Description", "String", ""), _ILIST, atom("Name", "String", "")],
+        "PID_ControlValve": [atom("Out", "Float4", 0.0), atom("Pos", "Float4", 0.0), atom("PermOK", "Boolean", True), atom("Intlk", "Boolean", False),
+                             atom("Fault", "Boolean", False), atom("Mode", "Int2", 0), atom("Name", "String", ""), atom("Description", "String", ""),
+                             atom("Feedback_Enabled", "Boolean", True)],
+        "DDT_Device_Demo": _bools("Auto", "HMI_Auto", "HMI_CMD", "HMI_Lockout", "HMI_Manual", "HMI_Off", "Interlock", "LockedOut", "Manual",
+                                  "Off", "REQ", "CMD", "YI", "YIF", "Alarm", "Warning", "Reset_Runtime", "Enable_Stalling", "Stalled") +
+                           [atom("Auto_Perm", "Boolean", True), atom("Man_Perm", "Boolean", True), atom("FB_Enb", "Boolean", True),
+                            atom("Run_Sec", "Float4", 0.0), atom("Run_Min", "Float4", 0.0), atom("Run_Hour", "Float4", 0.0), atom("Runtime", "Float4", 0.0),
+                            atom("Comp_Ratio", "Float4", 0.0), atom("Curr_Comp_Ratio", "Float4", 0.0), atom("Stall_Time", "Int4", 0),
+                            atom("Name", "String", ""), atom("Description", "String", "")],
+    }
+    for m in UDTS["DDT_Device_Demo"]:   # demo alarm so the outline can be seen: Alarm = 1 raises a High alarm
+        if m["name"] == "Alarm": m["alarms"] = [{"name": "Alarm", "mode": "Equality", "setpointA": 1.0, "priority": "High"}]
+    _IL = {"InterlockList": {"__document__": True, "value": {"Status": [True, False, False, False], "Description": ["High pressure", "", "", ""],
+                                                             "InterlockName": ["PSH-201", "", "", ""], "Used": [True, False, False, False]}}}
+    DEMO = [
+        ("XV101", "DDT_Valve_Demo", {"Auto": True, "CMD": True, "ZSO": True, "ZSC": False, "Name": "XV-101", "Description": "N2 supply isolation"}, "Valve_OnOff_Pneumatic"),
+        ("XV102", "DDT_Valve_Demo", {"Manual": True, "Permissive": True, "Name": "XV-102"}, "Valve_Solenoid"),
+        ("XV103", "DDT_Valve_Demo", {"Manual": True, "CMD": True, "ZSC": False, "Name": "XV-103"}, "Valve_MOV"),
+        ("XV104", "DDT_Valve_Demo", {"Off": True, "Interlock": True, **_IL, "Name": "XV-104"}, "Valve_OnOff_Pneumatic"),
+        ("XV105", "DDT_Valve_Demo", {"LockedOut": True, "ZSO": True, "ZSC": True, "Name": "XV-105"}, "Valve_OnOff_Pneumatic"),
+        ("FV101", "PID_ControlValve", {"Out": 45.0, "Pos": 43.0, "Name": "FV-101"}, "Valve_Control"),
+        ("FV102", "PID_ControlValve", {"Out": 20.0, "Pos": 20.0, "Mode": 1, "Name": "FV-102"}, "Valve_Control"),
+        ("P101", "DDT_Device_Demo", {"Auto": True, "CMD": True, "YI": True, "Runtime": 128.5, "Name": "P-101"}, "Pump_Centrifugal"),
+        ("P102", "DDT_Device_Demo", {"Auto": True, "Man_Perm": False, "Auto_Perm": False, "Interlock": True, "Name": "P-102"}, "Pump_PD_Rotary"),
+        ("K201", "DDT_Device_Demo", {"Manual": True, "CMD": True, "YI": True, "Enable_Stalling": True, "Comp_Ratio": 3.2, "Curr_Comp_Ratio": 3.1, "Name": "K-201"}, "Compressor_Diaphragm"),
+        ("K202", "DDT_Device_Demo", {"Auto": True, "Alarm": True, "Name": "K-202"}, "Compressor_Centrifugal"),
+        ("B301", "DDT_Device_Demo", {"Auto": True, "CMD": True, "Name": "B-301"}, "Blower"),
+        ("PV501", "DDT_Device_Demo", {"Manual": True, "CMD": True, "YI": True, "Name": "PV-501"}, "Pump_Vacuum"),
+        ("M601", "DDT_Device_Demo", {"Auto": True, "CMD": True, "YI": True, "Name": "M-601"}, "VFD"),
+        ("E401", "DDT_Device_Demo", {"Auto": True, "CMD": True, "YI": True, "Name": "E-401"}, "Heater_Electric"),
+    ]
 def tpl_path(s): return f"Templates/{s.cat}/{s.name}"   # imports straight into Views/Templates
 
 def tags_files():
@@ -346,7 +500,8 @@ def tags_files():
             for p_ in parts[:-1]: d = d.setdefault(p_, {})
             d[parts[-1]] = v
         def emit(d):
-            return [{"name": k, "tagType": "Folder", "tags": emit(v)} if isinstance(v, dict) else {"name": k, "tagType": "AtomicTag", "value": v}
+            return [{"name": k, "tagType": "AtomicTag", "value": v["value"]} if isinstance(v, dict) and v.get("__document__") else
+                    {"name": k, "tagType": "Folder", "tags": emit(v)} if isinstance(v, dict) else {"name": k, "tagType": "AtomicTag", "value": v}
                     for k, v in d.items()]
         return emit(root)
     inst = [{"name": n, "tagType": "UdtInstance", "typeId": u, "tags": nest(ov)} for n, u, ov, _ in DEMO]
@@ -371,7 +526,9 @@ def demo_view():
 # null inside && / || / if() puts the dependent bindings in error. Wrap every read of a tag-bound custom in coalesce().
 NULL_DEFAULTS = {"spd": "0.0", "spdEU": "\"\"", "cmd": "false", "opened": "false", "closed": "false", "hasZso": "false", "hasZsc": "false", "fb": "true",
                  "permMissing": "false", "intlk": "false", "man": "false", "oos": "false", "avail": "true", "local": "false",
-                 "on": "false", "off": "false", "trip": "false", "fault": "false", "mode": "0", "out": "0", "pos": "0", "firstOut": "-1"}
+                 "on": "false", "off": "false", "trip": "false", "fault": "false", "mode": "0", "out": "0", "pos": "0", "firstOut": "-1",
+                 # legacy-ddt members
+                 "zso": "false", "zsc": "false", "run": "false", "locked": "false", "auto": "false", "perm": "true", "manPerm": "true", "autoPerm": "true"}
 def _harden_expr(e):
     import re as _re
     e = _re.sub(r"\{view\.custom\.(\w+)\}", lambda m: f"coalesce({{view.custom.{m.group(1)}}}, {NULL_DEFAULTS[m.group(1)]})"

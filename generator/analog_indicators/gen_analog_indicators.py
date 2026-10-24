@@ -45,6 +45,19 @@ for k, a in [("ll", "Alm_LL"), ("l", "Alm_L"), ("h", "Alm_H"), ("hh", "Alm_HH")]
     TAGM.update({k: a + "/Cfg_Lim", k + "En": a + "/Cfg_En", k + "A": a + "/Sts_Active",
                  k + "U": a + "/Sts_Unack", k + "P": a + "/Cfg_Priority"})
 c = lambda k: "{view.custom." + k + "}"
+import legacy_types as LT
+LEGACY = LT.ENABLED           # legacy-ddt build: the cards read a DDT_Process_Value (no T_KPI equivalent); see generator/legacy_types.py
+TTYPE = "DDT_Process_Value" if LEGACY else "T_KPI"
+DEMO_TAG = "[default]PV_Demo/PT001" if LEGACY else "[default]KPI/KPI_101"
+# legacy members that are expressions, not tags (no equivalent member): value is the expression text
+LEGACY_EXPR = {"sdesc": "{view.custom.desc}", "iLo": "0", "iHi": "0",                       # no ideal band: IDEAL is false
+               "q": "if(toBoolean(coalesce({view.custom.hw}, false)), 2, 0)",              # 2 = bad quality
+               "llU": "false", "lU": "false", "hU": "false", "hhU": "false",                 # unack / priority live in the
+               "llP": "3", "lP": "3", "hP": "3", "hhP": "3"}                                 # Ignition alarm, not the DDT: Medium
+if LEGACY:
+    TAGM = {"pv": "PV", "eu": "Units", "desc": "Description", "tag": "Name", "min": "Eng_Min", "max": "Eng_Max", "hw": "HW_Fault"}
+    for k, a in [("ll", "LL"), ("l", "L"), ("h", "H"), ("hh", "HH")]:
+        TAGM.update({k: a + "/SP", k + "En": a + "/Enabled", k + "A": a + "/Alarm"})
 def pct(k): return f"min(max(({c(k)} - {c('min')}) / {c('span')}, 0), 1) * 100"
 IDEAL = f"{c('iLo')} < {c('iHi')}"
 DERIVED = {
@@ -122,10 +135,12 @@ def make_view(root, w, h, params, extra_custom=None):
     custom = {k: None for k in TAGM}; custom.update({k: None for k in DERIVED})
     pcfg = {}
     for k, m in TAGM.items(): pcfg["custom." + k] = tagb(m)
+    if LEGACY:
+        for k, e in LEGACY_EXPR.items(): custom[k] = None; pcfg["custom." + k] = expr(e)
     for k, e in DERIVED.items(): pcfg["custom." + k] = expr(e)
     for k, e in (extra_custom or {}).items():
         custom[k] = None; pcfg["custom." + k] = expr(e)
-    params = dict(params, tType="T_KPI", dockId="", dwTagPath="")    # efc.ui.openDynamic -> dw_ProcessValue
+    params = dict(params, tagPath=DEMO_TAG, tType=TTYPE, dockId="", dwTagPath="")    # efc.ui.openDynamic -> dw_ProcessValue
     for p in params: pcfg["params." + p] = {"paramDirection": "input", "persistent": True}
     root["events"] = {"dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}
     return {"custom": custom, "params": params, "propConfig": pcfg,
@@ -222,7 +237,7 @@ VIEWS = {
 def emb(name, path, w, h, params):
     return comp("ia.display.view", name, {"path": "Templates/AnalogIndicator/" + path, "params": params, "useDefaultViewWidth": False, "useDefaultViewHeight": False},
                 {"basis": f"{w}px", "shrink": 0, "grow": 0}) | {"position": {"basis": f"{w}px", "shrink": 0, "grow": 0, "height": h}}
-tp = "[default]KPI/KPI_101"
+tp = DEMO_TAG
 ex_root = flex("root", "row", [
     flex("A", "column", [comp("ia.display.view", "A1", {"path": "Templates/AnalogIndicator/A_RangeBar", "params": {"tagPath": tp, "LabelMode": "Both", "ShowMinMax": True, "Format": "#,##0.0"}}, {"basis": "120px", "shrink": 0})], basis="256px"),
     flex("B", "column", [comp("ia.display.view", "B1", {"path": "Templates/AnalogIndicator/B_PointerScale", "params": {"tagPath": tp, "ShowLimitType": True, "ShowLimitValue": True, "Format": "#,##0.0"}}, {"basis": "330px", "shrink": 0})], basis="128px"),

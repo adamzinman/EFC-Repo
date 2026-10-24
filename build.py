@@ -9,6 +9,8 @@ imported projects in imported/ (EFC_IOFaceplates, EFC_StationFaceplates), merged
                                   docs/previews/templates/ (needs Playwright + Chromium)
     python3 build.py --dist       also write importable zips to dist/ (gitignored)
     python3 build.py --check      check the committed projects/ only (no regeneration); used by CI
+    python3 build.py --legacy-ddt bind everything to the legacy DDT_ types instead of EFCLib v1 (sets EFC_LEGACY_DDT=1;
+                                  VERSION.json "types": "legacy-ddt" makes it the default, see generator/legacy_types.py)
 
 The generator (generator/) and imported/ are the sources. projects/EFC_Library is generated: the merged project
 unzipped in the gateway's own folder layout (data/projects/<Name>/...), so every change shows as a readable JSON
@@ -28,6 +30,18 @@ VERSION = json.load(open(os.path.join(ROOT, "VERSION.json")))
 LIBRARY = "EFC_Library"
 GENERATED_PARTS = ("EFC_Styles", "PID_Symbols", "EFC_ProcessValues", "PID_Loops", "EFC_AnalogIndicators", "EFC_Docks")
 IMPORTED_PARTS = ("EFC_IOFaceplates", "EFC_StationFaceplates")
+sys.path.insert(0, GEN)
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+
+
+def legacy_enabled():
+    """True when the legacy-ddt build is selected (EFC_LEGACY_DDT, or VERSION.json "types": "legacy-ddt"); the
+    generators read the same switch from generator/legacy_types.py."""
+    import importlib, legacy_types
+    return importlib.reload(legacy_types).ENABLED
+
+
+LEGACY = legacy_enabled()
 
 # Views that don't already live under Templates/ are moved there in the merged project. Every string that
 # names one of these view paths (embedded views, flex repeaters, openPopup calls) is rewritten to match.
@@ -162,6 +176,9 @@ def merge_library():
                 data = open(os.path.join(d, f), "rb").read()
                 if f.endswith(".json") and name in RELOCATE:
                     data = rewrite_refs(name, data.decode("utf-8")).encode("utf-8")
+                if LEGACY and name == "EFC_StationFaceplates" and f == "view.json":   # T_Station -> DDT_Station (tools/legacy_station.py)
+                    from legacy_station import legacy_text
+                    data = legacy_text(data.decode("utf-8")).encode("utf-8")
                 dest = os.path.join(lib, new)
                 os.makedirs(os.path.dirname(dest), exist_ok=True)
                 open(dest, "wb").write(data)
@@ -233,7 +250,13 @@ def main():
     ap.add_argument("--preview", action="store_true", help="render docs/previews/templates.png (Playwright)")
     ap.add_argument("--dist", action="store_true", help="write importable project zips to dist/")
     ap.add_argument("--check", action="store_true", help="only run the 8.1 import check on the committed projects/")
+    ap.add_argument("--legacy-ddt", action="store_true", help="bind to the legacy DDT_ types (EFC_LEGACY_DDT=1)")
     a = ap.parse_args()
+    if a.legacy_ddt:
+        os.environ["EFC_LEGACY_DDT"] = "1"
+    global LEGACY
+    LEGACY = legacy_enabled()
+    print("type binding:", "legacy DDT_ (generator/legacy_types.py)" if LEGACY else "EFCLib v1 T_")
     if not a.check:
         generate(a.preview)
     zips = make_dist() if (a.dist or a.check) else None

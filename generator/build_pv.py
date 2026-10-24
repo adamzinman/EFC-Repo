@@ -15,6 +15,9 @@ import json, os, re, shutil
 from urllib.parse import quote
 
 from common import REPO, PERSPECTIVE, write, dump, resource_json as _rj, project_json, project_dir
+import legacy_types as LT
+LEGACY = LT.ENABLED    # legacy-ddt build: DDT_Process_Value members and Ignition tag alarms (pre-e710de8 bindings)
+TTYPE = "DDT_Process_Value" if LEGACY else "T_AI"
 PV_VERSION = "1.3.0"   # template design version (docs/pv-display.md); repo version comes from VERSION.json
 PROJECT = "EFC_ProcessValues"
 PARENT = "EFC_Styles"
@@ -165,6 +168,82 @@ def common_defaults():
             **{f"a{k}": -1 for k, _ in ALARMS}, **{f"{k}{x}": None for k, _ in ALARMS if k not in ("OVR", "UNR") for x in ("act", "un", "pri")},
             "rOVR": False, "rUNR": False, "fltActive": False, "anyUnacked": False, "activePri": -1, "clearedPri": -1, "inh": False, "badValue": False}
 
+# ----------------------------------------------------------------- legacy-ddt build: DDT_Process_Value (generator/legacy_types.py)
+# The pre-e710de8 design: members PV / Name / Description / Units / HW_Fault / x.Inhibit, alarm state from the Ignition
+# tag alarms configured on x/Alarm, HW_Fault, Overrange and Underrange (one system.alarm.queryStatus per refresh;
+# isAlarmActiveFiltered is not re-evaluated by Perspective on alarm changes), OVR / UNR from the range bits.
+B2_MEMBERS = {"engMin": "/Cfg_EUMin", "engMax": "/Cfg_EUMax", "spLL": "/Alm_LL/Cfg_Lim", "spL": "/Alm_L/Cfg_Lim", "spH": "/Alm_H/Cfg_Lim", "spHH": "/Alm_HH/Cfg_Lim"}
+DEMO_UDT, DEMO_PV, DEMO_FLT = "T_AI_Demo", "Val_PV", "Sts_Bad"
+if LEGACY:
+    ALARMS = [("FLT", "/HW_Fault"), ("HH", "/HH/Alarm"), ("H", "/H/Alarm"), ("L", "/L/Alarm"),
+              ("LL", "/LL/Alarm"), ("OVR", "/Overrange"), ("UNR", "/Underrange")]
+    B2_MEMBERS = {"engMin": "/Eng_Min", "engMax": "/Eng_Max", "spLL": "/LL/SP", "spL": "/L/SP", "spH": "/H/SP", "spHH": "/HH/SP"}
+    DEMO_UDT, DEMO_PV, DEMO_FLT = "DDT_Process_Value_Demo", "PV", "HW_Fault"
+    ALM_SCRIPT = ('\t# One alarm-status query per refresh for this UDT instance. Returns {key: code}:\n'
+                  '\t# -1 = none, else state*10 + priority (state 0 active-acked, 1 active-unacked, 2 cleared-unacked;\n'
+                  '\t# priority 0 Diagnostic .. 4 Critical). Replaces isAlarmActiveFiltered (gateway scope needs the\n'
+                  '\t# provider in the path and Perspective never re-runs it on alarm changes).\n'
+                  '\tout = {"FLT": -1, "HH": -1, "H": -1, "L": -1, "LL": -1, "OVR": -1, "UNR": -1}\n'
+                  '\ttp = self.view.params.tagPath\n\tif not tp:\n\t\treturn out\n\ttp = str(tp).strip()\n\tprov = "*"\n\tpath = tp\n'
+                  '\tif tp.startswith("[") and "]" in tp:\n\t\tprov = tp[1:tp.index("]")] or "*"\n\t\tpath = tp[tp.index("]") + 1:]\n'
+                  '\tpath = path.strip("/")\n'
+                  '\tkeys = {"hw_fault": "FLT", "hh/alarm": "HH", "h/alarm": "H", "l/alarm": "L",\n\t\t\t"ll/alarm": "LL", "overrange": "OVR", "underrange": "UNR"}\n'
+                  '\ttry:\n\t\tevents = system.alarm.queryStatus(source=["prov:%s:/tag:%s/*" % (prov, path)])\n'
+                  '\texcept Exception as e:\n\t\tsystem.util.getLogger("EFC_PV").warn("queryStatus failed for %s: %s" % (tp, e))\n\t\treturn out\n'
+                  '\tagg = {}\n\tfor ev in events:\n\t\tst = str(ev.getState())\n'
+                  '\t\tif st not in ("ActiveUnacked", "ActiveAcked", "ClearUnacked"):\n\t\t\tcontinue\n'
+                  '\t\tsrc = str(ev.getSource())\n\t\tif ":/tag:" not in src:\n\t\t\tcontinue\n'
+                  '\t\ttag = src.split(":/tag:", 1)[1].split(":/alm:", 1)[0].strip("/")\n'
+                  '\t\tif not tag.lower().startswith(path.lower() + "/"):\n\t\t\tcontinue\n'
+                  '\t\tkey = keys.get(tag[len(path) + 1:].lower())\n\t\tif key is None:\n\t\t\tcontinue\n'
+                  '\t\tpri = int(ev.getPriority().ordinal())\n'
+                  '\t\ta = agg.setdefault(key, {"act": -1, "unack": False, "clr": -1})\n'
+                  '\t\tif st == "ClearUnacked":\n\t\t\ta["clr"] = max(a["clr"], pri)\n'
+                  '\t\telse:\n\t\t\ta["act"] = max(a["act"], pri)\n\t\t\tif st == "ActiveUnacked":\n\t\t\t\ta["unack"] = True\n'
+                  '\tfor key, a in agg.items():\n\t\tif a["act"] >= 0:\n\t\t\tout[key] = (10 if a["unack"] else 0) + a["act"]\n'
+                  '\t\telif a["clr"] >= 0:\n\t\t\tout[key] = 20 + a["clr"]\n\treturn out')
+
+    def common_custom():
+        pc = {
+            "params.tagPath": {"paramDirection": "input", "persistent": True},
+            "custom.tick": b_expr("now(1000)"),
+            "custom.pv": b_tag("/PV"),
+            "custom.name": b_tag("/Name"),
+            "custom.desc": b_tag("/Description"),
+            "custom.units": b_tag("/Units"),
+            "custom.hwFault": b_tag("/HW_Fault"),
+            "custom.inhHH": b_tag("/HH/Inhibit"), "custom.inhH": b_tag("/H/Inhibit"),
+            "custom.inhL": b_tag("/L/Inhibit"), "custom.inhLL": b_tag("/LL/Inhibit"),
+        }
+        pc["custom.alm"] = {"binding": {"type": "expr", "config": {"expression": "{view.custom.tick}"},
+                                        "transforms": [{"type": "script", "code": ALM_SCRIPT}]}}
+        for k, suffix in ALARMS:
+            if k == "FLT":   # alarm on HW_Fault; if none is configured yet, still show a steady FLT from the bit
+                pc["custom.aFLTalm"] = b_expr("coalesce({view.custom.alm.FLT}, -1)")
+                pc["custom.aFLT"] = b_expr("if({view.custom.aFLTalm} >= 0, {view.custom.aFLTalm},\n"
+                                           "  if(toBoolean(coalesce({view.custom.hwFault}, false)), 3, -1))")
+            else:
+                pc[f"custom.a{k}"] = b_expr("coalesce({view.custom.alm.%s}, -1)" % k)
+        act = ", ".join(f"if({C(k)} >= 0 && {C(k)} < 20, {C(k)} % 10, -1)" for k, _ in ALARMS if k != "FLT")
+        clr = ", ".join(f"if({C(k)} >= 20, {C(k)} % 10, -1)" for k, _ in ALARMS if k != "FLT")
+        pc["custom.fltActive"] = b_expr(f"{C('FLT')} >= 0 && {C('FLT')} < 20")
+        pc["custom.anyUnacked"] = b_expr(" || ".join(f"({C(k)} >= 10 && {C(k)} < 20)" for k, _ in ALARMS))
+        pc["custom.activePri"] = b_expr(f"max(-1, {act})")
+        pc["custom.clearedPri"] = b_expr(f"max(-1, {clr})")
+        pc["custom.inh"] = b_expr("toBoolean(coalesce({view.custom.inhHH}, false)) || toBoolean(coalesce({view.custom.inhH}, false)) || "
+                                  "toBoolean(coalesce({view.custom.inhL}, false)) || toBoolean(coalesce({view.custom.inhLL}, false))")
+        pc["custom.badValue"] = b_expr("!isGood({view.custom.pv}) || {view.custom.fltActive}")
+        for k in ("tType", "dockId", "dwTagPath"):
+            pc[f"params.{k}"] = {"paramDirection": "input", "persistent": True}
+        return pc
+
+    def common_defaults():
+        return {"tick": None, "pv": None, "name": "", "desc": "", "units": "", "hwFault": False,
+                "inhHH": False, "inhH": False, "inhL": False, "inhLL": False,
+                **{f"a{k}": -1 for k, _ in ALARMS}, "aFLTalm": -1,
+                "alm": {"FLT": -1, "HH": -1, "H": -1, "L": -1, "LL": -1, "OVR": -1, "UNR": -1},
+                "fltActive": False, "anyUnacked": False, "activePri": -1, "clearedPri": -1, "inh": False, "badValue": False}
+
 # ----------------------------------------------------------------- component builders
 def comp(ctype, name, props=None, position=None, children=None, prop_config=None, meta_extra=None):
     c = {"type": ctype, "version": 0, "meta": {"name": name}, "position": position or {}, "props": props or {}}
@@ -250,7 +329,7 @@ def strip_classes():
             '    "PV/Strip/Normal"))))')
 
 def view(root, custom_defaults, prop_config, w, h):
-    return {"custom": custom_defaults, "params": {"tagPath": "", "tType": "T_AI", "dockId": "", "dwTagPath": ""}, "propConfig": prop_config,
+    return {"custom": custom_defaults, "params": {"tagPath": "", "tType": TTYPE, "dockId": "", "dwTagPath": ""}, "propConfig": prop_config,
             "props": {"defaultSize": {"width": w, "height": h}}, "root": root}
 
 # ----------------------------------------------------------------- A1: PV_StatusStrip
@@ -283,9 +362,7 @@ def frac(x):
 def build_b2():
     pc = common_custom()
     pc.update({
-        "custom.engMin": b_tag("/Cfg_EUMin"), "custom.engMax": b_tag("/Cfg_EUMax"),
-        "custom.spLL": b_tag("/Alm_LL/Cfg_Lim"), "custom.spL": b_tag("/Alm_L/Cfg_Lim"),
-        "custom.spH": b_tag("/Alm_H/Cfg_Lim"), "custom.spHH": b_tag("/Alm_HH/Cfg_Lim"),
+        **{f"custom.{k}": b_tag(rel) for k, rel in B2_MEMBERS.items()},   # T_AI members, or DDT_Process_Value in the legacy-ddt build
         "custom.fLL": b_expr(frac("{view.custom.spLL}")), "custom.fL": b_expr(frac("{view.custom.spL}")),
         "custom.fH": b_expr(frac("{view.custom.spH}")), "custom.fHH": b_expr(frac("{view.custom.spHH}")),
         "custom.fPV": b_expr(frac("{view.custom.pv}")),
@@ -346,10 +423,10 @@ def build_demo():
             label(f"Lbl_{inst}", "Text/Caption", f"{inst}  PV:", FIX("auto")),
             comp("ia.input.numeric-entry-field", f"PV_{inst}", {"format": "0,0.0", "style": {"classes": "Input/Setpoint"}},
                  FIX(vh(24)), prop_config={"props.value": {"binding": {"type": "tag", "config": {
-                     "bidirectional": True, "mode": "direct", "tagPath": f"[default]PV_Demo/{inst}/Val_PV", "fallbackDelay": 2.5}}}}),
-            comp("ia.input.checkbox", f"Flt_{inst}", {"text": "Sts_Bad", "style": {"classes": "Input/Check"}},
+                     "bidirectional": True, "mode": "direct", "tagPath": f"[default]PV_Demo/{inst}/{DEMO_PV}", "fallbackDelay": 2.5}}}}),
+            comp("ia.input.checkbox", f"Flt_{inst}", {"text": DEMO_FLT, "style": {"classes": "Input/Check"}},
                  FIX("auto"), prop_config={"props.selected": {"binding": {"type": "tag", "config": {
-                     "bidirectional": True, "mode": "direct", "tagPath": f"[default]PV_Demo/{inst}/Sts_Bad", "fallbackDelay": 2.5}}}}),
+                     "bidirectional": True, "mode": "direct", "tagPath": f"[default]PV_Demo/{inst}/{DEMO_FLT}", "fallbackDelay": 2.5}}}}),
         ], "", FIX(vh(160)))
     rows = []
     for inst, desc in DEMO:
@@ -362,7 +439,7 @@ def build_demo():
         rows[-1]["props"]["style"]["gap"] = vh(16)
     kids = [label("Title", "Text/Title", "Process Value templates: PV_StatusStrip (A1) and PV_RangeBar (B2)", FIX("auto")),
             label("Hint", "Text/Caption Text/Mod/Wrap",
-                  "Demo tags: [default]PV_Demo (T_AI_Demo). Type a PV to cross the limits (LL 5, L 10, H 35, HH 42, range 0-50). "
+                  f"Demo tags: [default]PV_Demo ({DEMO_UDT}). Type a PV to cross the limits (LL 5, L 10, H 35, HH 42, range 0-50). "
                   "Acknowledge in an alarm table to see blink -> solid; return to normal before acking to see the faded cleared-unacked state.",
                   FIX("auto"))] + rows
     root = flex("root", "column", kids, "Container/Screen Util/Pad/L", justify="flex-start")
@@ -382,6 +459,30 @@ def build_tags():
             mem("DLY", "Int4", 0),
             expr("Alarm", "Boolean", f"{{[.]../PV}} {cmp} {{[.]SP}} && {{[.]Enabled}} && !{{[.]Inhibit}}", alarms=alarm(name, pri)),
         ]}
+    if LEGACY:   # pre-e710de8 demo UDT: DDT_Process_Value member names, Ignition alarms on the x/Alarm bits
+        udt = {"name": "DDT_Process_Value_Demo", "tagType": "UdtType", "tags": [
+            mem("PV", "Float4", 28.2),
+            expr("Name", "String", '"{InstanceName}"'),
+            mem("Description", "String", "Demo pressure transmitter"),
+            mem("Units", "String", "PSIG"),
+            mem("Eng_Min", "Float4", 0.0), mem("Eng_Max", "Float4", 50.0),
+            mem("Raw_Min", "Int4", 0), mem("Raw_Max", "Int4", 32000),
+            mem("HW_Fault", "Boolean", False, alarms=alarm("HW_Fault", "High")),
+            expr("Overrange", "Boolean", "{[.]PV} > {[.]Eng_Max}", alarms=alarm("Overrange", "Diagnostic")),
+            expr("Underrange", "Boolean", "{[.]PV} < {[.]Eng_Min}", alarms=alarm("Underrange", "Diagnostic")),
+            limit("HH", 42.0, ">=", "Critical"), limit("H", 35.0, ">=", "Medium"),
+            limit("L", 10.0, "<=", "Medium"), limit("LL", 5.0, "<=", "Critical"),
+        ]}
+        pvs = {"PT001": 28.2, "PT002": 37.6, "PT003": 44.1, "PT004": 3.2, "PT005": 28.2}
+        inst = []
+        for name, v in pvs.items():
+            t = {"name": name, "tagType": "UdtInstance", "typeId": "DDT_Process_Value_Demo",
+                 "tags": [{"name": "PV", "tagType": "AtomicTag", "value": v}]}
+            if name == "PT005":
+                t["tags"].append({"name": "HW_Fault", "tagType": "AtomicTag", "value": True})
+            inst.append(t)
+        return {"tags": [{"name": "_types_", "tagType": "Folder", "tags": [udt]},
+                         {"name": "PV_Demo", "tagType": "Folder", "tags": inst}]}
     PRI = {"Critical": 1, "High": 2, "Medium": 3, "Low": 4}        # PCLib Cfg_Priority order
     def almlim(name, lim, cmp, pri):
         act = f"{{[.]../Val_PV}} {cmp} {{[.]Cfg_Lim}} && {{[.]Cfg_En}} && !{{[.]Sts_Suppressed}}"

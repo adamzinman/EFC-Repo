@@ -581,21 +581,32 @@ def trend_part():
 VIEWS = [valve_discrete, valve_analog, rotating, vfd, heater, heat_transfer, process_value, loop, io_card,
          intlk_list, bypass_confirm, trend_part]
 
+import legacy_types as LT
+LEGACY = LT.ENABLED   # legacy-ddt build: the windows in legacy_windows.py (DDT_Valve, DDT_Device, DDT_Process_Value, PID_ControlValve, PID_Loop)
+
 def build():
     proj = project_dir(PROJECT)
     if os.path.exists(proj):
         import shutil; shutil.rmtree(proj)
-    write(os.path.join(proj, "project.json"), project_json(PROJECT, "EFC dynamic windows, parts and efc.ui"))
-    for fn in VIEWS:
+    views = VIEWS
+    if LEGACY:
+        import legacy_windows
+        views = legacy_windows.VIEWS
+    write(os.path.join(proj, "project.json"), project_json(PROJECT, "EFC dynamic windows, parts and efc.ui" + (" (legacy DDT_ types)" if LEGACY else "")))
+    for fn in views:
         path, view = fn()
         classify(view["root"])
         d = os.path.join(proj, PERSPECTIVE, "views", path)
         write(os.path.join(d, "view.json"), dump(view))
         write(os.path.join(d, "resource.json"), resource_json(["view.json"], "build_docks.py"))
     d = os.path.join(proj, "ignition", "script-python", "efc", "ui")
-    write(os.path.join(d, "code.py"), open(os.path.join(HERE, "efc_ui.py")).read())
+    code = open(os.path.join(HERE, "efc_ui.py")).read()
+    if LEGACY:
+        assert "\nLEGACY = False\n" in code
+        code = code.replace("\nLEGACY = False\n", "\nLEGACY = True\n")
+    write(os.path.join(d, "code.py"), code)
     write(os.path.join(d, "resource.json"), resource_json(["code.py"], "build_docks.py").replace('"scope": "G"', '"scope": "A"'))
-    print(f"{PROJECT}: {len(VIEWS)} views + efc.ui -> {proj}")
+    print(f"{PROJECT}: {len(views)} views + efc.ui -> {proj}")
 
 if __name__ == "__main__":
     build()

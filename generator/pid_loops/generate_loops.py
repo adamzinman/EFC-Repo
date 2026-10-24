@@ -4,6 +4,10 @@ Writes projects/PID_Loops (project source) and tags/PID_Loops. Run tools/package
 import json, os, shutil, sys, zipfile
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from common import extract_inline, write_classes
+import legacy_types as LT
+LEGACY = LT.ENABLED      # legacy-ddt build: the pre-8e719f8 PID_Loop UDT (PV / SP / OUT / Mode / AlmHi / AlmLo, PV tag properties)
+TTYPE = "PID_Loop" if LEGACY else "T_PID"
+M_PV, M_SP, M_OUT = ("PV", "SP", "OUT") if LEGACY else ("Val_PV", "Val_SP", "Out_CV")
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 PROJ = os.path.join(ROOT, "projects", "PID_Loops")
@@ -131,6 +135,14 @@ TEMPLATE_CUSTOM_PC = {   # EFCLib v1 T_PID members
     "params.dockId": {"paramDirection": "input", "persistent": True},
     "params.dwTagPath": {"paramDirection": "input", "persistent": True},
 }
+if LEGACY:   # PID_Loop members (generator/legacy_types.py): absolute alarm limits, PV range from the PV tag's properties
+    TEMPLATE_CUSTOM_PC.update({
+        "custom.pv": tag("PV"), "custom.sp": tag("SP"), "custom.out": tag("OUT"), "custom.mode": tag("Mode"),
+        "custom.devH": tag("AlmDev"), "custom.devL": tag("AlmDev"),
+        "custom.almHi": tag("AlmHi"), "custom.almLo": tag("AlmLo"),
+        "custom.devHAct": expr("{view.custom.pv} >= {view.custom.almHi}"), "custom.devLAct": expr("{view.custom.pv} <= {view.custom.almLo}"),
+        "custom.pvLo": tag("PV.engLow"), "custom.pvHi": tag("PV.engHigh"), "custom.units": tag("PV.engUnit"),
+    })
 TEMPLATE_CUSTOM = {k.split(".", 1)[1]: 0 for k in TEMPLATE_CUSTOM_PC if k.startswith("custom.")}
 TEMPLATE_CUSTOM.update(units="", modeText="", name="", alarm=False, devHAct=False, devLAct=False)
 
@@ -235,7 +247,7 @@ def template(root, size, extra_custom=None, extra_pc=None):
     custom.update(extra_custom or {})
     pc = dict(TEMPLATE_CUSTOM_PC)
     pc.update(extra_pc or {})
-    return view_json(root, size, custom, pc, {"tagPath": "[default]PID_Demo/TIC101", "label": "", "tType": "T_PID", "dockId": "", "dwTagPath": ""})
+    return view_json(root, size, custom, pc, {"tagPath": "[default]PID_Demo/TIC101", "label": "", "tType": TTYPE, "dockId": "", "dwTagPath": ""})
 
 
 # ================================================================= B1 – original bar card (150x156)
@@ -320,6 +332,7 @@ return {"pv": mk(0), "sp": mk(1)}
 '''
 
 
+SPARK = SPARK.replace('"/Val_PV"', '"/%s"' % M_PV).replace('"/Val_SP"', '"/%s"' % M_SP)
 def b3():
     devexpr = "{view.custom.pv} - {view.custom.sp}"
     vals = flex("vals", "column", [
@@ -348,7 +361,7 @@ def b3():
     root = card_root([header(), body, sparkWrap, outrow, outbar], "%s %s %s %s" % (v(8), v(10), v(10), v(10)))
     spark_b = with_script(expr("now(5000)"), SPARK)
     return template(root, (172, 184), {"devAlm": 10, "spark": {"pv": "", "sp": ""}},
-                    {"custom.devAlm": tag("Alm_DevH/Cfg_Lim"), "custom.spark": spark_b})
+                    {"custom.devAlm": tag("AlmDev" if LEGACY else "Alm_DevH/Cfg_Lim"), "custom.spark": spark_b})
 
 
 # ================================================================= B4 – slim twin-bar column (104x196)
@@ -588,7 +601,7 @@ write_view("PID/Templates/Loop_B3_Sparkline", b3())
 write_view("PID/Templates/Loop_B4_Column", b4())
 write_view("PID/_Demo_Loops", demo())
 write_classes(PROJ, LOOP_CLASSES, "generate_loops.py")
-json.dump({"title": "PID_Loops", "description": "PID loop templates B1-B4 (EFCLib v1 T_PID)", "parent": "",
+json.dump({"title": "PID_Loops", "description": "PID loop templates B1-B4 (%s)" % ("legacy PID_Loop UDT" if LEGACY else "EFCLib v1 T_PID"), "parent": "",
            "enabled": True, "inheritable": True}, open(os.path.join(PROJ, "project.json"), "w"), indent=2)
 
 # ================================================================= tags
@@ -625,8 +638,38 @@ instances = {"name": "PID_Demo", "tagType": "Folder", "tags": [
     inst("TIC101", "Reactor jacket temperature", "°F", 0.0, 200.0, 118.4, 120.0, 46.0, 1, 10.0, 10.0),
     inst("PIC205", "Compressor discharge pressure", "PSIG", 0.0, 300.0, 262.0, 210.0, 88.0, 0, 40.0, 40.0),
     inst("FIC310", "N2 feed flow", "SCFM", 0.0, 500.0, 296.0, 300.0, 63.0, 2, 50.0, 50.0)]}
+UDT_FILE, INST_FILE = "T_PID_Demo_UDT.json", "T_PID_Demo_Instances.json"
+
+if LEGACY:   # the pre-8e719f8 PID_Loop UDT and demo instances (tags/legacy/PID_Loop_UDT.json is the same definition)
+    udt = {"name": "PID_Loop", "tagType": "UdtType", "tags": [
+        mem("PV", "Float4", 0.0, engUnit="EU", engLow=0.0, engHigh=100.0, formatString="#,##0.0",
+            alarms=[{"name": "PV_High", "mode": "AboveValue", "priority": "High", "setpointA": {"bindType": "Tag", "value": "[.]AlmHi"}},
+                    {"name": "PV_Low", "mode": "BelowValue", "priority": "High", "setpointA": {"bindType": "Tag", "value": "[.]AlmLo"}}]),
+        mem("SP", "Float4", 0.0), mem("OUT", "Float4", 0.0, engUnit="%", engLow=0.0, engHigh=100.0),
+        mem("Mode", "Int2", 1, documentation="0 = MAN, 1 = AUTO, 2 = CAS"),
+        mem("Kp", "Float4", 1.0), mem("Ti", "Float4", 30.0, engUnit="s"), mem("Td", "Float4", 0.0, engUnit="s"),
+        mem("Action", "Int2", 0, documentation="0 = Reverse, 1 = Direct"),
+        mem("SP_Lo", "Float4", 0.0), mem("SP_Hi", "Float4", 100.0), mem("OUT_Lo", "Float4", 0.0), mem("OUT_Hi", "Float4", 100.0),
+        mem("AlmHi", "Float4", 90.0), mem("AlmLo", "Float4", 10.0), mem("AlmDev", "Float4", 10.0),
+        mem("Description", "String", ""),
+    ]}
+
+    def linst(name, desc, unit, lo, hi, pv, sp, out, mode, ah, al, splo, sphi):
+        return {"name": name, "tagType": "UdtInstance", "typeId": "PID_Loop", "tags": [
+            {"name": "PV", "tagType": "AtomicTag", "value": pv, "engUnit": unit, "engLow": lo, "engHigh": hi},
+            {"name": "SP", "tagType": "AtomicTag", "value": sp}, {"name": "OUT", "tagType": "AtomicTag", "value": out},
+            {"name": "Mode", "tagType": "AtomicTag", "value": mode},
+            {"name": "AlmHi", "tagType": "AtomicTag", "value": ah}, {"name": "AlmLo", "tagType": "AtomicTag", "value": al},
+            {"name": "SP_Lo", "tagType": "AtomicTag", "value": splo}, {"name": "SP_Hi", "tagType": "AtomicTag", "value": sphi},
+            {"name": "Description", "tagType": "AtomicTag", "value": desc}]}
+
+    instances = {"name": "PID_Demo", "tagType": "Folder", "tags": [
+        linst("TIC101", "Reactor jacket temperature", "°F", 0.0, 200.0, 118.4, 120.0, 46.0, 1, 130.0, 40.0, 20.0, 150.0),
+        linst("PIC205", "Compressor discharge pressure", "PSIG", 0.0, 300.0, 262.0, 210.0, 88.0, 0, 250.0, 150.0, 100.0, 260.0),
+        linst("FIC310", "N2 feed flow", "SCFM", 0.0, 500.0, 296.0, 300.0, 63.0, 2, 350.0, 50.0, 0.0, 450.0)]}
+    UDT_FILE, INST_FILE = "PID_Loop_UDT.json", "PID_Loop_Demo_Instances.json"
 os.makedirs(TAGS, exist_ok=True)
-json.dump(udt, open(os.path.join(TAGS, "T_PID_Demo_UDT.json"), "w"), indent=2, ensure_ascii=False)
-json.dump(instances, open(os.path.join(TAGS, "T_PID_Demo_Instances.json"), "w"), indent=2, ensure_ascii=False)
+json.dump(udt, open(os.path.join(TAGS, UDT_FILE), "w"), indent=2, ensure_ascii=False)
+json.dump(instances, open(os.path.join(TAGS, INST_FILE), "w"), indent=2, ensure_ascii=False)
 
 print("PID_Loops written to", PROJ)
