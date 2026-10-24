@@ -18,6 +18,13 @@ Also in the repo: 214 plain P&ID SVGs in `symbols/`, nav-connector options A–D
 
 Current version: see [`VERSION.json`](VERSION.json). What changed: see [`CHANGELOG.md`](CHANGELOG.md).
 
+> **This branch (`claude/legacy-ddt-fork`) is the legacy-type build:** the same templates and dynamic windows, bound to the
+> old `DDT_` UDT set (`DDT_Valve`, `DDT_Device`, `DDT_Process_Value`, `DDT_Station`, `MEM_Interlock_List`, plus the library's
+> `PID_ControlValve` / `PID_Loop`) instead of the EFCLib v1 `T_` types. View paths are unchanged, so a project can switch
+> between the two builds. Import the UDTs from [`tags/legacy/`](tags/legacy/README.md); the member maps, the sections each
+> window loses and the open points are in [`docs/legacy-ddt-fork.md`](docs/legacy-ddt-fork.md). `VERSION.json`
+> `"types": "legacy-ddt"` selects it; `EFC_LEGACY_DDT=0 python3 build.py` rebuilds the T_ library on this branch.
+
 ![Templates preview](docs/previews/templates.png)
 
 ## Repository layout

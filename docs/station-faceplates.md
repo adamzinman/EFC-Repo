@@ -16,7 +16,7 @@ The only parameter on each view is **`tagPath`**: the DDT_Station instance, e.g.
    - set it as a parent in your chain (`EFC_Styles → EFC_StationFaceplates → …→ HMI`), or
    - in Designer, copy the `Templates/Station` views and the `Station/*` and `Bar/Band/Deadband` style classes into your HMI project.
 2. Optional demo:
-   - Tag Browser → Data Types → import `tags/T_Station_Demo_UDT.json`.
+   - Tag Browser → Data Types → import `tags/DDT_Station_Demo_UDT.json`.
    - Tags root → import `tags/Station_Demo_Instances.json`.
    - Open `Templates/Station/_Demo`.
 3. Dock: in Page Configuration on the overview page, add the library's **right dock** (the same on every page, see [library-reference](library-reference.md#page-setup-the-dw_right-dock)):
@@ -73,6 +73,6 @@ The only parameter on each view is **`tagPath`**: the DDT_Station instance, e.g.
 
 ## In this repo
 - **Project:** source in `imported/EFC_StationFaceplates/` (imported from the 2026-10-06 export, v6.2); ships inside `projects/EFC_Library/` at `Templates/Station/`. Edit it in the Designer and re-import; its generator (`build_station.py`) is not in the repo.
-- **Demo tags:** `tags/T_Station_Demo_UDT.json`, `tags/Station_Demo_Instances.json`.
+- **Demo tags:** `tags/DDT_Station_Demo_UDT.json`, `tags/Station_Demo_Instances.json`.
 - **Checks:** passes the 8.1 import check. It uses 44 EFC_Styles classes, all present, and its own 5 classes don't clash with EFC_Styles, EFC_ProcessValues or EFC_IOFaceplates.
 - **Inline styles:** mostly layout spacing (`gap`, `height`, `padding`, margins). A few typography values (`fontSize`, `lineHeight`) are inline too; move those to classes when the station classes are folded into EFC_Styles.
