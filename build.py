@@ -176,9 +176,9 @@ def merge_library():
 
 
 def guard_window_classes(lib):
-    """Dynamic windows (Docks/): wrap class expressions in try(expr, <the component's static classes>). A missing or
-    bad-quality tag makes an expression error, and an erroring classes binding drops every class on the component."""
-    vroot = os.path.join(lib, "com.inductiveautomation.perspective", "views", "Docks")
+    """Dynamic windows (Templates/Dynamic Window/): wrap class expressions in try(expr, <the component's static classes>).
+    A missing or bad-quality tag makes an expression error, and an erroring classes binding drops every class on the component."""
+    vroot = os.path.join(lib, "com.inductiveautomation.perspective", "views", "Templates", "Dynamic Window")
     def walk(c):
         yield c
         for ch in c.get("children", []):
