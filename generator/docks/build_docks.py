@@ -316,8 +316,10 @@ def valve_analog():
 def motor_like(path, ttype, extra_values, extra_alarms, extra_cmd, extra_cfg, pens):
     vw = View(); m = vw.m
     rd = ready_expr(vw)
-    vals = [row("Cur", "Current", fmt(m("Val_Current")), "'A'"), row("Rated", "Rated", fmt(m("Cfg_RatedAmps"), "#,##0"), "'A'"),
-            row("Load", "Load", fmt(m("Val_LoadPct"), "0"), "'%'"), row("NE107", "Diagnostics", ne107(vw))]
+    vals = [row("Cur", "Current", fmt(m("Val_Current")), "'A'"), row("Rated", "Rated", fmt(m("Cfg_RatedAmps"), "#,##0"), "'A'")]
+    if ttype == "T_Motor":                              # T_VFD has no Val_LoadPct; its own values show torque %
+        vals.append(row("Load", "Load", fmt(m("Val_LoadPct"), "0"), "'%'"))
+    vals.append(row("NE107", "Diagnostics", ne107(vw)))
     return window(path, ttype, vw, [
         header(vw),
         banner(vw, [(m("Sts_Tripped"), "TRIPPED", "State/Fault"), (m("Sts_Fault"), "FAULT", "State/Fault"),

@@ -190,32 +190,6 @@
         }
       }
     },
-    "custom.avail": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Sts_Avail"
-        }
-      }
-    },
-    "custom.local": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Sts_Local"
-        }
-      }
-    },
     "custom.intlk": {
       "binding": {
         "type": "tag",
@@ -261,6 +235,32 @@
         "type": "expr",
         "config": {
           "expression": "if(coalesce({view.custom.man}, false), 1, 0)"
+        }
+      }
+    },
+    "custom.avail": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Sts_Avail"
+        }
+      }
+    },
+    "custom.local": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Sts_Local"
         }
       }
     },

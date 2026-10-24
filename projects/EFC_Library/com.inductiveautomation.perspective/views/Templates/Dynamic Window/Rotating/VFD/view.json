@@ -8,7 +8,6 @@
     "m_Sts_NotPerm": null,
     "m_Val_Current": null,
     "m_Cfg_RatedAmps": null,
-    "m_Val_LoadPct": null,
     "m_Sts_NE107": null,
     "m_Cfg_Tag": null,
     "m_Cfg_Desc": null,
@@ -184,20 +183,6 @@
         "config": {
           "mode": "indirect",
           "tagPath": "{0}/Cfg_RatedAmps",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Val_LoadPct": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Val_LoadPct",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -2569,99 +2554,6 @@
                           "type": "expr",
                           "config": {
                             "expression": "'A'"
-                          }
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "Load"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.037vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "Load",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Val"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "numberFormat({view.custom.m_Val_LoadPct}, '0')"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "'%'"
                           }
                         }
                       }

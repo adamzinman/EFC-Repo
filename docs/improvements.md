@@ -2,7 +2,7 @@
 
 Compiled 2026-10-24 from the review of branch `claude/dynamic-window-opendock` (code review with a mock harness, documentation audit, preview renders, imported-parts review and a repo-wide inventory). Everything below was checked against the code; items marked **GW** can only be settled on a gateway. Effort: S under 2 h, M half a day to 2 days, L more.
 
-Already done on this branch during the review: case-insensitive role matching, refusal of an empty `tagPath` in `openDynamic` / `cmd` / `ackAll` / `dblCmd`, one `alterDock` call per open (size + view + params), window previews rendered on demo instances, `build.py --preview` repaired, 18 documentation fixes, steward preview labels.
+Already done on this branch during the review: three bindings to members the types don't have (`Valve_Control` → `Sts_Avail`/`Sts_Local`, VFD window → `Val_LoadPct`) fixed and `tools/check_bindings.py` now runs in every build and in CI, case-insensitive role matching, refusal of an empty `tagPath` in `openDynamic` / `cmd` / `ackAll` / `dblCmd`, one `alterDock` call per open (size + view + params), window previews rendered on demo instances, `build.py --preview` repaired, 18 documentation fixes, steward preview labels.
 
 ## P1: must be settled before the library is used on a gateway
 
@@ -26,7 +26,7 @@ Already done on this branch during the review: case-insensitive role matching, r
 | 11 | Pass `tType` to every window. | `efc_ui.py` `openWindow` | Needed for item 10 and for `T_Agitator` / `T_Compressor` variants (decision 11). | S |
 | 12 | Session round-trip of the saved default (GW). | `efc_ui.py` `_state`, `_write` | Values read back from `session.custom` are property-tree wrappers. Convert to plain Python explicitly and catch/log in `closeDynamic` so Close can't get stuck. | S |
 | 13 | Audit lines lack role and old value; failed writes are logged as done. | `efc_ui.py` `cmd`, `_audit` | Decisions 10 and 14 want user, role, time, reason, old → new. Check the `writeBlocking` quality and include the level. | S |
-| 14 | Automated test of `efc.ui`. | CI `check.yml` | `efc_ui.py` runs under CPython with a fake `system`; the review harness already covers routing per `tType`, `dockSize`, close with/without default, roles, empty `tagPath`. Add it to CI plus a lint that every `efc.ui.X(` in view JSON exists. | S–M |
+| 14 | Automated test of `efc.ui`. | CI `check.yml` (the binding check already runs there) | `efc_ui.py` runs under CPython with a fake `system`; the review harness already covers routing per `tType`, `dockSize`, close with/without default, roles, empty `tagPath`. Add it to CI plus a lint that every `efc.ui.X(` in view JSON exists. | S–M |
 | 15 | Render each window at 2160 as well as 1080. | `generator/render_views.py` | Guards decision 33 (37.04 vh × 79.63 vh, no horizontal overflow). | S |
 | 16 | Demo tags are too thin, and some mismatch the windows. | `tags/*_Demo_UDT.json` | Previews show Loop and ProcessValue with every status flag lit and "UNKNOWN"; `T_DValve`/`T_Motor` demos lack `Perm`/`Intlk` arrays and all `Cmd_*`/`Cfg_*`/`Alm_*` members, so buttons can't be pressed without a PLC. Generate memory-tag Sim UDTs from `gen_pclib` with one instance per type. | M |
 | 17 | Templates default to demo tag paths. | 34 templates | An unconfigured template on a real screen shows and commands demo tags. Default to `''` (now refused cleanly) and keep demo paths only in `_Demo` views. | S |
