@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EFC-Repo Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E1E3E0; --surface:#F3F3F0; --raised:#FFFFFF; --ink:#1D2225; --muted:#596166;
+  --line:#9AA1A5; --pipe:#6E777C; --link:#1C5AA0; --open:#A86F00; --openbg:#F6E7C4;
+  --done:#2F6E4C; --donebg:#D9EBDF; --sel:#1D2225; --selink:#F3F3F0; --focus:#1C5AA0;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#202427; --surface:#2A2F33; --raised:#33393D; --ink:#E5E7E4; --muted:#A3AAAE;
+    --line:#545C61; --pipe:#7C858A; --link:#86B8EE; --open:#E3AA3A; --openbg:#3E3420;
+    --done:#78BB93; --donebg:#22352A; --sel:#E5E7E4; --selink:#202427; --focus:#86B8EE;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#202427; --surface:#2A2F33; --raised:#33393D; --ink:#E5E7E4; --muted:#A3AAAE;
+  --line:#545C61; --pipe:#7C858A; --link:#86B8EE; --open:#E3AA3A; --openbg:#3E3420;
+  --done:#78BB93; --donebg:#22352A; --sel:#E5E7E4; --selink:#202427; --focus:#86B8EE;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--link)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 64px}
+
+.titleblock{display:grid;grid-template-columns:1fr auto;gap:0;border:2px solid var(--ink);background:var(--surface)}
+.tb-main{padding:18px 20px 16px}
+.tb-main h1{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:clamp(30px,5vw,46px);line-height:1;margin:0 0 6px;letter-spacing:.2px}
+.tb-main p{margin:0;color:var(--muted);max-width:66ch}
+.tb-side{display:grid;grid-template-rows:repeat(3,auto);border-left:2px solid var(--ink);min-width:200px}
+.tb-cell{padding:8px 14px;border-bottom:1px solid var(--line)}
+.tb-cell:last-child{border-bottom:0}
+.tb-cell small{display:block;color:var(--muted);font-size:12.5px}
+.tb-cell b{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:600}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 26px}
+.quick a{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--line);background:var(--raised);color:var(--ink);text-decoration:none;font-weight:500;border-radius:3px}
+.quick a:hover{border-color:var(--ink)}
+.quick a .k{color:var(--muted);font-size:13px}
+
+.search{display:flex;gap:10px;align-items:center;margin-bottom:22px}
+.search input{flex:1;font:inherit;padding:11px 14px;border:1px solid var(--line);background:var(--raised);color:var(--ink);border-radius:3px;min-width:0}
+.search input::placeholder{color:var(--muted)}
+.search button{font:inherit;padding:10px 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:3px;cursor:pointer}
+
+.layout{display:grid;grid-template-columns:330px 1fr;gap:28px;align-items:start}
+
+.trunk{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px)}
+.trunk h2{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:20px;margin:0 0 10px}
+.bus{list-style:none;margin:0;padding:0 0 0 22px;position:relative}
+.bus::before{content:"";position:absolute;left:8px;top:6px;bottom:18px;width:4px;background:var(--pipe);border-radius:2px}
+.bus li{position:relative;margin:0}
+.bus li::before{content:"";position:absolute;left:-10px;top:24px;width:16px;height:2px;background:var(--pipe)}
+.node{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--line);padding:9px 12px;margin:6px 0 6px 6px;cursor:pointer;border-radius:2px}
+.node:hover{border-color:var(--ink)}
+.node .nm{font-weight:600;line-height:1.25}
+.node .sub{display:block;font-weight:400;font-size:13.5px;color:var(--muted)}
+.node .cnt{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap}
+.node[aria-current="true"]{background:var(--sel);color:var(--selink);border-color:var(--sel)}
+.node[aria-current="true"] .sub,.node[aria-current="true"] .cnt{color:var(--selink);opacity:.8}
+.node.src{border-left-color:var(--ink)}
+.node.gen{border-left-color:var(--open)}
+.node.rec{border-left-color:var(--done)}
+
+.panel{background:var(--surface);border:1px solid var(--line);padding:22px 24px 26px;min-height:420px;border-radius:2px}
+.panel h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:34px;line-height:1.05;margin:0 0 6px}
+.panel .blurb{color:var(--muted);margin:0 0 18px;max-width:72ch}
+.panel h3{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:20px;margin:24px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.panel ol{margin:0;padding-left:22px;display:grid;gap:6px}
+.links{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px}
+.links li{background:var(--raised);border:1px solid var(--line);padding:9px 12px;border-radius:2px;min-width:0}
+.links a,.links .nolink{font-weight:600;text-decoration:none;overflow-wrap:anywhere}
+.links a:hover{text-decoration:underline}
+.links .nolink{color:var(--ink)}
+.links .meta{display:block;font-size:13.5px;color:var(--muted);line-height:1.35;margin-top:2px}
+.kind{display:inline-block;font-size:12px;font-weight:600;padding:1px 6px;margin-right:6px;border:1px solid var(--line);border-radius:2px;color:var(--muted);vertical-align:1px}
+.tag{display:inline-block;font-size:12.5px;font-weight:600;padding:2px 8px;border-radius:2px;margin-bottom:10px;border:1px solid var(--line);color:var(--ink);background:var(--raised)}
+.tag.src{border-color:var(--ink)}
+.tag.gen{background:var(--openbg);border-color:var(--open);color:var(--ink)}
+.tag.rec{background:var(--donebg);border-color:var(--done)}
+.grp{font-size:13px;color:var(--muted)}
+.empty{color:var(--muted)}
+
+table.doc{width:100%;border-collapse:collapse;font-size:15px}
+.tablewrap{overflow-x:auto}
+table.doc th{text-align:left;font-weight:600;color:var(--muted);font-size:13.5px;padding:6px 8px;border-bottom:1px solid var(--line)}
+table.doc td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.doc td a{overflow-wrap:anywhere}
+table.doc .s{color:var(--muted);font-size:13.5px}
+
+.foot{margin-top:28px;color:var(--muted);font-size:13.5px;max-width:84ch}
+
+@media (max-width:860px){
+  .layout{grid-template-columns:1fr}
+  .trunk{position:static}
+  .titleblock{grid-template-columns:1fr}
+  .tb-side{border-left:0;border-top:2px solid var(--ink);grid-template-columns:repeat(3,1fr);grid-template-rows:auto}
+  .tb-cell{border-bottom:0;border-right:1px solid var(--line)}
+  .tb-cell:last-child{border-right:0}
+  .panel{padding:18px 16px 22px}
+  .panel h2{font-size:28px}
+  table.doc{font-size:14px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .panel.swap{animation:show .18s ease-out}
+  @keyframes show{from{opacity:.4}to{opacity:1}}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="titleblock">
+    <div class="tb-main">
+      <h1>EFC-Repo Map</h1>
+      <p>Where everything lives in the master repo, which folders are source and which are generated, and how to make a change. Pick a folder off the bus, or search by file name or part name.</p>
+    </div>
+    <div class="tb-side">
+      <div class="tb-cell"><small>Master repo</small><b>adamzinman/EFC-Repo</b></div>
+      <div class="tb-cell"><small>Tracked files</small><b>about 1,500</b></div>
+      <div class="tb-cell"><small>Snapshot</small><b>Oct 22, 2026</b></div>
+    </div>
+  </header>
+
+  <nav class="quick" aria-label="Most used">
+    <a href="https://github.com/adamzinman/EFC-Repo" target="_blank" rel="noopener"><span class="k">Repo</span>EFC-Repo on GitHub</a>
+    <a href="https://github.com/adamzinman/EFC-Repo/blob/main/README.md" target="_blank" rel="noopener"><span class="k">Guide</span>README</a>
+    <a href="https://github.com/adamzinman/EFC-Repo/blob/main/docs/inventory.md" target="_blank" rel="noopener"><span class="k">Status</span>Inventory</a>
+    <a href="https://github.com/adamzinman/EFC-Repo/blob/main/steward/DECISIONS.md" target="_blank" rel="noopener"><span class="k">Log</span>Decisions</a>
+    <a href="https://github.com/adamzinman/EFC-Repo/blob/main/steward/DOC-QUEUE.md" target="_blank" rel="noopener"><span class="k">Queue</span>Standard changes</a>
+    <a href="https://drive.google.com/drive/folders/1DdMF_X5DnH6t-LyDovtiL4PfjrQ6FcMs" target="_blank" rel="noopener"><span class="k">Drive</span>Controls Standard folder</a>
+  </nav>
+
+  <div class="search" role="search">
+    <input id="q" type="search" placeholder="Search folders and files, e.g. T_Heater, gen_pclib, faceplate, DECISIONS" aria-label="Search the repo">
+    <button id="clear" type="button" hidden>Clear</button>
+  </div>
+
+  <div class="layout">
+    <aside class="trunk" aria-label="Folders">
+      <h2>Folders</h2>
+      <ul class="bus" id="bus"></ul>
+    </aside>
+    <main class="panel" id="panel" aria-live="polite"></main>
+  </div>
+
+  <p class="foot">Links open the EFC-Repo on GitHub, on <code>main</code> unless marked "branch". Items marked branch are on <code>claude/amazing-brahmagupta-h59eke</code> and are not on main yet. Drive and Claude links point outside the repo. Source copy: docs/controls-standardization-map.html. Counts are as of October 22, 2026.</p>
+</div>
+
+<script>
+const REPO = "https://github.com/adamzinman/EFC-Repo/";
+const BR = "claude/amazing-brahmagupta-h59eke";
+const D = id => "https://drive.google.com/drive/folders/" + id;
+const A = id => "https://claude.ai/artifact/" + id;
+
+// kind: Folder or File. b: true = only on the working branch. u: full external URL.
+function url(it){
+  if (it.u) return it.u;
+  const ref = it.b ? BR : "main";
+  return REPO + (it.k === "Folder" ? "tree/" : "blob/") + ref + "/" + encodeURI(it.p);
+}
+
+const SECTIONS = [
+{
+  id:"start", name:"Start here", sub:"What the repo is and how to build", tag:"src", label:"Overview",
+  blurb:"EFC-Repo is the master for the EFC Ignition Perspective library (EFC_Library, Ignition 8.1, ready for 8.3), the PLC data types, the Controls Standard source and the steward records. Sources are edited. Generated folders are rebuilt by one command.",
+  how:[
+    "Edit a generator in generator/, a type in types/, or a part in imported/",
+    "Run python3 build.py --preview to regenerate, merge, check and render",
+    "Review git diff, then commit the generator and the generated files together",
+    "CI (.github/workflows/check.yml) fails if the committed output no longer matches the generator"
+  ],
+  files:[
+    {t:"README.md", k:"File", p:"README.md", d:"Repo guide: layout, workflow, gateway import"},
+    {t:"docs/inventory.md", k:"File", p:"docs/inventory.md", d:"Every design, version, status and location"},
+    {t:"build.py", k:"File", p:"build.py", d:"One command: regenerate, merge, check, package"},
+    {t:"VERSION.json", k:"File", p:"VERSION.json", d:"Library version and release date"},
+    {t:"CHANGELOG.md", k:"File", p:"CHANGELOG.md", d:"What changed in each version"},
+    {t:"CHANGES-analog-indicators.md", k:"File", p:"CHANGES-analog-indicators.md", d:"Analog indicator change notes"},
+    {t:"CI workflow", k:"File", p:".github/workflows/check.yml", d:"Rebuilds on every push; fails on drift"},
+    {t:"steward.config.json", k:"File", p:"steward.config.json", d:"Steward configuration"}
+  ]
+},
+{
+  id:"generators", name:"Generators", sub:"Source for every built template", tag:"src", label:"Source",
+  blurb:"Python that writes the library. Change these, never the output. Shared helpers are in common.py and pid_common.py.",
+  how:[
+    "Edit the generator for the part you are changing",
+    "Run python3 build.py --preview, then look at docs/previews/templates.png",
+    "Commit the generator and the regenerated output together"
+  ],
+  files:[
+    {t:"build_styles.py", k:"File", p:"generator/build_styles.py", d:"EFC_Styles classes and the ISA-101 palette"},
+    {t:"build_pid.py", k:"File", p:"generator/build_pid.py", d:"Controlled-device templates: valves, rotating, heat transfer"},
+    {t:"build_pv.py", k:"File", p:"generator/build_pv.py", d:"Process-value templates and PV demo tags"},
+    {t:"common.py", k:"File", p:"generator/common.py", d:"Shared helpers, including inline-style extraction"},
+    {t:"pid_loops/", k:"Folder", p:"generator/pid_loops", d:"PID loop cards B1 to B4, popup, UDT and demo tags"},
+    {t:"analog_indicators/", k:"Folder", p:"generator/analog_indicators", d:"Analog indicator templates A to D"},
+    {t:"nav_connectors/", k:"Folder", p:"generator/nav_connectors", d:"Off-page connector SVG options"},
+    {t:"docks/", k:"Folder", p:"generator/docks", d:"Dynamic-window docks"},
+    {t:"render_views.py", k:"File", p:"generator/render_views.py", d:"Renders every view to docs/previews"},
+    {t:"make_project_zip.py", k:"File", p:"generator/make_project_zip.py", d:"Packages the project for import"},
+    {t:"v2/", k:"Folder", p:"generator/v2", d:"Second generator set; check before use"}
+  ]
+},
+{
+  id:"generated", name:"Generated output", sub:"Rebuilt by build.py. Do not edit", tag:"gen", label:"Generated",
+  blurb:"Output of build.py. A hand edit here is overwritten by the next build, and CI fails if it drifts from the generator. Import these into Ignition; do not change them by hand.",
+  how:[
+    "Change the generator or imported/ instead",
+    "Import tags/ into the Tag Browser to try the demos",
+    "Copy projects/EFC_Library into the gateway's data/projects folder, or import the release zip"
+  ],
+  files:[
+    {t:"projects/EFC_Library", k:"Folder", p:"projects/EFC_Library", d:"The merged Perspective project, 761 files, gateway folder layout"},
+    {t:"tags/", k:"Folder", p:"tags", d:"UDT JSON and demo tag instances for the Tag Browser"},
+    {t:"symbols/", k:"Folder", p:"symbols", d:"214 plain P&ID SVGs"},
+    {t:"docs/previews/", k:"Folder", p:"docs/previews", d:"Rendered review images for every view"},
+    {t:"templates.png", k:"File", p:"docs/previews/templates.png", d:"Contact sheet of the templates"}
+  ]
+},
+{
+  id:"imported", name:"Designer-built parts", sub:"Source for parts made in the Designer", tag:"src", label:"Source",
+  blurb:"Parts that have no generator. Edit them in the Ignition Designer, export, and re-import with the tool. A new part also needs its name added to IMPORTED_PARTS in build.py.",
+  how:[
+    "python3 tools/import_project_zip.py <export>.zip",
+    "python3 build.py --preview && git add -A && git commit",
+    "New part: add its name to IMPORTED_PARTS in build.py first"
+  ],
+  files:[
+    {t:"EFC_IOFaceplates/", k:"Folder", p:"imported/EFC_IOFaceplates", d:"I/O card faceplates, parts and rack overview"},
+    {t:"EFC_StationFaceplates/", k:"Folder", p:"imported/EFC_StationFaceplates", d:"Station faceplates and fill and tile templates"},
+    {t:"import_project_zip.py", k:"File", p:"tools/import_project_zip.py", d:"Adds or refreshes a Designer-built part"},
+    {t:"build.py (IMPORTED_PARTS)", k:"File", p:"build.py", d:"The list of imported parts the build merges"}
+  ]
+},
+{
+  id:"types", name:"PLC data types", sub:"T_ types for Control Expert and Ignition", tag:"src", label:"Source",
+  blurb:"gen_pclib.py is the source of truth for the T_ types. It writes the Control Expert import file and the Ignition import file together, so the PLC and SCADA definitions match member for member. The Appendix I text is generated from UDT Standards.md.",
+  how:[
+    "Edit the type in types/gen_pclib.py, then re-run it",
+    "Never hand-edit the xdd, export or JSON files",
+    "gen_pclib_NeedsUpdate.py holds T_Station and T_Heater, marked NEEDS UPDATE"
+  ],
+  files:[
+    {t:"gen_pclib.py", k:"File", p:"types/gen_pclib.py", d:"Generates every T_ type for both platforms"},
+    {t:"gen_pclib_NeedsUpdate.py", k:"File", p:"types/gen_pclib_NeedsUpdate.py", d:"T_Station and T_Heater, marked NEEDS UPDATE"},
+    {t:"gen_dfb.py", k:"File", p:"types/gen_dfb.py", d:"Generates the DFBs"},
+    {t:"gen_tex.py", k:"File", p:"types/gen_tex.py", d:"LaTeX type tables for the Standard"},
+    {t:"UDT Standards.md", k:"File", p:"types/UDT Standards.md", d:"Type definitions that drive Appendix I"},
+    {t:"PCLib_Members.csv", k:"File", p:"types/PCLib_Members.csv", d:"Every member of every type"},
+    {t:"README.md", k:"File", p:"types/README.md", d:"How to import the types into each platform"},
+    {t:"export/", k:"Folder", p:"types/export", d:"Import-ready files for Control Expert and Ignition"},
+    {t:"xdd/", k:"Folder", p:"types/xdd", d:"One DDT per file for Control Expert"},
+    {t:"dfb/", k:"Folder", p:"types/dfb", d:"DFB source, including FB_AI"},
+    {t:"T_KPI/", k:"Folder", p:"types/T_KPI", d:"T_KPI type for the analog indicators"}
+  ]
+},
+{
+  id:"pclib", name:"PCLib phase DFBs", sub:"ISA-88 phases and the sequence bar", tag:"src", label:"Source",
+  blurb:"Phase function blocks for Control Expert Classic V16.2 and their Ignition 8.1 sequence bar.",
+  how:[
+    "Design a new phase from Sequence_Template.md",
+    "Read README_FB_Phase.md for the state machine",
+    "Tests are in PCLib/tests"
+  ],
+  files:[
+    {t:"README_FB_Phase.md", k:"File", p:"PCLib/README_FB_Phase.md", d:"The phase DFBs and the sequence bar"},
+    {t:"Sequence_Template.md", k:"File", p:"PCLib/Sequence_Template.md", d:"Template for designing a new phase"},
+    {t:"dfb/", k:"Folder", p:"PCLib/dfb", d:"Phase DFBs, including FB_PhaseCore and FB_Phase"},
+    {t:"export/", k:"Folder", p:"PCLib/export", d:"Control Expert and Ignition import files"},
+    {t:"ignition/", k:"Folder", p:"PCLib/ignition", d:"EFC_XeFill_HMI.zip: sequence bar, station faceplates, XeFill overview"},
+    {t:"examples/", k:"Folder", p:"PCLib/examples", d:"Worked examples, including FB_PhXeFill"},
+    {t:"tests/", k:"Folder", p:"PCLib/tests", d:"Tests for the phase blocks"}
+  ]
+},
+{
+  id:"standard", name:"Controls Standard", sub:"Rev I source, partial copy", tag:"src", label:"Source, partial", b:true,
+  blurb:"LaTeX source for the EFC Controls Standard. The repo has the master file and the rev I PDF so far. The chapters, appendices, preamble and build script are still in the Drive folder. This is on the working branch only, until it merges to main.",
+  how:[
+    "Copy the remaining Drive files into controls-standard/ (the map's open item)",
+    "Do not edit the Standard text directly; queue the change in steward/DOC-QUEUE.md (DECISIONS 18)",
+    "Build with build-all.bat once the source is complete"
+  ],
+  files:[
+    {t:"Controls Standard.tex", k:"File", p:"controls-standard/Controls Standard.tex", d:"Master file: inputs each chapter and appendix", b:true},
+    {t:"Controls Standard rev-I.pdf", k:"File", p:"controls-standard/pdf/Controls Standard rev-I.pdf", d:"Rev I as released, October 14, 2026", b:true},
+    {t:"controls-standard/", k:"Folder", p:"controls-standard", d:"Where the rest of the source goes", b:true},
+    {t:"DOC-QUEUE.md", k:"File", p:"steward/DOC-QUEUE.md", d:"Pending Standard changes, compiled into one batch"},
+    {t:"Standard in Drive", k:"Link", u:D("1DdMF_X5DnH6t-LyDovtiL4PfjrQ6FcMs"), d:"The full folder: chapters, appendices, build-all.bat"}
+  ]
+},
+{
+  id:"docs", name:"Design docs", sub:"Reference and how-to", tag:"rec", label:"Docs",
+  blurb:"How the library works, what each template does and why. Style indexes are generated from the library.",
+  how:[
+    "Start with inventory.md for status",
+    "library-reference.md for templates, UDT mapping and colors",
+    "design-notes.md for why a choice was made (notes 1 to 42)"
+  ],
+  files:[
+    {t:"inventory.md", k:"File", p:"docs/inventory.md", d:"Every design, version, status and location"},
+    {t:"library-reference.md", k:"File", p:"docs/library-reference.md", d:"Templates, UDT mapping, status logic, colors, 8.1 compatibility"},
+    {t:"design-notes.md", k:"File", p:"docs/design-notes.md", d:"Design decisions, notes 1 to 42, and open items"},
+    {t:"template-review.md", k:"File", p:"docs/template-review.md", d:"Findings from the rendered review images"},
+    {t:"isa101-audit.md", k:"File", p:"docs/isa101-audit.md", d:"ISA-101 and ISA-18.2 audit and documented deviations"},
+    {t:"isa101-color-palette.md", k:"File", p:"isa101-color-palette.md", d:"The ISA-101 palette"},
+    {t:"style-library.md", k:"File", p:"docs/style-library.md", d:"How to use EFC_Styles"},
+    {t:"style-class-index.md", k:"File", p:"docs/style-class-index.md", d:"Every style class (generated)"},
+    {t:"pv-display.md", k:"File", p:"docs/pv-display.md", d:"Process-value templates"},
+    {t:"pid-loop-templates.md", k:"File", p:"docs/pid-loop-templates.md", d:"PID loop cards and popup"},
+    {t:"screen-layout-standard.md", k:"File", p:"docs/screen-layout-standard.md", d:"16:9 screen layout and graphics conventions"},
+    {t:"station-faceplates.md", k:"File", p:"docs/station-faceplates.md", d:"Station faceplates, member mapping, dock setup"},
+    {t:"design-briefs.md", k:"File", p:"docs/design-briefs.md", d:"I/O card and station faceplates, compressor screen, Haskel pump"},
+    {t:"ddt-udt-sync.md", k:"File", p:"docs/ddt-udt-sync.md", d:"The gateway DDT-to-UDT sync"},
+    {t:"xsy-tag-import-strategy.md", k:"File", p:"docs/xsy-tag-import-strategy.md", d:"Strategy for importing tags from a Control Expert export (not built yet)"},
+    {t:"EFCLib v1 briefing (pptx)", k:"File", p:"docs/presentations/EFCLib_v1_Engineering_Briefing.pptx", d:"Engineering briefing with speaker notes", b:true},
+    {t:"previews/", k:"Folder", p:"docs/previews", d:"Rendered review images"}
+  ]
+},
+{
+  id:"records", name:"Steward records", sub:"Decisions, gaps, catalog, queue", tag:"rec", label:"Records",
+  blurb:"Working records for the library: what was decided, what is missing, what the library contains, and which Standard changes are pending.",
+  how:[
+    "Log a decision as a new numbered row in DECISIONS.md",
+    "Check coverage in GAPS.md",
+    "Queue a Controls Standard change in DOC-QUEUE.md. The queue is compiled into one batch at the end of library work"
+  ],
+  files:[
+    {t:"DECISIONS.md", k:"File", p:"steward/DECISIONS.md", d:"Approved design-review decisions, 1 to 30"},
+    {t:"GAPS.md", k:"File", p:"steward/GAPS.md", d:"Template, dock and preview coverage"},
+    {t:"CATALOG.md", k:"File", p:"steward/CATALOG.md", d:"Library catalog: views, PCLib bindings, UDTs (generated)"},
+    {t:"DOC-QUEUE.md", k:"File", p:"steward/DOC-QUEUE.md", d:"Pending Controls Standard changes"},
+    {t:"type_map.json", k:"File", p:"steward/type_map.json", d:"Which T_ type each view binds to"},
+    {t:"AUDIT.md", k:"File", p:"steward/AUDIT.md", d:"Library audit"},
+    {t:"AUDIT-SUMMARY.md", k:"File", p:"steward/AUDIT-SUMMARY.md", d:"Audit summary"},
+    {t:"CHANGES.md", k:"File", p:"steward/CHANGES.md", d:"Steward changes"},
+    {t:"IDEAS.md", k:"File", p:"steward/IDEAS.md", d:"Ideas not yet scheduled"},
+    {t:"previews/", k:"Folder", p:"steward/previews", d:"Review previews for each template, faceplate and window"},
+    {t:"proposals/", k:"Folder", p:"steward/proposals", d:"Standard instruction files and proposals"},
+    {t:"standard-edits/", k:"Folder", p:"steward/standard-edits", d:"The rev I edit batch"},
+    {t:"skill-updates/", k:"Folder", p:"steward/skill-updates", d:"The controls-standard skill and its scripts"},
+    {t:"docs/", k:"Folder", p:"steward/docs", d:"Per-template notes"},
+    {t:"tools/", k:"Folder", p:"steward/tools", d:"Steward scripts, including fix_station_styles.py and gaps.py"}
+  ]
+},
+{
+  id:"tools", name:"Gateway scripts and tools", sub:"Imports, PLC sync, packaging", tag:"src", label:"Tools",
+  blurb:"Scripts that run outside the build: the gateway DDT-to-UDT sync and the Designer import helper.",
+  how:[
+    "Designer part: run tools/import_project_zip.py on the export",
+    "PLC types into the gateway: run scripts/ddtsync.py inside the gateway, add-only",
+    "See docs/ddt-udt-sync.md before running the sync against a live PLC"
+  ],
+  files:[
+    {t:"ddtsync.py", k:"File", p:"scripts/ddtsync.py", d:"Gateway script: M580 DDTs over OPC UA into UDTs, add-only"},
+    {t:"import_project_zip.py", k:"File", p:"tools/import_project_zip.py", d:"Adds or refreshes a Designer-built part"},
+    {t:"ddt-udt-sync.md", k:"File", p:"docs/ddt-udt-sync.md", d:"How the DDT sync works"}
+  ]
+},
+{
+  id:"mockups", name:"Mockups and symbols", sub:"HTML previews and P&ID symbols", tag:"gen", label:"Previews",
+  blurb:"HTML design previews, and the plain P&ID SVG set that the templates embed.",
+  how:[
+    "Mockups are design previews and do not feed the build",
+    "Symbols are generated; change them through the generator"
+  ],
+  files:[
+    {t:"mockups/", k:"Folder", p:"mockups", d:"HTML design previews"},
+    {t:"symbols/", k:"Folder", p:"symbols", d:"214 plain SVGs: valves, instruments, vessels, rotating, fittings"},
+    {t:"symbols/Valves/", k:"Folder", p:"symbols/Valves", d:"Valve symbols"}
+  ]
+},
+{
+  id:"archive", name:"Archive", sub:"Retired, not built", tag:"rec", label:"Archive",
+  blurb:"Kept for reference only. Nothing here is built, and the build does not read it.",
+  how:["Read archive/ARCHIVED.md for what was retired and why"],
+  files:[
+    {t:"ARCHIVED.md", k:"File", p:"archive/ARCHIVED.md", d:"What was retired and why"},
+    {t:"archive/", k:"Folder", p:"archive", d:"Retired generators, projects, docs, tags, symbols, mockups"}
+  ]
+},
+{
+  id:"outside", name:"Outside the repo", sub:"Drive and Claude artifacts", tag:"rec", label:"Outside",
+  blurb:"Items that live outside the repo but feed it or describe it. The repo is the master; these are copies or review pages.",
+  how:[
+    "Drive efc-ignition-library is a synced working copy. The repo is the master",
+    "Review pages in Claude show the rendered templates and dynamic windows"
+  ],
+  files:[
+    {t:"Controls Standard folder (Drive)", k:"Link", u:D("1DdMF_X5DnH6t-LyDovtiL4PfjrQ6FcMs"), d:"Full Standard source, chapters and build script"},
+    {t:"efc-ignition-library folder (Drive)", k:"Link", u:D("1pgHXDENVs_EfoshQK2l0xz5hi0vuW-79"), d:"Synced working copy; the repo is the master"},
+    {t:"EFC Library Template Review (v7.0)", k:"Link", u:A("9QaYt9jdpumsSjCJSvwvQQ"), d:"One rendered image per template, two flagged bugs"},
+    {t:"Dynamic windows (canvas)", k:"Link", u:A("6LGwRff6hF4DjrjVYhLxEa"), d:"Right-dock window per equipment family"}
+  ]
+}
+];
+
+// "Where do I...?" finder. folder: true = a folder, else a file.
+const FINDER = [
+  {task:"Change a template, style or PID loop card", sec:"generators", p:"generator/", folder:true, note:"Edit the generator, then python3 build.py --preview"},
+  {task:"Add or refresh a Designer-built part", sec:"imported", p:"tools/import_project_zip.py", folder:false, note:"Export from Designer, import with the tool, add to IMPORTED_PARTS if new"},
+  {task:"Add or change a PLC data type (T_)", sec:"types", p:"types/gen_pclib.py", folder:false, note:"Edit the definition and re-run. Never hand-edit the outputs"},
+  {task:"Load tags or UDTs into the gateway", sec:"generated", p:"tags/", folder:true, note:"Tag Browser > Data Types > Import"},
+  {task:"Put the library on a gateway", sec:"start", p:"README.md", folder:false, note:"Import the release zip, or copy projects/EFC_Library"},
+  {task:"See what is built and its status", sec:"docs", p:"docs/inventory.md", folder:false, note:""},
+  {task:"Log a design decision", sec:"records", p:"steward/DECISIONS.md", folder:false, note:"Add a numbered row"},
+  {task:"Check coverage gaps", sec:"records", p:"steward/GAPS.md", folder:false, note:""},
+  {task:"Queue a Controls Standard text change", sec:"records", p:"steward/DOC-QUEUE.md", folder:false, note:"The Standard text is never edited directly"},
+  {task:"Read the Controls Standard source", sec:"standard", p:"controls-standard", folder:true, note:"Partial copy, on the working branch"},
+  {task:"Look at a rendered view before committing", sec:"generated", p:"docs/previews", folder:true, note:"Check the image before you commit a visual change"},
+  {task:"Release a version", sec:"start", p:"VERSION.json", folder:false, note:"Bump, CHANGELOG entry, build.py --dist, tag"},
+  {task:"Sync DDTs from the M580 into UDTs", sec:"tools", p:"scripts/ddtsync.py", folder:false, note:"Gateway script, add-only"},
+  {task:"Design a new ISA-88 phase", sec:"pclib", p:"PCLib/Sequence_Template.md", folder:false, note:""},
+  {task:"Find retired material", sec:"archive", p:"archive/ARCHIVED.md", folder:false, note:"Not built"}
+];
+
+// Counts for the bus: tracked-file totals per folder come from the snapshot.
+const ALL = [];
+SECTIONS.forEach(s => {
+  s.files.forEach(f => ALL.push({...f, sec:s.name, secId:s.id}));
+});
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const bus = document.getElementById("bus");
+const panel = document.getElementById("panel");
+const q = document.getElementById("q");
+const clearBtn = document.getElementById("clear");
+
+const NAV = [...SECTIONS.map(s => ({id:s.id, name:s.name, sub:s.sub, tag:s.tag, cnt:s.files.length + " items"})),
+  {id:"find", name:"Where do I...?", sub:"Task to folder finder", tag:"src", cnt:FINDER.length + " tasks"}];
+
+let current = "start";
+try { const s = localStorage.getItem("efcmap-node"); if (s && NAV.some(n => n.id === s)) current = s; } catch(e) {}
+
+function renderBus(){
+  bus.innerHTML = NAV.map(n =>
+    '<li><button class="node ' + (n.tag || "") + '" data-id="' + n.id + '" aria-current="' + (n.id === current && !q.value ? "true" : "false") + '">' +
+    '<span><span class="nm">' + esc(n.name) + '</span><span class="sub">' + esc(n.sub) + '</span></span>' +
+    '<span class="cnt">' + esc(n.cnt) + '</span></button></li>'
+  ).join("");
+}
+
+function linkItem(it, showGroup){
+  const title = it.u === undefined && !it.p && !it.k
+    ? '<span class="nolink">' + esc(it.t) + '</span>'
+    : '<a href="' + esc(url(it)) + '" target="_blank" rel="noopener">' + esc(it.t) + '</a>';
+  const branch = it.b ? ' <span class="grp">(branch)</span>' : "";
+  return '<li><span class="kind">' + esc(it.k) + '</span>' + title + branch +
+    '<span class="meta">' + esc(it.d || "") + (showGroup ? ' <span class="grp">in ' + esc(it.sec) + '</span>' : '') + '</span></li>';
+}
+
+function renderSection(id){
+  const s = SECTIONS.find(x => x.id === id);
+  const tagLabel = s.label;
+  let h = '<h2>' + esc(s.name) + '</h2>' +
+    '<span class="tag ' + s.tag + '">' + esc(tagLabel) + '</span>' +
+    '<p class="blurb">' + esc(s.blurb) + '</p>';
+  h += '<h3>How to work here</h3><ol>' + s.how.map(x => '<li>' + esc(x) + '</li>').join("") + '</ol>';
+  h += '<h3>Key files and folders</h3><ul class="links">' + s.files.map(f => linkItem(f, false)).join("") + '</ul>';
+  return h;
+}
+
+function renderFinder(){
+  const rows = FINDER.map(f => {
+    const sec = SECTIONS.find(x => x.id === f.sec);
+    const it = {t:f.p, k:f.folder ? "Folder" : "File", p:f.p, b: f.p.indexOf("controls-standard") === 0};
+    return '<tr><td>' + esc(f.task) + '</td>' +
+      '<td><a href="' + esc(url(it)) + '" target="_blank" rel="noopener">' + esc(f.p) + '</a></td>' +
+      '<td class="s">' + esc(f.note) + '</td></tr>';
+  }).join("");
+  return '<h2>Where do I...?</h2><p class="blurb">Find the folder for a task. The path links to GitHub; the section name is in the bus on the left.</p>' +
+    '<div class="tablewrap"><table class="doc"><thead><tr><th>Task</th><th>Go to</th><th>Note</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+}
+
+function renderPanel(id){
+  panel.className = "panel";
+  void panel.offsetWidth;
+  panel.className = "panel swap";
+  panel.innerHTML = id === "find" ? renderFinder() : renderSection(id);
+}
+
+function renderSearch(term){
+  const t = term.toLowerCase();
+  const hits = ALL.filter(l => (l.t + " " + (l.d||"") + " " + l.k + " " + l.sec + " " + (l.p||"")).toLowerCase().includes(t));
+  const fhits = FINDER.filter(f => (f.task + " " + f.p + " " + f.note).toLowerCase().includes(t));
+  panel.className = "panel results";
+  let h = '<h2>' + (hits.length + fhits.length) + ' match' + ((hits.length + fhits.length) === 1 ? '' : 'es') + ' for "' + esc(term) + '"</h2>';
+  if (fhits.length) h += '<h3>Tasks</h3><ul class="links">' + fhits.map(f => '<li><a href="#" data-goto="find">' + esc(f.task) + '</a><span class="meta">' + esc(f.p) + '</span></li>').join("") + '</ul>';
+  if (hits.length) h += '<h3>Files and folders</h3><ul class="links">' + hits.map(l => linkItem(l, true)).join("") + '</ul>';
+  if (!hits.length && !fhits.length) h += '<p class="empty">Nothing matches. Try a file name like gen_pclib, a type like T_Heater, or a word like faceplate.</p>';
+  panel.innerHTML = h;
+}
+
+bus.addEventListener("click", e => {
+  const b = e.target.closest(".node"); if (!b) return;
+  current = b.dataset.id;
+  try { localStorage.setItem("efcmap-node", current); } catch(e) {}
+  q.value = ""; clearBtn.hidden = true;
+  renderBus(); renderPanel(current);
+  if (window.matchMedia("(max-width:860px)").matches) panel.scrollIntoView({behavior:"smooth", block:"start"});
+});
+
+panel.addEventListener("click", e => {
+  const a = e.target.closest("a[data-goto]"); if (!a) return;
+  e.preventDefault();
+  current = a.dataset.goto;
+  q.value = ""; clearBtn.hidden = true;
+  renderBus(); renderPanel(current);
+});
+
+q.addEventListener("input", () => {
+  const v = q.value.trim();
+  clearBtn.hidden = !v;
+  renderBus();
+  if (v) renderSearch(v); else renderPanel(current);
+});
+clearBtn.addEventListener("click", () => { q.value=""; clearBtn.hidden = true; renderBus(); renderPanel(current); q.focus(); });
+
+renderBus();
+renderPanel(current);
+</script>
+</body>
+</html>

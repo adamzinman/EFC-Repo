@@ -1,0 +1,60 @@
+% ============================================================
+%  Controls Standard — Master Document
+% ============================================================
+%  All packages, colors, macros and document metadata are in
+%  preamble.tex; the revision letter is in revision.tex.
+%  This file \input-s each chapter from sections/ and each
+%  appendix from appendices/. Compile THIS file.
+%
+%  Build (editor): run pdflatex twice on this file
+%    -> "Controls Standard.pdf"
+%  Build (everything): double-click build-all.bat
+%    -> "Controls Standard rev-<rev>.pdf" plus one PDF per
+%       appendix in the "Appendix PDFs" folder.
+% ============================================================
+
+\documentclass[11pt]{report}
+\input{preamble}
+
+% Record each appendix's chapter number so the standalone appendix
+% builds (standalone/*.tex) use the same letter as this document.
+\newwrite\EFCappnums
+\immediate\openout\EFCappnums=appendix-numbers.tex
+\newcommand{\EFCappendix}[1]{%
+  \immediate\write\EFCappnums{\string\expandafter\string\def\string\csname\space appnum@#1\string\endcsname{\the\value{chapter}}}%
+  \input{appendices/#1}}
+\AtEndDocument{\immediate\closeout\EFCappnums}
+
+% ============================================================
+\begin{document}
+
+\input{sections/00-frontmatter}
+\input{sections/01-overview}
+\input{sections/02-terminology}
+\input{sections/03-design-process}
+\input{sections/04-working-with-contractors}
+\input{sections/05-process-definition}
+\input{sections/06-hardware}
+\input{sections/07-software}
+\input{sections/08-networking}
+\input{sections/09-accounts}
+\input{sections/10-plc-standards}
+\input{sections/11-scada-standards}
+\input{sections/12-reference-material}
+\appendix
+\EFCappendix{perspective-screen-design}
+\EFCappendix{perspective-edge-panel}
+\EFCappendix{important-equations}
+\EFCappendix{electrical-drawing-package}
+\EFCappendix{c1d2-panel-design}
+\EFCappendix{modbus}
+\EFCappendix{alarm-documentation}
+\EFCappendix{data-types}
+\EFCappendix{data-types-future}
+\EFCappendix{function-blocks}
+\EFCappendix{git-version-control}
+\EFCappendix{change-test-record}
+\EFCappendix{sample-fat}
+\EFCappendix{cato-claroty}
+
+\end{document}
