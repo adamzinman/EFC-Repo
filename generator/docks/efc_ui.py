@@ -10,6 +10,9 @@
 
 # The one right-side dock every dynamic window opens in (Page Configuration dock id)
 DOCK_ID = 'dw_Right'
+# Design page 1920 x 1080: px sizes are design px and scale with the viewport (decision 33). Page Configuration only
+# takes a dock size in px, so sizeDock keeps the dock at 400 design px = 37.04 vh on any screen (800 px at 4K).
+DESIGN_H, DOCK_W = 1080, 400
 
 # Dynamic-window id -> view path
 WINDOWS = {
@@ -85,6 +88,31 @@ def _write(component, **changes):
     s.efcDw = d
 
 
+def dockSize(viewportHeight):
+    """Dock width in screen px for this viewport height (400 at 1080, 800 at 2160)."""
+    try:
+        h = float(viewportHeight or 0)
+    except (TypeError, ValueError):
+        h = 0
+    return int(round(h * DOCK_W / DESIGN_H)) if h > 0 else DOCK_W
+
+
+def sizeDock(component):
+    """Scale the right dock to the page viewport. Called on every open and close; a screen also calls it from a
+    change script on page.props.dimensions.viewport.height so a resized window keeps the dock at 37.04 vh."""
+    dims = component.page.props.dimensions
+    try:
+        if not dims.enabled:
+            dims.enabled = True                # viewport is only reported while dimensions.enabled is true
+    except Exception:
+        pass
+    try:
+        h = dims.viewport.height
+    except Exception:
+        h = None
+    system.perspective.alterDock(DOCK_ID, {'size': dockSize(h)})
+
+
 def showDock(path, params=None):
     """Load a view into the right dock (DOCK_ID) on the calling page and open it."""
     params = dict(params or {})
@@ -111,11 +139,13 @@ def openDynamic(component):
         _log().warn('openDynamic: no window for tType=%s dockId=%s' % (_p(p, 'tType'), _p(p, 'dockId')))
         return
     tp = _p(p, 'dwTagPath') or _p(p, 'tagPath') or _p(p, 'cardPath') or ''
+    sizeDock(component)
     openWindow(dw, tp, _p(p, 'model'))
 
 
 def setDefaultDock(component, viewPath, params=None):
-    """Screen onStartup (optional): remember and show the page's default right-dock view."""
+    """Screen onStartup: size the right dock, then remember and show the page's default view (its trends overview)."""
+    sizeDock(component)
     if viewPath:
         params = dict(params or {})
         _write(component, default={'path': viewPath, 'params': params})
@@ -126,6 +156,7 @@ def closeDynamic(component):
     """Dynamic-window close button: put the page's default view back in the right dock, or close the dock."""
     s, pid, st = _state(component)
     d = st.get('default') or {}
+    sizeDock(component)
     if d.get('path'):
         showDock(d['path'], d.get('params'))
     else:

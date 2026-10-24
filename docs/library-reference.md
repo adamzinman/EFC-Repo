@@ -97,10 +97,12 @@ Dynamic windows (`Templates/Dynamic Window/<category>/`) open in one right-side 
 In each page's **Page Configuration**, add a **right dock**:
 - id `dw_Right`
 - view: the page's trends overview as the initial view (shown when the page loads; a click replaces it with the device's window)
-- size 400 px at 1080p (37.04 vh equivalent; the window is 400 x 860, decision 25)
+- size 400 (any value: `efc.ui.sizeDock` rescales it to 37.04 vh on every open, close and screen startup, so 400 px at 1080p and 800 px at 4K, decision 33)
 - display "visible": the dock is always present (decision 32)
 - content "cover": the dock covers the right-hand section of the shell
 - handle "hide"
+
+All px sizes in the library are design px on a 1920 x 1080 page and scale with the viewport (vh / vw). Page Configuration takes a dock size in px only, so the scaling is done in script. To keep it right when the browser window is resized, give the screen root a custom property bound to `page.props.dimensions.viewport.height` with a change script `efc.ui.sizeDock(self)` (page dimensions need Ignition 8.1.7+; `sizeDock` turns `page.props.dimensions.enabled` on).
 
 To make the trends overview the view a window's close button returns to, call `efc.ui.setDefaultDock(self, viewPath, params)` in the screen's root `onStartup`. A window's close button then puts that view back. Without a default, the close button closes the dock.
 
