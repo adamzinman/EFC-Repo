@@ -1,0 +1,338 @@
+{
+  "typeColor": -29696,
+  "name": "DDT_Valve",
+  "parameters": {
+    "OPC Server": {
+      "dataType": "String"
+    },
+    "OPC Prefix": {
+      "dataType": "String",
+      "value": "ns=2;s=0:"
+    },
+    "Tag": {
+      "dataType": "String"
+    }
+  },
+  "tagType": "UdtType",
+  "tags": [
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "HMI_Manual",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "HMI_Lockout",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "Off",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "LockedOut",
+      "tagType": "AtomicTag"
+    },
+    {
+      "valueSource": "memory",
+      "dataType": "String",
+      "name": "Description",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "ZSC",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Int4",
+      "name": "Cycle_Count",
+      "tagType": "AtomicTag"
+    },
+    {
+      "name": "InterlockList",
+      "typeId": "MEM_Interlock_List",
+      "tagType": "UdtInstance",
+      "tags": [
+        {
+          "name": "InterlockName",
+          "tagType": "AtomicTag"
+        },
+        {
+          "name": "Used",
+          "tagType": "AtomicTag"
+        },
+        {
+          "name": "Status",
+          "tagType": "AtomicTag"
+        },
+        {
+          "name": "Description",
+          "tagType": "AtomicTag"
+        }
+      ]
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "Interlock",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "Reset_Count",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "HMI_Auto",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "REQ",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "Manual",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "Man_Perm",
+      "tagType": "AtomicTag"
+    },
+    {
+      "value": {
+        "bindType": "parameter",
+        "binding": "{Tag}"
+      },
+      "valueSource": "memory",
+      "dataType": "String",
+      "name": "Name",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "CMD",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "Auto",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "Permissive",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "Feedback_Enabled",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "HMI_CMD",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "HMI_Off",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "Auto_Perm",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "ZSO",
+      "tagType": "AtomicTag"
+    }
+  ]
+}

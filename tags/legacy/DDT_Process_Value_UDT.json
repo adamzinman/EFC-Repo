@@ -1,0 +1,691 @@
+{
+  "typeColor": -29696,
+  "name": "DDT_Process_Value",
+  "parameters": {
+    "OPC Server": {
+      "dataType": "String"
+    },
+    "OPC Prefix": {
+      "dataType": "String",
+      "value": "ns=2;s=0:"
+    },
+    "Tag": {
+      "dataType": "String"
+    }
+  },
+  "tagType": "UdtType",
+  "tags": [
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "name": "Raw_Min",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "alarms": [
+        {
+          "setpointA": 1.0,
+          "name": "Underrange Alarm",
+          "priority": "High",
+          "label": {
+            "bindType": "Expression",
+            "value": "{[.]Name} + \" | Underrange\""
+          }
+        }
+      ],
+      "name": "Underrange",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "name": "HW_Fault",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "name": "Raw_Max",
+      "tagType": "AtomicTag"
+    },
+    {
+      "name": "L",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.L.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Int4",
+          "name": "DLY",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.L.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "name": "Inhibit",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.L.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "name": "Enabled",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.L.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "alarms": [
+            {
+              "setpointA": 1.0,
+              "name": "Alarm",
+              "priority": "Medium",
+              "ackMode": "Manual",
+              "label": {
+                "bindType": "Expression",
+                "value": "{InstanceName}+\" Low Alarm\""
+              }
+            }
+          ],
+          "name": "Alarm",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.L.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Float4",
+          "name": "DB",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.H.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "name": "Notification",
+          "value": false,
+          "tagType": "AtomicTag"
+        },
+        {
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "name": "Default",
+          "value": 0.0,
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.L.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Float4",
+          "name": "SP",
+          "tagType": "AtomicTag"
+        }
+      ]
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Float4",
+      "name": "Eng_Min",
+      "tagType": "AtomicTag"
+    },
+    {
+      "valueSource": "memory",
+      "dataType": "String",
+      "name": "Type",
+      "tagType": "AtomicTag"
+    },
+    {
+      "valueSource": "memory",
+      "dataType": "String",
+      "name": "Description",
+      "tagType": "AtomicTag"
+    },
+    {
+      "name": "H",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.H.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Float4",
+          "name": "DB",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.H.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "name": "Enabled",
+          "tagType": "AtomicTag"
+        },
+        {
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "name": "Default",
+          "value": 0.0,
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.H.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "name": "Inhibit",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.H.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "name": "Notification",
+          "value": false,
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.H.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Int4",
+          "name": "DLY",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.H.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Float4",
+          "name": "SP",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.H.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "alarms": [
+            {
+              "setpointA": 1.0,
+              "name": "Alarm",
+              "priority": "Medium",
+              "ackMode": "Manual",
+              "label": {
+                "bindType": "Expression",
+                "value": "{InstanceName}+\" High Alarm\""
+              }
+            }
+          ],
+          "name": "Alarm",
+          "tagType": "AtomicTag"
+        }
+      ]
+    },
+    {
+      "name": "LL",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.H.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "name": "Notification",
+          "value": false,
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.LL.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "name": "Enabled",
+          "tagType": "AtomicTag"
+        },
+        {
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "name": "Default",
+          "value": 0.0,
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.LL.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "alarms": [
+            {
+              "setpointA": 1.0,
+              "shelvingAllowed": false,
+              "name": "Alarm",
+              "priority": "High",
+              "label": {
+                "bindType": "Expression",
+                "value": "{InstanceName}+\" Low-Low Alarm\""
+              }
+            }
+          ],
+          "name": "Alarm",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.LL.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Int4",
+          "name": "DLY",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.LL.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "name": "Inhibit",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.LL.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Float4",
+          "name": "DB",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.LL.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Float4",
+          "name": "SP",
+          "tagType": "AtomicTag"
+        }
+      ]
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "historyMaxAge": 12,
+      "historicalDeadband": 0.5,
+      "historicalDeadbandMode": "Absolute",
+      "historicalDeadbandStyle": "Auto",
+      "tagType": "AtomicTag",
+      "dataType": "Float4",
+      "historyProvider": "HatfieldDB",
+      "historyMaxAgeUnits": "SEC",
+      "name": "PV",
+      "historyEnabled": true,
+      "sampleMode": "Periodic",
+      "historySampleRate": 3
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Boolean",
+      "alarms": [
+        {
+          "setpointA": 1.0,
+          "name": "Overrange Alarm",
+          "priority": "High",
+          "label": {
+            "bindType": "Expression",
+            "value": "{[.]Name} + \" | Overrange\""
+          }
+        }
+      ],
+      "name": "Overrange",
+      "tagType": "AtomicTag"
+    },
+    {
+      "opcItemPath": {
+        "bindType": "parameter",
+        "binding": "{OPC Prefix}{Tag}.{TagName}"
+      },
+      "opcServer": {
+        "bindType": "parameter",
+        "binding": "{OPC Server}"
+      },
+      "valueSource": "opc",
+      "dataType": "Float4",
+      "name": "Eng_Max",
+      "tagType": "AtomicTag"
+    },
+    {
+      "valueSource": "memory",
+      "dataType": "String",
+      "name": "Units",
+      "tagType": "AtomicTag"
+    },
+    {
+      "value": {
+        "bindType": "parameter",
+        "binding": "{InstanceName}"
+      },
+      "valueSource": "memory",
+      "dataType": "String",
+      "name": "Name",
+      "tagType": "AtomicTag"
+    },
+    {
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "name": "Edits",
+      "value": false,
+      "tagType": "AtomicTag"
+    },
+    {
+      "name": "HH",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.HH.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "alarms": [
+            {
+              "setpointA": 1.0,
+              "shelvingAllowed": false,
+              "name": "Alarm",
+              "priority": "High",
+              "label": {
+                "bindType": "Expression",
+                "value": "{InstanceName}+\" High-High Alarm\""
+              }
+            }
+          ],
+          "name": "Alarm",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.H.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "memory",
+          "dataType": "Boolean",
+          "name": "Notification",
+          "value": false,
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.HH.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "name": "Enabled",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.HH.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Boolean",
+          "name": "Inhibit",
+          "tagType": "AtomicTag"
+        },
+        {
+          "valueSource": "memory",
+          "dataType": "Float4",
+          "name": "Default",
+          "value": 0.0,
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.HH.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Float4",
+          "name": "SP",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.HH.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Float4",
+          "name": "DB",
+          "tagType": "AtomicTag"
+        },
+        {
+          "opcItemPath": {
+            "bindType": "parameter",
+            "binding": "{OPC Prefix}{Tag}.HH.{TagName}"
+          },
+          "opcServer": {
+            "bindType": "parameter",
+            "binding": "{OPC Server}"
+          },
+          "valueSource": "opc",
+          "dataType": "Int4",
+          "name": "DLY",
+          "tagType": "AtomicTag"
+        }
+      ]
+    }
+  ]
+}
