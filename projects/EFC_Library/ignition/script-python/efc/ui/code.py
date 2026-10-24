@@ -21,11 +21,18 @@ WINDOWS = {
     'dw_HeatTransfer': 'Templates/Dynamic Window/HeatTransfer/HeatTransfer', 'dw_ProcessValue': 'Templates/Dynamic Window/ProcessValues/ProcessValue',
     'dw_Loop': 'Templates/Dynamic Window/Loops/Loop', 'dw_Station': 'Templates/Dynamic Window/Station/Station', 'dw_IOCard': 'Templates/Dynamic Window/IO/IOCard',
 }
+# LEGACY: True in the legacy-ddt build (build_docks.py sets it from generator/legacy_types.py). The library is then
+# bound to the old UDT set (DDT_Valve, DDT_Device, DDT_Process_Value, DDT_Station, PID_ControlValve, PID_Loop):
+# commands are levels (HMI_CMD) and mode requests are 1 s pulses on HMI_Auto / HMI_Manual / HMI_Off / HMI_Lockout.
+LEGACY = True
 # Template tType -> default window (a template's dockId param overrides it)
 BY_TYPE = {
     'T_DValve': 'dw_ValveDiscrete', 'T_CValve': 'dw_ValveAnalog', 'T_Motor': 'dw_Rotating', 'T_VFD': 'dw_VFD',
     'T_Heater': 'dw_Heater', 'T_HeatEx': 'dw_HeatTransfer', 'T_AI': 'dw_ProcessValue', 'T_KPI': 'dw_ProcessValue',
     'T_PID': 'dw_Loop', 'T_Station': 'dw_Station', 'native': 'dw_IOCard',
+    # legacy-ddt types (VFD and Heater templates pass dockId dw_VFD / dw_Heater themselves)
+    'DDT_Valve': 'dw_ValveDiscrete', 'PID_ControlValve': 'dw_ValveAnalog', 'DDT_Device': 'dw_Rotating',
+    'DDT_Process_Value': 'dw_ProcessValue', 'PID_Loop': 'dw_Loop', 'DDT_Station': 'dw_Station',
 }
 # Role hierarchy, low to high (Controls Standard HMI rules)
 ROLES = ['Guest', 'Operator', 'Maintenance', 'Supervisor', 'Engineer', 'Admin']
@@ -38,6 +45,13 @@ DBL_CMD = {
 }
 READY_TRUE = ['Mode/Sts_Man', 'Sts_Avail']
 READY_FALSE = ['Sts_Intlk', 'Sts_NotPerm', 'Sts_Local', 'Sts_Fault']
+# legacy-ddt: HMI_CMD is a level; the double-tap writes the opposite of the current CMD. Blocking members per type.
+# type -> (state member, command member, must be TRUE, must be FALSE always, must be FALSE to switch on)
+LEGACY_DBL = {
+    'DDT_Valve':  ('CMD', 'HMI_CMD', ['Manual'], ['LockedOut', 'Off'], ['Interlock', 'Permissive']),
+    'DDT_Device': ('CMD', 'HMI_CMD', ['Manual'], ['LockedOut', 'Off'], ['Interlock']),
+}
+PULSE_MS = 1000
 
 
 def _log():
@@ -182,6 +196,23 @@ def cmd(component, member, value=True, minLevel=OPERATOR, audit=False):
         _audit(component, 'EFC write', tp, value)
 
 
+def pulse(component, member, minLevel=OPERATOR, audit=False):
+    """Legacy-ddt mode / command requests (HMI_Auto, HMI_Manual, HMI_Off, HMI_Lockout, HMI_Select, TareCMD ...):
+    the DFBs read them as rising edges, so write TRUE, then FALSE after PULSE_MS (the Station faceplates' scheme)."""
+    if userLevel(component) < minLevel:
+        return
+    tp = component.view.params.tagPath + '/' + member
+    system.tag.writeBlocking([tp], [True])
+    if audit:
+        _audit(component, 'EFC pulse', tp, True)
+
+    def _release(p=tp):
+        import time
+        time.sleep(PULSE_MS / 1000.0)
+        system.tag.writeBlocking([p], [False])
+    system.util.invokeAsynchronous(_release)
+
+
 def bypass(component, intlkPath, idx, reason):
     """BypassConfirm popup: Supervisor+ with a reason; written to the audit log."""
     reason = (reason or '').strip()
@@ -251,9 +282,21 @@ def dblCmd(component):
     Sent only when the template has useButton = false and dblCmd = true, the device is
     in Manual and available, and nothing blocks it."""
     p = component.view.params
-    if _p(p, 'useButton') or not _p(p, 'dblCmd') or _p(p, 'tType') not in DBL_CMD or userLevel(component) < OPERATOR:
+    if _p(p, 'useButton') or not _p(p, 'dblCmd') or userLevel(component) < OPERATOR:
         return
     base = p.tagPath
+    if _p(p, 'tType') in LEGACY_DBL:                 # legacy-ddt: toggle the HMI_CMD level
+        state, cmdMember, readyTrue, blockAll, blockOn = LEGACY_DBL[p.tType]
+        paths = [base + '/' + m for m in [state] + readyTrue + blockAll + blockOn]
+        v = [q.value for q in system.tag.readBlocking(paths)]
+        n1, n2 = 1 + len(readyTrue), 1 + len(readyTrue) + len(blockAll)
+        isOn, ready, blocked, blockedOn = v[0], v[1:n1], v[n1:n2], v[n2:]
+        if not all(ready) or any(blocked) or (not isOn and any(blockedOn)):
+            return
+        system.tag.writeBlocking([base + '/' + cmdMember], [not bool(isOn)])
+        return
+    if _p(p, 'tType') not in DBL_CMD:
+        return
     state, cmdOn, cmdOff = DBL_CMD[p.tType]
     paths = [base + '/' + m for m in [state] + READY_TRUE + READY_FALSE]
     v = [q.value for q in system.tag.readBlocking(paths)]

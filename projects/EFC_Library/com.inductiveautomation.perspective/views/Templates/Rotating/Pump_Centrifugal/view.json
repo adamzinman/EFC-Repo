@@ -1,35 +1,35 @@
 {
   "custom": {
     "cmd": false,
-    "on": false,
-    "off": true,
+    "run": false,
+    "fb": true,
     "fault": false,
-    "trip": false,
     "state": 0,
     "command": -1,
     "name": "",
     "desc": "",
     "man": false,
+    "auto": false,
     "oos": false,
-    "avail": true,
-    "local": false,
+    "locked": false,
     "intlk": false,
     "permMissing": false,
-    "firstOut": -1,
-    "firstDesc": "",
+    "avail": true,
     "mode": 0,
+    "manPerm": true,
+    "autoPerm": true,
+    "canCmd": false,
     "alarm": 0,
     "fill": "#9E9E9E",
     "head": "#9E9E9E",
     "line": "#262626",
     "lw": 2.679,
-    "con": "#262626",
-    "canCmd": false
+    "con": "#262626"
   },
   "params": {
     "tagPath": "[default]PID_Demo/P101",
     "useButton": true,
-    "tType": "T_Motor",
+    "tType": "DDT_Device",
     "dockId": "",
     "dwTagPath": "",
     "dblCmd": true
@@ -52,11 +52,11 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Out_Run"
+          "tagPath": "{0}/CMD"
         }
       }
     },
-    "custom.on": {
+    "custom.run": {
       "binding": {
         "type": "tag",
         "config": {
@@ -65,11 +65,11 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_Running"
+          "tagPath": "{0}/YI"
         }
       }
     },
-    "custom.off": {
+    "custom.fb": {
       "binding": {
         "type": "tag",
         "config": {
@@ -78,7 +78,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_Stopped"
+          "tagPath": "{0}/FB_Enb"
         }
       }
     },
@@ -91,20 +91,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_Fault"
-        }
-      }
-    },
-    "custom.trip": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Sts_Tripped"
+          "tagPath": "{0}/Alarm"
         }
       }
     },
@@ -112,7 +99,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "if(coalesce({view.custom.fault}, false) || coalesce({view.custom.trip}, false), 3, if(coalesce({view.custom.on}, false), 1, if(coalesce({view.custom.off}, false), 0, 2)))"
+          "expression": "if(coalesce({view.custom.fault}, false), 3, if(!coalesce({view.custom.fb}, true), if(coalesce({view.custom.cmd}, false), 1, 0), if(coalesce({view.custom.run}, false) && coalesce({view.custom.cmd}, false), 1, if(!coalesce({view.custom.run}, false) && !coalesce({view.custom.cmd}, false), 0, 2))))"
         }
       }
     },
@@ -125,7 +112,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Cfg_Tag"
+          "tagPath": "{0}/Name"
         }
       }
     },
@@ -138,7 +125,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Cfg_Desc"
+          "tagPath": "{0}/Description"
         }
       }
     },
@@ -151,7 +138,20 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Mode/Sts_Man"
+          "tagPath": "{0}/Manual"
+        }
+      }
+    },
+    "custom.auto": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Auto"
         }
       }
     },
@@ -164,11 +164,11 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Mode/Sts_OOS"
+          "tagPath": "{0}/Off"
         }
       }
     },
-    "custom.avail": {
+    "custom.locked": {
       "binding": {
         "type": "tag",
         "config": {
@@ -177,20 +177,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_Avail"
-        }
-      }
-    },
-    "custom.local": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Sts_Local"
+          "tagPath": "{0}/LockedOut"
         }
       }
     },
@@ -203,34 +190,15 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_Intlk"
+          "tagPath": "{0}/Interlock"
         }
       }
     },
-    "custom.firstOut": {
+    "custom.avail": {
       "binding": {
-        "type": "tag",
+        "type": "expr",
         "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Intlk/Sts_FirstOut"
-        }
-      }
-    },
-    "custom.firstDesc": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}",
-            "1": "{view.custom.firstOut}"
-          },
-          "tagPath": "{0}/Intlk/Cfg_CondDesc/{1}"
+          "expression": "!coalesce({view.custom.locked}, false)"
         }
       }
     },
@@ -242,7 +210,7 @@
         }
       }
     },
-    "custom.permMissing": {
+    "custom.manPerm": {
       "binding": {
         "type": "tag",
         "config": {
@@ -251,7 +219,36 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_NotPerm"
+          "tagPath": "{0}/Man_Perm"
+        }
+      }
+    },
+    "custom.autoPerm": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Auto_Perm"
+        }
+      }
+    },
+    "custom.permMissing": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "!if(coalesce({view.custom.man}, false), coalesce({view.custom.manPerm}, true), coalesce({view.custom.autoPerm}, true))"
+        }
+      }
+    },
+    "custom.canCmd": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "coalesce({view.custom.man}, false) && !coalesce({view.custom.locked}, false) && !coalesce({view.custom.oos}, false) && (coalesce({view.custom.cmd}, false) || (!coalesce({view.custom.permMissing}, false) && !coalesce({view.custom.intlk}, false)))"
         }
       }
     },
@@ -300,14 +297,6 @@
         "type": "expr",
         "config": {
           "expression": "if({view.custom.alarm} > 0 || {view.custom.state} = 3, 5.357, 2.679)"
-        }
-      }
-    },
-    "custom.canCmd": {
-      "binding": {
-        "type": "expr",
-        "config": {
-          "expression": "coalesce({view.custom.man}, false) && coalesce({view.custom.avail}, true) && !coalesce({view.custom.local}, false) && !coalesce({view.custom.oos}, false) && (coalesce({view.custom.cmd}, false) || (!coalesce({view.custom.permMissing}, false) && !coalesce({view.custom.intlk}, false)))"
         }
       }
     },
@@ -603,14 +592,6 @@
                 "expression": "coalesce({view.custom.intlk}, false)"
               }
             }
-          },
-          "meta.tooltip.text": {
-            "binding": {
-              "type": "expr",
-              "config": {
-                "expression": "\"Interlock active - \" + \"start\" + \" blocked\" + if(coalesce({view.custom.firstOut}, -1) >= 0 && len(coalesce({view.custom.firstDesc}, \"\")) > 0, \": \" + {view.custom.firstDesc}, \"\")"
-              }
-            }
           }
         }
       },
@@ -752,7 +733,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if(coalesce({view.custom.cmd}, false), \"Stop\", \"Start\")"
+                "expression": "if(coalesce({view.custom.locked}, false), \"Locked out\", if(!coalesce({view.custom.man}, false), \"Manual mode required\", if(coalesce({view.custom.cmd}, false), \"Stop\", \"Start\")))"
               }
             }
           }
@@ -763,7 +744,7 @@
               "type": "script",
               "scope": "G",
               "config": {
-                "script": "\tm = 'Cmd_Stop' if self.view.custom.cmd else 'Cmd_Start'\n\tefc.ui.cmd(self, m, True, 1)"
+                "script": "\tefc.ui.cmd(self, 'HMI_CMD', not bool(self.view.custom.cmd), 1)"
               }
             }
           }

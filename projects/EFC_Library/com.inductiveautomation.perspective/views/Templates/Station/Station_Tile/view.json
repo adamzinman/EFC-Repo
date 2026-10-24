@@ -105,7 +105,7 @@
   },
   "params": {
     "tagPath": "",
-    "tType": "T_Station",
+    "tType": "DDT_Station",
     "dockId": "",
     "dwTagPath": ""
   },
@@ -133,7 +133,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Active",
+          "tagPath": "{0}/Active",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -146,7 +146,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Complete",
+          "tagPath": "{0}/Complete",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -159,7 +159,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Prm_Deadband",
+          "tagPath": "{0}/Deadband",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -172,7 +172,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Disabled",
+          "tagPath": "{0}/Disabled",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -185,7 +185,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Failed",
+          "tagPath": "{0}/Failed",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -198,7 +198,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Filling",
+          "tagPath": "{0}/Filling",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -211,7 +211,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Val_Net",
+          "tagPath": "{0}/NetWeight",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -224,7 +224,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Val_PT",
+          "tagPath": "{0}/PT",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -237,7 +237,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Inp_PTValid",
+          "tagPath": "{0}/PT_Valid",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -250,7 +250,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_ReadyToFill",
+          "tagPath": "{0}/ReadyToFill",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -263,7 +263,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_ReadyToStart",
+          "tagPath": "{0}/ReadyToStart",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -276,7 +276,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Recovering",
+          "tagPath": "{0}/Recovering",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -289,7 +289,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Out_SampleCmd",
+          "tagPath": "{0}/SampleCMD",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -302,7 +302,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_ScaleName",
+          "tagPath": "{0}/ScaleName",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -315,7 +315,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Selected",
+          "tagPath": "{0}/Selected",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -328,7 +328,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_Desc",
+          "tagPath": "{0}/StationName",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -341,7 +341,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Prm_TargetWt",
+          "tagPath": "{0}/TargetWeight",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -354,7 +354,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_EU",
+          "tagPath": "{0}/Units",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -367,7 +367,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Vacuuming",
+          "tagPath": "{0}/Vacuuming",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -380,7 +380,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Venting",
+          "tagPath": "{0}/Venting",
           "references": {
             "0": "{view.params.tagPath}"
           },

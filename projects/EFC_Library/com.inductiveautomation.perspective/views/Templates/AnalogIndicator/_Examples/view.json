@@ -57,7 +57,7 @@
             "props": {
               "path": "Templates/AnalogIndicator/A_RangeBar",
               "params": {
-                "tagPath": "[default]KPI/KPI_101",
+                "tagPath": "[default]PV_Demo/PT001",
                 "LabelMode": "Both",
                 "ShowMinMax": true,
                 "Format": "#,##0.0"
@@ -98,7 +98,7 @@
             "props": {
               "path": "Templates/AnalogIndicator/B_PointerScale",
               "params": {
-                "tagPath": "[default]KPI/KPI_101",
+                "tagPath": "[default]PV_Demo/PT001",
                 "ShowLimitType": true,
                 "ShowLimitValue": true,
                 "Format": "#,##0.0"
@@ -139,7 +139,7 @@
             "props": {
               "path": "Templates/AnalogIndicator/C_CompactRow",
               "params": {
-                "tagPath": "[default]KPI/KPI_101",
+                "tagPath": "[default]PV_Demo/PT001",
                 "Header": "Tag",
                 "Format": "#,##0.0"
               }
@@ -158,7 +158,7 @@
             "props": {
               "path": "Templates/AnalogIndicator/C_CompactRow",
               "params": {
-                "tagPath": "[default]KPI/KPI_101",
+                "tagPath": "[default]PV_Demo/PT001",
                 "Header": "Desc",
                 "Format": "#,##0.0"
               }
@@ -198,7 +198,7 @@
             "props": {
               "path": "Templates/AnalogIndicator/D_MiniColumn",
               "params": {
-                "tagPath": "[default]KPI/KPI_101",
+                "tagPath": "[default]PV_Demo/PT001",
                 "Header": "Tag",
                 "Format": "#,##0.0"
               }
@@ -217,7 +217,7 @@
             "props": {
               "path": "Templates/AnalogIndicator/D_MiniColumn",
               "params": {
-                "tagPath": "[default]KPI/KPI_101",
+                "tagPath": "[default]PV_Demo/PT001",
                 "Header": "Desc",
                 "Format": "#,##0.0"
               }

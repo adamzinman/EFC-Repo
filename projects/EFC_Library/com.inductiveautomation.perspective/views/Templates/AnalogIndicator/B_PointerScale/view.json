@@ -3,33 +3,22 @@
     "pv": null,
     "eu": null,
     "desc": null,
-    "sdesc": null,
     "tag": null,
     "min": null,
     "max": null,
-    "iLo": null,
-    "iHi": null,
-    "q": null,
+    "hw": null,
     "ll": null,
     "llEn": null,
     "llA": null,
-    "llU": null,
-    "llP": null,
     "l": null,
     "lEn": null,
     "lA": null,
-    "lU": null,
-    "lP": null,
     "h": null,
     "hEn": null,
     "hA": null,
-    "hU": null,
-    "hP": null,
     "hh": null,
     "hhEn": null,
     "hhA": null,
-    "hhU": null,
-    "hhP": null,
     "good": null,
     "span": null,
     "p": null,
@@ -59,14 +48,26 @@
     "cLL": null,
     "cL": null,
     "cH": null,
-    "cHH": null
+    "cHH": null,
+    "sdesc": null,
+    "iLo": null,
+    "iHi": null,
+    "q": null,
+    "llU": null,
+    "lU": null,
+    "hU": null,
+    "hhU": null,
+    "llP": null,
+    "lP": null,
+    "hP": null,
+    "hhP": null
   },
   "params": {
-    "tagPath": "[default]KPI/KPI_101",
+    "tagPath": "[default]PV_Demo/PT001",
     "ShowLimitType": true,
     "ShowLimitValue": true,
     "Format": "#,##0.0",
-    "tType": "T_KPI",
+    "tType": "DDT_Process_Value",
     "dockId": "",
     "dwTagPath": ""
   },
@@ -76,7 +77,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Val_PV",
+          "tagPath": "{1}/PV",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -89,7 +90,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Cfg_EU",
+          "tagPath": "{1}/Units",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -102,20 +103,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Cfg_Desc",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.sdesc": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{1}/Cfg_ShortDesc",
+          "tagPath": "{1}/Description",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -128,7 +116,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Cfg_Tag",
+          "tagPath": "{1}/Name",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -141,7 +129,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Cfg_EUMin",
+          "tagPath": "{1}/Eng_Min",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -154,7 +142,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Cfg_EUMax",
+          "tagPath": "{1}/Eng_Max",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -162,38 +150,12 @@
         }
       }
     },
-    "custom.iLo": {
+    "custom.hw": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Cfg_IdealLo",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.iHi": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{1}/Cfg_IdealHi",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.q": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{1}/Sts_Quality",
+          "tagPath": "{1}/HW_Fault",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -206,7 +168,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_LL/Cfg_Lim",
+          "tagPath": "{1}/LL/SP",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -219,7 +181,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_LL/Cfg_En",
+          "tagPath": "{1}/LL/Enabled",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -232,33 +194,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_LL/Sts_Active",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.llU": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{1}/Alm_LL/Sts_Unack",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.llP": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{1}/Alm_LL/Cfg_Priority",
+          "tagPath": "{1}/LL/Alarm",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -271,7 +207,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_L/Cfg_Lim",
+          "tagPath": "{1}/L/SP",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -284,7 +220,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_L/Cfg_En",
+          "tagPath": "{1}/L/Enabled",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -297,33 +233,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_L/Sts_Active",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.lU": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{1}/Alm_L/Sts_Unack",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.lP": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{1}/Alm_L/Cfg_Priority",
+          "tagPath": "{1}/L/Alarm",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -336,7 +246,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_H/Cfg_Lim",
+          "tagPath": "{1}/H/SP",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -349,7 +259,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_H/Cfg_En",
+          "tagPath": "{1}/H/Enabled",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -362,33 +272,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_H/Sts_Active",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.hU": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{1}/Alm_H/Sts_Unack",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.hP": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{1}/Alm_H/Cfg_Priority",
+          "tagPath": "{1}/H/Alarm",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -401,7 +285,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_HH/Cfg_Lim",
+          "tagPath": "{1}/HH/SP",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -414,7 +298,7 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_HH/Cfg_En",
+          "tagPath": "{1}/HH/Enabled",
           "references": {
             "1": "{view.params.tagPath}"
           },
@@ -427,37 +311,107 @@
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{1}/Alm_HH/Sts_Active",
+          "tagPath": "{1}/HH/Alarm",
           "references": {
             "1": "{view.params.tagPath}"
           },
           "fallbackDelay": 2.5
+        }
+      }
+    },
+    "custom.sdesc": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "{view.custom.desc}"
+        }
+      }
+    },
+    "custom.iLo": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "0"
+        }
+      }
+    },
+    "custom.iHi": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "0"
+        }
+      }
+    },
+    "custom.q": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "if(toBoolean(coalesce({view.custom.hw}, false)), 2, 0)"
+        }
+      }
+    },
+    "custom.llU": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "false"
+        }
+      }
+    },
+    "custom.lU": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "false"
+        }
+      }
+    },
+    "custom.hU": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "false"
         }
       }
     },
     "custom.hhU": {
       "binding": {
-        "type": "tag",
+        "type": "expr",
         "config": {
-          "mode": "indirect",
-          "tagPath": "{1}/Alm_HH/Sts_Unack",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "fallbackDelay": 2.5
+          "expression": "false"
+        }
+      }
+    },
+    "custom.llP": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "3"
+        }
+      }
+    },
+    "custom.lP": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "3"
+        }
+      }
+    },
+    "custom.hP": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "3"
         }
       }
     },
     "custom.hhP": {
       "binding": {
-        "type": "tag",
+        "type": "expr",
         "config": {
-          "mode": "indirect",
-          "tagPath": "{1}/Alm_HH/Cfg_Priority",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "fallbackDelay": 2.5
+          "expression": "3"
         }
       }
     },

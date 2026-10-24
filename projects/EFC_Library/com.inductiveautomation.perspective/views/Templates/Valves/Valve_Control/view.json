@@ -3,20 +3,15 @@
     "out": 0.0,
     "pos": 0.0,
     "fb": true,
+    "perm": true,
+    "intlk": false,
     "fault": false,
-    "state": 0,
-    "command": 0,
+    "mode": 0,
+    "man": false,
     "name": "",
     "desc": "",
-    "man": false,
-    "oos": false,
-    "avail": true,
-    "local": false,
-    "intlk": false,
-    "permMissing": false,
-    "firstOut": -1,
-    "firstDesc": "",
-    "mode": 0,
+    "state": 0,
+    "command": 0,
     "alarm": 0,
     "fill": "#9E9E9E",
     "head": "#9E9E9E",
@@ -28,7 +23,7 @@
   },
   "params": {
     "tagPath": "[default]PID_Demo/FV101",
-    "tType": "T_CValve",
+    "tType": "PID_ControlValve",
     "dockId": "",
     "dwTagPath": ""
   },
@@ -46,7 +41,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Val_Demand"
+          "tagPath": "{0}/Out"
         }
       }
     },
@@ -59,7 +54,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Val_Pos"
+          "tagPath": "{0}/Pos"
         }
       }
     },
@@ -72,7 +67,33 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Cfg_HasFbk"
+          "tagPath": "{0}/Feedback_Enabled"
+        }
+      }
+    },
+    "custom.perm": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/PermOK"
+        }
+      }
+    },
+    "custom.intlk": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Intlk"
         }
       }
     },
@@ -85,7 +106,54 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_Fault"
+          "tagPath": "{0}/Fault"
+        }
+      }
+    },
+    "custom.mode": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Mode"
+        }
+      }
+    },
+    "custom.man": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "coalesce({view.custom.mode}, 0) = 1"
+        }
+      }
+    },
+    "custom.name": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Name"
+        }
+      }
+    },
+    "custom.desc": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Description"
         }
       }
     },
@@ -102,132 +170,6 @@
         "type": "expr",
         "config": {
           "expression": "if(coalesce({view.custom.fb}, true), if(coalesce({view.custom.out}, 0) > 1, 1, 0), -1)"
-        }
-      }
-    },
-    "custom.name": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Cfg_Tag"
-        }
-      }
-    },
-    "custom.desc": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Cfg_Desc"
-        }
-      }
-    },
-    "custom.man": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Mode/Sts_Man"
-        }
-      }
-    },
-    "custom.oos": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Mode/Sts_OOS"
-        }
-      }
-    },
-    "custom.avail": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Sts_Avail"
-        }
-      }
-    },
-    "custom.local": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Sts_Local"
-        }
-      }
-    },
-    "custom.intlk": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Sts_Intlk"
-        }
-      }
-    },
-    "custom.firstOut": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Intlk/Sts_FirstOut"
-        }
-      }
-    },
-    "custom.firstDesc": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}",
-            "1": "{view.custom.firstOut}"
-          },
-          "tagPath": "{0}/Intlk/Cfg_CondDesc/{1}"
-        }
-      }
-    },
-    "custom.mode": {
-      "binding": {
-        "type": "expr",
-        "config": {
-          "expression": "if(coalesce({view.custom.man}, false), 1, 0)"
         }
       }
     },
@@ -526,7 +468,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "false"
+                "expression": "!coalesce({view.custom.perm}, true)"
               }
             }
           }
@@ -560,14 +502,6 @@
               "type": "expr",
               "config": {
                 "expression": "coalesce({view.custom.intlk}, false)"
-              }
-            }
-          },
-          "meta.tooltip.text": {
-            "binding": {
-              "type": "expr",
-              "config": {
-                "expression": "\"Interlock active - \" + \"control\" + \" blocked\" + if(coalesce({view.custom.firstOut}, -1) >= 0 && len(coalesce({view.custom.firstDesc}, \"\")) > 0, \": \" + {view.custom.firstDesc}, \"\")"
               }
             }
           }

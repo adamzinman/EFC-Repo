@@ -25,7 +25,7 @@
   "params": {
     "tagPath": "[default]PID_Demo/TIC101",
     "label": "",
-    "tType": "T_PID",
+    "tType": "PID_Loop",
     "dockId": "",
     "dwTagPath": ""
   },
@@ -39,7 +39,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Val_PV"
+          "tagPath": "{1}/PV"
         }
       }
     },
@@ -52,7 +52,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Val_SP"
+          "tagPath": "{1}/SP"
         }
       }
     },
@@ -65,7 +65,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Out_CV"
+          "tagPath": "{1}/OUT"
         }
       }
     },
@@ -78,7 +78,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Sts_Mode"
+          "tagPath": "{1}/Mode"
         }
       }
     },
@@ -91,7 +91,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Alm_DevH/Cfg_Lim"
+          "tagPath": "{1}/AlmDev"
         }
       }
     },
@@ -104,25 +104,28 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Alm_DevL/Cfg_Lim"
+          "tagPath": "{1}/AlmDev"
         }
       }
     },
     "custom.devHAct": {
       "binding": {
-        "type": "tag",
+        "type": "expr",
         "config": {
-          "fallbackDelay": 2.5,
-          "mode": "indirect",
-          "references": {
-            "1": "{view.params.tagPath}"
-          },
-          "tagPath": "{1}/Alm_DevH/Sts_Active"
+          "expression": "{view.custom.pv} >= {view.custom.almHi}"
         }
       }
     },
     "custom.devLAct": {
       "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "{view.custom.pv} <= {view.custom.almLo}"
+        }
+      }
+    },
+    "custom.almHi": {
+      "binding": {
         "type": "tag",
         "config": {
           "fallbackDelay": 2.5,
@@ -130,23 +133,20 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Alm_DevL/Sts_Active"
-        }
-      }
-    },
-    "custom.almHi": {
-      "binding": {
-        "type": "expr",
-        "config": {
-          "expression": "{view.custom.sp} + {view.custom.devH}"
+          "tagPath": "{1}/AlmHi"
         }
       }
     },
     "custom.almLo": {
       "binding": {
-        "type": "expr",
+        "type": "tag",
         "config": {
-          "expression": "{view.custom.sp} - {view.custom.devL}"
+          "fallbackDelay": 2.5,
+          "mode": "indirect",
+          "references": {
+            "1": "{view.params.tagPath}"
+          },
+          "tagPath": "{1}/AlmLo"
         }
       }
     },
@@ -159,7 +159,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Cfg_PVMin"
+          "tagPath": "{1}/PV.engLow"
         }
       }
     },
@@ -172,7 +172,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Cfg_PVMax"
+          "tagPath": "{1}/PV.engHigh"
         }
       }
     },
@@ -185,7 +185,7 @@
           "references": {
             "1": "{view.params.tagPath}"
           },
-          "tagPath": "{1}/Cfg_PVEU"
+          "tagPath": "{1}/PV.engUnit"
         }
       }
     },

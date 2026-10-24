@@ -1,108 +1,14 @@
 {
   "custom": {
     "level": 0,
-    "m_Cfg_Used_0": null,
-    "m_Inp_Cond_0": null,
-    "m_Sts_Bypassed_0": null,
-    "m_Cfg_CondDesc_0": null,
-    "m_Cfg_Bypassable_0": null,
-    "m_Sts_BypLeft_0": null,
-    "m_Cfg_Used_1": null,
-    "m_Inp_Cond_1": null,
-    "m_Sts_Bypassed_1": null,
-    "m_Cfg_CondDesc_1": null,
-    "m_Cfg_Bypassable_1": null,
-    "m_Sts_BypLeft_1": null,
-    "m_Cfg_Used_2": null,
-    "m_Inp_Cond_2": null,
-    "m_Sts_Bypassed_2": null,
-    "m_Cfg_CondDesc_2": null,
-    "m_Cfg_Bypassable_2": null,
-    "m_Sts_BypLeft_2": null,
-    "m_Cfg_Used_3": null,
-    "m_Inp_Cond_3": null,
-    "m_Sts_Bypassed_3": null,
-    "m_Cfg_CondDesc_3": null,
-    "m_Cfg_Bypassable_3": null,
-    "m_Sts_BypLeft_3": null,
-    "m_Cfg_Used_4": null,
-    "m_Inp_Cond_4": null,
-    "m_Sts_Bypassed_4": null,
-    "m_Cfg_CondDesc_4": null,
-    "m_Cfg_Bypassable_4": null,
-    "m_Sts_BypLeft_4": null,
-    "m_Cfg_Used_5": null,
-    "m_Inp_Cond_5": null,
-    "m_Sts_Bypassed_5": null,
-    "m_Cfg_CondDesc_5": null,
-    "m_Cfg_Bypassable_5": null,
-    "m_Sts_BypLeft_5": null,
-    "m_Cfg_Used_6": null,
-    "m_Inp_Cond_6": null,
-    "m_Sts_Bypassed_6": null,
-    "m_Cfg_CondDesc_6": null,
-    "m_Cfg_Bypassable_6": null,
-    "m_Sts_BypLeft_6": null,
-    "m_Cfg_Used_7": null,
-    "m_Inp_Cond_7": null,
-    "m_Sts_Bypassed_7": null,
-    "m_Cfg_CondDesc_7": null,
-    "m_Cfg_Bypassable_7": null,
-    "m_Sts_BypLeft_7": null,
-    "m_Cfg_Used_8": null,
-    "m_Inp_Cond_8": null,
-    "m_Sts_Bypassed_8": null,
-    "m_Cfg_CondDesc_8": null,
-    "m_Cfg_Bypassable_8": null,
-    "m_Sts_BypLeft_8": null,
-    "m_Cfg_Used_9": null,
-    "m_Inp_Cond_9": null,
-    "m_Sts_Bypassed_9": null,
-    "m_Cfg_CondDesc_9": null,
-    "m_Cfg_Bypassable_9": null,
-    "m_Sts_BypLeft_9": null,
-    "m_Cfg_Used_10": null,
-    "m_Inp_Cond_10": null,
-    "m_Sts_Bypassed_10": null,
-    "m_Cfg_CondDesc_10": null,
-    "m_Cfg_Bypassable_10": null,
-    "m_Sts_BypLeft_10": null,
-    "m_Cfg_Used_11": null,
-    "m_Inp_Cond_11": null,
-    "m_Sts_Bypassed_11": null,
-    "m_Cfg_CondDesc_11": null,
-    "m_Cfg_Bypassable_11": null,
-    "m_Sts_BypLeft_11": null,
-    "m_Cfg_Used_12": null,
-    "m_Inp_Cond_12": null,
-    "m_Sts_Bypassed_12": null,
-    "m_Cfg_CondDesc_12": null,
-    "m_Cfg_Bypassable_12": null,
-    "m_Sts_BypLeft_12": null,
-    "m_Cfg_Used_13": null,
-    "m_Inp_Cond_13": null,
-    "m_Sts_Bypassed_13": null,
-    "m_Cfg_CondDesc_13": null,
-    "m_Cfg_Bypassable_13": null,
-    "m_Sts_BypLeft_13": null,
-    "m_Cfg_Used_14": null,
-    "m_Inp_Cond_14": null,
-    "m_Sts_Bypassed_14": null,
-    "m_Cfg_CondDesc_14": null,
-    "m_Cfg_Bypassable_14": null,
-    "m_Sts_BypLeft_14": null,
-    "m_Cfg_Used_15": null,
-    "m_Inp_Cond_15": null,
-    "m_Sts_Bypassed_15": null,
-    "m_Cfg_CondDesc_15": null,
-    "m_Cfg_Bypassable_15": null,
-    "m_Sts_BypLeft_15": null,
-    "m_Out_OK": null,
-    "m_Sts_ResetReq": null
+    "m_InterlockName": null,
+    "m_Used": null,
+    "m_Description": null
   },
   "params": {
     "tagPath": "",
-    "title": ""
+    "title": "",
+    "active": false
   },
   "propConfig": {
     "custom.level": {
@@ -119,12 +25,12 @@
         ]
       }
     },
-    "custom.m_Cfg_Used_0": {
+    "custom.m_InterlockName": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/0",
+          "tagPath": "{0}/InterlockName",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -133,12 +39,12 @@
         }
       }
     },
-    "custom.m_Inp_Cond_0": {
+    "custom.m_Used": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/0",
+          "tagPath": "{0}/Used",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -147,1342 +53,12 @@
         }
       }
     },
-    "custom.m_Sts_Bypassed_0": {
+    "custom.m_Description": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/0",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_0": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/0",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_0": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/0",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_0": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/0",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_1": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/1",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_1": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/1",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_1": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/1",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_1": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/1",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_1": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/1",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_1": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/1",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_2": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/2",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_2": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/2",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_2": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/2",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_2": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/2",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_2": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/2",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_2": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/2",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_3": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/3",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_3": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/3",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_3": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/3",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_3": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/3",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_3": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/3",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_3": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/3",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_4": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/4",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_4": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/4",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_4": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/4",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_4": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/4",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_4": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/4",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_4": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/4",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_5": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/5",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_5": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/5",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_5": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/5",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_5": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/5",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_5": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/5",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_5": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/5",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_6": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/6",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_6": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/6",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_6": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/6",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_6": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/6",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_6": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/6",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_6": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/6",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_7": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/7",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_7": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/7",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_7": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/7",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_7": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/7",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_7": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/7",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_7": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/7",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_8": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/8",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_8": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/8",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_8": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/8",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_8": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/8",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_8": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/8",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_8": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/8",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_9": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/9",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_9": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/9",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_9": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/9",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_9": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/9",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_9": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/9",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_9": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/9",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_10": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/10",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_10": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/10",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_10": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/10",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_10": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/10",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_10": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/10",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_10": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/10",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_11": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/11",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_11": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/11",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_11": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/11",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_11": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/11",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_11": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/11",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_11": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/11",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_12": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/12",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_12": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/12",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_12": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/12",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_12": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/12",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_12": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/12",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_12": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/12",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_13": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/13",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_13": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/13",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_13": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/13",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_13": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/13",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_13": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/13",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_13": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/13",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_14": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/14",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_14": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/14",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_14": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/14",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_14": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/14",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_14": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/14",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_14": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/14",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Used_15": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Used/15",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Inp_Cond_15": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Inp_Cond/15",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_Bypassed_15": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_Bypassed/15",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CondDesc_15": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CondDesc/15",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Bypassable_15": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Bypassable/15",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_BypLeft_15": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_BypLeft/15",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Out_OK": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Out_OK",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Sts_ResetReq": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Sts_ResetReq",
+          "tagPath": "{0}/Description",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -1496,6 +72,10 @@
       "persistent": true
     },
     "params.title": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.active": {
       "paramDirection": "input",
       "persistent": true
     }
@@ -1590,7 +170,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Out_OK}, 'OK', 'NOT OK')"
+                    "expression": "if({view.params.active}, 'ACTIVE', 'OK')"
                   }
                 }
               },
@@ -1598,7 +178,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Out_OK}, 'Indicator/Permissive', 'Indicator/Interlock')"
+                    "expression": "if({view.params.active}, 'Indicator/Interlock', 'Indicator/Permissive')"
                   }
                 }
               }
@@ -1615,7 +195,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -1629,7 +209,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_0}"
+                "expression": "try({view.custom.m_Used[0]}, false)"
               }
             }
           }
@@ -1639,26 +219,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_0}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_0}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -1683,120 +254,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_0}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_0} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_0}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_0} && !{view.custom.m_Sts_Bypassed_0}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 0, 'desc': self.view.custom.m_Cfg_CondDesc_0}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_0}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 0)"
+                    "expression": "try({view.custom.m_InterlockName[0]}, '') + if(len(try({view.custom.m_Description[0]}, '')) > 0, ' - ' + try({view.custom.m_Description[0]}, ''), '')"
                   }
                 }
               }
@@ -1813,7 +271,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -1827,7 +285,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_1}"
+                "expression": "try({view.custom.m_Used[1]}, false)"
               }
             }
           }
@@ -1837,26 +295,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_1}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_1}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -1881,120 +330,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_1}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_1} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_1}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_1} && !{view.custom.m_Sts_Bypassed_1}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 1, 'desc': self.view.custom.m_Cfg_CondDesc_1}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_1}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 1)"
+                    "expression": "try({view.custom.m_InterlockName[1]}, '') + if(len(try({view.custom.m_Description[1]}, '')) > 0, ' - ' + try({view.custom.m_Description[1]}, ''), '')"
                   }
                 }
               }
@@ -2011,7 +347,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -2025,7 +361,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_2}"
+                "expression": "try({view.custom.m_Used[2]}, false)"
               }
             }
           }
@@ -2035,26 +371,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_2}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_2}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -2079,120 +406,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_2}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_2} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_2}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_2} && !{view.custom.m_Sts_Bypassed_2}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 2, 'desc': self.view.custom.m_Cfg_CondDesc_2}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_2}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 2)"
+                    "expression": "try({view.custom.m_InterlockName[2]}, '') + if(len(try({view.custom.m_Description[2]}, '')) > 0, ' - ' + try({view.custom.m_Description[2]}, ''), '')"
                   }
                 }
               }
@@ -2209,7 +423,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -2223,7 +437,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_3}"
+                "expression": "try({view.custom.m_Used[3]}, false)"
               }
             }
           }
@@ -2233,26 +447,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_3}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_3}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -2277,120 +482,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_3}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_3} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_3}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_3} && !{view.custom.m_Sts_Bypassed_3}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 3, 'desc': self.view.custom.m_Cfg_CondDesc_3}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_3}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 3)"
+                    "expression": "try({view.custom.m_InterlockName[3]}, '') + if(len(try({view.custom.m_Description[3]}, '')) > 0, ' - ' + try({view.custom.m_Description[3]}, ''), '')"
                   }
                 }
               }
@@ -2407,7 +499,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -2421,7 +513,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_4}"
+                "expression": "try({view.custom.m_Used[4]}, false)"
               }
             }
           }
@@ -2431,26 +523,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_4}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_4}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -2475,120 +558,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_4}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_4} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_4}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_4} && !{view.custom.m_Sts_Bypassed_4}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 4, 'desc': self.view.custom.m_Cfg_CondDesc_4}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_4}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 4)"
+                    "expression": "try({view.custom.m_InterlockName[4]}, '') + if(len(try({view.custom.m_Description[4]}, '')) > 0, ' - ' + try({view.custom.m_Description[4]}, ''), '')"
                   }
                 }
               }
@@ -2605,7 +575,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -2619,7 +589,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_5}"
+                "expression": "try({view.custom.m_Used[5]}, false)"
               }
             }
           }
@@ -2629,26 +599,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_5}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_5}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -2673,120 +634,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_5}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_5} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_5}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_5} && !{view.custom.m_Sts_Bypassed_5}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 5, 'desc': self.view.custom.m_Cfg_CondDesc_5}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_5}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 5)"
+                    "expression": "try({view.custom.m_InterlockName[5]}, '') + if(len(try({view.custom.m_Description[5]}, '')) > 0, ' - ' + try({view.custom.m_Description[5]}, ''), '')"
                   }
                 }
               }
@@ -2803,7 +651,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -2817,7 +665,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_6}"
+                "expression": "try({view.custom.m_Used[6]}, false)"
               }
             }
           }
@@ -2827,26 +675,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_6}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_6}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -2871,120 +710,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_6}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_6} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_6}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_6} && !{view.custom.m_Sts_Bypassed_6}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 6, 'desc': self.view.custom.m_Cfg_CondDesc_6}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_6}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 6)"
+                    "expression": "try({view.custom.m_InterlockName[6]}, '') + if(len(try({view.custom.m_Description[6]}, '')) > 0, ' - ' + try({view.custom.m_Description[6]}, ''), '')"
                   }
                 }
               }
@@ -3001,7 +727,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -3015,7 +741,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_7}"
+                "expression": "try({view.custom.m_Used[7]}, false)"
               }
             }
           }
@@ -3025,26 +751,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_7}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_7}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -3069,120 +786,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_7}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_7} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_7}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_7} && !{view.custom.m_Sts_Bypassed_7}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 7, 'desc': self.view.custom.m_Cfg_CondDesc_7}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_7}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 7)"
+                    "expression": "try({view.custom.m_InterlockName[7]}, '') + if(len(try({view.custom.m_Description[7]}, '')) > 0, ' - ' + try({view.custom.m_Description[7]}, ''), '')"
                   }
                 }
               }
@@ -3199,7 +803,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -3213,7 +817,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_8}"
+                "expression": "try({view.custom.m_Used[8]}, false)"
               }
             }
           }
@@ -3223,26 +827,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_8}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_8}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -3267,120 +862,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_8}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_8} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_8}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_8} && !{view.custom.m_Sts_Bypassed_8}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 8, 'desc': self.view.custom.m_Cfg_CondDesc_8}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_8}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 8)"
+                    "expression": "try({view.custom.m_InterlockName[8]}, '') + if(len(try({view.custom.m_Description[8]}, '')) > 0, ' - ' + try({view.custom.m_Description[8]}, ''), '')"
                   }
                 }
               }
@@ -3397,7 +879,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -3411,7 +893,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_9}"
+                "expression": "try({view.custom.m_Used[9]}, false)"
               }
             }
           }
@@ -3421,26 +903,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_9}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_9}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -3465,120 +938,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_9}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_9} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_9}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_9} && !{view.custom.m_Sts_Bypassed_9}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 9, 'desc': self.view.custom.m_Cfg_CondDesc_9}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_9}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 9)"
+                    "expression": "try({view.custom.m_InterlockName[9]}, '') + if(len(try({view.custom.m_Description[9]}, '')) > 0, ' - ' + try({view.custom.m_Description[9]}, ''), '')"
                   }
                 }
               }
@@ -3595,7 +955,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -3609,7 +969,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_10}"
+                "expression": "try({view.custom.m_Used[10]}, false)"
               }
             }
           }
@@ -3619,26 +979,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_10}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_10}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -3663,120 +1014,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_10}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_10} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_10}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_10} && !{view.custom.m_Sts_Bypassed_10}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 10, 'desc': self.view.custom.m_Cfg_CondDesc_10}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_10}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 10)"
+                    "expression": "try({view.custom.m_InterlockName[10]}, '') + if(len(try({view.custom.m_Description[10]}, '')) > 0, ' - ' + try({view.custom.m_Description[10]}, ''), '')"
                   }
                 }
               }
@@ -3793,7 +1031,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -3807,7 +1045,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_11}"
+                "expression": "try({view.custom.m_Used[11]}, false)"
               }
             }
           }
@@ -3817,26 +1055,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_11}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_11}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -3861,120 +1090,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_11}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_11} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_11}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_11} && !{view.custom.m_Sts_Bypassed_11}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 11, 'desc': self.view.custom.m_Cfg_CondDesc_11}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_11}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 11)"
+                    "expression": "try({view.custom.m_InterlockName[11]}, '') + if(len(try({view.custom.m_Description[11]}, '')) > 0, ' - ' + try({view.custom.m_Description[11]}, ''), '')"
                   }
                 }
               }
@@ -3991,7 +1107,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -4005,7 +1121,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_12}"
+                "expression": "try({view.custom.m_Used[12]}, false)"
               }
             }
           }
@@ -4015,26 +1131,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_12}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_12}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -4059,120 +1166,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_12}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_12} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_12}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_12} && !{view.custom.m_Sts_Bypassed_12}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 12, 'desc': self.view.custom.m_Cfg_CondDesc_12}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_12}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 12)"
+                    "expression": "try({view.custom.m_InterlockName[12]}, '') + if(len(try({view.custom.m_Description[12]}, '')) > 0, ' - ' + try({view.custom.m_Description[12]}, ''), '')"
                   }
                 }
               }
@@ -4189,7 +1183,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -4203,7 +1197,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_13}"
+                "expression": "try({view.custom.m_Used[13]}, false)"
               }
             }
           }
@@ -4213,26 +1207,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_13}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_13}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -4257,120 +1242,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_13}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_13} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_13}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_13} && !{view.custom.m_Sts_Bypassed_13}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 13, 'desc': self.view.custom.m_Cfg_CondDesc_13}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_13}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 13)"
+                    "expression": "try({view.custom.m_InterlockName[13]}, '') + if(len(try({view.custom.m_Description[13]}, '')) > 0, ' - ' + try({view.custom.m_Description[13]}, ''), '')"
                   }
                 }
               }
@@ -4387,7 +1259,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -4401,7 +1273,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_14}"
+                "expression": "try({view.custom.m_Used[14]}, false)"
               }
             }
           }
@@ -4411,26 +1283,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_14}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_14}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -4455,120 +1318,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_14}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_14} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_14}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_14} && !{view.custom.m_Sts_Bypassed_14}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 14, 'desc': self.view.custom.m_Cfg_CondDesc_14}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_14}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 14)"
+                    "expression": "try({view.custom.m_InterlockName[14]}, '') + if(len(try({view.custom.m_Description[14]}, '')) > 0, ' - ' + try({view.custom.m_Description[14]}, ''), '')"
                   }
                 }
               }
@@ -4585,7 +1335,7 @@
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.222vh"
+          "basis": "2.037vh"
         },
         "props": {
           "direction": "row",
@@ -4599,7 +1349,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.m_Cfg_Used_15}"
+                "expression": "try({view.custom.m_Used[15]}, false)"
               }
             }
           }
@@ -4609,26 +1359,17 @@
             "type": "ia.display.label",
             "version": 0,
             "meta": {
-              "name": "LED"
+              "name": "Dot"
             },
             "position": {
               "shrink": 0,
+              "grow": 0,
               "basis": "1.111vh"
             },
             "props": {
-              "text": "",
+              "text": "\u2022",
               "style": {
-                "classes": "Indicator/LED/Off"
-              }
-            },
-            "propConfig": {
-              "props.style.classes": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "if({view.custom.m_Sts_Bypassed_15}, 'Indicator/LED/Unknown', if({view.custom.m_Inp_Cond_15}, 'Indicator/LED/On', 'Indicator/LED/Fault'))"
-                  }
-                }
+                "classes": "Text/Caption"
               }
             }
           },
@@ -4653,120 +1394,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Cfg_CondDesc_15}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Left"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "props.text": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "'BYPASSED ' + toInt({view.custom.m_Sts_BypLeft_15} / 60000) + ' min'"
-                  }
-                }
-              },
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_Bypassed_15}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Byp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "BYPASS",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Cfg_Bypassable_15} && !{view.custom.m_Sts_Bypassed_15}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tsystem.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath': self.view.params.tagPath, 'idx': 15, 'desc': self.view.custom.m_Cfg_CondDesc_15}, modal=True, showCloseIcon=False)"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.input.button",
-            "version": 0,
-            "meta": {
-              "name": "Unbyp"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0,
-              "basis": "2.963vh"
-            },
-            "props": {
-              "text": "UNBYP",
-              "style": {
-                "classes": "Button/Small"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.level} >= 3 && {view.custom.m_Sts_Bypassed_15}"
-                  }
-                }
-              }
-            },
-            "events": {
-              "component": {
-                "onActionPerformed": {
-                  "type": "script",
-                  "scope": "G",
-                  "config": {
-                    "script": "\tefc.ui.unbypass(self, self.view.params.tagPath, 15)"
+                    "expression": "try({view.custom.m_InterlockName[15]}, '') + if(len(try({view.custom.m_Description[15]}, '')) > 0, ' - ' + try({view.custom.m_Description[15]}, ''), '')"
                   }
                 }
               }
@@ -4775,20 +1403,21 @@
         ]
       },
       {
-        "type": "ia.input.button",
+        "type": "ia.container.flex",
         "version": 0,
         "meta": {
-          "name": "Reset"
+          "name": "C16"
         },
         "position": {
           "shrink": 0,
           "grow": 0,
-          "basis": "2.963vh"
+          "basis": "2.037vh"
         },
         "props": {
-          "text": "RESET",
+          "direction": "row",
+          "alignItems": "center",
           "style": {
-            "classes": "Button/Default"
+            "classes": "Util/Gap/S"
           }
         },
         "propConfig": {
@@ -4796,18 +1425,309 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.level} >= 2 && {view.custom.m_Sts_ResetReq}"
+                "expression": "try({view.custom.m_Used[16]}, false)"
               }
             }
           }
         },
-        "events": {
-          "component": {
-            "onActionPerformed": {
-              "type": "script",
-              "scope": "G",
+        "children": [
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Dot"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 0,
+              "basis": "1.111vh"
+            },
+            "props": {
+              "text": "\u2022",
+              "style": {
+                "classes": "Text/Caption"
+              }
+            }
+          },
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Desc"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 1
+            },
+            "props": {
+              "text": "",
+              "style": {
+                "classes": "Text/Caption Text/Mod/Ellipsis"
+              }
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "try({view.custom.m_InterlockName[16]}, '') + if(len(try({view.custom.m_Description[16]}, '')) > 0, ' - ' + try({view.custom.m_Description[16]}, ''), '')"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "ia.container.flex",
+        "version": 0,
+        "meta": {
+          "name": "C17"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0,
+          "basis": "2.037vh"
+        },
+        "props": {
+          "direction": "row",
+          "alignItems": "center",
+          "style": {
+            "classes": "Util/Gap/S"
+          }
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "type": "expr",
               "config": {
-                "script": "\tefc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)"
+                "expression": "try({view.custom.m_Used[17]}, false)"
+              }
+            }
+          }
+        },
+        "children": [
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Dot"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 0,
+              "basis": "1.111vh"
+            },
+            "props": {
+              "text": "\u2022",
+              "style": {
+                "classes": "Text/Caption"
+              }
+            }
+          },
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Desc"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 1
+            },
+            "props": {
+              "text": "",
+              "style": {
+                "classes": "Text/Caption Text/Mod/Ellipsis"
+              }
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "try({view.custom.m_InterlockName[17]}, '') + if(len(try({view.custom.m_Description[17]}, '')) > 0, ' - ' + try({view.custom.m_Description[17]}, ''), '')"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "ia.container.flex",
+        "version": 0,
+        "meta": {
+          "name": "C18"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0,
+          "basis": "2.037vh"
+        },
+        "props": {
+          "direction": "row",
+          "alignItems": "center",
+          "style": {
+            "classes": "Util/Gap/S"
+          }
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "try({view.custom.m_Used[18]}, false)"
+              }
+            }
+          }
+        },
+        "children": [
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Dot"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 0,
+              "basis": "1.111vh"
+            },
+            "props": {
+              "text": "\u2022",
+              "style": {
+                "classes": "Text/Caption"
+              }
+            }
+          },
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Desc"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 1
+            },
+            "props": {
+              "text": "",
+              "style": {
+                "classes": "Text/Caption Text/Mod/Ellipsis"
+              }
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "try({view.custom.m_InterlockName[18]}, '') + if(len(try({view.custom.m_Description[18]}, '')) > 0, ' - ' + try({view.custom.m_Description[18]}, ''), '')"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "ia.container.flex",
+        "version": 0,
+        "meta": {
+          "name": "C19"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0,
+          "basis": "2.037vh"
+        },
+        "props": {
+          "direction": "row",
+          "alignItems": "center",
+          "style": {
+            "classes": "Util/Gap/S"
+          }
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "try({view.custom.m_Used[19]}, false)"
+              }
+            }
+          }
+        },
+        "children": [
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Dot"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 0,
+              "basis": "1.111vh"
+            },
+            "props": {
+              "text": "\u2022",
+              "style": {
+                "classes": "Text/Caption"
+              }
+            }
+          },
+          {
+            "type": "ia.display.label",
+            "version": 0,
+            "meta": {
+              "name": "Desc"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 1
+            },
+            "props": {
+              "text": "",
+              "style": {
+                "classes": "Text/Caption Text/Mod/Ellipsis"
+              }
+            },
+            "propConfig": {
+              "props.text": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "try({view.custom.m_InterlockName[19]}, '') + if(len(try({view.custom.m_Description[19]}, '')) > 0, ' - ' + try({view.custom.m_Description[19]}, ''), '')"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "None"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0
+        },
+        "props": {
+          "text": "No interlocks configured",
+          "style": {
+            "classes": "Text/Caption Text/Color/Muted"
+          }
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "!(try({view.custom.m_Used[0]}, false) || try({view.custom.m_Used[1]}, false) || try({view.custom.m_Used[2]}, false) || try({view.custom.m_Used[3]}, false) || try({view.custom.m_Used[4]}, false) || try({view.custom.m_Used[5]}, false) || try({view.custom.m_Used[6]}, false) || try({view.custom.m_Used[7]}, false) || try({view.custom.m_Used[8]}, false) || try({view.custom.m_Used[9]}, false) || try({view.custom.m_Used[10]}, false) || try({view.custom.m_Used[11]}, false) || try({view.custom.m_Used[12]}, false) || try({view.custom.m_Used[13]}, false) || try({view.custom.m_Used[14]}, false) || try({view.custom.m_Used[15]}, false) || try({view.custom.m_Used[16]}, false) || try({view.custom.m_Used[17]}, false) || try({view.custom.m_Used[18]}, false) || try({view.custom.m_Used[19]}, false))"
               }
             }
           }

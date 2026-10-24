@@ -1,51 +1,29 @@
 {
   "custom": {
     "level": 0,
-    "m_Cfg_PVEU": null,
-    "m_Sts_Man": null,
-    "m_Sts_Auto": null,
-    "m_Sts_Cas": null,
-    "m_Cfg_Tag": null,
-    "m_Cfg_Desc": null,
-    "m_Sts_Intlk": null,
-    "m_Sts_Track": null,
-    "m_Sts_WindupHi": null,
-    "m_Sts_WindupLo": null,
-    "m_Sts_SPRamping": null,
-    "m_Val_PV": null,
-    "m_Val_SP": null,
-    "m_Out_CV": null,
-    "m_Val_Err": null,
-    "m_Alm_DevH_Sts_Active": null,
-    "m_Alm_DevH_Sts_Unack": null,
-    "m_Alm_DevH_Cfg_Priority": null,
-    "m_Alm_DevL_Sts_Active": null,
-    "m_Alm_DevL_Sts_Unack": null,
-    "m_Alm_DevL_Cfg_Priority": null,
-    "m_Alm_PVBad_Sts_Active": null,
-    "m_Alm_PVBad_Sts_Unack": null,
-    "m_Alm_PVBad_Cfg_Priority": null,
-    "m_Cfg_Kp": null,
-    "m_Cfg_Ti": null,
-    "m_Cfg_Td": null,
-    "m_Cfg_DB": null,
-    "m_Cfg_SPRate": null,
-    "m_Cfg_CVRate": null,
-    "m_Cfg_DirectAct": null,
+    "m_PV_engUnit": null,
+    "m_Mode": null,
+    "m_PV": null,
+    "m_AlmHi": null,
+    "m_AlmLo": null,
+    "m_SP": null,
+    "m_AlmDev": null,
+    "m_Description": null,
+    "m_OUT": null,
+    "m_Kp": null,
+    "m_Ti": null,
+    "m_Td": null,
+    "m_Action": null,
     "open_Tuning": false,
-    "m_Alm_DevH_Cfg_Lim": null,
-    "m_Alm_DevL_Cfg_Lim": null,
-    "m_Cfg_SPMin": null,
-    "m_Cfg_SPMax": null,
-    "m_Cfg_CVMin": null,
-    "m_Cfg_CVMax": null,
-    "m_Cfg_PVMin": null,
-    "m_Cfg_PVMax": null,
+    "m_SP_Lo": null,
+    "m_SP_Hi": null,
+    "m_OUT_Lo": null,
+    "m_OUT_Hi": null,
     "open_Configuration": false
   },
   "params": {
     "tagPath": "",
-    "tType": "T_PID"
+    "tType": "PID_Loop"
   },
   "propConfig": {
     "custom.level": {
@@ -62,12 +40,12 @@
         ]
       }
     },
-    "custom.m_Cfg_PVEU": {
+    "custom.m_PV_engUnit": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_PVEU",
+          "tagPath": "{0}/PV.engUnit",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -76,12 +54,12 @@
         }
       }
     },
-    "custom.m_Sts_Man": {
+    "custom.m_Mode": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Man",
+          "tagPath": "{0}/Mode",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -90,12 +68,12 @@
         }
       }
     },
-    "custom.m_Sts_Auto": {
+    "custom.m_PV": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Auto",
+          "tagPath": "{0}/PV",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -104,12 +82,12 @@
         }
       }
     },
-    "custom.m_Sts_Cas": {
+    "custom.m_AlmHi": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Cas",
+          "tagPath": "{0}/AlmHi",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -118,12 +96,12 @@
         }
       }
     },
-    "custom.m_Cfg_Tag": {
+    "custom.m_AlmLo": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_Tag",
+          "tagPath": "{0}/AlmLo",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -132,12 +110,12 @@
         }
       }
     },
-    "custom.m_Cfg_Desc": {
+    "custom.m_SP": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_Desc",
+          "tagPath": "{0}/SP",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -146,12 +124,12 @@
         }
       }
     },
-    "custom.m_Sts_Intlk": {
+    "custom.m_AlmDev": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Intlk",
+          "tagPath": "{0}/AlmDev",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -160,12 +138,12 @@
         }
       }
     },
-    "custom.m_Sts_Track": {
+    "custom.m_Description": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Track",
+          "tagPath": "{0}/Description",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -174,12 +152,12 @@
         }
       }
     },
-    "custom.m_Sts_WindupHi": {
+    "custom.m_OUT": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_WindupHi",
+          "tagPath": "{0}/OUT",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -188,12 +166,12 @@
         }
       }
     },
-    "custom.m_Sts_WindupLo": {
+    "custom.m_Kp": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_WindupLo",
+          "tagPath": "{0}/Kp",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -202,12 +180,12 @@
         }
       }
     },
-    "custom.m_Sts_SPRamping": {
+    "custom.m_Ti": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_SPRamping",
+          "tagPath": "{0}/Ti",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -216,12 +194,12 @@
         }
       }
     },
-    "custom.m_Val_PV": {
+    "custom.m_Td": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Val_PV",
+          "tagPath": "{0}/Td",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -230,12 +208,12 @@
         }
       }
     },
-    "custom.m_Val_SP": {
+    "custom.m_Action": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Val_SP",
+          "tagPath": "{0}/Action",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -244,12 +222,12 @@
         }
       }
     },
-    "custom.m_Out_CV": {
+    "custom.m_SP_Lo": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Out_CV",
+          "tagPath": "{0}/SP_Lo",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -258,12 +236,12 @@
         }
       }
     },
-    "custom.m_Val_Err": {
+    "custom.m_SP_Hi": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Val_Err",
+          "tagPath": "{0}/SP_Hi",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -272,12 +250,12 @@
         }
       }
     },
-    "custom.m_Alm_DevH_Sts_Active": {
+    "custom.m_OUT_Lo": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_DevH/Sts_Active",
+          "tagPath": "{0}/OUT_Lo",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -286,320 +264,12 @@
         }
       }
     },
-    "custom.m_Alm_DevH_Sts_Unack": {
+    "custom.m_OUT_Hi": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_DevH/Sts_Unack",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_DevH_Cfg_Priority": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_DevH/Cfg_Priority",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_DevL_Sts_Active": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_DevL/Sts_Active",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_DevL_Sts_Unack": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_DevL/Sts_Unack",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_DevL_Cfg_Priority": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_DevL/Cfg_Priority",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_PVBad_Sts_Active": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_PVBad/Sts_Active",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_PVBad_Sts_Unack": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_PVBad/Sts_Unack",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_PVBad_Cfg_Priority": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_PVBad/Cfg_Priority",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Kp": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Kp",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Ti": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Ti",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_Td": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_Td",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_DB": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_DB",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_SPRate": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_SPRate",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CVRate": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CVRate",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_DirectAct": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_DirectAct",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_DevH_Cfg_Lim": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_DevH/Cfg_Lim",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_DevL_Cfg_Lim": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_DevL/Cfg_Lim",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_SPMin": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_SPMin",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_SPMax": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_SPMax",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CVMin": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CVMin",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_CVMax": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_CVMax",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_PVMin": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_PVMin",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_PVMax": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_PVMax",
+          "tagPath": "{0}/OUT_Hi",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -699,7 +369,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "{view.custom.m_Cfg_Tag}"
+                        "expression": "substring({view.params.tagPath}, lastIndexOf({view.params.tagPath}, '/') + 1)"
                       }
                     }
                   }
@@ -726,7 +396,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "{view.custom.m_Cfg_Desc}"
+                        "expression": "{view.custom.m_Description}"
                       }
                     }
                   }
@@ -788,7 +458,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if({view.custom.m_Sts_Intlk}, 'State/Fault', if({view.custom.m_Sts_Track}, 'State/Transition', if({view.custom.m_Sts_Cas}, 'State/Running', if({view.custom.m_Sts_Auto}, 'State/Running', if({view.custom.m_Sts_Man}, 'State/Stopped', 'State/Unknown')))))"
+                "expression": "if({view.custom.m_Mode} = 2, 'State/Running', if({view.custom.m_Mode} = 1, 'State/Running', if({view.custom.m_Mode} = 0, 'State/Stopped', 'State/Unknown')))"
               }
             }
           }
@@ -815,7 +485,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Intlk}, 'INTERLOCKED', if({view.custom.m_Sts_Track}, 'TRACKING', if({view.custom.m_Sts_Cas}, 'CASCADE', if({view.custom.m_Sts_Auto}, 'AUTO', if({view.custom.m_Sts_Man}, 'MANUAL', 'UNKNOWN')))))"
+                    "expression": "if({view.custom.m_Mode} = 2, 'CASCADE', if({view.custom.m_Mode} = 1, 'AUTO', if({view.custom.m_Mode} = 0, 'MANUAL', 'UNKNOWN')))"
                   }
                 }
               }
@@ -832,7 +502,7 @@
               "grow": 0
             },
             "props": {
-              "text": "WINDUP HI",
+              "text": "HIGH",
               "style": {
                 "classes": "Indicator/Badge"
               }
@@ -842,7 +512,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Sts_WindupHi}"
+                    "expression": "{view.custom.m_PV} >= {view.custom.m_AlmHi}"
                   }
                 }
               }
@@ -859,7 +529,7 @@
               "grow": 0
             },
             "props": {
-              "text": "WINDUP LO",
+              "text": "LOW",
               "style": {
                 "classes": "Indicator/Badge"
               }
@@ -869,7 +539,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Sts_WindupLo}"
+                    "expression": "{view.custom.m_PV} <= {view.custom.m_AlmLo}"
                   }
                 }
               }
@@ -886,7 +556,7 @@
               "grow": 0
             },
             "props": {
-              "text": "RAMPING",
+              "text": "DEVIATION",
               "style": {
                 "classes": "Indicator/Badge"
               }
@@ -896,7 +566,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Sts_SPRamping}"
+                    "expression": "abs({view.custom.m_PV} - {view.custom.m_SP}) > {view.custom.m_AlmDev}"
                   }
                 }
               }
@@ -1036,7 +706,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Sts_Man}, 'Button/Toggle/On', 'Button/Toggle/Off')"
+                            "expression": "if({view.custom.m_Mode} = 0, 'Button/Toggle/On', 'Button/Toggle/Off')"
                           }
                         }
                       }
@@ -1047,7 +717,7 @@
                           "type": "script",
                           "scope": "G",
                           "config": {
-                            "script": "\tefc.ui.cmd(self, 'Cmd_Man', True, 1)"
+                            "script": "\tefc.ui.cmd(self, 'Mode', 0, 1)"
                           }
                         }
                       }
@@ -1083,7 +753,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Sts_Auto}, 'Button/Toggle/On', 'Button/Toggle/Off')"
+                            "expression": "if({view.custom.m_Mode} = 1, 'Button/Toggle/On', 'Button/Toggle/Off')"
                           }
                         }
                       }
@@ -1094,7 +764,7 @@
                           "type": "script",
                           "scope": "G",
                           "config": {
-                            "script": "\tefc.ui.cmd(self, 'Cmd_Auto', True, 1)"
+                            "script": "\tefc.ui.cmd(self, 'Mode', 1, 1)"
                           }
                         }
                       }
@@ -1130,7 +800,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Sts_Cas}, 'Button/Toggle/On', 'Button/Toggle/Off')"
+                            "expression": "if({view.custom.m_Mode} = 2, 'Button/Toggle/On', 'Button/Toggle/Off')"
                           }
                         }
                       }
@@ -1141,7 +811,7 @@
                           "type": "script",
                           "scope": "G",
                           "config": {
-                            "script": "\tefc.ui.cmd(self, 'Cmd_Cas', True, 1)"
+                            "script": "\tefc.ui.cmd(self, 'Mode', 2, 1)"
                           }
                         }
                       }
@@ -1283,7 +953,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Val_PV}, '#,##0.0')"
+                            "expression": "numberFormat({view.custom.m_PV}, '#,##0.0')"
                           }
                         }
                       }
@@ -1311,7 +981,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Cfg_PVEU}"
+                            "expression": "{view.custom.m_PV_engUnit}"
                           }
                         }
                       }
@@ -1376,7 +1046,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Val_SP}, '#,##0.0')"
+                            "expression": "numberFormat({view.custom.m_SP}, '#,##0.0')"
                           }
                         }
                       }
@@ -1404,7 +1074,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Cfg_PVEU}"
+                            "expression": "{view.custom.m_PV_engUnit}"
                           }
                         }
                       }
@@ -1469,7 +1139,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Out_CV}, '#,##0.0')"
+                            "expression": "numberFormat({view.custom.m_OUT}, '#,##0.0')"
                           }
                         }
                       }
@@ -1562,7 +1232,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Val_Err}, '#,##0.0')"
+                            "expression": "numberFormat({view.custom.m_PV} - {view.custom.m_SP}, '#,##0.0')"
                           }
                         }
                       }
@@ -1590,7 +1260,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Cfg_PVEU}"
+                            "expression": "{view.custom.m_PV_engUnit}"
                           }
                         }
                       }
@@ -1666,7 +1336,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cmd_SP",
+                            "tagPath": "{0}/SP",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -1679,7 +1349,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "!{view.custom.m_Sts_Cas}"
+                            "expression": "{view.custom.m_Mode} != 2"
                           }
                         }
                       }
@@ -1773,7 +1443,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cmd_CV",
+                            "tagPath": "{0}/OUT",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -1786,7 +1456,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Sts_Man}"
+                            "expression": "{view.custom.m_Mode} = 0"
                           }
                         }
                       }
@@ -1815,34 +1485,6 @@
             ]
           }
         ]
-      },
-      {
-        "type": "ia.display.view",
-        "version": 0,
-        "meta": {
-          "name": "Intlk"
-        },
-        "position": {
-          "shrink": 0
-        },
-        "props": {
-          "path": "Templates/Dynamic Window/Parts/IntlkList",
-          "useDefaultViewHeight": true,
-          "params": {
-            "tagPath": "",
-            "title": "Interlocks"
-          }
-        },
-        "propConfig": {
-          "props.params.tagPath": {
-            "binding": {
-              "type": "expr",
-              "config": {
-                "expression": "{view.params.tagPath} + '/Intlk'"
-              }
-            }
-          }
-        }
       },
       {
         "type": "ia.container.flex",
@@ -1891,7 +1533,7 @@
                   "grow": 1
                 },
                 "props": {
-                  "text": "Alarms",
+                  "text": "Alarm limits",
                   "style": {
                     "classes": "Text/Subheader Text/Mod/Upper"
                   }
@@ -1918,47 +1560,21 @@
             },
             "children": [
               {
-                "type": "ia.display.label",
-                "version": 0,
-                "meta": {
-                  "name": "None"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0
-                },
-                "props": {
-                  "text": "No active alarms",
-                  "style": {
-                    "classes": "Text/Caption Text/Color/Muted"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "!({view.custom.m_Alm_DevH_Sts_Active} || {view.custom.m_Alm_DevL_Sts_Active} || {view.custom.m_Alm_PVBad_Sts_Active})"
-                      }
-                    }
-                  }
-                }
-              },
-              {
                 "type": "ia.container.flex",
                 "version": 0,
                 "meta": {
-                  "name": "List"
+                  "name": "Hi"
                 },
                 "position": {
                   "shrink": 0,
-                  "grow": 0
+                  "grow": 0,
+                  "basis": "2.037vh"
                 },
                 "props": {
-                  "direction": "column",
-                  "alignItems": "stretch",
+                  "direction": "row",
+                  "alignItems": "center",
                   "style": {
-                    "classes": "Util/Gap/XS"
+                    "classes": "Util/Gap/M"
                   }
                 },
                 "children": [
@@ -1966,24 +1582,41 @@
                     "type": "ia.display.label",
                     "version": 0,
                     "meta": {
-                      "name": "A0"
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "High",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
                     },
                     "position": {
                       "shrink": 0,
                       "grow": 0
                     },
                     "props": {
-                      "text": "Deviation high",
+                      "text": "",
                       "style": {
-                        "classes": "Text/Caption"
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
                       }
                     },
                     "propConfig": {
-                      "props.style.classes": {
+                      "props.text": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_DevH_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_DevH_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_DevH_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_DevH_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "numberFormat({view.custom.m_AlmHi}, '#,##0.0')"
                           }
                         }
                       }
@@ -1993,51 +1626,25 @@
                     "type": "ia.display.label",
                     "version": 0,
                     "meta": {
-                      "name": "A1"
+                      "name": "EU"
                     },
                     "position": {
                       "shrink": 0,
-                      "grow": 0
+                      "grow": 0,
+                      "basis": "3.704vh"
                     },
                     "props": {
-                      "text": "Deviation low",
+                      "text": "",
                       "style": {
-                        "classes": "Text/Caption"
+                        "classes": "Text/Units"
                       }
                     },
                     "propConfig": {
-                      "props.style.classes": {
+                      "props.text": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_DevL_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_DevL_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_DevL_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_DevL_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "A2"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "PV bad",
-                      "style": {
-                        "classes": "Text/Caption"
-                      }
-                    },
-                    "propConfig": {
-                      "props.style.classes": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "if({view.custom.m_Alm_PVBad_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_PVBad_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_PVBad_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_PVBad_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "{view.custom.m_PV_engUnit}"
                           }
                         }
                       }
@@ -2046,43 +1653,190 @@
                 ]
               },
               {
-                "type": "ia.input.button",
+                "type": "ia.container.flex",
                 "version": 0,
                 "meta": {
-                  "name": "Ack"
+                  "name": "Lo"
                 },
                 "position": {
                   "shrink": 0,
                   "grow": 0,
-                  "basis": "2.963vh"
+                  "basis": "2.037vh"
                 },
                 "props": {
-                  "text": "ACK",
+                  "direction": "row",
+                  "alignItems": "center",
                   "style": {
-                    "classes": "Button/Default"
+                    "classes": "Util/Gap/M"
                   }
                 },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 1"
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "Low",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_AlmLo}, '#,##0.0')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.m_PV_engUnit}"
+                          }
+                        }
                       }
                     }
                   }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "Dev"
                 },
-                "events": {
-                  "component": {
-                    "onActionPerformed": {
-                      "type": "script",
-                      "scope": "G",
-                      "config": {
-                        "script": "\tefc.ui.ackAll(self, ['Alm_DevH', 'Alm_DevL', 'Alm_PVBad'])"
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "Deviation",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_AlmDev}, '#,##0.0')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.m_PV_engUnit}"
+                          }
+                        }
                       }
                     }
                   }
-                }
+                ]
               }
             ]
           }
@@ -2103,9 +1857,9 @@
           "params": {
             "tagPath": "",
             "pens": [
-              "Val_PV",
-              "Val_SP",
-              "Out_CV"
+              "PV",
+              "SP",
+              "OUT"
             ],
             "expanded": false
           }
@@ -2307,7 +2061,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_Kp}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Kp}, '#,##0.###')"
                           }
                         }
                       }
@@ -2411,7 +2165,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cfg_Kp",
+                            "tagPath": "{0}/Kp",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -2517,7 +2271,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_Ti} / 1000, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Ti}, '#,##0.###')"
                           }
                         }
                       }
@@ -2618,14 +2372,16 @@
                     "propConfig": {
                       "props.value": {
                         "binding": {
-                          "type": "expr",
+                          "type": "tag",
                           "config": {
-                            "expression": "{view.custom.m_Cfg_Ti} / 1000"
+                            "mode": "indirect",
+                            "tagPath": "{0}/Ti",
+                            "references": {
+                              "0": "{view.params.tagPath}"
+                            },
+                            "bidirectional": true,
+                            "fallbackDelay": 2.5
                           }
-                        },
-                        "onChange": {
-                          "enabled": null,
-                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_Ti', int(round(currentValue.value * 1000)), 4, audit=True)"
                         }
                       },
                       "props.enabled": {
@@ -2725,7 +2481,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_Td} / 1000, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Td}, '#,##0.###')"
                           }
                         }
                       }
@@ -2826,14 +2582,16 @@
                     "propConfig": {
                       "props.value": {
                         "binding": {
-                          "type": "expr",
+                          "type": "tag",
                           "config": {
-                            "expression": "{view.custom.m_Cfg_Td} / 1000"
+                            "mode": "indirect",
+                            "tagPath": "{0}/Td",
+                            "references": {
+                              "0": "{view.params.tagPath}"
+                            },
+                            "bidirectional": true,
+                            "fallbackDelay": 2.5
                           }
-                        },
-                        "onChange": {
-                          "enabled": null,
-                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_Td', int(round(currentValue.value * 1000)), 4, audit=True)"
                         }
                       },
                       "props.enabled": {
@@ -2906,7 +2664,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "Deadband",
+                      "text": "Action (0 reverse, 1 direct)",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -2933,7 +2691,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_DB}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Action}, '#,##0.###')"
                           }
                         }
                       }
@@ -3009,7 +2767,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "Deadband",
+                      "text": "Action (0 reverse, 1 direct)",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -3037,7 +2795,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cfg_DB",
+                            "tagPath": "{0}/Action",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -3075,550 +2833,6 @@
                     }
                   }
                 ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "R4"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.037vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "!({view.custom.level} >= 4)"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "SP rate",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Val"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_SPRate}, '#,##0.###')"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "'/s'"
-                          }
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "E4"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.593vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 4"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "SP rate",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.input.numeric-entry-field",
-                    "version": 0,
-                    "meta": {
-                      "name": "Entry"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "basis": "11.111vh"
-                    },
-                    "props": {
-                      "format": "#,##0.###",
-                      "style": {
-                        "classes": "Input/Setpoint"
-                      }
-                    },
-                    "propConfig": {
-                      "props.value": {
-                        "binding": {
-                          "type": "tag",
-                          "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_SPRate",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
-                          }
-                        }
-                      },
-                      "props.enabled": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "true"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "/s",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "R5"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.037vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "!({view.custom.level} >= 4)"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "CV rate",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Val"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_CVRate}, '#,##0.###')"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "'%/s'"
-                          }
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "E5"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.593vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 4"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "CV rate",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.input.numeric-entry-field",
-                    "version": 0,
-                    "meta": {
-                      "name": "Entry"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "basis": "11.111vh"
-                    },
-                    "props": {
-                      "format": "#,##0.###",
-                      "style": {
-                        "classes": "Input/Setpoint"
-                      }
-                    },
-                    "propConfig": {
-                      "props.value": {
-                        "binding": {
-                          "type": "tag",
-                          "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_CVRate",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
-                          }
-                        }
-                      },
-                      "props.enabled": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "true"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "%/s",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "R6"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.037vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "!({view.custom.level} >= 4)"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "Direct acting",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Val"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "if({view.custom.m_Cfg_DirectAct}, 'Yes', 'No')"
-                          }
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.input.checkbox",
-                "version": 0,
-                "meta": {
-                  "name": "C6"
-                },
-                "position": {
-                  "shrink": 0,
-                  "basis": "2.222vh"
-                },
-                "props": {
-                  "text": "Direct acting",
-                  "style": {
-                    "classes": "Input/Check"
-                  }
-                },
-                "propConfig": {
-                  "props.selected": {
-                    "binding": {
-                      "type": "tag",
-                      "config": {
-                        "mode": "indirect",
-                        "tagPath": "{0}/Cfg_DirectAct",
-                        "references": {
-                          "0": "{view.params.tagPath}"
-                        },
-                        "bidirectional": true,
-                        "fallbackDelay": 2.5
-                      }
-                    }
-                  },
-                  "props.enabled": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 4"
-                      }
-                    }
-                  },
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 4"
-                      }
-                    }
-                  }
-                }
               }
             ],
             "propConfig": {
@@ -3785,7 +2999,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "Dev high limit",
+                      "text": "High alarm",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -3812,7 +3026,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Alm_DevH_Cfg_Lim}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_AlmHi}, '#,##0.###')"
                           }
                         }
                       }
@@ -3888,7 +3102,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "Dev high limit",
+                      "text": "High alarm",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -3916,7 +3130,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Alm_DevH/Cfg_Lim",
+                            "tagPath": "{0}/AlmHi",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -3995,7 +3209,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "Dev low limit",
+                      "text": "Low alarm",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -4022,7 +3236,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Alm_DevL_Cfg_Lim}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_AlmLo}, '#,##0.###')"
                           }
                         }
                       }
@@ -4098,7 +3312,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "Dev low limit",
+                      "text": "Low alarm",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -4126,7 +3340,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Alm_DevL/Cfg_Lim",
+                            "tagPath": "{0}/AlmLo",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -4205,7 +3419,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "SP min",
+                      "text": "Deviation alarm",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -4232,7 +3446,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_SPMin}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_AlmDev}, '#,##0.###')"
                           }
                         }
                       }
@@ -4308,7 +3522,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "SP min",
+                      "text": "Deviation alarm",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -4336,7 +3550,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cfg_SPMin",
+                            "tagPath": "{0}/AlmDev",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -4415,7 +3629,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "SP max",
+                      "text": "SP min",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -4442,7 +3656,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_SPMax}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_SP_Lo}, '#,##0.###')"
                           }
                         }
                       }
@@ -4518,7 +3732,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "SP max",
+                      "text": "SP min",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -4546,7 +3760,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cfg_SPMax",
+                            "tagPath": "{0}/SP_Lo",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -4625,7 +3839,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "CV min",
+                      "text": "SP max",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -4652,7 +3866,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_CVMin}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_SP_Hi}, '#,##0.###')"
                           }
                         }
                       }
@@ -4680,7 +3894,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "'%'"
+                            "expression": "''"
                           }
                         }
                       }
@@ -4728,7 +3942,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "CV min",
+                      "text": "SP max",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -4756,7 +3970,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cfg_CVMin",
+                            "tagPath": "{0}/SP_Hi",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -4787,7 +4001,7 @@
                       "basis": "3.704vh"
                     },
                     "props": {
-                      "text": "%",
+                      "text": "",
                       "style": {
                         "classes": "Text/Units"
                       }
@@ -4835,7 +4049,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "CV max",
+                      "text": "Output min",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -4862,7 +4076,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_CVMax}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_OUT_Lo}, '#,##0.###')"
                           }
                         }
                       }
@@ -4938,7 +4152,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "CV max",
+                      "text": "Output min",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -4966,7 +4180,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cfg_CVMax",
+                            "tagPath": "{0}/OUT_Lo",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -5045,7 +4259,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "PV min",
+                      "text": "Output max",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -5072,7 +4286,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_PVMin}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_OUT_Hi}, '#,##0.###')"
                           }
                         }
                       }
@@ -5100,7 +4314,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "''"
+                            "expression": "'%'"
                           }
                         }
                       }
@@ -5148,7 +4362,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "PV min",
+                      "text": "Output max",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -5176,7 +4390,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cfg_PVMin",
+                            "tagPath": "{0}/OUT_Hi",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -5207,217 +4421,7 @@
                       "basis": "3.704vh"
                     },
                     "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "R7"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.037vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "!({view.custom.level} >= 4)"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "PV max",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Val"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_PVMax}, '#,##0.###')"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "''"
-                          }
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "E7"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.593vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 4"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "PV max",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.input.numeric-entry-field",
-                    "version": 0,
-                    "meta": {
-                      "name": "Entry"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "basis": "11.111vh"
-                    },
-                    "props": {
-                      "format": "#,##0.###",
-                      "style": {
-                        "classes": "Input/Setpoint"
-                      }
-                    },
-                    "propConfig": {
-                      "props.value": {
-                        "binding": {
-                          "type": "tag",
-                          "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_PVMax",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
-                          }
-                        }
-                      },
-                      "props.enabled": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "true"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "",
+                      "text": "%",
                       "style": {
                         "classes": "Text/Units"
                       }

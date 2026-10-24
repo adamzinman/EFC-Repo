@@ -1,55 +1,48 @@
 {
   "custom": {
     "level": 0,
-    "m_Cfg_EU": null,
-    "m_Cfg_Tag": null,
-    "m_Cfg_Desc": null,
-    "m_Sts_Bad": null,
-    "m_Val_PV": null,
-    "m_Sts_Sim": null,
-    "m_Sts_Subst": null,
-    "m_Sts_ORng": null,
-    "m_Sts_URng": null,
-    "m_Val_PVPct": null,
-    "m_Val_ROC": null,
-    "m_Cfg_EUMin": null,
-    "m_Cfg_EUMax": null,
-    "m_Sts_NE107": null,
-    "m_Alm_HH_Sts_Active": null,
-    "m_Alm_HH_Sts_Unack": null,
-    "m_Alm_HH_Cfg_Priority": null,
-    "m_Alm_H_Sts_Active": null,
-    "m_Alm_H_Sts_Unack": null,
-    "m_Alm_H_Cfg_Priority": null,
-    "m_Alm_L_Sts_Active": null,
-    "m_Alm_L_Sts_Unack": null,
-    "m_Alm_L_Cfg_Priority": null,
-    "m_Alm_LL_Sts_Active": null,
-    "m_Alm_LL_Sts_Unack": null,
-    "m_Alm_LL_Cfg_Priority": null,
-    "m_Alm_ROC_Sts_Active": null,
-    "m_Alm_ROC_Sts_Unack": null,
-    "m_Alm_ROC_Cfg_Priority": null,
-    "m_Alm_Bad_Sts_Active": null,
-    "m_Alm_Bad_Sts_Unack": null,
-    "m_Alm_Bad_Cfg_Priority": null,
-    "m_Sim_En": null,
-    "m_Alm_HH_Cfg_Lim": null,
-    "m_Alm_H_Cfg_Lim": null,
-    "m_Alm_L_Cfg_Lim": null,
-    "m_Alm_LL_Cfg_Lim": null,
-    "m_Alm_ROC_Cfg_Lim": null,
+    "m_Units": null,
+    "m_PV": null,
+    "m_Eng_Min": null,
+    "m_Eng_Max": null,
+    "m_HH_Inhibit": null,
+    "m_H_Inhibit": null,
+    "m_L_Inhibit": null,
+    "m_LL_Inhibit": null,
+    "m_HH_Alarm": null,
+    "m_HH_Enabled": null,
+    "m_HH_SP": null,
+    "m_H_Alarm": null,
+    "m_H_Enabled": null,
+    "m_H_SP": null,
+    "m_L_Alarm": null,
+    "m_L_Enabled": null,
+    "m_L_SP": null,
+    "m_LL_Alarm": null,
+    "m_LL_Enabled": null,
+    "m_LL_SP": null,
+    "m_Name": null,
+    "m_Description": null,
+    "m_HW_Fault": null,
+    "m_Overrange": null,
+    "m_Underrange": null,
+    "m_Raw_Min": null,
+    "m_Raw_Max": null,
     "open_Limits": false,
-    "m_Cfg_RawMin": null,
-    "m_Cfg_RawMax": null,
-    "m_Cfg_FiltTC": null,
-    "m_Cfg_LoCutoff": null,
-    "m_Cfg_SqrtExtract": null,
+    "m_HH_DB": null,
+    "m_HH_DLY": null,
+    "m_H_DB": null,
+    "m_H_DLY": null,
+    "m_L_DB": null,
+    "m_L_DLY": null,
+    "m_LL_DB": null,
+    "m_LL_DLY": null,
+    "open_AlarmCfg": false,
     "open_Configuration": false
   },
   "params": {
     "tagPath": "",
-    "tType": "T_AI"
+    "tType": "DDT_Process_Value"
   },
   "propConfig": {
     "custom.level": {
@@ -66,12 +59,12 @@
         ]
       }
     },
-    "custom.m_Cfg_EU": {
+    "custom.m_Units": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_EU",
+          "tagPath": "{0}/Units",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -80,12 +73,12 @@
         }
       }
     },
-    "custom.m_Cfg_Tag": {
+    "custom.m_PV": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_Tag",
+          "tagPath": "{0}/PV",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -94,12 +87,12 @@
         }
       }
     },
-    "custom.m_Cfg_Desc": {
+    "custom.m_Eng_Min": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_Desc",
+          "tagPath": "{0}/Eng_Min",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -108,12 +101,12 @@
         }
       }
     },
-    "custom.m_Sts_Bad": {
+    "custom.m_Eng_Max": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Bad",
+          "tagPath": "{0}/Eng_Max",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -122,12 +115,12 @@
         }
       }
     },
-    "custom.m_Val_PV": {
+    "custom.m_HH_Inhibit": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Val_PV",
+          "tagPath": "{0}/HH/Inhibit",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -136,12 +129,12 @@
         }
       }
     },
-    "custom.m_Sts_Sim": {
+    "custom.m_H_Inhibit": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Sim",
+          "tagPath": "{0}/H/Inhibit",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -150,12 +143,12 @@
         }
       }
     },
-    "custom.m_Sts_Subst": {
+    "custom.m_L_Inhibit": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_Subst",
+          "tagPath": "{0}/L/Inhibit",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -164,12 +157,12 @@
         }
       }
     },
-    "custom.m_Sts_ORng": {
+    "custom.m_LL_Inhibit": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_ORng",
+          "tagPath": "{0}/LL/Inhibit",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -178,12 +171,12 @@
         }
       }
     },
-    "custom.m_Sts_URng": {
+    "custom.m_HH_Alarm": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_URng",
+          "tagPath": "{0}/HH/Alarm",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -192,12 +185,12 @@
         }
       }
     },
-    "custom.m_Val_PVPct": {
+    "custom.m_HH_Enabled": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Val_PVPct",
+          "tagPath": "{0}/HH/Enabled",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -206,12 +199,12 @@
         }
       }
     },
-    "custom.m_Val_ROC": {
+    "custom.m_HH_SP": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Val_ROC",
+          "tagPath": "{0}/HH/SP",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -220,12 +213,12 @@
         }
       }
     },
-    "custom.m_Cfg_EUMin": {
+    "custom.m_H_Alarm": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_EUMin",
+          "tagPath": "{0}/H/Alarm",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -234,12 +227,12 @@
         }
       }
     },
-    "custom.m_Cfg_EUMax": {
+    "custom.m_H_Enabled": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Cfg_EUMax",
+          "tagPath": "{0}/H/Enabled",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -248,12 +241,12 @@
         }
       }
     },
-    "custom.m_Sts_NE107": {
+    "custom.m_H_SP": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sts_NE107",
+          "tagPath": "{0}/H/SP",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -262,12 +255,12 @@
         }
       }
     },
-    "custom.m_Alm_HH_Sts_Active": {
+    "custom.m_L_Alarm": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_HH/Sts_Active",
+          "tagPath": "{0}/L/Alarm",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -276,12 +269,12 @@
         }
       }
     },
-    "custom.m_Alm_HH_Sts_Unack": {
+    "custom.m_L_Enabled": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_HH/Sts_Unack",
+          "tagPath": "{0}/L/Enabled",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -290,12 +283,12 @@
         }
       }
     },
-    "custom.m_Alm_HH_Cfg_Priority": {
+    "custom.m_L_SP": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_HH/Cfg_Priority",
+          "tagPath": "{0}/L/SP",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -304,12 +297,12 @@
         }
       }
     },
-    "custom.m_Alm_H_Sts_Active": {
+    "custom.m_LL_Alarm": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_H/Sts_Active",
+          "tagPath": "{0}/LL/Alarm",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -318,12 +311,12 @@
         }
       }
     },
-    "custom.m_Alm_H_Sts_Unack": {
+    "custom.m_LL_Enabled": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_H/Sts_Unack",
+          "tagPath": "{0}/LL/Enabled",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -332,12 +325,12 @@
         }
       }
     },
-    "custom.m_Alm_H_Cfg_Priority": {
+    "custom.m_LL_SP": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_H/Cfg_Priority",
+          "tagPath": "{0}/LL/SP",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -346,12 +339,12 @@
         }
       }
     },
-    "custom.m_Alm_L_Sts_Active": {
+    "custom.m_Name": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_L/Sts_Active",
+          "tagPath": "{0}/Name",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -360,12 +353,12 @@
         }
       }
     },
-    "custom.m_Alm_L_Sts_Unack": {
+    "custom.m_Description": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_L/Sts_Unack",
+          "tagPath": "{0}/Description",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -374,12 +367,12 @@
         }
       }
     },
-    "custom.m_Alm_L_Cfg_Priority": {
+    "custom.m_HW_Fault": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_L/Cfg_Priority",
+          "tagPath": "{0}/HW_Fault",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -388,12 +381,12 @@
         }
       }
     },
-    "custom.m_Alm_LL_Sts_Active": {
+    "custom.m_Overrange": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_LL/Sts_Active",
+          "tagPath": "{0}/Overrange",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -402,12 +395,12 @@
         }
       }
     },
-    "custom.m_Alm_LL_Sts_Unack": {
+    "custom.m_Underrange": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_LL/Sts_Unack",
+          "tagPath": "{0}/Underrange",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -416,12 +409,12 @@
         }
       }
     },
-    "custom.m_Alm_LL_Cfg_Priority": {
+    "custom.m_Raw_Min": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_LL/Cfg_Priority",
+          "tagPath": "{0}/Raw_Min",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -430,12 +423,12 @@
         }
       }
     },
-    "custom.m_Alm_ROC_Sts_Active": {
+    "custom.m_Raw_Max": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_ROC/Sts_Active",
+          "tagPath": "{0}/Raw_Max",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -444,12 +437,12 @@
         }
       }
     },
-    "custom.m_Alm_ROC_Sts_Unack": {
+    "custom.m_HH_DB": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_ROC/Sts_Unack",
+          "tagPath": "{0}/HH/DB",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -458,12 +451,12 @@
         }
       }
     },
-    "custom.m_Alm_ROC_Cfg_Priority": {
+    "custom.m_HH_DLY": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_ROC/Cfg_Priority",
+          "tagPath": "{0}/HH/DLY",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -472,12 +465,12 @@
         }
       }
     },
-    "custom.m_Alm_Bad_Sts_Active": {
+    "custom.m_H_DB": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_Bad/Sts_Active",
+          "tagPath": "{0}/H/DB",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -486,12 +479,12 @@
         }
       }
     },
-    "custom.m_Alm_Bad_Sts_Unack": {
+    "custom.m_H_DLY": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_Bad/Sts_Unack",
+          "tagPath": "{0}/H/DLY",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -500,12 +493,12 @@
         }
       }
     },
-    "custom.m_Alm_Bad_Cfg_Priority": {
+    "custom.m_L_DB": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_Bad/Cfg_Priority",
+          "tagPath": "{0}/L/DB",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -514,12 +507,12 @@
         }
       }
     },
-    "custom.m_Sim_En": {
+    "custom.m_L_DLY": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Sim_En",
+          "tagPath": "{0}/L/DLY",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -528,12 +521,12 @@
         }
       }
     },
-    "custom.m_Alm_HH_Cfg_Lim": {
+    "custom.m_LL_DB": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_HH/Cfg_Lim",
+          "tagPath": "{0}/LL/DB",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -542,124 +535,12 @@
         }
       }
     },
-    "custom.m_Alm_H_Cfg_Lim": {
+    "custom.m_LL_DLY": {
       "binding": {
         "type": "tag",
         "config": {
           "mode": "indirect",
-          "tagPath": "{0}/Alm_H/Cfg_Lim",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_L_Cfg_Lim": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_L/Cfg_Lim",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_LL_Cfg_Lim": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_LL/Cfg_Lim",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Alm_ROC_Cfg_Lim": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Alm_ROC/Cfg_Lim",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_RawMin": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_RawMin",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_RawMax": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_RawMax",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_FiltTC": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_FiltTC",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_LoCutoff": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_LoCutoff",
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "bidirectional": false,
-          "fallbackDelay": 2.5
-        }
-      }
-    },
-    "custom.m_Cfg_SqrtExtract": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "tagPath": "{0}/Cfg_SqrtExtract",
+          "tagPath": "{0}/LL/DLY",
           "references": {
             "0": "{view.params.tagPath}"
           },
@@ -759,7 +640,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "{view.custom.m_Cfg_Tag}"
+                        "expression": "if(len(coalesce({view.custom.m_Name}, '')) > 0, {view.custom.m_Name}, substring({view.params.tagPath}, lastIndexOf({view.params.tagPath}, '/') + 1))"
                       }
                     }
                   }
@@ -786,7 +667,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "{view.custom.m_Cfg_Desc}"
+                        "expression": "{view.custom.m_Description}"
                       }
                     }
                   }
@@ -848,7 +729,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if({view.custom.m_Sts_Bad}, 'State/Fault', if(true, 'State/Stopped', 'State/Unknown'))"
+                "expression": "if({view.custom.m_HW_Fault}, 'State/Fault', if(true, 'State/Stopped', 'State/Unknown'))"
               }
             }
           }
@@ -875,7 +756,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "if({view.custom.m_Sts_Bad}, 'BAD QUALITY', if(true, numberFormat({view.custom.m_Val_PV}, '#,##0.0') + ' ' + {view.custom.m_Cfg_EU}, 'UNKNOWN'))"
+                    "expression": "if({view.custom.m_HW_Fault}, 'HW FAULT', if(true, numberFormat({view.custom.m_PV}, '#,##0.0') + ' ' + {view.custom.m_Units}, 'UNKNOWN'))"
                   }
                 }
               }
@@ -892,7 +773,7 @@
               "grow": 0
             },
             "props": {
-              "text": "SIM",
+              "text": "OVER",
               "style": {
                 "classes": "Indicator/Badge"
               }
@@ -902,7 +783,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Sts_Sim}"
+                    "expression": "{view.custom.m_Overrange}"
                   }
                 }
               }
@@ -919,7 +800,7 @@
               "grow": 0
             },
             "props": {
-              "text": "SUBST",
+              "text": "UNDER",
               "style": {
                 "classes": "Indicator/Badge"
               }
@@ -929,7 +810,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Sts_Subst}"
+                    "expression": "{view.custom.m_Underrange}"
                   }
                 }
               }
@@ -946,7 +827,7 @@
               "grow": 0
             },
             "props": {
-              "text": "OVER",
+              "text": "INH",
               "style": {
                 "classes": "Indicator/Badge"
               }
@@ -956,34 +837,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.m_Sts_ORng}"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "type": "ia.display.label",
-            "version": 0,
-            "meta": {
-              "name": "Chip3"
-            },
-            "position": {
-              "shrink": 0,
-              "grow": 0
-            },
-            "props": {
-              "text": "UNDER",
-              "style": {
-                "classes": "Indicator/Badge"
-              }
-            },
-            "propConfig": {
-              "position.display": {
-                "binding": {
-                  "type": "expr",
-                  "config": {
-                    "expression": "{view.custom.m_Sts_URng}"
+                    "expression": "{view.custom.m_HH_Inhibit} || {view.custom.m_H_Inhibit} || {view.custom.m_L_Inhibit} || {view.custom.m_LL_Inhibit}"
                   }
                 }
               }
@@ -1121,7 +975,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Val_PV}, '#,##0.0')"
+                            "expression": "numberFormat({view.custom.m_PV}, '#,##0.0')"
                           }
                         }
                       }
@@ -1149,7 +1003,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Cfg_EU}"
+                            "expression": "{view.custom.m_Units}"
                           }
                         }
                       }
@@ -1214,7 +1068,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Val_PVPct}, '0')"
+                            "expression": "numberFormat(({view.custom.m_PV} - {view.custom.m_Eng_Min}) / max({view.custom.m_Eng_Max} - {view.custom.m_Eng_Min}, 0.000001) * 100, '0')"
                           }
                         }
                       }
@@ -1243,99 +1097,6 @@
                           "type": "expr",
                           "config": {
                             "expression": "'%'"
-                          }
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "ROC"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.037vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "Rate of change",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Val"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "numberFormat({view.custom.m_Val_ROC}, '#,##0.###')"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "{view.custom.m_Cfg_EU} + '/s'"
                           }
                         }
                       }
@@ -1400,7 +1161,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_EUMin}, '#,##0.##') + ' .. ' + numberFormat({view.custom.m_Cfg_EUMax}, '#,##0.##')"
+                            "expression": "numberFormat({view.custom.m_Eng_Min}, '#,##0.##') + ' .. ' + numberFormat({view.custom.m_Eng_Max}, '#,##0.##')"
                           }
                         }
                       }
@@ -1428,7 +1189,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Cfg_EU}"
+                            "expression": "{view.custom.m_Units}"
                           }
                         }
                       }
@@ -1440,7 +1201,7 @@
                 "type": "ia.container.flex",
                 "version": 0,
                 "meta": {
-                  "name": "NE107"
+                  "name": "Raw"
                 },
                 "position": {
                   "shrink": 0,
@@ -1466,7 +1227,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "Diagnostics",
+                      "text": "Raw range",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -1493,7 +1254,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "case(toInt({view.custom.m_Sts_NE107}), 0, 'NE107 OK', 1, 'NE107 F', 2, 'NE107 C', 3, 'NE107 S', 4, 'NE107 M', '')"
+                            "expression": "toStr({view.custom.m_Raw_Min}) + ' .. ' + toStr({view.custom.m_Raw_Max})"
                           }
                         }
                       }
@@ -1552,7 +1313,7 @@
                   "grow": 1
                 },
                 "props": {
-                  "text": "Alarms",
+                  "text": "Alarm limits",
                   "style": {
                     "classes": "Text/Subheader Text/Mod/Upper"
                   }
@@ -1579,47 +1340,21 @@
             },
             "children": [
               {
-                "type": "ia.display.label",
-                "version": 0,
-                "meta": {
-                  "name": "None"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0
-                },
-                "props": {
-                  "text": "No active alarms",
-                  "style": {
-                    "classes": "Text/Caption Text/Color/Muted"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "!({view.custom.m_Alm_HH_Sts_Active} || {view.custom.m_Alm_H_Sts_Active} || {view.custom.m_Alm_L_Sts_Active} || {view.custom.m_Alm_LL_Sts_Active} || {view.custom.m_Alm_ROC_Sts_Active} || {view.custom.m_Alm_Bad_Sts_Active})"
-                      }
-                    }
-                  }
-                }
-              },
-              {
                 "type": "ia.container.flex",
                 "version": 0,
                 "meta": {
-                  "name": "List"
+                  "name": "LHH"
                 },
                 "position": {
                   "shrink": 0,
-                  "grow": 0
+                  "grow": 0,
+                  "basis": "2.037vh"
                 },
                 "props": {
-                  "direction": "column",
-                  "alignItems": "stretch",
+                  "direction": "row",
+                  "alignItems": "center",
                   "style": {
-                    "classes": "Util/Gap/XS"
+                    "classes": "Util/Gap/M"
                   }
                 },
                 "children": [
@@ -1627,16 +1362,16 @@
                     "type": "ia.display.label",
                     "version": 0,
                     "meta": {
-                      "name": "A0"
+                      "name": "LED"
                     },
                     "position": {
                       "shrink": 0,
-                      "grow": 0
+                      "basis": "1.111vh"
                     },
                     "props": {
-                      "text": "High high",
+                      "text": "",
                       "style": {
-                        "classes": "Text/Caption"
+                        "classes": "Indicator/LED/Off"
                       }
                     },
                     "propConfig": {
@@ -1644,7 +1379,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_HH_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_HH_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_HH_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_HH_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "if({view.custom.m_HH_Inhibit}, 'Indicator/LED/Unknown', if({view.custom.m_HH_Alarm}, 'Indicator/LED/Fault', if({view.custom.m_HH_Enabled}, 'Indicator/LED/On', 'Indicator/LED/Off')))"
                           }
                         }
                       }
@@ -1654,24 +1389,49 @@
                     "type": "ia.display.label",
                     "version": 0,
                     "meta": {
-                      "name": "A1"
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "High high (HH)",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "State"
                     },
                     "position": {
                       "shrink": 0,
                       "grow": 0
                     },
                     "props": {
-                      "text": "High",
+                      "text": "",
                       "style": {
-                        "classes": "Text/Caption"
+                        "classes": "Indicator/Badge"
                       }
                     },
                     "propConfig": {
-                      "props.style.classes": {
+                      "props.text": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_H_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_H_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_H_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_H_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "if({view.custom.m_HH_Inhibit}, 'INHIBITED', if(!{view.custom.m_HH_Enabled}, 'DISABLED', if({view.custom.m_HH_Alarm}, 'ALARM', '')))"
+                          }
+                        }
+                      },
+                      "position.display": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.m_HH_Inhibit} || !{view.custom.m_HH_Enabled} || {view.custom.m_HH_Alarm}"
                           }
                         }
                       }
@@ -1681,24 +1441,24 @@
                     "type": "ia.display.label",
                     "version": 0,
                     "meta": {
-                      "name": "A2"
+                      "name": "Val"
                     },
                     "position": {
                       "shrink": 0,
                       "grow": 0
                     },
                     "props": {
-                      "text": "Low",
+                      "text": "",
                       "style": {
-                        "classes": "Text/Caption"
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
                       }
                     },
                     "propConfig": {
-                      "props.style.classes": {
+                      "props.text": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_L_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_L_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_L_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_L_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "numberFormat({view.custom.m_HH_SP}, '#,##0.##')"
                           }
                         }
                       }
@@ -1708,78 +1468,25 @@
                     "type": "ia.display.label",
                     "version": 0,
                     "meta": {
-                      "name": "A3"
+                      "name": "EU"
                     },
                     "position": {
                       "shrink": 0,
-                      "grow": 0
+                      "grow": 0,
+                      "basis": "3.704vh"
                     },
                     "props": {
-                      "text": "Low low",
+                      "text": "",
                       "style": {
-                        "classes": "Text/Caption"
+                        "classes": "Text/Units"
                       }
                     },
                     "propConfig": {
-                      "props.style.classes": {
+                      "props.text": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "if({view.custom.m_Alm_LL_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_LL_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_LL_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_LL_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "A4"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "Rate of change",
-                      "style": {
-                        "classes": "Text/Caption"
-                      }
-                    },
-                    "propConfig": {
-                      "props.style.classes": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "if({view.custom.m_Alm_ROC_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_ROC_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_ROC_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_ROC_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "A5"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "Bad quality",
-                      "style": {
-                        "classes": "Text/Caption"
-                      }
-                    },
-                    "propConfig": {
-                      "props.style.classes": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "if({view.custom.m_Alm_Bad_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_Bad_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_Bad_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_Bad_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
+                            "expression": "{view.custom.m_Units}"
                           }
                         }
                       }
@@ -1788,41 +1495,484 @@
                 ]
               },
               {
-                "type": "ia.input.button",
+                "type": "ia.container.flex",
                 "version": 0,
                 "meta": {
-                  "name": "Ack"
+                  "name": "LH"
                 },
                 "position": {
                   "shrink": 0,
                   "grow": 0,
-                  "basis": "2.963vh"
+                  "basis": "2.037vh"
                 },
                 "props": {
-                  "text": "ACK",
+                  "direction": "row",
+                  "alignItems": "center",
                   "style": {
-                    "classes": "Button/Default"
+                    "classes": "Util/Gap/M"
                   }
                 },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 1"
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "LED"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "basis": "1.111vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Indicator/LED/Off"
+                      }
+                    },
+                    "propConfig": {
+                      "props.style.classes": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_H_Inhibit}, 'Indicator/LED/Unknown', if({view.custom.m_H_Alarm}, 'Indicator/LED/Fault', if({view.custom.m_H_Enabled}, 'Indicator/LED/On', 'Indicator/LED/Off')))"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "High (H)",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "State"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Indicator/Badge"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_H_Inhibit}, 'INHIBITED', if(!{view.custom.m_H_Enabled}, 'DISABLED', if({view.custom.m_H_Alarm}, 'ALARM', '')))"
+                          }
+                        }
+                      },
+                      "position.display": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.m_H_Inhibit} || !{view.custom.m_H_Enabled} || {view.custom.m_H_Alarm}"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_H_SP}, '#,##0.##')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.m_Units}"
+                          }
+                        }
                       }
                     }
                   }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "LL"
                 },
-                "events": {
-                  "component": {
-                    "onActionPerformed": {
-                      "type": "script",
-                      "scope": "G",
-                      "config": {
-                        "script": "\tefc.ui.ackAll(self, ['Alm_HH', 'Alm_H', 'Alm_L', 'Alm_LL', 'Alm_ROC', 'Alm_Bad'])"
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "LED"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "basis": "1.111vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Indicator/LED/Off"
+                      }
+                    },
+                    "propConfig": {
+                      "props.style.classes": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_L_Inhibit}, 'Indicator/LED/Unknown', if({view.custom.m_L_Alarm}, 'Indicator/LED/Fault', if({view.custom.m_L_Enabled}, 'Indicator/LED/On', 'Indicator/LED/Off')))"
+                          }
+                        }
                       }
                     }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "Low (L)",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "State"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Indicator/Badge"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_L_Inhibit}, 'INHIBITED', if(!{view.custom.m_L_Enabled}, 'DISABLED', if({view.custom.m_L_Alarm}, 'ALARM', '')))"
+                          }
+                        }
+                      },
+                      "position.display": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.m_L_Inhibit} || !{view.custom.m_L_Enabled} || {view.custom.m_L_Alarm}"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_L_SP}, '#,##0.##')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.m_Units}"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "LLL"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "LED"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "basis": "1.111vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Indicator/LED/Off"
+                      }
+                    },
+                    "propConfig": {
+                      "props.style.classes": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_LL_Inhibit}, 'Indicator/LED/Unknown', if({view.custom.m_LL_Alarm}, 'Indicator/LED/Fault', if({view.custom.m_LL_Enabled}, 'Indicator/LED/On', 'Indicator/LED/Off')))"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "Low low (LL)",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "State"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Indicator/Badge"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_LL_Inhibit}, 'INHIBITED', if(!{view.custom.m_LL_Enabled}, 'DISABLED', if({view.custom.m_LL_Alarm}, 'ALARM', '')))"
+                          }
+                        }
+                      },
+                      "position.display": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.m_LL_Inhibit} || !{view.custom.m_LL_Enabled} || {view.custom.m_LL_Alarm}"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_LL_SP}, '#,##0.##')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.m_Units}"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.display.label",
+                "version": 0,
+                "meta": {
+                  "name": "Hint"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0
+                },
+                "props": {
+                  "text": "Acknowledge in the alarm status table (Ignition tag alarms on the x/Alarm bits).",
+                  "style": {
+                    "classes": "Text/Micro Text/Color/Muted"
                   }
                 }
               }
@@ -1831,49 +1981,10 @@
         ]
       },
       {
-        "type": "ia.display.view",
-        "version": 0,
-        "meta": {
-          "name": "Trend"
-        },
-        "position": {
-          "shrink": 0,
-          "basis": "15.741vh"
-        },
-        "props": {
-          "path": "Templates/Dynamic Window/Parts/Trend",
-          "params": {
-            "tagPath": "",
-            "pens": [
-              "Val_PV"
-            ],
-            "expanded": false
-          }
-        },
-        "propConfig": {
-          "props.params.tagPath": {
-            "binding": {
-              "type": "expr",
-              "config": {
-                "expression": "{view.params.tagPath}"
-              }
-            }
-          },
-          "position.basis": {
-            "binding": {
-              "type": "expr",
-              "config": {
-                "expression": "if({this.props.params.expanded}, '70.370vh', '15.741vh')"
-              }
-            }
-          }
-        }
-      },
-      {
         "type": "ia.container.flex",
         "version": 0,
         "meta": {
-          "name": "Maintenance"
+          "name": "Inhibit"
         },
         "position": {
           "shrink": 0,
@@ -1891,7 +2002,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.level} >= 2"
+                "expression": "{view.custom.level} >= 3"
               }
             }
           }
@@ -1926,7 +2037,7 @@
                   "grow": 1
                 },
                 "props": {
-                  "text": "Maintenance",
+                  "text": "Inhibit (Supervisor)",
                   "style": {
                     "classes": "Text/Subheader Text/Mod/Upper"
                   }
@@ -1956,14 +2067,14 @@
                 "type": "ia.input.checkbox",
                 "version": 0,
                 "meta": {
-                  "name": "Sim"
+                  "name": "IHH"
                 },
                 "position": {
                   "shrink": 0,
                   "basis": "2.222vh"
                 },
                 "props": {
-                  "text": "Simulate",
+                  "text": "Inhibit HH",
                   "style": {
                     "classes": "Input/Check"
                   }
@@ -1974,7 +2085,7 @@
                       "type": "tag",
                       "config": {
                         "mode": "indirect",
-                        "tagPath": "{0}/Sim_En",
+                        "tagPath": "{0}/HH/Inhibit",
                         "references": {
                           "0": "{view.params.tagPath}"
                         },
@@ -1987,122 +2098,177 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "{view.custom.level} >= 2"
+                        "expression": "{view.custom.level} >= 3"
                       }
                     }
                   }
                 }
               },
               {
-                "type": "ia.container.flex",
+                "type": "ia.input.checkbox",
                 "version": 0,
                 "meta": {
-                  "name": "SimPV"
+                  "name": "IH"
                 },
                 "position": {
                   "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.593vh"
+                  "basis": "2.222vh"
                 },
                 "props": {
-                  "direction": "row",
-                  "alignItems": "center",
+                  "text": "Inhibit H",
                   "style": {
-                    "classes": "Util/Gap/M"
+                    "classes": "Input/Check"
                   }
                 },
                 "propConfig": {
-                  "position.display": {
+                  "props.selected": {
+                    "binding": {
+                      "type": "tag",
+                      "config": {
+                        "mode": "indirect",
+                        "tagPath": "{0}/H/Inhibit",
+                        "references": {
+                          "0": "{view.params.tagPath}"
+                        },
+                        "bidirectional": true,
+                        "fallbackDelay": 2.5
+                      }
+                    }
+                  },
+                  "props.enabled": {
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "{view.custom.level} >= 2 && ({view.custom.m_Sim_En})"
+                        "expression": "{view.custom.level} >= 3"
                       }
                     }
+                  }
+                }
+              },
+              {
+                "type": "ia.input.checkbox",
+                "version": 0,
+                "meta": {
+                  "name": "IL"
+                },
+                "position": {
+                  "shrink": 0,
+                  "basis": "2.222vh"
+                },
+                "props": {
+                  "text": "Inhibit L",
+                  "style": {
+                    "classes": "Input/Check"
                   }
                 },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "Simulated value",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "type": "tag",
+                      "config": {
+                        "mode": "indirect",
+                        "tagPath": "{0}/L/Inhibit",
+                        "references": {
+                          "0": "{view.params.tagPath}"
+                        },
+                        "bidirectional": true,
+                        "fallbackDelay": 2.5
                       }
                     }
                   },
-                  {
-                    "type": "ia.input.numeric-entry-field",
-                    "version": 0,
-                    "meta": {
-                      "name": "Entry"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "basis": "11.111vh"
-                    },
-                    "props": {
-                      "format": "#,##0.0",
-                      "style": {
-                        "classes": "Input/Setpoint"
-                      }
-                    },
-                    "propConfig": {
-                      "props.value": {
-                        "binding": {
-                          "type": "tag",
-                          "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Sim_PV",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
-                          }
-                        }
-                      },
-                      "props.enabled": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "true"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Units"
+                  "props.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 3"
                       }
                     }
                   }
-                ]
+                }
+              },
+              {
+                "type": "ia.input.checkbox",
+                "version": 0,
+                "meta": {
+                  "name": "ILL"
+                },
+                "position": {
+                  "shrink": 0,
+                  "basis": "2.222vh"
+                },
+                "props": {
+                  "text": "Inhibit LL",
+                  "style": {
+                    "classes": "Input/Check"
+                  }
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "type": "tag",
+                      "config": {
+                        "mode": "indirect",
+                        "tagPath": "{0}/LL/Inhibit",
+                        "references": {
+                          "0": "{view.params.tagPath}"
+                        },
+                        "bidirectional": true,
+                        "fallbackDelay": 2.5
+                      }
+                    }
+                  },
+                  "props.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 3"
+                      }
+                    }
+                  }
+                }
               }
             ]
           }
         ]
+      },
+      {
+        "type": "ia.display.view",
+        "version": 0,
+        "meta": {
+          "name": "Trend"
+        },
+        "position": {
+          "shrink": 0,
+          "basis": "15.741vh"
+        },
+        "props": {
+          "path": "Templates/Dynamic Window/Parts/Trend",
+          "params": {
+            "tagPath": "",
+            "pens": [
+              "PV"
+            ],
+            "expanded": false
+          }
+        },
+        "propConfig": {
+          "props.params.tagPath": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "{view.params.tagPath}"
+              }
+            }
+          },
+          "position.basis": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({this.props.params.expanded}, '70.370vh', '15.741vh')"
+              }
+            }
+          }
+        }
       },
       {
         "type": "ia.container.flex",
@@ -2151,7 +2317,7 @@
                   "grow": 1
                 },
                 "props": {
-                  "text": "Alarm limits",
+                  "text": "Alarm limits (edit)",
                   "style": {
                     "classes": "Text/Subheader Text/Mod/Upper"
                   }
@@ -2282,7 +2448,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Alm_HH_Cfg_Lim}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_HH_SP}, '#,##0.###')"
                           }
                         }
                       }
@@ -2386,7 +2552,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Alm_HH/Cfg_Lim",
+                            "tagPath": "{0}/HH/SP",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -2492,7 +2658,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Alm_H_Cfg_Lim}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_H_SP}, '#,##0.###')"
                           }
                         }
                       }
@@ -2596,7 +2762,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Alm_H/Cfg_Lim",
+                            "tagPath": "{0}/H/SP",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -2702,7 +2868,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Alm_L_Cfg_Lim}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_L_SP}, '#,##0.###')"
                           }
                         }
                       }
@@ -2806,7 +2972,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Alm_L/Cfg_Lim",
+                            "tagPath": "{0}/L/SP",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -2912,7 +3078,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Alm_LL_Cfg_Lim}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_LL_SP}, '#,##0.###')"
                           }
                         }
                       }
@@ -3016,7 +3182,466 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Alm_LL/Cfg_Lim",
+                            "tagPath": "{0}/LL/SP",
+                            "references": {
+                              "0": "{view.params.tagPath}"
+                            },
+                            "bidirectional": true,
+                            "fallbackDelay": 2.5
+                          }
+                        }
+                      },
+                      "props.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "true"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    }
+                  }
+                ]
+              }
+            ],
+            "propConfig": {
+              "position.display": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "{view.custom.open_Limits}"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "ia.container.flex",
+        "version": 0,
+        "meta": {
+          "name": "AlarmCfg"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0
+        },
+        "props": {
+          "direction": "column",
+          "alignItems": "stretch",
+          "style": {
+            "classes": "Container/GroupBox Util/Gap/S"
+          }
+        },
+        "children": [
+          {
+            "type": "ia.container.flex",
+            "version": 0,
+            "meta": {
+              "name": "Header"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 0
+            },
+            "props": {
+              "direction": "row",
+              "alignItems": "center",
+              "style": {
+                "classes": ""
+              }
+            },
+            "children": [
+              {
+                "type": "ia.display.label",
+                "version": 0,
+                "meta": {
+                  "name": "Title"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 1
+                },
+                "props": {
+                  "text": "Alarm configuration",
+                  "style": {
+                    "classes": "Text/Subheader Text/Mod/Upper"
+                  }
+                }
+              },
+              {
+                "type": "ia.display.label",
+                "version": 0,
+                "meta": {
+                  "name": "Chevron"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0
+                },
+                "props": {
+                  "text": "",
+                  "style": {
+                    "classes": "Text/Caption"
+                  }
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.open_AlarmCfg}, '\u25be', '\u25b8')"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "events": {
+              "dom": {
+                "onClick": {
+                  "type": "script",
+                  "scope": "G",
+                  "config": {
+                    "script": "\tself.view.custom.open_AlarmCfg = not self.view.custom.open_AlarmCfg"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "ia.container.flex",
+            "version": 0,
+            "meta": {
+              "name": "Body"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 0
+            },
+            "props": {
+              "direction": "column",
+              "alignItems": "stretch",
+              "style": {
+                "classes": "Util/Gap/S"
+              }
+            },
+            "children": [
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R0"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "HH enabled",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_HH_Enabled}, 'Yes', 'No')"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.input.checkbox",
+                "version": 0,
+                "meta": {
+                  "name": "C0"
+                },
+                "position": {
+                  "shrink": 0,
+                  "basis": "2.222vh"
+                },
+                "props": {
+                  "text": "HH enabled",
+                  "style": {
+                    "classes": "Input/Check"
+                  }
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "type": "tag",
+                      "config": {
+                        "mode": "indirect",
+                        "tagPath": "{0}/HH/Enabled",
+                        "references": {
+                          "0": "{view.params.tagPath}"
+                        },
+                        "bidirectional": true,
+                        "fallbackDelay": 2.5
+                      }
+                    }
+                  },
+                  "props.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  },
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R1"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "HH deadband",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_HH_DB}, '#,##0.###')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "''"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "E1"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.593vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "HH deadband",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.input.numeric-entry-field",
+                    "version": 0,
+                    "meta": {
+                      "name": "Entry"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "basis": "11.111vh"
+                    },
+                    "props": {
+                      "format": "#,##0.###",
+                      "style": {
+                        "classes": "Input/Setpoint"
+                      }
+                    },
+                    "propConfig": {
+                      "props.value": {
+                        "binding": {
+                          "type": "tag",
+                          "config": {
+                            "mode": "indirect",
+                            "tagPath": "{0}/HH/DB",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -3059,6 +3684,340 @@
                 "type": "ia.container.flex",
                 "version": 0,
                 "meta": {
+                  "name": "R2"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "HH delay",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_HH_DLY}, '#,##0.###')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "''"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "E2"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.593vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "HH delay",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.input.numeric-entry-field",
+                    "version": 0,
+                    "meta": {
+                      "name": "Entry"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "basis": "11.111vh"
+                    },
+                    "props": {
+                      "format": "#,##0.###",
+                      "style": {
+                        "classes": "Input/Setpoint"
+                      }
+                    },
+                    "propConfig": {
+                      "props.value": {
+                        "binding": {
+                          "type": "tag",
+                          "config": {
+                            "mode": "indirect",
+                            "tagPath": "{0}/HH/DLY",
+                            "references": {
+                              "0": "{view.params.tagPath}"
+                            },
+                            "bidirectional": true,
+                            "fallbackDelay": 2.5
+                          }
+                        }
+                      },
+                      "props.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "true"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R3"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "H enabled",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_H_Enabled}, 'Yes', 'No')"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.input.checkbox",
+                "version": 0,
+                "meta": {
+                  "name": "C3"
+                },
+                "position": {
+                  "shrink": 0,
+                  "basis": "2.222vh"
+                },
+                "props": {
+                  "text": "H enabled",
+                  "style": {
+                    "classes": "Input/Check"
+                  }
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "type": "tag",
+                      "config": {
+                        "mode": "indirect",
+                        "tagPath": "{0}/H/Enabled",
+                        "references": {
+                          "0": "{view.params.tagPath}"
+                        },
+                        "bidirectional": true,
+                        "fallbackDelay": 2.5
+                      }
+                    }
+                  },
+                  "props.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  },
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
                   "name": "R4"
                 },
                 "position": {
@@ -3095,7 +4054,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "ROC limit",
+                      "text": "H deadband",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -3122,7 +4081,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Alm_ROC_Cfg_Lim}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_H_DB}, '#,##0.###')"
                           }
                         }
                       }
@@ -3150,7 +4109,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "'/s'"
+                            "expression": "''"
                           }
                         }
                       }
@@ -3198,7 +4157,7 @@
                       "grow": 1
                     },
                     "props": {
-                      "text": "ROC limit",
+                      "text": "H deadband",
                       "style": {
                         "classes": "Text/Caption Text/Mod/Upper"
                       }
@@ -3226,7 +4185,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Alm_ROC/Cfg_Lim",
+                            "tagPath": "{0}/H/DB",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -3257,7 +4216,1305 @@
                       "basis": "3.704vh"
                     },
                     "props": {
-                      "text": "/s",
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R5"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "H delay",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_H_DLY}, '#,##0.###')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "''"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "E5"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.593vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "H delay",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.input.numeric-entry-field",
+                    "version": 0,
+                    "meta": {
+                      "name": "Entry"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "basis": "11.111vh"
+                    },
+                    "props": {
+                      "format": "#,##0.###",
+                      "style": {
+                        "classes": "Input/Setpoint"
+                      }
+                    },
+                    "propConfig": {
+                      "props.value": {
+                        "binding": {
+                          "type": "tag",
+                          "config": {
+                            "mode": "indirect",
+                            "tagPath": "{0}/H/DLY",
+                            "references": {
+                              "0": "{view.params.tagPath}"
+                            },
+                            "bidirectional": true,
+                            "fallbackDelay": 2.5
+                          }
+                        }
+                      },
+                      "props.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "true"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R6"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "L enabled",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_L_Enabled}, 'Yes', 'No')"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.input.checkbox",
+                "version": 0,
+                "meta": {
+                  "name": "C6"
+                },
+                "position": {
+                  "shrink": 0,
+                  "basis": "2.222vh"
+                },
+                "props": {
+                  "text": "L enabled",
+                  "style": {
+                    "classes": "Input/Check"
+                  }
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "type": "tag",
+                      "config": {
+                        "mode": "indirect",
+                        "tagPath": "{0}/L/Enabled",
+                        "references": {
+                          "0": "{view.params.tagPath}"
+                        },
+                        "bidirectional": true,
+                        "fallbackDelay": 2.5
+                      }
+                    }
+                  },
+                  "props.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  },
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R7"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "L deadband",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_L_DB}, '#,##0.###')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "''"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "E7"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.593vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "L deadband",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.input.numeric-entry-field",
+                    "version": 0,
+                    "meta": {
+                      "name": "Entry"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "basis": "11.111vh"
+                    },
+                    "props": {
+                      "format": "#,##0.###",
+                      "style": {
+                        "classes": "Input/Setpoint"
+                      }
+                    },
+                    "propConfig": {
+                      "props.value": {
+                        "binding": {
+                          "type": "tag",
+                          "config": {
+                            "mode": "indirect",
+                            "tagPath": "{0}/L/DB",
+                            "references": {
+                              "0": "{view.params.tagPath}"
+                            },
+                            "bidirectional": true,
+                            "fallbackDelay": 2.5
+                          }
+                        }
+                      },
+                      "props.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "true"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R8"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "L delay",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_L_DLY}, '#,##0.###')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "''"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "E8"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.593vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "L delay",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.input.numeric-entry-field",
+                    "version": 0,
+                    "meta": {
+                      "name": "Entry"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "basis": "11.111vh"
+                    },
+                    "props": {
+                      "format": "#,##0.###",
+                      "style": {
+                        "classes": "Input/Setpoint"
+                      }
+                    },
+                    "propConfig": {
+                      "props.value": {
+                        "binding": {
+                          "type": "tag",
+                          "config": {
+                            "mode": "indirect",
+                            "tagPath": "{0}/L/DLY",
+                            "references": {
+                              "0": "{view.params.tagPath}"
+                            },
+                            "bidirectional": true,
+                            "fallbackDelay": 2.5
+                          }
+                        }
+                      },
+                      "props.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "true"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R9"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "LL enabled",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.m_LL_Enabled}, 'Yes', 'No')"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.input.checkbox",
+                "version": 0,
+                "meta": {
+                  "name": "C9"
+                },
+                "position": {
+                  "shrink": 0,
+                  "basis": "2.222vh"
+                },
+                "props": {
+                  "text": "LL enabled",
+                  "style": {
+                    "classes": "Input/Check"
+                  }
+                },
+                "propConfig": {
+                  "props.selected": {
+                    "binding": {
+                      "type": "tag",
+                      "config": {
+                        "mode": "indirect",
+                        "tagPath": "{0}/LL/Enabled",
+                        "references": {
+                          "0": "{view.params.tagPath}"
+                        },
+                        "bidirectional": true,
+                        "fallbackDelay": 2.5
+                      }
+                    }
+                  },
+                  "props.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  },
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R10"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "LL deadband",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_LL_DB}, '#,##0.###')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "''"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "E10"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.593vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "LL deadband",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.input.numeric-entry-field",
+                    "version": 0,
+                    "meta": {
+                      "name": "Entry"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "basis": "11.111vh"
+                    },
+                    "props": {
+                      "format": "#,##0.###",
+                      "style": {
+                        "classes": "Input/Setpoint"
+                      }
+                    },
+                    "propConfig": {
+                      "props.value": {
+                        "binding": {
+                          "type": "tag",
+                          "config": {
+                            "mode": "indirect",
+                            "tagPath": "{0}/LL/DB",
+                            "references": {
+                              "0": "{view.params.tagPath}"
+                            },
+                            "bidirectional": true,
+                            "fallbackDelay": 2.5
+                          }
+                        }
+                      },
+                      "props.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "true"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "R11"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.037vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "!({view.custom.level} >= 4)"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "LL delay",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Val"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "numberFormat({view.custom.m_LL_DLY}, '#,##0.###')"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
+                      "style": {
+                        "classes": "Text/Units"
+                      }
+                    },
+                    "propConfig": {
+                      "props.text": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "''"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "ia.container.flex",
+                "version": 0,
+                "meta": {
+                  "name": "E11"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.593vh"
+                },
+                "props": {
+                  "direction": "row",
+                  "alignItems": "center",
+                  "style": {
+                    "classes": "Util/Gap/M"
+                  }
+                },
+                "propConfig": {
+                  "position.display": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} >= 4"
+                      }
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "Lbl"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 1
+                    },
+                    "props": {
+                      "text": "LL delay",
+                      "style": {
+                        "classes": "Text/Caption Text/Mod/Upper"
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.input.numeric-entry-field",
+                    "version": 0,
+                    "meta": {
+                      "name": "Entry"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "basis": "11.111vh"
+                    },
+                    "props": {
+                      "format": "#,##0.###",
+                      "style": {
+                        "classes": "Input/Setpoint"
+                      }
+                    },
+                    "propConfig": {
+                      "props.value": {
+                        "binding": {
+                          "type": "tag",
+                          "config": {
+                            "mode": "indirect",
+                            "tagPath": "{0}/LL/DLY",
+                            "references": {
+                              "0": "{view.params.tagPath}"
+                            },
+                            "bidirectional": true,
+                            "fallbackDelay": 2.5
+                          }
+                        }
+                      },
+                      "props.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "true"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "ia.display.label",
+                    "version": 0,
+                    "meta": {
+                      "name": "EU"
+                    },
+                    "position": {
+                      "shrink": 0,
+                      "grow": 0,
+                      "basis": "3.704vh"
+                    },
+                    "props": {
+                      "text": "",
                       "style": {
                         "classes": "Text/Units"
                       }
@@ -3271,7 +5528,7 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "{view.custom.open_Limits}"
+                    "expression": "{view.custom.open_AlarmCfg}"
                   }
                 }
               }
@@ -3457,7 +5714,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_EUMin}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Eng_Min}, '#,##0.###')"
                           }
                         }
                       }
@@ -3561,7 +5818,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cfg_EUMin",
+                            "tagPath": "{0}/Eng_Min",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -3667,7 +5924,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_EUMax}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Eng_Max}, '#,##0.###')"
                           }
                         }
                       }
@@ -3771,7 +6028,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cfg_EUMax",
+                            "tagPath": "{0}/Eng_Max",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -3877,7 +6134,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_RawMin}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Raw_Min}, '#,##0.###')"
                           }
                         }
                       }
@@ -3981,7 +6238,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cfg_RawMin",
+                            "tagPath": "{0}/Raw_Min",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -4087,7 +6344,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_RawMax}, '#,##0.###')"
+                            "expression": "numberFormat({view.custom.m_Raw_Max}, '#,##0.###')"
                           }
                         }
                       }
@@ -4191,7 +6448,7 @@
                           "type": "tag",
                           "config": {
                             "mode": "indirect",
-                            "tagPath": "{0}/Cfg_RawMax",
+                            "tagPath": "{0}/Raw_Max",
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
@@ -4229,550 +6486,6 @@
                     }
                   }
                 ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "R4"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.037vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "!({view.custom.level} >= 4)"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "Filter TC",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Val"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_FiltTC}, '#,##0.###')"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "'s'"
-                          }
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "E4"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.593vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 4"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "Filter TC",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.input.numeric-entry-field",
-                    "version": 0,
-                    "meta": {
-                      "name": "Entry"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "basis": "11.111vh"
-                    },
-                    "props": {
-                      "format": "#,##0.###",
-                      "style": {
-                        "classes": "Input/Setpoint"
-                      }
-                    },
-                    "propConfig": {
-                      "props.value": {
-                        "binding": {
-                          "type": "tag",
-                          "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_FiltTC",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
-                          }
-                        }
-                      },
-                      "props.enabled": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "true"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "s",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "R5"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.037vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "!({view.custom.level} >= 4)"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "Low cutoff",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Val"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "numberFormat({view.custom.m_Cfg_LoCutoff}, '#,##0.###')"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "''"
-                          }
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "E5"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.593vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 4"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "Low cutoff",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.input.numeric-entry-field",
-                    "version": 0,
-                    "meta": {
-                      "name": "Entry"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "basis": "11.111vh"
-                    },
-                    "props": {
-                      "format": "#,##0.###",
-                      "style": {
-                        "classes": "Input/Setpoint"
-                      }
-                    },
-                    "propConfig": {
-                      "props.value": {
-                        "binding": {
-                          "type": "tag",
-                          "config": {
-                            "mode": "indirect",
-                            "tagPath": "{0}/Cfg_LoCutoff",
-                            "references": {
-                              "0": "{view.params.tagPath}"
-                            },
-                            "bidirectional": true,
-                            "fallbackDelay": 2.5
-                          }
-                        }
-                      },
-                      "props.enabled": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "true"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "EU"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0,
-                      "basis": "3.704vh"
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Units"
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.container.flex",
-                "version": 0,
-                "meta": {
-                  "name": "R6"
-                },
-                "position": {
-                  "shrink": 0,
-                  "grow": 0,
-                  "basis": "2.037vh"
-                },
-                "props": {
-                  "direction": "row",
-                  "alignItems": "center",
-                  "style": {
-                    "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "!({view.custom.level} >= 4)"
-                      }
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Lbl"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 1
-                    },
-                    "props": {
-                      "text": "Square root",
-                      "style": {
-                        "classes": "Text/Caption Text/Mod/Upper"
-                      }
-                    }
-                  },
-                  {
-                    "type": "ia.display.label",
-                    "version": 0,
-                    "meta": {
-                      "name": "Val"
-                    },
-                    "position": {
-                      "shrink": 0,
-                      "grow": 0
-                    },
-                    "props": {
-                      "text": "",
-                      "style": {
-                        "classes": "Text/Value Text/Mod/Right Text/Mod/Tabular"
-                      }
-                    },
-                    "propConfig": {
-                      "props.text": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "if({view.custom.m_Cfg_SqrtExtract}, 'Yes', 'No')"
-                          }
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
-              {
-                "type": "ia.input.checkbox",
-                "version": 0,
-                "meta": {
-                  "name": "C6"
-                },
-                "position": {
-                  "shrink": 0,
-                  "basis": "2.222vh"
-                },
-                "props": {
-                  "text": "Square root",
-                  "style": {
-                    "classes": "Input/Check"
-                  }
-                },
-                "propConfig": {
-                  "props.selected": {
-                    "binding": {
-                      "type": "tag",
-                      "config": {
-                        "mode": "indirect",
-                        "tagPath": "{0}/Cfg_SqrtExtract",
-                        "references": {
-                          "0": "{view.params.tagPath}"
-                        },
-                        "bidirectional": true,
-                        "fallbackDelay": 2.5
-                      }
-                    }
-                  },
-                  "props.enabled": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 4"
-                      }
-                    }
-                  },
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 4"
-                      }
-                    }
-                  }
-                }
               }
             ],
             "propConfig": {

@@ -1,36 +1,34 @@
 {
   "custom": {
     "cmd": false,
-    "opened": false,
-    "closed": true,
-    "fault": false,
-    "hasZso": true,
-    "hasZsc": true,
+    "zso": false,
+    "zsc": true,
+    "fb": true,
+    "ilist": null,
     "state": 0,
     "command": 0,
     "name": "",
     "desc": "",
     "man": false,
+    "auto": false,
     "oos": false,
-    "avail": true,
-    "local": false,
+    "locked": false,
     "intlk": false,
     "permMissing": false,
-    "firstOut": -1,
-    "firstDesc": "",
+    "avail": true,
     "mode": 0,
+    "canCmd": false,
     "alarm": 0,
     "fill": "#9E9E9E",
     "head": "#9E9E9E",
     "line": "#262626",
     "lw": 4.167,
-    "con": "#262626",
-    "canCmd": false
+    "con": "#262626"
   },
   "params": {
     "tagPath": "[default]PID_Demo/XV102",
     "useButton": true,
-    "tType": "T_DValve",
+    "tType": "DDT_Valve",
     "dockId": "",
     "dwTagPath": "",
     "dblCmd": true
@@ -53,11 +51,11 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Out_Open"
+          "tagPath": "{0}/CMD"
         }
       }
     },
-    "custom.opened": {
+    "custom.zso": {
       "binding": {
         "type": "tag",
         "config": {
@@ -66,11 +64,11 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_Opened"
+          "tagPath": "{0}/ZSO"
         }
       }
     },
-    "custom.closed": {
+    "custom.zsc": {
       "binding": {
         "type": "tag",
         "config": {
@@ -79,11 +77,11 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_Closed"
+          "tagPath": "{0}/ZSC"
         }
       }
     },
-    "custom.fault": {
+    "custom.fb": {
       "binding": {
         "type": "tag",
         "config": {
@@ -92,11 +90,11 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_Fault"
+          "tagPath": "{0}/Feedback_Enabled"
         }
       }
     },
-    "custom.hasZso": {
+    "custom.ilist": {
       "binding": {
         "type": "tag",
         "config": {
@@ -105,20 +103,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Cfg_HasZSO"
-        }
-      }
-    },
-    "custom.hasZsc": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Cfg_HasZSC"
+          "tagPath": "{0}/InterlockList"
         }
       }
     },
@@ -126,7 +111,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "if(coalesce({view.custom.fault}, false), 3, if(coalesce({view.custom.opened}, false), 1, if(coalesce({view.custom.closed}, false), 0, 2)))"
+          "expression": "if(coalesce({view.custom.zso}, false) && coalesce({view.custom.zsc}, false), 3, if(!coalesce({view.custom.fb}, true), if(coalesce({view.custom.cmd}, false), 1, 0), if(coalesce({view.custom.zso}, false), 1, if(coalesce({view.custom.zsc}, false), 0, 2))))"
         }
       }
     },
@@ -134,7 +119,7 @@
       "binding": {
         "type": "expr",
         "config": {
-          "expression": "if(coalesce({view.custom.hasZso}, false) || coalesce({view.custom.hasZsc}, false), if(coalesce({view.custom.cmd}, false), 1, 0), -1)"
+          "expression": "if(coalesce({view.custom.fb}, true), if(coalesce({view.custom.cmd}, false), 1, 0), -1)"
         }
       }
     },
@@ -147,7 +132,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Cfg_Tag"
+          "tagPath": "{0}/Name"
         }
       }
     },
@@ -160,7 +145,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Cfg_Desc"
+          "tagPath": "{0}/Description"
         }
       }
     },
@@ -173,7 +158,20 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Mode/Sts_Man"
+          "tagPath": "{0}/Manual"
+        }
+      }
+    },
+    "custom.auto": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "fallbackDelay": 2.5,
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "tagPath": "{0}/Auto"
         }
       }
     },
@@ -186,11 +184,11 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Mode/Sts_OOS"
+          "tagPath": "{0}/Off"
         }
       }
     },
-    "custom.avail": {
+    "custom.locked": {
       "binding": {
         "type": "tag",
         "config": {
@@ -199,20 +197,7 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_Avail"
-        }
-      }
-    },
-    "custom.local": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Sts_Local"
+          "tagPath": "{0}/LockedOut"
         }
       }
     },
@@ -225,34 +210,15 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_Intlk"
+          "tagPath": "{0}/Interlock"
         }
       }
     },
-    "custom.firstOut": {
+    "custom.avail": {
       "binding": {
-        "type": "tag",
+        "type": "expr",
         "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}"
-          },
-          "tagPath": "{0}/Intlk/Sts_FirstOut"
-        }
-      }
-    },
-    "custom.firstDesc": {
-      "binding": {
-        "type": "tag",
-        "config": {
-          "mode": "indirect",
-          "fallbackDelay": 2.5,
-          "references": {
-            "0": "{view.params.tagPath}",
-            "1": "{view.custom.firstOut}"
-          },
-          "tagPath": "{0}/Intlk/Cfg_CondDesc/{1}"
+          "expression": "!coalesce({view.custom.locked}, false)"
         }
       }
     },
@@ -273,7 +239,15 @@
           "references": {
             "0": "{view.params.tagPath}"
           },
-          "tagPath": "{0}/Sts_NotPerm"
+          "tagPath": "{0}/Permissive"
+        }
+      }
+    },
+    "custom.canCmd": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "coalesce({view.custom.man}, false) && !coalesce({view.custom.locked}, false) && !coalesce({view.custom.oos}, false) && (coalesce({view.custom.cmd}, false) || (!coalesce({view.custom.permMissing}, false) && !coalesce({view.custom.intlk}, false)))"
         }
       }
     },
@@ -322,14 +296,6 @@
         "type": "expr",
         "config": {
           "expression": "if({view.custom.alarm} > 0 || {view.custom.state} = 3, 8.333, 4.167)"
-        }
-      }
-    },
-    "custom.canCmd": {
-      "binding": {
-        "type": "expr",
-        "config": {
-          "expression": "coalesce({view.custom.man}, false) && coalesce({view.custom.avail}, true) && !coalesce({view.custom.local}, false) && !coalesce({view.custom.oos}, false) && (coalesce({view.custom.cmd}, false) || (!coalesce({view.custom.permMissing}, false) && !coalesce({view.custom.intlk}, false)))"
         }
       }
     },
@@ -630,10 +596,16 @@
           },
           "meta.tooltip.text": {
             "binding": {
-              "type": "expr",
+              "type": "property",
               "config": {
-                "expression": "\"Interlock active - \" + \"open\" + \" blocked\" + if(coalesce({view.custom.firstOut}, -1) >= 0 && len(coalesce({view.custom.firstDesc}, \"\")) > 0, \": \" + {view.custom.firstDesc}, \"\")"
-              }
+                "path": "view.custom.ilist"
+              },
+              "transforms": [
+                {
+                  "type": "script",
+                  "code": "\t# InterlockList is a MEM_Interlock_List document: {Status[], Description[], InterlockName[], Used[]}\n\thead = \"Interlock active - open blocked\"\n\ttry:\n\t\tnames = list(value[\"InterlockName\"] or [])\n\t\tused = list(value[\"Used\"] or [])\n\t\tdesc = list(value[\"Description\"] or [])\n\t\titems = []\n\t\tfor i in range(len(names)):\n\t\t\tif i < len(used) and used[i] and names[i]:\n\t\t\t\td = desc[i] if i < len(desc) and desc[i] else \"\"\n\t\t\t\titems.append(str(names[i]) + (\" - \" + str(d) if d else \"\"))\n\t\treturn head + (\":\\n\" + \"\\n\".join(items) if items else \"\")\n\texcept:\n\t\treturn head"
+                }
+              ]
             }
           }
         }
@@ -776,7 +748,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if(coalesce({view.custom.local}, false), \"Local control\", if(!coalesce({view.custom.man}, false), \"Manual mode required\", if(coalesce({view.custom.cmd}, false), \"Close\", \"Open\")))"
+                "expression": "if(coalesce({view.custom.locked}, false), \"Locked out\", if(!coalesce({view.custom.man}, false), \"Manual mode required\", if(coalesce({view.custom.cmd}, false), \"Close\", \"Open\")))"
               }
             }
           }
@@ -787,7 +759,7 @@
               "type": "script",
               "scope": "G",
               "config": {
-                "script": "\tm = 'Cmd_Close' if self.view.custom.cmd else 'Cmd_Open'\n\tefc.ui.cmd(self, m, True, 1)"
+                "script": "\tefc.ui.cmd(self, 'HMI_CMD', not bool(self.view.custom.cmd), 1)"
               }
             }
           }

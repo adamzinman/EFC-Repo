@@ -1,0 +1,231 @@
+{
+  "name": "DDT_Device_Demo",
+  "tagType": "UdtType",
+  "tags": [
+    {
+      "name": "Auto",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "HMI_Auto",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "HMI_CMD",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "HMI_Lockout",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "HMI_Manual",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "HMI_Off",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "Interlock",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "LockedOut",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "Manual",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "Off",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "REQ",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "CMD",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "YI",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "YIF",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "Alarm",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false,
+      "alarms": [
+        {
+          "name": "Alarm",
+          "mode": "Equality",
+          "setpointA": 1.0,
+          "priority": "High"
+        }
+      ]
+    },
+    {
+      "name": "Warning",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "Reset_Runtime",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "Enable_Stalling",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "Stalled",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": false
+    },
+    {
+      "name": "Auto_Perm",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": true
+    },
+    {
+      "name": "Man_Perm",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": true
+    },
+    {
+      "name": "FB_Enb",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Boolean",
+      "value": true
+    },
+    {
+      "name": "Run_Sec",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Run_Min",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Run_Hour",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Runtime",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Comp_Ratio",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Curr_Comp_Ratio",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Float4",
+      "value": 0.0
+    },
+    {
+      "name": "Stall_Time",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "Int4",
+      "value": 0
+    },
+    {
+      "name": "Name",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "String",
+      "value": ""
+    },
+    {
+      "name": "Description",
+      "tagType": "AtomicTag",
+      "valueSource": "memory",
+      "dataType": "String",
+      "value": ""
+    }
+  ]
+}
