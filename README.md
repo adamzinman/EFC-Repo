@@ -11,6 +11,7 @@ Everything ships as **one Perspective project, `EFC_Library`** (no parent). Its 
 | `Templates/Loops` | PID loop cards B1–B4 and `Popups/LoopConfig` | `generator/pid_loops/` |
 | `Templates/Station` | DDT_Station sidebar, fill and tile faceplates | `imported/EFC_StationFaceplates/` |
 | `Templates/IO` | Modicon x80 I/O card faceplates, parts and `RackOverview` | `imported/EFC_IOFaceplates/` |
+| `Templates/Dynamic Window` | Dynamic windows by category (`Valves`, `Rotating`, `HeatTransfer`, `ProcessValues`, `Loops`, `IO`, `Station`) and shared `Parts`. A template click opens one in the page's `dw_Right` dock (`efc.ui`) | `generator/docks/build_docks.py` (Station window from `imported/EFC_StationFaceplates/`) |
 | `Styles/_Catalog` + style classes + stylesheet | EFC_Styles: 166 ISA-101 classes, light-gray scheme, vh-scaled | `generator/build_styles.py` |
 
 Also in the repo: 214 plain P&ID SVGs in `symbols/`, nav-connector options A–D, tags (UDTs and demo instances) in `tags/`, HTML mockups in `mockups/`, and one rendered image per view in `docs/previews/templates/`. Retired material is in `archive/` (see `archive/ARCHIVED.md`).
@@ -87,7 +88,7 @@ Parts in `imported/` have no generator here, so edit them in the Designer, expor
 ## Documentation
 - [`docs/inventory.md`](docs/inventory.md): every design, version, status and location.
 - [`docs/template-review.md`](docs/template-review.md): findings from the rendered review images.
-- [`docs/library-reference.md`](docs/library-reference.md): templates, UDT mapping, status logic, colors, 8.1 compatibility.
+- [`docs/library-reference.md`](docs/library-reference.md): templates, UDT mapping, status logic, page setup (the `dw_Right` dock for dynamic windows), colors, 8.1 compatibility.
 - [`docs/design-notes.md`](docs/design-notes.md): every design decision (notes 1–42) and the open items.
 - [`docs/isa101-audit.md`](docs/isa101-audit.md): the ISA-101 / ISA-18.2 audit and documented deviations.
 - [`docs/style-library.md`](docs/style-library.md) / [`docs/style-class-index.md`](docs/style-class-index.md): how to use EFC_Styles; every class (generated).

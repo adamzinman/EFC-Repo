@@ -1,4 +1,4 @@
-"""Rule: Docks/Station (imported Station_Sidebar) setpoints and commands are Operator+ (role level 1, efc.ui.level).
+"""Rule: Templates/Dynamic Window/Station/Station (imported Station_Sidebar) setpoints and commands are Operator+ (role level 1, efc.ui.level).
 Adds custom.level (session roles -> efc.ui.level) and gates every Input/Setpoint field and Button/* by it.
 Usage: python3 -I steward/tools/fix_station_roles.py <viewtools dir> [apply]
 """

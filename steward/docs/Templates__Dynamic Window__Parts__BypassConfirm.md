@@ -1,0 +1,27 @@
+# Templates/Dynamic Window/Parts/BypassConfirm
+
+<!-- keep:start -->
+**Purpose:** TODO: purpose
+
+**Usage notes:**
+
+**Gotchas:**
+<!-- keep:end -->
+
+<!-- auto:start -->
+_Auto-generated 2026-10-23 20:15 from EFC_Library:view:Templates/Dynamic Window/Parts/BypassConfirm. Do not edit this section._
+
+| Param | Direction | Default |
+|---|---|---|
+| desc | input | "" |
+| idx | input | 0 |
+| tagPath | input | "" |
+
+- PCLib types: none
+- Dynamic window: none
+- Style classes: Button/Danger, Button/Default, Container/Popup, Input/Field, Text/Body, Text/Caption, Text/Mod/Wrap, Text/Title, Util/Gap/L, Util/Gap/M
+- Inline style props: 0
+- Popups opened: 0
+- system.* calls: system.perspective.closePopup
+- Last modified: 2026-10-19T00:00:00Z by efc-ignition-library
+<!-- auto:end -->

@@ -2,7 +2,7 @@
 
 Covers `Templates/ProcessValues/PV_RangeBar` (design B2 in the PV design note).
 Source: `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/ProcessValues/PV_RangeBar/view.json`
-Dynamic window it opens: `Docks/ProcessValue` (dock `dw_ProcessValue`, chosen from `tType` `T_AI`; see [ProcessValue](../../Docks/ProcessValue.md)).
+Dynamic window it opens: `Templates/Dynamic Window/ProcessValues/ProcessValue` (dock `dw_ProcessValue`, chosen from `tType` `T_AI`; see [ProcessValue](../Dynamic%20Window/ProcessValues/ProcessValue.md)).
 Context: [PV display design note](../../../pv-display.md). The sibling template is [PV_StatusStrip](PV_StatusStrip.md).
 
 ## Overview
@@ -11,7 +11,7 @@ A process value card for an analog input (`T_AI`) with a range track. The track 
 
 - **Default size** (`props.defaultSize`): 104 x 54. The card is 100 x 50 inside the view (per the design note).
 - **Bound to:** one T_AI instance through `params.tagPath`.
-- **Opening the dock:** a single click runs `efc.ui.openDynamic(self)`, which maps `tType` (`T_AI`) to `dw_ProcessValue` and `Docks/ProcessValue`, as described in PV_StatusStrip.
+- **Opening the dock:** a single click runs `efc.ui.openDynamic(self)`, which maps `tType` (`T_AI`) to `dw_ProcessValue` and `Templates/Dynamic Window/ProcessValues/ProcessValue`, as described in PV_StatusStrip.
 - **Generated view:** written by `generator/build_pv.py` to `projects/EFC_ProcessValues/`, not to `projects/EFC_Library/`. Check which copy is current before editing (see Notes).
 
 ## How it operates
@@ -88,7 +88,7 @@ None.
 
 ### Session, page and message payloads
 
-None read. The click writes `session.custom.efcDw[<pageId>]` through `efc.ui.openDynamic`. See Scripts.
+None read. The click loads the window into the `dw_Right` dock through `efc.ui.openDynamic`. See Scripts.
 
 ## Bindings reference
 

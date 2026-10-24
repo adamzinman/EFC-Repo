@@ -9,7 +9,7 @@
 <!-- keep:end -->
 
 <!-- auto:start -->
-_Auto-generated 2026-10-21 03:53 from EFC_Library:view:Templates/IO/Parts/SlotTile. Do not edit this section._
+_Auto-generated 2026-10-23 20:15 from EFC_Library:view:Templates/IO/Parts/SlotTile. Do not edit this section._
 
 | Param | Direction | Default |
 |---|---|---|

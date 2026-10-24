@@ -79,7 +79,7 @@
               "shrink": 0
             },
             "props": {
-              "text": "Type 3: overview tiles (click opens the StationSidebar dock)",
+              "text": "Type 3: overview tiles (click opens the dw_Station window in the dw_Right dock)",
               "style": {
                 "classes": "Text/Subheader"
               }
@@ -370,7 +370,7 @@
               "shrink": 0
             },
             "props": {
-              "path": "Docks/Station",
+              "path": "Templates/Dynamic Window/Station/Station",
               "params": {
                 "tagPath": "[default]Station_Demo/Station_1"
               },
