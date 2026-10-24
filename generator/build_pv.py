@@ -9,7 +9,7 @@ Writes (relative to the repo root):
   tags/PV_Demo_Tags.json        Demo UDT T_AI_Demo (EFCLib v1 member names) + 5 instances (import at the [default] provider root)
   docs/pv-style-index.md        Every PV style class and what it is for
 Normally run from the repo root:  python3 build.py
-Only template parameter: tagPath (path to a DDT_Process_Value instance, e.g. [default]Area1/PT002).
+Template parameters: tagPath (a T_AI instance, e.g. [default]PV_Demo/PT001), tType, dockId, dwTagPath (click opens dw_ProcessValue in the dw_Right dock).
 """
 import json, os, re, shutil
 from urllib.parse import quote

@@ -9,7 +9,7 @@ The operator dynamic window for a fill station (T_Station). It is the full stati
 
 - **Default size:** 400 x 860 (`props.defaultSize`). The root column uses `Container/Popup Util/Clip` and has no scroll class, so content taller than the window is clipped, not scrolled (the `Util/Clip` class is defined in EFC_Styles and was not checked).
 - **Parameters:** `tagPath` only (the T_Station instance). The view has no `tType` param, and `efc.ui.openDynamic` passes only `tagPath`.
-- **How it is opened:** the tile's click runs `efc.ui.openDynamic(self)`. That function loads `Templates/Dynamic Window/Station/Station` into the page's `dw_Right` dock with params `{tagPath: ...}` (`system.perspective.alterDock`) and opens the dock.
+- **How it is opened:** the tile's click runs `efc.ui.openDynamic(self)`. That function loads `Templates/Dynamic Window/Station/Station` into the page's `dw_Right` dock with params `{tagPath: ...}` (`system.perspective.alterDock`) and opens the dock (`system.perspective.openDock`). Before that it runs `efc.ui.sizeDock(self)`, which sets the dock size to 37.04 vh (400 px at 1080p, 800 px at 4K, decision 33).
 - **Built view:** this view is not written by `generator/docks/build_docks.py`. `build.py` copies the imported Designer project `imported/EFC_StationFaceplates` into the merged library and relocates `Templates/Station/Station_Sidebar` to `Templates/Dynamic Window/Station/Station` (its `RELOCATE` table). `steward/tools/fix_station.py` maps the DDT_Station member names to T_Station, adds the dynamic-window params to the tile and sets the window to 400 x 860 (`steward/DECISIONS.md`, decisions 4 and 25). Make changes in the imported source and rebuild. Edits made directly to `Templates/Dynamic Window/Station/Station/view.json` are replaced on the next build.
 - **How it closes:** the header icon (`Util/Pointer`) runs `efc.ui.closeDynamic(self)` on click, which puts the page's default view back in the `dw_Right` dock (set by `efc.ui.setDefaultDock` in the screen's onStartup), or closes the dock if the page has no default. That startup script is not in this view.
 
@@ -85,8 +85,9 @@ None.
 ### Session, page and message payloads
 
 - `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
-- `session.custom.efcDw[pageId]`: holds only the page's default dock view, written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
-- `page.props.pageId`: read by `efc.ui._state` to key `efcDw`. Reached through the header icon.
+- `session.custom.efcDw['<pageId>|<page path>']`: holds only the page's default dock view (`{'default': {'path', 'params'}}`), written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
+- `page.props.pageId` and `page.props.path`: read by `efc.ui._state` to key `efcDw` (the pageId survives `navigate()`, so the path keeps one screen's default from leaking into the next).
+- `page.props.dimensions`: `efc.ui.sizeDock` (run by `openDynamic`, `closeDynamic` and `setDefaultDock`) reads `viewport.height`, turns `dimensions.enabled` on if needed, and sets the `dw_Right` dock size to 400 x height / 1080 px (37.04 vh, decision 33). Needs Ignition 8.1.7+ for page dimensions and 8.1.19+ for `alterDock`. Reached through the header icon.
 - `session.props.auth.user.userName`: not used in this view.
 - No message handlers. No `customMethods`.
 
@@ -432,7 +433,7 @@ The button handlers below call no `efc.ui` command functions. The Tare, Zero, Re
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
-- **`efc.ui.closeDynamic(component)`**: loads the page's stored `default` view and params (`session.custom.efcDw[pageId]`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
+- **`efc.ui.closeDynamic(component)`**: sizes the dock (`efc.ui.sizeDock`), then loads the page's stored `default` view and params (`session.custom.efcDw['<pageId>|<page path>']`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - Not used by this view: `efc.ui.cmd` and `efc.ui.ackAll`. The command and setpoint writes are direct tag writes (see the notes).
 - Ignition built-ins used directly: `system.tag.writeBlocking`, `system.util.invokeAsynchronous`, and Python `time.sleep` on the release thread.
 
@@ -673,7 +674,7 @@ All paths are relative to `tagPath`. Types and comments come from `types/PCLib_M
 - **Command pulses.** Select, Tare, Zero and Reset write True and then write False 1 s later. A PLC that reads these as a level, not a one-shot, will see a 1 s pulse. The PCLib comments call them one-shot (for example "Tare the scale (one-shot; blocked while active)").
 - **Members the faceplate does not show.** No alarm rows (`Alm_Failed`, `Alm_OverFill`, `Alm_PressHi`, `Alm_ScaleFault`), no scale health (`Inp_ScaleOK`), no NE107 diagnostic (`Sts_NE107`), no SIM chip (`Sts_Sim`) and no simulation toggle (`Sim_En`). `Sts_State` (the PCLib state enumeration) is not read; the status comes from the flags. `Mode` and `Perm` are not used. Confirm the faceplate does not have to show these.
 - **Derived state refresh.** All derived values come from one property binding on `custom.t`. `docs/station-faceplates.md` lists as an open item whether the binding recalculates when one member changes. The view file cannot show this. Confirm on the gateway.
-- **Stale faceplate doc.** `docs/station-faceplates.md` describes a 300 x 800 sidebar opened with `system.perspective.openDock("StationSidebar")`, command pulses named `TareCMD`, `ZeroCMD`, `HMI_Reset` and `HMI_Select`, and a `DDT_Station` type. The built dock is 400 x 860, opened by `efc.ui.openDynamic` as `dw_Station`, and writes the T_Station members `Cmd_Tare`, `Cmd_Zero`, `Cmd_Reset` and `Cmd_Select`. Update that document.
+- **Faceplate doc.** `docs/station-faceplates.md` now gives the 400 x 860 size, the `dw_Right` dock and the `Cmd_Tare`, `Cmd_Zero`, `Cmd_Reset`, `Cmd_Select` commands. Its member mapping still lists the `DDT_Station` names of the original export (`NetWeight`, `Filling`, ...); the built window binds the T_Station names from the `MAP` in `steward/tools/fix_station.py` (`Val_Net`, `Prm_TargetWt`, `Sts_Filling`, ...), and the old names remain only as keys of the derived-state transform.
 - **Prefill setpoint naming.** The view binds `custom.t.SamplePress` to `Prm_PrefillPress`, and the Prefill setpoint writes that member. The PCLib comment says `Prm_PrefillPress` is the prefill pressure, which matches the label. The `SamplePress` name in `station-faceplates.md` is a leftover; the open item there is resolved by the PCLib comment, but the gateway tag mapping still needs checking.
 - **No scroll on the root.** The root has `Util/Clip` and no `Container/Scroll`. At 860 px, any content taller than that is clipped. Check the layout on the gateway at 1080p.
 - **Built from the imported project.** Edits belong in `imported/EFC_StationFaceplates`, followed by `steward/tools/fix_station.py` and a `build.py` run. The `build_station.py` generator named in `station-faceplates.md` is not in the repo.

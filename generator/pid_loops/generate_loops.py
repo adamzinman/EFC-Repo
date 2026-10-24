@@ -1,6 +1,6 @@
 """Generate Perspective 8.1 PID loop templates (B1-B4), config popup, demo view, UDT + demo tags.
 
-Writes projects/PID_Loops (project source) and tags/PID_Loops. Run tools/package.py to build the import zip."""
+Built into build/components/PID_Loops and merged into EFC_Library as Templates/Loops by build.py (LoopConfig popup retired, decision 15)."""
 import json, os, shutil, sys, zipfile
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from common import extract_inline, write_classes
@@ -371,7 +371,7 @@ def b4():
     return template(root, (104, 196))
 
 
-# ================================================================= Popup: PID/Popups/LoopConfig (440x470)
+# ================================================================= Popup: LoopConfig (440x470), retired (decision 15): built for the component only, not merged into EFC_Library
 EDIT_NAMES = ["Kp", "Ti", "Td", "Action", "SP_Lo", "SP_Hi", "OUT_Lo", "OUT_Hi", "AlmHi", "AlmLo", "AlmDev"]
 LOAD = '''
 base = self.view.params.tagPath

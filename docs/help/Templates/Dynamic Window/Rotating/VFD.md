@@ -9,7 +9,7 @@ The operator and maintenance dynamic window for a variable frequency drive (T_VF
 
 - **Default size:** 400 x 860 (`props.defaultSize`). The root is a scrolling column.
 - **Parameters:** `tagPath` (the T_VFD instance) and `tType` (default `T_VFD`).
-- **How it is opened:** the template's single click runs `efc.ui.openDynamic(self)`. The template's `tType` is `T_VFD` and its `dockId` is empty, so `efc.ui.openDynamic` maps it to `dw_VFD` and loads `Templates/Dynamic Window/Rotating/VFD` into the page's `dw_Right` dock with params `{tagPath: ...}` (`system.perspective.alterDock`) and opens the dock. `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the dock always runs with its default `T_VFD`. Nothing in this view uses `tType`.
+- **How it is opened:** the template's single click runs `efc.ui.openDynamic(self)`. The template's `tType` is `T_VFD` and its `dockId` is empty, so `efc.ui.openDynamic` maps it to `dw_VFD` and loads `Templates/Dynamic Window/Rotating/VFD` into the page's `dw_Right` dock with params `{tagPath: ...}` (`system.perspective.alterDock`) and opens the dock (`system.perspective.openDock`). Before that it runs `efc.ui.sizeDock(self)`, which sets the dock size to 37.04 vh (400 px at 1080p, 800 px at 4K, decision 33). `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the dock always runs with its default `T_VFD`. Nothing in this view uses `tType`.
 - **Generated view:** this view is written by `generator/docks/build_docks.py` (function `vfd()`, which uses the shared `motor_like()` layout). Change the generator, not `view.json`, or the next build overwrites the edit.
 - **How it closes:** the header `X` runs `efc.ui.closeDynamic(self)`, which puts the page's default view back in the `dw_Right` dock (set by `efc.ui.setDefaultDock` in the screen's onStartup), or closes the dock if the page has no default. That startup script is not in this view.
 
@@ -93,8 +93,9 @@ None.
 
 - `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
 - `session.props.auth.user.userName`: read by `efc.ui._audit` (not bound in this view).
-- `session.custom.efcDw[pageId]`: holds only the page's default dock view, written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
-- `page.props.pageId`: read by `efc.ui._state` to key `efcDw`.
+- `session.custom.efcDw['<pageId>|<page path>']`: holds only the page's default dock view (`{'default': {'path', 'params'}}`), written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
+- `page.props.pageId` and `page.props.path`: read by `efc.ui._state` to key `efcDw` (the pageId survives `navigate()`, so the path keeps one screen's default from leaking into the next).
+- `page.props.dimensions`: `efc.ui.sizeDock` (run by `openDynamic`, `closeDynamic` and `setDefaultDock`) reads `viewport.height`, turns `dimensions.enabled` on if needed, and sets the `dw_Right` dock size to 400 x height / 1080 px (37.04 vh, decision 33). Needs Ignition 8.1.7+ for page dimensions and 8.1.19+ for `alterDock`.
 - No message handlers. No `customMethods`.
 
 ## Bindings reference
@@ -447,7 +448,7 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
-- **`efc.ui.closeDynamic(component)`**: loads the page's stored `default` view and params (`session.custom.efcDw[pageId]`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
+- **`efc.ui.closeDynamic(component)`**: sizes the dock (`efc.ui.sizeDock`), then loads the page's stored `default` view and params (`session.custom.efcDw['<pageId>|<page path>']`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - **`efc.ui.cmd(component, member, value, minLevel, audit)`**: the role-checked write described above. Audits when `audit=True`.
 - **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true, only at level 1 and above.
 - **`efc.ui.bypass` / `unbypass`**: not called from this view. They are called from the embedded `IntlkList` views and the `BypassConfirm` popup.
@@ -767,7 +768,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **Simulate toggle depends on the mirror.** `SIMULATE` writes `not self.view.custom.m_Sim_En`. If the mirror has not yet been read (`None`), `not None` is TRUE, so the first click writes TRUE.
 - **Configuration writes are not role-checked in script.** Their only guard is the UI enable expression. This is a binding-level write, not an `efc.ui` call. Real access control has to be in Perspective security and the PLC.
 - **Mode buttons have no enable binding.** MAN and AUTO can be clicked at level 1 and above in any state. MAINT and OOS can be clicked at level 2 and above in any state. The same applies in `Templates/Dynamic Window/Valves/ValveDiscrete`.
-- **Outside this view, the template bypasses the rules.** The `PB` button on `Templates/Rotating/VFD` writes `Cmd_Start` or `Cmd_Stop` directly with `system.tag.writeBlocking`. It has no `efc.ui.cmd` role check and no enable check. Operators using the template symbol can start the drive without the level or enable rules in this dock.
+- **The template's `PB` button follows its own gate.** `PB` on `Templates/Rotating/VFD` writes `Cmd_Start` or `Cmd_Stop` through `efc.ui.cmd(self, m, True, 1)` (Operator re-check, Fix #3). Its `enabled` is the template's `custom.canCmd` (Manual, available, not Local, not OOS; a start also needs no missing permissive and no interlock), evaluated from the template's own bindings, not the START enable in this view.
 - **Drive fault code depends on `Sts_Fault`.** The fault code row is shown only when `Sts_Fault` is true. PCLib defines `Sts_Fault` as "any fault present" and `Sts_Tripped` as "tripped - reset required", but does not say whether a trip also sets `Sts_Fault`. If it does not, the code row is hidden while the banner shows TRIPPED. Open question.
 - **Parameter and style class names** (`Alarm/Critical/Unacked` and similar, `Button/Toggle/On`, `Button/Momentary`, etc.) are style classes defined elsewhere. Their appearance was not checked.
 - **Level thresholds** come from the constants in `efc.ui` (`OPERATOR=1`, `MAINT=2`, `SUPERVISOR=3`, `ENGINEER=4`). The dock uses 4 for Configuration editing, which matches `ENGINEER`.

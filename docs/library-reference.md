@@ -104,9 +104,9 @@ In each page's **Page Configuration**, add a **right dock**:
 
 All px sizes in the library are design px on a 1920 x 1080 page and scale with the viewport (vh / vw). Page Configuration takes a dock size in px only, so the scaling is done in script. To keep it right when the browser window is resized, give the screen root a custom property bound to `page.props.dimensions.viewport.height` with a change script `efc.ui.sizeDock(self)` (page dimensions need Ignition 8.1.7+; `sizeDock` turns `page.props.dimensions.enabled` on).
 
-To make the trends overview the view a window's close button returns to, call `efc.ui.setDefaultDock(self, viewPath, params)` in the screen's root `onStartup`. A window's close button then puts that view back. Without a default, the close button closes the dock.
+To make the trends overview the view a window's close button returns to, call `efc.ui.setDefaultDock(self, viewPath, params)` in the screen's root `onStartup`; it sizes the dock, shows that view and remembers it in `session.custom.efcDw` under the key `<pageId>|<page path>` (so a default set on one screen does not leak into the next after `navigate()`). A window's close button (`efc.ui.closeDynamic(self)`) then puts that view back. Without a default, the close button closes the dock.
 
-Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=None)` opens a window by its id (`dw_ValveDiscrete`, `dw_Loop`, ...), and `efc.ui.showDock(path, params)` loads any view.
+Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=None)` opens a window by its id (`dw_ValveDiscrete`, `dw_Loop`, ...), and `efc.ui.showDock(path, params)` loads any view. Neither resizes the dock; call `efc.ui.sizeDock(self)` first if the page has not. The constants are `efc.ui.DOCK_ID` (`'dw_Right'`), `DESIGN_H` (1080) and `DOCK_W` (400); `efc.ui.dockSize(viewportHeight)` returns the px width for a viewport height.
 
 ## Symbols & colors
 | State | Fill | Notes |

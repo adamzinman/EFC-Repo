@@ -88,7 +88,7 @@ None. The components carry no `custom` properties.
 
 ### Session, page and message payloads
 
-None. The view reads no `session.*` or `page.*` values and sends no messages. Its only use of `session` is inside `efc.ui.openDynamic` (see the Scripts section). The `PB` button writes tags only.
+None. The view reads no `session.*` or `page.*` values and sends no messages. `efc.ui.openDynamic` reads `page.props.dimensions` (to size the `dw_Right` dock) and changes that dock; it writes no session value (see the Scripts section). The `PB` button writes tags only.
 
 ## Bindings reference
 

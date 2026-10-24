@@ -9,7 +9,7 @@ The operator, tuning and configuration dynamic window for a PID loop (T_PID). It
 
 - **Default size:** 400 x 860 (`props.defaultSize`). The root is a scrolling column (`Container/Scroll`).
 - **Parameters:** `tagPath` (the T_PID instance) and `tType` (default `T_PID`).
-- **How it is opened:** the template's click runs `efc.ui.openDynamic(self)`. That function loads `Templates/Dynamic Window/Loops/Loop` into the page's `dw_Right` dock with params `{tagPath: ...}` (`system.perspective.alterDock`) and opens the dock. `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the dock always runs with its default `T_PID`. No binding in this view reads `view.params.tType`.
+- **How it is opened:** the template's click runs `efc.ui.openDynamic(self)`. That function loads `Templates/Dynamic Window/Loops/Loop` into the page's `dw_Right` dock with params `{tagPath: ...}` (`system.perspective.alterDock`) and opens the dock (`system.perspective.openDock`). Before that it runs `efc.ui.sizeDock(self)`, which sets the dock size to 37.04 vh (400 px at 1080p, 800 px at 4K, decision 33). `efc.ui.openDynamic` passes only `tagPath` (and `model` if present). **`tType` is never passed**, so the dock always runs with its default `T_PID`. No binding in this view reads `view.params.tType`.
 - **Generated view:** this view is written by `generator/docks/build_docks.py` (function `loop()`, listed in `VIEWS`). Change the generator, not `view.json`, or the next build overwrites the edit.
 - **How it closes:** the header `X` runs `efc.ui.closeDynamic(self)`, which puts the page's default view back in the `dw_Right` dock (set by `efc.ui.setDefaultDock` in the screen's onStartup), or closes the dock if the page has no default. That startup script is not in this view.
 
@@ -78,8 +78,9 @@ None.
 
 - `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
 - `session.props.auth.user.userName`: not bound in this view. `efc.ui._audit` reads it; only the Ti and Td entry onChange scripts reach it.
-- `session.custom.efcDw[pageId]`: holds only the page's default dock view, written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
-- `page.props.pageId`: read by `efc.ui._state` to key `efcDw`. Reached through the header close.
+- `session.custom.efcDw['<pageId>|<page path>']`: holds only the page's default dock view (`{'default': {'path', 'params'}}`), written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
+- `page.props.pageId` and `page.props.path`: read by `efc.ui._state` to key `efcDw` (the pageId survives `navigate()`, so the path keeps one screen's default from leaking into the next).
+- `page.props.dimensions`: `efc.ui.sizeDock` (run by `openDynamic`, `closeDynamic` and `setDefaultDock`) reads `viewport.height`, turns `dimensions.enabled` on if needed, and sets the `dw_Right` dock size to 400 x height / 1080 px (37.04 vh, decision 33). Needs Ignition 8.1.7+ for page dimensions and 8.1.19+ for `alterDock`. Reached through the header close.
 - No message handlers. No `customMethods`.
 
 ## Bindings reference
@@ -354,7 +355,7 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
-- **`efc.ui.closeDynamic(component)`**: loads the page's stored `default` view and params (`session.custom.efcDw[pageId]`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
+- **`efc.ui.closeDynamic(component)`**: sizes the dock (`efc.ui.sizeDock`), then loads the page's stored `default` view and params (`session.custom.efcDw['<pageId>|<page path>']`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - **`efc.ui.cmd(component, member, value, minLevel, audit)`**: the role-checked write described above. It is called with `minLevel` 1 and no audit by the Mode buttons, and with `minLevel` 4 and `audit=True` by the Ti and Td entries. It writes one tag member with `system.tag.writeBlocking`.
 - **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms with `system.tag.readBlocking`, then writes `<alarm>/Cmd_Ack` = True for those that are true. Only runs at level 1 and above.
 - **`efc.ui.openDynamic`**, **`efc.ui.trend`**: used by the templates and by `Templates/Dynamic Window/Parts/Trend`, not by this view.
@@ -615,4 +616,4 @@ All paths are relative to `tagPath`. Types and comments come from `types/PCLib_M
 - **Trend history.** The Trend part reads `Val_PV`, `Val_SP` and `Out_CV` through `efc.ui.trend` (`queryTagHistory`, average aggregation). History must be enabled on these members on the gateway, or the trend stays empty. This is not checked from the repo.
 - **T_PID members this view does not use.** Inputs: `Inp_PV`, `Inp_PVBad`, `Inp_CasSP`, `Inp_FF`, `Inp_TrackEn`, `Inp_TrackVal`, `Inp_IntlkOK`. Program and config: `Prog_SP`, `Cfg_ProgSP`, `Cfg_FFGain`, `Cfg_PVTrack`, `Cfg_IntlkCV`, `Cfg_BadPVAction`. Status: `Val_SPTarget`, `Sts_Mode`. This is expected for an operator dock, but `Cfg_PVTrack`, `Cfg_BadPVAction` and `Cfg_IntlkCV` change how the loop behaves on a bad PV or interlock, so the operator cannot see them here.
 - **Every custom mirror is used.** All 38 `custom.m_*` properties are read by at least one binding. None is unused.
-- **`docs/pid-loop-templates.md` is out of date.** It says the templates open `PID/Popups/LoopConfig` and describes a separate `PID_Loop` UDT with Mode 0/1/2. `generator/pid_loops/generate_loops.py` now opens this dock with `efc.ui.openDynamic` (decision 15 retired the popup), and the templates bind `T_PID`, which uses boolean `Sts_Man`, `Sts_Auto` and `Sts_Cas`.
+- **`docs/pid-loop-templates.md`** now says the cards open this window with `efc.ui.openDynamic` (decision 15 retired the LoopConfig popup) and bind `T_PID`. The cards still read `Sts_Mode` (0 MAN / 1 AUTO / 2 CAS) for their mode chip; this window uses the boolean `Sts_Man`, `Sts_Auto` and `Sts_Cas`.
