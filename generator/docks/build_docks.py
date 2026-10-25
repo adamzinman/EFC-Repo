@@ -248,7 +248,7 @@ def classify(o):
 # Dock content keeps the dw_Right dock at 37.04 vh: the root watches the page viewport height and calls efc.ui.sizeDock
 # (decision 33), so screens need no change script of their own.
 DOCK_SIZE_PC = {"custom.vh": {"binding": {"type": "property", "config": {"path": "page.props.dimensions.viewport.height"}},
-                              "onChange": {"enabled": True, "script": "\tefc.ui.sizeDock(self)"}}}
+                              "onChange": {"enabled": None, "script": "\tefc.ui.sizeDock(self)"}}}
 
 def window(path, ttype, vw, blocks):
     root = flex("root", "column", blocks, extra={"style": {"classes": "Container/Faceplate Container/Scroll", "gap": v(6)}},
@@ -589,12 +589,16 @@ def trend_part():
 # ----------------------------------------------------------------- trends overview (decision 35)
 # Default Power Chart props: realtime, no tag browser / pen table / config UI; efc.pv.refresh writes plots, axes, pens.
 POWERCHART = {
-    "pens": [], "axes": [], "plots": [{"axes": [], "trends": [], "relativeWeight": 1}],
-    "config": {"mode": "realtime", "realtime": {"range": 30, "units": "minute"}, "refreshRate": 10000,
-               "historical": {"startDate": "", "endDate": ""}, "visibility": {"showTagBrowser": False, "showPenControl": False,
-                                                                              "showSettings": False, "showMoreOptions": False}},
-    "title": {"visible": False}, "legend": {"visible": False},
-    "pollRate": 10000,
+    "pens": [], "axes": [], "plots": [{"relativeWeight": 1, "color": "#FFFFFF00", "markers": [], "style": {"classes": ""}}],
+    "config": {"mode": "realtime", "unitOfTime": 30, "measureOfTime": "minutes", "refreshRate": 10000, "pointCount": 300,
+               "responsiveDesignWidth": 0,                    # the dock is 400 px wide: never switch to the mobile layout
+               "visibility": {"showTagBrowser": False, "showDateRangeSelector": False, "showPenControlDisplay": False,
+                              "buttons": {"showTagBrowserButton": False, "showPanZoomButton": False, "showXTraceButton": False,
+                                          "showRangeBrushButton": False, "showAnnotationButton": False, "showFullscreenButton": False,
+                                          "showSettingsButton": False, "showMoreButton": False}}},
+    "interaction": {"mode": "xTrace"},                     # tap to read values; no zoom state to go stale
+    "title": {"visible": False}, "legend": {"visible": True},
+    "timeAxis": {"visible": True, "tickCount": 0, "tick": {"label": {"format": "HH:mm"}}},
     "style": {"classes": "Container/Inset"},
 }
 

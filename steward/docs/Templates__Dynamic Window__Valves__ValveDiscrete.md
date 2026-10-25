@@ -9,7 +9,7 @@
 <!-- keep:end -->
 
 <!-- auto:start -->
-_Auto-generated 2026-10-25 01:45 from EFC_Library:view:Templates/Dynamic Window/Valves/ValveDiscrete. Do not edit this section._
+_Auto-generated 2026-10-25 01:51 from EFC_Library:view:Templates/Dynamic Window/Valves/ValveDiscrete. Do not edit this section._
 
 | Param | Direction | Default |
 |---|---|---|

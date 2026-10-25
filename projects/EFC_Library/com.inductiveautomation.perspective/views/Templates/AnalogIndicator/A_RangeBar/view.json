@@ -706,7 +706,7 @@
       "paramDirection": "input",
       "persistent": true,
       "onChange": {
-        "enabled": true,
+        "enabled": null,
         "script": "\tefc.pv.rebind(self, previousValue, currentValue)"
       }
     },

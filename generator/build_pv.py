@@ -254,7 +254,7 @@ def strip_classes():
 PV_EVENTS = {"system": {"onStartup": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.register(self)"}},
                        "onShutdown": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.unregister(self)"}}},
            "dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}
-TAGPATH_CHANGE = {"paramDirection": "input", "persistent": True, "onChange": {"enabled": True, "script": "\tefc.pv.rebind(self, previousValue, currentValue)"}}
+TAGPATH_CHANGE = {"paramDirection": "input", "persistent": True, "onChange": {"enabled": None, "script": "\tefc.pv.rebind(self, previousValue, currentValue)"}}
 
 def view(root, custom_defaults, prop_config, w, h):
     prop_config = dict(prop_config)

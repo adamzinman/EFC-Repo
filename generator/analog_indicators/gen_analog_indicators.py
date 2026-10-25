@@ -127,7 +127,7 @@ def make_view(root, w, h, params, extra_custom=None):
         custom[k] = None; pcfg["custom." + k] = expr(e)
     params = dict(params, tType="T_KPI", dockId="", dwTagPath="", census=True)    # efc.ui.openDynamic -> dw_ProcessValue
     for p in params: pcfg["params." + p] = {"paramDirection": "input", "persistent": True}
-    pcfg["params.tagPath"] = {"paramDirection": "input", "persistent": True, "onChange": {"enabled": True, "script": "\tefc.pv.rebind(self, previousValue, currentValue)"}}
+    pcfg["params.tagPath"] = {"paramDirection": "input", "persistent": True, "onChange": {"enabled": None, "script": "\tefc.pv.rebind(self, previousValue, currentValue)"}}
     root["events"] = {"system": {"onStartup": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.register(self)"}},
                        "onShutdown": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.unregister(self)"}}},
            "dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}   # click opens the window; startup/shutdown register the value (efc.pv, decision 35)

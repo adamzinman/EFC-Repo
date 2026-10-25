@@ -53,7 +53,7 @@
           }
         },
         "onChange": {
-          "enabled": true,
+          "enabled": null,
           "script": "\tefc.ui.sizeDock(self)"
         }
       }
@@ -375,36 +375,55 @@
           "axes": [],
           "plots": [
             {
-              "axes": [],
-              "trends": [],
-              "relativeWeight": 1
+              "relativeWeight": 1,
+              "color": "#FFFFFF00",
+              "markers": [],
+              "style": {
+                "classes": ""
+              }
             }
           ],
           "config": {
             "mode": "realtime",
-            "realtime": {
-              "range": 30,
-              "units": "minute"
-            },
+            "unitOfTime": 30,
+            "measureOfTime": "minutes",
             "refreshRate": 10000,
-            "historical": {
-              "startDate": "",
-              "endDate": ""
-            },
+            "pointCount": 300,
+            "responsiveDesignWidth": 0,
             "visibility": {
               "showTagBrowser": false,
-              "showPenControl": false,
-              "showSettings": false,
-              "showMoreOptions": false
+              "showDateRangeSelector": false,
+              "showPenControlDisplay": false,
+              "buttons": {
+                "showTagBrowserButton": false,
+                "showPanZoomButton": false,
+                "showXTraceButton": false,
+                "showRangeBrushButton": false,
+                "showAnnotationButton": false,
+                "showFullscreenButton": false,
+                "showSettingsButton": false,
+                "showMoreButton": false
+              }
             }
+          },
+          "interaction": {
+            "mode": "xTrace"
           },
           "title": {
             "visible": false
           },
           "legend": {
-            "visible": false
+            "visible": true
           },
-          "pollRate": 10000,
+          "timeAxis": {
+            "visible": true,
+            "tickCount": 0,
+            "tick": {
+              "label": {
+                "format": "HH:mm"
+              }
+            }
+          },
           "style": {
             "classes": "Container/Inset"
           }

@@ -1,4 +1,4 @@
-# Library catalog (2026-10-25 01:46)
+# Library catalog (2026-10-25 01:51)
 
 64 views, 2 script modules, 314 style classes, 29 UDTs
 
@@ -73,7 +73,7 @@
 
 ## Script modules
 
-- efc/pv: _log, _p, norm_eu, var_type, type_label, _registry, _page_map, _key, _notify, _entry, register, unregister, rebind, purgeSession, entries, signature, groups, chart, setRange, refresh
+- efc/pv: _log, _p, norm_eu, var_type, type_label, _registry, _page_map, _key, _notify, _entry, register, unregister, _val, rebind, purgeSession, entries, signature, groups, _pen_style, chart, setRange, refresh
 - efc/ui: _log, _p, level, userLevel, _state, _write, dockSize, _viewportHeight, sizeDock, showDock, openWindow, openDynamic, setDefaultDock, closeDynamic, _audit, cmd, bypass, unbypass, ackAll, _num, trend, dblCmd
 
 ## PCLib UDTs

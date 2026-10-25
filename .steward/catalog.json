@@ -15,8 +15,8 @@
    }
   },
   "EFC_Library:script:efc/pv": {
-   "bytes": 13207,
-   "changed_at": "2026-10-25 01:45",
+   "bytes": 14717,
+   "changed_at": "2026-10-25 01:51",
    "first_seen": "2026-10-25 01:45",
    "functions": [
     "_log()",
@@ -31,16 +31,18 @@
     "_entry(tagPath, tType, page)",
     "register(component, tagPath=None)",
     "unregister(component, tagPath=None)",
+    "_val(q)",
     "rebind(component, previous, current)",
     "purgeSession(sessionId)",
     "entries(component)",
     "signature(entries_)",
     "groups(entries_, maxPlots=MAX_PLOTS, maxPens=MAX_PENS)",
+    "_pen_style(color, dash, width, opacity)",
     "chart(groups_, rangeMinutes=30)",
     "setRange(component, minutes)",
     "refresh(component, force=False)"
    ],
-   "hash": "80fa2d2a7850",
+   "hash": "799f3a9ca373",
    "kind": "script",
    "system_calls": [
     "system.perspective.sendMessage",
@@ -3499,7 +3501,7 @@
   "EFC_Library:view:Templates/AnalogIndicator/A_RangeBar": {
    "bound_classes": 7,
    "bytes": 36577,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Indicator/Analog/A/Pointer",
     "Indicator/Analog/A/ValueRow",
@@ -3528,11 +3530,11 @@
     "height": 120,
     "width": 256
    },
-   "doc_hash": "09a8229950e5",
+   "doc_hash": "498c183ca5e6",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/AnalogIndicator/A_RangeBar/view.json",
    "first_seen": "2026-10-21 03:53",
-   "hash": "09a8229950e5",
+   "hash": "498c183ca5e6",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -3582,7 +3584,7 @@
   "EFC_Library:view:Templates/AnalogIndicator/B_PointerScale": {
    "bound_classes": 6,
    "bytes": 42961,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Indicator/Analog/A/ValueRow",
     "Indicator/Analog/A/root",
@@ -3613,11 +3615,11 @@
     "height": 330,
     "width": 128
    },
-   "doc_hash": "aeb407accebd",
+   "doc_hash": "c57428717629",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/AnalogIndicator/B_PointerScale/view.json",
    "first_seen": "2026-10-21 03:53",
-   "hash": "aeb407accebd",
+   "hash": "c57428717629",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -3667,7 +3669,7 @@
   "EFC_Library:view:Templates/AnalogIndicator/C_CompactRow": {
    "bound_classes": 6,
    "bytes": 32796,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Indicator/Analog/A/ValueRow",
     "Indicator/Analog/A/root",
@@ -3694,11 +3696,11 @@
     "height": 46,
     "width": 200
    },
-   "doc_hash": "459df5b3400d",
+   "doc_hash": "aded99eeb696",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/AnalogIndicator/C_CompactRow/view.json",
    "first_seen": "2026-10-21 03:53",
-   "hash": "459df5b3400d",
+   "hash": "aded99eeb696",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -3744,7 +3746,7 @@
   "EFC_Library:view:Templates/AnalogIndicator/D_MiniColumn": {
    "bound_classes": 6,
    "bytes": 33186,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Indicator/Analog/Card",
     "Indicator/Analog/Chip",
@@ -3772,11 +3774,11 @@
     "height": 200,
     "width": 64
    },
-   "doc_hash": "46c438cbac78",
+   "doc_hash": "04c308fad8c5",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/AnalogIndicator/D_MiniColumn/view.json",
    "first_seen": "2026-10-21 03:53",
-   "hash": "46c438cbac78",
+   "hash": "04c308fad8c5",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -3853,7 +3855,7 @@
   "EFC_Library:view:Templates/Dynamic Window/HeatTransfer/HeatTransfer": {
    "bound_classes": 6,
    "bytes": 121333,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Button/Default",
     "Button/Icon",
@@ -3883,11 +3885,11 @@
     "height": 860,
     "width": 400
    },
-   "doc_hash": "81d8a868658a",
+   "doc_hash": "6c11e1860fac",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Dynamic Window/HeatTransfer/HeatTransfer/view.json",
    "first_seen": "2026-10-23 20:15",
-   "hash": "81d8a868658a",
+   "hash": "6c11e1860fac",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -3913,7 +3915,7 @@
   "EFC_Library:view:Templates/Dynamic Window/HeatTransfer/Heater": {
    "bound_classes": 12,
    "bytes": 184049,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Button/Default",
     "Button/Icon",
@@ -3948,11 +3950,11 @@
     "height": 860,
     "width": 400
    },
-   "doc_hash": "ca0454f3d854",
+   "doc_hash": "72e11650fd05",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Dynamic Window/HeatTransfer/Heater/view.json",
    "first_seen": "2026-10-23 20:15",
-   "hash": "ca0454f3d854",
+   "hash": "72e11650fd05",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -3978,7 +3980,7 @@
   "EFC_Library:view:Templates/Dynamic Window/IO/IOCard": {
    "bound_classes": 1,
    "bytes": 21633,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Button/Icon",
     "Button/Primary",
@@ -4004,11 +4006,11 @@
     "height": 860,
     "width": 400
    },
-   "doc_hash": "fff96a207aee",
+   "doc_hash": "ae3176a943a1",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Dynamic Window/IO/IOCard/view.json",
    "first_seen": "2026-10-23 20:15",
-   "hash": "fff96a207aee",
+   "hash": "ae3176a943a1",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -4038,7 +4040,7 @@
   "EFC_Library:view:Templates/Dynamic Window/Loops/Loop": {
    "bound_classes": 7,
    "bytes": 168339,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Button/Default",
     "Button/Icon",
@@ -4071,11 +4073,11 @@
     "height": 860,
     "width": 400
    },
-   "doc_hash": "8c37ba32a6f1",
+   "doc_hash": "6c20327253ea",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Dynamic Window/Loops/Loop/view.json",
    "first_seen": "2026-10-23 20:15",
-   "hash": "8c37ba32a6f1",
+   "hash": "6c20327253ea",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -4256,7 +4258,7 @@
   "EFC_Library:view:Templates/Dynamic Window/ProcessValues/ProcessValue": {
    "bound_classes": 7,
    "bytes": 147012,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Button/Default",
     "Button/Icon",
@@ -4288,11 +4290,11 @@
     "height": 860,
     "width": 400
    },
-   "doc_hash": "acefbf30db35",
+   "doc_hash": "95609fd5002b",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Dynamic Window/ProcessValues/ProcessValue/view.json",
    "first_seen": "2026-10-23 20:15",
-   "hash": "acefbf30db35",
+   "hash": "95609fd5002b",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -4318,7 +4320,7 @@
   "EFC_Library:view:Templates/Dynamic Window/Rotating/Rotating": {
    "bound_classes": 13,
    "bytes": 140226,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Button/Default",
     "Button/Icon",
@@ -4355,11 +4357,11 @@
     "height": 860,
     "width": 400
    },
-   "doc_hash": "b176c8947a43",
+   "doc_hash": "d4a5b6e34c92",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Dynamic Window/Rotating/Rotating/view.json",
    "first_seen": "2026-10-23 20:15",
-   "hash": "b176c8947a43",
+   "hash": "d4a5b6e34c92",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -4385,7 +4387,7 @@
   "EFC_Library:view:Templates/Dynamic Window/Rotating/VFD": {
    "bound_classes": 15,
    "bytes": 187869,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Button/Default",
     "Button/Icon",
@@ -4422,11 +4424,11 @@
     "height": 860,
     "width": 400
    },
-   "doc_hash": "d0be14f78e55",
+   "doc_hash": "d0ba5837248c",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Dynamic Window/Rotating/VFD/view.json",
    "first_seen": "2026-10-23 20:15",
-   "hash": "d0be14f78e55",
+   "hash": "d0ba5837248c",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -4549,8 +4551,8 @@
   },
   "EFC_Library:view:Templates/Dynamic Window/TrendsOverview": {
    "bound_classes": 5,
-   "bytes": 12948,
-   "changed_at": "2026-10-25 01:46",
+   "bytes": 13594,
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Button/Small",
     "Container/Faceplate",
@@ -4569,11 +4571,11 @@
     "height": 860,
     "width": 400
    },
-   "doc_hash": "17529418c489",
+   "doc_hash": "89507661655e",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Dynamic Window/TrendsOverview/view.json",
    "first_seen": "2026-10-25 01:45",
-   "hash": "17529418c489",
+   "hash": "89507661655e",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -4588,7 +4590,7 @@
   "EFC_Library:view:Templates/Dynamic Window/Valves/ValveAnalog": {
    "bound_classes": 8,
    "bytes": 128245,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Button/Default",
     "Button/Icon",
@@ -4621,11 +4623,11 @@
     "height": 860,
     "width": 400
    },
-   "doc_hash": "41b8ed512873",
+   "doc_hash": "6ec28dc98c34",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Dynamic Window/Valves/ValveAnalog/view.json",
    "first_seen": "2026-10-23 20:15",
-   "hash": "41b8ed512873",
+   "hash": "6ec28dc98c34",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -4651,7 +4653,7 @@
   "EFC_Library:view:Templates/Dynamic Window/Valves/ValveDiscrete": {
    "bound_classes": 10,
    "bytes": 100893,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Button/Default",
     "Button/Icon",
@@ -4687,11 +4689,11 @@
     "height": 860,
     "width": 400
    },
-   "doc_hash": "480a9a56599e",
+   "doc_hash": "257644b2ec40",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Dynamic Window/Valves/ValveDiscrete/view.json",
    "first_seen": "2026-10-23 20:15",
-   "hash": "480a9a56599e",
+   "hash": "257644b2ec40",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -5945,7 +5947,7 @@
   "EFC_Library:view:Templates/ProcessValues/PV_RangeBar": {
    "bound_classes": 13,
    "bytes": 60726,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "Bar/Band/Alarm",
     "Bar/Band/Extreme",
@@ -5970,11 +5972,11 @@
     "height": 54,
     "width": 104
    },
-   "doc_hash": "b956aa9edafd",
+   "doc_hash": "ccd53682066e",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/ProcessValues/PV_RangeBar/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "b956aa9edafd",
+   "hash": "ccd53682066e",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -6012,7 +6014,7 @@
   "EFC_Library:view:Templates/ProcessValues/PV_StatusStrip": {
    "bound_classes": 10,
    "bytes": 44724,
-   "changed_at": "2026-10-25 01:45",
+   "changed_at": "2026-10-25 01:51",
    "classes": [
     "PV/Body",
     "PV/Card",
@@ -6034,11 +6036,11 @@
     "height": 54,
     "width": 104
    },
-   "doc_hash": "c8163d53e690",
+   "doc_hash": "8e78d1c3081b",
    "docks": [],
    "file": "projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/ProcessValues/PV_StatusStrip/view.json",
    "first_seen": "2026-10-21 00:35",
-   "hash": "c8163d53e690",
+   "hash": "8e78d1c3081b",
    "inline_styles": 0,
    "inline_where": [],
    "kind": "view",
@@ -8912,10 +8914,10 @@
   }
  },
  "last_audit_fp": "5aec66161f1a",
- "last_delta": 1,
+ "last_delta": 17,
  "projects": [
   "EFC_Library"
  ],
- "scanned_at": "2026-10-25 01:46",
+ "scanned_at": "2026-10-25 01:51",
  "upstream": {}
 }

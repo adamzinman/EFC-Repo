@@ -2,7 +2,7 @@
 
 Compiled 2026-10-24 from the review of branch `claude/dynamic-window-opendock` (code review with a mock harness, documentation audit, preview renders, imported-parts review and a repo-wide inventory). Everything below was checked against the code; items marked **GW** can only be settled on a gateway. Effort: S under 2 h, M half a day to 2 days, L more.
 
-Already done on this branch during the review: three bindings to members the types don't have (`Valve_Control` → `Sts_Avail`/`Sts_Local`, VFD window → `Val_LoadPct`) fixed and `tools/check_bindings.py` now runs in every build and in CI, case-insensitive role matching, refusal of an empty `tagPath` in `openDynamic` / `cmd` / `ackAll` / `dblCmd`, one `alterDock` call per open (size + view + params), window previews rendered on demo instances, `build.py --preview` repaired, 18 documentation fixes, steward preview labels.
+Done since the review: trends overview (P1 items 3 and 4: `Templates/Dynamic Window/TrendsOverview`, self-registering PV templates via `efc.pv`, dock views carry the viewport change script), process values historized with the `HistProvider` parameter (decision 34). Already done on this branch during the review: three bindings to members the types don't have (`Valve_Control` → `Sts_Avail`/`Sts_Local`, VFD window → `Val_LoadPct`) fixed and `tools/check_bindings.py` now runs in every build and in CI, case-insensitive role matching, refusal of an empty `tagPath` in `openDynamic` / `cmd` / `ackAll` / `dblCmd`, one `alterDock` call per open (size + view + params), window previews rendered on demo instances, `build.py --preview` repaired, 18 documentation fixes, steward preview labels.
 
 ## P1: must be settled before the library is used on a gateway
 

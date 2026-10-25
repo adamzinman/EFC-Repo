@@ -573,7 +573,7 @@
           }
         },
         "onChange": {
-          "enabled": true,
+          "enabled": null,
           "script": "\tefc.ui.sizeDock(self)"
         }
       }

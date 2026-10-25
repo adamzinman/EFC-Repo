@@ -182,8 +182,17 @@ def unregister(component, tagPath=None):
         _notify(component)
 
 
+def _val(q):
+    """QualifiedValue (change-script arguments) -> value."""
+    return getattr(q, 'value', q)
+
+
 def rebind(component, previous, current):
-    """params.tagPath change script: a reused view gets new params without onStartup firing again."""
+    """params.tagPath change script: a reused view gets new params without onStartup firing again.
+    On a view-param change script `self` is the view, so the root container stands in as the component."""
+    if not hasattr(component, 'view'):
+        component = component.rootContainer
+    previous, current = _val(previous), _val(current)
     if previous:
         unregister(component, str(previous))
     if current:
@@ -237,24 +246,35 @@ def groups(entries_, maxPlots=MAX_PLOTS, maxPens=MAX_PENS):
     return out[:maxPlots]
 
 
+def _pen_style(color, dash, width, opacity):
+    return {'stroke': {'color': color, 'width': width, 'dashArray': dash or 0, 'opacity': opacity},
+            'fill': {'color': color, 'opacity': 0}}
+
+
 def chart(groups_, rangeMinutes=30):
-    """Power Chart props (plots, axes, pens) for the grouped values: one plot and one left axis per variable type."""
+    """Power Chart props (plots, axes, pens) for the grouped values: one plot and one left axis per variable type.
+    Property names per the 8.1 Power Chart schema; pen sources are plain tag paths (converted by the chart, 8.1.14+)."""
     plots, axes, pens = [], [], []
     for i, g in enumerate(groups_):
-        axis = 'ax%d' % i
-        axes.append({'name': axis, 'label': g['eu'] or g['label'], 'position': 'left', 'color': '#5A5A5A',
-                     'autoRange': True, 'tickCount': 0, 'format': '#,##0.#'})
-        plots.append({'axes': [axis], 'trends': [], 'relativeWeight': 1, 'borderColor': '#C4C4C4', 'gridColor': '#E0E0E0',
-                      'label': g['label']})
+        axis = '%s_%d' % (g['type'], i)
+        axes.append({'name': axis, 'position': 'left', 'width': 48, 'color': '#7F7F7F', 'dataFormat': '0,0.#',
+                     'range': {'auto': True, 'min': '', 'max': ''},
+                     'label': {'text': g['eu'] or g['label'], 'offset': 0, 'font': {'color': '#1F1F1F', 'size': 11}, 'style': {'classes': ''}},
+                     'tick': {'color': '#7F7F7F', 'count': 'Auto', 'label': {'font': {'color': '#1F1F1F', 'size': 10}, 'format': 'Auto',
+                                                                            'style': {'classes': ''}}, 'style': {'classes': ''}},
+                     'grid': {'visible': True, 'color': '#C4C4C4', 'opacity': 0.6, 'dashArray': 2, 'style': {'classes': ''}},
+                     'style': {'classes': ''}})
+        plots.append({'relativeWeight': 1, 'color': '#FFFFFF00', 'markers': [], 'style': {'classes': ''}})
         for j, pen in enumerate(g['pens']):
             stroke, dash = PEN_STYLES[j % len(PEN_STYLES)]
             if pen.get('kind') == 'sp':
                 stroke, dash = '#1F4E99', '6,3'
-            pens.append({'name': pen['name'], 'visible': True, 'enabled': True, 'selectable': True, 'axis': axis, 'plot': i,
-                         'display': {'type': 'line', 'interpolation': 'linear', 'breakLine': True, 'radius': 1,
-                                     'styles': {'normal': {'stroke': stroke, 'width': 1.5, 'dashArray': dash, 'fill': 'rgba(0,0,0,0)'}}},
+            pens.append({'name': pen['name'], 'visible': True, 'enabled': True, 'selectable': False, 'axis': axis, 'plot': i,
+                         'display': {'type': 'line', 'interpolation': 'curveLinear', 'breakLine': True, 'radius': 3,
+                                     'styles': {'normal': _pen_style(stroke, dash, 1.5, 1), 'highlighted': _pen_style(stroke, dash, 2.5, 1),
+                                                'selected': _pen_style(stroke, dash, 2.5, 1), 'muted': _pen_style(stroke, dash, 1.5, 0.4)}},
                          'data': {'source': pen['path'], 'aggregateMode': 'default'}})
-    return {'plots': plots, 'axes': axes, 'pens': pens, 'range': {'range': int(rangeMinutes), 'units': 'minute'}}
+    return {'plots': plots, 'axes': axes, 'pens': pens, 'unitOfTime': int(rangeMinutes), 'measureOfTime': 'minutes'}
 
 
 def setRange(component, minutes):
@@ -262,8 +282,9 @@ def setRange(component, minutes):
     view = component.view
     view.custom.range = int(minutes)
     ch = view.rootContainer.getChild('Chart')
-    ch.props.config.realtime.range = int(minutes)
-    ch.props.config.realtime.units = 'minute'
+    ch.props.config.mode = 'realtime'
+    ch.props.config.unitOfTime = int(minutes)
+    ch.props.config.measureOfTime = 'minutes'
 
 
 def refresh(component, force=False):
@@ -280,8 +301,9 @@ def refresh(component, force=False):
     gs = groups(ents)
     cfg = chart(gs, _p(view.custom, 'range', 30))
     ch = component.getChild('Chart')
-    ch.props.plots = cfg['plots']
+    ch.props.pens = []                     # clear first: a pen whose plot index changes keeps its old axis row otherwise
     ch.props.axes = cfg['axes']
+    ch.props.plots = cfg['plots']
     ch.props.pens = cfg['pens']
     view.custom.sig = sig
     view.custom.count = len(ents)

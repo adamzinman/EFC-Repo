@@ -101,13 +101,19 @@ def main():
     check([g["type"] for g in gs] == ["pressure", "temperature"], "group order follows VAR_TYPES: %r" % [g["type"] for g in gs])
     cfg = pv["chart"](gs, 30)
     check(len(cfg["plots"]) == 2 and len(cfg["axes"]) == 2 and len(cfg["pens"]) == 3, "chart shape")
-    check(cfg["pens"][0]["plot"] == 0 and cfg["pens"][1]["plot"] == 1 and cfg["pens"][2]["axis"] == "ax1", "pen -> plot/axis")
+    check(cfg["pens"][0]["plot"] == 0 and cfg["pens"][1]["plot"] == 1 and cfg["pens"][2]["axis"] == "temperature_1", "pen -> plot/axis")
     check(cfg["pens"][0]["data"]["source"] == "[default]PV_Demo/PT001/Val_PV", "pen source path")
+    check(cfg["axes"][0]["label"]["text"] == "PSIG" and cfg["axes"][0]["range"]["auto"] is True, "axis schema")
+    check(set(cfg["pens"][0]["display"]["styles"]) == {"normal", "highlighted", "selected", "muted"}, "pen style states")
+    check(cfg["unitOfTime"] == 30 and cfg["measureOfTime"] == "minutes", "range keys")
     # refresh writes the chart once per change
     check(pv["refresh"](ov) is True and pv["refresh"](ov) is False, "refresh only on change")
     check(len(ov._chart.props.pens) == 3 and ov.view.custom.count == 2, "chart props written")
     # rebind, unregister
-    pv["rebind"](a, "[default]PV_Demo/PT001", "[default]PV_Demo/PT003")
+    class QV:
+        def __init__(self, v): self.value = v
+    view_a = NS(rootContainer=a, params=a.view.params)          # on a view-param change script, self is the view
+    pv["rebind"](view_a, QV("[default]PV_Demo/PT001"), QV("[default]PV_Demo/PT003"))
     paths = [e["tagPath"] for e in pv["entries"](ov)]
     check("[default]PV_Demo/PT003" in paths and "[default]PV_Demo/PT001" not in paths, "rebind swaps the entry: %r" % paths)
     pv["unregister"](b)
