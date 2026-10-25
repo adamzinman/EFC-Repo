@@ -1,6 +1,12 @@
 {
   "name": "PID_Loop",
   "tagType": "UdtType",
+  "parameters": {
+    "HistProvider": {
+      "dataType": "String",
+      "value": ""
+    }
+  },
   "tags": [
     {
       "name": "PV",
@@ -12,6 +18,16 @@
       "engLow": 0.0,
       "engHigh": 100.0,
       "formatString": "#,##0.0",
+      "historyEnabled": {
+        "bindType": "Expression",
+        "value": "len(\"{HistProvider}\") > 0"
+      },
+      "historyProvider": {
+        "bindType": "parameter",
+        "binding": "{HistProvider}"
+      },
+      "historicalDeadbandStyle": "Analog",
+      "sampleMode": "OnChange",
       "alarms": [
         {
           "name": "PV_High",
@@ -38,7 +54,17 @@
       "tagType": "AtomicTag",
       "valueSource": "memory",
       "dataType": "Float4",
-      "value": 0.0
+      "value": 0.0,
+      "historyEnabled": {
+        "bindType": "Expression",
+        "value": "len(\"{HistProvider}\") > 0"
+      },
+      "historyProvider": {
+        "bindType": "parameter",
+        "binding": "{HistProvider}"
+      },
+      "historicalDeadbandStyle": "Analog",
+      "sampleMode": "OnChange"
     },
     {
       "name": "OUT",
@@ -48,7 +74,17 @@
       "value": 0.0,
       "engUnit": "%",
       "engLow": 0.0,
-      "engHigh": 100.0
+      "engHigh": 100.0,
+      "historyEnabled": {
+        "bindType": "Expression",
+        "value": "len(\"{HistProvider}\") > 0"
+      },
+      "historyProvider": {
+        "bindType": "parameter",
+        "binding": "{HistProvider}"
+      },
+      "historicalDeadbandStyle": "Analog",
+      "sampleMode": "OnChange"
     },
     {
       "name": "Mode",

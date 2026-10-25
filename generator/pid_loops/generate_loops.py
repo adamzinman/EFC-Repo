@@ -641,11 +641,12 @@ instances = {"name": "PID_Demo", "tagType": "Folder", "tags": [
 UDT_FILE, INST_FILE = "T_PID_Demo_UDT.json", "T_PID_Demo_Instances.json"
 
 if LEGACY:   # the pre-8e719f8 PID_Loop UDT and demo instances (tags/legacy/PID_Loop_UDT.json is the same definition)
-    udt = {"name": "PID_Loop", "tagType": "UdtType", "tags": [
-        mem("PV", "Float4", 0.0, engUnit="EU", engLow=0.0, engHigh=100.0, formatString="#,##0.0",
+    # PV / SP / OUT historized when the instance names a HistProvider (decision 34, LT.HIST_PROPS)
+    udt = {"name": "PID_Loop", "tagType": "UdtType", "parameters": dict(LT.HIST_PARAMS), "tags": [
+        mem("PV", "Float4", 0.0, engUnit="EU", engLow=0.0, engHigh=100.0, formatString="#,##0.0", **LT.HIST_PROPS,
             alarms=[{"name": "PV_High", "mode": "AboveValue", "priority": "High", "setpointA": {"bindType": "Tag", "value": "[.]AlmHi"}},
                     {"name": "PV_Low", "mode": "BelowValue", "priority": "High", "setpointA": {"bindType": "Tag", "value": "[.]AlmLo"}}]),
-        mem("SP", "Float4", 0.0), mem("OUT", "Float4", 0.0, engUnit="%", engLow=0.0, engHigh=100.0),
+        mem("SP", "Float4", 0.0, **LT.HIST_PROPS), mem("OUT", "Float4", 0.0, engUnit="%", engLow=0.0, engHigh=100.0, **LT.HIST_PROPS),
         mem("Mode", "Int2", 1, documentation="0 = MAN, 1 = AUTO, 2 = CAS"),
         mem("Kp", "Float4", 1.0), mem("Ti", "Float4", 30.0, engUnit="s"), mem("Td", "Float4", 0.0, engUnit="s"),
         mem("Action", "Int2", 0, documentation="0 = Reverse, 1 = Direct"),

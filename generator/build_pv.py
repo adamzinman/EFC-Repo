@@ -460,8 +460,8 @@ def build_tags():
             expr("Alarm", "Boolean", f"{{[.]../PV}} {cmp} {{[.]SP}} && {{[.]Enabled}} && !{{[.]Inhibit}}", alarms=alarm(name, pri)),
         ]}
     if LEGACY:   # pre-e710de8 demo UDT: DDT_Process_Value member names, Ignition alarms on the x/Alarm bits
-        udt = {"name": "DDT_Process_Value_Demo", "tagType": "UdtType", "tags": [
-            mem("PV", "Float4", 28.2),
+        udt = {"name": "DDT_Process_Value_Demo", "tagType": "UdtType", "parameters": dict(LT.HIST_PARAMS), "tags": [
+            mem("PV", "Float4", 28.2, **LT.HIST_PROPS),   # historized when the instance names a HistProvider (decision 34)
             expr("Name", "String", '"{InstanceName}"'),
             mem("Description", "String", "Demo pressure transmitter"),
             mem("Units", "String", "PSIG"),

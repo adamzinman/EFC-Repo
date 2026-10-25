@@ -29,13 +29,28 @@ can switch between this branch's `EFC_Library_PROJECT.zip` and the main one with
 ## Gateway setup
 1. Tag Browser → Data Types: import `tags/legacy/MEM_Interlock_List_UDT.json`, then `DDT_Valve`, `DDT_Device`,
    `DDT_Process_Value`, `DDT_Station` (`PID_ControlValve`, `PID_Loop` if you use the analog valve / loop templates). Point
-   their `OPC Server` / `OPC Prefix` / `Tag` parameters at your M580 (the files keep the RGTCR gateway's defaults).
+   their `OPC Server` / `OPC Prefix` / `Tag` parameters at your M580 (the files keep the RGTCR gateway's defaults), and
+   set `HistProvider` on `DDT_Process_Value` / `PID_Loop` instances to your history provider (empty = no history).
 2. Import `EFC_Library_PROJECT.zip` from this branch. Templates take `tagPath` = the instance path, as before.
 3. Optional demo tags: `tags/PID_Demo_Instances.json` (DDT_Valve_Demo / DDT_Device_Demo / PID_ControlValve),
    `tags/PV_Demo_Tags.json`, `tags/PID_Loops/*.json`, `tags/DDT_Station_Demo_UDT.json` + `tags/Station_Demo_Instances.json`.
 4. The `dw_Right` dock and `efc.ui` work as on main. Legacy `tType` values the templates send: `DDT_Valve`,
    `PID_ControlValve`, `DDT_Device` (VFD and Heater templates add `dockId` `dw_VFD` / `dw_Heater`), `DDT_Process_Value`,
    `PID_Loop`, `DDT_Station`.
+
+## Tag history (decision 34)
+Main-branch decision 34 applies here too: every process value is historized and the historian database is the UDT
+parameter `HistProvider` (String, default `""` = no history). On the legacy types the historized members are
+`DDT_Process_Value.PV` and `PID_Loop.PV` / `SP` / `OUT` (`HISTORIZED` in `generator/legacy_types.py`), with the same
+property set as `IGN_HISTORY_PROPS` in `types/gen_pclib.py`: `historyEnabled` = expression `len("{HistProvider}") > 0`,
+`historyProvider` = parameter `{HistProvider}`, `historicalDeadbandStyle` Analog, `sampleMode` OnChange (other history
+settings: the provider's defaults). This replaces the recovered export's hard-coded `HatfieldDB` history on
+`DDT_Process_Value.PV` (Periodic 3 s, absolute deadband 0.5, max age 12 s); on the RGTCR gateway set `HistProvider` =
+`HatfieldDB` on each instance (or a folder multi-edit) to keep its history. The demo UDTs (`DDT_Process_Value_Demo`,
+`PID_Loop`) carry the same parameter and properties (`LT.HIST_PARAMS` / `LT.HIST_PROPS`). No legacy UDT that carries a
+process value embeds another UDT, so there is no nested `HistProvider` pass-through (`DDT_Valve.InterlockList` holds no
+process value). `PID_ControlValve` (`Out` / `Pos`) and `DDT_Station` (weights, `PT`) are not historized, as their T_
+counterparts are not on main.
 
 ## Command semantics on the legacy types
 - `HMI_CMD` is a **level** (DFB: `CMD := HMI_CMD AND Manual AND Man_Perm`; the DFB resets it on a mode change or an

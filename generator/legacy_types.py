@@ -33,6 +33,18 @@ def _enabled():
 
 ENABLED = _enabled()
 
+# Decision 34 (main branch): every process value is historized; the historian database is the UDT parameter
+# `HistProvider` (String, default "" = no history). Same property set as types/gen_pclib.py IGN_HISTORY_PROPS.
+# Legacy members historized: DDT_Process_Value.PV, PID_Loop.PV / SP / OUT (tags/legacy/*.json and the demo UDTs).
+HIST_PARAMS = {"HistProvider": {"dataType": "String", "value": ""}}
+HIST_PROPS = {
+    "historyEnabled": {"bindType": "Expression", "value": 'len("{HistProvider}") > 0'},
+    "historyProvider": {"bindType": "parameter", "binding": "{HistProvider}"},
+    "historicalDeadbandStyle": "Analog",
+    "sampleMode": "OnChange",
+}
+HISTORIZED = {"DDT_Process_Value": ["PV"], "PID_Loop": ["PV", "SP", "OUT"]}
+
 # Template / window tType -> legacy type name (what the views' tType param and efc.ui.BY_TYPE use in the legacy build)
 TTYPE = {"T_DValve": "DDT_Valve", "T_CValve": "PID_ControlValve", "T_Motor": "DDT_Device", "T_VFD": "DDT_Device",
          "T_Heater": "DDT_Device", "T_AI": "DDT_Process_Value", "T_KPI": "DDT_Process_Value", "T_PID": "PID_Loop",

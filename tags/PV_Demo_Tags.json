@@ -7,13 +7,29 @@
         {
           "name": "DDT_Process_Value_Demo",
           "tagType": "UdtType",
+          "parameters": {
+            "HistProvider": {
+              "dataType": "String",
+              "value": ""
+            }
+          },
           "tags": [
             {
               "name": "PV",
               "tagType": "AtomicTag",
               "valueSource": "memory",
               "dataType": "Float4",
-              "value": 28.2
+              "value": 28.2,
+              "historyEnabled": {
+                "bindType": "Expression",
+                "value": "len(\"{HistProvider}\") > 0"
+              },
+              "historyProvider": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              },
+              "historicalDeadbandStyle": "Analog",
+              "sampleMode": "OnChange"
             },
             {
               "name": "Name",

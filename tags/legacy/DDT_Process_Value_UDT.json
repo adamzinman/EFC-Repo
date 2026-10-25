@@ -11,6 +11,10 @@
     },
     "Tag": {
       "dataType": "String"
+    },
+    "HistProvider": {
+      "dataType": "String",
+      "value": ""
     }
   },
   "tagType": "UdtType",
@@ -488,18 +492,19 @@
         "binding": "{OPC Server}"
       },
       "valueSource": "opc",
-      "historyMaxAge": 12,
-      "historicalDeadband": 0.5,
-      "historicalDeadbandMode": "Absolute",
-      "historicalDeadbandStyle": "Auto",
       "tagType": "AtomicTag",
       "dataType": "Float4",
-      "historyProvider": "HatfieldDB",
-      "historyMaxAgeUnits": "SEC",
       "name": "PV",
-      "historyEnabled": true,
-      "sampleMode": "Periodic",
-      "historySampleRate": 3
+      "historyEnabled": {
+        "bindType": "Expression",
+        "value": "len(\"{HistProvider}\") > 0"
+      },
+      "historyProvider": {
+        "bindType": "parameter",
+        "binding": "{HistProvider}"
+      },
+      "historicalDeadbandStyle": "Analog",
+      "sampleMode": "OnChange"
     },
     {
       "opcItemPath": {
