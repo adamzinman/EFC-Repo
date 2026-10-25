@@ -1,0 +1,480 @@
+{
+  "custom": {
+    "sig": "",
+    "count": 0,
+    "groups": [],
+    "range": 30
+  },
+  "params": {},
+  "propConfig": {},
+  "props": {
+    "defaultSize": {
+      "width": 400,
+      "height": 860
+    }
+  },
+  "root": {
+    "type": "ia.container.flex",
+    "version": 0,
+    "meta": {
+      "name": "root"
+    },
+    "position": {
+      "shrink": 0,
+      "grow": 0
+    },
+    "props": {
+      "direction": "column",
+      "alignItems": "stretch",
+      "style": {
+        "classes": "Container/Faceplate Util/Gap/M"
+      }
+    },
+    "propConfig": {
+      "custom.tick": {
+        "binding": {
+          "type": "expr",
+          "config": {
+            "expression": "now(5000)"
+          },
+          "transforms": [
+            {
+              "type": "script",
+              "code": "\tefc.pv.refresh(self)\n\treturn value"
+            }
+          ]
+        }
+      },
+      "custom.vh": {
+        "binding": {
+          "type": "property",
+          "config": {
+            "path": "page.props.dimensions.viewport.height"
+          }
+        },
+        "onChange": {
+          "enabled": true,
+          "script": "\tefc.ui.sizeDock(self)"
+        }
+      }
+    },
+    "children": [
+      {
+        "type": "ia.container.flex",
+        "version": 0,
+        "meta": {
+          "name": "Header"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0,
+          "basis": "5.185vh"
+        },
+        "props": {
+          "direction": "row",
+          "alignItems": "center",
+          "style": {
+            "classes": "Container/PopupHeader Util/Gap/S"
+          }
+        },
+        "children": [
+          {
+            "type": "ia.container.flex",
+            "version": 0,
+            "meta": {
+              "name": "Names"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 1
+            },
+            "props": {
+              "direction": "column",
+              "alignItems": "stretch",
+              "style": {
+                "classes": ""
+              }
+            },
+            "children": [
+              {
+                "type": "ia.display.label",
+                "version": 0,
+                "meta": {
+                  "name": "Title"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0
+                },
+                "props": {
+                  "text": "TRENDS",
+                  "style": {
+                    "classes": "Text/TagName"
+                  }
+                }
+              },
+              {
+                "type": "ia.display.label",
+                "version": 0,
+                "meta": {
+                  "name": "Count"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0
+                },
+                "props": {
+                  "text": "",
+                  "style": {
+                    "classes": "Text/Caption Text/Mod/Ellipsis"
+                  }
+                },
+                "propConfig": {
+                  "props.text": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.count} = 0, 'No process values on this screen', {view.custom.count} + ' value' + if({view.custom.count} = 1, '', 's') + ' on screen, ' + case({view.custom.range}, 1440, '24 h', 480, '8 h', 60, '1 h', 5, '5 min', '30 min'))"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "type": "ia.container.flex",
+            "version": 0,
+            "meta": {
+              "name": "Ranges"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 0
+            },
+            "props": {
+              "direction": "row",
+              "alignItems": "stretch",
+              "style": {
+                "classes": "Util/Gap/XS"
+              }
+            },
+            "children": [
+              {
+                "type": "ia.input.button",
+                "version": 0,
+                "meta": {
+                  "name": "R24h"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.963vh"
+                },
+                "props": {
+                  "text": "24h",
+                  "style": {
+                    "classes": "Button/Small"
+                  }
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "type": "script",
+                      "scope": "G",
+                      "config": {
+                        "script": "\tefc.pv.setRange(self, 1440)"
+                      }
+                    }
+                  }
+                },
+                "propConfig": {
+                  "props.style.classes": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.range} = 1440, 'Button/TabActive', 'Button/Tab')"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.input.button",
+                "version": 0,
+                "meta": {
+                  "name": "R8h"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.963vh"
+                },
+                "props": {
+                  "text": "8h",
+                  "style": {
+                    "classes": "Button/Small"
+                  }
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "type": "script",
+                      "scope": "G",
+                      "config": {
+                        "script": "\tefc.pv.setRange(self, 480)"
+                      }
+                    }
+                  }
+                },
+                "propConfig": {
+                  "props.style.classes": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.range} = 480, 'Button/TabActive', 'Button/Tab')"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.input.button",
+                "version": 0,
+                "meta": {
+                  "name": "R1h"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.963vh"
+                },
+                "props": {
+                  "text": "1h",
+                  "style": {
+                    "classes": "Button/Small"
+                  }
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "type": "script",
+                      "scope": "G",
+                      "config": {
+                        "script": "\tefc.pv.setRange(self, 60)"
+                      }
+                    }
+                  }
+                },
+                "propConfig": {
+                  "props.style.classes": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.range} = 60, 'Button/TabActive', 'Button/Tab')"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.input.button",
+                "version": 0,
+                "meta": {
+                  "name": "R30m"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.963vh"
+                },
+                "props": {
+                  "text": "30m",
+                  "style": {
+                    "classes": "Button/Small"
+                  }
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "type": "script",
+                      "scope": "G",
+                      "config": {
+                        "script": "\tefc.pv.setRange(self, 30)"
+                      }
+                    }
+                  }
+                },
+                "propConfig": {
+                  "props.style.classes": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.range} = 30, 'Button/TabActive', 'Button/Tab')"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "ia.input.button",
+                "version": 0,
+                "meta": {
+                  "name": "R5m"
+                },
+                "position": {
+                  "shrink": 0,
+                  "grow": 0,
+                  "basis": "2.963vh"
+                },
+                "props": {
+                  "text": "5m",
+                  "style": {
+                    "classes": "Button/Small"
+                  }
+                },
+                "events": {
+                  "component": {
+                    "onActionPerformed": {
+                      "type": "script",
+                      "scope": "G",
+                      "config": {
+                        "script": "\tefc.pv.setRange(self, 5)"
+                      }
+                    }
+                  }
+                },
+                "propConfig": {
+                  "props.style.classes": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "if({view.custom.range} = 5, 'Button/TabActive', 'Button/Tab')"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ia.chart.powerchart",
+        "version": 0,
+        "meta": {
+          "name": "Chart"
+        },
+        "position": {
+          "shrink": 1,
+          "grow": 1,
+          "basis": "0px"
+        },
+        "props": {
+          "pens": [],
+          "axes": [],
+          "plots": [
+            {
+              "axes": [],
+              "trends": [],
+              "relativeWeight": 1
+            }
+          ],
+          "config": {
+            "mode": "realtime",
+            "realtime": {
+              "range": 30,
+              "units": "minute"
+            },
+            "refreshRate": 10000,
+            "historical": {
+              "startDate": "",
+              "endDate": ""
+            },
+            "visibility": {
+              "showTagBrowser": false,
+              "showPenControl": false,
+              "showSettings": false,
+              "showMoreOptions": false
+            }
+          },
+          "title": {
+            "visible": false
+          },
+          "legend": {
+            "visible": false
+          },
+          "pollRate": 10000,
+          "style": {
+            "classes": "Container/Inset"
+          }
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "{view.custom.count} > 0"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "Empty"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 1
+        },
+        "props": {
+          "text": "No process values on this screen",
+          "style": {
+            "classes": "Text/Caption Text/Mod/Center"
+          }
+        },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "{view.custom.count} = 0"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "events": {
+      "system": {
+        "onStartup": {
+          "type": "script",
+          "scope": "G",
+          "config": {
+            "script": "\tefc.ui.sizeDock(self)\n\tefc.pv.refresh(self, True)"
+          }
+        }
+      }
+    },
+    "custom": {
+      "tick": null,
+      "vh": null
+    },
+    "scripts": {
+      "customMethods": [],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "efc.pvChanged",
+          "pageScope": true,
+          "sessionScope": false,
+          "viewScope": false,
+          "script": "\tefc.pv.refresh(self)"
+        }
+      ]
+    }
+  }
+}

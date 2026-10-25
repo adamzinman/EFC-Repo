@@ -9,7 +9,7 @@
    "tagPath": "[default]PID_Demo/FV101"
   },
   "bindings": {
-   "ok": 109,
+   "ok": 103,
    "fail": 0
   }
  },
@@ -589,7 +589,7 @@
    "tagPath": "[default]PID_Demo/P101"
   },
   "bindings": {
-   "ok": 205,
+   "ok": 207,
    "fail": 6
   }
  },
@@ -603,7 +603,7 @@
    "tagPath": "[default]PID_Demo/E401"
   },
   "bindings": {
-   "ok": 1340,
+   "ok": 1342,
    "fail": 12
   }
  },
@@ -618,7 +618,7 @@
    "model": "BMXAMI0810"
   },
   "bindings": {
-   "ok": 33,
+   "ok": 35,
    "fail": 3
   }
  },
@@ -632,7 +632,7 @@
    "tagPath": "[default]PID_Demo/TIC101"
   },
   "bindings": {
-   "ok": 719,
+   "ok": 721,
    "fail": 9
   }
  },
@@ -695,7 +695,7 @@
    "tagPath": "[default]PV_Demo/PT001"
   },
   "bindings": {
-   "ok": 209,
+   "ok": 211,
    "fail": 6
   }
  },
@@ -709,7 +709,7 @@
    "tagPath": "[default]PID_Demo/P101"
   },
   "bindings": {
-   "ok": 1320,
+   "ok": 1322,
    "fail": 12
   }
  },
@@ -723,7 +723,7 @@
    "tagPath": "[default]PID_Demo/M601"
   },
   "bindings": {
-   "ok": 1390,
+   "ok": 1385,
    "fail": 12
   }
  },
@@ -743,6 +743,18 @@
  },
  {
   "group": "Dynamic windows (dw_Right dock)",
+  "path": "Templates/Dynamic Window/TrendsOverview",
+  "kind": "template",
+  "png": "templates/Dynamic Window/TrendsOverview.png",
+  "size": "400\u00d7860",
+  "params": {},
+  "bindings": {
+   "ok": 18,
+   "fail": 2
+  }
+ },
+ {
+  "group": "Dynamic windows (dw_Right dock)",
   "path": "Templates/Dynamic Window/Valves/ValveAnalog",
   "kind": "template",
   "png": "templates/Dynamic Window/Valves/ValveAnalog.png",
@@ -751,7 +763,7 @@
    "tagPath": "[default]PID_Demo/FV101"
   },
   "bindings": {
-   "ok": 720,
+   "ok": 722,
    "fail": 9
   }
  },
@@ -765,7 +777,7 @@
    "tagPath": "[default]PID_Demo/XV101"
   },
   "bindings": {
-   "ok": 1271,
+   "ok": 1273,
    "fail": 12
   }
  },
@@ -777,7 +789,7 @@
   "size": "1920\u00d71080",
   "params": {},
   "bindings": {
-   "ok": 1646,
+   "ok": 1634,
    "fail": 0
   }
  },

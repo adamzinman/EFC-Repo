@@ -175,6 +175,7 @@ def merge_library():
                                         "the parent of an HMI project."), f, indent=2); f.write("\n")
     check_view_refs(lib)
     run_tool("check_bindings.py")         # every bound member exists in the UDT the view binds (tools/check_bindings.py)
+    run_tool("test_efc_pv.py")            # efc.pv registry / grouping unit test (CPython, fake system)
 
 
 def check_view_refs(lib):
@@ -242,6 +243,7 @@ def main():
         generate(a.preview)
     else:
         run_tool("check_bindings.py")     # CI: the committed views still bind only members their UDTs have
+        run_tool("test_efc_pv.py")
     zips = make_dist() if (a.dist or a.check) else None
     if zips is None:                      # check from temporary zips so the check always runs
         import tempfile

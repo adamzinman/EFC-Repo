@@ -125,9 +125,12 @@ def make_view(root, w, h, params, extra_custom=None):
     for k, e in DERIVED.items(): pcfg["custom." + k] = expr(e)
     for k, e in (extra_custom or {}).items():
         custom[k] = None; pcfg["custom." + k] = expr(e)
-    params = dict(params, tType="T_KPI", dockId="", dwTagPath="")    # efc.ui.openDynamic -> dw_ProcessValue
+    params = dict(params, tType="T_KPI", dockId="", dwTagPath="", census=True)    # efc.ui.openDynamic -> dw_ProcessValue
     for p in params: pcfg["params." + p] = {"paramDirection": "input", "persistent": True}
-    root["events"] = {"dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}
+    pcfg["params.tagPath"] = {"paramDirection": "input", "persistent": True, "onChange": {"enabled": True, "script": "\tefc.pv.rebind(self, previousValue, currentValue)"}}
+    root["events"] = {"system": {"onStartup": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.register(self)"}},
+                       "onShutdown": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.unregister(self)"}}},
+           "dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}   # click opens the window; startup/shutdown register the value (efc.pv, decision 35)
     return {"custom": custom, "params": params, "propConfig": pcfg,
             "props": {"defaultSize": {"width": w, "height": h}}, "root": root}
 

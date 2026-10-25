@@ -249,8 +249,18 @@ def strip_classes():
             f'   if({{view.custom.clearedPri}} >= 0, "PV/Strip/" + {PRI_NAME("{view.custom.clearedPri}")} + " Alarm/Mod/ClearedUnacked",\n'
             '    "PV/Strip/Normal"))))')
 
+# Root events: click opens the dynamic window; startup / shutdown and a tagPath change keep the page's process-value
+# registry (efc.pv) current, so the trends overview charts what is on screen (decision 35).
+PV_EVENTS = {"system": {"onStartup": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.register(self)"}},
+                       "onShutdown": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.unregister(self)"}}},
+           "dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}
+TAGPATH_CHANGE = {"paramDirection": "input", "persistent": True, "onChange": {"enabled": True, "script": "\tefc.pv.rebind(self, previousValue, currentValue)"}}
+
 def view(root, custom_defaults, prop_config, w, h):
-    return {"custom": custom_defaults, "params": {"tagPath": "", "tType": "T_AI", "dockId": "", "dwTagPath": ""}, "propConfig": prop_config,
+    prop_config = dict(prop_config)
+    prop_config["params.tagPath"] = TAGPATH_CHANGE
+    prop_config["params.census"] = {"paramDirection": "input", "persistent": True}
+    return {"custom": custom_defaults, "params": {"tagPath": "", "tType": "T_AI", "dockId": "", "dwTagPath": "", "census": True}, "propConfig": prop_config,
             "props": {"defaultSize": {"width": w, "height": h}}, "root": root}
 
 # ----------------------------------------------------------------- A1: PV_StatusStrip
@@ -261,7 +271,7 @@ def build_a1():
                 justify="space-between")
     card = flex("Card", "row", [strip, body], "PV/Card", {"basis": "auto", "grow": 1, "shrink": 1}, justify="flex-start", align="stretch")
     root = flex("root", "column", [card], "PV/Shell Util/Pointer", justify="flex-start", align="stretch")
-    root["events"] = {"dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}
+    root["events"] = PV_EVENTS                         # click opens dw_ProcessValue; startup/shutdown register the value (efc.pv)
     return view(root, common_defaults(), common_custom(), 104, 54)
 
 # ----------------------------------------------------------------- B2: PV_RangeBar
@@ -330,7 +340,7 @@ def build_b2():
     card = flex("Card", "column", [header_row(), value_row("PV/ValueSmall"), track], "PV/Card PV/BodyBar",
                 {"basis": "auto", "grow": 1, "shrink": 1}, justify="space-between")
     root = flex("root", "column", [card], "PV/Shell Util/Pointer", justify="flex-start", align="stretch")
-    root["events"] = {"dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}
+    root["events"] = PV_EVENTS                         # click opens dw_ProcessValue; startup/shutdown register the value (efc.pv)
     return view(root, defaults, pc, 104, 54)
 
 # ----------------------------------------------------------------- demo view

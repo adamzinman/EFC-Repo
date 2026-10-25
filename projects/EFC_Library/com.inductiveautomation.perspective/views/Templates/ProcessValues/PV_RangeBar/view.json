@@ -56,12 +56,17 @@
     "tagPath": "",
     "tType": "T_AI",
     "dockId": "",
-    "dwTagPath": ""
+    "dwTagPath": "",
+    "census": true
   },
   "propConfig": {
     "params.tagPath": {
       "paramDirection": "input",
-      "persistent": true
+      "persistent": true,
+      "onChange": {
+        "enabled": true,
+        "script": "\tefc.pv.rebind(self, previousValue, currentValue)"
+      }
     },
     "custom.tick": {
       "binding": {
@@ -642,6 +647,10 @@
           "expression": "if({view.custom.engMax} = {view.custom.engMin} || isNull({view.custom.pv}), 0, max(0, min(1, ({view.custom.pv} - {view.custom.engMin}) / ({view.custom.engMax} - {view.custom.engMin}))))"
         }
       }
+    },
+    "params.census": {
+      "paramDirection": "input",
+      "persistent": true
     }
   },
   "props": {
@@ -1717,6 +1726,22 @@
       }
     ],
     "events": {
+      "system": {
+        "onStartup": {
+          "type": "script",
+          "scope": "G",
+          "config": {
+            "script": "\tefc.pv.register(self)"
+          }
+        },
+        "onShutdown": {
+          "type": "script",
+          "scope": "G",
+          "config": {
+            "script": "\tefc.pv.unregister(self)"
+          }
+        }
+      },
       "dom": {
         "onClick": {
           "type": "script",

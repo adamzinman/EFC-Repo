@@ -9,12 +9,13 @@
 <!-- keep:end -->
 
 <!-- auto:start -->
-_Auto-generated 2026-10-21 03:55 from EFC_Library:view:Templates/AnalogIndicator/D_MiniColumn. Do not edit this section._
+_Auto-generated 2026-10-25 01:45 from EFC_Library:view:Templates/AnalogIndicator/D_MiniColumn. Do not edit this section._
 
 | Param | Direction | Default |
 |---|---|---|
 | Format | input | "#,##0.0" |
 | Header | input | "Tag" |
+| census | input | true |
 | dockId | input | "" |
 | dwTagPath | input | "" |
 | tType | input | "T_KPI" |

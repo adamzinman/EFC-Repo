@@ -245,8 +245,15 @@ def classify(o):
         for x in o: classify(x)
     return o
 
+# Dock content keeps the dw_Right dock at 37.04 vh: the root watches the page viewport height and calls efc.ui.sizeDock
+# (decision 33), so screens need no change script of their own.
+DOCK_SIZE_PC = {"custom.vh": {"binding": {"type": "property", "config": {"path": "page.props.dimensions.viewport.height"}},
+                              "onChange": {"enabled": True, "script": "\tefc.ui.sizeDock(self)"}}}
+
 def window(path, ttype, vw, blocks):
-    root = flex("root", "column", blocks, extra={"style": {"classes": "Container/Faceplate Container/Scroll", "gap": v(6)}})
+    root = flex("root", "column", blocks, extra={"style": {"classes": "Container/Faceplate Container/Scroll", "gap": v(6)}},
+                pc=dict(DOCK_SIZE_PC))
+    root["custom"] = {"vh": None}
     params = {"tagPath": "", "tType": ttype}
     pc = dict(vw.pc)
     for p in params:
@@ -579,9 +586,52 @@ def trend_part():
     return "Templates/Dynamic Window/Parts/Trend", {"custom": custom, "params": {"tagPath": "", "pens": [], "expanded": False}, "propConfig": pc,
                                  "props": {"defaultSize": {"width": W - 16, "height": 170}}, "root": root}
 
+# ----------------------------------------------------------------- trends overview (decision 35)
+# Default Power Chart props: realtime, no tag browser / pen table / config UI; efc.pv.refresh writes plots, axes, pens.
+POWERCHART = {
+    "pens": [], "axes": [], "plots": [{"axes": [], "trends": [], "relativeWeight": 1}],
+    "config": {"mode": "realtime", "realtime": {"range": 30, "units": "minute"}, "refreshRate": 10000,
+               "historical": {"startDate": "", "endDate": ""}, "visibility": {"showTagBrowser": False, "showPenControl": False,
+                                                                              "showSettings": False, "showMoreOptions": False}},
+    "title": {"visible": False}, "legend": {"visible": False},
+    "pollRate": 10000,
+    "style": {"classes": "Container/Inset"},
+}
+
+def trends_overview():
+    """Templates/Dynamic Window/TrendsOverview: the dock's default view. Charts every process value registered on this
+    screen (efc.pv), one plot per variable type, stacked. Rebuilt when the set of values changes; range 5 m .. 24 h."""
+    rng = [button(f"R{n}", n, f"efc.pv.setRange(self, {mins})", cls="Button/Small", grow=0) for n, mins in RANGES]
+    for b, (n, mins) in zip(rng, RANGES):
+        b.setdefault("propConfig", {})["props.style.classes"] = expr(f"if({{view.custom.range}} = {mins}, 'Button/TabActive', 'Button/Tab')")
+    head = flex("Header", "row", [
+        flex("Names", "column", [label("Title", "TRENDS", "Text/TagName"),
+                                 label("Count", "", "Text/Caption Text/Mod/Ellipsis",
+                                       pc={"props.text": expr("if({view.custom.count} = 0, 'No process values on this screen', "
+                                                              "{view.custom.count} + ' value' + if({view.custom.count} = 1, '', 's') + ' on screen, ' + "
+                                                              "case({view.custom.range}, 1440, '24 h', 480, '8 h', 60, '1 h', 5, '5 min', '30 min'))")})], grow=1),
+        flex("Ranges", "row", rng, extra={"style": {"classes": "", "gap": v(2)}})],
+        basis=v(56), extra={"alignItems": "center", "style": {"classes": "Container/PopupHeader", "gap": v(4)}})
+    chart = comp("ia.chart.powerchart", "Chart", dict(POWERCHART), {"shrink": 1, "grow": 1, "basis": "0px"},
+                 {"position.display": expr("{view.custom.count} > 0")})
+    empty = label("Empty", "No process values on this screen", "Text/Caption Text/Mod/Center", grow=1,
+                  pc={"position.display": expr("{view.custom.count} = 0")})
+    tick = {"custom.tick": {"binding": {"type": "expr", "config": {"expression": "now(5000)"},
+                                        "transforms": [{"type": "script", "code": "\tefc.pv.refresh(self)\n\treturn value"}]}}}
+    tick.update(DOCK_SIZE_PC)
+    root = flex("root", "column", [head, chart, empty], extra={"style": {"classes": "Container/Faceplate", "gap": v(6)}},
+                pc=tick, events={"system": {"onStartup": script("efc.ui.sizeDock(self)\nefc.pv.refresh(self, True)")}})
+    root["custom"] = {"tick": None, "vh": None}
+    root["scripts"] = {"customMethods": [], "extensionFunctions": None,
+                       "messageHandlers": [{"messageType": "efc.pvChanged", "pageScope": True, "sessionScope": False, "viewScope": False,
+                                            "script": "\tefc.pv.refresh(self)"}]}
+    custom = {"sig": "", "count": 0, "groups": [], "range": 30}
+    return "Templates/Dynamic Window/TrendsOverview", {"custom": custom, "params": {}, "propConfig": {},
+                                                       "props": {"defaultSize": {"width": W, "height": H}}, "root": root}
+
 # ----------------------------------------------------------------- write
 VIEWS = [valve_discrete, valve_analog, rotating, vfd, heater, heat_transfer, process_value, loop, io_card,
-         intlk_list, bypass_confirm, trend_part]
+         intlk_list, bypass_confirm, trend_part, trends_overview]
 
 def build():
     proj = project_dir(PROJECT)
@@ -597,7 +647,10 @@ def build():
     d = os.path.join(proj, "ignition", "script-python", "efc", "ui")
     write(os.path.join(d, "code.py"), open(os.path.join(HERE, "efc_ui.py")).read())
     write(os.path.join(d, "resource.json"), resource_json(["code.py"], "build_docks.py").replace('"scope": "G"', '"scope": "A"'))
-    print(f"{PROJECT}: {len(VIEWS)} views + efc.ui -> {proj}")
+    d = os.path.join(proj, "ignition", "script-python", "efc", "pv")
+    write(os.path.join(d, "code.py"), open(os.path.join(HERE, "efc_pv.py")).read())
+    write(os.path.join(d, "resource.json"), resource_json(["code.py"], "build_docks.py").replace('"scope": "G"', '"scope": "A"'))
+    print(f"{PROJECT}: {len(VIEWS)} views + efc.ui + efc.pv -> {proj}")
 
 if __name__ == "__main__":
     build()

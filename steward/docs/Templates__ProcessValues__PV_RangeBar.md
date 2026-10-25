@@ -9,10 +9,11 @@
 <!-- keep:end -->
 
 <!-- auto:start -->
-_Auto-generated 2026-10-23 20:15 from EFC_Library:view:Templates/ProcessValues/PV_RangeBar. Do not edit this section._
+_Auto-generated 2026-10-25 01:45 from EFC_Library:view:Templates/ProcessValues/PV_RangeBar. Do not edit this section._
 
 | Param | Direction | Default |
 |---|---|---|
+| census | input | true |
 | dockId | input | "" |
 | dwTagPath | input | "" |
 | tType | input | "T_AI" |
