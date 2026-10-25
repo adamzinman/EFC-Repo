@@ -9,7 +9,7 @@ Writes (relative to the repo root):
   tags/PV_Demo_Tags.json        Demo UDT T_AI_Demo (EFCLib v1 member names) + 5 instances (import at the [default] provider root)
   docs/pv-style-index.md        Every PV style class and what it is for
 Normally run from the repo root:  python3 build.py
-Only template parameter: tagPath (path to a DDT_Process_Value instance, e.g. [default]Area1/PT002).
+Template parameters: tagPath (a T_AI instance, e.g. [default]PV_Demo/PT001), tType, dockId, dwTagPath (click opens dw_ProcessValue in the dw_Right dock).
 """
 import json, os, re, shutil
 from urllib.parse import quote
@@ -490,8 +490,8 @@ def build_tags():
             mem("Cfg_Lim", "Float4", lim), mem("Cfg_En", "Boolean", True), mem("Cfg_Priority", "Int2", PRI[pri]),
             mem("Sts_Suppressed", "Boolean", False),
             expr("Sts_Active", "Boolean", act, alarms=alarm(name, pri)), expr("Sts_Unack", "Boolean", act)]}
-    udt = {"name": "T_AI_Demo", "tagType": "UdtType", "tags": [   # memory stand-in with the EFCLib v1 T_AI member names
-        mem("Val_PV", "Float4", 28.2),
+    udt = {"name": "T_AI_Demo", "tagType": "UdtType", "parameters": {"HistProvider": {"dataType": "String", "value": ""}}, "tags": [   # memory stand-in with the EFCLib v1 T_AI member names
+        mem("Val_PV", "Float4", 28.2, historyEnabled={"bindType": "Expression", "value": 'len("{HistProvider}") > 0'}, historyProvider={"bindType": "parameter", "binding": "{HistProvider}"}, historicalDeadbandStyle="Analog", sampleMode="OnChange"),   # historized when the instance names a HistProvider
         expr("Cfg_Tag", "String", '"{InstanceName}"'),
         mem("Cfg_Desc", "String", "Demo pressure transmitter"),
         mem("Cfg_EU", "String", "PSIG"),

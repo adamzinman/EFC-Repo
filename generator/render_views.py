@@ -894,10 +894,21 @@ GROUPS = [
     ("PID loops", "Templates/Loops/"),
     ("Station faceplates", "Templates/Station/"),
     ("x80 I/O card faceplates", "Templates/IO/"),
+    ("Dynamic windows (dw_Right dock)", "Templates/Dynamic Window/"),
 ]
 
 IO_NAMES = {}
 PARAM_OVERRIDES = {f"Templates/IO/Faceplates/{m}": {"cardPath": f"[default]IO_Demo/Rack0/{f}"} for f, m, *_ in IO_CARDS}
+DW = "Templates/Dynamic Window/"                 # the windows are not embedded anywhere, so render them on a demo instance
+PARAM_OVERRIDES.update({
+    DW + "Valves/ValveDiscrete": {"tagPath": "[default]PID_Demo/XV101"}, DW + "Valves/ValveAnalog": {"tagPath": "[default]PID_Demo/FV101"},
+    DW + "Rotating/Rotating": {"tagPath": "[default]PID_Demo/P101"}, DW + "Rotating/VFD": {"tagPath": "[default]PID_Demo/M601"},
+    DW + "HeatTransfer/Heater": {"tagPath": "[default]PID_Demo/E401"}, DW + "HeatTransfer/HeatTransfer": {"tagPath": "[default]PID_Demo/P101"},
+    DW + "ProcessValues/ProcessValue": {"tagPath": "[default]PV_Demo/PT001"}, DW + "Loops/Loop": {"tagPath": "[default]PID_Demo/TIC101"},
+    DW + "Station/Station": {"tagPath": "[default]Station_1"}, DW + "IO/IOCard": {"tagPath": "[default]IO_Demo/Rack0/R0S5", "model": "BMXAMI0810"},
+    DW + "Parts/IntlkList": {"tagPath": "[default]PID_Demo/XV101/Intlk", "title": "Interlocks"},
+    DW + "Parts/Trend": {"tagPath": "[default]PV_Demo/PT001", "pens": ["PV"]},
+    DW + "Parts/BypassConfirm": {"tagPath": "[default]PID_Demo/XV101/Intlk", "idx": 0, "desc": "Low level"}})
 
 def main():
     global TAGS

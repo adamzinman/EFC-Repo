@@ -189,7 +189,8 @@ def template_card(item, ttype, new_note=""):
         inner = (f'<div style="position:relative;width:100%;height:{dh - 14}px">{inner}</div>'
                  '<div style="display:flex;flex:none;gap:4px;align-items:center;height:14px"><div data-c="Bar/Track" style="flex:1;height:5px"><div data-c="Bar/Fill" style="width:62%;height:100%"></div></div><span data-c="Text/Caption">48.2 Hz</span></div>')
     dbl = ttype in ("T_DValve", "T_Motor")
-    extra = "<br>click symbol: open dynamic window" + (" &middot; dbl-tap (touch, Manual, canCmd): toggle" if dbl else "") + new_note
+    ex = next((r for k, r in tm.get("click_exempt", {}).items() if item.startswith(k)), None)
+    extra = (f"<br>no click target: {esc(ex)}" if ex else "<br>click symbol: open dynamic window" + (" &middot; dbl-tap (touch, Manual, canCmd): toggle" if dbl else "")) + new_note
     return frame(item, inner, dw, dh, ttype, dock_for(item), extra)
 
 
@@ -631,7 +632,7 @@ def dock_card(did, path, ttype, parts):
     REV2 = {"valve_discrete": valve_discrete, "valve_analog": valve_analog, "motor": motor_body, "vfd": lambda: motor_body(True), "heat_exchanger": heat_exchanger, "process_value": process_value, "loop": loop, "heater": heater, "io_card": io_card}
     if isinstance(parts, str) and parts in REV2:  # rev 2 designs
         inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(REV2[parts]())}</div>'
-        return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 - design proposal</b> &middot; 400 x 860 at 1080p (37.04 vh x 79.63 vh; 800 x 1720 at 4K) &middot; dashed purple outline = role-gated (hover for role)" + ("<br>binds to the Modicon x80 device DDT imported from Control Expert" if parts == "io_card" else ""), maxh=600)
+        return frame(path, inner, DOCK_DW, DOCK_DH, ttype, did, "<br><b>rev 2 design mockup</b> (not a render of the committed view) &middot; 400 x 860 at 1080p (37.04 vh x 79.63 vh; 800 x 1720 at 4K) &middot; dashed purple outline = role-gated (hover for role)" + ("<br>binds to the Modicon x80 device DDT imported from Control Expert" if parts == "io_card" else ""), maxh=600)
     body = "".join(SECTIONS.get(p, p) for p in parts)
     head = (f'<div data-c="Container/PopupHeader" class="row"><span data-c="Text/TagName">XV-101</span>'
             f'<span data-c="Text/Caption" style="flex:1">Description</span><button data-c="Button/Icon" title="close returns the dw_Right dock to the page&#39;s default view or closes it">&#x2715;</button></div>'
@@ -664,14 +665,14 @@ def layout_card():
             + lab(f"Process area &middot; {PW} x {MH} px at 1080p &middot; {2 * PW} x {2 * MH} px at 4K", "left:20px;bottom:10px"))
     proc += "</div>"
     if True:
-        sc = (MH - 56 - 66) / DOCK_DH
+        sc = (MH - 56 - 96) / DOCK_DH
         inner = f'<div data-c="Container/Faceplate" class="dock2">{gate(motor_body())}</div>'
         win = (f'<div style="position:absolute;left:0;top:56px;width:{RW}px;height:{DOCK_DH}px;transform:scale({sc:.4f});transform-origin:0 0">{inner}</div>')
-        note = "dw_Rotating (Templates/Dynamic Window/Rotating/Rotating)"
+        note = "showing dw_Rotating"
     wtxt = "37.04 vh"
     right = (f'<div data-c="Container/TrendPanel" class="reg ev" style="left:{W - RW}px;top:{HEAD}px;width:{RW}px;height:{MH}px">'
              f'<div class="rl evl">{EV_LABEL}</div>{win}'
-             + lab(f"Right dock dw_Right &middot; {RW} x {MH} px at 1080p ({wtxt}) &middot; {2 * RW} x {2 * MH} px at 4K &middot; {note}", f"left:0;right:0;bottom:0;border:none;border-top:1px solid #7F7F7F;font-size:19px;height:66px"))
+             + lab(f"Right dock dw_Right &middot; {RW} x {MH} px at 1080p ({wtxt}) &middot; {2 * RW} x {2 * MH} px at 4K &middot; {note}", f"left:0;right:0;bottom:0;border:none;border-top:1px solid #7F7F7F;font-size:19px;height:96px"))
     right += "</div>"
     head = (f'<div data-c="Container/Header" class="reg" style="left:0;top:0;width:{W}px;height:{HEAD}px;display:flex;align-items:center;gap:20px;padding:0 20px;box-sizing:border-box">'
             '<span data-c="Text/TagName">EFC &middot; Reactor area</span><span data-c="Text/Caption" style="flex:1">Screen header</span>'
@@ -718,7 +719,8 @@ if __name__ == "__main__":
             t, parts = DOCKS[did]
             frag = dock_card(did, path, t, parts)
         else:  # existing dock view: draw it like a template
-            frag = template_card(path, "gap:T_Station").replace("click symbol: open dynamic window", "existing dock view; planned: move to <code>Templates/Dynamic Window/Station/Station</code>, resize 300 x 800 to 400 x 860 (decision 25)")
+            frag = (template_card(path, "T_Station").replace("dynamic window <code>-</code>", f"dynamic window <code>{esc(did)}</code>")
+                    .replace("click symbol: open dynamic window", "imported Station_Sidebar, moved here by build.py; 400 x 860 (decision 25); binds T_Station members through tagPath"))
         open(f"{OUT}/{slug(path)}.html", "w").write(frag)
         groups.setdefault("Dynamic windows", []).append(frag)
     for path, (title, rows) in CFG.items():
@@ -728,11 +730,11 @@ if __name__ == "__main__":
         open(f"{OUT}/{slug(path)}_{title.lower()}_expanded.html", "w").write(f2)
         groups.setdefault("Expanded sections", []).append(f2)
     f3 = frame("Templates/Dynamic Window/Parts/TrendExpanded", f'<div data-c="Container/Popup" class="dock2">{trend_expanded()}</div>', 400, 860, "any", "popup",
-               "<br><b>NEW</b> &middot; expanded graph: fills the dynamic window; window stays 400 x 860; other sections hidden until collapsed (decision 26)", cw=400, maxh=860)
+               "<br><b>design mockup</b> &middot; expanded graph (Parts/Trend, expanded = true): fills the dynamic window; window stays 400 x 860; other sections hidden until collapsed (decision 26)", cw=400, maxh=860)
     open(f"{OUT}/{slug('Templates/Dynamic Window/Parts/TrendExpanded')}.html", "w").write(f3)
     groups.setdefault("Expanded sections", []).append(f3)
     fr = frame("Templates/Dynamic Window/Parts/BypassConfirm", f'<div data-c="Container/Popup" class="dock2">{bypass_popup()}</div>', 400, 330, "T_Intlk", "popup",
-               "<br><b>NEW - design proposal</b> &middot; opened by every Bypass button (Supervisor+)", maxh=600)
+               "<br><b>design mockup</b> (not a render of the committed view) &middot; opened by every Bypass button (Supervisor+)", maxh=600)
     open(f"{OUT}/{slug('Templates/Dynamic Window/Parts/BypassConfirm')}.html", "w").write(fr)
     groups.setdefault("Dynamic windows", []).append(fr)
     for _ in (0,):
@@ -743,7 +745,7 @@ if __name__ == "__main__":
     page = (f'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>EFC Library Previews</title><style>{PAGE_CSS}\n{DOCK_CSS}\n/* EFC_Styles */\n{css_block()}</style></head><body>'
             f'<h1>EFC Library - review contact sheet</h1><p class="legend">Dashed blue = click target (opens the dynamic window). Red type = gap (no EFCLib v1 type). '
-            f'Templates are drawn from slim output (layout approximate); dynamic windows and VFD are new design proposals.</p>{body}</body></html>')
+            f'Templates are real renders (generator/render_views.py) where docs/previews has a PNG, otherwise slim mockups; dynamic-window cards are design mockups, not renders of the committed Templates/Dynamic Window views.</p>{body}</body></html>')
     import base64  # inline the renders so index.html is self-contained
     page = re.sub(r'src="([^"]+\.png)"', lambda m: 'src="data:image/png;base64,' + base64.b64encode(open(os.path.normpath(f"{OUT}/{m.group(1)}"), "rb").read()).decode() + '"', page)
     open(f"{OUT}/index.html", "w").write(page)

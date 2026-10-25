@@ -18,6 +18,10 @@
         "BaseTag": {
           "dataType": "String",
           "value": ""
+        },
+        "HistProvider": {
+          "dataType": "String",
+          "value": ""
         }
       },
       "tags": [
@@ -490,6 +494,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -998,6 +1006,10 @@
         "BaseTag": {
           "dataType": "String",
           "value": ""
+        },
+        "HistProvider": {
+          "dataType": "String",
+          "value": ""
         }
       },
       "tags": [
@@ -1352,6 +1364,10 @@
         "BaseTag": {
           "dataType": "String",
           "value": ""
+        },
+        "HistProvider": {
+          "dataType": "String",
+          "value": ""
         }
       },
       "tags": [
@@ -1556,6 +1572,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -4293,6 +4313,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Trip"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -4322,6 +4349,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Bypass"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -4341,6 +4375,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -4651,7 +4689,17 @@
           "documentation": "Process value (EU) - use this in logic",
           "tooltip": "Process value (EU) - use this in logic",
           "dataType": "Float4",
-          "readOnly": true
+          "readOnly": true,
+          "historyEnabled": {
+            "bindType": "Expression",
+            "value": "len(\"{HistProvider}\") > 0"
+          },
+          "historyProvider": {
+            "bindType": "parameter",
+            "binding": "{HistProvider}"
+          },
+          "historicalDeadbandStyle": "Analog",
+          "sampleMode": "OnChange"
         },
         {
           "name": "Val_PVPct",
@@ -4849,6 +4897,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HH"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -4877,6 +4932,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_H"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -4907,6 +4969,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_L"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -4935,6 +5004,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LL"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -4965,6 +5041,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_ROC"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -4994,6 +5077,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Bad"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -5013,6 +5103,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -5325,6 +5419,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -5354,6 +5455,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Bad"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -5373,6 +5481,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -5436,6 +5548,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Mode"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -5465,6 +5584,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Perm"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -5493,6 +5619,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Intlk"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -6058,6 +6191,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_FailOpen"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -6086,6 +6226,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_FailClose"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -6116,6 +6263,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_PosConflict"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -6144,6 +6298,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Uncmd"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -6174,6 +6335,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_IntlkTrip"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -6203,6 +6371,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Run"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -6222,6 +6397,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -6285,6 +6464,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Mode"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -6313,6 +6499,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Intlk"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -6940,6 +7133,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_PosDev"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -6968,6 +7168,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_FbkBad"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -6998,6 +7205,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_IntlkTrip"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -7017,6 +7231,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -7080,6 +7298,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Mode"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -7109,6 +7334,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Perm"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -7137,6 +7369,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Intlk"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -7839,6 +8078,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_FailStart"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -7867,6 +8113,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_FailStop"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -7897,6 +8150,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Uncmd"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -7925,6 +8185,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_EStop"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -7955,6 +8222,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_IntlkTrip"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -7983,6 +8257,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_ExcessStarts"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -8013,6 +8294,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_OL"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -8041,6 +8329,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HiCurrent"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -8071,6 +8366,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Run"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -8090,6 +8392,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -8153,6 +8459,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Mode"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -8182,6 +8495,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Perm"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -8210,6 +8530,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Intlk"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -9381,6 +9708,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_FailStart"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -9409,6 +9743,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_FailStop"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -9439,6 +9780,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Uncmd"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -9467,6 +9815,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_EStop"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -9497,6 +9852,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_IntlkTrip"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -9525,6 +9887,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_ExcessStarts"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -9555,6 +9924,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_DrvFault"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -9583,6 +9959,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_DrvWarn"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -9613,6 +9996,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_CommFail"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -9641,6 +10031,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_SpdDev"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -9671,6 +10068,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Run"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -9690,6 +10094,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -9753,6 +10161,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Mode"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -9782,6 +10197,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Perm"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -9810,6 +10232,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Intlk"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -10727,6 +11156,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HiLimit"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -10755,6 +11191,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Shorted"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -10785,6 +11228,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LoadFail"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -10813,6 +11263,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_FailOn"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -10843,6 +11300,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_FailOff"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -10871,6 +11335,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_ScrFault"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -10901,6 +11372,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_IntlkTrip"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -10930,6 +11408,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Run"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -10949,6 +11434,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -11011,6 +11500,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Intlk"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -11552,7 +12048,17 @@
           "documentation": "Controller output (%)",
           "tooltip": "Controller output (%)",
           "dataType": "Float4",
-          "readOnly": true
+          "readOnly": true,
+          "historyEnabled": {
+            "bindType": "Expression",
+            "value": "len(\"{HistProvider}\") > 0"
+          },
+          "historyProvider": {
+            "bindType": "parameter",
+            "binding": "{HistProvider}"
+          },
+          "historicalDeadbandStyle": "Analog",
+          "sampleMode": "OnChange"
         },
         {
           "name": "Val_SP",
@@ -11569,7 +12075,17 @@
           "documentation": "Active setpoint after ramp and limits (EU)",
           "tooltip": "Active setpoint after ramp and limits (EU)",
           "dataType": "Float4",
-          "readOnly": true
+          "readOnly": true,
+          "historyEnabled": {
+            "bindType": "Expression",
+            "value": "len(\"{HistProvider}\") > 0"
+          },
+          "historyProvider": {
+            "bindType": "parameter",
+            "binding": "{HistProvider}"
+          },
+          "historicalDeadbandStyle": "Analog",
+          "sampleMode": "OnChange"
         },
         {
           "name": "Val_SPTarget",
@@ -11603,7 +12119,17 @@
           "documentation": "Process value (EU)",
           "tooltip": "Process value (EU)",
           "dataType": "Float4",
-          "readOnly": true
+          "readOnly": true,
+          "historyEnabled": {
+            "bindType": "Expression",
+            "value": "len(\"{HistProvider}\") > 0"
+          },
+          "historyProvider": {
+            "bindType": "parameter",
+            "binding": "{HistProvider}"
+          },
+          "historicalDeadbandStyle": "Analog",
+          "sampleMode": "OnChange"
         },
         {
           "name": "Val_Err",
@@ -11801,6 +12327,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_DevH"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -11829,6 +12362,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_DevL"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -11859,6 +12399,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_PVBad"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -11878,6 +12425,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -11940,6 +12491,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Prot"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -12286,6 +12844,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_DryRun"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -12314,6 +12879,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LowFlow"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -12344,6 +12916,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Deadhead"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -12372,6 +12951,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_SealLeak"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -12402,6 +12988,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_BrgTemp"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -12430,6 +13023,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Vib"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -12460,6 +13060,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LoSuct"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -12479,6 +13086,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -12541,6 +13152,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Mode"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -13229,6 +13847,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_NoStandby"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -13257,6 +13882,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_NoneAvail"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -13313,6 +13945,10 @@
         "BaseTag": {
           "dataType": "String",
           "value": ""
+        },
+        "HistProvider": {
+          "dataType": "String",
+          "value": ""
         }
       },
       "tags": [
@@ -13342,6 +13978,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Drv"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -13370,6 +14013,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Prot"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -13567,6 +14217,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LowLvlRun"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -13595,6 +14252,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Seal"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -13625,6 +14289,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_GbxTemp"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -13654,6 +14325,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Vib"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -13673,6 +14351,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -13704,6 +14386,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Drv"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -13732,6 +14421,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Prot"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -14135,6 +14831,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HiDischPress"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -14163,6 +14866,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HiDischTemp"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -14193,6 +14903,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LoOilPress"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -14221,6 +14938,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HiOilTemp"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -14251,6 +14975,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Vib"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -14280,6 +15011,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LoSuct"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -14299,6 +15037,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -14330,6 +15072,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Prot"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -14358,6 +15107,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Mtr"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -14744,6 +15500,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_ZeroSpd"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -14772,6 +15535,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_PullCord"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -14802,6 +15572,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Misalign"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -14830,6 +15607,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Chute"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -14860,6 +15644,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_BeltRip"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -14889,6 +15680,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_DownstrStop"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -14908,6 +15706,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -15637,6 +16439,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HH"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -15665,6 +16474,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_H"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -15695,6 +16511,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_L"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -15723,6 +16546,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LL"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -15753,6 +16583,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LSHH"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -15781,6 +16618,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LSLL"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -15811,6 +16655,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LvlDisc"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -15839,6 +16690,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HiTemp"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -15869,6 +16727,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HiPress"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -15888,6 +16753,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -16530,6 +17399,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HiRate"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -16558,6 +17434,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LoRate"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -16588,6 +17471,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Overrun"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -16617,6 +17507,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_RateBad"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -16636,6 +17533,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -17101,6 +18002,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Fouling"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -17129,6 +18037,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HotDP"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -17159,6 +18074,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_ColdDP"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -17187,6 +18109,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HeatBal"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -17217,6 +18146,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HiOutT"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -17236,6 +18172,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -17267,6 +18207,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Prot"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -17295,6 +18242,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Mtr"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -17740,6 +18694,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_NoFlow"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -17768,6 +18729,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LoChem"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -17798,6 +18766,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LoLoChem"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -17826,6 +18801,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Leak"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -17856,6 +18838,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_RateLim"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -17875,6 +18864,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -17905,6 +18898,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.AI"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -18190,7 +19190,17 @@
           "documentation": "Value for control - held value while in hold",
           "tooltip": "Value for control - held value while in hold",
           "dataType": "Float4",
-          "readOnly": true
+          "readOnly": true,
+          "historyEnabled": {
+            "bindType": "Expression",
+            "value": "len(\"{HistProvider}\") > 0"
+          },
+          "historyProvider": {
+            "bindType": "parameter",
+            "binding": "{HistProvider}"
+          },
+          "historicalDeadbandStyle": "Analog",
+          "sampleMode": "OnChange"
         },
         {
           "name": "Val_HeldPV",
@@ -18303,6 +19313,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_DevFault"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -18331,6 +19348,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_NoSample"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -18361,6 +19385,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Frozen"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -18389,6 +19420,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_CalDue"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -18419,6 +19457,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HoldLong"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -18438,6 +19483,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -19014,6 +20063,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_A1"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -19042,6 +20098,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_A2"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -19072,6 +20135,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_A3"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -19100,6 +20170,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Fault"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -19130,6 +20207,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_OverRng"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -19159,6 +20243,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_InhibitLong"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -19178,6 +20269,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -21460,6 +22555,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Trip"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -21488,6 +22590,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_FailSafe"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -21518,6 +22627,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_MOS"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -21547,6 +22663,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_MOSLong"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -21566,6 +22689,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -21661,6 +22788,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Mode"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -21689,6 +22823,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Perm"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -22491,6 +23632,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Failed"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -22519,6 +23667,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_OverFill"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -22549,6 +23704,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_PressHi"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -22578,6 +23740,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_ScaleFault"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -22597,6 +23766,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -24041,6 +25214,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_Fail"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -24070,6 +25250,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_StepTimeout"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         }
@@ -24089,6 +25276,10 @@
           "value": ""
         },
         "BaseTag": {
+          "dataType": "String",
+          "value": ""
+        },
+        "HistProvider": {
           "dataType": "String",
           "value": ""
         }
@@ -24538,6 +25729,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_CleanExpired"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }

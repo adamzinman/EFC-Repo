@@ -158,14 +158,16 @@ def first_out(group):
 I_TIP = ('"Interlock active - " + {view.custom.blockVerb} + " blocked" + '
          'if({view.custom.firstOut} >= 0 && len(coalesce({view.custom.firstDesc}, "")) > 0, ": " + {view.custom.firstDesc}, "")')
 
-def common_cfg(custom, cfg, perm=True):
-    """Members every bound device template reads: identity, mode, availability, permissive / interlock."""
+def common_cfg(custom, cfg, perm=True, avail=True):
+    """Members every bound device template reads: identity, mode, availability, permissive / interlock.
+    perm=False: no Sts_NotPerm (T_CValve). avail=False: no Sts_Avail / Sts_Local either (T_CValve has neither)."""
     custom.update({"name": "", "desc": "", "man": False, "oos": False, "avail": True, "local": False, "intlk": False,
                    "permMissing": False, "firstOut": -1, "firstDesc": "", "mode": 0})
     cfg.update({"custom.name": ftag("Cfg_Tag"), "custom.desc": ftag("Cfg_Desc"), "custom.man": ftag("Mode/Sts_Man"),
-                "custom.oos": ftag("Mode/Sts_OOS"), "custom.avail": ftag("Sts_Avail"), "custom.local": ftag("Sts_Local"),
+                "custom.oos": ftag("Mode/Sts_OOS"),
                 "custom.intlk": ftag("Sts_Intlk"), "custom.firstOut": ftag("Intlk/Sts_FirstOut"), "custom.firstDesc": first_out("Intlk"),
                 "custom.mode": expr("if({view.custom.man}, 1, 0)")})
+    if avail: cfg.update({"custom.avail": ftag("Sts_Avail"), "custom.local": ftag("Sts_Local")})
     if perm: cfg["custom.permMissing"] = ftag("Sts_NotPerm")
 
 def dw_params(params, ttype, dbl, dock=""):
@@ -222,7 +224,7 @@ def control_template(s, demo_path):
     cfg = {"custom.out": ftag("Val_Demand"), "custom.pos": ftag("Val_Pos"), "custom.fb": ftag("Cfg_HasFbk"), "custom.fault": ftag("Sts_Fault"),
            "custom.state": expr("if({view.custom.fault}, 3, if((if({view.custom.fb}, {view.custom.pos}, {view.custom.out})) > 1, 1, 0))"),
            "custom.command": expr("if({view.custom.fb}, if({view.custom.out} > 1, 1, 0), -1)")}
-    common_cfg(custom, cfg, perm=False)
+    common_cfg(custom, cfg, perm=False, avail=False)
     color_props(s, custom, cfg)
     status = 'if({view.custom.state} = 3, "FAULT", numberFormat(if({view.custom.fb}, {view.custom.pos}, {view.custom.out}), "0") + " %")'
     cls = 'case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown") + " Text/Mod/Tabular"'

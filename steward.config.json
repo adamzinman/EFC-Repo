@@ -57,7 +57,6 @@
     "Templates/IO/Parts/DiscreteTile",
     "Templates/IO/Parts/SlotTile",
     "Templates/IO/_Demo",
-    "Templates/Loops/Popups/LoopConfig",
     "Templates/Loops/_Demo",
     "Templates/ProcessValues/_Demo",
     "Templates/Dynamic Window/IO/IOCard",
@@ -69,5 +68,6 @@
     "Templates/_Demo"
   ],
   "upstream_check_days": 30,
-  "_note": "require_dock off: templates call efc.ui.openDynamic, which opens the dynamic window in the dw_Right dock via alterDock + openDock (decision 31); wiring is checked by steward/tools/gaps.py."
+  "_note": "require_dock off: templates call efc.ui.openDynamic, which opens the dynamic window in the dw_Right dock via alterDock + openDock (decision 31); wiring is checked by steward/tools/gaps.py.",
+  "_exempt_note": "exempt = demo screens, catalogs and parts with no T_ type of their own (IO Parts, Dynamic Window/Parts), the native x80 IOCard window, and Dynamic Window/Station/Station (imported Station_Sidebar, relocated by build.py; binds T_Station members through tagPath only). LoopConfig was retired (decision 15)."
 }

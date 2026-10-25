@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Check every tag binding in projects/EFC_Library against the UDT definitions the build targets.
 
-    python3 tools/check_bindings.py              # legacy-ddt build: members must exist in tags/legacy/*.json (+ demo UDTs)
+    python3 tools/check_bindings.py              # follows VERSION.json "types": T_ (default) or legacy-ddt
     python3 tools/check_bindings.py --t          # EFCLib v1 build: members must exist in types/export/PCLib_Ignition81.json
+    python3 tools/check_bindings.py --legacy     # legacy-ddt build: members must exist in tags/legacy/*.json (+ demo UDTs)
     python3 tools/check_bindings.py -v           # also list every member each view binds
 
 For each view.json it collects
@@ -163,7 +164,10 @@ def exists(types, tname, member):
 
 
 def main():
-    legacy = "--t" not in sys.argv
+    # default follows the build: VERSION.json "types": "legacy-ddt" (the legacy fork branch) or EFCLib v1 T_ types
+    import json as _j
+    _types = _j.load(open(os.path.join(ROOT, "VERSION.json"))).get("types", "")
+    legacy = "--legacy" in sys.argv or (_types == "legacy-ddt" and "--t" not in sys.argv)
     verbose = "-v" in sys.argv
     types = legacy_types() if legacy else t_types()
     bad, n_members, n_views = [], 0, 0
