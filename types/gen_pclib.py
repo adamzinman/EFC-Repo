@@ -1322,9 +1322,13 @@ Nested DDTs (`Mode`, `Alm_*`, `Run`, `Drv`...) are nested UDT instances. Arrays 
 | `OPCServer` | Ignition OPC connection name | `M580_Line1` |
 | `PathPrefix` | Node-ID prefix used by your OPC server | `ns=2;s=` (check with the OPC Quick Client) |
 | `BaseTag` | PLC instance name | `P101` |
+| `HistProvider` | Tag history provider (historian database) for the process values; leave empty for no history | `PlantHistorian` |
 
    Each tag's OPC path is `{PathPrefix}{BaseTag}.<Member>`. Browse one variable in the OPC Quick Client
    first and copy its prefix, because the namespace index and path syntax differ between Schneider OPC servers.
+   Process values (`{p}AI.Val_PV`, `{p}KPI.Val_PV`, `{p}PID.Val_PV` / `Val_SP` / `Out_CV`, `{p}Analyzer.Val_PV`)
+   are historized (analog deadband, on change) as soon as `HistProvider` names a provider; set it once on
+   the instance, or on a parent folder's instances through a Tag Browser multi-edit.
 4. In Perspective, bind faceplates to the instance (e.g. `[default]P101/Sts_State`). `Cfg_`, `Cmd_`, `Sim_`
    and `Prm_` tags are writable; everything else is read-only (ISA-101: the HMI never writes PLC status).
 
@@ -1464,6 +1468,21 @@ IGN_PARAMS = {
     "OPCServer": "Name of the OPC UA connection to the PLC (Gateway > OPC Connections)",
     "PathPrefix": "Node ID prefix for the PLC server, e.g. ns=2;s=",
     "BaseTag": "PLC instance name of this DDT, e.g. P101",
+    "HistProvider": "Tag history provider (historian database) for the process values; empty = no history",
+}
+# Process values that are historized on every instance (decision 34): history is enabled when HistProvider is set.
+# Member names as in the DDTs; the type name is without the prefix.
+IGN_HISTORY = {
+    "AI": ["Val_PV"],
+    "KPI": ["Val_PV"],
+    "PID": ["Val_PV", "Val_SP", "Out_CV"],
+    "Analyzer": ["Val_PV"],
+}
+IGN_HISTORY_PROPS = {                          # analog compression on change; the provider's defaults otherwise
+    "historyEnabled": {"bindType": "Expression", "value": 'len("{HistProvider}") > 0'},
+    "historyProvider": {"bindType": "parameter", "binding": "{HistProvider}"},
+    "historicalDeadbandStyle": "Analog",
+    "sampleMode": "OnChange",
 }
 
 # Ignition AlarmPriority: 0=Diagnostic 1=Low 2=Medium 3=High 4=Critical
@@ -1477,7 +1496,7 @@ def _pbind(expr):
     return {"bindType": "parameter", "binding": expr}
 
 
-def _ign_atomic(name, ctype, comment, plc_path):
+def _ign_atomic(name, ctype, comment, plc_path, history=False):
     base_t = ctype
     tag = {
         "name": name,
@@ -1496,10 +1515,12 @@ def _ign_atomic(name, ctype, comment, plc_path):
         tag["engUnit"] = "ms"
     if name.split("_")[0] not in IGN_WRITABLE:
         tag["readOnly"] = True
+    if history:
+        tag.update(IGN_HISTORY_PROPS)
     return tag
 
 
-def ign_member(mname, mtype, comment, udt_names, sub_name=None, path=None):
+def ign_member(mname, mtype, comment, udt_names, sub_name=None, path=None, history=()):
     name = sub_name or mname
     path = path or mname
     m = ARRAY.match(mtype)
@@ -1518,10 +1539,11 @@ def ign_member(mname, mtype, comment, udt_names, sub_name=None, path=None):
                 "OPCServer": {"dataType": "String", "value": _pbind("{OPCServer}")},
                 "PathPrefix": {"dataType": "String", "value": _pbind("{PathPrefix}")},
                 "BaseTag": {"dataType": "String", "value": _pbind("{BaseTag}." + path)},
+                "HistProvider": {"dataType": "String", "value": _pbind("{HistProvider}")},
             },
         }
     # sub_name set => array element: writability follows the array member name
-    tag = _ign_atomic(mname, mtype, comment, path)
+    tag = _ign_atomic(mname, mtype, comment, path, history=mname in history)
     tag["name"] = name
     return tag
 
@@ -1531,7 +1553,8 @@ def ignition_json(types, prefix):
     alarm_types = {prefix + "Alarm", prefix + "AlmLim"}
     udts = []
     for name, comment, members, _ in types:
-        tags = [ign_member(mn, mt, mc, udt_names) for mn, mt, mc, _ in members]
+        hist = IGN_HISTORY.get(name[len(prefix):], ())
+        tags = [ign_member(mn, mt, mc, udt_names, history=hist) for mn, mt, mc, _ in members]
         if name in alarm_types:
             for t in tags:
                 if t["name"] == "Sts_Active":

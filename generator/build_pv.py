@@ -389,8 +389,8 @@ def build_tags():
             mem("Cfg_Lim", "Float4", lim), mem("Cfg_En", "Boolean", True), mem("Cfg_Priority", "Int2", PRI[pri]),
             mem("Sts_Suppressed", "Boolean", False),
             expr("Sts_Active", "Boolean", act, alarms=alarm(name, pri)), expr("Sts_Unack", "Boolean", act)]}
-    udt = {"name": "T_AI_Demo", "tagType": "UdtType", "tags": [   # memory stand-in with the EFCLib v1 T_AI member names
-        mem("Val_PV", "Float4", 28.2),
+    udt = {"name": "T_AI_Demo", "tagType": "UdtType", "parameters": {"HistProvider": {"dataType": "String", "value": ""}}, "tags": [   # memory stand-in with the EFCLib v1 T_AI member names
+        mem("Val_PV", "Float4", 28.2, historyEnabled={"bindType": "Expression", "value": 'len("{HistProvider}") > 0'}, historyProvider={"bindType": "parameter", "binding": "{HistProvider}"}, historicalDeadbandStyle="Analog", sampleMode="OnChange"),   # historized when the instance names a HistProvider
         expr("Cfg_Tag", "String", '"{InstanceName}"'),
         mem("Cfg_Desc", "String", "Demo pressure transmitter"),
         mem("Cfg_EU", "String", "PSIG"),

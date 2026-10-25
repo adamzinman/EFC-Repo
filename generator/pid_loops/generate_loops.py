@@ -602,10 +602,10 @@ def grp(name, *members):
     return {"name": name, "tagType": "Folder", "tags": list(members)}
 
 
-udt = {"name": "T_PID_Demo", "tagType": "UdtType",   # memory stand-in with the EFCLib v1 T_PID member names
+udt = {"name": "T_PID_Demo", "tagType": "UdtType", "parameters": {"HistProvider": {"dataType": "String", "value": ""}},   # memory stand-in with the EFCLib v1 T_PID member names
        "tags": [mem("Cfg_Tag", "String", ""), mem("Cfg_Desc", "String", ""), mem("Cfg_PVEU", "String", "EU"),
                 mem("Cfg_PVMin", "Float4", 0.0), mem("Cfg_PVMax", "Float4", 100.0),
-                mem("Val_PV", "Float4", 0.0), mem("Val_SP", "Float4", 0.0), mem("Out_CV", "Float4", 0.0),
+                mem("Val_PV", "Float4", 0.0, historyEnabled={"bindType": "Expression", "value": 'len("{HistProvider}") > 0'}, historyProvider={"bindType": "parameter", "binding": "{HistProvider}"}, historicalDeadbandStyle="Analog", sampleMode="OnChange"), mem("Val_SP", "Float4", 0.0, historyEnabled={"bindType": "Expression", "value": 'len("{HistProvider}") > 0'}, historyProvider={"bindType": "parameter", "binding": "{HistProvider}"}, historicalDeadbandStyle="Analog", sampleMode="OnChange"), mem("Out_CV", "Float4", 0.0, historyEnabled={"bindType": "Expression", "value": 'len("{HistProvider}") > 0'}, historyProvider={"bindType": "parameter", "binding": "{HistProvider}"}, historicalDeadbandStyle="Analog", sampleMode="OnChange"),
                 mem("Cmd_SP", "Float4", 0.0), mem("Cmd_CV", "Float4", 0.0),
                 mem("Sts_Mode", "Int2", 1, documentation="0=Man 1=Auto 2=Cas 3=Track 4=Intlk"), mem("Sts_Intlk", "Boolean", False),
                 grp("Alm_DevH", mem("Cfg_Lim", "Float4", 10.0), mem("Sts_Active", "Boolean", False)),

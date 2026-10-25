@@ -91,6 +91,9 @@ Point `tagPath` at an instance of the existing discrete-valve UDT (OPC tags `{OP
 - The PLC must enforce permissives and interlocks itself; the HMI badges are information only.
 - A very fast click can produce a short pulse. If your scan could miss it, have the PLC reset PB and delete the release events on the button.
 
+## Tag history for process values
+The PCLib UDTs (`types/export/PCLib_Ignition81.json`) have a `HistProvider` parameter: the name of the tag history provider (historian database). When it is set on an instance, `Val_PV` of `T_AI`, `T_KPI` and `T_Analyzer` and `Val_PV` / `Val_SP` / `Out_CV` of `T_PID` are historized (analog deadband, on change). Leave it empty for no history. The dynamic-window trends and the planned trends overview read this history, so set it on every process-value instance (decision 34).
+
 ## Page setup: the dw_Right dock
 Dynamic windows (`Templates/Dynamic Window/<category>/`) open in one right-side Perspective dock per page, id `dw_Right` (decision 31). A template click runs `efc.ui.openDynamic(self)`, which loads the window into that dock with `system.perspective.alterDock` and opens it with `system.perspective.openDock`. This needs **Ignition 8.1.19 or later** (the library minimum is 8.1.22).
 
