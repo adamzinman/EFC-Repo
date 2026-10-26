@@ -196,7 +196,7 @@ Total: **3 event scripts**, no `customMethods`, no `messageHandlers`, no propert
 
 - **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_DValve` that is `dw_ValveDiscrete`, which maps to `Templates/Dynamic Window/Valves/ValveDiscrete`. If no window is found, logs a warning and stops. Otherwise it loads it into the page's `dw_Right` dock with `params:{tagPath: dwTagPath or tagPath}` and opens the dock (`efc.ui.showDock`). It does not check the user's role and does not write to the tag.
 - **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an audit record. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
-- **`efc.ui.dblCmd(component)`**: returns immediately unless all of these hold: `useButton` false, `dblCmd` true, `tType` in `DBL_CMD` (only `T_DValve` and `T_Motor`), and the user's level is 1 (Operator) or higher. It then reads `Sts_Opened`, `Mode/Sts_Man`, `Sts_Avail`, `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault`. It writes nothing unless `Mode/Sts_Man` and `Sts_Avail` are true and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are all false. When it does write, it sends `Cmd_Close` if `Sts_Opened` is true, else `Cmd_Open`, with `True`. It does not check `Mode/Sts_OOS`. The steward note omits the fault check, which the code does have.
+- **`efc.ui.dblCmd(component)`**: returns immediately unless all of these hold: `useButton` false, `dblCmd` true, `tType` in `DBL_CMD` (only `T_DValve` and `T_Motor`), and the user's level is 1 (Operator) or higher. It then reads `Sts_Opened`, `Mode/Sts_Man`, `Sts_Avail`, `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault`. It writes nothing unless `Mode/Sts_Man` and `Sts_Avail` are true and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are all false. When it does write, it sends `Cmd_Close` if `Sts_Opened` is true, else `Cmd_Open`, with `True`. It does not check `Mode/Sts_OOS`.
 - **Role levels** (`efc.ui.level`): the highest index in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` gives 0 to 5. Operator is 1. Used by the dock; `dblCmd` uses `userLevel >= 1`.
 - **`efc.ui.closeDynamic`** is not called from this view. The dock's close button calls it.
 
@@ -243,7 +243,7 @@ The alarm expression reads `<tagPath>/*` through `isAlarmActiveFiltered`, not a 
 
 ## Notes and open questions
 
-- The steward note mentions "limit-switch LEDs". This view has no limit-switch indicators. The limit-switch rows are in the dock (`Feedback`).
+- This view has no limit-switch indicators. The limit-switch rows are in the dock (`Feedback`), following `Cfg_HasZSO` / `Cfg_HasZSC`.
 - `custom.mode` and `custom.con` are defined and bound but never referenced.
 - The I tooltip always says "open blocked", whatever the interlock actually drives (`Cfg_IntlkOpen` is not read here).
 - The alarm expression checks one Ignition priority at a time (`minPriority = maxPriority = N`, 4 first) for every alarm under `tagPath/*`. It reads Ignition alarms configured on the tags, not the PLC `Alm_*` members the dock shows. The two only agree if the UDT carries matching Ignition alarm definitions.

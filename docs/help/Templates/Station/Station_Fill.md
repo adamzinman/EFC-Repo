@@ -32,7 +32,7 @@ Three things that make the view harder to follow than it looks:
 - **A missing or bad tag silently becomes `false`, `0` or blank** inside the transform. A bad value does not raise an error on screen. It shows as a normal 0, off or blank state. Only the quality marker on `custom.t` in the Designer shows it.
 - **Not every `s` key is shown.** The view binds 26 of the 51 keys. The other 25 are computed and unused here (the Tag section and the Notes say which are unused).
 
-The transform is identical to the one in [Docks/Station](../../Docks/Station.md) and in [Station_Tile](Station_Tile.md). It is the same code in three places.
+The transform is identical to the one in [Station dynamic window](../Dynamic%20Window/Station/Station.md) and in [Station_Tile](Station_Tile.md). It is the same code in three places.
 
 ### `t`: raw tag values
 
@@ -79,7 +79,7 @@ Each key is a read-only indirect tag binding (`{0}` = `{view.params.tagPath}`). 
 
 ### `s`: how each key is calculated
 
-The derived-state transform is the same code as in `Docks/Station`. The tables below are copied from [Docks/Station](../../Docks/Station.md), where they were checked against the transform.
+The derived-state transform is the same code as in `Templates/Dynamic Window/Station/Station`. The tables below are copied from [Station dynamic window](../Dynamic%20Window/Station/Station.md), where they were checked against the transform.
 
 Bound on this view (26 keys): `chip`, `dbW`, `dbX`, `dis`, `fillCls`, `fillW`, `gross`, `hiCls`, `msg`, `name`, `net`, `pct`, `pt`, `ptSmallCls`, `rem`, `resetLocked`, `scale`, `selCls`, `selText`, `tare`, `target`, `tgtX`, `total`, `tzLocked`, `units`, `word`. The other 25 keys (`sel`, `busy`, `db`, `steps`, `stepText`, `permLed`, `permTxt`, `inReq`, `inCmd`, `inIlk`, `smReq`, `smCmd`, `smIlk`, `vaReq`, `vaCmd`, `vaIlk`, `ptCls`, `ptd`, `ptW`, `preX`, `maxX`, `pre`, `pmax`, `ptBad`, `foot`) are computed and not bound.
 

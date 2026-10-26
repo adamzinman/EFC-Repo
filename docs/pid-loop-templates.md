@@ -1,38 +1,37 @@
-# PID loop templates (PID_Loops)
+# PID loop templates (EFC_Library)
 
-**Status:** designed and built 2026-10-05; the `xMidYMid` fix followed 2026-10-07. **In the repo since v6.3:**
-- **Generator:** `generator/pid_loops/generate_loops.py`.
-- **Project:** `projects/PID_Loops/` (no parent; inline styles).
-- **Tags:** `tags/PID_Loops/PID_Loop_UDT.json` and `PID_Loop_Demo_Instances.json`.
-- **Mockups:** `mockups/pid-loop-options.html` and `pid-loop-option-b-variants.html`.
+The four PID cards bind to **`T_PID`** (decision 15) and ship under `projects/EFC_Library/com.inductiveautomation.perspective/views/Templates/Loops/`. See the [detailed card help](help/Templates/Loops/Loop_Family.md) and [Loop dynamic-window help](help/Templates/Dynamic%20Window/Loops/Loop.md) for bindings, scripts and operating rules.
 
-It passes the 8.1 check but hasn't been test-imported on a gateway. Import `dist/PID_Loops_PROJECT.zip` from `python3 build.py --dist`; the 2026-10-05 zips have `xMidYMid meet`, which 8.1 rejects.
-
-The chosen design is Option B (a bar-graph card) plus three variations, in a modern flat ISA-101 style: grays, a blue SP, and color only for alarms.
+## Views
 
 | View | Size @1080p | Notes |
 |---|---|---|
-| `PID/Templates/Loop_B1_Bar` | 150×156 | Vertical PV bar, SP pointer and alarm ticks. SP and OUT values enlarged to 16 px. |
-| `PID/Templates/Loop_B2_Horizontal` | 260×92 | Horizontal bar with a normal-range band between AlmLo and AlmHi |
-| `PID/Templates/Loop_B3_Sparkline` | 172×184 | B1 plus a 1-minute PV/SP sparkline (queryTagHistory) and a deviation chip (orange past AlmDev) |
-| `PID/Templates/Loop_B4_Column` | 104×196 | Twin vertical bars: PV and OUT |
-| `PID/Popups/LoopConfig` | 440×480 | Tabs: Operate / Tuning / Limits & Alarms |
-| `PID/_Demo_Loops` | — | All four templates × 3 demo loops |
+| `Templates/Loops/Loop_B1_Bar` | 150×156 | Vertical PV bar, SP pointer, deviation-limit markers and output bar |
+| `Templates/Loops/Loop_B2_Horizontal` | 260×92 | Horizontal PV bar with a band between SP − low deviation and SP + high deviation |
+| `Templates/Loops/Loop_B3_Sparkline` | 172×184 | B1 plus a one-minute PV/SP sparkline and deviation text |
+| `Templates/Loops/Loop_B4_Column` | 104×196 | Twin vertical PV and output bars |
+| `Templates/Dynamic Window/Loops/Loop` | 400×860 | Operation, interlocks, alarms, trend, tuning and configuration |
+| `Templates/Loops/_Demo` | — | Demo cards |
 
-- **Template parameters:** `tagPath` (a `PID_Loop` UDT instance) and `label` (optional). The whole card is the click target and calls `openPopup("loopcfg_<tagPath>", "PID/Popups/LoopConfig")`.
-- **Graphics:** Drawing components with bound element geometry. Fonts and padding are in vh.
-- **UDT `PID_Loop`:**
-  - PV (EngUnit/EngLow/EngHigh drive the units and scaling; the PV_High/PV_Low alarms are bound to AlmHi/AlmLo), SP, OUT.
-  - Mode (0 MAN / 1 AUTO / 2 CAS), Kp, Ti, Td, Action (0 Rev / 1 Dir).
-  - SP_Lo/Hi, OUT_Lo/Hi, AlmHi, AlmLo, AlmDev, Description.
-  - They're memory tags in the export; map them to the M580 PID block.
-- **Popup:**
-  - The mode buttons and SP/OUT write immediately. OUT is writable only in MAN, and SP is locked in CAS.
-  - Tuning and limits are read when the popup opens and written on Apply. They're editable only with the role in `view.custom.engineerRole` (default `Engineer`).
-- **History:** must be enabled on PV/SP/OUT for the B3 sparkline and the popup trend.
+## Use and import
 
-## Open items
-- **Demo tag folder:** the loop demo instances and the PID_Symbols demo instances both import into a folder named `PID_Demo`. Import with **Merge** (not Overwrite) so one set doesn't replace the other.
-- The card's alarm state is PV ≥ AlmHi or ≤ AlmLo, not the real alarm priority yet.
-- It uses inline styles, not EFC_Styles classes, so it doesn't follow the style-library standard yet.
-- The cards label the output "OUT"; relabel it to CV if wanted.
+Import `EFC_Library_PROJECT.zip`, or build `dist/EFC_Library_PROJECT.zip` with `python3 build.py --dist`. The merged library has no parent requirement. Optional demo tags are `tags/PID_Loops/T_PID_Demo_UDT.json` and `tags/PID_Loops/T_PID_Demo_Instances.json`.
+
+Card parameters are `tagPath` (T_PID instance), `label` (title override), `tType` (default `T_PID`), `dockId` (window-id override) and `dwTagPath` (window tag-path override). Cards only display data; they write no tags.
+
+A single click calls `efc.ui.openDynamic(self)`. It chooses `dw_Loop` and loads `Templates/Dynamic Window/Loops/Loop` into the page's right-side `dw_Right` Perspective dock. This is the October 24, 2026 migration in PR #36 (decisions 31–32), replacing the former `Docks/Loop` path. Configure the dock as described in [library-reference](library-reference.md#page-setup-the-dw_right-dock): 400 px wide at 1080p, display visible, content cover, handle hide, with the trends overview as its initial view. Register that default through `efc.ui.setDefaultDock` in the screen's root `onStartup`; close restores it, or closes the dock when no default is registered.
+
+## Members and behavior
+
+- **Values:** `Val_PV`, `Val_SP`, `Out_CV`; PV scale and units from `Cfg_PVMin`, `Cfg_PVMax`, `Cfg_PVEU`.
+- **Mode chip:** `Sts_Mode`: 0 MAN, 1 AUTO, 2 CAS; other values show `---`.
+- **Card alarms:** `Alm_DevH/Sts_Active` or `Alm_DevL/Sts_Active` produces an orange outline and icon. Markers use `Alm_DevH/Cfg_Lim` and `Alm_DevL/Cfg_Lim` relative to SP. The card does not display the highest Ignition alarm priority.
+- **B3 history:** every 5 s, queries up to 40 samples of `Val_PV` and `Val_SP` over the last minute. Enable history on those members. The Loop window's trend also reads `Out_CV`.
+- **Window operation (Operator+):** MAN/AUTO/CAS buttons write `Cmd_Man`, `Cmd_Auto`, `Cmd_Cas` through `efc.ui.cmd`. The SP entry binds two-way to `Cmd_SP` (disabled in CAS); the output entry binds to `Cmd_CV` (enabled in MAN). The PLC enforces command acceptance.
+- **Window tuning/configuration:** Engineer+ entries bind directly to `Cfg_*` members; lower levels see read-only values. There is no read-on-open / Apply workflow.
+
+## Build sources and history
+
+`generator/pid_loops/generate_loops.py` builds the PID component; `build.py` merges and remaps it into EFC_Library. The Loop window is generated by `generator/docks/build_docks.py`. Change those sources for implementation changes.
+
+The original October 5 design used `PID/Templates/*`, a separate `PID_Loop` UDT and `PID/Popups/LoopConfig`; those describe the earlier export, not the current library. The original mockups remain at `mockups/pid-loop-options.html` and `mockups/pid-loop-option-b-variants.html`. The October 7 `xMidYMid` compatibility fix is retained in the generator. Static import checks do not replace a live gateway import/rendering check.

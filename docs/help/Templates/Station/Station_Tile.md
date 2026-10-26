@@ -35,7 +35,7 @@ Three things that make this view harder to follow than it looks:
 - **A missing or bad tag silently becomes `false`, `0` or blank** inside the transform, as on the faceplate.
 - **`custom.pendingCmd` is defined but unused.** It has the default `""` and no binding or script. The tile has no commands. It is a leftover from the faceplate.
 
-The transform is identical to the one in [Docks/Station](../../Docks/Station.md) and in [Station_Fill](Station_Fill.md).
+The transform is identical to the one in [Station dynamic window](../Dynamic%20Window/Station/Station.md) and in [Station_Fill](Station_Fill.md).
 
 ### `t`: raw tag values
 
@@ -81,7 +81,7 @@ The 35 mirrored members. Each is a read-only indirect tag binding (`{0}` = `{vie
 
 ### `s`: how each key is calculated
 
-The tables below are copied from [Docks/Station](../../Docks/Station.md), where they were checked against the transform. This view is the same code.
+The tables below are copied from [Station dynamic window](../Dynamic%20Window/Station/Station.md), where they were checked against the transform. This view is the same code.
 
 Bound on this view (13 keys): `name`, `scale`, `units`, `word`, `chip`, `net`, `target`, `pct`, `pt`, `fillW`, `fillCls`, `tgtX`, `hiCls`. All 35 keys the transform reads are mirrored, so every key is computed from live values.
 
@@ -500,7 +500,7 @@ All members are read by the view. Each is relative to `tagPath`. Types and comme
 - **Pressure quality style.** The transform provides `ptCls` and `ptSmallCls` for bad quality, but the tile binds only the text of `Pt`. A bad pressure reading shows `-----` with no bad-quality style.
 - **Target of 0 or less.** The bar scale falls back to 1.0 (`scale = tgt * 1.08 if tgt > 0 else 1.0`). So any net of 1.0 or more fills the bar, whatever the units. Whether the bar should be hidden in that case is not defined in the repo.
 - **Fixed units text.** The pressure unit `psig` is fixed in the view. The weight fallback `kg` is used when `Cfg_EU` is empty, even though the PCLib comment lists `kg, lb`.
-- **Naming.** `docs/station-faceplates.md` calls the instance type `DDT_Station`. The PCLib type and the `efc.ui` mapping use `T_Station`.
+- **Naming.** The instance type is `T_Station`, as used by PCLib and the `efc.ui` mapping. The keys in `custom.t` retain the imported display aliases; see the member mapping above.
 
 - **Resolved: unmirrored keys.** The tile mirrored only 20 of the 35 keys the transform reads. The 15 missing mirrors were added in `imported/EFC_StationFaceplates` (copied from `Station_Fill`), so the tile is now safe to extend.
 - **`pendingCmd` is unused.** See the custom properties table above.

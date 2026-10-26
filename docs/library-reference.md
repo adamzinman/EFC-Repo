@@ -26,8 +26,8 @@ The symbol is **embedded in the template as a Perspective Drawing** (`ia.shapes.
 
 | Template | Size @1080p | UDT | Button |
 |---|---|---|---|
-| `Templates/Valves/Valve_OnOff_Pneumatic` · `Valve_Solenoid` · `Valve_MOV` | 120×100 | Plant discrete-valve UDT | Writes `HMI_CMD = NOT CMD`, Manual only |
-| `Templates/Valves/Valve_Control` | 120×100 | `PID_ControlValve` | none (operated by output %) |
+| `Templates/Valves/Valve_OnOff_Pneumatic` · `Valve_Solenoid` · `Valve_MOV` | 120×100 | `T_DValve` | Operator+ writes `Cmd_Close` when `Out_Open` is true, otherwise `Cmd_Open` (one-shot), Manual only |
+| `Templates/Valves/Valve_Control` | 120×100 | `T_CValve` | none (operated from the dynamic window) |
 | `Templates/Rotating/` `Pump_Centrifugal` · `Pump_Vacuum` · `Pump_PD_Rotary` · `Pump_Diaphragm` · `Pump_Reciprocating` · `Compressor_Centrifugal` · `Compressor_Diaphragm` · `Blower` · `Agitator` · `Motor` | 120×116 | `PID_Motor` | Momentary start/stop (PB) |
 | `Templates/HeatTransfer/` `HX_AirCooled` · `Heater_Electric` | 120×116 | `PID_Motor` | Momentary start/stop (PB) |
 
@@ -45,40 +45,39 @@ To use one, drag the template for the right symbol onto a screen and set `tagPat
 - **Momentary button** (`Button/Momentary`, blank square): bottom left, **visible only in Manual** (valves: `Manual` = 1; motors: `Mode` = 1). It's hidden in Auto, Off and Locked Out.
   - Open/close on valves, start/stop on running equipment.
   - **Motor:** writes PB 1 on press and 0 on release. Disabled only when stopped **and** P or I is showing.
-  - **AutoValve:** one click writes `HMI_CMD = NOT CMD`, in Manual only (see the AutoValve section).
-  - Stopping or closing is always allowed. Tooltip reads Open/Close or Start/Stop.
+  - **AutoValve:** one click writes `Cmd_Close` when `Out_Open` is true, otherwise `Cmd_Open`, through `efc.ui.cmd` (Operator+; see the AutoValve section).
+  - Valve closing bypasses the permissive/interlock opening restriction, but still requires MAN, available, not LOCAL and not OOS. Tooltip reads Open/Close or Start/Stop.
 - **No mode letters** (note 27). Manual is shown by the button, which only appears in Manual.
   - Other options (white M, orange M, inverted tag, chip) are documented in the notes. To switch, change `MANUAL_M` in `build_styles.py`.
 
 ### Status logic
 | Template | Status values | State derivation |
 |---|---|---|
-| AutoValve | CLOSED · OPEN · OPENING / CLOSING · FAULT | ZSO → open, ZSC → closed, neither → travel, both → fault. With Feedback_Enabled = 0 the symbol follows CMD. |
+| AutoValve | CLOSED · OPEN · OPENING / CLOSING · FAULT | `Sts_Fault` first, then `Sts_Opened`, then `Sts_Closed`, otherwise travel; direction from `Out_Open`. |
 | ControlValve | `NN %` (Pos, or Out without feedback) · FAULT | Body = position (> 1 % = open); actuator head = command (Out > 1 %) |
 | Motor | STOPPED · RUNNING · STARTING / STOPPING · FAULT | Run and Cmd agree → that state; they disagree → transition; Fault → fault. Without feedback the symbol follows Cmd. |
 
-### AutoValve: mapped to the plant discrete-valve UDT
-Point `tagPath` at an instance of the existing discrete-valve UDT (OPC tags `{OPC Server}/{OPC Prefix}{Tag}.{TagName}`).
+### AutoValve: current T_DValve mapping
+The three discrete templates bind to a `T_DValve` instance through `tagPath`. See [discrete-valve help](help/Templates/Valves/Valve_Discrete.md) for the full bindings and scripts.
 
 | Member | Used for |
 |---|---|
-| `CMD` | Actuator head color; direction of travel (OPENING / CLOSING); the button writes its inverse |
-| `ZSO` / `ZSC` | Body state: open / closed / travelling. Both made = FAULT (the UDT has no fault bit). |
-| `Feedback_Enabled` | 0 → the symbol follows CMD (no limit switches) |
-| `Permissive` | **1 = permissive missing** → orange P badge; opening blocked |
-| `Interlock` | 1 = interlock active → red I badge; opening blocked |
-| `InterlockList` | Shown in the I badge tooltip (as text) |
-| `Manual` / `Off` / `LockedOut` | Mode letter left of the status: **M** manual, **D** off (disabled), **L** locked out. Auto shows nothing. Priority: L > D > M. All three letters are yellow (`Mode/ManualSplit`). |
-| `Name` | Tag text above the symbol (the `label` param overrides it; the tagPath's last segment is the fallback) |
-| `Description` | Tooltip on the tag text |
-| `HMI_CMD` | **Written by the button: one click writes `NOT CMD`** (maintained bit, no pulse) |
-| not used | Auto, Auto_Perm, Man_Perm, HMI_Auto, HMI_Manual, HMI_Off, HMI_Lockout, REQ, Cycle_Count, Reset_Count (faceplate/popup candidates) |
+| `Out_Open` | Actuator head color and OPENING/CLOSING direction; command button chooses Close when true, Open otherwise |
+| `Sts_Opened` / `Sts_Closed` | Body state (opened takes priority over closed) |
+| `Sts_Fault` | Fault state, checked before opened/closed; also blocks the double-tap command |
+| `Cfg_HasZSO` / `Cfg_HasZSC` | Whether limit switches are fitted; with neither fitted the head follows the body color. Limit-switch LEDs are in the dynamic window's Feedback section, not the template. |
+| `Sts_NotPerm` / `Sts_Intlk` | P/I badges; block opening from the button |
+| `Intlk/Sts_FirstOut` / `Intlk/Cfg_CondDesc` | First-out text in the I tooltip |
+| `Mode/Sts_Man` / `Mode/Sts_OOS` | Manual and out-of-service flags used by the button |
+| `Sts_Avail` / `Sts_Local` | Availability and local-control guards |
+| `Cfg_Tag` / `Cfg_Desc` | Tag text (last tag-path segment is the fallback) and tooltip |
+| `Cmd_Open` / `Cmd_Close` | One-shot operator commands; scripts write True, with no timed reset in the HMI |
 
-**Button rules:**
-- **Enabled:** only when Manual = 1 and the valve is not Off or Locked Out.
-- **Open vs close:** opening is blocked while P or I is showing; closing is always allowed.
-- **Tooltip:** reads Open, Close, "Manual mode required" or "Locked out".
-- **PLC side:** the PLC must still enforce all of this.
+**Button rules:** with `useButton = true`, the button is visible only in MAN. It is enabled in MAN, available, not LOCAL, not OOS, and either `Out_Open` is true (closing) or neither permissive-missing nor interlocked. The script calls `efc.ui.cmd(self, member, True, 1)`, which checks Operator+ before writing. The button's enable expression does not separately check `Sts_Fault`.
+
+**Touch mode:** with `useButton = false` and `dblCmd = true`, double-tap calls `efc.ui.dblCmd`. It requires Operator+, `Mode/Sts_Man` and `Sts_Avail` true, and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` false. It writes `Cmd_Close` if `Sts_Opened` is true, otherwise `Cmd_Open`. This path does not separately check `Mode/Sts_OOS` and does not bypass permissive/interlock guards for closing. With touch mode, M is shown while manual; the default button mode hides that letter.
+
+A single click opens `Templates/Dynamic Window/Valves/ValveDiscrete` in `dw_Right`. The PLC must enforce command acceptance and clear one-shot commands.
 
 ### UDTs for the other templates (memory tags in the export; point them at the M580 addresses)
 | UDT | Members |
