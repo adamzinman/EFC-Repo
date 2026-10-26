@@ -1,0 +1,56 @@
+# Recommended improvements (dw_Right dynamic windows)
+
+Compiled 2026-10-24 from the review of branch `claude/dynamic-window-opendock` (code review with a mock harness, documentation audit, preview renders, imported-parts review and a repo-wide inventory). Everything below was checked against the code; items marked **GW** can only be settled on a gateway. Effort: S under 2 h, M half a day to 2 days, L more.
+
+Done since the review: trends overview (P1 items 3 and 4: `Templates/Dynamic Window/TrendsOverview`, self-registering PV templates via `efc.pv`, dock views carry the viewport change script), process values historized with the `HistProvider` parameter (decision 34). Already done on this branch during the review: three bindings to members the types don't have (`Valve_Control` → `Sts_Avail`/`Sts_Local`, VFD window → `Val_LoadPct`) fixed and `tools/check_bindings.py` now runs in every build and in CI, case-insensitive role matching, refusal of an empty `tagPath` in `openDynamic` / `cmd` / `ackAll` / `dblCmd`, one `alterDock` call per open (size + view + params), window previews rendered on demo instances, `build.py --preview` repaired, 18 documentation fixes, steward preview labels.
+
+## P1: must be settled before the library is used on a gateway
+
+| # | Item | Where | Why | Effort |
+|---|---|---|---|---|
+| 1 | **Prove that `alterDock` swaps the view of an open dock** (GW). | `generator/docks/efc_ui.py` `showDock` | The whole click path assumes `alterDock(dw_Right, {view, viewParams})` re-renders a dock that is already open with another window. Ignition's docs don't promise it and forum reports say an opened dock is not re-rendered when its params change. First test: click valve A, then motor B (view swap), then valve C (params only), then Close and re-open. If it fails, the fallback that is certain to work is a fixed host view in the dock (`Templates/Dynamic Window/Host`) whose embedded view path and params are bound to a per-page session value: bindings always update, the dock stays `dw_Right`, and nothing else changes. | S to test, M for the fallback |
+| 2 | **Decide what Close does when a screen has no default view.** | `efc_ui.py` `closeDynamic`; decision 32 (open) | Today Close calls `closeDock`, which empties the section that decision 32 says is always filled. No screen in the library calls `setDefaultDock` yet. Options: a library default (the trends overview from item 3), require `setDefaultDock` and lint for it, or hide Close when there is no default. | S after the decision |
+| 3 | **Ship a trends overview view and a demo page shell.** | New `Templates/Dynamic Window/TrendsOverview`; new demo project with a page config | Decision 32 makes the trends overview the dock's initial view, but no such view exists and the repo ships no page config, so nothing can be tested end to end. A small demo child project (page config with `dw_Right`, one screen with each template type, `setDefaultDock` and the resize script wired) is also the smoke-test fixture. | M |
+| 4 | **Dock width at 4K on first use** (GW). | `efc_ui.py` `_viewportHeight`, `sizeDock` | `page.props.dimensions` is off by default and the browser reports the viewport only after a round trip, so the first `sizeDock` after a page load may see nothing and set 400 px on a 2160 screen. The resize change script is documented but each screen must add it. Fix: put the change script on the window and trends-overview views themselves so it travels with the dock, and enable `dimensions` at page startup. | S |
+| 5 | **Writes that bypass `efc.ui.cmd`.** | `generator/docks/build_docks.py` `entry()` / `check()`; imported `Station` window and `Station_Fill` | About 69 bidirectional tag bindings (alarm limits, tuning, setpoints, Station Tare/Zero/Reset/Select) write straight to tags: hidden by role in the UI only, no server-side check, no audit line. Decisions 14, 20 and 27 require audited, re-checked writes. Route them through `efc.ui.cmd(..., audit=True)` or set UDT write permissions. The Station window also greys controls (`enabled`) instead of hiding them (decision 27), and `Station_Fill` has no role gating at all. | M |
+| 6 | **I/O chain reads members native x80 DDTs don't have.** | `Templates/IO/RackOverview`, `Dynamic Window/IO/IOCard`, faceplates | They read `CardModel`, `Slot`, `Rack`, `CardDesc`, `Module/HMI/DiagText`. Decision 23 says native Control Expert device DDTs, which lack these. On a real gateway the rack overview comes back empty and `dw_IOCard` is unreachable. Ship the wrapper UDT or map native fields; test against one real export. | M |
+| 7 | **Gateway smoke-test runbook.** | New `docs/gateway-smoke-test.md` | Last gateway verification in the CHANGELOG is v5.1. Steps: import zip + demo tags + demo project on 8.1.22; dock shows trends on load; click each template type and check window, tag and Close; navigate A→B with a window open; 1080 and 2160 plus a browser resize; each role; bypass with reason and check the audit log; double-tap on the real touch panel; trend expand. Repeat once on an 8.3 trial. | S to write |
+| 8 | **PCLib XeFill project is broken next to this library.** | `PCLib/gen_phase.py:1846, :1923`, `PCLib/ignition/EFC_XeFill_HMI.zip`, `README_FB_Phase.md` | Its tile opens `openDock("StationSidebar")`, its parent is the retired `EFC_Styles`, and its `Templates/Station/*` paths shadow the library's. A reviewed minimal patch exists (parent → `EFC_Library`, tile → `efc.ui.showDock`, sidebar close → `efc.ui.closeDynamic`); the zip must be regenerated. Its sidebar still binds the old `DDT_Station`, so it can't use `dw_Station` as is. | S |
+
+## P2: correctness and maintainability
+
+| # | Item | Where | Why | Effort |
+|---|---|---|---|---|
+| 9 | `dw_HeatTransfer` cannot be opened. | `HX_AirCooled` is `T_Motor`; nothing emits `T_HeatEx` | A built, documented window with no way in. Either an HX template bound to `T_HeatEx` or a `dockId` on `HX_AirCooled`. `steward/tools/gaps.py` wrongly reports it reachable (it maps by folder, not by `tType`). | S |
+| 10 | `T_KPI` templates open the `T_AI` window. | `BY_TYPE['T_KPI']`; `types/T_KPI` | The ProcessValue window binds about 13 members `T_KPI` lacks (Sim, ROC, NE107, raw scaling…). Pass `tType` into the window and hide the `T_AI`-only sections, or build a small `dw_KPI`. `T_KPI` is also not in the PCLib export yet. | M |
+| 11 | Pass `tType` to every window. | `efc_ui.py` `openWindow` | Needed for item 10 and for `T_Agitator` / `T_Compressor` variants (decision 11). | S |
+| 12 | Session round-trip of the saved default (GW). | `efc_ui.py` `_state`, `_write` | Values read back from `session.custom` are property-tree wrappers. Convert to plain Python explicitly and catch/log in `closeDynamic` so Close can't get stuck. | S |
+| 13 | Audit lines lack role and old value; failed writes are logged as done. | `efc_ui.py` `cmd`, `_audit` | Decisions 10 and 14 want user, role, time, reason, old → new. Check the `writeBlocking` quality and include the level. | S |
+| 14 | Automated test of `efc.ui`. | CI `check.yml` (the binding check already runs there) | `efc_ui.py` runs under CPython with a fake `system`; the review harness already covers routing per `tType`, `dockSize`, close with/without default, roles, empty `tagPath`. Add it to CI plus a lint that every `efc.ui.X(` in view JSON exists. | S–M |
+| 15 | Render each window at 2160 as well as 1080. | `generator/render_views.py` | Guards decision 33 (37.04 vh × 79.63 vh, no horizontal overflow). | S |
+| 16 | Demo tags are too thin, and some mismatch the windows. | `tags/*_Demo_UDT.json` | Previews show Loop and ProcessValue with every status flag lit and "UNKNOWN"; `T_DValve`/`T_Motor` demos lack `Perm`/`Intlk` arrays and all `Cmd_*`/`Cfg_*`/`Alm_*` members, so buttons can't be pressed without a PLC. Generate memory-tag Sim UDTs from `gen_pclib` with one instance per type. | M |
+| 17 | Templates default to demo tag paths. | 34 templates | An unconfigured template on a real screen shows and commands demo tags. Default to `''` (now refused cleanly) and keep demo paths only in `_Demo` views. | S |
+| 18 | `IntlkList` clips a 4th condition. | `Dynamic Window/Parts/IntlkList` (fixed 120 px, no scroll) | Any device with more than three used conditions loses rows. Grow with content or scroll. | S |
+| 19 | ValveDiscrete and Rotating windows are taller than 860. | `build_docks.py` | History sits below the fold and needs scrolling; Station's header style differs from the device windows. | S–M |
+| 20 | Double-tap on touch hardware (GW). | 14 templates `onDoubleClick` | Mobile browsers don't reliably send `dblclick`; decision 1's touch command may never fire. Test on the panel; fall back to pointer timestamps if needed. | S–M |
+| 21 | Version floor stated three ways. | `efc_ui.py`, `VERSION.json`, docs, decision 32 (open) | 8.1.19 (alterDock) vs 8.1.22 (library). Recommend stating 8.1.22 once. | S |
+| 22 | Trend pause / live not built. | `build_docks.py` trend part | Decision 26 lists it; only range buttons exist. | S |
+| 23 | Controls Standard queue row 4 still has open items. | `steward/DOC-QUEUE.md`, `CS-REV-I-dock-instructions.md` | Close-with-no-default (item 2), version floor (item 21), and the appendix sentence on collapsible trends now that the dock is always shown. | decision |
+
+## P3: nice to have
+
+| # | Item | Where | Why | Effort |
+|---|---|---|---|---|
+| 24 | `SlotTile` does nothing silently when `model` is empty. | `Templates/IO/Parts/SlotTile` | Add a warn log or tooltip. | S |
+| 25 | Optional details button on `Station_Fill`. | `Templates/Station/Station_Fill` | By design it has no click; operators may want the window from the fill screen. | S |
+| 26 | Rebuild the briefing deck. | `docs/presentations/` | `build_deck.js` and `notes.json` changed; the `.pptx` still shows the old mechanism. | S |
+| 27 | Steward purpose blurbs and warnings. | `steward/AUDIT.md` | 8 windows need a human purpose blurb; 4 off-palette `#dce6f7` warnings. | S |
+| 28 | `session.custom.efcDw` is never pruned. | `efc_ui.py` | One entry per tab and screen in long-lived kiosk sessions. | S |
+| 29 | Cut a version. | `VERSION.json` (7.0), CHANGELOG Unreleased | Paths changed; the imported zip should be identifiable before the gateway test (7.1 or 8.0). | S |
+| 30 | Archive `types/gen_pclib_NeedsUpdate.py`. | `types/` | Superseded by `T_Station` / `T_Heater` in `gen_pclib.py`. | S |
+| 31 | Retire `generator/preview_pid.py` / `preview.py`. | `generator/` | They mirror the retired `PID_*` UDTs and no longer run from `build.py`. | S |
+| 32 | One 8.3 trial pass. | item 7 runbook | Nothing in `efc.ui` is 8.1-only; the risk is import and page-config migration. | S |
+
+## Verified not problems
+
+Every `efc.ui` function the views call exists; every `WINDOWS` path resolves (enforced in `build.py`); all 10 windows are 400 × 860 in vh units; `dockSize` gives 400 / 800 / 400 for 1080 / 2160 / unknown; `dblCmd` members exist in `T_DValve` / `T_Motor`; bypass array paths match the export; `trend` and `_audit` survive failures; a full rebuild reproduces the committed `projects/` byte for byte; the imported Station and IO parts are wired correctly end to end; the steward fix tools are idempotent.

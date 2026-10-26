@@ -272,7 +272,7 @@ The station commands act only while the station is free: the sequence isn't runn
    Give `BAR_XeFill`, `PH_XeFill` and `XE` the **HMI** attribute in Control Expert.
 3. Gateway > Config > Projects > Import `EFC_XeFill_HMI.zip`, and add it to your project chain.
 4. Open `Templates/XeFill/Overview` with `unitPath` = `[default]XeFill`.
-5. For the tile, add a right dock with id `StationSidebar`, view `Templates/Station/Station_Sidebar`, size 300, shown on demand.
+5. For the tile, add a right dock with id `StationSidebar`, view `Templates/Station/Station_Sidebar`, size 300, shown on demand. (This zip keeps the older EFC_StationFaceplates dock. In EFC_Library the same faceplate is the `dw_Station` dynamic window, 400 × 860, opened in the page's `dw_Right` dock by `efc.ui.openDynamic`; see `docs/library-reference.md`.)
 
 ## Tests
 

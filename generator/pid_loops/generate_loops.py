@@ -1,6 +1,6 @@
 """Generate Perspective 8.1 PID loop templates (B1-B4), config popup, demo view, UDT + demo tags.
 
-Writes projects/PID_Loops (project source) and tags/PID_Loops. Run tools/package.py to build the import zip."""
+Built into build/components/PID_Loops and merged into EFC_Library as Templates/Loops by build.py (LoopConfig popup retired, decision 15)."""
 import json, os, shutil, sys, zipfile
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from common import extract_inline, write_classes
@@ -371,7 +371,7 @@ def b4():
     return template(root, (104, 196))
 
 
-# ================================================================= Popup: PID/Popups/LoopConfig (440x470)
+# ================================================================= Popup: LoopConfig (440x470), retired (decision 15): built for the component only, not merged into EFC_Library
 EDIT_NAMES = ["Kp", "Ti", "Td", "Action", "SP_Lo", "SP_Hi", "OUT_Lo", "OUT_Hi", "AlmHi", "AlmLo", "AlmDev"]
 LOAD = '''
 base = self.view.params.tagPath
@@ -602,10 +602,10 @@ def grp(name, *members):
     return {"name": name, "tagType": "Folder", "tags": list(members)}
 
 
-udt = {"name": "T_PID_Demo", "tagType": "UdtType",   # memory stand-in with the EFCLib v1 T_PID member names
+udt = {"name": "T_PID_Demo", "tagType": "UdtType", "parameters": {"HistProvider": {"dataType": "String", "value": ""}},   # memory stand-in with the EFCLib v1 T_PID member names
        "tags": [mem("Cfg_Tag", "String", ""), mem("Cfg_Desc", "String", ""), mem("Cfg_PVEU", "String", "EU"),
                 mem("Cfg_PVMin", "Float4", 0.0), mem("Cfg_PVMax", "Float4", 100.0),
-                mem("Val_PV", "Float4", 0.0), mem("Val_SP", "Float4", 0.0), mem("Out_CV", "Float4", 0.0),
+                mem("Val_PV", "Float4", 0.0, historyEnabled={"bindType": "Expression", "value": 'len("{HistProvider}") > 0'}, historyProvider={"bindType": "parameter", "binding": "{HistProvider}"}, historicalDeadbandStyle="Analog", sampleMode="OnChange"), mem("Val_SP", "Float4", 0.0, historyEnabled={"bindType": "Expression", "value": 'len("{HistProvider}") > 0'}, historyProvider={"bindType": "parameter", "binding": "{HistProvider}"}, historicalDeadbandStyle="Analog", sampleMode="OnChange"), mem("Out_CV", "Float4", 0.0, historyEnabled={"bindType": "Expression", "value": 'len("{HistProvider}") > 0'}, historyProvider={"bindType": "parameter", "binding": "{HistProvider}"}, historicalDeadbandStyle="Analog", sampleMode="OnChange"),
                 mem("Cmd_SP", "Float4", 0.0), mem("Cmd_CV", "Float4", 0.0),
                 mem("Sts_Mode", "Int2", 1, documentation="0=Man 1=Auto 2=Cas 3=Track 4=Intlk"), mem("Sts_Intlk", "Boolean", False),
                 grp("Alm_DevH", mem("Cfg_Lim", "Float4", 10.0), mem("Sts_Active", "Boolean", False)),

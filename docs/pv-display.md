@@ -11,7 +11,7 @@ PV design **1.3.0**. Generator: `generator/build_pv.py`. Ships inside `projects/
 **Status:** v1.1–v1.3 have not been re-tested on the gateway yet.
 
 ## Requirements and decisions
-- Ignition Perspective 8.1, ready for the 8.3 upgrade. Uses EFC_Styles. Templates live in **Views/Templates/ProcessValues**. Set `tagPath` to a `T_AI` instance. The views also accept `tType` (default `T_AI`), `dockId` and `dwTagPath` for dynamic-window selection.
+- Ignition Perspective 8.1, ready for the 8.3 upgrade. Uses EFC_Styles. Templates live in **Views/Templates/ProcessValues**. Set `tagPath` to a `T_AI` instance. The views also accept `tType` (default `T_AI`), `dockId` and `dwTagPath` for dynamic-window selection. A click runs `efc.ui.openDynamic(self)` and opens `dw_ProcessValue` (`Templates/Dynamic Window/ProcessValues/ProcessValue`) in the page's `dw_Right` dock.
 - **Two templates**, both 100×50 white rounded cards with a shadow:
   - **A1 `PV_StatusStrip`** (primary).
   - **B2 `PV_RangeBar`**, styled like A1.

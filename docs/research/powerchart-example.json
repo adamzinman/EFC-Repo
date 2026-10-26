@@ -1,0 +1,388 @@
+{
+  "type": "ia.chart.powerchart",
+  "version": 0,
+  "props": {
+    "config": {
+      "mode": "realtime",
+      "unitOfTime": 30,
+      "measureOfTime": "minutes",
+      "refreshRate": 5000,
+      "pointCount": 300,
+      "responsiveDesignWidth": 0,
+      "visibility": {
+        "showTagBrowser": false,
+        "showDateRangeSelector": false,
+        "showPenControlDisplay": false,
+        "buttons": {
+          "showTagBrowserButton": false,
+          "showPanZoomButton": false,
+          "showXTraceButton": false,
+          "showRangeBrushButton": false,
+          "showAnnotationButton": false,
+          "showFullscreenButton": false,
+          "showSettingsButton": false,
+          "showMoreButton": false
+        }
+      }
+    },
+    "interaction": {
+      "mode": "xTrace"
+    },
+    "axes": [
+      {
+        "name": "Pressure_psig",
+        "position": "left",
+        "width": 48,
+        "color": "#8A8F94",
+        "dataFormat": "0,0.0",
+        "range": {
+          "auto": true,
+          "min": "",
+          "max": ""
+        },
+        "label": {
+          "text": "psig",
+          "offset": 0,
+          "font": {
+            "color": "#5F6368",
+            "size": 11
+          },
+          "style": {
+            "classes": ""
+          }
+        },
+        "tick": {
+          "color": "#8A8F94",
+          "count": "Auto",
+          "label": {
+            "font": {
+              "color": "#5F6368",
+              "size": 10
+            },
+            "format": "Auto",
+            "style": {
+              "classes": ""
+            }
+          },
+          "style": {
+            "classes": ""
+          }
+        },
+        "grid": {
+          "visible": true,
+          "color": "#D0D4D9",
+          "opacity": 0.6,
+          "dashArray": 2,
+          "style": {
+            "classes": ""
+          }
+        },
+        "style": {
+          "classes": ""
+        }
+      },
+      {
+        "name": "Temperature_degF",
+        "position": "left",
+        "width": 48,
+        "color": "#8A8F94",
+        "dataFormat": "0,0.0",
+        "range": {
+          "auto": true,
+          "min": "",
+          "max": ""
+        },
+        "label": {
+          "text": "°F",
+          "offset": 0,
+          "font": {
+            "color": "#5F6368",
+            "size": 11
+          },
+          "style": {
+            "classes": ""
+          }
+        },
+        "tick": {
+          "color": "#8A8F94",
+          "count": "Auto",
+          "label": {
+            "font": {
+              "color": "#5F6368",
+              "size": 10
+            },
+            "format": "Auto",
+            "style": {
+              "classes": ""
+            }
+          },
+          "style": {
+            "classes": ""
+          }
+        },
+        "grid": {
+          "visible": true,
+          "color": "#D0D4D9",
+          "opacity": 0.6,
+          "dashArray": 2,
+          "style": {
+            "classes": ""
+          }
+        },
+        "style": {
+          "classes": ""
+        }
+      }
+    ],
+    "plots": [
+      {
+        "relativeWeight": 1,
+        "color": "#FFFFFF00",
+        "markers": [],
+        "style": {
+          "classes": ""
+        }
+      },
+      {
+        "relativeWeight": 1,
+        "color": "#FFFFFF00",
+        "markers": [],
+        "style": {
+          "classes": ""
+        }
+      }
+    ],
+    "pens": [
+      {
+        "name": "PT-101",
+        "visible": true,
+        "enabled": true,
+        "selectable": false,
+        "axis": "Pressure_psig",
+        "plot": 0,
+        "display": {
+          "type": "line",
+          "interpolation": "curveLinear",
+          "breakLine": true,
+          "radius": 3,
+          "styles": {
+            "normal": {
+              "stroke": {
+                "color": "#1F77B4",
+                "width": 2,
+                "dashArray": 0,
+                "opacity": 1
+              },
+              "fill": {
+                "color": "#1F77B4",
+                "opacity": 0.8
+              }
+            },
+            "highlighted": {
+              "stroke": {
+                "color": "#1F77B4",
+                "width": 3,
+                "dashArray": 0,
+                "opacity": 1
+              },
+              "fill": {
+                "color": "#1F77B4",
+                "opacity": 1
+              }
+            },
+            "selected": {
+              "stroke": {
+                "color": "#1F77B4",
+                "width": 3,
+                "dashArray": 0,
+                "opacity": 1
+              },
+              "fill": {
+                "color": "#1F77B4",
+                "opacity": 1
+              }
+            },
+            "muted": {
+              "stroke": {
+                "color": "#1F77B4",
+                "width": 2,
+                "dashArray": 0,
+                "opacity": 0.4
+              },
+              "fill": {
+                "color": "#1F77B4",
+                "opacity": 0.4
+              }
+            }
+          }
+        },
+        "data": {
+          "source": "histprov:EFC_Historian:/drv:EFC_GW:default:/tag:area1/pt_101/val_pv",
+          "aggregateMode": "default"
+        }
+      },
+      {
+        "name": "PT-102",
+        "visible": true,
+        "enabled": true,
+        "selectable": false,
+        "axis": "Pressure_psig",
+        "plot": 0,
+        "display": {
+          "type": "line",
+          "interpolation": "curveLinear",
+          "breakLine": true,
+          "radius": 3,
+          "styles": {
+            "normal": {
+              "stroke": {
+                "color": "#FF7F0E",
+                "width": 2,
+                "dashArray": 0,
+                "opacity": 1
+              },
+              "fill": {
+                "color": "#FF7F0E",
+                "opacity": 0.8
+              }
+            },
+            "highlighted": {
+              "stroke": {
+                "color": "#FF7F0E",
+                "width": 3,
+                "dashArray": 0,
+                "opacity": 1
+              },
+              "fill": {
+                "color": "#FF7F0E",
+                "opacity": 1
+              }
+            },
+            "selected": {
+              "stroke": {
+                "color": "#FF7F0E",
+                "width": 3,
+                "dashArray": 0,
+                "opacity": 1
+              },
+              "fill": {
+                "color": "#FF7F0E",
+                "opacity": 1
+              }
+            },
+            "muted": {
+              "stroke": {
+                "color": "#FF7F0E",
+                "width": 2,
+                "dashArray": 0,
+                "opacity": 0.4
+              },
+              "fill": {
+                "color": "#FF7F0E",
+                "opacity": 0.4
+              }
+            }
+          }
+        },
+        "data": {
+          "source": "histprov:EFC_Historian:/drv:EFC_GW:default:/tag:area1/pt_102/val_pv",
+          "aggregateMode": "default"
+        }
+      },
+      {
+        "name": "TT-101",
+        "visible": true,
+        "enabled": true,
+        "selectable": false,
+        "axis": "Temperature_degF",
+        "plot": 1,
+        "display": {
+          "type": "line",
+          "interpolation": "curveLinear",
+          "breakLine": true,
+          "radius": 3,
+          "styles": {
+            "normal": {
+              "stroke": {
+                "color": "#D62728",
+                "width": 2,
+                "dashArray": 0,
+                "opacity": 1
+              },
+              "fill": {
+                "color": "#D62728",
+                "opacity": 0.8
+              }
+            },
+            "highlighted": {
+              "stroke": {
+                "color": "#D62728",
+                "width": 3,
+                "dashArray": 0,
+                "opacity": 1
+              },
+              "fill": {
+                "color": "#D62728",
+                "opacity": 1
+              }
+            },
+            "selected": {
+              "stroke": {
+                "color": "#D62728",
+                "width": 3,
+                "dashArray": 0,
+                "opacity": 1
+              },
+              "fill": {
+                "color": "#D62728",
+                "opacity": 1
+              }
+            },
+            "muted": {
+              "stroke": {
+                "color": "#D62728",
+                "width": 2,
+                "dashArray": 0,
+                "opacity": 0.4
+              },
+              "fill": {
+                "color": "#D62728",
+                "opacity": 0.4
+              }
+            }
+          }
+        },
+        "data": {
+          "source": "histprov:EFC_Historian:/drv:EFC_GW:default:/tag:area1/tt_101/val_pv",
+          "aggregateMode": "default"
+        }
+      }
+    ],
+    "title": {
+      "visible": false
+    },
+    "legend": {
+      "visible": true
+    },
+    "timeAxis": {
+      "visible": true,
+      "tick": {
+        "label": {
+          "format": "HH:mm"
+        }
+      }
+    },
+    "style": {
+      "backgroundColor": "#FFFFFF",
+      "borderStyle": "none"
+    }
+  },
+  "meta": {
+    "name": "Chart"
+  },
+  "position": {
+    "grow": 1,
+    "basis": "0px"
+  },
+  "custom": {}
+}
