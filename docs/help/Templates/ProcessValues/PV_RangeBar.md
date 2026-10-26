@@ -38,12 +38,12 @@ A process value card for an analog input (`T_AI`) with a range track. The track 
 
 | Name | Direction | Default | Meaning | Set / read by |
 |---|---|---|---|---|
-| `tagPath` | input | `""` | Analog input (T_AI) instance. Every binding reads its members as `{view.params.tagPath}/<member>`. The PV design note calls it a `DDT_Process_Value` instance. | Caller. Read by all bindings and by `efc.ui.openDynamic`. |
+| `tagPath` | input | `""` | Analog input (T_AI) instance. Every binding reads its members as `{view.params.tagPath}/<member>`. | Caller. Read by all bindings and by `efc.ui.openDynamic`. |
 | `tType` | input | `T_AI` | Type key. `efc.ui.openDynamic` maps it through `BY_TYPE` to the dock. | Read by `efc.ui.openDynamic` only. |
 | `dockId` | input | `""` | Dock id that overrides the window chosen from `tType`. | Read by `efc.ui.openDynamic` only. |
 | `dwTagPath` | input | `""` | Tag path passed to the dock instead of `tagPath` when non-empty. | Read by `efc.ui.openDynamic` only. |
 
-All four have `paramDirection: input` and `persistent: true`. There are no output params. `docs/pv-display.md` says the only parameter is `tagPath`. The view also has `tType`, `dockId` and `dwTagPath`, which the click path reads.
+All four have `paramDirection: input` and `persistent: true`. There are no output params. The click path reads `tType`, `dockId` and `dwTagPath`.
 
 ### View-level custom properties (`custom`)
 
@@ -233,7 +233,7 @@ Indentation shows parent and child. Each entry is `name` (component type).
 **Behaviour to review**
 
 1. **Pointer is not exactly on the PV.** The pointer's left edge is `fPV x (1 - 0.09091)`, and its width is 0.09091 of the track. Its centre is `fPV x (1 - 0.09091) + 0.04545`, which equals `fPV` only at 0.5. The two ends of the track are offset by a few per cent.
-2. **`tick` drives nothing.** Same as PV_StatusStrip: `docs/pv-display.md` describes a transform on `tick` that is not in this view.
+2. **`tick` drives nothing.** Same as PV_StatusStrip: alarm codes read direct PLC tag mirrors; no binding reads `tick`.
 3. **OVR and UNR never blink.** Same as PV_StatusStrip.
 4. **Empty `tagPath` still opens the dock.** Same as PV_StatusStrip.
 5. **`activePri`, `clearedPri` and `anyUnacked` are computed but never read.** Each is an expression over the four alarm levels (`aHH`, `aH`, `aL`, `aLL` and `aFLT`), but no binding or script in this view uses any of them. `anyUnacked` is read only by PV_StatusStrip.

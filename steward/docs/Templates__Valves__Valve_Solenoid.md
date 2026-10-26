@@ -3,9 +3,9 @@
 <!-- keep:start -->
 **Purpose:** P&ID solenoid valve template bound to EFCLib v1 T_DValve through tagPath: state fill, alarm outline, P/I badges, mode and status line.
 
-**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_ValveDiscrete) in the page's dw_Right dock.
+**Usage notes:** Params: tagPath, useButton (in-template command button), tType, dockId / dwTagPath overrides. Click the symbol opens the dynamic window (dw_ValveDiscrete) in the page's dw_Right dock at Templates/Dynamic Window/Valves/ValveDiscrete.
 
-**Gotchas:** Touch mode (useButton = false, dblCmd = true): double-tap toggles the device, Operator+, only in MAN, available, permitted, not interlocked, not LOCAL. Limit-switch LEDs follow Cfg_HasZSO / Cfg_HasZSC.
+**Gotchas:** Touch mode (useButton = false, dblCmd = true): double-tap toggles the device, Operator+, only in MAN, available, permitted, not interlocked, not LOCAL and not faulted (Sts_Fault = false). It writes Cmd_Close when Sts_Opened is true, otherwise Cmd_Open. Limit-switch LEDs are only in the dynamic window's Feedback section, following Cfg_HasZSO / Cfg_HasZSC; the template has no limit-switch LEDs.
 <!-- keep:end -->
 
 <!-- auto:start -->

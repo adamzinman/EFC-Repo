@@ -24,7 +24,7 @@ A process value card for an analog input (`T_AI`). It shows a coloured status st
 
 **Value.** The PV shows one decimal, or `---` when PV is null. `badValue` is true when PV is not good, an FLT alarm is active, or `hwFault` (`Sts_Bad`) is true. It adds the `Value/BadQuality` style. It does not change the strip.
 
-**As the repo defines the type,** the FLT, HH, H, L, LL, OVR and UNR codes never leave -1, because their bindings point at members that T_AI does not have (see Notes). In practice the strip stays `PV/Strip/Normal`, and only the INH chip and the bad-value style can appear.
+**Type contract.** `types/PCLib_Members.csv` defines `Alm_Bad` as T_Alarm, the four limit alarms as T_AlmLim, and `Sts_ORng` / `Sts_URng` as BOOL members of T_AI. The nested alarm types define `Sts_Active`, `Sts_Unack` and `Cfg_Priority`. Verify that deployed instances expose those members; missing values are coalesced to inactive states.
 
 **Click.** A single click opens the process value dock for this tag. The view writes no tag and checks no role.
 
@@ -34,12 +34,12 @@ A process value card for an analog input (`T_AI`). It shows a coloured status st
 
 | Name | Direction | Default | Meaning | Set / read by |
 |---|---|---|---|---|
-| `tagPath` | input | `""` | Analog input (T_AI) instance. Every binding reads its members as `{view.params.tagPath}/<member>`. The PV design note calls it a `DDT_Process_Value` instance. | Caller. Read by all bindings and by `efc.ui.openDynamic`. |
+| `tagPath` | input | `""` | Analog input (T_AI) instance. Every binding reads its members as `{view.params.tagPath}/<member>`. | Caller. Read by all bindings and by `efc.ui.openDynamic`. |
 | `tType` | input | `T_AI` | Type key. `efc.ui.openDynamic` maps it through `BY_TYPE` to the dock. | Read by `efc.ui.openDynamic` only. |
 | `dockId` | input | `""` | Dock id that overrides the window chosen from `tType`. | Read by `efc.ui.openDynamic` only. |
 | `dwTagPath` | input | `""` | Tag path passed to the dock instead of `tagPath` when non-empty. | Read by `efc.ui.openDynamic` only. |
 
-All four have `paramDirection: input` and `persistent: true`. There are no output params. `docs/pv-display.md` says the only parameter is `tagPath`. The view also has `tType`, `dockId` and `dwTagPath`, which the click path reads.
+All four have `paramDirection: input` and `persistent: true`. There are no output params. The click path reads `tType`, `dockId` and `dwTagPath`.
 
 ### View-level custom properties (`custom`)
 
@@ -189,7 +189,7 @@ Indentation shows parent and child. Each entry is `name` (component type).
 
 1. **`hwFault` does not drive the strip.** `hwFault` (`Sts_Bad`) only feeds `badValue`, so a PV bad flag changes the value style. The strip enters the fault state from the bad-PV alarm (`Alm_Bad/Sts_Active`).
 2. **OVR and UNR never blink.** `aOVR` is 0 when `rOVR` is true, with no acknowledge state. The chip class is therefore always the Diagnostic class when active, and `anyUnacked` never includes it.
-3. **`tick` drives nothing.** `docs/pv-display.md` says the alarm state is evaluated on `view.custom.tick` by a script transform that calls `system.alarm.queryStatus`. This view has no such transform, and no binding reads `view.custom.tick`. The design note is out of date for these views, or the transform was lost.
+3. **`tick` drives nothing.** No binding reads `view.custom.tick`. Alarm codes are expressions over direct PLC tag mirrors; there is no `system.alarm.queryStatus` transform.
 4. **Empty `tagPath` still opens the dock.** `tagPath` defaults to empty. A click then writes an empty `tagPath` to the dock, because `openDynamic` does not check it.
 
 **Open questions**
