@@ -16,6 +16,14 @@ Build an alternate version of the templates (`Templates/*`) and dynamic windows 
 1. **Member shapes come from the owner's real DDT exports**, placed in `samples/ddt/` (Control Expert `.XDD`, `.XSY`/`.XEF`, or Ignition UDT JSON). Do not invent members for any family that has no export.
 2. **Structure:** a parallel project `projects/EFC_Library_DDT`, produced by the same generators with a **type-profile switch** (`T_*` vs `DDT_*`), so the two stay in sync when a template changes. Do not make a hand-edited copy of the views.
 
+3. **DDT inventory and mapping (from the owner's Control Expert data type browser):**
+   `DDT_AI_Alarm`, `DDT_ColorEnum`, `DDT_CompControl`, `DDT_CompModes`, `DDT_CompOpMode`, `DDT_CompVars`, `DDT_Device`, `DDT_Discrete`, `DDT_Minebea`, `DDT_MinebeaReadCmd`, `DDT_MinebeaWriteCmd`, `DDT_Mode`, `DDT_Motor_VFD`, `DDT_OpModeEnum`, `DDT_Process_Value`, `DDT_Scale`, `DDT_SCT2200`, `DDT_SCT2200_CMDs`, `DDT_Seq`, `DDT_Setpoint`, `DDT_Station`, `DDT_Station_Data`, `DDT_StationEnum`, `DDT_Valve`.
+   - **All motors, heaters and pumps, except the compressor, use `DDT_Device`.** That covers Templates/Rotating (Motor, Pump_*, Agitator, Blower), Templates/HeatTransfer (Heater_Electric, HX_AirCooled) and the `dw_Rotating`, `dw_VFD`, `dw_Heater` and `dw_HeatTransfer` windows. Expect the shared `DDT_Device` to be the binding for all of them; use `DDT_Motor_VFD` for the VFD only if the export shows it is needed.
+   - The compressor uses its own `DDT_Comp*` types (`DDT_CompControl`, `DDT_CompModes`, `DDT_CompOpMode`, `DDT_CompVars`).
+   - Valves use `DDT_Valve`; process values use `DDT_Process_Value` (alarms `DDT_AI_Alarm`, setpoints `DDT_Setpoint`); stations use `DDT_Station` with `DDT_Station_Data`, `DDT_StationEnum`, `DDT_Seq`, `DDT_Scale` and the Minebea/SCT2200 scale types.
+   - No DDTs were listed for loops (T_PID) or I/O (native x80 device DDTs, decision 23). Leave those families on their current types and list them as out of scope.
+   - Many of these (Comp*, Scale, Minebea, SCT2200, Seq, Mode, the enums) have no member list anywhere in git history, so they depend on the exports in `samples/ddt/`.
+
 ## Step 0: check the inputs
 List `samples/ddt/`. If it is missing or empty, **stop and report that** and do nothing else. If only some families are present, build only those and list the rest as pending in the final report.
 
