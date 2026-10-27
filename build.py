@@ -221,6 +221,23 @@ def check_view_refs(lib):
     print(f"{LIBRARY}: {len(views)} views, all view references resolve")
 
 
+def make_ddt_zip():
+    """EFC_Library_DDT_PROJECT.zip: the legacy-bound library with every Templates/ view named *_DDT, so it imports
+    next to the main EFC_Library without clashing and is easy to tell apart (tools/ddt_suffix.py)."""
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    from ddt_suffix import suffix_tree, SUFFIX
+    tmp = os.path.join(BUILD, f"{LIBRARY}{SUFFIX}")
+    v = VERSION["version"]
+    renamed, n = suffix_tree(os.path.join(PROJECTS, LIBRARY), tmp, title=LIBRARY + SUFFIX,
+                             description=f"EFC Ignition library v{v}, legacy DDT_ build: every template and dynamic window is bound "
+                                         f"to the plant's DDT_ types and its view name ends in {SUFFIX}.")
+    check_view_refs(tmp)
+    zp = os.path.join(DIST, f"{LIBRARY}{SUFFIX}_PROJECT.zip")
+    zip_dir(tmp, zp)
+    print(f"{LIBRARY}{SUFFIX}: {len(renamed)} views renamed, {n} path references rewritten")
+    return zp
+
+
 def make_dist():
     os.makedirs(DIST, exist_ok=True)
     v = VERSION["version"]
@@ -231,6 +248,8 @@ def make_dist():
         zp = os.path.join(DIST, f"{name}_PROJECT.zip")
         zip_dir(os.path.join(PROJECTS, name), zp)
         out.append(zp)
+    if LEGACY and os.path.isfile(os.path.join(PROJECTS, LIBRARY, "project.json")):
+        out.append(make_ddt_zip())
     bundle = os.path.join(DIST, f"EFC_Ignition_Library_v{v}.zip")     # everything in one download for people without git
     with zipfile.ZipFile(bundle, "w", zipfile.ZIP_DEFLATED) as z:
         for sub in ("tags", "symbols"):

@@ -26,6 +26,16 @@ can switch between this branch's `EFC_Library_PROJECT.zip` and the main one with
   **38 typed views, 656 member references, 0 unknown, no T_-only member name left.** `python3 tools/check_bindings.py --t`
   runs the same check on a T_ build against `types/export/PCLib_Ignition81.json`.
 
+## Import zip: EFC_Library_DDT
+`python3 build.py --dist` also writes `dist/EFC_Library_DDT_PROJECT.zip` (a built copy is committed at
+`legacy/EFC_Library_DDT_PROJECT.zip`). It is the legacy-bound library with the project titled `EFC_Library_DDT` and **every
+view under `Templates/` renamed with a `_DDT` suffix** (`Templates/Valves/Valve_Solenoid_DDT`,
+`Templates/Dynamic Window/Station/Station_DDT`, ...), so it imports next to the main `EFC_Library` and is easy to tell apart.
+`tools/ddt_suffix.py` does the rename and rewrites every embedded-view, repeater, `openPopup` and `efc.ui` window path to
+match; the build then re-runs the view-reference check on the renamed tree. `Styles/_Catalog`, the style classes, the stylesheet
+and the `efc` script library keep their names, so do not make `EFC_Library` and `EFC_Library_DDT` parents of the same HMI
+project (the `efc.ui` scripts would collide). Import it as its own project, or as the parent in place of `EFC_Library`.
+
 ## Gateway setup
 1. Tag Browser → Data Types: import `tags/legacy/MEM_Interlock_List_UDT.json`, then `DDT_Valve`, `DDT_Device`,
    `DDT_Process_Value`, `DDT_Station` (`PID_ControlValve`, `PID_Loop` if you use the analog valve / loop templates). Point
