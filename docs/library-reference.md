@@ -105,6 +105,16 @@ To make the trends overview the view a window's close button returns to, call `e
 
 Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=None)` opens a window by its id (`dw_ValveDiscrete`, `dw_Loop`, ...), and `efc.ui.showDock(path, params)` loads any view.
 
+## Placing templates in a flex container
+Template text is sized in vh, so it grows with the screen. The box a template sits in has to grow the same way, or the text outgrows it and clips. When you drop a template into a flex container, the Designer sets the child's `position.basis` to a pixel size. That pins the box: at 1080p it fits, but on a taller screen the vh text gets bigger while the box doesn't, and the bottom row is cut off with a scrollbar.
+
+Set `position.basis` in vh instead, with `grow` and `shrink` at 0:
+- Basis is the size along the parent's direction: width in a row, height in a column.
+- Convert the template's default size at 1080p: px / 10.8 = vh. For example, `PV_StatusStrip` (104 × 54) is `9.63vh` in a row and `5vh` in a column.
+- `basis: auto` also works if the box should size itself from its content.
+
+`Templates/ProcessValues/_Demo` shows the pattern: each strip sits in a row with `basis: 9.63vh`, grow 0, shrink 0. In a coordinate container, use percent mode for the same reason: fixed mode pins the box in pixels.
+
 ## Symbols & colors
 | State | Fill | Notes |
 |---|---|---|
