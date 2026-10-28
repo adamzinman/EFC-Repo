@@ -116,11 +116,15 @@ def fmt(e, f="#,##0.0"): return f"numberFormat({e}, '{f}')"
 
 TIME_SCALE = 1000        # PLC TIME members arrive in milliseconds; the docks show and edit seconds
 
-def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmtstr="#,##0.0", scale=None):
+def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmtstr="#,##0.0", scale=None, grey=False):
     """Numeric setpoint bound bidirectionally to the member; hidden below minlvl.
+    grey=True: shown below minlvl but greyed (props.enabled gains the level check; only `show` controls display).
     scale (e.g. TIME_SCALE): the tag holds value * scale. The entry then reads the mirror / scale and a props.value
     onChange script (origin == 'Browser' only) writes int(round(value * scale)) through efc.ui.cmd, Engineer, audited."""
-    pc = {"props.value": tag(member, bidi=True), "props.enabled": expr(enabled or "true")}
+    en = enabled or "true"
+    if grey:
+        en = f"({lvl(minlvl)}) && ({en})"
+    pc = {"props.value": tag(member, bidi=True), "props.enabled": expr(en)}
     if scale:
         wr = (f"if origin == 'Browser' and currentValue.value is not None:\n"
               f"\tefc.ui.cmd(self, {member!r}, int(round(currentValue.value * {scale})), {ENG}, audit=True)")
@@ -128,9 +132,13 @@ def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmts
                              "onChange": {"enabled": None, "script": "\t" + wr.replace("\n", "\n\t")}}
     num = comp("ia.input.numeric-entry-field", "Entry", {"format": fmtstr, "style": {"classes": "Input/Setpoint"}},
                {"shrink": 0, "basis": v(120)}, pc)
-    s = lvl(minlvl) + (f" && ({show})" if show else "")
+    if grey:
+        disp = {"position.display": expr(show)} if show else {}
+    else:
+        s = lvl(minlvl) + (f" && ({show})" if show else "")
+        disp = {"position.display": expr(s)}
     return flex(name, "row", [label("Lbl", text, "Text/Caption Text/Mod/Upper", grow=1), num, label("EU", unit, "Text/Units", basis=v(40))],
-                basis=v(28), pc={"position.display": expr(s)}, extra={"alignItems": "center", "style": {"classes": "", "gap": v(6)}})
+                basis=v(28), pc=disp, extra={"alignItems": "center", "style": {"classes": "", "gap": v(6)}})
 
 def check(name, text, member, minlvl, hide=False):
     pc = {"props.selected": tag(member, bidi=True), "props.enabled": expr(lvl(minlvl))}
@@ -314,7 +322,7 @@ def valve_analog():
                [(m("Sts_Sim"), "SIM"), (m("Sts_RateLim"), "RATE LIM")]),
         mode_section(vw),
         commands(vw, [("RESET", "Cmd_Reset", "Button/Default", OP, None)],
-                 extra=[entry(vw, "Pos", "Manual position", "Cmd_ManPos", OP, "%", enabled=rd),
+                 extra=[entry(vw, "Pos", "Manual position", "Cmd_ManPos", OP, "%", enabled=rd, grey=True),
                         flex("Presets", "row", presets, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})],
                  hint="Position entry and presets enabled in MAN, not interlocked"),
         section("Values", "Values", [row("Dem", "Demand", fmt(m("Val_Demand")), "'%'"),
@@ -364,7 +372,7 @@ def rotating():
 def vfd():
     def cmd(vw):
         rd = f"{vw.m('Mode/Sts_Man')} && {vw.m('Sts_Avail')}"
-        return [entry(vw, "Spd", "Speed", "Cmd_Spd", OP, "", enabled=rd),
+        return [entry(vw, "Spd", "Speed", "Cmd_Spd", OP, "", enabled=rd, grey=True),
                 flex("Dir", "row", [button("Fwd", "FWD", "efc.ui.cmd(self, 'Cmd_Rev', False, 1)", cls="Button/Default", enabled=rd, need=OP),
                                     button("Rev", "REV", "efc.ui.cmd(self, 'Cmd_Rev', True, 1)", cls="Button/Default", enabled=rd, need=OP)],
                      basis=v(32), pc={"position.display": expr(vw.m("Cfg_Reversible"))}, extra={"style": {"classes": "", "gap": v(4)}})]
@@ -395,7 +403,7 @@ def heater():
         commands(vw, [("ON", "Cmd_On", "Button/Start", OP, rd), ("OFF", "Cmd_Off", "Button/Stop", OP, None),
                       ("RESET", "Cmd_Reset", "Button/Default", OP, None)],
                  extra=[label("ResetHint", "High-limit trip resets at the limit device.", "Text/Micro Text/Color/Muted"),
-                        entry(vw, "Pwr", "Power demand", "Cmd_Pwr", OP, "%", enabled=rd, show=pwr)]),
+                        entry(vw, "Pwr", "Power demand", "Cmd_Pwr", OP, "%", enabled=rd, show=pwr, grey=True)]),
         section("Values", "Values", [row("Type", "Control", ctype), row("Dem", "Power demand", fmt(m("Val_PwrDemand")), "'%'", show=pwr),
                                      row("Duty", "Duty", fmt(m("Val_Duty")), "'%'", show=pwr), row("Pwr", "Power", fmt(m("Val_Power")), "'kW'"),
                                      row("Cur", "Current", fmt(m("Val_Current")), "'A'", show=amps), row("Load", "Load", fmt(m("Val_LoadPct"), "0"), "'%'", show=amps),
@@ -471,8 +479,8 @@ def loop():
         section("Mode", "Mode", [flex("Buttons", "row", b, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})]),
         section("Values", "Values", [row("PV", "PV", fmt(m("Val_PV")), eu), row("SP", "SP", fmt(m("Val_SP")), eu),
                                      row("CV", "Output", fmt(m("Out_CV")), "'%'"), row("Err", "Error", fmt(m("Val_Err")), eu),
-                                     entry(vw, "SPe", "Setpoint", "Cmd_SP", OP, "", enabled=f"!{m('Sts_Cas')}"),
-                                     entry(vw, "CVe", "Output", "Cmd_CV", OP, "%", enabled=m("Sts_Man"))]),
+                                     entry(vw, "SPe", "Setpoint", "Cmd_SP", OP, "", enabled=f"!{m('Sts_Cas')}", grey=True),
+                                     entry(vw, "CVe", "Output", "Cmd_CV", OP, "%", enabled=m("Sts_Man"), grey=True)]),
         intlk("Intlk", "Interlocks", "Intlk"),
         alarms(vw, [("Alm_DevH", "Deviation high"), ("Alm_DevL", "Deviation low"), ("Alm_PVBad", "PV bad")]),
         trend(["Val_PV", "Val_SP", "Out_CV"]),

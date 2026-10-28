@@ -1669,16 +1669,6 @@
                     "classes": "Util/Gap/M"
                   }
                 },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 1"
-                      }
-                    }
-                  }
-                },
                 "children": [
                   {
                     "type": "ia.display.label",
@@ -1732,7 +1722,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "!{view.custom.m_Sts_Cas}"
+                            "expression": "({view.custom.level} >= 1) && (!{view.custom.m_Sts_Cas})"
                           }
                         }
                       }
@@ -1774,16 +1764,6 @@
                   "alignItems": "center",
                   "style": {
                     "classes": "Util/Gap/M"
-                  }
-                },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 1"
-                      }
-                    }
                   }
                 },
                 "children": [
@@ -1839,7 +1819,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Sts_Man}"
+                            "expression": "({view.custom.level} >= 1) && ({view.custom.m_Sts_Man})"
                           }
                         }
                       }

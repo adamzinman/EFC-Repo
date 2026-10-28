@@ -168,7 +168,7 @@ When `Disabled`, every step is Pending. When `Failed`, the first step that is no
 
 **State word, chip and header.** The `custom.s` transform works out the state word and chip exactly as the overview tile does. The condition order is Disabled, Failed, Complete, Filling, SampleCMD (SAMPLING), Vacuuming, Venting, Recovering, Active, ReadyToStart or ReadyToFill (READY), and IDLE otherwise. Chip classes: DISABLED `State/OutOfService`; FAULT `State/Fault`; COMPLETE, READY and IDLE `State/Stopped`; FILLING, SAMPLING and ACTIVE `State/Running`; VACUUMING, VENTING and RECOVERING `State/Transition`. When the station is selected, the header adds `Util/Highlight`.
 
-**Select toggle.** The button at the right of the header shows `SELECTED` or `SELECT`, with `Button/Toggle/On` or `Button/Toggle/Off`. It is enabled when the station is not disabled. A click pulses `Cmd_Select`: it writes True, and after 1 s a background thread writes False. There is no confirm step.
+**Select toggle.** The button at the right of the header shows `SELECTED` or `SELECT`, with `Button/Toggle/On` or `Button/Toggle/Off`. It is enabled when the station is not disabled, or when the user is below Operator level (decision 33). Below Operator it shows a lock icon with the tooltip "Requires Operator access". A click pulses `Cmd_Select` through `efc.ui.cmd`: it writes True, and after 1 s a background thread writes False. Below Operator the press writes nothing and opens the AccessDenied popup. There is no confirm step.
 
 **Message line.** The line under the header shows `Sts_Msg`. When that is empty it shows the fallback text for the state, for example "Filling primary vessel" or "Station disabled".
 
@@ -176,21 +176,21 @@ When `Disabled`, every step is Pending. When `Failed`, the first step that is no
 
 **Boxes.** Tare and Total show the tare and total weights with their units. PT shows the vessel pressure in psig. When `Inp_PTValid` is false it shows `-----` with the bad-quality class `Value/BadQuality`.
 
-**Setpoints.** Four numeric entry fields are bidirectional tag bindings, so an edit writes straight to the tag. Each field is enabled only when the station is not disabled. Target and Sample show 3 decimals and take their units from `Cfg_EU`. Max press and Prefill press show 1 decimal and the fixed unit `psig`.
+**Setpoints.** Four numeric entry fields are bidirectional tag bindings, so an edit writes straight to the tag. Each field is enabled only at Operator level or above and when the station is not disabled; below Operator the fields are greyed (no lock), as in the Station window. Target and Sample show 3 decimals and take their units from `Cfg_EU`. Max press and Prefill press show 1 decimal and the fixed unit `psig`.
 
-**Commands and confirm step.** Tare, Zero and Reset do not write when pressed. Each stores its name in `view.custom.pendingCmd`. The button row is hidden while `pendingCmd` is set, and the confirm strip is shown instead. It reads, for example, "Tare WT101?" (the scale name followed by "?"). Confirm clears `pendingCmd` and pulses the matching `Cmd_*` member, which is True and then False 1 s later. Cancel only clears `pendingCmd`.
+**Commands and confirm step.** Tare, Zero and Reset do not write when pressed. Each stores its name in `view.custom.pendingCmd`. The button row is hidden while `pendingCmd` is set, and the confirm strip is shown instead. It reads, for example, "Tare WT101?" (the scale name followed by "?"). Confirm clears `pendingCmd` and pulses the matching `Cmd_*` member, which is True and then False 1 s later. Cancel only clears `pendingCmd`. Below Operator level, Tare, Zero and Reset stay enabled with a lock icon and the tooltip "Requires Operator access". A press opens the AccessDenied popup and stores no command.
 
 **Enable rules.**
 
 | Control | Enabled when | Expression |
 |---|---|---|
-| Select | station not disabled | `!{view.custom.s.dis}` |
+| Select | station not disabled, or below Operator (locked) | `({view.custom.level} < 1) || (!{view.custom.s.dis})` |
 | Target, Sample, Max press, Prefill fields | station not disabled | `!{view.custom.s.dis}` |
-| Tare, Zero | not locked | `!{view.custom.s.tzLocked}`. `tzLocked` = busy or disabled, where busy means the state chip is Running or Transition (FILLING, SAMPLING, ACTIVE, VACUUMING, VENTING, RECOVERING). |
-| Reset | not locked | `!{view.custom.s.resetLocked}`. `resetLocked` = not (Complete or Failed), so Reset is enabled only when Complete or Failed is true. |
+| Tare, Zero | below Operator (locked), or not locked | `({view.custom.level} < 1) || (!{view.custom.s.tzLocked})`. `tzLocked` = busy or disabled, where busy means the state chip is Running or Transition (FILLING, SAMPLING, ACTIVE, VACUUMING, VENTING, RECOVERING). |
+| Reset | below Operator (locked), or not locked | `({view.custom.level} < 1) || (!{view.custom.s.resetLocked})`. `resetLocked` = not (Complete or Failed), so Reset is enabled only when Complete or Failed is true. |
 | Confirm, Cancel | while a command is pending | visibility only: `{view.custom.pendingCmd} != ""`. The Confirm button has no enable expression. |
 
-**Commands and security.** Select, Tare, Zero, Reset and the four setpoint fields write directly to tags. The view does not check the role level and does not write an audit record. The enable expressions are the only guard. This view calls no `efc.ui` function, so the `efc.ui.cmd` role check and audit are not used (see Notes).
+**Commands and security.** Select, Tare, Zero, Reset (through Confirm) write to tags only through `efc.ui`. `custom.level` binds `session.props.auth.securityLevels` through `efc.ui.level`. Below Operator (level 1) the four command buttons stay visible and pressable with a lock icon. Their scripts call `efc.ui.cmd` (Select, Confirm) or `efc.ui.userLevel` and `efc.ui.denied` (Tare, Zero, Reset), so a press below level writes nothing, logs a warning and opens `Templates/Dynamic Window/Parts/AccessDenied`. The four setpoint fields write through bidirectional tag bindings, not `efc.ui.cmd`; they are greyed below Operator (see Notes).
 
 ## Properties reference
 
@@ -209,6 +209,7 @@ The param has `paramDirection: input` and `persistent: true`. There are no outpu
 | `view.custom.s` | dict of 51 keys (sample values, for example `name` = `"Station 1"`) | property on `view.custom.t`, with a script transform | Script transform (see Scripts reference) | Display model. The bindings read 26 of its keys (see Bindings reference). The other 25 are computed and never bound. |
 | `view.custom.t` | dict of 36 keys, each `null` | none on the dict itself. Each key has its own tag binding. | Tag members, listed below | Raw values mirrored from the station tag. It is the only input to the `s` transform. |
 | `view.custom.pendingCmd` | `""` | none (no binding) | Set by the Tare, Zero, Reset, Cancel and Confirm scripts | Name of the command waiting for confirmation (`Tare`, `Zero` or `Reset`). Empty when no command is pending. It is view state, not session state. |
+| `view.custom.level` | `0` | property on `session.props.auth.securityLevels`, with a script transform `return efc.ui.level(value)` | Role level from the Perspective session (0 Guest to 5 Admin) | The user's level. The command buttons read it for the lock icon, tooltip and enable rule (decision 33). |
 
 **Tag mirrors.** The 36 keys of `view.custom.t` each take their value from one T_Station member through an indirect tag binding (`mode: indirect`, `{0}` = `{view.params.tagPath}`, fallback delay 2.5 s). The mirror bindings are read-only. The four setpoint fields are separate bidirectional bindings (see Bindings reference).
 
@@ -236,11 +237,11 @@ None. The components carry no `custom` properties.
 
 ## Bindings reference
 
-Total: **80 bindings**. 37 are at the view root and 43 are on components. By type: 40 `tag`, 24 `property` and 16 `expr`. Component bindings: 23 `property`, 16 `expr` and 4 `tag` (the setpoint fields).
+Total: **91 bindings**. 38 are at the view root and 53 are on components. By type: 40 `tag`, 25 `property` and 26 `expr`. Component bindings: 23 `property`, 26 `expr` and 4 `tag` (the setpoint fields).
 
 ### View root
 
-The 37 view-root bindings are 36 tag mirrors and the `custom.s` transform. Each is listed with its source in **View-level custom properties** above.
+The 38 view-root bindings are 36 tag mirrors, the `custom.s` transform and `custom.level`. Each is listed with its source in **View-level custom properties** above.
 
 ### root/Header
 
@@ -253,7 +254,7 @@ The 37 view-root bindings are 36 tag mirrors and the `custom.s` transform. Each 
 | root/Header/Chip | `props.style.classes` | expr | `({view.custom.s.chip}) + ' Station/Fill/Chip'` | State colour class plus `Station/Fill/Chip`. |
 | root/Header/Select | `props.text` | property | `view.custom.s.selText` | `SELECTED` or `SELECT`. |
 | root/Header/Select | `props.style.classes` | expr | `{view.custom.s.selCls}` | `Button/Toggle/On` or `Button/Toggle/Off`. |
-| root/Header/Select | `props.enabled` | expr | `!{view.custom.s.dis}` | Enabled unless the station is disabled. |
+| root/Header/Select | `props.enabled` | expr | `({view.custom.level} < 1) || (!{view.custom.s.dis})` | Enabled unless the station is disabled. Below Operator it stays enabled (locked). |
 
 ### root/Body
 
@@ -279,19 +280,19 @@ The 37 view-root bindings are 36 tag mirrors and the `custom.s` transform. Each 
 | root/Body/Boxes/PT/PTRow/PTVal | `props.text` | property | `view.custom.s.pt` | Vessel pressure, 1 decimal, or `-----` when invalid. |
 | root/Body/Boxes/PT/PTRow/PTVal | `props.style.classes` | expr | `{view.custom.s.ptSmallCls}` | Full class string. It adds `Value/BadQuality` when `Inp_PTValid` is false. |
 | root/Body/Setpoints/SpRow0/SpTarget/SpTargetRow/SpTargetFld | `props.value` | tag | `{0}/Prm_TargetWt` (indirect, `{0}` = `{view.params.tagPath}`, bidirectional) | Target setpoint. Edits write `Prm_TargetWt`. |
-| root/Body/Setpoints/SpRow0/SpTarget/SpTargetRow/SpTargetFld | `props.enabled` | expr | `!{view.custom.s.dis}` | Enabled unless the station is disabled. |
+| root/Body/Setpoints/SpRow0/SpTarget/SpTargetRow/SpTargetFld | `props.enabled` | expr | `{view.custom.level} >= 1 && (!{view.custom.s.dis})` | Enabled at Operator or above when the station is not disabled; greyed below Operator. |
 | root/Body/Setpoints/SpRow0/SpTarget/SpTargetRow/SpTargetU | `props.text` | property | `view.custom.s.units` | Weight units. |
 | root/Body/Setpoints/SpRow0/SpSample/SpSampleRow/SpSampleFld | `props.value` | tag | `{0}/Prm_SampleWt` (indirect, bidirectional) | Sample setpoint. Edits write `Prm_SampleWt`. |
-| root/Body/Setpoints/SpRow0/SpSample/SpSampleRow/SpSampleFld | `props.enabled` | expr | `!{view.custom.s.dis}` | Enabled unless the station is disabled. |
+| root/Body/Setpoints/SpRow0/SpSample/SpSampleRow/SpSampleFld | `props.enabled` | expr | `{view.custom.level} >= 1 && (!{view.custom.s.dis})` | Enabled at Operator or above when the station is not disabled; greyed below Operator. |
 | root/Body/Setpoints/SpRow0/SpSample/SpSampleRow/SpSampleU | `props.text` | property | `view.custom.s.units` | Weight units. |
 | root/Body/Setpoints/SpRow1/SpPmax/SpPmaxRow/SpPmaxFld | `props.value` | tag | `{0}/Prm_MaxPress` (indirect, bidirectional) | Max press setpoint. Edits write `Prm_MaxPress`. |
-| root/Body/Setpoints/SpRow1/SpPmax/SpPmaxRow/SpPmaxFld | `props.enabled` | expr | `!{view.custom.s.dis}` | Enabled unless the station is disabled. |
+| root/Body/Setpoints/SpRow1/SpPmax/SpPmaxRow/SpPmaxFld | `props.enabled` | expr | `{view.custom.level} >= 1 && (!{view.custom.s.dis})` | Enabled at Operator or above when the station is not disabled; greyed below Operator. |
 | root/Body/Setpoints/SpRow1/SpPrefill/SpPrefillRow/SpPrefillFld | `props.value` | tag | `{0}/Prm_PrefillPress` (indirect, bidirectional) | Prefill press setpoint. Edits write `Prm_PrefillPress`. |
-| root/Body/Setpoints/SpRow1/SpPrefill/SpPrefillRow/SpPrefillFld | `props.enabled` | expr | `!{view.custom.s.dis}` | Enabled unless the station is disabled. |
+| root/Body/Setpoints/SpRow1/SpPrefill/SpPrefillRow/SpPrefillFld | `props.enabled` | expr | `{view.custom.level} >= 1 && (!{view.custom.s.dis})` | Enabled at Operator or above when the station is not disabled; greyed below Operator. |
 | root/Body/Commands/Buttons | `position.display` | expr | `{view.custom.pendingCmd} = ""` | Button row shown when no command is pending. |
-| root/Body/Commands/Buttons/Tare | `props.enabled` | expr | `!{view.custom.s.tzLocked}` | Tare enabled unless locked (busy or disabled). |
-| root/Body/Commands/Buttons/Zero | `props.enabled` | expr | `!{view.custom.s.tzLocked}` | Zero enabled unless locked (busy or disabled). |
-| root/Body/Commands/Buttons/Reset | `props.enabled` | expr | `!{view.custom.s.resetLocked}` | Reset enabled only when Complete or Failed. |
+| root/Body/Commands/Buttons/Tare | `props.enabled` | expr | `({view.custom.level} < 1) || (!{view.custom.s.tzLocked})` | Tare enabled unless locked (busy or disabled). Below Operator it stays enabled (locked). |
+| root/Body/Commands/Buttons/Zero | `props.enabled` | expr | `({view.custom.level} < 1) || (!{view.custom.s.tzLocked})` | Zero enabled unless locked (busy or disabled). Below Operator it stays enabled (locked). |
+| root/Body/Commands/Buttons/Reset | `props.enabled` | expr | `({view.custom.level} < 1) || (!{view.custom.s.resetLocked})` | Reset enabled only when Complete or Failed. Below Operator it stays enabled (locked). |
 | root/Body/Commands/Confirm | `position.display` | expr | `{view.custom.pendingCmd} != ""` | Confirm strip shown while a command is pending. |
 | root/Body/Commands/Confirm/ConfirmTxt | `props.text` | expr | `{view.custom.pendingCmd} + " " + {view.custom.s.scale} + "?"` | Question text, for example `Tare WT101?`. |
 
@@ -303,33 +304,42 @@ Total: **6 event scripts** and **1 transform script**. There are no custom metho
 
 ```python
 	# Momentary pulse: set the PLC bit, release it 1 s later (harmless if the PLC clears it first).
-	path = self.view.params.tagPath + "/Cmd_Select"
-	system.tag.writeBlocking([path], [True])
-	def _release(p=path):
-		import time
-		time.sleep(1.0)
-		system.tag.writeBlocking([p], [False])
-	system.util.invokeAsynchronous(_release)
+	if efc.ui.cmd(self, 'Cmd_Select', True, 1):
+		path = self.view.params.tagPath + "/Cmd_Select"
+		def _release(p=path):
+			import time
+			time.sleep(1.0)
+			system.tag.writeBlocking([p], [False])
+		system.util.invokeAsynchronous(_release)
 ```
 
-   It writes True to `Cmd_Select` and releases it to False 1 s later on a background thread. No role check, no audit, no confirm step.
+   It writes True to `Cmd_Select` through `efc.ui.cmd` (minimum level Operator) and releases it to False 1 s later on a background thread. Below Operator, `efc.ui.cmd` writes nothing and opens the AccessDenied popup. No confirm step.
 
 2. **`root/Body/Commands/Buttons/Tare`**: `events.component.onActionPerformed`, scope G. Trigger: click on Tare. It only stores the command name for confirmation. Code:
 
 ```python
-	self.view.custom.pendingCmd = "Tare"
+	if efc.ui.userLevel(self) < 1:
+		efc.ui.denied(self, 1, 'Tare')
+	else:
+		self.view.custom.pendingCmd = "Tare"
 ```
 
 3. **`root/Body/Commands/Buttons/Zero`**: `events.component.onActionPerformed`, scope G. Trigger: click on Zero. Stores `Zero` in `pendingCmd`. Code:
 
 ```python
-	self.view.custom.pendingCmd = "Zero"
+	if efc.ui.userLevel(self) < 1:
+		efc.ui.denied(self, 1, 'Zero')
+	else:
+		self.view.custom.pendingCmd = "Zero"
 ```
 
 4. **`root/Body/Commands/Buttons/Reset`**: `events.component.onActionPerformed`, scope G. Trigger: click on Reset. Stores `Reset` in `pendingCmd`. Code:
 
 ```python
-	self.view.custom.pendingCmd = "Reset"
+	if efc.ui.userLevel(self) < 1:
+		efc.ui.denied(self, 1, 'Reset')
+	else:
+		self.view.custom.pendingCmd = "Reset"
 ```
 
 5. **`root/Body/Commands/Confirm/Cancel`**: `events.component.onActionPerformed`, scope G. Trigger: click on Cancel. Clears `pendingCmd`, so the button row returns and nothing is written. Code:
@@ -344,9 +354,8 @@ Total: **6 event scripts** and **1 transform script**. There are no custom metho
 	cmd = self.view.custom.pendingCmd
 	self.view.custom.pendingCmd = ""
 	member = {"Tare": "Cmd_Tare", "Zero": "Cmd_Zero", "Reset": "Cmd_Reset"}.get(cmd)
-	if member:
+	if member and efc.ui.cmd(self, member, True, 1):
 		path = self.view.params.tagPath + "/" + member
-		system.tag.writeBlocking([path], [True])
 		def _release(p=path):
 			import time
 			time.sleep(1.0)
@@ -354,7 +363,7 @@ Total: **6 event scripts** and **1 transform script**. There are no custom metho
 		system.util.invokeAsynchronous(_release)
 ```
 
-   There is no enable check here. The button is only shown while a command is pending, and nothing re-reads `Sts_Active` or `Sts_Disabled` before the write.
+   The write goes through `efc.ui.cmd` (minimum level Operator), so a press below Operator is refused and logged. There is still no enable check on `Sts_Active` or `Sts_Disabled` before the write (see Notes).
 
 7. **`view.custom.s`**: script transform on the property binding from `view.custom.t`. Trigger: runs whenever any of the 36 mirrored values changes. It returns the whole display dict. Code (identical to the transform in `Station_Tile`):
 
@@ -480,7 +489,7 @@ Total: **6 event scripts** and **1 transform script**. There are no custom metho
 
 ### library calls made from this view
 
-None. The view calls no function in `efc.ui` or any other project library module.
+`efc.ui` only. The view calls `efc.ui.level` (the `custom.level` transform), `efc.ui.cmd` (Select and Confirm), `efc.ui.userLevel` and `efc.ui.denied` (Tare, Zero and Reset). It calls no other project library module.
 
 ## Tag members used
 
@@ -615,7 +624,9 @@ Relative to `tagPath`. Types and comments are from `types/PCLib_Members.csv`. Wr
 
 ## Notes and open questions
 
-- **No role check and no audit on writes.** Select, Tare, Zero, Reset (through Confirm) and the four setpoint fields write to tags with no role level check and no audit record. The enable expressions are the only guard, so any user who can open the view can use these controls. The library's `efc.ui.cmd` path (role level and audit) is not used by this view. The `efc` library is not referenced anywhere in the view.
+- **Role lock on the commands (decision 33).** Select, Tare, Zero, Reset and Confirm check the role level through `efc.ui` before they write. Below Operator they show a lock and refuse the press. The writes are not audited here: `efc.ui.cmd` is called without `audit=True`. Enforce access in Perspective security and the PLC, because the HMI check is not security.
+- **Setpoint fields write directly.** The four setpoint fields are bidirectional tag bindings, not `efc.ui.cmd`, so an edit is not logged or audited. They are disabled below Operator, as in the Station window.
+- **Cancel is not gated.** Cancel only clears `pendingCmd` and writes nothing, so it has no level check. It cannot be reached below Operator because Tare, Zero and Reset open the popup instead of storing a command.
 - **Confirm has no guard.** `ConfirmBtn` has no enable expression, and its script does not re-read `Sts_Active` or `Sts_Disabled`. If a cycle starts between the first click (Tare or Zero) and Confirm, the pulse is still written. PCLib says Cmd_Tare and Cmd_Zero are "blocked while active". The view does not re-check that before writing, and whether the PLC enforces it is not in the repo.
 - **Tare and Zero are not gated on selection.** `tzLocked` depends only on busy and disabled, not on `Sts_Selected`. The PCLib comments do not say whether Tare or Zero needs the station to be selected. Open question.
 - **Reset ignores disabled.** `resetLocked` = not (Complete or Failed). If Sts_Disabled and (Sts_Complete or Sts_Failed) are both true, Reset is enabled. Whether the PLC can reach that state is not in the repo.

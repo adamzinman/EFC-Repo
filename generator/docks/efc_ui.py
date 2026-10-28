@@ -110,6 +110,16 @@ def denied(component, minLevel, action=''):
     need = ROLES[max(0, min(minLevel, len(ROLES) - 1))]
     user = _p(_p(component.session.props.auth, 'user'), 'userName') or ''
     _log().warn('Refused %s for %s (%s): needs %s' % (action, user or 'not signed in', ROLES[have], need))
+    # JOG fires efc.ui.cmd on both onMouseDown and onTouchStart: one touch would open the popup twice
+    try:
+        now = system.date.toMillis(system.date.now())
+        s = component.session.custom
+        last = getattr(s, 'efcDenied', None) or {}
+        if _p(last, 'action') == action and 0 <= now - (_p(last, 't', 0) or 0) < 1500:
+            return
+        s.efcDenied = {'action': action, 't': now}
+    except Exception as e:
+        _log().warn('denied: dedupe check failed: %s' % e)
     try:
         system.perspective.openPopup(DENIED_POPUP, DENIED_VIEW,
                                      params={'action': action, 'need': need, 'have': ROLES[have], 'user': user},

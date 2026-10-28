@@ -2256,16 +2256,6 @@
                     "classes": "Util/Gap/M"
                   }
                 },
-                "propConfig": {
-                  "position.display": {
-                    "binding": {
-                      "type": "expr",
-                      "config": {
-                        "expression": "{view.custom.level} >= 1"
-                      }
-                    }
-                  }
-                },
                 "children": [
                   {
                     "type": "ia.display.label",
@@ -2319,7 +2309,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail}"
+                            "expression": "({view.custom.level} >= 1) && ({view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail})"
                           }
                         }
                       }

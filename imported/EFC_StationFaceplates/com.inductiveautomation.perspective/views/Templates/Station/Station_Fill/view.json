@@ -117,7 +117,8 @@
       "resetLocked": true,
       "foot": "Tare and Zero locked while active"
     },
-    "pendingCmd": ""
+    "pendingCmd": "",
+    "level": 0
   },
   "params": {
     "tagPath": ""
@@ -608,6 +609,20 @@
           "fallbackDelay": 2.5
         }
       }
+    },
+    "custom.level": {
+      "binding": {
+        "type": "property",
+        "config": {
+          "path": "session.props.auth.securityLevels"
+        },
+        "transforms": [
+          {
+            "type": "script",
+            "code": "\treturn efc.ui.level(value)"
+          }
+        ]
+      }
     }
   },
   "props": {
@@ -787,7 +802,11 @@
             "type": "ia.input.button",
             "version": 0,
             "meta": {
-              "name": "Select"
+              "name": "Select",
+              "tooltip": {
+                "enabled": false,
+                "text": "Requires Operator access"
+              }
             },
             "position": {
               "basis": "auto",
@@ -798,6 +817,15 @@
               "text": "SELECT",
               "style": {
                 "classes": "Button/Toggle/Off"
+              },
+              "image": {
+                "icon": {
+                  "path": "",
+                  "color": "#1F1F1F"
+                },
+                "position": "left",
+                "width": 14,
+                "height": 14
               }
             },
             "propConfig": {
@@ -821,7 +849,23 @@
                 "binding": {
                   "type": "expr",
                   "config": {
-                    "expression": "!{view.custom.s.dis}"
+                    "expression": "({view.custom.level} < 1) || (!{view.custom.s.dis})"
+                  }
+                }
+              },
+              "props.image.icon.path": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                  }
+                }
+              },
+              "meta.tooltip.enabled": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "{view.custom.level} < 1"
                   }
                 }
               }
@@ -830,7 +874,7 @@
               "component": {
                 "onActionPerformed": {
                   "config": {
-                    "script": "\t# Momentary pulse: set the PLC bit, release it 1 s later (harmless if the PLC clears it first).\n\tpath = self.view.params.tagPath + \"/Cmd_Select\"\n\tsystem.tag.writeBlocking([path], [True])\n\tdef _release(p=path):\n\t\timport time\n\t\ttime.sleep(1.0)\n\t\tsystem.tag.writeBlocking([p], [False])\n\tsystem.util.invokeAsynchronous(_release)"
+                    "script": "\t# Momentary pulse: set the PLC bit, release it 1 s later (harmless if the PLC clears it first).\n\tif efc.ui.cmd(self, 'Cmd_Select', True, 1):\n\t\tpath = self.view.params.tagPath + \"/Cmd_Select\"\n\t\tdef _release(p=path):\n\t\t\timport time\n\t\t\ttime.sleep(1.0)\n\t\t\tsystem.tag.writeBlocking([p], [False])\n\t\tsystem.util.invokeAsynchronous(_release)"
                   },
                   "scope": "G",
                   "type": "script"
@@ -1946,7 +1990,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "!{view.custom.s.dis}"
+                                    "expression": "{view.custom.level} >= 1 && (!{view.custom.s.dis})"
                                   }
                                 }
                               }
@@ -2081,7 +2125,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "!{view.custom.s.dis}"
+                                    "expression": "{view.custom.level} >= 1 && (!{view.custom.s.dis})"
                                   }
                                 }
                               }
@@ -2239,7 +2283,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "!{view.custom.s.dis}"
+                                    "expression": "{view.custom.level} >= 1 && (!{view.custom.s.dis})"
                                   }
                                 }
                               }
@@ -2364,7 +2408,7 @@
                                 "binding": {
                                   "type": "expr",
                                   "config": {
-                                    "expression": "!{view.custom.s.dis}"
+                                    "expression": "{view.custom.level} >= 1 && (!{view.custom.s.dis})"
                                   }
                                 }
                               }
@@ -2452,7 +2496,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "Tare"
+                      "name": "Tare",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "basis": "0px",
@@ -2463,6 +2511,15 @@
                       "text": "Tare",
                       "style": {
                         "classes": "Button/Default"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
@@ -2470,7 +2527,23 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "!{view.custom.s.tzLocked}"
+                            "expression": "({view.custom.level} < 1) || (!{view.custom.s.tzLocked})"
+                          }
+                        }
+                      },
+                      "props.image.icon.path": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
                           }
                         }
                       }
@@ -2479,7 +2552,7 @@
                       "component": {
                         "onActionPerformed": {
                           "config": {
-                            "script": "\tself.view.custom.pendingCmd = \"Tare\""
+                            "script": "\tif efc.ui.userLevel(self) < 1:\n\t\tefc.ui.denied(self, 1, 'Tare')\n\telse:\n\t\tself.view.custom.pendingCmd = \"Tare\""
                           },
                           "scope": "G",
                           "type": "script"
@@ -2491,7 +2564,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "Zero"
+                      "name": "Zero",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "basis": "0px",
@@ -2502,6 +2579,15 @@
                       "text": "Zero",
                       "style": {
                         "classes": "Button/Default"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
@@ -2509,7 +2595,23 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "!{view.custom.s.tzLocked}"
+                            "expression": "({view.custom.level} < 1) || (!{view.custom.s.tzLocked})"
+                          }
+                        }
+                      },
+                      "props.image.icon.path": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
                           }
                         }
                       }
@@ -2518,7 +2620,7 @@
                       "component": {
                         "onActionPerformed": {
                           "config": {
-                            "script": "\tself.view.custom.pendingCmd = \"Zero\""
+                            "script": "\tif efc.ui.userLevel(self) < 1:\n\t\tefc.ui.denied(self, 1, 'Zero')\n\telse:\n\t\tself.view.custom.pendingCmd = \"Zero\""
                           },
                           "scope": "G",
                           "type": "script"
@@ -2530,7 +2632,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "Reset"
+                      "name": "Reset",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "basis": "0px",
@@ -2541,6 +2647,15 @@
                       "text": "Reset",
                       "style": {
                         "classes": "Button/Primary"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
@@ -2548,7 +2663,23 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "!{view.custom.s.resetLocked}"
+                            "expression": "({view.custom.level} < 1) || (!{view.custom.s.resetLocked})"
+                          }
+                        }
+                      },
+                      "props.image.icon.path": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
                           }
                         }
                       }
@@ -2557,7 +2688,7 @@
                       "component": {
                         "onActionPerformed": {
                           "config": {
-                            "script": "\tself.view.custom.pendingCmd = \"Reset\""
+                            "script": "\tif efc.ui.userLevel(self) < 1:\n\t\tefc.ui.denied(self, 1, 'Reset')\n\telse:\n\t\tself.view.custom.pendingCmd = \"Reset\""
                           },
                           "scope": "G",
                           "type": "script"
@@ -2659,7 +2790,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "ConfirmBtn"
+                      "name": "ConfirmBtn",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "basis": "auto",
@@ -2670,16 +2805,43 @@
                       "text": "Confirm",
                       "style": {
                         "classes": "Button/Primary"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "events": {
                       "component": {
                         "onActionPerformed": {
                           "config": {
-                            "script": "\tcmd = self.view.custom.pendingCmd\n\tself.view.custom.pendingCmd = \"\"\n\tmember = {\"Tare\": \"Cmd_Tare\", \"Zero\": \"Cmd_Zero\", \"Reset\": \"Cmd_Reset\"}.get(cmd)\n\tif member:\n\t\tpath = self.view.params.tagPath + \"/\" + member\n\t\tsystem.tag.writeBlocking([path], [True])\n\t\tdef _release(p=path):\n\t\t\timport time\n\t\t\ttime.sleep(1.0)\n\t\t\tsystem.tag.writeBlocking([p], [False])\n\t\tsystem.util.invokeAsynchronous(_release)"
+                            "script": "\tcmd = self.view.custom.pendingCmd\n\tself.view.custom.pendingCmd = \"\"\n\tmember = {\"Tare\": \"Cmd_Tare\", \"Zero\": \"Cmd_Zero\", \"Reset\": \"Cmd_Reset\"}.get(cmd)\n\tif member and efc.ui.cmd(self, member, True, 1):\n\t\tpath = self.view.params.tagPath + \"/\" + member\n\t\tdef _release(p=path):\n\t\t\timport time\n\t\t\ttime.sleep(1.0)\n\t\t\tsystem.tag.writeBlocking([p], [False])\n\t\tsystem.util.invokeAsynchronous(_release)"
                           },
                           "scope": "G",
                           "type": "script"
+                        }
+                      }
+                    },
+                    "propConfig": {
+                      "props.image.icon.path": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
+                          }
                         }
                       }
                     }

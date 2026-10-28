@@ -2032,7 +2032,7 @@
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "{view.custom.level} >= 1 && ({view.custom.m_Cfg_CtrlType} > 0)"
+                        "expression": "{view.custom.m_Cfg_CtrlType} > 0"
                       }
                     }
                   }
@@ -2090,7 +2090,7 @@
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}"
+                            "expression": "({view.custom.level} >= 1) && ({view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm})"
                           }
                         }
                       }
