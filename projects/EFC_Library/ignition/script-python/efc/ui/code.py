@@ -7,6 +7,8 @@
 #   template symbol onDoubleClick:  efc.ui.dblCmd(self)
 #   window close button:            efc.ui.closeDynamic(self)
 #   screen root onStartup:          efc.ui.setDefaultDock(self, viewPath, params)   (optional default dock view)
+# Access (decision 33): the user's level comes from session.props.auth.securityLevels. Command buttons below the user's
+# level stay visible with a lock; a press anyway is refused here, logged, and answered with the AccessDenied popup.
 
 # The one right-side dock every dynamic window opens in (Page Configuration dock id)
 DOCK_ID = 'dw_Right'
@@ -24,9 +26,16 @@ BY_TYPE = {
     'T_Heater': 'dw_Heater', 'T_HeatEx': 'dw_HeatTransfer', 'T_AI': 'dw_ProcessValue', 'T_KPI': 'dw_ProcessValue',
     'T_PID': 'dw_Loop', 'T_Station': 'dw_Station', 'native': 'dw_IOCard',
 }
-# Role hierarchy, low to high (Controls Standard HMI rules)
+# Role hierarchy, low to high (Controls Standard HMI rules). Matched case-insensitively against every name in the
+# user's security levels (Authenticated/Roles/<role>, or a custom security level of the same name).
 ROLES = ['Guest', 'Operator', 'Maintenance', 'Supervisor', 'Engineer', 'Admin']
 OPERATOR, MAINT, SUPERVISOR, ENGINEER = 1, 2, 3, 4
+# Site role or security-level names that mean one of ROLES (lower case -> ROLES name). Add the gateway's names here.
+ROLE_ALIASES = {'administrator': 'Admin', 'administrators': 'Admin', 'operators': 'Operator',
+                'supervisors': 'Supervisor', 'engineers': 'Engineer', 'engineering': 'Engineer'}
+# Popup shown when a command is refused for the user's access level
+DENIED_POPUP = 'efcAccessDenied'
+DENIED_VIEW = 'Templates/Dynamic Window/Parts/AccessDenied'
 
 # Two-state devices that accept a double-tap command: type -> (state member, cmd if on, cmd if off)
 DBL_CMD = {
@@ -52,18 +61,77 @@ def _p(params, name, default=None):
     return default if v is None else v
 
 
-def level(roles):
-    """Highest role level the user holds (0 Guest .. 5 Admin). Bound by every window as custom.level."""
+def _names(node, out):
+    """Every name in session.props.auth.securityLevels (nested {name, children}), a path string
+    ('Authenticated/Roles/Operator') or a plain list of role names."""
+    if node is None:
+        return out
+    if isinstance(node, basestring):
+        out.extend(node.split('/'))
+        return out
+    name = _p(node, 'name')
+    if name is not None:
+        out.append(str(name))
+        return _names(_p(node, 'children'), out)
+    try:
+        for n in node:
+            _names(n, out)
+    except TypeError:
+        pass
+    return out
+
+
+def _rank(name):
+    n = str(name).strip().lower()
+    n = ROLE_ALIASES.get(n, n).lower()
+    for i, r in enumerate(ROLES):
+        if r.lower() == n:
+            return i
+    return 0
+
+
+def level(levels):
+    """Highest role level (0 Guest .. 5 Admin) in the user's security levels (or a list of role names).
+    Bound by every window and command template as custom.level from session.props.auth.securityLevels."""
     best = 0
-    for r in (roles or []):
-        r = str(r)
-        if r in ROLES:
-            best = max(best, ROLES.index(r))
+    for n in _names(levels, []):
+        best = max(best, _rank(n))
     return best
 
 
 def userLevel(component):
-    return level(component.session.props.auth.user.roles)
+    auth = component.session.props.auth
+    return max(level(_p(auth, 'securityLevels')), level(_p(_p(auth, 'user'), 'roles')))
+
+
+def denied(component, minLevel, action=''):
+    """A command the user's level doesn't allow: log it and open the AccessDenied popup (decision 33)."""
+    have = userLevel(component)
+    need = ROLES[max(0, min(minLevel, len(ROLES) - 1))]
+    user = _p(_p(component.session.props.auth, 'user'), 'userName') or ''
+    _log().warn('Refused %s for %s (%s): needs %s' % (action, user or 'not signed in', ROLES[have], need))
+    try:
+        system.perspective.openPopup(DENIED_POPUP, DENIED_VIEW,
+                                     params={'action': action, 'need': need, 'have': ROLES[have], 'user': user},
+                                     title='Invalid access level', modal=True, showCloseIcon=True, overlayDismiss=True)
+    except Exception as e:
+        _log().warn('denied: could not open %s: %s' % (DENIED_VIEW, e))
+
+
+def _target(component, member):
+    """'XV101 Cmd_Open' for log lines and the AccessDenied popup."""
+    tp = _p(component.view.params, 'tagPath', '') or ''
+    return ('%s %s' % (tp.split('/')[-1].split(']')[-1], member)).strip()
+
+
+def _writeTags(paths, values, what):
+    """writeBlocking, logging any write that doesn't come back good (missing member, read-only, bad quality)."""
+    ok = True
+    for p, q in zip(paths, system.tag.writeBlocking(paths, values)):
+        if not q.isGood():
+            ok = False
+            _log().warn('%s: write %s failed: %s' % (what, p, q))
+    return ok
 
 
 def _state(component):
@@ -141,14 +209,18 @@ def _audit(component, action, target, value=''):
     _log().info('AUDIT %s %s %s by %s' % (action, target, value, user))
 
 
-def cmd(component, member, value=True, minLevel=OPERATOR, audit=False):
-    """Window button: write one member of the window's tag, if the user's role allows it."""
+def cmd(component, member, value=True, minLevel=OPERATOR, audit=False, notify=True):
+    """Command button: write one member of the view's tag if the user's level allows it. Below the level the write
+    is refused, logged and (notify) answered with the AccessDenied popup; release events pass notify=False."""
     if userLevel(component) < minLevel:
-        return
+        if notify:
+            denied(component, minLevel, _target(component, member))
+        return False
     tp = component.view.params.tagPath + '/' + member
-    system.tag.writeBlocking([tp], [value])
+    ok = _writeTags([tp], [value], 'cmd')
     if audit:
         _audit(component, 'EFC write', tp, value)
+    return ok
 
 
 def bypass(component, intlkPath, idx, reason):
@@ -156,27 +228,29 @@ def bypass(component, intlkPath, idx, reason):
     reason = (reason or '').strip()
     if userLevel(component) < SUPERVISOR or not reason:
         return False
-    system.tag.writeBlocking(['%s/Cmd_Bypass/%d' % (intlkPath, idx)], [True])
+    _writeTags(['%s/Cmd_Bypass/%d' % (intlkPath, idx)], [True], 'bypass')
     _audit(component, 'EFC bypass', '%s/%d' % (intlkPath, idx), reason)
     return True
 
 
 def unbypass(component, intlkPath, idx):
     if userLevel(component) < SUPERVISOR:
+        denied(component, SUPERVISOR, 'Unbypass %d' % idx)
         return
-    system.tag.writeBlocking(['%s/Cmd_Unbypass/%d' % (intlkPath, idx)], [True])
+    _writeTags(['%s/Cmd_Unbypass/%d' % (intlkPath, idx)], [True], 'unbypass')
     _audit(component, 'EFC unbypass', '%s/%d' % (intlkPath, idx))
 
 
 def ackAll(component, alarms):
     """ACK button: acknowledge every unacked PLC alarm member listed (Operator+)."""
     if userLevel(component) < OPERATOR:
+        denied(component, OPERATOR, _target(component, 'ACK'))
         return
     base = component.view.params.tagPath
     vals = system.tag.readBlocking([base + '/' + a + '/Sts_Unack' for a in alarms])
     paths = [base + '/' + a + '/Cmd_Ack' for a, q in zip(alarms, vals) if q.value]
     if paths:
-        system.tag.writeBlocking(paths, [True] * len(paths))
+        _writeTags(paths, [True] * len(paths), 'ackAll')
 
 
 def _num(v):
@@ -218,9 +292,12 @@ def trend(base, pens, minutes, w, h):
 def dblCmd(component):
     """Double-click/tap on the symbol in touch mode: toggle a two-state device (Operator+).
     Sent only when the template has useButton = false and dblCmd = true, the device is
-    in Manual and available, and nothing blocks it."""
+    in Manual and available, and nothing blocks it. Below Operator: refused with the AccessDenied popup."""
     p = component.view.params
-    if _p(p, 'useButton') or not _p(p, 'dblCmd') or _p(p, 'tType') not in DBL_CMD or userLevel(component) < OPERATOR:
+    if _p(p, 'useButton') or not _p(p, 'dblCmd') or _p(p, 'tType') not in DBL_CMD:
+        return
+    if userLevel(component) < OPERATOR:
+        denied(component, OPERATOR, _target(component, 'double-tap command'))
         return
     base = p.tagPath
     state, cmdOn, cmdOff = DBL_CMD[p.tType]
@@ -230,4 +307,4 @@ def dblCmd(component):
     blocked = v[1 + len(READY_TRUE):]
     if not all(ready) or any(blocked):
         return
-    system.tag.writeBlocking([base + '/' + (cmdOn if isOn else cmdOff)], [True])
+    _writeTags([base + '/' + (cmdOn if isOn else cmdOff)], [True], 'dblCmd')

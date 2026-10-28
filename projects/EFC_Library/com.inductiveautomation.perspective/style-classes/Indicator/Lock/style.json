@@ -1,0 +1,9 @@
+{
+  "base": {
+    "style": {
+      "pointerEvents": "none",
+      "padding": "8%"
+    }
+  },
+  "variants": []
+}

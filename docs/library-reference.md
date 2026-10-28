@@ -105,6 +105,15 @@ To make the trends overview the view a window's close button returns to, call `e
 
 Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=None)` opens a window by its id (`dw_ValveDiscrete`, `dw_Loop`, ...), and `efc.ui.showDock(path, params)` loads any view.
 
+## Access levels: the lock and the AccessDenied popup
+The user's level comes from the Perspective session's security levels, `session.props.auth.securityLevels` (decision 33). `efc.ui.level` takes the highest of `Guest` 0, `Operator` 1, `Maintenance` 2, `Supervisor` 3, `Engineer` 4 and `Admin` 5 found anywhere in that tree, so both `Authenticated/Roles/Operator` and a custom security level named `Operator` count. Names are matched without regard to case. If your gateway uses other names, map them in `efc.ui.ROLE_ALIASES` (for example `'administrator': 'Admin'`); a user whose roles match nothing is Guest.
+
+- **Command buttons below the user's level stay visible with a lock.** This covers the template Manual button and, in the dynamic windows, the mode, command, preset, FWD/REV, ACK and interlock RESET buttons. The tooltip says which role is needed.
+- **A press anyway is refused.** `efc.ui.cmd` writes nothing, logs a warning to the `efc.ui` logger and opens `Templates/Dynamic Window/Parts/AccessDenied`: "Invalid access level", what was pressed, the role it needs, and who is signed in. Double-tap commands and ACK behave the same.
+- **Failed writes are logged too.** When a write comes back bad (missing member, read-only tag, bad quality), `efc.ui` logs the tag path and the quality.
+- Sections and controls that are Supervisor+ or Engineer+ (bypass, alarm limits, configuration, tuning, the Maintenance section) stay hidden below their level, as before (decision 27).
+- The HMI check is a convenience, not security: enforce access in Perspective security and the PLC.
+
 ## Placing templates in a flex container
 Template text is sized in vh, so it grows with the screen. The box a template sits in has to grow the same way, or the text outgrows it and clips. When you drop a template into a flex container, the Designer sets the child's `position.basis` to a pixel size. That pins the box: at 1080p it fits, but on a taller screen the vh text gets bigger while the box doesn't, and the bottom row is cut off with a scrollbar.
 

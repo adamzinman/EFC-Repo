@@ -170,3 +170,4 @@
 | `Mode/ManualJoined` | Add to a State/* chip when Mode/ManualSplit sits on its left (squares the joined corners) |
 | `Mode/ManualSplitStatus` | Status segment paired with Mode/ManualSplit (plain-text statuses) |
 | `Button/Command` | Manual command button on P&ID templates: blank square, raised, sinks when pressed |
+| `Indicator/Lock` | Lock icon over a command button the user's access level doesn't allow (decision 33); clicks pass through to the button |

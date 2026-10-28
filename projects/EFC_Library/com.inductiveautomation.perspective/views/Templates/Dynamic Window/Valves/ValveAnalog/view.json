@@ -46,7 +46,7 @@
       "binding": {
         "type": "property",
         "config": {
-          "path": "session.props.auth.user.roles"
+          "path": "session.props.auth.securityLevels"
         },
         "transforms": [
           {
@@ -962,7 +962,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "Auto"
+                      "name": "Auto",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "shrink": 0,
@@ -973,14 +977,31 @@
                       "text": "AUTO",
                       "style": {
                         "classes": "Button/Toggle/Off"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
-                      "position.display": {
+                      "props.image.icon.path": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.level} >= 1"
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
                           }
                         }
                       },
@@ -1009,7 +1030,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "Man"
+                      "name": "Man",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "shrink": 0,
@@ -1020,14 +1045,31 @@
                       "text": "MAN",
                       "style": {
                         "classes": "Button/Toggle/Off"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
-                      "position.display": {
+                      "props.image.icon.path": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.level} >= 1"
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
                           }
                         }
                       },
@@ -1056,7 +1098,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "Maint"
+                      "name": "Maint",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Maintenance access"
+                      }
                     },
                     "position": {
                       "shrink": 0,
@@ -1067,14 +1113,31 @@
                       "text": "MAINT",
                       "style": {
                         "classes": "Button/Toggle/Off"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
-                      "position.display": {
+                      "props.image.icon.path": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.level} >= 2"
+                            "expression": "if({view.custom.level} < 2, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 2"
                           }
                         }
                       },
@@ -1103,7 +1166,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "OOS"
+                      "name": "OOS",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Maintenance access"
+                      }
                     },
                     "position": {
                       "shrink": 0,
@@ -1114,14 +1181,31 @@
                       "text": "OOS",
                       "style": {
                         "classes": "Button/Toggle/Off"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
-                      "position.display": {
+                      "props.image.icon.path": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.level} >= 2"
+                            "expression": "if({view.custom.level} < 2, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 2"
                           }
                         }
                       },
@@ -1167,16 +1251,6 @@
           "alignItems": "stretch",
           "style": {
             "classes": "Container/GroupBox Util/Gap/S"
-          }
-        },
-        "propConfig": {
-          "position.display": {
-            "binding": {
-              "type": "expr",
-              "config": {
-                "expression": "{view.custom.level} >= 1"
-              }
-            }
           }
         },
         "children": [
@@ -1258,7 +1332,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "B0"
+                      "name": "B0",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "shrink": 0,
@@ -1269,14 +1347,31 @@
                       "text": "RESET",
                       "style": {
                         "classes": "Button/Default"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
-                      "position.display": {
+                      "props.image.icon.path": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.level} >= 1"
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
                           }
                         }
                       }
@@ -1425,7 +1520,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "P0"
+                      "name": "P0",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "shrink": 0,
@@ -1436,14 +1535,39 @@
                       "text": "0%",
                       "style": {
                         "classes": "Button/Default"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
+                      "props.image.icon.path": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
+                          }
+                        }
+                      },
                       "props.enabled": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk}"
+                            "expression": "({view.custom.level} < 1) || ({view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk})"
                           }
                         }
                       }
@@ -1464,7 +1588,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "P25"
+                      "name": "P25",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "shrink": 0,
@@ -1475,14 +1603,39 @@
                       "text": "25%",
                       "style": {
                         "classes": "Button/Default"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
+                      "props.image.icon.path": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
+                          }
+                        }
+                      },
                       "props.enabled": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk}"
+                            "expression": "({view.custom.level} < 1) || ({view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk})"
                           }
                         }
                       }
@@ -1503,7 +1656,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "P50"
+                      "name": "P50",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "shrink": 0,
@@ -1514,14 +1671,39 @@
                       "text": "50%",
                       "style": {
                         "classes": "Button/Default"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
+                      "props.image.icon.path": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
+                          }
+                        }
+                      },
                       "props.enabled": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk}"
+                            "expression": "({view.custom.level} < 1) || ({view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk})"
                           }
                         }
                       }
@@ -1542,7 +1724,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "P75"
+                      "name": "P75",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "shrink": 0,
@@ -1553,14 +1739,39 @@
                       "text": "75%",
                       "style": {
                         "classes": "Button/Default"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
+                      "props.image.icon.path": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
+                          }
+                        }
+                      },
                       "props.enabled": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk}"
+                            "expression": "({view.custom.level} < 1) || ({view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk})"
                           }
                         }
                       }
@@ -1581,7 +1792,11 @@
                     "type": "ia.input.button",
                     "version": 0,
                     "meta": {
-                      "name": "P100"
+                      "name": "P100",
+                      "tooltip": {
+                        "enabled": false,
+                        "text": "Requires Operator access"
+                      }
                     },
                     "position": {
                       "shrink": 0,
@@ -1592,14 +1807,39 @@
                       "text": "100%",
                       "style": {
                         "classes": "Button/Default"
+                      },
+                      "image": {
+                        "icon": {
+                          "path": "",
+                          "color": "#1F1F1F"
+                        },
+                        "position": "left",
+                        "width": 14,
+                        "height": 14
                       }
                     },
                     "propConfig": {
+                      "props.image.icon.path": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                          }
+                        }
+                      },
+                      "meta.tooltip.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} < 1"
+                          }
+                        }
+                      },
                       "props.enabled": {
                         "binding": {
                           "type": "expr",
                           "config": {
-                            "expression": "{view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk}"
+                            "expression": "({view.custom.level} < 1) || ({view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk})"
                           }
                         }
                       }
@@ -2471,7 +2711,11 @@
                 "type": "ia.input.button",
                 "version": 0,
                 "meta": {
-                  "name": "Ack"
+                  "name": "Ack",
+                  "tooltip": {
+                    "enabled": false,
+                    "text": "Requires Operator access"
+                  }
                 },
                 "position": {
                   "shrink": 0,
@@ -2482,14 +2726,31 @@
                   "text": "ACK",
                   "style": {
                     "classes": "Button/Default"
+                  },
+                  "image": {
+                    "icon": {
+                      "path": "",
+                      "color": "#1F1F1F"
+                    },
+                    "position": "left",
+                    "width": 14,
+                    "height": 14
                   }
                 },
                 "propConfig": {
-                  "position.display": {
+                  "props.image.icon.path": {
                     "binding": {
                       "type": "expr",
                       "config": {
-                        "expression": "{view.custom.level} >= 1"
+                        "expression": "if({view.custom.level} < 1, 'material/lock', '')"
+                      }
+                    }
+                  },
+                  "meta.tooltip.enabled": {
+                    "binding": {
+                      "type": "expr",
+                      "config": {
+                        "expression": "{view.custom.level} < 1"
                       }
                     }
                   }

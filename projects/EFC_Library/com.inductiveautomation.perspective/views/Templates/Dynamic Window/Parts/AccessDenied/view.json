@@ -1,0 +1,192 @@
+{
+  "custom": {},
+  "params": {
+    "action": "",
+    "need": "",
+    "have": "",
+    "user": ""
+  },
+  "propConfig": {
+    "params.action": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.need": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.have": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.user": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {
+    "defaultSize": {
+      "width": 360,
+      "height": 170
+    }
+  },
+  "root": {
+    "type": "ia.container.flex",
+    "version": 0,
+    "meta": {
+      "name": "root"
+    },
+    "position": {
+      "shrink": 0,
+      "grow": 0
+    },
+    "props": {
+      "direction": "column",
+      "alignItems": "stretch",
+      "style": {
+        "classes": "Container/Popup Util/Gap/L"
+      }
+    },
+    "children": [
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "Title"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0
+        },
+        "props": {
+          "text": "Invalid access level",
+          "style": {
+            "classes": "Text/Subheader"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "Msg"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "classes": "Text/Body Text/Mod/Wrap"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "{view.params.action} + ' requires ' + {view.params.need} + ' access or higher.'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "Who"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "classes": "Text/Caption Text/Mod/Wrap"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(len({view.params.user}) > 0, 'Signed in as ' + {view.params.user} + ' (' + {view.params.have} + ').', 'Not signed in (' + {view.params.have} + ').')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "Note"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0
+        },
+        "props": {
+          "text": "Nothing was written.",
+          "style": {
+            "classes": "Text/Caption"
+          }
+        }
+      },
+      {
+        "type": "ia.container.flex",
+        "version": 0,
+        "meta": {
+          "name": "Buttons"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0,
+          "basis": "3.333vh"
+        },
+        "props": {
+          "direction": "row",
+          "alignItems": "stretch",
+          "style": {
+            "classes": "Util/Gap/M"
+          },
+          "justify": "flex-end"
+        },
+        "children": [
+          {
+            "type": "ia.input.button",
+            "version": 0,
+            "meta": {
+              "name": "Ok"
+            },
+            "position": {
+              "shrink": 0,
+              "grow": 1,
+              "basis": "2.963vh"
+            },
+            "props": {
+              "text": "OK",
+              "style": {
+                "classes": "Button/Default"
+              }
+            },
+            "events": {
+              "component": {
+                "onActionPerformed": {
+                  "type": "script",
+                  "scope": "G",
+                  "config": {
+                    "script": "\tsystem.perspective.closePopup('efcAccessDenied')"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

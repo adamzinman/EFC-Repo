@@ -6,7 +6,9 @@ and the efc.ui script library (windows open in the right dock dw_Right, decision
 Every window is 400 x 860 at 1080p (37.04vh x 79.63vh, decision 25), binds one EFCLib v1 T_ type through
 view.params.tagPath and uses EFC_Styles classes only. Role levels (efc.ui.ROLES): 1 Operator commands and
 setpoints, 2 Maintenance MAINT/OOS/JOG/simulate/maint reset, 3 Supervisor bypass + shelving (reason, audit),
-4 Engineer limits, configuration and tuning. Controls below the user's level are hidden, not greyed.
+4 Engineer limits, configuration and tuning. Command buttons (mode, commands, ACK, RESET) below the user's level
+stay visible with a lock and a press opens Parts/AccessDenied (decision 33); other controls below the level are hidden.
+The level is efc.ui.level(session.props.auth.securityLevels).
 """
 import os, re, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
@@ -48,21 +50,32 @@ def label(name, text="", cls="Text/Label", grow=0, basis=None, pc=None):
     if basis: pos["basis"] = basis
     return comp("ia.display.label", name, {"text": text, "style": {"classes": cls}}, pos, pc)
 
-def button(name, text, body, cls="Button/Command", show=None, enabled=None, grow=1):
-    pc = {}
-    if show: pc["position.display"] = expr(show)
-    if enabled: pc["props.enabled"] = expr(enabled)
-    return comp("ia.input.button", name, {"text": text, "style": {"classes": cls}}, {"shrink": 0, "grow": grow, "basis": v(32)},
-                pc or None, events=on_action(body))
-
 def lvl(n): return f"{{view.custom.level}} >= {n}"
 OP, MAINT, SUP, ENG = 1, 2, 3, 4
+ROLE_NAMES = ["Guest", "Operator", "Maintenance", "Supervisor", "Engineer", "Admin"]
+
+def button(name, text, body, cls="Button/Command", show=None, enabled=None, grow=1, need=None):
+    """need: minimum role level of a command button (decision 33). Below it the button stays visible and pressable
+    with a lock icon and a 'Requires <role> access' tooltip; efc.ui refuses the press and opens Parts/AccessDenied."""
+    pc, props, meta = {}, {"text": text, "style": {"classes": cls}}, None
+    if show: pc["position.display"] = expr(show)
+    if need:
+        locked = f"{{view.custom.level}} < {need}"
+        props["image"] = {"icon": {"path": "", "color": "#1F1F1F"}, "position": "left", "width": 14, "height": 14}
+        pc["props.image.icon.path"] = expr(f"if({locked}, 'material/lock', '')")
+        pc["meta.tooltip.enabled"] = expr(locked)
+        meta = {"enabled": False, "text": f"Requires {ROLE_NAMES[need]} access"}
+        if enabled: enabled = f"({locked}) || ({enabled})"
+    if enabled: pc["props.enabled"] = expr(enabled)
+    b = comp("ia.input.button", name, props, {"shrink": 0, "grow": grow, "basis": v(32)}, pc or None, events=on_action(body))
+    if meta: b["meta"]["tooltip"] = meta
+    return b
 
 class View:
     """Collects the T_ members a window reads; each becomes custom.<key> with an indirect tag binding."""
     def __init__(self):
         self.custom, self.pc = {"level": 0}, {
-            "custom.level": {"binding": {"type": "property", "config": {"path": "session.props.auth.user.roles"},
+            "custom.level": {"binding": {"type": "property", "config": {"path": "session.props.auth.securityLevels"},
                                          "transforms": [{"type": "script", "code": "\treturn efc.ui.level(value)"}]}}}
     def m(self, member):
         k = "m_" + re.sub(r"\W", "_", member)
@@ -147,7 +160,7 @@ def mode_section(vw, base="Mode/"):
     m = lambda x: vw.m(base + x)
     cur = f"if({m('Sts_OOS')}, 'OOS', if({m('Sts_Maint')}, 'MAINT', if({m('Sts_Man')}, 'MAN', 'AUTO')))"
     btn = lambda n, t, mem, lv, active: button(n, t, f"efc.ui.cmd(self, '{base}{mem}', True, {lv}, audit={lv >= MAINT})",
-                                               show=lvl(lv), cls="Button/Toggle/Off")
+                                               need=lv, cls="Button/Toggle/Off")
     b = [btn("Auto", "AUTO", "Cmd_Auto", OP, "Sts_Auto"), btn("Man", "MAN", "Cmd_Man", OP, "Sts_Man"),
          btn("Maint", "MAINT", "Cmd_Maint", MAINT, "Sts_Maint"), btn("OOS", "OOS", "Cmd_OOS", MAINT, "Sts_OOS")]
     for x, s in zip(b, ["Sts_Auto", "Sts_Man", "Sts_Maint", "Sts_OOS"]):
@@ -164,19 +177,20 @@ def ready_expr(vw, perm=True, avail=True, mode=True):
 
 def commands(vw, buttons, extra=(), hint="Enabled in MAN, available, permitted, not interlocked, not LOCAL"):
     """buttons: [(TEXT, member, class, minlvl, enabled_expr or None)] - uniform size, one row of up to four."""
-    b = [button(f"B{i}", t, f"efc.ui.cmd(self, '{mem}', True, {lv})", cls=cls, show=lvl(lv), enabled=en)
+    b = [button(f"B{i}", t, f"efc.ui.cmd(self, '{mem}', True, {lv})", cls=cls, need=lv, enabled=en)
          for i, (t, mem, cls, lv, en) in enumerate(buttons)]
     for x, (t, mem, cls, lv, en) in zip(b, buttons):
         if mem == "Cmd_Jog":                                       # hold-to-jog: TRUE on press, FALSE on release / leave
-            # press writes only while the button is enabled (DOM events can still fire on a disabled button); release always writes
+            # press writes only while the button is enabled (DOM events can still fire on a disabled button); release always
+            # writes, without the AccessDenied popup (the press already showed it)
             x["events"] = {"dom": {k: script((f"if self.props.enabled:\n\tefc.ui.cmd(self, '{mem}', True, {lv})" if val else
-                                              f"efc.ui.cmd(self, '{mem}', False, {lv})")) for k, val in
+                                              f"efc.ui.cmd(self, '{mem}', False, {lv}, notify=False)")) for k, val in
                                    (("onMouseDown", True), ("onTouchStart", True), ("onMouseUp", False),
                                     ("onMouseLeave", False), ("onTouchEnd", False))}}
     kids = [flex("Buttons", "row", b, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})] + list(extra)
     if hint:
         kids.append(label("Hint", hint, "Text/Micro Text/Color/Muted"))
-    return section("Commands", "Commands", kids, show=lvl(OP))
+    return section("Commands", "Commands", kids)
 
 def intlk(name, title, sub):
     """Embedded Templates/Dynamic Window/Parts/IntlkList for the T_Intlk member `sub` (Perm or Intlk)."""
@@ -198,7 +212,7 @@ def alarms(vw, items):
     return section("Alarms", "Alarms", [
         label("None", "No active alarms", "Text/Caption Text/Color/Muted", pc={"position.display": expr(f"!({any_a})")}),
         flex("List", "column", rows, extra={"style": {"classes": "", "gap": v(2)}}),
-        button("Ack", "ACK", f"efc.ui.ackAll(self, {names!r})", cls="Button/Default", show=lvl(OP), grow=0)])
+        button("Ack", "ACK", f"efc.ui.ackAll(self, {names!r})", cls="Button/Default", need=OP, grow=0)])
 
 def trend(pens, title="History"):
     """Embedded Templates/Dynamic Window/Parts/Trend; its expanded param (in/out) grows the graph to about 400 x 760 inside the window
@@ -291,7 +305,7 @@ def valve_discrete():
 def valve_analog():
     vw = View(); m = vw.m
     rd = f"{m('Mode/Sts_Man')} && !{m('Sts_Intlk')}"
-    presets = [button(f"P{p}", f"{p}%", f"efc.ui.cmd(self, 'Cmd_ManPos', {float(p)}, 1)", cls="Button/Default", enabled=rd) for p in (0, 25, 50, 75, 100)]
+    presets = [button(f"P{p}", f"{p}%", f"efc.ui.cmd(self, 'Cmd_ManPos', {float(p)}, 1)", cls="Button/Default", enabled=rd, need=OP) for p in (0, 25, 50, 75, 100)]
     return window("Templates/Dynamic Window/Valves/ValveAnalog", "T_CValve", vw, [
         header(vw),
         banner(vw, [(" || ".join(f"isNull({m(x)}) || !isGood({m(x)})" for x in ("Val_Pos", "Sts_Closed")), "UNKNOWN", "State/Unknown"),
@@ -351,8 +365,8 @@ def vfd():
     def cmd(vw):
         rd = f"{vw.m('Mode/Sts_Man')} && {vw.m('Sts_Avail')}"
         return [entry(vw, "Spd", "Speed", "Cmd_Spd", OP, "", enabled=rd),
-                flex("Dir", "row", [button("Fwd", "FWD", "efc.ui.cmd(self, 'Cmd_Rev', False, 1)", cls="Button/Default", enabled=rd),
-                                    button("Rev", "REV", "efc.ui.cmd(self, 'Cmd_Rev', True, 1)", cls="Button/Default", enabled=rd)],
+                flex("Dir", "row", [button("Fwd", "FWD", "efc.ui.cmd(self, 'Cmd_Rev', False, 1)", cls="Button/Default", enabled=rd, need=OP),
+                                    button("Rev", "REV", "efc.ui.cmd(self, 'Cmd_Rev', True, 1)", cls="Button/Default", enabled=rd, need=OP)],
                      basis=v(32), pc={"position.display": expr(vw.m("Cfg_Reversible"))}, extra={"style": {"classes": "", "gap": v(4)}})]
     def vals(vw):
         m = vw.m; eu = m("Cfg_SpdEU")
@@ -445,7 +459,7 @@ def process_value():
 def loop():
     vw = View(); m = vw.m
     eu = m("Cfg_PVEU")
-    mb = lambda n, t, mem, sts: button(n, t, f"efc.ui.cmd(self, '{mem}', True, 1)", cls="Button/Toggle/Off", show=lvl(OP))
+    mb = lambda n, t, mem, sts: button(n, t, f"efc.ui.cmd(self, '{mem}', True, 1)", cls="Button/Toggle/Off", need=OP)
     b = []
     for n, t, mem, sts in (("Man", "MAN", "Cmd_Man", "Sts_Man"), ("Auto", "AUTO", "Cmd_Auto", "Sts_Auto"), ("Cas", "CAS", "Cmd_Cas", "Sts_Cas")):
         x = mb(n, t, mem, sts); x["propConfig"]["props.style.classes"] = cls_expr(f"if({m(sts)}, 'Button/Toggle/On', 'Button/Toggle/Off')", "Button/Toggle/Off"); b.append(x)
@@ -454,7 +468,7 @@ def loop():
         banner(vw, [(m("Sts_Intlk"), "INTERLOCKED", "State/Fault"), (m("Sts_Track"), "TRACKING", "State/Transition"),
                     (m("Sts_Cas"), "CASCADE", "State/Running"), (m("Sts_Auto"), "AUTO", "State/Running"), (m("Sts_Man"), "MANUAL", "State/Stopped")],
                [(m("Sts_WindupHi"), "WINDUP HI"), (m("Sts_WindupLo"), "WINDUP LO"), (m("Sts_SPRamping"), "RAMPING")]),
-        section("Mode", "Mode", [flex("Buttons", "row", b, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})], show=lvl(OP)),
+        section("Mode", "Mode", [flex("Buttons", "row", b, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})]),
         section("Values", "Values", [row("PV", "PV", fmt(m("Val_PV")), eu), row("SP", "SP", fmt(m("Val_SP")), eu),
                                      row("CV", "Output", fmt(m("Out_CV")), "'%'"), row("Err", "Error", fmt(m("Val_Err")), eu),
                                      entry(vw, "SPe", "Setpoint", "Cmd_SP", OP, "", enabled=f"!{m('Sts_Cas')}"),
@@ -519,7 +533,7 @@ def intlk_list():
              extra={"alignItems": "center"}),
         *rows,
         button("Reset", "RESET", "efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)", cls="Button/Default",
-               show=f"{lvl(MAINT)} && {m('Sts_ResetReq')}", grow=0),
+               show=m('Sts_ResetReq'), need=MAINT, grow=0),
     ], extra={"style": {"classes": "Container/GroupBox", "gap": v(2)}})
     params = {"tagPath": "", "title": ""}
     pc = dict(vw.pc, **{"params." + p: {"paramDirection": "input", "persistent": True} for p in params})
@@ -547,6 +561,24 @@ def bypass_confirm():
     pc = dict(vw.pc, **{"params." + p: {"paramDirection": "input", "persistent": True} for p in params})
     return "Templates/Dynamic Window/Parts/BypassConfirm", {"custom": vw.custom, "params": params, "propConfig": pc,
                                          "props": {"defaultSize": {"width": 360, "height": 260}}, "root": root}
+
+def access_denied():
+    """Templates/Dynamic Window/Parts/AccessDenied: efc.ui.denied opens it when a command is pressed below the user's level."""
+    msg = "{view.params.action} + ' requires ' + {view.params.need} + ' access or higher.'"
+    who = ("if(len({view.params.user}) > 0, 'Signed in as ' + {view.params.user} + ' (' + {view.params.have} + ').', "
+           "'Not signed in (' + {view.params.have} + ').')")
+    root = flex("root", "column", [
+        label("Title", "Invalid access level", "Text/Subheader"),
+        label("Msg", "", "Text/Body Text/Mod/Wrap", pc={"props.text": expr(msg)}),
+        label("Who", "", "Text/Caption Text/Mod/Wrap", pc={"props.text": expr(who)}),
+        label("Note", "Nothing was written.", "Text/Caption"),
+        flex("Buttons", "row", [button("Ok", "OK", "system.perspective.closePopup('efcAccessDenied')", cls="Button/Default")],
+             basis=v(36), extra={"justify": "flex-end", "style": {"classes": "", "gap": v(6)}}),
+    ], extra={"style": {"classes": "Container/Popup", "gap": v(8)}})
+    params = {"action": "", "need": "", "have": "", "user": ""}
+    pc = {"params." + p: {"paramDirection": "input", "persistent": True} for p in params}
+    return "Templates/Dynamic Window/Parts/AccessDenied", {"custom": {}, "params": params, "propConfig": pc,
+                                           "props": {"defaultSize": {"width": 360, "height": 170}}, "root": root}
 
 RANGES = [("24h", 1440), ("8h", 480), ("1h", 60), ("30m", 30), ("5m", 5)]
 def trend_part():
@@ -582,7 +614,7 @@ def trend_part():
 
 # ----------------------------------------------------------------- write
 VIEWS = [valve_discrete, valve_analog, rotating, vfd, heater, heat_transfer, process_value, loop, io_card,
-         intlk_list, bypass_confirm, trend_part]
+         intlk_list, bypass_confirm, access_denied, trend_part]
 
 def build():
     proj = project_dir(PROJECT)
