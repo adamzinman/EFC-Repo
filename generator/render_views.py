@@ -891,13 +891,31 @@ GROUPS = [
     ("Rotating equipment", "Templates/Rotating/"),
     ("Heat transfer", "Templates/HeatTransfer/"),
     ("Process values", "Templates/ProcessValues/"),
+    ("Analog indicators", "Templates/AnalogIndicator/"),
     ("PID loops", "Templates/Loops/"),
     ("Station faceplates", "Templates/Station/"),
     ("x80 I/O card faceplates", "Templates/IO/"),
+    ("Dynamic windows", "Templates/Dynamic Window/"),
 ]
 
 IO_NAMES = {}
 PARAM_OVERRIDES = {f"Templates/IO/Faceplates/{m}": {"cardPath": f"[default]IO_Demo/Rack0/{f}"} for f, m, *_ in IO_CARDS}
+# Dynamic windows open from a device (efc.ui.openDynamic), so they get a demo instance of their type from tags/PID_Demo_Instances.json etc.
+# Popups take their own params. There is no demo T_Intlk instance: the interlock list comes from XV104 (Intlk folder, PSH-201 condition).
+PARAM_OVERRIDES.update({
+    "Templates/Dynamic Window/Parts/AccessDenied": {"action": "XV101 Cmd_Open", "need": "Operator", "have": "Guest", "user": "jsmith"},
+    "Templates/Dynamic Window/Parts/BypassConfirm": {"tagPath": "[default]PID_Demo/XV104", "idx": 0, "desc": "PSH-201 high pressure"},
+    "Templates/Dynamic Window/Parts/IntlkList": {"tagPath": "[default]PID_Demo/XV104"},
+    "Templates/Dynamic Window/Parts/Trend": {"tagPath": "[default]PID_Demo/P101"},
+    "Templates/Dynamic Window/Valves/ValveDiscrete": {"tagPath": "[default]PID_Demo/XV101"},     # T_DValve
+    "Templates/Dynamic Window/Valves/ValveAnalog": {"tagPath": "[default]PID_Demo/FV101"},       # T_CValve
+    "Templates/Dynamic Window/Rotating/Rotating": {"tagPath": "[default]PID_Demo/P101"},         # T_Motor
+    "Templates/Dynamic Window/Rotating/VFD": {"tagPath": "[default]PID_Demo/M601"},              # T_VFD
+    "Templates/Dynamic Window/HeatTransfer/Heater": {"tagPath": "[default]PID_Demo/E401"},       # T_Heater
+    "Templates/Dynamic Window/Loops/Loop": {"tagPath": "[default]PID_Demo/TIC101"},              # T_PID
+    "Templates/Dynamic Window/ProcessValues/ProcessValue": {"tagPath": "[default]PV_Demo/PT001"},  # T_AI
+    "Templates/Dynamic Window/IO/IOCard": {"model": "BMXDDI1602"},
+})
 
 def main():
     global TAGS
@@ -914,7 +932,7 @@ def main():
             if not v.startswith(pre):
                 continue
             rest = v[len(pre):]
-            kind = "demo" if "/_Demo" in "/" + rest or rest.startswith("_Demo") else "part" if rest.startswith("Parts/") else "template"
+            kind = "demo" if "/_Demo" in "/" + rest or "/_Examples" in "/" + rest else "part" if rest.startswith("Parts/") else "template"
             items.append((group, v, kind))
     items += [("Library", "Templates/_Demo", "demo"), ("Library", "Styles/_Catalog", "demo")]
     out_t = os.path.join(OUT, "templates")

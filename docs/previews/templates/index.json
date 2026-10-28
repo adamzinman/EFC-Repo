@@ -270,6 +270,84 @@
   }
  },
  {
+  "group": "Analog indicators",
+  "path": "Templates/AnalogIndicator/A_RangeBar",
+  "kind": "template",
+  "png": "templates/AnalogIndicator/A_RangeBar.png",
+  "size": "256\u00d7120",
+  "params": {
+   "tagPath": "[default]KPI/KPI_101",
+   "LabelMode": "Both",
+   "ShowMinMax": true,
+   "Format": "#,##0.0"
+  },
+  "bindings": {
+   "ok": 234,
+   "fail": 0
+  }
+ },
+ {
+  "group": "Analog indicators",
+  "path": "Templates/AnalogIndicator/B_PointerScale",
+  "kind": "template",
+  "png": "templates/AnalogIndicator/B_PointerScale.png",
+  "size": "128\u00d7330",
+  "params": {
+   "tagPath": "[default]KPI/KPI_101",
+   "ShowLimitType": true,
+   "ShowLimitValue": true,
+   "Format": "#,##0.0"
+  },
+  "bindings": {
+   "ok": 244,
+   "fail": 0
+  }
+ },
+ {
+  "group": "Analog indicators",
+  "path": "Templates/AnalogIndicator/C_CompactRow",
+  "kind": "template",
+  "png": "templates/AnalogIndicator/C_CompactRow.png",
+  "size": "200\u00d746",
+  "params": {
+   "tagPath": "[default]KPI/KPI_101",
+   "Header": "Tag",
+   "Format": "#,##0.0"
+  },
+  "bindings": {
+   "ok": 222,
+   "fail": 0
+  }
+ },
+ {
+  "group": "Analog indicators",
+  "path": "Templates/AnalogIndicator/D_MiniColumn",
+  "kind": "template",
+  "png": "templates/AnalogIndicator/D_MiniColumn.png",
+  "size": "64\u00d7200",
+  "params": {
+   "tagPath": "[default]KPI/KPI_101",
+   "Header": "Tag",
+   "Format": "#,##0.0"
+  },
+  "bindings": {
+   "ok": 222,
+   "fail": 0
+  }
+ },
+ {
+  "group": "Analog indicators",
+  "path": "Templates/AnalogIndicator/_Examples",
+  "kind": "demo",
+  "png": "templates/AnalogIndicator/_Examples.png",
+  "size": "900\u00d7420",
+  "params": {},
+  "bindings": {
+   "ok": 1366,
+   "fail": 0
+  }
+ },
+ {
   "group": "PID loops",
   "path": "Templates/Loops/Loop_B1_Bar",
   "kind": "template",
@@ -351,8 +429,8 @@
    "tagPath": "[default]Station_Demo/Station_1"
   },
   "bindings": {
-   "ok": 195,
-   "fail": 0
+   "ok": 211,
+   "fail": 3
   }
  },
  {
@@ -377,8 +455,8 @@
   "size": "1920\u00d71080",
   "params": {},
   "bindings": {
-   "ok": 1609,
-   "fail": 3
+   "ok": 1673,
+   "fail": 15
   }
  },
  {
@@ -577,6 +655,211 @@
   "bindings": {
    "ok": 207,
    "fail": 0
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/HeatTransfer/HeatTransfer",
+  "kind": "template",
+  "png": "templates/Dynamic Window/HeatTransfer/HeatTransfer.png",
+  "size": "400\u00d7860",
+  "params": {},
+  "bindings": {
+   "ok": 207,
+   "fail": 6
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/HeatTransfer/Heater",
+  "kind": "template",
+  "png": "templates/Dynamic Window/HeatTransfer/Heater.png",
+  "size": "400\u00d7860",
+  "params": {
+   "tagPath": "[default]PID_Demo/E401"
+  },
+  "bindings": {
+   "ok": 1372,
+   "fail": 12
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/IO/IOCard",
+  "kind": "template",
+  "png": "templates/Dynamic Window/IO/IOCard.png",
+  "size": "400\u00d7860",
+  "params": {
+   "model": "BMXDDI1602"
+  },
+  "bindings": {
+   "ok": 33,
+   "fail": 3
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/Loops/Loop",
+  "kind": "template",
+  "png": "templates/Dynamic Window/Loops/Loop.png",
+  "size": "400\u00d7860",
+  "params": {
+   "tagPath": "[default]PID_Demo/TIC101"
+  },
+  "bindings": {
+   "ok": 745,
+   "fail": 9
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/Parts/AccessDenied",
+  "kind": "part",
+  "png": "templates/Dynamic Window/Parts/AccessDenied.png",
+  "size": "360\u00d7170",
+  "params": {
+   "action": "XV101 Cmd_Open",
+   "need": "Operator",
+   "have": "Guest",
+   "user": "jsmith"
+  },
+  "bindings": {
+   "ok": 4,
+   "fail": 0
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/Parts/BypassConfirm",
+  "kind": "part",
+  "png": "templates/Dynamic Window/Parts/BypassConfirm.png",
+  "size": "360\u00d7260",
+  "params": {
+   "tagPath": "[default]PID_Demo/XV104",
+   "idx": 0,
+   "desc": "PSH-201 high pressure"
+  },
+  "bindings": {
+   "ok": 6,
+   "fail": 3
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/Parts/IntlkList",
+  "kind": "part",
+  "png": "templates/Dynamic Window/Parts/IntlkList.png",
+  "size": "384\u00d7120",
+  "params": {
+   "tagPath": "[default]PID_Demo/XV104",
+   "title": "Permissives"
+  },
+  "bindings": {
+   "ok": 530,
+   "fail": 3
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/Parts/Trend",
+  "kind": "part",
+  "png": "templates/Dynamic Window/Parts/Trend.png",
+  "size": "384\u00d7170",
+  "params": {
+   "tagPath": "[default]PID_Demo/P101",
+   "pens": [
+    "Val_Current",
+    "Sts_Running"
+   ],
+   "expanded": false
+  },
+  "bindings": {
+   "ok": 16,
+   "fail": 3
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/ProcessValues/ProcessValue",
+  "kind": "template",
+  "png": "templates/Dynamic Window/ProcessValues/ProcessValue.png",
+  "size": "400\u00d7860",
+  "params": {
+   "tagPath": "[default]PV_Demo/PT001"
+  },
+  "bindings": {
+   "ok": 211,
+   "fail": 6
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/Rotating/Rotating",
+  "kind": "template",
+  "png": "templates/Dynamic Window/Rotating/Rotating.png",
+  "size": "400\u00d7860",
+  "params": {
+   "tagPath": "[default]PID_Demo/P101"
+  },
+  "bindings": {
+   "ok": 1356,
+   "fail": 12
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/Rotating/VFD",
+  "kind": "template",
+  "png": "templates/Dynamic Window/Rotating/VFD.png",
+  "size": "400\u00d7860",
+  "params": {
+   "tagPath": "[default]PID_Demo/M601"
+  },
+  "bindings": {
+   "ok": 1444,
+   "fail": 12
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/Station/Station",
+  "kind": "template",
+  "png": "templates/Dynamic Window/Station/Station.png",
+  "size": "400\u00d7860",
+  "params": {
+   "tagPath": "[default]Station_Demo/Station_1"
+  },
+  "bindings": {
+   "ok": 293,
+   "fail": 3
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/Valves/ValveAnalog",
+  "kind": "template",
+  "png": "templates/Dynamic Window/Valves/ValveAnalog.png",
+  "size": "400\u00d7860",
+  "params": {
+   "tagPath": "[default]PID_Demo/FV101"
+  },
+  "bindings": {
+   "ok": 770,
+   "fail": 9
+  }
+ },
+ {
+  "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/Valves/ValveDiscrete",
+  "kind": "template",
+  "png": "templates/Dynamic Window/Valves/ValveDiscrete.png",
+  "size": "400\u00d7860",
+  "params": {
+   "tagPath": "[default]PID_Demo/XV101"
+  },
+  "bindings": {
+   "ok": 1303,
+   "fail": 12
   }
  },
  {
