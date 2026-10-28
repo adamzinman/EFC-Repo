@@ -26,9 +26,9 @@ One interlock or permissive group (`T_Intlk`) with up to 16 conditions. It shows
 - a **BYPASS** button, shown to level 3 and above when `Cfg_Bypassable[n]` is TRUE and the condition is not bypassed;
 - an **UNBYP** button, shown to level 3 and above while the condition is bypassed.
 
-**RESET.** One button under the rows, shown to level 2 and above while `Sts_ResetReq` is TRUE (conditions healthy, reset required). It calls `efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)`, which re-checks the role level (Maintenance, 2) and writes an `EFC write` audit record.
+**RESET.** One button under the rows, shown to every level while `Sts_ResetReq` is TRUE (conditions healthy, reset required). Below Maintenance (level 2) it shows a lock icon and the tooltip "Requires Maintenance access". It calls `efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)`, which re-checks the role level (Maintenance, 2) and writes an `EFC write` audit record. Below level 2 nothing is written: the press is logged and answered with the [AccessDenied](./AccessDenied.md) popup.
 
-**Role levels** come from `efc.ui.level` on `session.props.auth.user.roles`: 0 Guest, 1 Operator, 2 Maintenance, 3 Supervisor, 4 Engineer, 5 Admin. The rows use `custom.level` only for the button visibility. BYPASS and UNBYP are Supervisor (3) and above. RESET is Maintenance (2) and above, per the generator docstring.
+**Role levels** come from `efc.ui.level` on `session.props.auth.securityLevels` (names matched case-insensitively, site names through `efc.ui.ROLE_ALIASES`): 0 Guest, 1 Operator, 2 Maintenance, 3 Supervisor, 4 Engineer, 5 Admin. The rows use `custom.level` for the button visibility (BYPASS and UNBYP, Supervisor (3) and above, stay hidden below it) and for the RESET lock. RESET needs Maintenance (2) and above; below it the button is visible with a lock (decision 33).
 
 ### Bypass, unbypass and the BypassConfirm popup
 
@@ -41,9 +41,9 @@ One interlock or permissive group (`T_Intlk`) with up to 16 conditions. It shows
 
 If `efc.ui.bypass` returns False, the popup stays open with no message. The popup does not read `Cfg_BypassMax`. The time limit is the PLC's (the popup note says the bypass times out at `Cfg_BypassMax`; this repository does not show that logic).
 
-**Unbypass.** UNBYP on row n runs `efc.ui.unbypass(self, tagPath, n)` directly, with no popup and no reason. It returns unless the user is at level 3 or above. Otherwise it writes `TRUE` to `Cmd_Unbypass[n]` (one-shot) and writes an audit record `EFC unbypass`, target `<tagPath>/n`, with no value.
+**Unbypass.** UNBYP on row n runs `efc.ui.unbypass(self, tagPath, n)` directly, with no popup and no reason. Below level 3 it writes nothing and calls `efc.ui.denied` (WARN log and the AccessDenied popup); the UNBYP button is hidden below level 3, so this guards only against a stale level. Otherwise it writes `TRUE` to `Cmd_Unbypass[n]` (one-shot) and writes an audit record `EFC unbypass`, target `<tagPath>/n`, with no value.
 
-**Reset.** RESET calls `efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)`. The function returns without writing if the user is below Maintenance (2). Otherwise it writes `TRUE` to `<tagPath>/Cmd_Reset` (one-shot) and writes an `EFC write` audit record (target `<tagPath>/Cmd_Reset`, value `True`).
+**Reset.** RESET calls `efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)`. Below Maintenance (2) the function does not write: it calls `efc.ui.denied` (a WARN log line and the AccessDenied popup) and returns False. Otherwise it writes `TRUE` to `<tagPath>/Cmd_Reset` (one-shot) and writes an `EFC write` audit record (target `<tagPath>/Cmd_Reset`, value `True`).
 
 ## Properties reference
 
@@ -67,7 +67,7 @@ Ninety-six custom properties are plain tag mirrors. For each condition n = 0 to 
 
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
-| `view.custom.level` | `0` | property | `session.props.auth.user.roles`, transform `return efc.ui.level(value)` | Highest role level (0 to 5). Drives every role-gated button visibility. |
+| `view.custom.level` | `0` | property | `session.props.auth.securityLevels`, transform `return efc.ui.level(value)` | Highest role level (0 to 5). Drives the BYPASS and UNBYP visibility (level 3 and above) and the RESET lock (below level 2). |
 | `view.custom.m_Out_OK` | `null` | tag | `{0}/Out_OK` | Group OK. Drives the header badge. |
 | `view.custom.m_Sts_ResetReq` | `null` | tag | `{0}/Sts_ResetReq` | Reset required. Drives RESET visibility. |
 
@@ -77,14 +77,14 @@ None. The components carry no `custom` properties.
 
 ### Session, page and message payloads
 
-- Reads `session.props.auth.user.roles` (`level`) and `session.props.auth.user.userName` (audit actor, in `efc.ui`).
+- Reads `session.props.auth.securityLevels` (`level`) and `session.props.auth.user.userName` (audit actor, in `efc.ui`).
 - Opens the popup `efcBypass` (`Templates/Dynamic Window/Parts/BypassConfirm`).
 - Writes tags: `Cmd_Reset` (through `efc.ui.cmd`, with audit); `Cmd_Bypass/n` and `Cmd_Unbypass/n` (through `efc.ui.bypass` and `efc.ui.unbypass`).
 - No `session.custom`, `page` or message handler is used.
 
 ## Bindings reference
 
-Total: **215 bindings**: 99 at view root (`custom.*`) and 116 on components. By type: 116 `expr`, 1 `property`, 98 `tag`. No transforms on component bindings; the one transform is `custom.level`.
+Total: **217 bindings**: 99 at view root (`custom.*`) and 118 on components. By type: 118 `expr`, 1 `property`, 98 `tag`. No transforms on component bindings; the one transform is `custom.level`.
 
 ### View root
 
@@ -294,7 +294,9 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
-| `root/Reset` | `position.display` | expr | `{view.custom.level} >= 2 && {view.custom.m_Sts_ResetReq}` | RESET button shown to level 2 and above while `Sts_ResetReq` is TRUE. |
+| `root/Reset` | `position.display` | expr | `{view.custom.m_Sts_ResetReq}` | RESET button shown at every level while `Sts_ResetReq` is TRUE. |
+| `root/Reset` | `props.image.icon.path` | expr | `if({view.custom.level} < 2, 'material/lock', '')` | Shows a lock icon on the button while the user is below Maintenance |
+| `root/Reset` | `meta.tooltip.enabled` | expr | `{view.custom.level} < 2` | Tooltip "Requires Maintenance access" shown while expression is true |
 
 ## Scripts reference
 
@@ -343,16 +345,16 @@ Total: **33 event scripts** (all `onActionPerformed`) and **1 transform script**
 Plain-language explanation of each kind:
 
 - **BYPASS (16 scripts, one per row):** opens `efcBypass` (`Templates/Dynamic Window/Parts/BypassConfirm`) as a modal popup with `tagPath`, `idx` = n and the condition text. It writes nothing to the PLC itself. The write happens in the popup (see [BypassConfirm](./BypassConfirm.md)).
-- **UNBYP (16 scripts):** calls `efc.ui.unbypass(self, tagPath, n)`. That function checks level 3 and above, writes `Cmd_Unbypass[n]` TRUE, and writes an `EFC unbypass` audit record.
-- **RESET (1 script):** calls `efc.ui.cmd`, which re-checks level 2 and above, writes `TRUE` to `<tagPath>/Cmd_Reset` and writes an `EFC write` audit record. The visibility rule (level 2 and above, `Sts_ResetReq`) is a second guard.
-- **Transform (T1):** `efc.ui.level(value)` turns the role list into level 0 to 5.
+- **UNBYP (16 scripts):** calls `efc.ui.unbypass(self, tagPath, n)`. That function checks level 3 and above (below it, `efc.ui.denied` logs and opens the AccessDenied popup), writes `Cmd_Unbypass[n]` TRUE, and writes an `EFC unbypass` audit record.
+- **RESET (1 script):** calls `efc.ui.cmd`, which re-checks level 2 and above, writes `TRUE` to `<tagPath>/Cmd_Reset` and writes an `EFC write` audit record. Below level 2 it writes nothing and opens the AccessDenied popup. The button is visible only while `Sts_ResetReq` is TRUE; the lock shows below level 2.
+- **Transform (T1):** `efc.ui.level(value)` turns the user's security levels into a level from 0 to 5.
 
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.level(roles)`**: returns the highest index in `ROLES` (Guest 0 to Admin 5) among the user's roles.
+- **`efc.ui.level(levels)`**: walks `session.props.auth.securityLevels` and returns the highest index in `ROLES` (Guest 0 to Admin 5) among the names that match, case-insensitively (site names through `efc.ui.ROLE_ALIASES`).
 - **`efc.ui.bypass(component, intlkPath, idx, reason)`**: level 3 and above and a non-blank reason required; writes `Cmd_Bypass[idx]` TRUE and an `EFC bypass` audit record with the reason. Returns True or False. It does not check `Cfg_Bypassable`, `Inp_BypassPerm` or `Cfg_BypassMax`.
-- **`efc.ui.unbypass(component, intlkPath, idx)`**: level 3 and above; writes `Cmd_Unbypass[idx]` TRUE and an `EFC unbypass` audit record. No reason is taken.
-- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an `EFC write` audit record. RESET calls it with `Cmd_Reset`, `True`, 2, `audit=True`.
+- **`efc.ui.unbypass(component, intlkPath, idx)`**: level 3 and above (below it, `efc.ui.denied` logs and opens the AccessDenied popup); writes `Cmd_Unbypass[idx]` TRUE and an `EFC unbypass` audit record. No reason is taken.
+- **`efc.ui.cmd(component, member, value=True, minLevel=1, audit=False, notify=True)`**: below `minLevel` it does not write; with `notify` it calls `efc.ui.denied` (WARN log and the AccessDenied popup) and returns False. Otherwise it writes `value` to `<tagPath>/<member>` through `_writeTags` (failed writes are logged) and, with `audit=True`, writes an `EFC write` audit record. RESET calls it with `Cmd_Reset`, `True`, 2, `audit=True`.
 
 ## Tag members used
 

@@ -7,7 +7,7 @@ Dynamic window they open: `Templates/Dynamic Window/Rotating/Rotating` (see [Rot
 
 ## Overview
 
-These are single-device symbols for a two-state drive (T_Motor): start/stop with run feedback and a run output. Each shows the run state as a fill colour, an alarm or fault outline, P and I badges, a status line (STOPPED, RUNNING, STARTING, STOPPING or FAULT), an M label, and a Start/Stop button in manual mode. The family shares one set of params, custom properties, bindings, scripts and tag members. The views differ in symbol geometry, default `tagPath`, `custom.lw` values, which SVG elements are bound, and (for two views) the `I` badge position. See the differences table.
+These are single-device symbols for a two-state drive (T_Motor): start/stop with run feedback and a run output. Each shows the run state as a fill colour, an alarm or fault outline, P and I badges, a status line (STOPPED, RUNNING, STARTING, STOPPING or FAULT), an M label, and a Start/Stop button in manual mode. Below Operator access the button stays visible under a lock icon (decision 33). The family shares one set of params, custom properties, bindings, scripts and tag members. The views differ in symbol geometry, default `tagPath`, `custom.lw` values, which SVG elements are bound, and (for two views) the `I` badge position. See the differences table.
 
 - **Default size:** 120 x 116 (`props.defaultSize`) for all 11 views.
 - **Bound to:** one T_Motor instance through `params.tagPath`. The default `tagPath` is per view (see the table).
@@ -108,11 +108,13 @@ Priority is fault or trip, then running, then stopped, then transition. STARTING
 
 **Name and tooltip.** The label shows `Cfg_Tag`, or the last segment of tagPath if `Cfg_Tag` is empty. The tooltip shows `Cfg_Desc`, if non-empty.
 
-**Start/Stop button (`PB`).** Visible when `useButton` is true and the drive is in MAN. Enabled when `custom.canCmd` is true: MAN, available, not local, not OOS, and either a stop is pending (`cmd`) or the drive is not permissive-missing and not interlocked. The tooltip is "Stop" when `cmd` (`Out_Run`) is true, otherwise "Start". A click writes `Cmd_Stop` if `Out_Run` is true, otherwise `Cmd_Start`, with `True`.
+**Start/Stop button (`PB`).** Visible when `useButton` is true and the drive is in MAN. Enabled when `custom.canCmd` is true (MAN, available, not local, not OOS, and either a stop is pending (`cmd`) or the drive is not permissive-missing and not interlocked) or when `custom.locked` is true. The tooltip is "Requires Operator access" when locked, otherwise "Stop" when `cmd` (`Out_Run`) is true, otherwise "Start". A click writes `Cmd_Stop` if `Out_Run` is true, otherwise `Cmd_Start`, with `True`.
 
-**Touch mode (double-tap).** With `useButton = false` and `dblCmd = true`, a double-click on the symbol calls `efc.ui.dblCmd(self)`. For T_Motor that function acts only when the user is Operator (level 1) or higher, and all of these hold: `Mode/Sts_Man` and `Sts_Avail` are true, and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are false. It then writes `Cmd_Stop` if `Sts_Running` is true, otherwise `Cmd_Start`.
+**Access lock.** `custom.level` is the user's level (0 to 5), bound to `session.props.auth.securityLevels`. `custom.locked` is true when `useButton` is true, the drive is in MAN and the level is below 1 (below Operator). While locked, the `Lock` icon (`material/lock`, class `Indicator/Lock`, pointer events off) is drawn over `PB`, and `PB` stays enabled so the press reaches `efc.ui.cmd`. A press is then refused: `efc.ui.cmd` logs a warning and opens the `Parts/AccessDenied` popup (see [AccessDenied](../Dynamic%20Window/Parts/AccessDenied.md)). Nothing is written.
 
-**Security.** The `PB` script calls `efc.ui.cmd(self, m, True, 1)`, which re-checks that the user is Operator (level 1) or higher before writing, with no audit record. The enable expression is a second guard. The double-tap path checks for Operator or higher but also writes no audit record. Neither path checks `Sts_Tripped` (see Notes).
+**Touch mode (double-tap).** With `useButton = false` and `dblCmd = true`, a double-click on the symbol calls `efc.ui.dblCmd(self)`. For T_Motor that function writes only when the user is Operator (level 1) or higher (below that it logs a warning and opens the AccessDenied popup), and all of these hold: `Mode/Sts_Man` and `Sts_Avail` are true, and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are false. It then writes `Cmd_Stop` if `Sts_Running` is true, otherwise `Cmd_Start`.
+
+**Security.** The `PB` script calls `efc.ui.cmd(self, m, True, 1)`, which re-checks that the user is Operator (level 1) or higher before writing, with no audit record. Below Operator it refuses the write, logs it and opens the AccessDenied popup. The enable expression is a second guard for the other conditions. The double-tap path checks for Operator or higher (and opens the same popup below it) but also writes no audit record. Neither path checks `Sts_Tripped` (see Notes).
 
 ## Properties reference
 
@@ -158,7 +160,9 @@ Motor, applied to all 11 views. Only `custom.lw`'s values differ, through the di
 | `view.custom.line` | `"#262626"` | expr | `if({view.custom.state} = 3, "#D50000", case({view.custom.alarm}, 1, "#00A3E0", 2, "#FFD200", 3, "#FF7A00", 4, "#D50000", "#262626"))` | Outline colour: #D50000 when faulted or tripped; else by alarm class; default #262626. |
 | `view.custom.con` | `"#262626"` | expr | `if({view.custom.state} = 3, "#F2F2F2", "#262626")` | Inner mark colour: #F2F2F2 when faulted or tripped, else #262626. |
 | `view.custom.lw` | per view (see table) | expr | `if({view.custom.alarm} > 0 \|\| {view.custom.state} = 3, <alarm width>, <normal width>)` | Outline width. Motor: `7.5` and `3.75`. Other views use their own values (see the differences table). |
-| `view.custom.canCmd` | `false` | expr | `coalesce({view.custom.man}, false) && coalesce({view.custom.avail}, true) && !coalesce({view.custom.local}, false) && !coalesce({view.custom.oos}, false) && (coalesce({view.custom.cmd}, false) \|\| (!coalesce({view.custom.permMissing}, false) && !coalesce({view.custom.intlk}, false)))` | True when man AND avail AND not local AND not oos AND (cmd OR (not permMissing AND not intlk)). Enables `PB`. Does not check `fault` or `trip`. |
+| `view.custom.level` | `0` | property | `session.props.auth.securityLevels`, transform `return efc.ui.level(value)` | The user's highest role level, 0 (Guest) to 5 (Admin). Feeds `locked`. |
+| `view.custom.locked` | `false` | expr | `{view.params.useButton} && coalesce({view.custom.man}, false) && {view.custom.level} < 1` | True when the `PB` button is shown and the user is below Operator. Enables `PB` and shows `Lock`. |
+| `view.custom.canCmd` | `false` | expr | `coalesce({view.custom.man}, false) && coalesce({view.custom.avail}, true) && !coalesce({view.custom.local}, false) && !coalesce({view.custom.oos}, false) && (coalesce({view.custom.cmd}, false) \|\| (!coalesce({view.custom.permMissing}, false) && !coalesce({view.custom.intlk}, false)))` | True when man AND avail AND not local AND not oos AND (cmd OR (not permMissing AND not intlk)). Enables `PB` (together with `locked`). Does not check `fault` or `trip`. |
 
 The `lw` expression is the same in every view. Its constants come from the table above.
 
@@ -168,29 +172,29 @@ None. The components carry no `custom` properties.
 
 ### Session, page and message payloads
 
-None. The views read no `session.*` or `page.*` values and send no messages. `efc.ui.openDynamic` changes the page's `dw_Right` dock (see the Scripts section). The PB and the double-tap path write tags only.
+The views read `session.props.auth.securityLevels` (for `custom.level`) and no `page.*` values, and send no messages. `efc.ui.openDynamic` changes the page's `dw_Right` dock (see the Scripts section). The PB and the double-tap path write tags only.
 
 ## Bindings reference
 
-Motor (reference) total: **41 bindings**: 24 at view root (`custom.*`) and 17 on components. Types: 26 `expr`, 15 `tag`. No transforms. `params.*` entries have `paramDirection` only and are not bindings.
+Motor (reference) total: **44 bindings**: 26 at view root (`custom.*`) and 18 on components. Types: 28 `expr`, 15 `tag`, 1 `property`. One transform (`custom.level`). `params.*` entries have `paramDirection` only and are not bindings.
 
 Totals for all 11 views (view root plus components):
 
 | View | Bindings | Components | Scripts |
 |---|---|---|---|
-| `Motor` | 41 | 17 | 3 |
-| `Agitator` | 41 | 17 | 3 |
-| `Blower` | 42 | 18 | 3 |
-| `Compressor_Centrifugal` | 41 | 17 | 3 |
-| `Compressor_Diaphragm` | 41 | 17 | 3 |
-| `Pump_Centrifugal` | 43 | 19 | 3 |
-| `Pump_Diaphragm` | 50 | 26 | 3 |
-| `Pump_PD_Rotary` | 50 | 26 | 3 |
-| `Pump_Reciprocating` | 45 | 21 | 3 |
-| `Pump_Vacuum` | 42 | 18 | 3 |
-| `HX_AirCooled` | 43 | 19 | 3 |
+| `Motor` | 44 | 18 | 3 |
+| `Agitator` | 44 | 18 | 3 |
+| `Blower` | 45 | 19 | 3 |
+| `Compressor_Centrifugal` | 44 | 18 | 3 |
+| `Compressor_Diaphragm` | 44 | 18 | 3 |
+| `Pump_Centrifugal` | 46 | 20 | 3 |
+| `Pump_Diaphragm` | 53 | 27 | 3 |
+| `Pump_PD_Rotary` | 53 | 27 | 3 |
+| `Pump_Reciprocating` | 48 | 22 | 3 |
+| `Pump_Vacuum` | 45 | 19 | 3 |
+| `HX_AirCooled` | 46 | 20 | 3 |
 
-The extra component bindings are all in `root/Symbol` (per-view element bindings) and, for Blower and Pump_Centrifugal, the `root/I` position (which is not a binding). The Symbol element rows are listed in the differences table. Each view's view-root bindings are the 24 listed for Motor.
+The extra component bindings are all in `root/Symbol` (per-view element bindings) and, for Blower and Pump_Centrifugal, the `root/I` position (which is not a binding). The Symbol element rows are listed in the differences table. Each view's view-root bindings are the 26 listed for Motor.
 
 ### View root
 
@@ -242,8 +246,14 @@ Motor's Symbol has these four bindings. Other views bind different element indic
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/PB | `meta.visible` | expr | `{view.params.useButton} && coalesce({view.custom.man}, false)` | Shown while expression is true |
-| root/PB | `props.enabled` | expr | `{view.custom.canCmd}` | Enabled while expression is true |
-| root/PB | `meta.tooltip.text` | expr | `if(coalesce({view.custom.cmd}, false), "Stop", "Start")` | Tooltip |
+| root/PB | `props.enabled` | expr | `{view.custom.canCmd} \|\| {view.custom.locked}` | Enabled while expression is true. Stays enabled when locked so the press reaches `efc.ui.cmd`. |
+| root/PB | `meta.tooltip.text` | expr | `if({view.custom.locked}, "Requires Operator access", if(coalesce({view.custom.cmd}, false), "Stop", "Start"))` | Tooltip |
+
+### `root/Lock`
+
+| Component | Property | Type | Source | Effect |
+|---|---|---|---|---|
+| root/Lock | `meta.visible` | expr | `{view.custom.locked}` | Lock icon shown over `PB` while the user is below Operator |
 
 ## Scripts reference
 
@@ -274,9 +284,9 @@ Total: **3 event scripts** on every view (identical in all 11), no `customMethod
 ### Library functions called by this family (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_Motor` that is `dw_Rotating`, which maps to `Templates/Dynamic Window/Rotating/Rotating`. If no window is found, it logs a warning and stops. Otherwise it loads it into the page's `dw_Right` dock with `params:{tagPath: dwTagPath or tagPath}` and opens the dock (`efc.ui.showDock`). It does not check the user's role and does not write to the tag.
-- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an audit record. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
+- **`efc.ui.cmd(component, member, value=True, minLevel=1, audit=False, notify=True)`**: if the user's level is below `minLevel` it does not write. With `notify` true it calls `efc.ui.denied` (logs a WARN line and opens the `efcAccessDenied` popup, see [AccessDenied](../Dynamic%20Window/Parts/AccessDenied.md)); either way it returns False. Otherwise it writes `value` to `<tagPath>/<member>` through `_writeTags`, which logs any write that does not come back good, and, with `audit=True`, writes an audit record. It returns True when the write was good. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
 - **`efc.ui.dblCmd(component)`**: returns immediately unless all of these hold: `useButton` false, `dblCmd` true, `tType` in `DBL_CMD` (`T_DValve` or `T_Motor`), and the user's level is 1 (Operator) or higher. It then reads `Sts_Running`, `Mode/Sts_Man`, `Sts_Avail`, `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault`. It writes nothing unless `Mode/Sts_Man` and `Sts_Avail` are true and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are all false. When it does write, it sends `Cmd_Stop` if `Sts_Running` is true, else `Cmd_Start`, with `True`. It does not check `Mode/Sts_OOS` or `Sts_Tripped`, and it writes no audit record.
-- **`efc.ui.level`**: the highest index in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` gives 0 to 5. Used by `dblCmd` (`userLevel >= 1`).
+- **`efc.ui.level(levels)`**: walks the security-level tree from `session.props.auth.securityLevels` (nested `name`/`children`, a path string, or a plain role list). Each name is matched case-insensitively against `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, with site names mapped by `efc.ui.ROLE_ALIASES`; the highest index gives 0 to 5. Bound as `custom.level`. `efc.ui.userLevel` (used by `cmd` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
 - **`efc.ui.closeDynamic`** is not called from these views. The dock's close button calls it.
 
 ## Tag members used
@@ -319,6 +329,7 @@ Motor (identical in all 11 views, apart from the `root/Symbol` element count and
     - `M` (ia.display.label)
     - `Status` (ia.display.label)
   - `PB` (ia.input.button)
+  - `Lock` (ia.display.icon, material/lock, class Indicator/Lock)
 ```
 
 ## Notes and open questions
@@ -327,7 +338,8 @@ Motor (identical in all 11 views, apart from the `root/Symbol` element count and
 - **`custom.command` is never bound.** In all 11 views `custom.command` keeps its default `-1`, so `custom.head` always equals `custom.fill`. `custom.head` is not referenced anywhere. Either bind `command` or remove `head`.
 - **`custom.mode` is unused** in all 11 views.
 - **`PB` can be enabled in fault or trip.** `custom.canCmd` does not check `fault` or `trip`. With no interlock or permissive-missing, `PB` is enabled, and a click writes `Cmd_Start` even when the drive is tripped or faulted. The double-tap path checks `Sts_Fault` but not `Sts_Tripped`. Confirm this matches the PLC behaviour for start after a trip.
-- **No audit on `PB` or double-tap.** `PB` goes through `efc.ui.cmd` (Operator level check) and the double-tap path checks the same level, but neither passes `audit=True`.
+- **No audit on `PB` or double-tap.** `PB` goes through `efc.ui.cmd` (Operator level check) and the double-tap path checks the same level, but neither passes `audit=True`. A refused press is logged at WARN level only.
+- **Lock follows the view's `man` state.** `custom.locked` needs `useButton` and MAN, so the lock appears only where `PB` is shown. In touch mode (`useButton = false`) there is no lock; a double-tap below Operator opens the AccessDenied popup.
 - **Double-tap also opens the dock.** Browsers fire two `click` events before `dblclick`, so `onClick` (open the dock) runs as well as `onDoubleClick` (command). The dock opens for the same drive.
 - **STARTING and STOPPING depend on the run command.** A drive that has been commanded to run but has no run feedback yet shows STARTING. The T_Motor `Sts_Starting` and `Sts_Stopping` members are not used.
 - **`I` badge position.** Blower and Pump_Centrifugal place the `I` badge at y 0.5345. The other nine views use y 0.1897. Confirm that this is intended for the taller or wider symbols.

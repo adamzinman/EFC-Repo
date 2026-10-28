@@ -35,9 +35,11 @@ Priority is fault or trip, then on, then off, then transition. SWITCHING ON or O
 
 **Name and tooltip.** The label shows `Cfg_Tag`, or the last segment of tagPath if `Cfg_Tag` is empty. The tooltip shows `Cfg_Desc`, if non-empty.
 
-**On/Off button (`PB`).** Visible when `useButton` is true and the heater is in MAN. Enabled when `custom.canCmd` is true: MAN, available, not local, not OOS, and either a switch-off is pending (`cmd`, from `Out_Contactor`) or the heater is not permissive-missing and not interlocked. The tooltip is "Switch off" when `cmd` is true, otherwise "Switch on". A click writes `Cmd_Off` if `cmd` is true, otherwise `Cmd_On`, with `True`.
+**On/Off button (`PB`).** Visible when `useButton` is true and the heater is in MAN. Enabled when `custom.canCmd` is true (MAN, available, not local, not OOS, and either a switch-off is pending (`cmd`, from `Out_Contactor`) or the heater is not permissive-missing and not interlocked) or when `custom.locked` is true. The tooltip is "Requires Operator access" when locked, otherwise "Switch off" when `cmd` is true, otherwise "Switch on". A click writes `Cmd_Off` if `cmd` is true, otherwise `Cmd_On`, with `True`.
 
-**Security.** The `PB` script calls `efc.ui.cmd(self, m, True, 1)`, which re-checks that the user is Operator (level 1) or higher before writing, with no audit record. The enable expression is a second guard. `canCmd` does not check `Sts_Fault` or `Sts_Tripped` (see Notes).
+**Access lock.** `custom.level` is the user's level (0 to 5), bound to `session.props.auth.securityLevels`. `custom.locked` is true when `useButton` is true, the heater is in MAN and the level is below 1 (below Operator). While locked, the `Lock` icon (`material/lock`, class `Indicator/Lock`, pointer events off) is drawn over `PB`, and `PB` stays enabled so the press reaches `efc.ui.cmd`. The press is then refused: `efc.ui.cmd` logs a warning and opens the `Parts/AccessDenied` popup (see [AccessDenied](../Dynamic%20Window/Parts/AccessDenied.md)). Nothing is written.
+
+**Security.** The `PB` script calls `efc.ui.cmd(self, m, True, 1)`, which re-checks that the user is Operator (level 1) or higher before writing, with no audit record. Below Operator it refuses the write, logs it and opens the AccessDenied popup. The enable expression is a second guard for the other conditions. `canCmd` does not check `Sts_Fault` or `Sts_Tripped` (see Notes).
 
 ## Properties reference
 
@@ -80,6 +82,8 @@ Every property below has a binding. The source column gives what drives each one
 | `view.custom.line` | `"#262626"` | expr | `if({view.custom.state} = 3, "#D50000", case({view.custom.alarm}, 1, "#00A3E0", 2, "#FFD200", 3, "#FF7A00", 4, "#D50000", "#262626"))` | Outline colour: #D50000 when faulted or tripped; else by alarm class; default #262626. |
 | `view.custom.con` | `"#262626"` | expr | `if({view.custom.state} = 3, "#F2F2F2", "#262626")` | Not referenced anywhere in the view (defined and bound, unused). |
 | `view.custom.lw` | `2.5` | expr | `if({view.custom.alarm} > 0 \|\| {view.custom.state} = 3, 5.0, 2.5)` | Outline width: 5.0 when `alarm` > 0 or faulted or tripped, else 2.5. |
+| `view.custom.level` | `0` | property | `session.props.auth.securityLevels`, transform `return efc.ui.level(value)` | The user's highest role level, 0 (Guest) to 5 (Admin). Feeds `locked`. |
+| `view.custom.locked` | `false` | expr | `{view.params.useButton} && coalesce({view.custom.man}, false) && {view.custom.level} < 1` | True when the `PB` button is shown and the user is below Operator. Enables `PB` and shows `Lock`. |
 | `view.custom.canCmd` | `false` | expr | `coalesce({view.custom.man}, false) && coalesce({view.custom.avail}, true) && !coalesce({view.custom.local}, false) && !coalesce({view.custom.oos}, false) && (coalesce({view.custom.cmd}, false) \|\| (!coalesce({view.custom.permMissing}, false) && !coalesce({view.custom.intlk}, false)))` | True when man AND avail AND not local AND not oos AND (cmd OR (not permMissing AND not intlk)). Enables `PB`. Does not check `fault` or `trip`. |
 
 ### Component-level custom properties
@@ -88,11 +92,11 @@ None. The components carry no `custom` properties.
 
 ### Session, page and message payloads
 
-None. The view reads no `session.*` or `page.*` values and sends no messages. Its only use of `session` is inside `efc.ui.openDynamic` (see the Scripts section). The `PB` button writes tags only.
+The view reads `session.props.auth.securityLevels` (for `custom.level`) and no `page.*` values, and sends no messages. `efc.ui` also uses `session` inside `openDynamic` and `cmd` (see the Scripts section). The `PB` button writes tags only.
 
 ## Bindings reference
 
-Total: **42 bindings**: 24 at view root (`custom.*`) and 18 on components. Types: 27 `expr`, 15 `tag`. No transforms. `params.*` entries have `paramDirection` only and are not bindings.
+Total: **45 bindings**: 26 at view root (`custom.*`) and 19 on components. Types: 29 `expr`, 15 `tag`, 1 `property`. One transform (`custom.level`). `params.*` entries have `paramDirection` only and are not bindings.
 
 ### View root
 
@@ -143,8 +147,14 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/PB | `meta.visible` | expr | `{view.params.useButton} && coalesce({view.custom.man}, false)` | Shown while expression is true |
-| root/PB | `props.enabled` | expr | `{view.custom.canCmd}` | Enabled while expression is true |
+| root/PB | `props.enabled` | expr | `{view.custom.canCmd} \|\| {view.custom.locked}` | Enabled while expression is true. Stays enabled when locked so the press reaches `efc.ui.cmd`. |
 | root/PB | `meta.tooltip.text` | expr | `if(coalesce({view.custom.cmd}, false), "Switch off", "Switch on")` | Tooltip |
+
+### `root/Lock`
+
+| Component | Property | Type | Source | Effect |
+|---|---|---|---|---|
+| root/Lock | `meta.visible` | expr | `{view.custom.locked}` | Lock icon shown over `PB` while the user is below Operator |
 
 ## Scripts reference
 
@@ -168,7 +178,7 @@ Total: **2 event scripts**, no `customMethods`, no `messageHandlers`, no propert
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_Heater` that is `dw_Heater`, which maps to `Templates/Dynamic Window/HeatTransfer/Heater`. If no window is found, it logs a warning and stops. Otherwise it loads it into the page's `dw_Right` dock with `params:{tagPath: dwTagPath or tagPath}` and opens the dock (`efc.ui.showDock`). It does not check the user's role and does not write to the tag.
-- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an audit record. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
+- **`efc.ui.cmd(component, member, value=True, minLevel=1, audit=False, notify=True)`**: if the user's level is below `minLevel` it does not write. With `notify` true it calls `efc.ui.denied` (logs a WARN line and opens the `efcAccessDenied` popup, see [AccessDenied](../Dynamic%20Window/Parts/AccessDenied.md)); either way it returns False. Otherwise it writes `value` to `<tagPath>/<member>` through `_writeTags`, which logs any write that does not come back good, and, with `audit=True`, writes an audit record. It returns True when the write was good. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
 - `efc.ui.dblCmd` is not called by this view, and `T_Heater` is not in its `DBL_CMD` table.
 
 ## Tag members used
@@ -209,6 +219,7 @@ The alarm expression reads `<tagPath>/*` through `isAlarmActiveFiltered`, not a 
     - `M` (ia.display.label)
     - `Status` (ia.display.label)
   - `PB` (ia.input.button)
+  - `Lock` (ia.display.icon, material/lock, class Indicator/Lock)
 ```
 
 `root/Symbol` (viewBox 0 0 120 90) has four SVG elements: `body0` (rect, fill fixed #EBEBEB, outline bound), `detail1` (zig-zag element, unbound), `detail2` (short stem, unbound) and `state3` (rect head, fill, outline bound).
@@ -220,6 +231,6 @@ The alarm expression reads `<tagPath>/*` through `isAlarmActiveFiltered`, not a 
 - **`custom.mode` and `custom.head` are unused.** `custom.command` is never bound, so `head` always equals `fill`.
 - **Power and current are not shown on the symbol.** The symbol shows only on, off, switching and fault. `Val_Power`, `Val_Duty`, `Val_Current` and the SSR or SCR fields are on the dock.
 - **High-limit trip is not shown separately.** The dock banner has a HIGH LIMIT state (`Sts_HiLimit`). This symbol does not read it. A high-limit trip shows as FAULT only if it also sets `Sts_Fault` or `Sts_Tripped`.
-- **No command path with `useButton = false`.** `PB` is hidden, there is no double-tap event and no `dblCmd` parameter, so commands are only possible on the dock.
+- **No command path with `useButton = false`.** `PB` is hidden, there is no double-tap event and no `dblCmd` parameter, so commands are only possible on the dock. The lock needs `useButton` and MAN, so it never shows in that case.
 - **Interlock wording.** The `I` tooltip says "switch-on blocked", as on the VFD template, while the rotating templates say "start blocked".
 - **STARTING and STOPPING equivalents depend on the contactor command.** SWITCHING ON or OFF is shown from `Out_Contactor`, not from `Sts_State` (which has its own switching states in T_Heater).

@@ -19,15 +19,15 @@ The operator and maintenance dynamic window for a two-state valve (T_DValve). It
 
 **Banner.** The state label is chosen by priority: `Sts_Fault` (FAULT), `Sts_Opening` (OPENING), `Sts_Closing` (CLOSING), `Sts_Opened` (OPEN), `Sts_Closed` (CLOSED), else UNKNOWN. The style class follows the same order (`State/Fault`, `State/Transition`, `State/Running`, `State/Stopped`, `State/Unknown`). Four badges appear when their flag is true: SIM (`Sts_Sim`), LOCAL (`Sts_Local`), INTLK (`Sts_Intlk`), NOT PERM (`Sts_NotPerm`).
 
-**Mode.** The mode text shows the highest of OOS, MAINT, MAN, else AUTO. The four toggle buttons highlight the active mode. AUTO and MAN are visible at level 1 and above, and MAINT and OOS at level 2 and above. None of the four has an `enabled` binding, so they are always clickable when visible. Each writes a one-shot `Mode/Cmd_*`. MAINT and OOS are audited.
+**Mode.** The mode text shows the highest of OOS, MAINT, MAN, else AUTO. The four toggle buttons highlight the active mode. All four are always visible. AUTO and MAN show a lock icon and the tooltip "Requires Operator access" below level 1; MAINT and OOS show a lock and "Requires Maintenance access" below level 2. None of the four has an `enabled` binding, so each is always clickable. A press below a button's level is refused by `efc.ui.cmd`, which logs a warning and opens the AccessDenied popup (see [AccessDenied](../Parts/AccessDenied.md)); nothing is written. Each writes a one-shot `Mode/Cmd_*`. MAINT and OOS are audited.
 
-**Commands** (level 1 and above). `OPEN` and `CLOSE` are enabled only when all of these are true: `Mode/Sts_Man`, `Sts_Avail`, not `Sts_Intlk`, not `Sts_Local`, not `Sts_NotPerm`. They write `Cmd_Open` and `Cmd_Close`. Note: they do not check `Sts_Opened`, `Sts_Closed`, `Sts_Fault` or `Mode/Sts_OOS`. `RESET` writes `Cmd_Reset` and is visible at level 1 and above, but has **no enable condition**, so it is clickable outside MAN. A hint line states the enable rule.
+**Commands** (all levels; the buttons are locked below level 1, with the tooltip "Requires Operator access"). `OPEN` and `CLOSE` are enabled when the user is below Operator (so a press can be refused with the popup) or when all of these are true: `Mode/Sts_Man`, `Sts_Avail`, not `Sts_Intlk`, not `Sts_Local`, not `Sts_NotPerm`. They write `Cmd_Open` and `Cmd_Close`. Note: they do not check `Sts_Opened`, `Sts_Closed`, `Sts_Fault` or `Mode/Sts_OOS`. `RESET` writes `Cmd_Reset` and is locked below level 1, but has **no enable condition**, so it is clickable outside MAN. A hint line states the enable rule.
 
 **Feedback.** Two rows show the limit switches, each visible only when that limit is configured (`Cfg_HasZSO` / `Cfg_HasZSC`). Each shows ON or off from `Inp_ZSO` / `Inp_ZSC`. A diagnostics row shows the NAMUR NE107 text for `Sts_NE107`: 0 `NE107 OK`, 1 `NE107 F`, 2 `NE107 C`, 3 `NE107 S`, 4 `NE107 M`.
 
 **Permissives and interlocks.** Two embedded `Templates/Dynamic Window/Parts/IntlkList` views get `tagPath + '/Perm'` and `tagPath + '/Intlk'`, with titles "Permissives" and "Interlocks". Their content is not in this file.
 
-**Alarms** (all levels). Five rows (fail to open, fail to close, position conflict, uncommanded move, interlock trip). A row is coloured when its alarm is active, using the alarm's `Cfg_Priority`: 1 `Critical`, 2 `High`, 3 `Medium`, 4 `Low`, anything else `Medium`. The class adds `/Unacked` or `/Fill`. An inactive but unacknowledged alarm uses `Alarm/Status/ClearedUnacked`. An inactive, acknowledged alarm uses `Text/Caption Text/Color/Muted`. "No active alarms" is shown when none is active. **ACK** (level 1 and above) calls `efc.ui.ackAll`, which writes `Cmd_Ack` only for those alarms whose `Sts_Unack` is true.
+**Alarms** (all levels). Five rows (fail to open, fail to close, position conflict, uncommanded move, interlock trip). A row is coloured when its alarm is active, using the alarm's `Cfg_Priority`: 1 `Critical`, 2 `High`, 3 `Medium`, 4 `Low`, anything else `Medium`. The class adds `/Unacked` or `/Fill`. An inactive but unacknowledged alarm uses `Alarm/Status/ClearedUnacked`. An inactive, acknowledged alarm uses `Text/Caption Text/Color/Muted`. "No active alarms" is shown when none is active. **ACK** (always visible; lock icon below level 1) calls `efc.ui.ackAll`, which writes `Cmd_Ack` only for those alarms whose `Sts_Unack` is true. Below Operator `efc.ui.ackAll` writes nothing, logs a warning and opens the AccessDenied popup.
 
 **Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` with pens `Out_Open` and `Sts_Opened` over the tagPath. The embedded view's `expanded` param starts `false`. It is declared `inout` in `Templates/Dynamic Window/Parts/Trend`, so the Trend part toggles it itself and the value flows back to this embed. The `position.basis` binding (`{this.props.params.expanded}`) then grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock.
 
@@ -35,7 +35,7 @@ The operator and maintenance dynamic window for a two-state valve (T_DValve). It
 
 **Configuration** (collapsible; the header click toggles `open_Configuration`). Travel time is read-only below level 4 and editable at level 4 and above (`Cfg_TravelTime`, unit s; the PLC TIME is in milliseconds, so the row shows `Cfg_TravelTime / 1000` and the entry reads the mirror `/ 1000`; its `props.value` onChange script, only when `origin == 'Browser'`, writes `int(round(value * 1000))` through `efc.ui.cmd(self, 'Cfg_TravelTime', ..., 4, audit=True)`, Engineer and audited). The "Has open limit" and "Has closed limit" settings follow the same pattern: below level 4 each is a read-only row showing `Yes` or `No` from `Cfg_HasZSO` / `Cfg_HasZSC`; at level 4 and above the row is hidden and a checkbox, bidirectional to the tag, is shown (and enabled). The checkboxes write the tag directly through the binding; their only guard is visibility (their enable is `level >= 4`). The travel-time entry is guarded by visibility (its enable is the literal `true`) and by the level check in `efc.ui.cmd`.
 
-**Role checks.** All role levels come from the Perspective session (`session.props.auth.user.roles`) and are checked in the client. `efc.ui.cmd` returns without writing when the level is too low. Bindings do not check the level (the Configuration checkboxes write through bindings); the travel-time entry goes through `efc.ui.cmd`. Real access control has to be enforced in Perspective security and the PLC logic.
+**Role checks.** `view.custom.level` comes from the Perspective session (`session.props.auth.securityLevels`) through `efc.ui.level`, which matches the security-level names case-insensitively (site names through `efc.ui.ROLE_ALIASES`). It decides which controls are locked or hidden in the client. `efc.ui.cmd` and `efc.ui.ackAll` re-check the level (`efc.ui.userLevel`, the larger of the security levels and `session.props.auth.user.roles`). Below it they do not write: they log a warning and open the `Parts/AccessDenied` popup (decision 33; see [AccessDenied](../Parts/AccessDenied.md)). Failed writes are logged too. Bindings do not check the level (the Configuration checkboxes write through bindings); the travel-time entry goes through `efc.ui.cmd`. Real access control has to be enforced in Perspective security and the PLC logic.
 
 **Audit.** `efc.ui` writes an audit entry (`system.util.audit`, falling back to the logger) for MAINT, OOS, RESET MAINT, SIMULATE and travel-time edits. It does not audit AUTO, MAN, OPEN, CLOSE, RESET or ACK.
 
@@ -54,7 +54,7 @@ Both have `paramDirection: input` and `persistent: true`. No output parameters.
 
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
-| `view.custom.level` | `0` | property + script transform | `session.props.auth.user.roles` → `return efc.ui.level(value)` | Role level 0-5 from `session.props.auth.user.roles` via `efc.ui.level`. Gates buttons and sections (Guest 0, Operator 1, Maintenance 2, Supervisor 3, Engineer 4, Admin 5). |
+| `view.custom.level` | `0` | property + script transform | `session.props.auth.securityLevels` → `return efc.ui.level(value)` | Role level 0-5 from `session.props.auth.securityLevels` via `efc.ui.level`. Locks command buttons below the level they need and hides the sections and entries above the user's level (Guest 0, Operator 1, Maintenance 2, Supervisor 3, Engineer 4, Admin 5). |
 | `view.custom.open_Configuration` | `false` | none (written by scripts) | none | View-local toggle for the Configuration section. Set by the header click script; not bound to any tag; not persisted. |
 
 #### Tag mirrors (`custom.m_*`)
@@ -76,7 +76,7 @@ None.
 
 ### Session, page and message payloads
 
-- `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
+- `session.props.auth.securityLevels`: read by `custom.level` (transform `efc.ui.level`).
 - `session.props.auth.user.userName`: read by `efc.ui._audit` (not bound in this view).
 - `session.custom.efcDw[pageId]`: holds only the page's default dock view, written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
 - `page.props.pageId`: read by `efc.ui._state` to key `efcDw`.
@@ -84,7 +84,7 @@ None.
 
 ## Bindings reference
 
-Total: **107 bindings**: 44 at view root (all `custom.*`, including 1 `property` binding with a transform) and 63 on components. Types: 61 `expr`, 45 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 63.
+Total: **114 bindings**: 44 at view root (all `custom.*`, including 1 `property` binding with a transform) and 70 on components. Types: 68 `expr`, 45 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 70.
 
 ### View root
 
@@ -113,25 +113,31 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Mode/Body/Current/Val | `props.text` | expr | `if({view.custom.m_Mode_Sts_OOS}, 'OOS', if({view.custom.m_Mode_Sts_Maint}, 'MAINT', if({view.custom.m_Mode_Sts_Man}, 'MAN', 'AUTO')))` | Text content |
-| root/Mode/Body/Buttons/Auto | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
+| root/Mode/Body/Buttons/Auto | `props.image.icon.path` | expr | `if({view.custom.level} < 1, 'material/lock', '')` | Shows a lock icon on the button while the user is below Operator |
+| root/Mode/Body/Buttons/Auto | `meta.tooltip.enabled` | expr | `{view.custom.level} < 1` | Tooltip "Requires Operator access" shown while expression is true |
 | root/Mode/Body/Buttons/Auto | `props.style.classes` | expr | `if({view.custom.m_Mode_Sts_Auto}, 'Button/Toggle/On', 'Button/Toggle/Off')` | CSS class(es) selected by state |
-| root/Mode/Body/Buttons/Man | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
+| root/Mode/Body/Buttons/Man | `props.image.icon.path` | expr | `if({view.custom.level} < 1, 'material/lock', '')` | Shows a lock icon on the button while the user is below Operator |
+| root/Mode/Body/Buttons/Man | `meta.tooltip.enabled` | expr | `{view.custom.level} < 1` | Tooltip "Requires Operator access" shown while expression is true |
 | root/Mode/Body/Buttons/Man | `props.style.classes` | expr | `if({view.custom.m_Mode_Sts_Man}, 'Button/Toggle/On', 'Button/Toggle/Off')` | CSS class(es) selected by state |
-| root/Mode/Body/Buttons/Maint | `position.display` | expr | `{view.custom.level} >= 2` | Shown while expression is true |
+| root/Mode/Body/Buttons/Maint | `props.image.icon.path` | expr | `if({view.custom.level} < 2, 'material/lock', '')` | Shows a lock icon on the button while the user is below Maintenance |
+| root/Mode/Body/Buttons/Maint | `meta.tooltip.enabled` | expr | `{view.custom.level} < 2` | Tooltip "Requires Maintenance access" shown while expression is true |
 | root/Mode/Body/Buttons/Maint | `props.style.classes` | expr | `if({view.custom.m_Mode_Sts_Maint}, 'Button/Toggle/On', 'Button/Toggle/Off')` | CSS class(es) selected by state |
-| root/Mode/Body/Buttons/OOS | `position.display` | expr | `{view.custom.level} >= 2` | Shown while expression is true |
+| root/Mode/Body/Buttons/OOS | `props.image.icon.path` | expr | `if({view.custom.level} < 2, 'material/lock', '')` | Shows a lock icon on the button while the user is below Maintenance |
+| root/Mode/Body/Buttons/OOS | `meta.tooltip.enabled` | expr | `{view.custom.level} < 2` | Tooltip "Requires Maintenance access" shown while expression is true |
 | root/Mode/Body/Buttons/OOS | `props.style.classes` | expr | `if({view.custom.m_Mode_Sts_OOS}, 'Button/Toggle/On', 'Button/Toggle/Off')` | CSS class(es) selected by state |
 
 ### `root/Commands`
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
-| root/Commands | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
-| root/Commands/Body/Buttons/B0 | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
-| root/Commands/Body/Buttons/B0 | `props.enabled` | expr | `{view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}` | Enabled while expression is true |
-| root/Commands/Body/Buttons/B1 | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
-| root/Commands/Body/Buttons/B1 | `props.enabled` | expr | `{view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm}` | Enabled while expression is true |
-| root/Commands/Body/Buttons/B2 | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
+| root/Commands/Body/Buttons/B0 | `props.image.icon.path` | expr | `if({view.custom.level} < 1, 'material/lock', '')` | Shows a lock icon on the button while the user is below Operator |
+| root/Commands/Body/Buttons/B0 | `meta.tooltip.enabled` | expr | `{view.custom.level} < 1` | Tooltip "Requires Operator access" shown while expression is true |
+| root/Commands/Body/Buttons/B0 | `props.enabled` | expr | `({view.custom.level} < 1) || ({view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm})` | Enabled while expression is true. Below the needed level the button is enabled so the press reaches `efc.ui` (decision 33). |
+| root/Commands/Body/Buttons/B1 | `props.image.icon.path` | expr | `if({view.custom.level} < 1, 'material/lock', '')` | Shows a lock icon on the button while the user is below Operator |
+| root/Commands/Body/Buttons/B1 | `meta.tooltip.enabled` | expr | `{view.custom.level} < 1` | Tooltip "Requires Operator access" shown while expression is true |
+| root/Commands/Body/Buttons/B1 | `props.enabled` | expr | `({view.custom.level} < 1) || ({view.custom.m_Mode_Sts_Man} && {view.custom.m_Sts_Avail} && !{view.custom.m_Sts_Intlk} && !{view.custom.m_Sts_Local} && !{view.custom.m_Sts_NotPerm})` | Enabled while expression is true. Below the needed level the button is enabled so the press reaches `efc.ui` (decision 33). |
+| root/Commands/Body/Buttons/B2 | `props.image.icon.path` | expr | `if({view.custom.level} < 1, 'material/lock', '')` | Shows a lock icon on the button while the user is below Operator |
+| root/Commands/Body/Buttons/B2 | `meta.tooltip.enabled` | expr | `{view.custom.level} < 1` | Tooltip "Requires Operator access" shown while expression is true |
 
 ### `root/Feedback`
 
@@ -165,7 +171,8 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Alarms/Body/List/A2 | `props.style.classes` | expr | `if({view.custom.m_Alm_PosConflict_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_PosConflict_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_PosConflict_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_PosConflict_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))` | CSS class(es) selected by state |
 | root/Alarms/Body/List/A3 | `props.style.classes` | expr | `if({view.custom.m_Alm_Uncmd_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_Uncmd_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_Uncmd_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_Uncmd_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))` | CSS class(es) selected by state |
 | root/Alarms/Body/List/A4 | `props.style.classes` | expr | `if({view.custom.m_Alm_IntlkTrip_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_IntlkTrip_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_IntlkTrip_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_IntlkTrip_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))` | CSS class(es) selected by state |
-| root/Alarms/Body/Ack | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
+| root/Alarms/Body/Ack | `props.image.icon.path` | expr | `if({view.custom.level} < 1, 'material/lock', '')` | Shows a lock icon on the button while the user is below Operator |
+| root/Alarms/Body/Ack | `meta.tooltip.enabled` | expr | `{view.custom.level} < 1` | Tooltip "Requires Operator access" shown while expression is true |
 
 ### `root/Trend`
 
@@ -287,7 +294,7 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	self.view.custom.open_Configuration = not self.view.custom.open_Configuration
 ```
 
-13. **transform on `(view root)` `custom.level`**: `custom.level` binding, `property` source `session.props.auth.user.roles`.
+13. **transform on `(view root)` `custom.level`**: `custom.level` binding, `property` source `session.props.auth.securityLevels`.
 
 ```python
 	return efc.ui.level(value)
@@ -318,14 +325,15 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 | `Configuration/Header` (dom click) | toggles `open_Configuration` | none | none | no |
 | `Configuration/Body/E0` (`Cfg_TravelTime` entry, onChange) | `efc.ui.cmd(... 'Cfg_TravelTime', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_TravelTime` (milliseconds) | level 4 | yes
 
-`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`. The Mode, Commands, Ack and Maintenance buttons and the travel-time entry therefore use the level check; the Configuration checkboxes, which are bindings, do not.
+`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`; below it, `cmd` returns False after logging and opening the AccessDenied popup (unless `notify=False`). The Mode, Commands, Ack and Maintenance buttons and the travel-time entry therefore use the level check; the Configuration checkboxes, which are bindings, do not.
 
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
+- **`efc.ui.level(levels)`**: walks `session.props.auth.securityLevels` (nested `name`/`children`, a path string, or a plain role list) and returns the highest index, 0 to 5, of the names that match `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` case-insensitively (site names map through `efc.ui.ROLE_ALIASES`; no match gives 0). Bound to `custom.level`. `efc.ui.userLevel` (used by the checks in `cmd`, `ackAll`, `bypass`, `unbypass` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
 - **`efc.ui.closeDynamic(component)`**: loads the page's stored `default` view and params (`session.custom.efcDw[pageId]`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
-- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: the role-checked write described above. Audits when `audit=True`.
-- **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true, only at level 1 and above.
+- **`efc.ui.cmd(component, member, value=True, minLevel=1, audit=False, notify=True)`**: the role-checked write described above. Below `minLevel` it does not write: with `notify` true it calls `efc.ui.denied` (a WARN log line and the `efcAccessDenied` popup, see [AccessDenied](../Parts/AccessDenied.md)), and it returns False either way. The JOG release events pass `notify=False`. Otherwise it writes through `_writeTags`, which logs any write that does not come back good, and returns True when the write was good. Audits when `audit=True`.
+- **`efc.ui.denied(component, minLevel, action='')`**: logs `Refused <action> for <user> (<have>): needs <need>` at WARN level and opens the popup `efcAccessDenied` (`Templates/Dynamic Window/Parts/AccessDenied`, modal) with params `action`, `need`, `have` and `user`. Called by `cmd`, `ackAll`, `unbypass` and `dblCmd`. See [AccessDenied](../Parts/AccessDenied.md).
+- **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true. Below level 1 it writes nothing and calls `efc.ui.denied` (WARN log and AccessDenied popup).
 - **`efc.ui.bypass` / `unbypass`**: exist in the module but are not called from this view. Interlock bypass is handled in the embedded `IntlkList` views, which are not in this file.
 
 ## Tag members used
@@ -506,8 +514,8 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 
 - **`tType` is never passed.** `efc.ui.openDynamic` sends only `tagPath`, so the dock's `tType` is always its default. Nothing here depends on it.
 - **Commands do not check the device state.** OPEN and CLOSE are not disabled by `Sts_Opened`, `Sts_Closed`, `Sts_Fault` or `Mode/Sts_OOS`. The template's enable (`custom.canCmd`) checks OOS but not fault. The double-tap (`efc.ui.dblCmd`) checks fault but not OOS. The three rules differ.
-- **RESET is always enabled at level 1 and above**, including outside MAN.
-- **Mode buttons have no enable binding.** Clicking MAN or AUTO is always possible at level 1 and above, whatever the current state.
+- **RESET is always enabled at level 1 and above**, including outside MAN. Below level 1 it shows a lock and a press is refused with the AccessDenied popup.
+- **Mode buttons have no enable binding.** Clicking MAN or AUTO is always possible, whatever the current state; below level 1 the click is refused with the AccessDenied popup (lock icon on the button).
 - **Configuration writes are not role-checked in script.** Their only guard is the UI enable expression. This is a binding-level write, not an `efc.ui` call.
 - **Trend expand is owned by the Trend part.** `expanded` is an `inout` param of `Templates/Dynamic Window/Parts/Trend`. This view only seeds it with `false` and resizes the embed from it.
 - **Alarm rows** map `Cfg_Priority` through a `case()` with a default of `Medium`. Each row reads `Sts_Active` and `Sts_Unack` directly from its alarm member. The `Perm` and `Intlk` structures are shown by the embedded `IntlkList` views, which are not in this file.

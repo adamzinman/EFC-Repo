@@ -22,13 +22,13 @@ The monitoring window for a heat exchanger (T_HeatEx). It is read-only: it has n
 
 **Values** (all levels). Twelve read-only rows, all formatted `#,##0.0` (effectiveness is multiplied by 100 first): hot in and hot out (`Inp_HotInT`, `Inp_HotOutT`, unit °C), cold in and cold out (`Inp_ColdInT`, `Inp_ColdOutT`, °C), hot flow and cold flow (`Inp_HotFlow`, `Inp_ColdFlow`, no unit shown), duty (`Val_Duty`, kW), LMTD (`Val_LMTD`, K), UA (`Val_UA`, kW/K), cleanliness (`Val_Clean`, %), approach (`Val_Approach`, K) and effectiveness (`Val_Effect`, a 0-1 fraction shown as a percentage: value x 100, unit %). The values are not gated by `Sts_CalcValid`, so the banner and the values can disagree (see the notes).
 
-**Alarms** (all levels). Five rows: Fouling (`Alm_Fouling`), Hot side dP high (`Alm_HotDP`), Cold side dP high (`Alm_ColdDP`), Heat balance error (`Alm_HeatBal`) and Outlet temperature high (`Alm_HiOutT`). A row is coloured when its alarm is active, using the alarm's `Cfg_Priority`: 1 `Critical`, 2 `High`, 3 `Medium`, 4 `Low`, anything else `Medium`. The class adds `/Unacked` or `/Fill`. An inactive but unacknowledged alarm uses `Alarm/Status/ClearedUnacked`. An inactive, acknowledged alarm uses `Text/Caption Text/Color/Muted`. "No active alarms" is shown when none is active. **ACK** (level 1 and above) calls `efc.ui.ackAll`, which writes `Cmd_Ack` only for the alarms whose `Sts_Unack` is true.
+**Alarms** (all levels). Five rows: Fouling (`Alm_Fouling`), Hot side dP high (`Alm_HotDP`), Cold side dP high (`Alm_ColdDP`), Heat balance error (`Alm_HeatBal`) and Outlet temperature high (`Alm_HiOutT`). A row is coloured when its alarm is active, using the alarm's `Cfg_Priority`: 1 `Critical`, 2 `High`, 3 `Medium`, 4 `Low`, anything else `Medium`. The class adds `/Unacked` or `/Fill`. An inactive but unacknowledged alarm uses `Alarm/Status/ClearedUnacked`. An inactive, acknowledged alarm uses `Text/Caption Text/Color/Muted`. "No active alarms" is shown when none is active. **ACK** (always visible; lock icon below level 1) calls `efc.ui.ackAll`, which writes `Cmd_Ack` only for the alarms whose `Sts_Unack` is true. Below Operator `efc.ui.ackAll` writes nothing, logs a warning and opens the AccessDenied popup.
 
 **Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` ([Parts/Trend](../Parts/Trend.md)) with pens `Val_Clean` and `Val_UA`, over the window's tag. The embedded view's `expanded` param starts `false`. The Trend part toggles it itself, and the `position.basis` binding grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock. Both pens are plotted on one shared scale (see the notes).
 
 **Configuration** (collapsible; the header click toggles `open_Configuration`, collapsed at start). Seven items: design UA (`Cfg_DesignUA`, kW/K), minimum flow (`Cfg_MinFlow`), calculation filter (`Cfg_CalcFilt`, s), fouling limit (`Alm_Fouling/Cfg_Lim`, %), hot side dP limit (`Alm_HotDP/Cfg_Lim`), cold side dP limit (`Alm_ColdDP/Cfg_Lim`) and outlet temperature limit (`Alm_HiOutT/Cfg_Lim`, °C). Below level 4 each is a read-only row. At level 4 and above each is an entry bound bidirectionally to the tag. The entries' enable expression is the literal `true`. Their visibility is what limits them to level 4. Writes are not audited.
 
-**Role checks.** All role levels come from the Perspective session (`session.props.auth.user.roles`), mapped by `efc.ui.level`. Only ACK checks the level in script (inside `efc.ui.ackAll`). The configuration entries are protected by visibility only. Bindings do not check the level. Real access control has to be enforced in Perspective security and the PLC logic.
+**Role checks.** `view.custom.level` comes from the Perspective session (`session.props.auth.securityLevels`), mapped by `efc.ui.level` (case-insensitive, site names through `efc.ui.ROLE_ALIASES`). Only ACK checks the level in script (inside `efc.ui.ackAll`): its button stays visible with a lock below Operator, and a press below it logs a warning and opens the `Parts/AccessDenied` popup (decision 33; see [AccessDenied](../Parts/AccessDenied.md)). The configuration entries are protected by visibility only. Bindings do not check the level. Real access control has to be enforced in Perspective security and the PLC logic.
 
 **Audit.** None. This view makes no `efc.ui.cmd` call with `audit=True`, and `efc.ui.ackAll` does not audit. Configuration writes go straight to the tags and are not audited.
 
@@ -47,7 +47,7 @@ Both have `paramDirection: input` and `persistent: true`. No output parameters.
 
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
-| `view.custom.level` | `0` | property + script transform | `session.props.auth.user.roles` → `return efc.ui.level(value)` | Role level 0-5 from `session.props.auth.user.roles` via `efc.ui.level`. Gates the ACK button and the configuration entries (level 4). |
+| `view.custom.level` | `0` | property + script transform | `session.props.auth.securityLevels` → `return efc.ui.level(value)` | Role level 0-5 from `session.props.auth.securityLevels` via `efc.ui.level`. Gates the ACK button and the configuration entries (level 4). |
 | `view.custom.open_Configuration` | `false` | none (written by script) | none | View-local toggle for the Configuration section. Set by the header click script; not bound to any tag; not persisted. |
 
 #### Tag mirrors (`custom.m_*`)
@@ -69,7 +69,7 @@ None.
 
 ### Session, page and message payloads
 
-- `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
+- `session.props.auth.securityLevels`: read by `custom.level` (transform `efc.ui.level`).
 - `session.props.auth.user.userName`: read by `efc.ui._audit` (not bound in this view).
 - `session.custom.efcDw[pageId]`: holds only the page's default dock view, written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
 - `page.props.pageId`: read by `efc.ui._state` to key `efcDw`.
@@ -77,7 +77,7 @@ None.
 
 ## Bindings reference
 
-Total: **119 bindings**: 38 at view root (all `custom.*`, including 1 `property` binding with a transform) and 81 on components (74 `expr`, 7 `tag`). Types overall: 74 `expr`, 44 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only, so they are not counted.
+Total: **120 bindings**: 38 at view root (all `custom.*`, including 1 `property` binding with a transform) and 82 on components (75 `expr`, 7 `tag`). Types overall: 75 `expr`, 44 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only, so they are not counted.
 
 ### View root
 
@@ -136,7 +136,8 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Alarms/Body/List/A2 | `props.style.classes` | expr | `if({view.custom.m_Alm_ColdDP_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_ColdDP_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_ColdDP_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_ColdDP_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))` | CSS class(es) selected by state |
 | root/Alarms/Body/List/A3 | `props.style.classes` | expr | `if({view.custom.m_Alm_HeatBal_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_HeatBal_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_HeatBal_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_HeatBal_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))` | CSS class(es) selected by state |
 | root/Alarms/Body/List/A4 | `props.style.classes` | expr | `if({view.custom.m_Alm_HiOutT_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_HiOutT_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_HiOutT_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_HiOutT_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))` | CSS class(es) selected by state |
-| root/Alarms/Body/Ack | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
+| root/Alarms/Body/Ack | `props.image.icon.path` | expr | `if({view.custom.level} < 1, 'material/lock', '')` | Shows a lock icon on the button while the user is below Operator |
+| root/Alarms/Body/Ack | `meta.tooltip.enabled` | expr | `{view.custom.level} < 1` | Tooltip "Requires Operator access" shown while expression is true |
 
 ### `root/Trend`
 
@@ -218,7 +219,7 @@ The button handlers call `efc.ui` functions, which are summarised after the list
 	self.view.custom.open_Configuration = not self.view.custom.open_Configuration
 ```
 
-4. **transform on `(view root)` `custom.level`**: `custom.level` binding, `property` source `session.props.auth.user.roles`.
+4. **transform on `(view root)` `custom.level`**: `custom.level` binding, `property` source `session.props.auth.securityLevels`.
 
 ```python
 	return efc.ui.level(value)
@@ -236,9 +237,9 @@ This view has no `efc.ui.cmd` calls. The configuration entries and checkboxes ar
 
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.level(roles)`**: highest index of the role in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']`, or 0. Bound to `custom.level`.
+- **`efc.ui.level(levels)`**: walks `session.props.auth.securityLevels` (nested `name`/`children`, a path string, or a plain role list) and returns the highest index, 0 to 5, of the names that match `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` case-insensitively (site names map through `efc.ui.ROLE_ALIASES`; no match gives 0). Bound to `custom.level`. `efc.ui.userLevel` (used by the checks in `cmd`, `ackAll`, `bypass`, `unbypass` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
 - **`efc.ui.closeDynamic(component)`**: loads the page's stored `default` view and params (`session.custom.efcDw[pageId]`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
-- **`efc.ui.ackAll(component, alarms)`**: returns unless the user is at level 1 or above. Reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true. No audit.
+- **`efc.ui.ackAll(component, alarms)`**: below level 1 it writes nothing and calls `efc.ui.denied` (WARN log and AccessDenied popup). Otherwise it reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true. No audit.
 - **`efc.ui.cmd`, `bypass`, `unbypass`, `dblCmd`**: not called from this view. `efc.ui.trend` is called by the Trend part, not here.
 
 ## Tag members used
