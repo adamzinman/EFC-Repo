@@ -137,7 +137,7 @@ When `Disabled`, every step is Pending. When `Failed`, the first step that is no
 | `resetLocked` | not (`Complete` or `Failed`). Locks Reset |
 | `foot` | "Station disabled: commands unavailable", else "Tare and Zero locked while active" when `tzLocked`, else blank |
 
-The view's two other custom properties are `level`, the user's role level (1 or higher enables the controls), and `pendingCmd`, the command waiting for Confirm or Cancel. Both are described under Properties reference.
+The view's two other custom properties are `level`, the user's role level (from `session.props.auth.securityLevels`; 1 or higher is Operator and may command), and `pendingCmd`, the command waiting for Confirm or Cancel. Both are described under Properties reference.
 
 ### PLC members that already provide some of `s`
 
@@ -155,7 +155,7 @@ Reading these directly would remove most of the transform. Each element could th
 
 **Status.** The chip (`custom.s.word`, class `custom.s.chip`) shows the status word for the first matching state: DISABLED, FAULT, COMPLETE, FILLING, SAMPLING, VACUUMING, VENTING, RECOVERING, ACTIVE, READY or IDLE. The message line shows `Sts_Msg` when it has text, otherwise the status text for that state. The status block is highlighted (`Util/Highlight`) while the station is selected.
 
-**Select** (level 1 and above, and station not disabled). The button reads SELECT or SELECTED from `Sts_Selected`. It pulses `Cmd_Select`: True now, then False 1 s later on a background thread (`system.util.invokeAsynchronous`).
+**Select** (Operator and above, and station not disabled; below Operator it stays enabled with a lock and a press opens the AccessDenied popup). The button reads SELECT or SELECTED from `Sts_Selected`. It calls `efc.ui.cmd(self, 'Cmd_Select', True, 1)`, which writes `Cmd_Select` True, then False 1 s later on a background thread (`system.util.invokeAsynchronous`).
 
 **Steps.** A strip of six segments: Vessel, Vac, Prefill, Fill, Sample, Done. Each segment is Pending, Active, Done or Fault (see the derived state below). When the station is FAILED, the first unfinished step is drawn as the fault step.
 
@@ -169,9 +169,9 @@ Reading these directly would remove most of the transform. Each element could th
 
 **Setpoints** (level 1 and above, and station not disabled). Five numeric entries, each bound two-way to a T_Station setpoint: Target (`Prm_TargetWt`), Sample (`Prm_SampleWt`), Max press (`Prm_MaxPress`), Prefill press (`Prm_PrefillPress`) and Deadband (`Prm_Deadband`). Units come from `custom.s.units`, except the two pressures, which are fixed as `psig`. The entries write through their bindings. No `efc.ui` call, no role check in script, no audit.
 
-**Commands.** Tare and Zero are enabled at level 1 and above when the station is not locked (`tzLocked` is false). Reset is enabled at level 1 and above when `resetLocked` is false, that is, only when the station is Complete or Failed. Each button sets `view.custom.pendingCmd` to `Tare`, `Zero` or `Reset`, which shows the confirm strip: "`<Command> <scale>?`" with Cancel and Confirm. Cancel clears `pendingCmd`. Confirm clears it and writes `Cmd_Tare`, `Cmd_Zero` or `Cmd_Reset` True, then False 1 s later. While a command is pending the button row is hidden. The foot line below the buttons shows the lock reason (see `foot`).
+**Commands.** Tare and Zero are enabled when the station is not locked (`tzLocked` is false). Reset is enabled when `resetLocked` is false, that is, only when the station is Complete or Failed. Each button sets `view.custom.pendingCmd` to `Tare`, `Zero` or `Reset`, which shows the confirm strip: "`<Command> <scale>?`" with Cancel and Confirm. Cancel clears `pendingCmd`. Confirm clears it and writes `Cmd_Tare`, `Cmd_Zero` or `Cmd_Reset` True through `efc.ui.cmd`, then False 1 s later. Below Operator these buttons stay enabled with the lock icon (see Role checks). While a command is pending the button row is hidden. The foot line below the buttons shows the lock reason (see `foot`).
 
-**Role checks.** Role levels come from the Perspective session and are mapped by `efc.ui.level` to `view.custom.level`. The Select button, the setpoints, the command buttons and Confirm are gated by `view.custom.level >= 1` in their enable expressions. No script in this view checks the level, and no script calls `efc.ui.cmd`. Real access control has to be enforced in Perspective security and the PLC logic.
+**Role checks (decision 33).** `view.custom.level` is bound to `session.props.auth.securityLevels` and mapped by `efc.ui.level` (Guest 0 ... Admin 5), the same as the generated windows. The command buttons Select, Tare, Zero, Reset and Confirm need level 1 (Operator). Below it they stay enabled and show a lock icon (`material/lock`, 14 px, `#1F1F1F`) with the tooltip "Requires Operator access"; their enable expression is `({view.custom.level} < 1) || (<own condition>)`, so the station-state conditions only apply to users who may command. A press below Operator is refused by `efc.ui` and opens the `Templates/Dynamic Window/Parts/AccessDenied` popup: Select and Confirm go through `efc.ui.cmd(self, member, True, 1)` (it writes `tagPath + '/' + member`), and Tare, Zero and Reset call `efc.ui.denied` instead of opening the confirm strip. The five setpoint entries are not locked: they are greyed out (disabled) below Operator by `{view.custom.level} >= 1 && (!{view.custom.s.dis})`. Cancel only clears `pendingCmd`, so it keeps the plain `level >= 1` enable and has no lock. The setpoint entries write their tags through bidirectional bindings, not `efc.ui.cmd`.
 
 **Audit.** None. The commands and setpoints do not call `efc.ui`, so nothing is audit-logged.
 
@@ -191,7 +191,7 @@ Reading these directly would remove most of the transform. Each element could th
 |---|---|---|---|---|
 | `view.custom.s` | sample values from the design preview (for example `"name": "Station 1"`, `"net": "9.814"`) | property with script transform | `view.custom.t` → `custom.s` transform (below) | Derived display state for the whole faceplate: header text, status chip and message, step strip, weight and pressure bars, permissive and valve LEDs, enable flags and the foot line. Every component that shows state reads `view.custom.s.*`. The default is replaced when the binding evaluates. |
 | `view.custom.t` | dictionary of nulls | 36 tag mirrors (see below) | `custom.t.<Name>` | Raw tag values, one key per member. Only the transform reads it. |
-| `view.custom.level` | `0` | property + script transform | `session.props.auth.user.roles` → `return efc.ui.level(value)` | Role level 0-5 via `efc.ui.level` (Guest 0, Operator 1, Maintenance 2, Supervisor 3, Engineer 4, Admin 5). Gates the Select button, the setpoints, Tare, Zero, Reset and the Confirm and Cancel buttons. |
+| `view.custom.level` | `0` | property + script transform | `session.props.auth.securityLevels` → `return efc.ui.level(value)` | Role level 0-5 via `efc.ui.level` (Guest 0, Operator 1, Maintenance 2, Supervisor 3, Engineer 4, Admin 5). Greys out the setpoints and Cancel below Operator; drives the lock on Select, Tare, Zero, Reset and Confirm. |
 | `view.custom.pendingCmd` | `""` | none (written by scripts) | none | The command waiting for confirmation: `Tare`, `Zero`, `Reset` or empty. Set by the command buttons and cleared by Cancel and Confirm. Not persisted. |
 
 #### Derived state (`custom.s`)
@@ -220,7 +220,7 @@ None.
 
 ### Session, page and message payloads
 
-- `session.props.auth.user.roles`: read by `custom.level` (transform `efc.ui.level`).
+- `session.props.auth.securityLevels`: read by `custom.level` (transform `efc.ui.level`).
 - `session.custom.efcDw[pageId]`: holds only the page's default dock view, written by `efc.ui.setDefaultDock` in the screen's onStartup (not in this file) and read by `efc.ui.closeDynamic` in the header. `openDynamic` writes no session value; it calls `system.perspective.alterDock` and `openDock` on `dw_Right`.
 - `page.props.pageId`: read by `efc.ui._state` to key `efcDw`. Reached through the header icon.
 - `session.props.auth.user.userName`: not used in this view.
@@ -250,7 +250,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Body/Status/ChipRow/Chip | `props.style.classes` | expr | `({view.custom.s.chip}) + ' Station/Fill/Chip'` | CSS class(es) selected by state |
 | root/Body/Status/ChipRow/Select | `props.text` | property | `view.custom.s.selText` | Text content |
 | root/Body/Status/ChipRow/Select | `props.style.classes` | expr | `{view.custom.s.selCls}` | CSS class(es) selected by state |
-| root/Body/Status/ChipRow/Select | `props.enabled` | expr | `{view.custom.level} >= 1 && (!{view.custom.s.dis})` | Enabled while expression is true |
+| root/Body/Status/ChipRow/Select | `props.enabled` | expr | `({view.custom.level} < 1) || (!{view.custom.s.dis})` | Enabled while expression is true |
 | root/Body/Status/Msg | `props.text` | property | `view.custom.s.msg` | Text content |
 | root/Body/Status/Steps/Step0/Seg | `props.style.classes` | expr | `{view.custom.s.steps[0]}` | CSS class(es) selected by state |
 | root/Body/Status/Steps/Step0/Txt | `props.style.classes` | expr | `{view.custom.s.stepText[0]}` | CSS class(es) selected by state |
@@ -346,20 +346,21 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/Body/Commands/Buttons | `position.display` | expr | `{view.custom.pendingCmd} = ""` | Shown while expression is true |
-| root/Body/Commands/Buttons/Tare | `props.enabled` | expr | `{view.custom.level} >= 1 && (!{view.custom.s.tzLocked})` | Enabled while expression is true |
-| root/Body/Commands/Buttons/Zero | `props.enabled` | expr | `{view.custom.level} >= 1 && (!{view.custom.s.tzLocked})` | Enabled while expression is true |
-| root/Body/Commands/Buttons/Reset | `props.enabled` | expr | `{view.custom.level} >= 1 && (!{view.custom.s.resetLocked})` | Enabled while expression is true |
+| root/Body/Commands/Buttons/Tare | `props.enabled` | expr | `({view.custom.level} < 1) || (!{view.custom.s.tzLocked})` | Enabled while expression is true |
+| root/Body/Commands/Buttons/Zero | `props.enabled` | expr | `({view.custom.level} < 1) || (!{view.custom.s.tzLocked})` | Enabled while expression is true |
+| root/Body/Commands/Buttons/Reset | `props.enabled` | expr | `({view.custom.level} < 1) || (!{view.custom.s.resetLocked})` | Enabled while expression is true |
 | root/Body/Commands/Confirm | `position.display` | expr | `{view.custom.pendingCmd} != ""` | Shown while expression is true |
 | root/Body/Commands/Confirm/ConfirmTxt | `props.text` | expr | `{view.custom.pendingCmd} + " " + {view.custom.s.scale} + "?"` | Text content |
 | root/Body/Commands/Confirm/Cancel | `props.enabled` | expr | `{view.custom.level} >= 1` | Enabled while expression is true |
-| root/Body/Commands/Confirm/ConfirmBtn | `props.enabled` | expr | `{view.custom.level} >= 1` | Enabled while expression is true |
+| root/Body/Commands/Confirm/ConfirmBtn | `props.image.icon.path` | expr | `if({view.custom.level} < 1, 'material/lock', '')` | Lock icon below Operator |
+| root/Body/Commands/Confirm/ConfirmBtn | `meta.tooltip.enabled` | expr | `{view.custom.level} < 1` | Shows "Requires Operator access" |
 | root/Body/Commands/Foot | `props.text` | property | `view.custom.s.foot` | Text content |
 
 ## Scripts reference
 
 Total: **9 scripts**: 7 event scripts (6 `component.onActionPerformed`, 1 `dom.onClick`) and 2 transform scripts (`custom.s` and `custom.level`). No `customMethods`, no `messageHandlers`, no property-change `onChange` scripts.
 
-The button handlers below call no `efc.ui` command functions. The Tare, Zero, Reset and Select writes are made directly with `system.tag.writeBlocking`. The derived state transform is explained after the list.
+Select and Confirm write through `efc.ui.cmd` (level check, AccessDenied popup); Tare, Zero and Reset call `efc.ui.denied` below Operator. The release half of each pulse still uses `system.tag.writeBlocking`. The derived state transform is explained after the list.
 
 1. **`root/Header/Close`**: `events.dom.onClick`, scope G.
 
@@ -371,31 +372,40 @@ The button handlers below call no `efc.ui` command functions. The Tare, Zero, Re
 
 ```python
 	# Momentary pulse: set the PLC bit, release it 1 s later (harmless if the PLC clears it first).
-	path = self.view.params.tagPath + "/Cmd_Select"
-	system.tag.writeBlocking([path], [True])
-	def _release(p=path):
-		import time
-		time.sleep(1.0)
-		system.tag.writeBlocking([p], [False])
-	system.util.invokeAsynchronous(_release)
+	if efc.ui.cmd(self, 'Cmd_Select', True, 1):
+		path = self.view.params.tagPath + "/Cmd_Select"
+		def _release(p=path):
+			import time
+			time.sleep(1.0)
+			system.tag.writeBlocking([p], [False])
+		system.util.invokeAsynchronous(_release)
 ```
 
 3. **`root/Body/Commands/Buttons/Tare`**: `events.component.onActionPerformed`, scope G.
 
 ```python
-	self.view.custom.pendingCmd = "Tare"
+	if efc.ui.userLevel(self) < 1:
+		efc.ui.denied(self, 1, 'Tare')
+	else:
+		self.view.custom.pendingCmd = "Tare"
 ```
 
 4. **`root/Body/Commands/Buttons/Zero`**: `events.component.onActionPerformed`, scope G.
 
 ```python
-	self.view.custom.pendingCmd = "Zero"
+	if efc.ui.userLevel(self) < 1:
+		efc.ui.denied(self, 1, 'Zero')
+	else:
+		self.view.custom.pendingCmd = "Zero"
 ```
 
 5. **`root/Body/Commands/Buttons/Reset`**: `events.component.onActionPerformed`, scope G.
 
 ```python
-	self.view.custom.pendingCmd = "Reset"
+	if efc.ui.userLevel(self) < 1:
+		efc.ui.denied(self, 1, 'Reset')
+	else:
+		self.view.custom.pendingCmd = "Reset"
 ```
 
 6. **`root/Body/Commands/Confirm/Cancel`**: `events.component.onActionPerformed`, scope G.
@@ -410,9 +420,8 @@ The button handlers below call no `efc.ui` command functions. The Tare, Zero, Re
 	cmd = self.view.custom.pendingCmd
 	self.view.custom.pendingCmd = ""
 	member = {"Tare": "Cmd_Tare", "Zero": "Cmd_Zero", "Reset": "Cmd_Reset"}.get(cmd)
-	if member:
+	if member and efc.ui.cmd(self, member, True, 1):
 		path = self.view.params.tagPath + "/" + member
-		system.tag.writeBlocking([path], [True])
 		def _release(p=path):
 			import time
 			time.sleep(1.0)
@@ -533,7 +542,7 @@ The button handlers below call no `efc.ui` command functions. The Tare, Zero, Re
 	}
 ```
 
-9. **transform on `(view root)` `custom.level`**: `custom.level` binding, `property` source `session.props.auth.user.roles`.
+9. **transform on `(view root)` `custom.level`**: `custom.level` binding, `property` source `session.props.auth.securityLevels`.
 
 ```python
 	return efc.ui.level(value)
@@ -544,14 +553,14 @@ The button handlers below call no `efc.ui` command functions. The Tare, Zero, Re
 | Handler | Action | Writes | Role check | Audit |
 |---|---|---|---|---|
 | `Header/Close` (dom click) | `efc.ui.closeDynamic` restores the default dock view or closes the dock | none | none | no |
-| `Status/ChipRow/Select` | pulses `Cmd_Select`: True now, False after 1 s, on a background thread | `Cmd_Select` | enable only: level 1 and not `Disabled` | no |
-| `Commands/Buttons/Tare` | sets `pendingCmd` = `Tare`, which shows the confirm strip | none (confirm writes) | enable only: level 1 and not `tzLocked` | no |
-| `Commands/Buttons/Zero` | sets `pendingCmd` = `Zero` | none (confirm writes) | enable only: level 1 and not `tzLocked` | no |
-| `Commands/Buttons/Reset` | sets `pendingCmd` = `Reset` | none (confirm writes) | enable only: level 1 and not `resetLocked` | no |
+| `Status/ChipRow/Select` | pulses `Cmd_Select`: True now, False after 1 s, on a background thread | `Cmd_Select` | `efc.ui.cmd` min level 1 (lock + AccessDenied below); enabled below level, else not `Disabled` | no |
+| `Commands/Buttons/Tare` | sets `pendingCmd` = `Tare`, which shows the confirm strip | none (confirm writes) | lock + `efc.ui.denied` below level 1; else not `tzLocked` | no |
+| `Commands/Buttons/Zero` | sets `pendingCmd` = `Zero` | none (confirm writes) | lock + `efc.ui.denied` below level 1; else not `tzLocked` | no |
+| `Commands/Buttons/Reset` | sets `pendingCmd` = `Reset` | none (confirm writes) | lock + `efc.ui.denied` below level 1; else not `resetLocked` | no |
 | `Commands/Confirm/Cancel` | clears `pendingCmd` | none | enable only: level 1 | no |
-| `Commands/Confirm/ConfirmBtn` | clears `pendingCmd`, writes the matching command True, then False after 1 s | `Cmd_Tare`, `Cmd_Zero` or `Cmd_Reset` | enable only: level 1 | no |
+| `Commands/Confirm/ConfirmBtn` | clears `pendingCmd`, writes the matching command True, then False after 1 s | `Cmd_Tare`, `Cmd_Zero` or `Cmd_Reset` | `efc.ui.cmd` min level 1 (lock + AccessDenied below) | no |
 | `custom.s` transform | derives the state map from `custom.t` (below) | `view.custom.s` | none | no |
-| `custom.level` transform | `efc.ui.level(value)` | `view.custom.level` | none | no |
+| `custom.level` transform (`session.props.auth.securityLevels`) | `efc.ui.level(value)` | `view.custom.level` | none | no |
 
 ### Derived state transform (`custom.s`)
 
@@ -802,7 +811,7 @@ All paths are relative to `tagPath`. Types and comments come from `types/PCLib_M
 
 - **Reset can be enabled while the station is disabled.** `resetLocked` is `not (Complete or Failed)` and does not test `Disabled`. Select, the setpoints, Tare and Zero do check `Disabled`. If `Sts_Failed` and `Sts_Disabled` are both true, Reset is enabled and the chip shows DISABLED.
 - **Tare and Zero stay enabled during a fault and at idle.** `tzLocked` is `busy` or `Disabled`, and `busy` only counts the Running and Transition chips. Tare and Zero are therefore enabled in FAULT, COMPLETE, READY and IDLE. The foot line says "Tare and Zero locked while active", which matches only the active states. Confirm that enabling them during a fault is intended.
-- **Commands and setpoints write tags directly.** Select, Tare, Zero, Reset and the five setpoints do not call `efc.ui.cmd`. Their only guard is the enable expression. There is no server-side level check and no audit. This conflicts with `steward/DECISIONS.md` decision 27 (writes go through `efc.ui.cmd`) and decision 20 (station setpoints are Operator+ and audit-logged). Decide as for `Templates/Dynamic Window/Loops/Loop`: route these writes through a role-checked, audited `efc.ui` function, or record the exception.
+- **Setpoints write tags directly.** Select, Tare, Zero, Reset and Confirm now go through `efc.ui.cmd` / `efc.ui.denied` (decision 33), but the five setpoint entries still write their bidirectional tag bindings without `efc.ui.cmd`: the only guard is the enable expression (greyed out below Operator). There is no server-side level check and no audit for them (decision 20 asks for Operator+ with an audit log). Decide as for `Templates/Dynamic Window/Loops/Loop`, or record the exception.
 - **Setpoints can change during a fill.** The setpoint entries are enabled whenever the station is not disabled and the level is 1 or higher. Changing `Prm_TargetWt` during a fill moves the target marker, the deadband band, the remaining value and the percentage at once. Confirm that the PLC accepts a target change mid-fill.
 - **Fill step is Done as soon as sampling starts.** Step 4 (Fill) is Done when `Sts_Complete` or `Out_SampleCmd` is true. If the sample valve opens before the fill is marked complete, the Fill segment shows Done early. Confirm this matches the sequence.
 - **Pressure units are mixed.** The pressure value line, the prefill and max setpoint units and the marker labels are fixed text `psig`. The dP line says `psi` (`ptd` = "dP x psi"). Pick one unit, or take the unit from configuration (`Cfg_EU` is the weight unit, and no pressure unit member exists in T_Station).

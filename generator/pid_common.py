@@ -279,14 +279,14 @@ def fx(name, kids, direction="row", classes="", wrap=True, extra=None, basis="au
     if wrap: p["wrap"] = "wrap"
     return {"type": "ia.container.flex", "version": 0, "meta": {"name": uid(name)}, "position": {"basis": basis, "shrink": 0}, "props": p, "children": kids}
 def ev(path, params, w, h):
-    return {"type": "ia.display.view", "version": 0, "meta": {"name": uid("V")}, "position": {"basis": f"{h}px", "shrink": 0},   # column flex: basis = height
-            "props": {"path": path, "params": params, "useDefaultViewWidth": False, "useDefaultViewHeight": False, "style": {"width": f"{w}px"}}}
+    return {"type": "ia.display.view", "version": 0, "meta": {"name": uid("V")}, "position": {"basis": f"{h/10.8:.3f}vh", "shrink": 0},   # column flex: basis = height (vh, so it scales with vh text)
+            "props": {"path": path, "params": params, "useDefaultViewWidth": False, "useDefaultViewHeight": False, "style": {"width": f"{w/10.8:.3f}vh"}}}
 def cap(t): return {"type": "ia.display.label", "version": 0, "meta": {"name": uid("Cap")}, "position": {"basis": "auto", "shrink": 0},
                     "props": {"text": t, "style": {"classes": "Text/Caption Text/Mod/Center"}}}
 def item(path, params, w, h, caption):
-    return fx("Item", [ev(path, params, w, h), cap(caption)], direction="column", wrap=False, extra={"alignItems": "center", "gap": "2px"}, basis=f"{max(w, 90)}px")
+    return fx("Item", [ev(path, params, w, h), cap(caption)], direction="column", wrap=False, extra={"alignItems": "center", "gap": "2px"}, basis=f"{max(w, 90)/10.8:.3f}vh")
 def section(title, items):
-    return fx("Sec", [{"type": "ia.display.label", "version": 0, "meta": {"name": uid("T")}, "position": {"basis": "28px", "shrink": 0},
+    return fx("Sec", [{"type": "ia.display.label", "version": 0, "meta": {"name": uid("T")}, "position": {"basis": f"{28/10.8:.3f}vh", "shrink": 0},
                        "props": {"text": title, "style": {"classes": "Text/Header"}}}, fx("Grid", items)], direction="column", classes="Container/Panel", wrap=False)
 def demo_view():
     t_items = []
