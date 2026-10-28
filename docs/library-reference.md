@@ -118,6 +118,16 @@ The user's level comes from the Perspective session's security levels, `session.
 
 Full reference: [efc.ui](efc-ui.md).
 
+## Alarm shelving
+
+Shelving hides a PLC alarm in Ignition for a chosen time (decision 34). It uses Ignition's own alarm shelving; the PLC is not changed.
+
+- **Where to shelve:** the Alarms section of a dynamic window. Each alarm row that is not shelved has a SHELVE button, visible to Supervisor and above only (decisions 27 and 33: hidden below the level, not locked). SHELVE opens a popup with 15 min, 1 h, 4 h and 8 h presets (the longest is 8 h, the T_Alarm `Cfg_MaxShelf` default), a required reason, and a SHELVE button that stays disabled until a reason is typed. The popup closes when the shelve is made.
+- **Unshelve:** a shelved row shows a SHELVED chip with the minutes left (a chip with no minutes means no expiry) and an UNSHELVE button, also Supervisor and above.
+- **Audit:** each shelve writes `EFC shelve` (the alarm source, the minutes and the reason) and each unshelve writes `EFC unshelve` to the audit log, with the user name. See [efc.ui section 7](efc-ui.md#73-audit-records).
+- **What shelving does:** Ignition hides the alarm from the alarm status table, the alarm journal views and the template alarm outline until the timeout or an unshelve. **The PLC alarm stays active.** `Cmd_Shelve` and `Sts_Shelved` are not driven by the HMI library; they remain available for PLC-side logic.
+- **Alarm Status Table:** the table's built-in shelve is a second way to shelve. Enable it in the Designer, check the table's shelving and toolbar properties for your 8.1 version, and set the component's security so only Supervisor and above can use it. The table's own shelve does not go through `efc.ui`, so it does not write the `EFC shelve` audit line.
+
 ## Placing templates in a flex container
 Template text is sized in vh, so it grows with the screen. The box a template sits in has to grow the same way, or the text outgrows it and clips. When you drop a template into a flex container, the Designer sets the child's `position.basis` to a pixel size. That pins the box: at 1080p it fits, but on a taller screen the vh text gets bigger while the box doesn't, and the bottom row is cut off with a scrollbar.
 

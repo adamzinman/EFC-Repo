@@ -665,8 +665,8 @@
   "size": "400\u00d7860",
   "params": {},
   "bindings": {
-   "ok": 207,
-   "fail": 6
+   "ok": 262,
+   "fail": 9
   }
  },
  {
@@ -679,8 +679,8 @@
    "tagPath": "[default]PID_Demo/E401"
   },
   "bindings": {
-   "ok": 1372,
-   "fail": 12
+   "ok": 1449,
+   "fail": 15
   }
  },
  {
@@ -707,8 +707,8 @@
    "tagPath": "[default]PID_Demo/TIC101"
   },
   "bindings": {
-   "ok": 745,
-   "fail": 9
+   "ok": 778,
+   "fail": 12
   }
  },
  {
@@ -761,6 +761,22 @@
  },
  {
   "group": "Dynamic windows",
+  "path": "Templates/Dynamic Window/Parts/ShelveConfirm",
+  "kind": "part",
+  "png": "templates/Dynamic Window/Parts/ShelveConfirm.png",
+  "size": "360\u00d7300",
+  "params": {
+   "tagPath": "[default]PID_Demo/XV101",
+   "member": "Alm_FailOpen",
+   "desc": "Fail to open"
+  },
+  "bindings": {
+   "ok": 14,
+   "fail": 3
+  }
+ },
+ {
+  "group": "Dynamic windows",
   "path": "Templates/Dynamic Window/Parts/Trend",
   "kind": "part",
   "png": "templates/Dynamic Window/Parts/Trend.png",
@@ -788,8 +804,8 @@
    "tagPath": "[default]PV_Demo/PT001"
   },
   "bindings": {
-   "ok": 211,
-   "fail": 6
+   "ok": 277,
+   "fail": 9
   }
  },
  {
@@ -802,8 +818,8 @@
    "tagPath": "[default]PID_Demo/P101"
   },
   "bindings": {
-   "ok": 1356,
-   "fail": 12
+   "ok": 1444,
+   "fail": 15
   }
  },
  {
@@ -816,8 +832,8 @@
    "tagPath": "[default]PID_Demo/M601"
   },
   "bindings": {
-   "ok": 1444,
-   "fail": 12
+   "ok": 1554,
+   "fail": 15
   }
  },
  {
@@ -844,8 +860,8 @@
    "tagPath": "[default]PID_Demo/FV101"
   },
   "bindings": {
-   "ok": 770,
-   "fail": 9
+   "ok": 803,
+   "fail": 12
   }
  },
  {
@@ -858,8 +874,8 @@
    "tagPath": "[default]PID_Demo/XV101"
   },
   "bindings": {
-   "ok": 1303,
-   "fail": 12
+   "ok": 1358,
+   "fail": 15
   }
  },
  {

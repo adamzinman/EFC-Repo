@@ -6,7 +6,8 @@ and the efc.ui script library (windows open in the right dock dw_Right, decision
 Every window is 400 x 860 at 1080p (37.04vh x 79.63vh, decision 25), binds one EFCLib v1 T_ type through
 view.params.tagPath and uses EFC_Styles classes only. Role levels (efc.ui.ROLES): 1 Operator commands and
 setpoints, 2 Maintenance MAINT/OOS/JOG/simulate/maint reset, 3 Supervisor bypass + shelving (reason, audit),
-4 Engineer limits, configuration and tuning. Command buttons (mode, commands, ACK, RESET) below the user's level
+4 Engineer limits, configuration and tuning. Alarm shelving (decision 34) is Ignition's own alarm shelving only (the
+PLC Cmd_Shelve is not driven from the HMI). Command buttons (mode, commands, ACK, RESET) below the user's level
 stay visible with a lock and a press opens Parts/AccessDenied (decision 33); other controls below the level are hidden.
 The level is efc.ui.level(session.props.auth.securityLevels).
 """
@@ -16,6 +17,8 @@ from common import PERSPECTIVE, dump, write, resource_json, project_json, projec
 
 PROJECT = "EFC_Docks"
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import efc_ui as _ui                    # constants only at import time (SHELVE_PRESETS, SHELVE_MAX_MIN); no Ignition calls
 W, H = 400, 860
 def v(px): return f"{px / 10.8:.3f}vh"
 
@@ -206,16 +209,58 @@ def intlk(name, title, sub):
                                           "params": {"tagPath": "", "title": title}}, {"shrink": 0},
                 {"props.params.tagPath": expr(f"{{view.params.tagPath}} + '/{sub}'")})
 
+def _shelved_transform(mem):
+    """Binding transform for one row's custom.sh_<member>. Input: efc.ui.shelvedMap's 'Alm_X=12,Alm_Y=0' (or ''). Output:
+    minutes left for mem (0 = no expiry), or -1 when mem is not shelved."""
+    body = ("try:\n"
+            "\ts = ',' + str(value or '') + ','\n"
+            "\ti = s.find(',@@M@@=')\n"
+            "\tif i < 0:\n"
+            "\t\treturn -1\n"
+            "\tj = i + len(',@@M@@=')\n"
+            "\treturn int(s[j:s.find(',', j)])\n"
+            "except Exception:\n"
+            "\treturn -1").replace("@@M@@", mem)
+    return "\t" + body.replace("\n", "\n\t")
+
+def _dur(minutes):
+    return f"{minutes} min" if minutes < 60 else f"{minutes // 60} h"
+
 def alarms(vw, items):
-    """items: [(member, text)] - T_Alarm / T_AlmLim members; ACK acknowledges the unacked ones."""
+    """items: [(member, text)] - T_Alarm / T_AlmLim members; ACK acknowledges the unacked ones.
+    Shelving (decision 34, Ignition's alarm shelving only): one view custom `shelved` polls efc.ui.shelvedMap every 5 s (now(5000) + script transform)
+    ('Alm_X=12,...' for the shelved members). Each row's custom sh_<member> is its minutes left (-1 = not shelved), read
+    from that string by a binding transform. SHELVE (Supervisor+, not shelved) opens ShelveConfirm; UNSHELVE (Supervisor+,
+    shelved) calls efc.ui.unshelve. Rows show a SHELVED chip while shelved."""
+    names = [m for m, _ in items]
+    # polled like Parts/Trend: now(5000) re-runs the transform every 5 s (runScript is not on the 8.1 expression list check_81 uses)
+    vw.custom["shelved"] = ""
+    vw.pc["custom.shelved"] = {"binding": {"type": "expr", "config": {"expression": "len({view.params.tagPath}) + toMillis(now(5000)) * 0"},
+                               "transforms": [{"type": "script", "code": "\treturn efc.ui.shelvedMap(self.view.params.tagPath, %r)" % ",".join(names)}]}}
     rows = []
     for i, (mem, text) in enumerate(items):
         a, u = vw.m(mem + "/Sts_Active"), vw.m(mem + "/Sts_Unack")
         p = vw.m(mem + "/Cfg_Priority")
         pri = f"case(toInt({p}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium')"
         cls = f"if({a}, 'Alarm/' + {pri} + if({u}, '/Unacked', '/Fill'), if({u}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
-        rows.append(label(f"A{i}", text, "Text/Caption", pc={"props.style.classes": cls_expr(cls, "Text/Caption Text/Color/Muted")}))
-    names = [m for m, _ in items]
+        key = "sh_" + re.sub(r"\W", "_", mem)
+        vw.custom[key] = -1
+        vw.pc["custom." + key] = {"binding": {"type": "expr", "config": {"expression": "{view.custom.shelved}"},
+                                              "transforms": [{"type": "script", "code": _shelved_transform(mem)}]}}
+        sh = "{view.custom." + key + "}"
+        chip = label(f"Shelved{i}", "", "Indicator/Badge",
+                     pc={"props.text": expr(f"if({sh} > 0, 'SHELVED ' + toStr({sh}) + ' min', 'SHELVED')"),
+                         "position.display": expr(f"{sh} >= 0")})
+        shelve = button(f"Shelve{i}", "SHELVE",
+                        f"system.perspective.openPopup('efcShelve', 'Templates/Dynamic Window/Parts/ShelveConfirm', "
+                        f"params={{'tagPath': self.view.params.tagPath, 'member': {mem!r}, 'desc': {text!r}}}, "
+                        f"modal=True, showCloseIcon=False)",
+                        cls="Button/Small", show=f"{lvl(SUP)} && {sh} < 0", grow=0)
+        unshelve = button(f"Unshelve{i}", "UNSHELVE", f"efc.ui.unshelve(self, {mem!r})", cls="Button/Small",
+                          show=f"{lvl(SUP)} && {sh} >= 0", grow=0)
+        rows.append(flex(f"R{i}", "row", [
+            label(f"A{i}", text, "Text/Caption", grow=1, pc={"props.style.classes": cls_expr(cls, "Text/Caption Text/Color/Muted")}),
+            chip, shelve, unshelve], extra={"alignItems": "center", "style": {"classes": "", "gap": v(4)}}))
     any_a = " || ".join(vw.m(m + "/Sts_Active") for m in names)
     return section("Alarms", "Alarms", [
         label("None", "No active alarms", "Text/Caption Text/Color/Muted", pc={"position.display": expr(f"!({any_a})")}),
@@ -570,6 +615,38 @@ def bypass_confirm():
     return "Templates/Dynamic Window/Parts/BypassConfirm", {"custom": vw.custom, "params": params, "propConfig": pc,
                                          "props": {"defaultSize": {"width": 360, "height": 260}}, "root": root}
 
+def shelve_confirm():
+    """Templates/Dynamic Window/Parts/ShelveConfirm: shelve a PLC alarm's Ignition alarm (decision 34). Presets from
+    efc_ui.SHELVE_PRESETS (max SHELVE_MAX_MIN), reason required, Supervisor+. efc.ui.shelve checks the level and the reason
+    again and writes the audit record."""
+    vw = View()
+    ok = ("if efc.ui.shelve(self, self.view.params.member, self.view.custom.minutes, self.view.custom.reason):\n"
+          "\tsystem.perspective.closePopup('efcShelve')")
+    pb = [button(f"P{m}", _dur(m), f"self.view.custom.minutes = {m}", cls="Button/Toggle/Off") for m in _ui.SHELVE_PRESETS]
+    for b, m in zip(pb, _ui.SHELVE_PRESETS):
+        b.setdefault("propConfig", {})["props.style.classes"] = cls_expr(
+            f"if({{view.custom.minutes}} = {m}, 'Button/Toggle/On', 'Button/Toggle/Off')", "Button/Toggle/Off")
+    root = flex("root", "column", [
+        label("Title", "Shelve alarm", "Text/Title"),
+        label("Desc", "", "Text/Body", pc={"props.text": expr("{view.params.desc}")}),
+        label("Note", "Supervisor or higher. Hides this alarm in Ignition (alarm table, journal, template outline) for the "
+                      "chosen time. The PLC alarm stays active. The reason and your user name go to the audit log.",
+              "Text/Caption Text/Mod/Wrap"),
+        flex("Presets", "row", pb, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}}),
+        comp("ia.input.text-field", "Reason", {"placeholder": "Reason (required)", "style": {"classes": "Input/Field"}},
+             {"shrink": 0, "basis": v(32)}, {"props.text": {"binding": {"type": "property", "config": {"path": "view.custom.reason", "bidirectional": True}}}}),
+        flex("Buttons", "row", [button("Cancel", "CANCEL", "system.perspective.closePopup('efcShelve')", cls="Button/Default"),
+                                button("Ok", "SHELVE", ok, cls="Button/Danger",
+                                       enabled=f"{lvl(SUP)} && len(trim({{view.custom.reason}})) > 0")],
+             basis=v(36), extra={"style": {"classes": "", "gap": v(6)}}),
+    ], extra={"style": {"classes": "Container/Popup", "gap": v(8)}})
+    vw.custom["reason"] = ""
+    vw.custom["minutes"] = 60
+    params = {"tagPath": "", "member": "", "desc": ""}
+    pc = dict(vw.pc, **{"params." + p: {"paramDirection": "input", "persistent": True} for p in params})
+    return "Templates/Dynamic Window/Parts/ShelveConfirm", {"custom": vw.custom, "params": params, "propConfig": pc,
+                                         "props": {"defaultSize": {"width": 360, "height": 300}}, "root": root}
+
 def access_denied():
     """Templates/Dynamic Window/Parts/AccessDenied: efc.ui.denied opens it when a command is pressed below the user's level."""
     msg = "{view.params.action} + ' requires ' + {view.params.need} + ' access or higher.'"
@@ -622,7 +699,7 @@ def trend_part():
 
 # ----------------------------------------------------------------- write
 VIEWS = [valve_discrete, valve_analog, rotating, vfd, heater, heat_transfer, process_value, loop, io_card,
-         intlk_list, bypass_confirm, access_denied, trend_part]
+         intlk_list, bypass_confirm, shelve_confirm, access_denied, trend_part]
 
 def build():
     proj = project_dir(PROJECT)

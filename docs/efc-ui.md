@@ -76,6 +76,8 @@ All module-level names, in file order.
 | `DBL_CMD` | `{'T_DValve': ('Sts_Opened', 'Cmd_Close', 'Cmd_Open'), 'T_Motor': ('Sts_Running', 'Cmd_Stop', 'Cmd_Start')}` | Two-state types that accept a double-tap command. Maps type to (state member, command when on, command when off). | When another two-state type should take double-tap. The generator sets `dblCmd` only for `T_DValve` and `T_Motor` (section 4, `dblCmd`). |
 | `READY_TRUE` | `['Mode/Sts_Man', 'Sts_Avail']` | Members that must be true for a double-tap command. | Rarely. |
 | `READY_FALSE` | `['Sts_Intlk', 'Sts_NotPerm', 'Sts_Local', 'Sts_Fault']` | Members that must be false for a double-tap command. | Rarely. |
+| `SHELVE_PRESETS` | `[15, 60, 240, 480]` | Minutes offered as presets in the ShelveConfirm popup (labels 15 min, 1 h, 4 h, 8 h). `build_docks.py` imports this list, so the popup follows it. | To offer other durations. Keep the largest at or below `SHELVE_MAX_MIN`. |
+| `SHELVE_MAX_MIN` | `480` | Longest shelve `shelve` allows, in minutes (clamped to 1..480). Matches the T_Alarm `Cfg_MaxShelf` default of T#8H. | Only if `Cfg_MaxShelf` changes in the types. |
 
 `WINDOWS`, as written in the file:
 
@@ -107,7 +109,7 @@ All module-level names, in file order.
 | `T_Station` | `dw_Station` |
 | `native` | `dw_IOCard` (Modicon x80 device DDTs, decision 23) |
 
-Hard-coded values that are not constants: the 1500 ms refusal dedupe window in `denied`; the session keys `efcDenied` and `efcDw`; the logger name `efc.ui`; the popup title `Invalid access level`; the trend sample count `returnSize=200`; the trend padding (10 % of span, minimum 0.5); and `_audit`'s audit action strings (section 7).
+Hard-coded values that are not constants: the 1500 ms refusal dedupe window in `denied`; the session keys `efcDenied` and `efcDw`; the logger name `efc.ui`; the popup title `Invalid access level`; the trend sample count `returnSize=200`; the trend padding (10 % of span, minimum 0.5); the shelved-state poll interval (5000 ms, `now(5000)` in the `shelved` binding in `build_docks.alarms`); and `_audit`'s audit action strings (section 7).
 
 ---
 
@@ -310,6 +312,46 @@ Functions appear in file order. "Required level" is the minimum `userLevel` the 
 - **Required level:** Supervisor (3).
 - **Called by:** the IntlkList UNBYP button (`build_docks.py` `intlk_list()`). The button is shown only at Supervisor and above, so the denial path is a fallback.
 
+### `_almSource(tagPath, member)`
+
+- **Does:** builds the Ignition alarm source path of a T_Alarm / T_AlmLim member. `'[prov]Path/To/Dev'` with member `Alm_X` gives `'prov:prov:/tag:Path/To/Dev/Alm_X/Sts_Active:/alm:Alarm'`. A `tagPath` without a `[provider]` prefix uses provider `default`.
+- **Returns:** the source string.
+- **Side effects:** none.
+- **Required level:** none (a helper).
+- **Called by:** `shelve`, `unshelve`, `shelvedMap`.
+
+### `shelve(component, member, minutes, reason)`
+
+- **Does:**
+  1. `reason = (reason or '').strip()`.
+  2. If `userLevel < SUPERVISOR`, calls `denied(component, SUPERVISOR, 'Shelve <member>')` and returns `False`. The AccessDenied popup opens.
+  3. If `reason` is empty, returns `False`. Silent: no call, no log, no popup.
+  4. `src = _almSource(component.view.params.tagPath, member)`.
+  5. In a `try`: `mins = max(1, min(SHELVE_MAX_MIN, int(minutes)))` and `system.alarm.shelve(path=[src], timeoutMinutes=mins)`. On an exception, logs a warning and returns `False`.
+  6. `_audit(component, 'EFC shelve', src, '<mins> min: <reason>')`.
+  7. Returns `True`.
+- **Returns:** `True` when the shelve call was made, `False` otherwise. The popup closes on `True`.
+- **Side effects:** Ignition's alarm shelving on the member's `Sts_Active` alarm, and one audit record. The PLC is not written.
+- **Required level:** Supervisor (3), plus a non-empty reason.
+- **Called by:** the ShelveConfirm view's SHELVE button (`build_docks.py` `shelve_confirm()`), with `self.view.params.member`, `self.view.custom.minutes` and `self.view.custom.reason`. The tag path comes from the popup's own `tagPath` param.
+- **Not checked here:** whether the alarm exists or is active, and what Ignition does when the source path matches no alarm (not verified; see section 9).
+
+### `unshelve(component, member)`
+
+- **Does:** if `userLevel < SUPERVISOR`, calls `denied(component, SUPERVISOR, 'Unshelve <member>')` and returns `False`. Otherwise `system.alarm.unshelve(path=[src])` in a `try` (a warning and `False` on an exception), then `_audit(component, 'EFC unshelve', src)` and returns `True`.
+- **Returns:** `True` or `False`.
+- **Side effects:** clears Ignition's shelving on the member's alarm, and one audit record on success.
+- **Required level:** Supervisor (3).
+- **Called by:** the UNSHELVE button on each alarm row (`build_docks.py` `alarms()`). The button is shown only at Supervisor and above, so the denial path is a fallback.
+
+### `shelvedMap(tagPath, members)`
+
+- **Does:** for a window's alarm members, finds which are shelved in Ignition. `members` is a list or a comma-separated string. It calls `system.alarm.getShelvedPaths()`, matches each item's `str(getPath())` against `_almSource(tagPath, m)`, and computes minutes left from `getExpiration()` (rounded up to whole minutes; `0` when there is no expiry).
+- **Returns:** a string `'Alm_X=12,Alm_Y=0'` listing only the shelved members, or `''` when none are shelved or `tagPath` / `members` is empty. This is a string, not the dict named in the brief: a per-row binding can read a string with a transform, and the dict form was not verified against the expression layer. Never raises: any exception logs a warning and returns `''`.
+- **Side effects:** none.
+- **Required level:** none. Read only.
+- **Called by:** the view custom `shelved`, through an expression binding `len({view.params.tagPath}) + toMillis(now(5000)) * 0` (re-evaluated every 5 s) whose script transform returns `efc.ui.shelvedMap(self.view.params.tagPath, '<members>')`, in every window with an Alarms section (the same polling pattern as `Parts/Trend`). Each row's `custom.sh_<member>` parses its own entry (`-1` when not shelved).
+
 ### `ackAll(component, alarms)`
 
 - **Signature:** `ackAll(component, alarms)`, where `alarms` is a list of member names such as `Alm_FailOpen`.
@@ -461,6 +503,26 @@ Example: the Manual button on a device symbol (`minLevel` 1), or a window comman
 
 ---
 
+### 5.10 Shelve and unshelve
+
+**Shelve:**
+
+1. An alarm row with `custom.sh_<member> < 0` (not shelved) and `lvl(SUP)` shows SHELVE. Its inline script opens `efcShelve` with view `Templates/Dynamic Window/Parts/ShelveConfirm` and params `{tagPath, member, desc}` (modal, no close icon). This script is inline in the view, not `efc.ui`.
+2. ShelveConfirm shows four presets (`SHELVE_PRESETS`, default 60 min), a reason field (`custom.reason`) and SHELVE. SHELVE is enabled when the level is Supervisor and the trimmed reason is not empty. The view enforces this; `efc.ui` checks again.
+3. SHELVE runs `efc.ui.shelve(self, member, minutes, reason)`.
+   - Level below Supervisor: AccessDenied popup, returns `False`. The popup stays open.
+   - Reason empty: returns `False`, no message.
+   - Otherwise: `system.alarm.shelve(path=[<source>], timeoutMinutes=<clamped minutes>)`, writes the audit record `EFC shelve`, and returns `True`.
+4. On `True` the popup closes with `closePopup('efcShelve')`. Cancel only closes the popup.
+5. The row's chip (`SHELVED <n> min`, or `SHELVED` for no expiry) appears within about 5 s, when the `shelved` binding next polls `shelvedMap`.
+
+**Unshelve:**
+
+1. A shelved row (`custom.sh_<member> >= 0`) and `lvl(SUP)` show UNSHELVE, which runs `efc.ui.unshelve(self, member)`.
+2. Below Supervisor: refused with the popup. Otherwise `system.alarm.unshelve(path=[<source>])` and the audit record `EFC unshelve`.
+
+**Notes:** the PLC alarm is never written. `Cmd_Shelve` and `Sts_Shelved` are not used here (decision 34). The Alarm Status Table's own shelve does not call `efc.ui`.
+
 ## 6. Access levels
 
 ### 6.1 Where the level comes from
@@ -542,6 +604,8 @@ Not logged: ACK, the double-tap readiness refusal, the bypass refusal (no level 
 | `EFC write` | full tag path of the member | the value written | `cmd(..., audit=True)`: MAINT and OOS mode buttons, RESET MAINT, SIMULATE, IntlkList RESET, and Engineer scaled entries (time values) |
 | `EFC bypass` | `<intlkPath>/<idx>` | the reason text | `bypass` |
 | `EFC unbypass` | `<intlkPath>/<idx>` | empty | `unbypass` |
+| `EFC shelve` | the Ignition alarm source path (`prov:...:/alm:Alarm`) | `<minutes> min: <reason>` | `shelve` (written after the shelve call succeeds; not written on a refused or failed call) |
+| `EFC unshelve` | the Ignition alarm source path | empty | `unshelve` (written after a successful unshelve call) |
 
 Notes:
 
@@ -579,7 +643,7 @@ Each item was checked in the code. The decision reference is given where the cod
 1. **Bidirectional entries and checkboxes bypass `efc.ui`.** `entry(...)` without `scale`, and `check(...)`, bind `props.value` or `props.selected` to the tag with `tag(..., bidi=True)`. They write without `cmd`, without a level re-check, without a log line and without an audit record. This covers Loop `Cmd_SP` and `Cmd_CV`, valve `Cmd_ManPos`, VFD `Cmd_Spd`, heater `Cmd_Pwr`, Process Value `Sim_En` and `Sim_PV`, and every Engineer configuration value that is not time-scaled and every Engineer checkbox. Decision 27 says writes go through `efc.ui.cmd`; this is not true for these controls. Decision 14 asks for audit-logged configuration edits with old to new values; plain configuration edits are not audited.
 2. **Commands are one-shot and the PLC must clear them.** `cmd` writes `True` and nothing writes `False`. The exceptions are `Cmd_Jog` (released by the window on release) and the Station window's `Cmd_Select`, `Cmd_Tare`, `Cmd_Zero`, `Cmd_Reset` (released by a 1 s timer in the view script, not by `efc.ui`). If the PLC does not clear a `Cmd_` member, it stays `True`.
 3. **`bypass` returns `True` even when the write failed.** BypassConfirm closes on `True`, so a failed write is only visible in the log. Decision 10 also asks for `Inp_BypassPerm` and duration presets. Neither is in `efc.ui` or `build_docks.py`. `Cfg_BypassMax` is named in the popup text only.
-4. **Shelving is not implemented.** Decision 14 names Supervisor shelving and `build_docks.py` lists it in its docstring. No code in `generator/docks/` creates it.
+4. **Shelving state is polled, and the poll is unverified.** Shelving (decision 34) uses `system.alarm.shelve`, `unshelve` and `getShelvedPaths`, and the `shelved` binding polls `shelvedMap` every 5 s (`now(5000)` plus a script transform). The code assumes `getShelvedPaths` items have `getPath()` (whose string is the alarm source path) and `getExpiration()`; this was not checked against a running 8.1 gateway. A shelve or unshelve shows in the window within 5 s, not at once. The Alarm Status Table's own shelve bypasses `efc.ui` (no audit line).
 5. **Two level sources.** Locks and visibility use `securityLevels` only. Enforcement uses `max(securityLevels, user.roles)`. A user whose level comes only from roles can press a locked button. Decision 33 names `securityLevels` as the source.
 6. **No default dock is wired.** `setDefaultDock` has no caller in `projects/` or `imported/`, and no view has a `defaultDock` param. Decision 2 and the Station window documentation (`docs/station-faceplates.md`) refer to a screen-level `setDefaultDock`. Until a screen calls it, ✕ closes the dock. Decision 32 leaves close without a default open.
 7. **ACK has no log line, no audit, and does not read `Sts_Active`.** It acknowledges every alarm whose `Sts_Unack` is truthy.

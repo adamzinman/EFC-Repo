@@ -9,6 +9,8 @@
 #   screen root onStartup:          efc.ui.setDefaultDock(self, viewPath, params)   (optional default dock view)
 # Access (decision 33): the user's level comes from session.props.auth.securityLevels. Command buttons below the user's
 # level stay visible with a lock; a press anyway is refused here, logged, and answered with the AccessDenied popup.
+# Alarm shelving (decision 34): Supervisor+ shelves a PLC alarm's Ignition alarm (system.alarm.shelve) for a chosen
+# time with a reason, audit-logged. Only Ignition's shelving is used: the PLC alarm (Cmd_Shelve) is not driven from here.
 
 # The one right-side dock every dynamic window opens in (Page Configuration dock id)
 DOCK_ID = 'dw_Right'
@@ -36,6 +38,10 @@ ROLE_ALIASES = {'administrator': 'Admin', 'administrators': 'Admin', 'operators'
 # Popup shown when a command is refused for the user's access level
 DENIED_POPUP = 'efcAccessDenied'
 DENIED_VIEW = 'Templates/Dynamic Window/Parts/AccessDenied'
+
+# Shelve durations offered in ShelveConfirm (minutes) and the longest one allowed (matches T_Alarm Cfg_MaxShelf T#8H)
+SHELVE_PRESETS = [15, 60, 240, 480]
+SHELVE_MAX_MIN = 480
 
 # Two-state devices that accept a double-tap command: type -> (state member, cmd if on, cmd if off)
 DBL_CMD = {
@@ -249,6 +255,84 @@ def unbypass(component, intlkPath, idx):
         return
     _writeTags(['%s/Cmd_Unbypass/%d' % (intlkPath, idx)], [True], 'unbypass')
     _audit(component, 'EFC unbypass', '%s/%d' % (intlkPath, idx))
+
+
+def _almSource(tagPath, member):
+    """Ignition alarm source path of a T_Alarm / T_AlmLim member (decision 34): '[prov]Path/To/Dev' + 'Alm_X' ->
+    'prov:prov:/tag:Path/To/Dev/Alm_X/Sts_Active:/alm:Alarm'. A path without a [provider] prefix uses provider 'default'."""
+    tp = str(tagPath or '').strip()
+    prov = 'default'
+    if tp.startswith('['):
+        end = tp.find(']')
+        if end > 0:
+            prov, tp = tp[1:end], tp[end + 1:]
+    return 'prov:%s:/tag:%s/%s/Sts_Active:/alm:Alarm' % (prov, tp.strip('/'), member)
+
+
+def shelve(component, member, minutes, reason):
+    """ShelveConfirm popup: shelve the Ignition alarm of PLC alarm `member` on the popup's tagPath for `minutes`
+    (clamped to 1..SHELVE_MAX_MIN). Supervisor+ with a non-empty reason; written to the audit log. The PLC alarm stays
+    active (decision 34). Returns True when the shelve call was made, so the popup can close."""
+    reason = (reason or '').strip()
+    if userLevel(component) < SUPERVISOR:
+        denied(component, SUPERVISOR, _target(component, 'Shelve ' + member))
+        return False
+    if not reason:
+        return False
+    src = _almSource(_p(component.view.params, 'tagPath', ''), member)
+    try:
+        mins = max(1, min(SHELVE_MAX_MIN, int(minutes)))
+        system.alarm.shelve(path=[src], timeoutMinutes=mins)
+    except Exception as e:
+        _log().warn('shelve: %s failed: %s' % (src, e))
+        return False
+    _audit(component, 'EFC shelve', src, '%d min: %s' % (mins, reason))
+    return True
+
+
+def unshelve(component, member):
+    """Unshelve button: Supervisor+ only; clears the Ignition shelving of PLC alarm `member` and is audit-logged."""
+    if userLevel(component) < SUPERVISOR:
+        denied(component, SUPERVISOR, _target(component, 'Unshelve ' + member))
+        return False
+    src = _almSource(_p(component.view.params, 'tagPath', ''), member)
+    try:
+        system.alarm.unshelve(path=[src])
+    except Exception as e:
+        _log().warn('unshelve: %s failed: %s' % (src, e))
+        return False
+    _audit(component, 'EFC unshelve', src)
+    return True
+
+
+def shelvedMap(tagPath, members):
+    """Window binding (now(5000) expression + script transform, polled every 5 s): which of the window's alarm members are shelved in Ignition. `members` is a
+    list or a comma-separated string of member names. Returns 'Alm_X=12,Alm_Y=0' (minutes left, 0 = no expiry) for the
+    shelved ones, or '' when none. A string rather than a dict: each row reads its own entry with a binding transform
+    (build_docks.alarms). Never raises."""
+    try:
+        names = members.split(',') if isinstance(members, basestring) else list(members or [])
+        names = [n.strip() for n in names if n and n.strip()]
+        if not names or not str(tagPath or '').strip():
+            return ''
+        srcs = {}
+        for m in names:
+            srcs[_almSource(tagPath, m)] = m
+        now = system.date.toMillis(system.date.now())
+        out = []
+        for item in system.alarm.getShelvedPaths():
+            src = str(item.getPath())
+            if src not in srcs:
+                continue
+            exp, left = item.getExpiration(), 0
+            if exp is not None:
+                ms = max(0, system.date.toMillis(exp) - now)
+                left = (ms + 59999) // 60000                # whole minutes, rounded up
+            out.append('%s=%d' % (srcs[src], left))
+        return ','.join(out)
+    except Exception as e:
+        _log().warn('shelvedMap: %s: %s' % (tagPath, e))
+        return ''
 
 
 def ackAll(component, alarms):

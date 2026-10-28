@@ -904,6 +904,7 @@ PARAM_OVERRIDES = {f"Templates/IO/Faceplates/{m}": {"cardPath": f"[default]IO_De
 # Popups take their own params. There is no demo T_Intlk instance: the interlock list comes from XV104 (Intlk folder, PSH-201 condition).
 PARAM_OVERRIDES.update({
     "Templates/Dynamic Window/Parts/AccessDenied": {"action": "XV101 Cmd_Open", "need": "Operator", "have": "Guest", "user": "jsmith"},
+    "Templates/Dynamic Window/Parts/ShelveConfirm": {"tagPath": "[default]PID_Demo/XV101", "member": "Alm_FailOpen", "desc": "Fail to open"},
     "Templates/Dynamic Window/Parts/BypassConfirm": {"tagPath": "[default]PID_Demo/XV104", "idx": 0, "desc": "PSH-201 high pressure"},
     "Templates/Dynamic Window/Parts/IntlkList": {"tagPath": "[default]PID_Demo/XV104"},
     "Templates/Dynamic Window/Parts/Trend": {"tagPath": "[default]PID_Demo/P101"},

@@ -16,15 +16,19 @@
     "m_Val_SP": null,
     "m_Out_CV": null,
     "m_Val_Err": null,
+    "shelved": "",
     "m_Alm_DevH_Sts_Active": null,
     "m_Alm_DevH_Sts_Unack": null,
     "m_Alm_DevH_Cfg_Priority": null,
+    "sh_Alm_DevH": -1,
     "m_Alm_DevL_Sts_Active": null,
     "m_Alm_DevL_Sts_Unack": null,
     "m_Alm_DevL_Cfg_Priority": null,
+    "sh_Alm_DevL": -1,
     "m_Alm_PVBad_Sts_Active": null,
     "m_Alm_PVBad_Sts_Unack": null,
     "m_Alm_PVBad_Cfg_Priority": null,
+    "sh_Alm_PVBad": -1,
     "m_Cfg_Kp": null,
     "m_Cfg_Ti": null,
     "m_Cfg_Td": null,
@@ -272,6 +276,20 @@
         }
       }
     },
+    "custom.shelved": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "len({view.params.tagPath}) + toMillis(now(5000)) * 0"
+        },
+        "transforms": [
+          {
+            "type": "script",
+            "code": "\treturn efc.ui.shelvedMap(self.view.params.tagPath, 'Alm_DevH,Alm_DevL,Alm_PVBad')"
+          }
+        ]
+      }
+    },
     "custom.m_Alm_DevH_Sts_Active": {
       "binding": {
         "type": "tag",
@@ -312,6 +330,20 @@
           "bidirectional": false,
           "fallbackDelay": 2.5
         }
+      }
+    },
+    "custom.sh_Alm_DevH": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "{view.custom.shelved}"
+        },
+        "transforms": [
+          {
+            "type": "script",
+            "code": "\ttry:\n\t\ts = ',' + str(value or '') + ','\n\t\ti = s.find(',Alm_DevH=')\n\t\tif i < 0:\n\t\t\treturn -1\n\t\tj = i + len(',Alm_DevH=')\n\t\treturn int(s[j:s.find(',', j)])\n\texcept Exception:\n\t\treturn -1"
+          }
+        ]
       }
     },
     "custom.m_Alm_DevL_Sts_Active": {
@@ -356,6 +388,20 @@
         }
       }
     },
+    "custom.sh_Alm_DevL": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "{view.custom.shelved}"
+        },
+        "transforms": [
+          {
+            "type": "script",
+            "code": "\ttry:\n\t\ts = ',' + str(value or '') + ','\n\t\ti = s.find(',Alm_DevL=')\n\t\tif i < 0:\n\t\t\treturn -1\n\t\tj = i + len(',Alm_DevL=')\n\t\treturn int(s[j:s.find(',', j)])\n\texcept Exception:\n\t\treturn -1"
+          }
+        ]
+      }
+    },
     "custom.m_Alm_PVBad_Sts_Active": {
       "binding": {
         "type": "tag",
@@ -396,6 +442,20 @@
           "bidirectional": false,
           "fallbackDelay": 2.5
         }
+      }
+    },
+    "custom.sh_Alm_PVBad": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "{view.custom.shelved}"
+        },
+        "transforms": [
+          {
+            "type": "script",
+            "code": "\ttry:\n\t\ts = ',' + str(value or '') + ','\n\t\ti = s.find(',Alm_PVBad=')\n\t\tif i < 0:\n\t\t\treturn -1\n\t\tj = i + len(',Alm_PVBad=')\n\t\treturn int(s[j:s.find(',', j)])\n\texcept Exception:\n\t\treturn -1"
+          }
+        ]
       }
     },
     "custom.m_Cfg_Kp": {
@@ -1996,85 +2056,484 @@
                 },
                 "children": [
                   {
-                    "type": "ia.display.label",
+                    "type": "ia.container.flex",
                     "version": 0,
                     "meta": {
-                      "name": "A0"
+                      "name": "R0"
                     },
                     "position": {
                       "shrink": 0,
                       "grow": 0
                     },
                     "props": {
-                      "text": "Deviation high",
+                      "direction": "row",
+                      "alignItems": "center",
                       "style": {
-                        "classes": "Text/Caption"
+                        "classes": "Util/Gap/S"
                       }
                     },
-                    "propConfig": {
-                      "props.style.classes": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "try(if({view.custom.m_Alm_DevH_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_DevH_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_DevH_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_DevH_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
+                    "children": [
+                      {
+                        "type": "ia.display.label",
+                        "version": 0,
+                        "meta": {
+                          "name": "A0"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 1
+                        },
+                        "props": {
+                          "text": "Deviation high",
+                          "style": {
+                            "classes": "Text/Caption"
+                          }
+                        },
+                        "propConfig": {
+                          "props.style.classes": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "try(if({view.custom.m_Alm_DevH_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_DevH_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_DevH_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_DevH_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "ia.display.label",
+                        "version": 0,
+                        "meta": {
+                          "name": "Shelved0"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 0
+                        },
+                        "props": {
+                          "text": "",
+                          "style": {
+                            "classes": "Indicator/Badge"
+                          }
+                        },
+                        "propConfig": {
+                          "props.text": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "if({view.custom.sh_Alm_DevH} > 0, 'SHELVED ' + toStr({view.custom.sh_Alm_DevH}) + ' min', 'SHELVED')"
+                              }
+                            }
+                          },
+                          "position.display": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "{view.custom.sh_Alm_DevH} >= 0"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "ia.input.button",
+                        "version": 0,
+                        "meta": {
+                          "name": "Shelve0"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 0,
+                          "basis": "2.963vh"
+                        },
+                        "props": {
+                          "text": "SHELVE",
+                          "style": {
+                            "classes": "Button/Small"
+                          }
+                        },
+                        "propConfig": {
+                          "position.display": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "{view.custom.level} >= 3 && {view.custom.sh_Alm_DevH} < 0"
+                              }
+                            }
+                          }
+                        },
+                        "events": {
+                          "component": {
+                            "onActionPerformed": {
+                              "type": "script",
+                              "scope": "G",
+                              "config": {
+                                "script": "\tsystem.perspective.openPopup('efcShelve', 'Templates/Dynamic Window/Parts/ShelveConfirm', params={'tagPath': self.view.params.tagPath, 'member': 'Alm_DevH', 'desc': 'Deviation high'}, modal=True, showCloseIcon=False)"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "ia.input.button",
+                        "version": 0,
+                        "meta": {
+                          "name": "Unshelve0"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 0,
+                          "basis": "2.963vh"
+                        },
+                        "props": {
+                          "text": "UNSHELVE",
+                          "style": {
+                            "classes": "Button/Small"
+                          }
+                        },
+                        "propConfig": {
+                          "position.display": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "{view.custom.level} >= 3 && {view.custom.sh_Alm_DevH} >= 0"
+                              }
+                            }
+                          }
+                        },
+                        "events": {
+                          "component": {
+                            "onActionPerformed": {
+                              "type": "script",
+                              "scope": "G",
+                              "config": {
+                                "script": "\tefc.ui.unshelve(self, 'Alm_DevH')"
+                              }
+                            }
                           }
                         }
                       }
-                    }
+                    ]
                   },
                   {
-                    "type": "ia.display.label",
+                    "type": "ia.container.flex",
                     "version": 0,
                     "meta": {
-                      "name": "A1"
+                      "name": "R1"
                     },
                     "position": {
                       "shrink": 0,
                       "grow": 0
                     },
                     "props": {
-                      "text": "Deviation low",
+                      "direction": "row",
+                      "alignItems": "center",
                       "style": {
-                        "classes": "Text/Caption"
+                        "classes": "Util/Gap/S"
                       }
                     },
-                    "propConfig": {
-                      "props.style.classes": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "try(if({view.custom.m_Alm_DevL_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_DevL_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_DevL_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_DevL_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
+                    "children": [
+                      {
+                        "type": "ia.display.label",
+                        "version": 0,
+                        "meta": {
+                          "name": "A1"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 1
+                        },
+                        "props": {
+                          "text": "Deviation low",
+                          "style": {
+                            "classes": "Text/Caption"
+                          }
+                        },
+                        "propConfig": {
+                          "props.style.classes": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "try(if({view.custom.m_Alm_DevL_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_DevL_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_DevL_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_DevL_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "ia.display.label",
+                        "version": 0,
+                        "meta": {
+                          "name": "Shelved1"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 0
+                        },
+                        "props": {
+                          "text": "",
+                          "style": {
+                            "classes": "Indicator/Badge"
+                          }
+                        },
+                        "propConfig": {
+                          "props.text": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "if({view.custom.sh_Alm_DevL} > 0, 'SHELVED ' + toStr({view.custom.sh_Alm_DevL}) + ' min', 'SHELVED')"
+                              }
+                            }
+                          },
+                          "position.display": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "{view.custom.sh_Alm_DevL} >= 0"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "ia.input.button",
+                        "version": 0,
+                        "meta": {
+                          "name": "Shelve1"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 0,
+                          "basis": "2.963vh"
+                        },
+                        "props": {
+                          "text": "SHELVE",
+                          "style": {
+                            "classes": "Button/Small"
+                          }
+                        },
+                        "propConfig": {
+                          "position.display": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "{view.custom.level} >= 3 && {view.custom.sh_Alm_DevL} < 0"
+                              }
+                            }
+                          }
+                        },
+                        "events": {
+                          "component": {
+                            "onActionPerformed": {
+                              "type": "script",
+                              "scope": "G",
+                              "config": {
+                                "script": "\tsystem.perspective.openPopup('efcShelve', 'Templates/Dynamic Window/Parts/ShelveConfirm', params={'tagPath': self.view.params.tagPath, 'member': 'Alm_DevL', 'desc': 'Deviation low'}, modal=True, showCloseIcon=False)"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "ia.input.button",
+                        "version": 0,
+                        "meta": {
+                          "name": "Unshelve1"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 0,
+                          "basis": "2.963vh"
+                        },
+                        "props": {
+                          "text": "UNSHELVE",
+                          "style": {
+                            "classes": "Button/Small"
+                          }
+                        },
+                        "propConfig": {
+                          "position.display": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "{view.custom.level} >= 3 && {view.custom.sh_Alm_DevL} >= 0"
+                              }
+                            }
+                          }
+                        },
+                        "events": {
+                          "component": {
+                            "onActionPerformed": {
+                              "type": "script",
+                              "scope": "G",
+                              "config": {
+                                "script": "\tefc.ui.unshelve(self, 'Alm_DevL')"
+                              }
+                            }
                           }
                         }
                       }
-                    }
+                    ]
                   },
                   {
-                    "type": "ia.display.label",
+                    "type": "ia.container.flex",
                     "version": 0,
                     "meta": {
-                      "name": "A2"
+                      "name": "R2"
                     },
                     "position": {
                       "shrink": 0,
                       "grow": 0
                     },
                     "props": {
-                      "text": "PV bad",
+                      "direction": "row",
+                      "alignItems": "center",
                       "style": {
-                        "classes": "Text/Caption"
+                        "classes": "Util/Gap/S"
                       }
                     },
-                    "propConfig": {
-                      "props.style.classes": {
-                        "binding": {
-                          "type": "expr",
-                          "config": {
-                            "expression": "try(if({view.custom.m_Alm_PVBad_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_PVBad_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_PVBad_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_PVBad_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
+                    "children": [
+                      {
+                        "type": "ia.display.label",
+                        "version": 0,
+                        "meta": {
+                          "name": "A2"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 1
+                        },
+                        "props": {
+                          "text": "PV bad",
+                          "style": {
+                            "classes": "Text/Caption"
+                          }
+                        },
+                        "propConfig": {
+                          "props.style.classes": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "try(if({view.custom.m_Alm_PVBad_Sts_Active}, 'Alarm/' + case(toInt({view.custom.m_Alm_PVBad_Cfg_Priority}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium') + if({view.custom.m_Alm_PVBad_Sts_Unack}, '/Unacked', '/Fill'), if({view.custom.m_Alm_PVBad_Sts_Unack}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted')), 'Text/Caption Text/Color/Muted')"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "ia.display.label",
+                        "version": 0,
+                        "meta": {
+                          "name": "Shelved2"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 0
+                        },
+                        "props": {
+                          "text": "",
+                          "style": {
+                            "classes": "Indicator/Badge"
+                          }
+                        },
+                        "propConfig": {
+                          "props.text": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "if({view.custom.sh_Alm_PVBad} > 0, 'SHELVED ' + toStr({view.custom.sh_Alm_PVBad}) + ' min', 'SHELVED')"
+                              }
+                            }
+                          },
+                          "position.display": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "{view.custom.sh_Alm_PVBad} >= 0"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "ia.input.button",
+                        "version": 0,
+                        "meta": {
+                          "name": "Shelve2"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 0,
+                          "basis": "2.963vh"
+                        },
+                        "props": {
+                          "text": "SHELVE",
+                          "style": {
+                            "classes": "Button/Small"
+                          }
+                        },
+                        "propConfig": {
+                          "position.display": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "{view.custom.level} >= 3 && {view.custom.sh_Alm_PVBad} < 0"
+                              }
+                            }
+                          }
+                        },
+                        "events": {
+                          "component": {
+                            "onActionPerformed": {
+                              "type": "script",
+                              "scope": "G",
+                              "config": {
+                                "script": "\tsystem.perspective.openPopup('efcShelve', 'Templates/Dynamic Window/Parts/ShelveConfirm', params={'tagPath': self.view.params.tagPath, 'member': 'Alm_PVBad', 'desc': 'PV bad'}, modal=True, showCloseIcon=False)"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "ia.input.button",
+                        "version": 0,
+                        "meta": {
+                          "name": "Unshelve2"
+                        },
+                        "position": {
+                          "shrink": 0,
+                          "grow": 0,
+                          "basis": "2.963vh"
+                        },
+                        "props": {
+                          "text": "UNSHELVE",
+                          "style": {
+                            "classes": "Button/Small"
+                          }
+                        },
+                        "propConfig": {
+                          "position.display": {
+                            "binding": {
+                              "type": "expr",
+                              "config": {
+                                "expression": "{view.custom.level} >= 3 && {view.custom.sh_Alm_PVBad} >= 0"
+                              }
+                            }
+                          }
+                        },
+                        "events": {
+                          "component": {
+                            "onActionPerformed": {
+                              "type": "script",
+                              "scope": "G",
+                              "config": {
+                                "script": "\tefc.ui.unshelve(self, 'Alm_PVBad')"
+                              }
+                            }
                           }
                         }
                       }
-                    }
+                    ]
                   }
                 ]
               },
