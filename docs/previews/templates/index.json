@@ -9,7 +9,7 @@
    "tagPath": "[default]PID_Demo/FV101"
   },
   "bindings": {
-   "ok": 91,
+   "ok": 109,
    "fail": 0
   }
  },
@@ -24,8 +24,8 @@
    "useButton": false
   },
   "bindings": {
-   "ok": 103,
-   "fail": 0
+   "ok": 118,
+   "fail": 3
   }
  },
  {
@@ -38,8 +38,8 @@
    "tagPath": "[default]PID_Demo/XV101"
   },
   "bindings": {
-   "ok": 103,
-   "fail": 0
+   "ok": 118,
+   "fail": 3
   }
  },
  {
@@ -52,8 +52,8 @@
    "tagPath": "[default]PID_Demo/XV102"
   },
   "bindings": {
-   "ok": 103,
-   "fail": 0
+   "ok": 118,
+   "fail": 3
   }
  },
  {
@@ -64,8 +64,8 @@
   "size": "120\u00d7116",
   "params": {},
   "bindings": {
-   "ok": 85,
-   "fail": 0
+   "ok": 108,
+   "fail": 3
   }
  },
  {
@@ -78,8 +78,8 @@
    "tagPath": "[default]PID_Demo/B301"
   },
   "bindings": {
-   "ok": 87,
-   "fail": 0
+   "ok": 110,
+   "fail": 3
   }
  },
  {
@@ -92,8 +92,8 @@
    "tagPath": "[default]PID_Demo/K202"
   },
   "bindings": {
-   "ok": 85,
-   "fail": 0
+   "ok": 108,
+   "fail": 3
   }
  },
  {
@@ -106,8 +106,8 @@
    "tagPath": "[default]PID_Demo/K201"
   },
   "bindings": {
-   "ok": 85,
-   "fail": 0
+   "ok": 108,
+   "fail": 3
   }
  },
  {
@@ -118,8 +118,8 @@
   "size": "120\u00d7116",
   "params": {},
   "bindings": {
-   "ok": 85,
-   "fail": 0
+   "ok": 108,
+   "fail": 3
   }
  },
  {
@@ -132,8 +132,8 @@
    "tagPath": "[default]PID_Demo/P101"
   },
   "bindings": {
-   "ok": 89,
-   "fail": 0
+   "ok": 112,
+   "fail": 3
   }
  },
  {
@@ -144,8 +144,8 @@
   "size": "120\u00d7116",
   "params": {},
   "bindings": {
-   "ok": 103,
-   "fail": 0
+   "ok": 126,
+   "fail": 3
   }
  },
  {
@@ -158,8 +158,8 @@
    "tagPath": "[default]PID_Demo/P102"
   },
   "bindings": {
-   "ok": 103,
-   "fail": 0
+   "ok": 126,
+   "fail": 3
   }
  },
  {
@@ -170,8 +170,8 @@
   "size": "120\u00d7116",
   "params": {},
   "bindings": {
-   "ok": 93,
-   "fail": 0
+   "ok": 116,
+   "fail": 3
   }
  },
  {
@@ -185,8 +185,22 @@
    "useButton": false
   },
   "bindings": {
-   "ok": 87,
-   "fail": 0
+   "ok": 110,
+   "fail": 3
+  }
+ },
+ {
+  "group": "Rotating equipment",
+  "path": "Templates/Rotating/VFD",
+  "kind": "template",
+  "png": "templates/Rotating/VFD.png",
+  "size": "120\u00d7116",
+  "params": {
+   "tagPath": "[default]PID_Demo/M601"
+  },
+  "bindings": {
+   "ok": 116,
+   "fail": 3
   }
  },
  {
@@ -197,8 +211,8 @@
   "size": "120\u00d7116",
   "params": {},
   "bindings": {
-   "ok": 89,
-   "fail": 0
+   "ok": 112,
+   "fail": 3
   }
  },
  {
@@ -211,8 +225,8 @@
    "tagPath": "[default]PID_Demo/E401"
   },
   "bindings": {
-   "ok": 87,
-   "fail": 0
+   "ok": 110,
+   "fail": 3
   }
  },
  {
@@ -225,7 +239,7 @@
    "tagPath": "[default]PV_Demo/PT001"
   },
   "bindings": {
-   "ok": 210,
+   "ok": 249,
    "fail": 0
   }
  },
@@ -239,7 +253,7 @@
    "tagPath": "[default]PV_Demo/PT001"
   },
   "bindings": {
-   "ok": 125,
+   "ok": 164,
    "fail": 0
   }
  },
@@ -251,7 +265,7 @@
   "size": "1200\u00d7700",
   "params": {},
   "bindings": {
-   "ok": 1695,
+   "ok": 2085,
    "fail": 0
   }
  },
@@ -266,7 +280,7 @@
    "label": ""
   },
   "bindings": {
-   "ok": 83,
+   "ok": 95,
    "fail": 0
   }
  },
@@ -281,7 +295,7 @@
    "label": ""
   },
   "bindings": {
-   "ok": 85,
+   "ok": 97,
    "fail": 0
   }
  },
@@ -296,7 +310,7 @@
    "label": ""
   },
   "bindings": {
-   "ok": 99,
+   "ok": 111,
    "fail": 0
   }
  },
@@ -311,19 +325,7 @@
    "label": ""
   },
   "bindings": {
-   "ok": 85,
-   "fail": 0
-  }
- },
- {
-  "group": "PID loops",
-  "path": "Templates/Loops/Popups/LoopConfig",
-  "kind": "template",
-  "png": "templates/Loops/Popups/LoopConfig.png",
-  "size": "440\u00d7480",
-  "params": {},
-  "bindings": {
-   "ok": 69,
+   "ok": 97,
    "fail": 0
   }
  },
@@ -335,7 +337,7 @@
   "size": "1000\u00d7858",
   "params": {},
   "bindings": {
-   "ok": 1056,
+   "ok": 1200,
    "fail": 0
   }
  },
@@ -355,20 +357,6 @@
  },
  {
   "group": "Station faceplates",
-  "path": "Templates/Station/Station_Sidebar",
-  "kind": "template",
-  "png": "templates/Station/Station_Sidebar.png",
-  "size": "300\u00d7800",
-  "params": {
-   "tagPath": "[default]Station_Demo/Station_1"
-  },
-  "bindings": {
-   "ok": 277,
-   "fail": 0
-  }
- },
- {
-  "group": "Station faceplates",
   "path": "Templates/Station/Station_Tile",
   "kind": "template",
   "png": "templates/Station/Station_Tile.png",
@@ -377,7 +365,7 @@
    "tagPath": "[default]Station_Demo/Station_1"
   },
   "bindings": {
-   "ok": 89,
+   "ok": 134,
    "fail": 0
   }
  },
@@ -389,8 +377,8 @@
   "size": "1920\u00d71080",
   "params": {},
   "bindings": {
-   "ok": 1413,
-   "fail": 0
+   "ok": 1609,
+   "fail": 3
   }
  },
  {
@@ -417,7 +405,7 @@
    "cardPath": "[default]IO_Demo/Rack0/R0S6"
   },
   "bindings": {
-   "ok": 494,
+   "ok": 482,
    "fail": 0
   }
  },
@@ -599,8 +587,8 @@
   "size": "1920\u00d71080",
   "params": {},
   "bindings": {
-   "ok": 1320,
-   "fail": 0
+   "ok": 1711,
+   "fail": 39
   }
  },
  {
