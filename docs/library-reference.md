@@ -105,14 +105,18 @@ To make the trends overview the view a window's close button returns to, call `e
 
 Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=None)` opens a window by its id (`dw_ValveDiscrete`, `dw_Loop`, ...), and `efc.ui.showDock(path, params)` loads any view.
 
+Full reference: [efc.ui](efc-ui.md).
+
 ## Access levels: the lock and the AccessDenied popup
-The user's level comes from the Perspective session's security levels, `session.props.auth.securityLevels` (decision 33). `efc.ui.level` takes the highest of `Guest` 0, `Operator` 1, `Maintenance` 2, `Supervisor` 3, `Engineer` 4 and `Admin` 5 found anywhere in that tree, so both `Authenticated/Roles/Operator` and a custom security level named `Operator` count. Names are matched without regard to case. If your gateway uses other names, map them in `efc.ui.ROLE_ALIASES` (for example `'administrator': 'Admin'`); a user whose roles match nothing is Guest.
+The user's level comes from the Perspective session's security levels, `session.props.auth.securityLevels` (decision 33). `efc.ui.level` takes the highest of `Guest` 0, `Operator` 1, `Maintenance` 2, `Supervisor` 3, `Engineer` 4 and `Admin` 5 found anywhere in that tree, so both `Authenticated/Roles/Operator` and a custom security level named `Operator` count. Names are matched without regard to case. If your gateway uses other names, map them in `efc.ui.ROLE_ALIASES` (for example `'administrator': 'Admin'`); a user whose roles match nothing is Guest. The lock and visibility bindings read `securityLevels`; the server-side check in `efc.ui` takes the higher of `securityLevels` and `session.props.auth.user.roles`.
 
 - **Command buttons below the user's level stay visible with a lock.** This covers the template Manual button and, in the dynamic windows, the mode, command, preset, FWD/REV, ACK and interlock RESET buttons. The tooltip says which role is needed.
-- **A press anyway is refused.** `efc.ui.cmd` writes nothing, logs a warning to the `efc.ui` logger and opens `Templates/Dynamic Window/Parts/AccessDenied`: "Invalid access level", what was pressed, the role it needs, and who is signed in. Double-tap commands and ACK behave the same.
+- **A press anyway is refused.** `efc.ui.cmd` writes nothing, logs a warning to the `efc.ui` logger and opens `Templates/Dynamic Window/Parts/AccessDenied`: "Invalid access level", what was pressed, the role it needs, and who is signed in. Double-tap commands and ACK behave the same. If the same action is refused again within 1.5 s (a touch fires both mouse and touch events), the second refusal is logged but opens no second popup.
 - **Failed writes are logged too.** When a write comes back bad (missing member, read-only tag, bad quality), `efc.ui` logs the tag path and the quality.
 - Sections and controls that are Supervisor+ or Engineer+ (bypass, alarm limits, configuration, tuning, the Maintenance section) stay hidden below their level, as before (decision 27).
 - The HMI check is a convenience, not security: enforce access in Perspective security and the PLC.
+
+Full reference: [efc.ui](efc-ui.md).
 
 ## Placing templates in a flex container
 Template text is sized in vh, so it grows with the screen. The box a template sits in has to grow the same way, or the text outgrows it and clips. When you drop a template into a flex container, the Designer sets the child's `position.basis` to a pixel size. That pins the box: at 1080p it fits, but on a taller screen the vh text gets bigger while the box doesn't, and the bottom row is cut off with a scrollbar.
@@ -158,7 +162,7 @@ Set `position.basis` in vh instead, with `grow` and `shrink` at 0:
 
 ## Ignition 8.1 compatibility
 Both projects target **Ignition 8.1** and pass `generator/check_81.py`, a static import check:
-- **Project zips:** `project.json` sits at the zip root (title, parent, enabled, inheritable). Every resource uses the 8.1 layout: `com.inductiveautomation.perspective/<type>/<path>/` plus `resource.json` (scope `G`, version 1).
+- **Project zips:** `project.json` sits at the zip root (title, parent, enabled, inheritable). Every resource uses the 8.1 layout: `com.inductiveautomation.perspective/<type>/<path>/` plus `resource.json` (scope `G`, version 1). The `efc/ui` script resource is the exception: scope `A`, so gateway and client scripts can both call it.
 - **Style classes:** in the 8.1 `style.json` form (`base.style` plus `variants` with `pseudo`).
 - **Coordinate containers:** percent mode, with every child position a 0–1 fraction (the 8.1 format).
 - **Expression functions:** only 8.1 functions are used: `case`, `if`, `indexOf`, `lastIndexOf`, `len`, `numberFormat`, `substring`, `coalesce`, `toStr`, `try`, `forceQuality`, `isAlarmActiveFiltered`. The earlier `endsWith()` call doesn't exist in 8.1 and was replaced with `indexOf()`.

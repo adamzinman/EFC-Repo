@@ -89,6 +89,7 @@ Parts in `imported/` have no generator here, so edit them in the Designer, expor
 - [`docs/inventory.md`](docs/inventory.md): every design, version, status and location.
 - [`docs/template-review.md`](docs/template-review.md): findings from the rendered review images.
 - [`docs/library-reference.md`](docs/library-reference.md): templates, UDT mapping, status logic, page setup (the `dw_Right` dock for dynamic windows), colors, 8.1 compatibility.
+- [`docs/efc-ui.md`](docs/efc-ui.md): the `efc.ui` script library: dynamic windows, command access checks, audit and logging, trend, troubleshooting.
 - [`docs/design-notes.md`](docs/design-notes.md): every design decision (notes 1–42) and the open items.
 - [`docs/isa101-audit.md`](docs/isa101-audit.md): the ISA-101 / ISA-18.2 audit and documented deviations.
 - [`docs/style-library.md`](docs/style-library.md) / [`docs/style-class-index.md`](docs/style-class-index.md): how to use EFC_Styles; every class (generated).
