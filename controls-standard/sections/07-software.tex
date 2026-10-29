@@ -1,0 +1,123 @@
+\chapter{Software Lifecycle}\label{ch:software}
+\section{Approved Platforms}
+Schneider Electric Control Expert is the primary Modicon programming platform; Productivity Suite is used for approved Productivity2000 applications; and Ignition is the standard SCADA/HMI platform for new projects. Projects must use a company-approved release that remains supported by the vendor and is compatible with installed firmware and modules. The approved version register must be maintained separately from this standard so security and compatibility updates do not require a full standards revision.
+
+\subsection{Current Software Versions}\label{sec:software-versions}
+\begin{longtable}{@{}P{3.60cm}P{4.44cm}P{2.33cm}P{6.13cm}@{}}
+\caption{Programming and SCADA Software Versions}\label{tab:software-versions} \\
+\toprule
+\rowcolor{tblhead}\textbf{Platform} & \textbf{Software} & \textbf{Version} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblhead}\textbf{Platform} & \textbf{Software} & \textbf{Version} & \textbf{Notes} \\
+\midrule
+\endhead
+Schneider Modicon M580 & EcoStruxure Control Expert Classic & v16.2 & EFC standard PLC platform. License ordering below. \\
+AutomationDirect Productivity2000 & \href{https://www.automationdirect.com/productivity/software/softwarewhatsnew}{Productivity Suite} & v4.7 & Latest full release listed by AutomationDirect (October 2026). The P2-622 CPU needs v4.0.1 or later. Free download. \\
+Allen-Bradley ControlLogix & Studio 5000 Logix Designer (Logix5000) & v38 & \textbf{Not an EFC standard platform.} Used only to support the two existing systems that run on ControlLogix PLCs: the Rare Gas column and the Helium system. New projects use the M580 (or Productivity2000 for small systems) per Chapter~\ref{ch:hardware}. \\
+Ignition (SCADA/HMI) & Inductive Automation Ignition & 8.1 & EFC standard SCADA/HMI platform; upgrade to 8.3 planned. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Control Expert Classic License}
+New engineering seats use a \textbf{Large (L)} license, which covers M580 programming. The older paper license (CEXSPUCZLSPMZZ) was discontinued in 2022; order the digital (node-locked) license instead.
+\begin{longtable}{@{}P{3.90cm}P{8.89cm}P{4.12cm}@{}}
+\caption{Control Expert Classic License Ordering}\label{tab:ce-license} \\
+\toprule
+\rowcolor{tblhead}\textbf{Part Number} & \textbf{Description} & \textbf{Last Quote} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblhead}\textbf{Part Number} & \textbf{Description} & \textbf{Last Quote} \\
+\midrule
+\endhead
+\separt{CEXSPUCZLSPAZZ} & Control Expert Classic --- Large (L) --- single license (1 user), digital node-locked license & \$2,380.67 (\href{https://us.wiautomation.com/}{WIAutomation}, October 2, 2026) \\
+\bottomrule
+\end{longtable}
+\note{If several engineers need seats, ask the distributor about team (multi-user) license options.}
+
+\subsection{ICONICS SCADA (Legacy)}\label{sec:iconics}
+Most of our legacy systems use \textbf{ICONICS} SCADA software (the GENESIS family). ICONICS is \textbf{not} used on new projects; Ignition is the standard SCADA/HMI going forward.
+\begin{itemize}[itemsep=1pt]
+  \item Existing ICONICS systems are maintained as they are. Changes to them follow the same change, backup, and testing rules as the rest of this chapter.
+  \item Moving a system from ICONICS to Ignition is done as a planned project, not piece by piece during other work.
+\end{itemize}
+\note{Current ICONICS version(s) in use: to be confirmed.}
+
+\section{Source Control and File Naming}\label{sec:source-control}
+There is currently no official source control system for PLC and SCADA software. Files are saved manually using the naming convention below.
+
+\textbf{File name format:} \texttt{ProjectNumber\_ShortDescription\_Revision\_YYMMDD}
+\begin{itemize}[itemsep=1pt]
+  \item Example of a working file: \texttt{014\_R23-Column-PLC\_C\_261002} (project 014, R23 column PLC program, revision C, saved October 2, 2026).
+  \item The short description uses hyphens, not underscores, so the four fields stay easy to separate.
+\end{itemize}
+
+\textbf{Revisions:}
+\begin{itemize}[itemsep=1pt]
+  \item During development, revisions are \textbf{letters} (A, B, C, \ldots).
+  \item The as-built software at the time of turnover to Operations is always \textbf{Rev~0}. Changes after turnover continue as Rev~1, 2, 3, \ldots
+  \item Development involves many changes, so the engineer uses their discretion on when a change deserves a new revision. The exception is a change that requires an MOC (Section~\ref{sec:review-release}): it always gets a new revision.
+  \item When a revision is officially released, the engineer drops the date suffix from the file name. A file name with no date marks a released version (for example \texttt{014\_R23-Column-PLC\_0}); working files keep the date.
+\end{itemize}
+
+\future{integrate Git for real revision control of PLC and SCADA software (see Appendix~\ref{app:git}).}
+\future{keep a companion document with the software that lists each revision and what changed between revisions.}
+\future{major and minor revisions are under consideration --- for example, an MOC change creates a major revision while minor revisions are left to the engineer's discretion. To be determined.}
+
+\section{Review and Release}\label{sec:review-release}
+\begin{center}
+\fcolorbox{warnred}{white}{\parbox{0.94\textwidth}{\textbf{Interlocks and safety-related items must not be changed without an approved Management of Change (MOC).} This includes interlock logic, protective setpoints, the hard-coded limits on permissive setpoints, bypass and override logic, and anything tied to the E-stop or safety relay circuits. Any such change always requires a new software revision (Section~\ref{sec:source-control}). This applies to software that has been turned over to Operations (Rev~0 and later); before turnover, interlocks are developed and reviewed through the process in Chapter~5.}}
+\end{center}
+
+Changes should be peer reviewed for logic, safe-state behavior, cybersecurity, alarms, performance, maintainability, and test coverage. Development files should not be placed in production without review, except under an approved emergency-change process. For each released revision, record what changed, how it was tested (Section~\ref{sec:change-testing}), and who loaded it.
+
+\section{Online Changes and Forces}\label{sec:online-changes}
+\note{This is not currently enforced. A policy will be reviewed and defined before it is put in place; until then, treat the text below as guidance.}
+
+Online edits, forces, simulations, and overrides should be authorized, assessed for risk, logged, and clearly indicated on SCADA. In particular:
+\begin{itemize}[itemsep=1pt]
+  \item Keep a running list of active forces and overrides, with who applied each one, why, and when it will be removed. Every force is removed, or made part of the controlled source, before the work is closed out; forces are never used as permanent logic.
+  \item Set a time limit for every force or bypass, and review any that are still active at shift change.
+  \item A force or bypass on an interlock or safety-related signal needs a second person to check it and an approved MOC (Section~\ref{sec:review-release}).
+  \item After any change to production software, upload the running program, save a verified backup, and retest what the change affects (Section~\ref{sec:change-testing}).\footnote{Sources for this section: OSHA 29 CFR 1910.119(l) (management of change); ISA/IEC 62443-2-1:2024, SPE~2 (configuration management and change control) and SPE~7 (event logging); ISA/IEC 62443-3-3:2013, SR~2.8 (auditable events) and SR~7.6 (network and security configuration settings); NIST SP 800-82 Rev.~3 (2023), App.~F (configuration management overlay); IEC 61511-1:2016+A1:2017, 11.7 and 16.2 (bypasses, overrides, and forcing of safety functions); NFPA 79-2024, 18.7 and IEC 60204-1:2016+A1:2021, 18.7 (retesting after modification).}
+\end{itemize}
+
+\section{Backup and Recovery}\label{sec:backup}
+\note{This is not a formal policy. It is a proposed approach to discuss with the engineering group, to decide whether it should be adopted and, if so, how it should be implemented.}
+
+\textbf{What should be backed up:}
+\begin{itemize}[itemsep=1pt]
+  \item PLC programs: the Control Expert \texttt{.STU}/\texttt{.STA} files and the Productivity \texttt{.adpro} file.
+  \item The configuration actually running in the PLC, uploaded from the controller, so the backup matches the field.
+  \item Ignition gateway backups (\texttt{.gwbk}) and project exports.
+  \item Network switch and router (NAT/firewall) configurations.
+  \item VFD parameter files.
+  \item Database structure (schema) for historian and application databases.
+  \item Certificates and license information.
+  \item A short written recovery procedure.
+\end{itemize}
+
+\textbf{Test the restore.} A backup is only proven when it has been restored onto spare hardware or a virtual machine and shown to work; saving the file is not enough. This should be done once before turnover and then on a regular schedule.
+
+\textbf{Protect the backups.} Keep backups where only authorized people can change them, so older versions cannot be overwritten.
+
+\textbf{Keep a copy away from the equipment.} At least one copy should be stored away from the system it backs up. A copy kept only on the operator PC or server in the same panel or room would be lost with it in a fire, flood, or hardware failure. Released backups use the released file name without a date (Section~\ref{sec:source-control}).
+
+\section{Change Testing}\label{sec:change-testing}
+This section covers testing of changes to a system that has already been built --- during commissioning or after turnover. Initial testing of a new system is covered by the FAT Checkout (Appendix~\ref{app:sample-fat}) and commissioning (Chapter~\ref{ch:design-process}).
+
+\textbf{Any change to I/O, the electrical system, sequences, interlocks, permissives or their setpoint limits, alarms, or similar must be documented and tested before the equipment is returned to service.} Record the change on the Change Test Record in Appendix~\ref{app:change-test}. Testing is scaled to the change: a text edit on a screen needs a quick check, while an interlock change needs a full functional test. Changes that require an MOC follow Section~\ref{sec:review-release}.
+
+Where relevant, the test should cover:
+\begin{itemize}[itemsep=1pt]
+  \item Normal operation of the changed function and of anything connected to it.
+  \item Limits and boundary values, including permissive setpoint limits.
+  \item Bad-quality, out-of-range, open-circuit, or shorted analog signals.
+  \item Loss and restoration of communications and power, and restart behavior.
+  \item Alarms, permissives, trips, and first-out indication.
+  \item Manual modes and operator commands, including security roles.
+  \item That a current backup was taken before the change and a new one after it.
+\end{itemize}
+Safety functions require independent validation appropriate to their lifecycle.

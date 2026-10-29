@@ -40,6 +40,7 @@ tags/                    UDTs + demo instances (Tag Browser import JSON)
 symbols/                 GENERATED: 214 plain SVGs
 mockups/                 HTML design previews
 docs/                    inventory, reference docs, template-review.md, previews/
+controls-standard/       EFC Controls Standard: LaTeX source (source of truth) + released PDFs, see its README
 archive/                 retired files, kept for reference (not built)
 tools/import_project_zip.py  add or refresh a Designer-built part in imported/
 scripts/ddtsync.py       gateway script: PLC DDTs (M580 via BMENUA0100 OPC UA) -> UDTs, add-only

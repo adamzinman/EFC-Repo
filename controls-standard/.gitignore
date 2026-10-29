@@ -1,0 +1,18 @@
+# LaTeX build outputs (rebuild with pdflatex or build-all.bat)
+*.aux
+*.log
+*.toc
+*.lot
+*.lof
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.name
+appendix-numbers.tex
+build/
+Appendix PDFs/
+# compiled output of the master file; released PDFs live in pdf/
+/Controls Standard.pdf
+/Controls Standard rev-*.pdf
+master.pdf
