@@ -597,6 +597,117 @@ def io_card():
     ) + "</div>"
 
 
+# ---------- History graph redesign: Perspective Power Chart (review mockup) ----------
+def pc_chart(W, H, rng_min, step_min, pens, lo, hi, ystep, cursor=None, fmt="{:.0f}", rlo=None, rhi=None, rstep=None, rfmt="{:.0f}"):
+    """SVG mock of a Power Chart (toolbar hidden). pens: dicts name/unit/color/dash/axis/f/fmt. cursor: minutes from window start."""
+    right = rlo is not None
+    ml, mr, mt, mb = 40, (38 if right else 8), 8, 22
+    pw, ph = W - ml - mr, H - mt - mb
+    X = lambda m: ml + pw * m / rng_min
+    ax = {"L": (lo, hi), "R": (rlo, rhi)}
+    Y = lambda v, a: mt + ph * (1 - (v - ax[a][0]) / (ax[a][1] - ax[a][0]))
+    s = f'<svg viewBox="0 0 {W} {H}" width="{W}" height="{H}" style="display:block;font-family:\'Noto Sans\',\'Segoe UI\',Arial,sans-serif">'
+    s += f'<rect x="{ml}" y="{mt}" width="{pw}" height="{ph}" fill="#F7F7F7" stroke="#7F7F7F"/>'
+    v = lo
+    while v <= hi + 1e-9:
+        y = Y(v, "L")
+        s += f'<line x1="{ml}" x2="{ml + pw}" y1="{y:.1f}" y2="{y:.1f}" stroke="#D0D0D0"/><text x="{ml - 4}" y="{y + 4:.1f}" text-anchor="end" font-size="11" fill="#1F1F1F">{fmt.format(v)}</text>'
+        v += ystep
+    if right:
+        v = rlo
+        while v <= rhi + 1e-9:
+            s += f'<text x="{ml + pw + 4}" y="{Y(v, "R") + 4:.1f}" font-size="11" fill="#595959">{rfmt.format(v)}</text>'
+            v += rstep
+        s += f'<text x="{W - 2}" y="{mt + ph + 16}" text-anchor="end" font-size="10" fill="#595959">%</text>'
+    t = 0
+    while t <= rng_min + 1e-9:
+        x = X(t)
+        hh, mm = divmod(14 * 60 - rng_min + t, 60)
+        s += (f'<line x1="{x:.1f}" x2="{x:.1f}" y1="{mt}" y2="{mt + ph}" stroke="#E0E0E0"/><line x1="{x:.1f}" x2="{x:.1f}" y1="{mt + ph}" y2="{mt + ph + 4}" stroke="#7F7F7F"/>'
+              f'<text x="{min(max(x, ml + 12), W - mr - 10):.1f}" y="{mt + ph + 16}" text-anchor="middle" font-size="11" fill="#1F1F1F">{int(hh):02d}:{int(mm):02d}</text>')
+        t += step_min
+    n = 120
+    for p in pens:
+        a = p.get("axis", "L")
+        d = " ".join(f"{'M' if i == 0 else 'L'}{X(rng_min * i / n):.1f},{Y(p['f'](rng_min * i / n), a):.1f}" for i in range(n + 1))
+        s += f'<path d="{d}" fill="none" stroke="{p["color"]}" stroke-width="{p.get("w", 1.5)}"{" stroke-dasharray=\"6 4\"" if p.get("dash") else ""}/>'
+    if cursor is not None:
+        cx = X(cursor)
+        s += f'<line x1="{cx:.1f}" x2="{cx:.1f}" y1="{mt}" y2="{mt + ph}" stroke="#1F1F1F" stroke-width="1" stroke-dasharray="3 2"/>'
+        for p in pens:
+            s += f'<circle cx="{cx:.1f}" cy="{Y(p["f"](cursor), p.get("axis", "L")):.1f}" r="4" fill="{p["color"]}" stroke="#FFFFFF" stroke-width="1.5"/>'
+        tot = 14 * 3600 - round(rng_min * 60) + round(cursor * 60)
+        stamp = f"{tot // 3600:02d}:{tot % 3600 // 60:02d}:{tot % 60:02d}"
+        lines = [(stamp, "#1F1F1F", True)] + [(f"{p['name']} {p['fmt'].format(p['f'](cursor))} {p['unit']}", p["color"], False) for p in pens]
+        bw, bh = 128, 8 + 15 * len(lines)
+        bx = cx + 8 if cx + 8 + bw < ml + pw else cx - 8 - bw
+        by = mt + 6
+        s += f'<rect x="{bx:.1f}" y="{by}" width="{bw}" height="{bh}" fill="#FFFFFF" stroke="#7F7F7F"/>'
+        for i, (tx, col, b) in enumerate(lines):
+            s += f'<text x="{bx + 6:.1f}" y="{by + 17 + 15 * i}" font-size="12" font-weight="{700 if b else 600}" fill="{col}">{tx}</text>'
+    return s + "</svg>"
+
+
+def pc_legend(pens):
+    return '<div class="pcleg">' + "".join(f'<span><i style="background:{p["color"]}"></i><span data-c="Text/Label">{p["name"]}</span> <span data-c="Text/Units">{p["unit"]}</span></span>' for p in pens) + "</div>"
+
+
+def pc_window(tag, desc, big, hist_title, chart_html, leg, sections="", expanded=False):
+    if expanded:
+        rng = "".join(f'<button data-c="Button/Small{" Button/Toggle/On" if t == "1 h" else ""}">{t}</button>' for t in ("5 m", "30 m", "1 h", "8 h", "24 h"))
+        body = (f'<div class="body"><div class="row" style="flex-wrap:nowrap;gap:3px">{rng}<span style="flex:1"></span>'
+                '<button data-c="Button/Icon" class="xp" title="collapse graph">&#x2921;</button></div>' + chart_html + leg + "</div>")
+    else:
+        body = '<div class="body">' + big + sections + grp(hist_title, chart_html + leg) + details("ALARM LIMITS", "") + details("CONFIGURATION", "") + "</div>"
+    return hdr(tag, desc) + body
+
+
+def power_chart_card():
+    import math
+    def f_pv(t):  # 820 -> 804 psig over 30 min, small ripple
+        return 820.0 - 16.0 * t / 30 + 0.9 * math.sin(t * 1.3) + 0.5 * math.sin(t * 3.1)
+    k = 811.4 - f_pv(17.2)  # the 13:47:12 sample reads 811.4
+    pv1 = dict(name="PV", unit="psig", color="#1F1F1F", f=lambda t: f_pv(t) + k, fmt="{:.1f}")
+    cw, ch = 372, 330
+    big1 = ('<div class="row st"><span data-c="Value/Normal" class="pvbig">804.3</span><span data-c="Text/Units">psig</span>'
+            '<span data-c="Indicator/Badge" class="dim">SIM</span><span data-c="Indicator/Badge" class="dim">SUBST</span><span data-c="Indicator/Badge" class="dim">OVER</span><span data-c="Indicator/Badge" class="dim">UNDER</span></div>')
+    sec1 = (f'<div class="dim">{grp("VALUES", kv(("VALUE", "804.3 psig"), ("RATE OF CHANGE", "-0.5 psig/min"), ("RANGE", "0 .. 1000 psig")))}'
+            f'{grp("ALARMS", "<div data-c=\"Text/Caption\">No active alarms</div>")}</div>')
+    w1 = pc_window("PIT100", "Pressure transmitter, header", big1, "HISTORY (30 MIN)", pc_chart(cw, ch, 30, 5, [pv1], 800, 825, 5), pc_legend([pv1]), sec1)
+    w2 = pc_window("PIT100", "Pressure transmitter, header", big1, "HISTORY (30 MIN)", pc_chart(cw, ch, 30, 5, [pv1], 800, 825, 5, 17.2, fmt="{:.0f}"), pc_legend([pv1]), sec1)
+    def loop_pens(scale):
+        pv = dict(name="PV", unit="&#176;F", color="#1F1F1F", fmt="{:.1f}", f=lambda t: 119.2 + 2.2 * math.sin(t * scale / 30 * 8) + 0.5 * math.sin(t * scale / 30 * 37))
+        sp = dict(name="SP", unit="&#176;F", color="#1F4E99", dash=True, fmt="{:.1f}", f=lambda t: 120.0)
+        out = dict(name="Output", unit="%", color="#7F7F7F", axis="R", fmt="{:.1f}", f=lambda t: 46 + 14 * math.sin(t * scale / 30 * 8 + 1.2) + 3 * math.sin(t * scale / 30 * 31))
+        return [pv, sp, out]
+    p3 = loop_pens(1)
+    big3 = (f'<div class="pvsp"><div><span data-c="Text/Label">PV</span><span data-c="Value/Normal" class="pvbig">{p3[0]["f"](30):.1f}</span><span data-c="Text/Units">&#176;F</span></div>'
+            '<div><span data-c="Text/Label">SP</span><span data-c="Input/Setpoint" class="pvbig">120.0</span><span data-c="Text/Units">&#176;F</span></div>'
+            f'<div><span data-c="Text/Label">Output</span><span data-c="Value/Output" class="pvbig">{p3[2]["f"](30):.1f}</span><span data-c="Text/Units">%</span></div></div>')
+    sec3 = f'<div class="dim">{grp("LOOP", kv(("MODE", "AUTO"), ("ERROR", "-1.1 &#176;F")))}{grp("ALARMS", "<div data-c=\"Text/Caption\">No active alarms</div>")}</div>'
+    w3 = pc_window("TIC101", "Reactor jacket temperature", big3, "HISTORY (30 MIN)", pc_chart(cw, ch, 30, 5, p3, 100, 140, 10, 17.2, rlo=0, rhi=100, rstep=25), pc_legend(p3), sec3)
+    p4 = loop_pens(0.5)
+    w4 = pc_window("TIC101", "Reactor jacket temperature", "", "", pc_chart(384, 650, 60, 10, p4, 100, 140, 10, 47.2, rlo=0, rhi=100, rstep=25), pc_legend(p4), expanded=True)
+    def win(i, t, w, cap):
+        return (f'<figure class="card" id="pc{i}"><div class="view" style="width:400px;height:860px"><div class="stage" style="width:400px;height:860px">'
+                f'<div data-c="Container/Popup" class="dock2">{w}</div></div></div><figcaption style="width:400px"><b>{t}</b><br>{cap}</figcaption></figure>')
+    notes = ('<figure class="card pcnotes" id="pcnotes"><figcaption style="width:380px;font-size:12px;line-height:1.5"><b>Notes</b>'
+             '<ul><li><b>Changes vs today:</b> the custom SVG line graph in <code>Templates/Dynamic Window/Parts/Trend</code> (flat grey plot, only "-30 min .. now") '
+             'is replaced by a Perspective Power Chart with the toolbar hidden, styled to the ISA-101 greys. Adds a left value axis with gridlines, a clock-time axis, '
+             'an optional right 0-100 % axis for outputs, an X-Trace cursor (vertical line, a dot per pen, readout box with timestamp and value + unit in the pen colour) and a compact pen legend (swatch, name, unit) under the plot. '
+             'Header, expand button and the 5 m / 30 m / 1 h / 8 h / 24 h buttons (current = Button/Toggle/On) stay; the buttons set the chart time range. No legend inside the plot.</li>'
+             '<li><b>To confirm in the 8.1 Designer:</b> exact Power Chart property names (toolbar visibility, pen and axis styling, time-range binding) and the X-Trace behaviour '
+             '(hover vs click-and-drag). The cursor here is the intended result, not read from a built view; readout colours and formatting may be limited by what the component exposes.</li>'
+             '<li><b>History source:</b> each pen reads from the site historian (tag history provider, one pen per tag path); the ranges are query windows, not different tags.</li>'
+             '<li>Sample data; sections above and below the graph are greyed or abbreviated.</li></ul></figcaption></figure>')
+    cards = (win(1, "1. ProcessValue, 1 pen, no hover", w1, "PIT100 Val_PV (psig), 30 min") + win(2, "2. ProcessValue, X-Trace cursor at 13:47", w2, "Readout: 13:47:12, PV 811.4 psig")
+             + win(3, "3. Loop, 3 pens, cursor", w3, "PV and SP on the left axis, Output on the right 0-100 % axis") + win(4, "4. Expanded (1 h), cursor", w4, "Graph fills the window below the header (~400 x 760); range buttons visible") + notes)
+    return f'<figure class="card wide" id="Templates_DynamicWindow_Parts_TrendPowerChart"><b>HISTORY graph redesign: Perspective Power Chart (review mockup)</b><div class="grid">{cards}</div></figure>'
+
+
+PC_CSS = """.pcleg{display:flex;gap:14px;align-items:center;margin:4px 2px 0}.pcleg i{display:inline-block;width:18px;height:4px;margin-right:4px;vertical-align:middle}.pcnotes ul{padding-left:16px;margin:4px 0}.pcnotes li{margin-bottom:6px}.card.wide>b{display:block;font-size:14px;margin:0 0 6px}
+"""
+
 DOCK_CSS = """.dock2{height:100%;display:flex;flex-direction:column;box-sizing:border-box}.dock2 .hdr{display:flex;align-items:center;gap:6px;padding:4px 8px}
 .dock2 .x{width:28px;height:28px}.dock2 .body{flex:1;overflow:hidden;padding:2px 8px;display:flex;flex-direction:column;gap:3px}
 .dock2 .row{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin:1px 0}.dock2 .lbl{width:40px}.dock2 .big{font-size:16px;padding:2px 10px}
@@ -693,7 +804,7 @@ def layout_card():
     return name, fig
 
 
-PAGE_CSS = """body{margin:0;padding:16px;background:#E6E6E6;font:12px 'Noto Sans','Segoe UI',Arial,sans-serif;color:#1F1F1F}
+PAGE_CSS = PC_CSS + """body{margin:0;padding:16px;background:#E6E6E6;font:12px 'Noto Sans','Segoe UI',Arial,sans-serif;color:#1F1F1F}
 h1{font-size:16px;margin:0 0 4px}h2{font-size:13px;margin:18px 0 6px;border-bottom:1px solid #BDBDBD}
 .grid{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start}.card{margin:0;background:#F2F2F2;border:1px solid #C4C4C4;padding:6px}
 .card figcaption{font-size:10px;line-height:1.4;margin-top:4px;width:240px}.gap{color:#B71C1C}.ok{color:#1B5E20}
@@ -731,6 +842,9 @@ if __name__ == "__main__":
                "<br><b>NEW</b> &middot; expanded graph: fills the dynamic window; window stays 400 x 860; other sections hidden until collapsed (decision 26)", cw=400, maxh=860)
     open(f"{OUT}/{slug('Templates/Dynamic Window/Parts/TrendExpanded')}.html", "w").write(f3)
     groups.setdefault("Expanded sections", []).append(f3)
+    fpc = power_chart_card()
+    open(f"{OUT}/Templates_DynamicWindow_Parts_TrendPowerChart.html", "w").write(fpc)
+    groups.setdefault("History graph redesign (Power Chart)", []).append(fpc)
     fr = frame("Templates/Dynamic Window/Parts/BypassConfirm", f'<div data-c="Container/Popup" class="dock2">{bypass_popup()}</div>', 400, 330, "T_Intlk", "popup",
                "<br><b>NEW - design proposal</b> &middot; opened by every Bypass button (Supervisor+)", maxh=600)
     open(f"{OUT}/{slug('Templates/Dynamic Window/Parts/BypassConfirm')}.html", "w").write(fr)
