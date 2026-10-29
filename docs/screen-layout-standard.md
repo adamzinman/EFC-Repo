@@ -10,7 +10,7 @@ Screens scale at 16:9 from **1920×1080 to 3840×2160**. Text inside templates m
 | Header | 1920 × 80 | 3840 × 160 | Title, navigation, status |
 | Left menu | 120 × 860 | 240 × 1720 | Screen navigation |
 | Main process area | 1400 × 860 | 2800 × 1720 | P&ID templates (PID_Symbols, PV, loops) |
-| Trends / dynamic window | 400 × 860 (37.04 vh × 79.63 vh) | 800 × 1720 | Right region between header and alarm bar; an Embedded View switched by `efc.ui` (dynamic windows, trends). Expands to about 50 % for an expanded graph. |
+| Trends / dynamic window | 400 × 860 (37.04 vh × 79.63 vh) | 800 × 1720 | Right region between header and alarm bar: the page's `dw_Right` Perspective dock (always visible, content cover), whose view `efc.ui` swaps between the trends overview and the dynamic windows (decisions 31, 32). `efc.ui.sizeDock` keeps it at 37.04 vh (decision 33). It never widens; an expanded graph grows inside the window (decision 26). See [library-reference](library-reference.md#page-setup-the-dw_right-dock). |
 | Alarm bar | 1920 × 140 | 3840 × 280 | Most-recent alarms (about four rows plus a header row) |
 
 Sizes match the Controls Standard screen design appendix (Perspective Screen Design Standard). All regions scale down proportionally on smaller displays.

@@ -90,20 +90,32 @@ A single click opens `Templates/Dynamic Window/Valves/ValveDiscrete` in `dw_Righ
 - The PLC must enforce permissives and interlocks itself; the HMI badges are information only.
 - A very fast click can produce a short pulse. If your scan could miss it, have the PLC reset PB and delete the release events on the button.
 
+## Tag history for process values
+The PCLib UDTs (`types/export/PCLib_Ignition81.json`) have a `HistProvider` parameter: the name of the tag history provider (historian database). When it is set on an instance, `Val_PV` of `T_AI`, `T_KPI` and `T_Analyzer` and `Val_PV` / `Val_SP` / `Out_CV` of `T_PID` are historized (analog deadband, on change). Leave it empty for no history. The dynamic-window trends and the planned trends overview read this history, so set it on every process-value instance (decision 34).
+
 ## Page setup: the dw_Right dock
 Dynamic windows (`Templates/Dynamic Window/<category>/`) open in one right-side Perspective dock per page, id `dw_Right` (decision 31). A template click runs `efc.ui.openDynamic(self)`, which loads the window into that dock with `system.perspective.alterDock` and opens it with `system.perspective.openDock`. This needs **Ignition 8.1.19 or later** (the library minimum is 8.1.22).
 
 In each page's **Page Configuration**, add a **right dock**:
 - id `dw_Right`
 - view: the page's trends overview as the initial view (shown when the page loads; a click replaces it with the device's window)
-- size 400 px at 1080p (37.04 vh equivalent; the window is 400 x 860, decision 25)
+- size 400 (any value: `efc.ui.sizeDock` rescales it to 37.04 vh on every open, close and screen startup, so 400 px at 1080p and 800 px at 4K, decision 33)
 - display "visible": the dock is always present (decision 32)
 - content "cover": the dock covers the right-hand section of the shell
 - handle "hide"
 
-To make the trends overview the view a window's close button returns to, call `efc.ui.setDefaultDock(self, viewPath, params)` in the screen's root `onStartup`. A window's close button then puts that view back. Without a default, the close button closes the dock.
+All px sizes in the library are design px on a 1920 x 1080 page and scale with the viewport (vh / vw). Page Configuration takes a dock size in px only, so the scaling is done in script: every dock view (the windows and the trends overview) watches `page.props.dimensions.viewport.height` and calls `efc.ui.sizeDock(self)` (page dimensions need Ignition 8.1.7+; `sizeDock` turns `page.props.dimensions.enabled` on).
 
-Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=None)` opens a window by its id (`dw_ValveDiscrete`, `dw_Loop`, ...), and `efc.ui.showDock(path, params)` loads any view.
+### Trends overview (the default view)
+`Templates/Dynamic Window/TrendsOverview` charts every process value on the screen: one Power Chart plot per variable type (pressure, temperature, flow, level, analysis, speed, electrical, weight, volume, vibration, percent, length, other), stacked, each with its own axis labelled with the unit; 30 min by default, buttons for 5 m to 24 h. It needs tag history on the values (decision 34, `HistProvider`) and a Tag Historian licence.
+
+How it knows what is on the screen: Perspective cannot list a page's templates, so the process-value templates (`PV_StatusStrip`, `PV_RangeBar`, `AnalogIndicator/*`) register their tag with `efc.pv` when they start and remove it when they stop (root `onStartup` / `onShutdown`, plus a change script on `tagPath`). The overview reads that registry on startup, on the page message `efc.pvChanged` and every 5 s, and rebuilds the chart only when the set of values changed. A template inside a dynamic window or popup sets its `census` param to false so its value is not charted twice. The variable type comes from the engineering unit (`efc.pv.VAR_TYPES`); for `%`, lengths and a missing unit the ISA letter of the tag name decides (P, T, F, L, A, S, W...), else the value lands in "Other". Limits: 6 plots, 8 pens per plot.
+
+Project setup: `efc.ui.setDefaultDock(self, 'Templates/Dynamic Window/TrendsOverview')` in each screen's root `onStartup`, and the Gateway **Session Shutdown** event `efc.pv.purgeSession(session.props.id)` (a closed browser tab does not shut its views down until the session ends). The dock views carry the viewport-height change script themselves, so screens no longer need one.
+
+To make the trends overview the view a window's close button returns to, call `efc.ui.setDefaultDock(self, viewPath, params)` in the screen's root `onStartup`; it sizes the dock, shows that view and remembers it in `session.custom.efcDw` under the key `<pageId>|<page path>` (so a default set on one screen does not leak into the next after `navigate()`). A window's close button (`efc.ui.closeDynamic(self)`) then puts that view back. Without a default, the close button closes the dock.
+
+Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=None)` opens a window by its id (`dw_ValveDiscrete`, `dw_Loop`, ...), and `efc.ui.showDock(path, params)` loads any view. Neither resizes the dock; call `efc.ui.sizeDock(self)` first if the page has not. The constants are `efc.ui.DOCK_ID` (`'dw_Right'`), `DESIGN_H` (1080) and `DOCK_W` (400); `efc.ui.dockSize(viewportHeight)` returns the px width for a viewport height.
 
 ## Symbols & colors
 | State | Fill | Notes |

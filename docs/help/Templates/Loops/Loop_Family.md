@@ -333,7 +333,7 @@ Totals: **B1 1, B2 1, B4 1** event scripts. **B3 2**: one event script and one t
 	efc.ui.openDynamic(self)
 ```
 
-It opens the loop dock for this tag. The view passes itself (`self`). `openDynamic` reads the view's `dockId`, `tType`, `dwTagPath` and `tagPath`, writes the dock state for this page, and writes nothing to the PLC. See the library function below.
+It opens the loop dock for this tag. The view passes itself (`self`). `openDynamic` reads the view's `dockId`, `tType`, `dwTagPath` and `tagPath`, sizes the page's `dw_Right` dock (`efc.ui.sizeDock`) and loads the window into it (`alterDock` + `openDock`); it writes no session value and nothing to the PLC. See the library function below.
 
 ### Transform script on `custom.spark` (B3 only)
 

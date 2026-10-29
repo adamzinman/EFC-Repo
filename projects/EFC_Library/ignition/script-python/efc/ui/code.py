@@ -10,6 +10,9 @@
 
 # The one right-side dock every dynamic window opens in (Page Configuration dock id)
 DOCK_ID = 'dw_Right'
+# Design page 1920 x 1080: px sizes are design px and scale with the viewport (decision 33). Page Configuration only
+# takes a dock size in px, so sizeDock keeps the dock at 400 design px = 37.04 vh on any screen (800 px at 4K).
+DESIGN_H, DOCK_W = 1080, 400
 
 # Dynamic-window id -> view path
 WINDOWS = {
@@ -55,10 +58,11 @@ def _p(params, name, default=None):
 def level(roles):
     """Highest role level the user holds (0 Guest .. 5 Admin). Bound by every window as custom.level."""
     best = 0
+    lower = [x.lower() for x in ROLES]
     for r in (roles or []):
-        r = str(r)
-        if r in ROLES:
-            best = max(best, ROLES.index(r))
+        r = str(r).strip().lower()          # site role names may differ in case ('operator', 'ADMIN')
+        if r in lower:
+            best = max(best, lower.index(r))
     return best
 
 
@@ -85,14 +89,52 @@ def _write(component, **changes):
     s.efcDw = d
 
 
-def showDock(path, params=None):
-    """Load a view into the right dock (DOCK_ID) on the calling page and open it."""
+def dockSize(viewportHeight):
+    """Dock width in screen px for this viewport height (400 at 1080, 800 at 2160)."""
+    try:
+        h = float(viewportHeight or 0)
+    except (TypeError, ValueError):
+        h = 0
+    return int(round(h * DOCK_W / DESIGN_H)) if h > 0 else DOCK_W
+
+
+def _viewportHeight(component):
+    """page.props.dimensions.viewport.height, or None when not reported yet (dimensions.enabled is off by default
+    and the browser only sends the values on page startup and resize, so the first call after a page load may
+    see None: dockSize then falls back to 400)."""
+    try:
+        dims = component.page.props.dimensions
+    except Exception:
+        return None
+    try:
+        if not dims.enabled:
+            dims.enabled = True
+    except Exception:
+        pass
+    try:
+        return dims.viewport.height
+    except Exception:
+        return None
+
+
+def sizeDock(component):
+    """Scale the right dock to the page viewport: a screen calls it from a change script on
+    page.props.dimensions.viewport.height so a resized window keeps the dock at 37.04 vh."""
+    system.perspective.alterDock(DOCK_ID, {'size': dockSize(_viewportHeight(component))})
+
+
+def showDock(path, params=None, component=None):
+    """Load a view into the right dock (DOCK_ID) on the calling page and open it. One alterDock call carries size,
+    view and params (alterDock replaces the dock's altered state, so two calls must not be relied on to merge)."""
     params = dict(params or {})
-    system.perspective.alterDock(DOCK_ID, {'view': path, 'viewParams': params})
+    cfg = {'view': path, 'viewParams': params}
+    if component is not None:
+        cfg['size'] = dockSize(_viewportHeight(component))
+    system.perspective.alterDock(DOCK_ID, cfg)
     system.perspective.openDock(DOCK_ID, params=params)
 
 
-def openWindow(dw, tagPath, model=None):
+def openWindow(dw, tagPath, model=None, component=None):
     """Open dynamic window `dw` (a WINDOWS id) for tagPath in the right dock."""
     if dw not in WINDOWS:
         _log().warn('openWindow: unknown dynamic window %s' % dw)
@@ -100,7 +142,7 @@ def openWindow(dw, tagPath, model=None):
     params = {'tagPath': tagPath or ''}
     if model:
         params['model'] = model
-    showDock(WINDOWS[dw], params)
+    showDock(WINDOWS[dw], params, component)
 
 
 def openDynamic(component):
@@ -111,15 +153,20 @@ def openDynamic(component):
         _log().warn('openDynamic: no window for tType=%s dockId=%s' % (_p(p, 'tType'), _p(p, 'dockId')))
         return
     tp = _p(p, 'dwTagPath') or _p(p, 'tagPath') or _p(p, 'cardPath') or ''
-    openWindow(dw, tp, _p(p, 'model'))
+    if not tp:
+        _log().warn('openDynamic: no tagPath on %s' % component.view.id)
+        return
+    openWindow(dw, tp, _p(p, 'model'), component)
 
 
 def setDefaultDock(component, viewPath, params=None):
-    """Screen onStartup (optional): remember and show the page's default right-dock view."""
+    """Screen onStartup: size the right dock, then remember and show the page's default view (its trends overview)."""
     if viewPath:
         params = dict(params or {})
         _write(component, default={'path': viewPath, 'params': params})
-        showDock(viewPath, params)
+        showDock(viewPath, params, component)
+    else:
+        sizeDock(component)
 
 
 def closeDynamic(component):
@@ -127,7 +174,7 @@ def closeDynamic(component):
     s, pid, st = _state(component)
     d = st.get('default') or {}
     if d.get('path'):
-        showDock(d['path'], d.get('params'))
+        showDock(d['path'], d.get('params'), component)
     else:
         system.perspective.closeDock(DOCK_ID)
 
@@ -143,9 +190,10 @@ def _audit(component, action, target, value=''):
 
 def cmd(component, member, value=True, minLevel=OPERATOR, audit=False):
     """Window button: write one member of the window's tag, if the user's role allows it."""
-    if userLevel(component) < minLevel:
+    base = _p(component.view.params, 'tagPath') or ''
+    if not base or userLevel(component) < minLevel:
         return
-    tp = component.view.params.tagPath + '/' + member
+    tp = base + '/' + member
     system.tag.writeBlocking([tp], [value])
     if audit:
         _audit(component, 'EFC write', tp, value)
@@ -170,9 +218,9 @@ def unbypass(component, intlkPath, idx):
 
 def ackAll(component, alarms):
     """ACK button: acknowledge every unacked PLC alarm member listed (Operator+)."""
-    if userLevel(component) < OPERATOR:
+    base = _p(component.view.params, 'tagPath') or ''
+    if not base or userLevel(component) < OPERATOR:
         return
-    base = component.view.params.tagPath
     vals = system.tag.readBlocking([base + '/' + a + '/Sts_Unack' for a in alarms])
     paths = [base + '/' + a + '/Cmd_Ack' for a, q in zip(alarms, vals) if q.value]
     if paths:
@@ -222,7 +270,9 @@ def dblCmd(component):
     p = component.view.params
     if _p(p, 'useButton') or not _p(p, 'dblCmd') or _p(p, 'tType') not in DBL_CMD or userLevel(component) < OPERATOR:
         return
-    base = p.tagPath
+    base = _p(p, 'tagPath') or ''
+    if not base:
+        return
     state, cmdOn, cmdOff = DBL_CMD[p.tType]
     paths = [base + '/' + m for m in [state] + READY_TRUE + READY_FALSE]
     v = [q.value for q in system.tag.readBlocking(paths)]

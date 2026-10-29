@@ -45,12 +45,17 @@
     "tagPath": "",
     "tType": "T_AI",
     "dockId": "",
-    "dwTagPath": ""
+    "dwTagPath": "",
+    "census": true
   },
   "propConfig": {
     "params.tagPath": {
       "paramDirection": "input",
-      "persistent": true
+      "persistent": true,
+      "onChange": {
+        "enabled": null,
+        "script": "\tefc.pv.rebind(self, previousValue, currentValue)"
+      }
     },
     "custom.tick": {
       "binding": {
@@ -511,6 +516,10 @@
       "persistent": true
     },
     "params.dwTagPath": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.census": {
       "paramDirection": "input",
       "persistent": true
     }
@@ -1164,6 +1173,22 @@
       }
     ],
     "events": {
+      "system": {
+        "onStartup": {
+          "type": "script",
+          "scope": "G",
+          "config": {
+            "script": "\tefc.pv.register(self)"
+          }
+        },
+        "onShutdown": {
+          "type": "script",
+          "scope": "G",
+          "config": {
+            "script": "\tefc.pv.unregister(self)"
+          }
+        }
+      },
       "dom": {
         "onClick": {
           "type": "script",
