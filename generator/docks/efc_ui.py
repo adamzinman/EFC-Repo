@@ -40,6 +40,8 @@ DENIED_POPUP = 'efcAccessDenied'
 DENIED_VIEW = 'Templates/Dynamic Window/Parts/AccessDenied'
 
 # Shelve durations offered in ShelveConfirm (minutes) and the longest one allowed (matches T_Alarm Cfg_MaxShelf T#8H)
+# Pen paths drawn by Templates/Dynamic Window/Parts/Trend (build_docks.trend_part)
+TREND_PATHS = 3
 SHELVE_PRESETS = [15, 60, 240, 480]
 SHELVE_MAX_MIN = 480
 
@@ -357,7 +359,9 @@ def _num(v):
 
 def trend(base, pens, minutes, w, h):
     """Templates/Dynamic Window/Parts/Trend transform: SVG path per pen over the last `minutes` from tag history."""
-    out = {'d': [''] * len(pens), 'lo': '', 'hi': ''}
+    # Parts/Trend always draws TREND_PATHS pen paths bound to d[0..2]: pad d so a window with fewer pens leaves no
+    # missing index (a missing index reads as Bad_NotFound, which try() in the binding does not catch)
+    out = {'d': [''] * max(TREND_PATHS, len(pens or [])), 'lo': '', 'hi': ''}
     if not base or not pens:
         return out
     try:
