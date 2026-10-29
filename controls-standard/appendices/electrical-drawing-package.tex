@@ -1,0 +1,104 @@
+\chapter{Electrical Drawing Package}
+\label{app:drawing-package}
+This appendix describes the documents that make up a controls electrical package, with short examples, the differences between them, and when each is used. The package is produced in Stage 4 (Section~\ref{sec:stage4}) and brought to as-built in Stage 8. NFPA 79 lists the technical documentation expected for industrial machinery, and IEC 61082-1 gives the general rules for preparing electrotechnical documents.\footnote{NFPA 79-2024, Ch.~17 (technical documentation); IEC 61082-1:2014, \emph{Preparation of documents used in electrotechnology --- Part 1: Rules}; reference designations per IEC 81346-1:2022 and IEC 81346-2:2019; graphic symbols per IEC 60617 or IEEE 315-1975 (inactive-reserved since 2019).} UL 508A requires a wiring diagram for each listed panel.
+
+\section{Single-Line Diagram (SLD)}
+\textbf{What it is.} The power system drawn with one line per circuit, regardless of how many conductors it has. It shows the incoming supply (voltage, phases, available fault current), the main disconnect, protective devices with ratings, transformers with kVA and voltages, and major loads (motors, VFDs, heaters) with their ratings.
+
+\textbf{What it is not.} It does not show control wiring, terminals, or wire numbers.
+
+\textbf{Quick example.}
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize, node distance=6mm,
+  blk/.style={draw, align=center, minimum width=2.6cm, minimum height=6mm, fill=white}]
+  \node[blk] (src) {480\,VAC, 3$\phi$, 60\,Hz\\available fault 22\,kA};
+  \node[blk, below=of src] (disc) {Main disconnect\\60\,A fused, Class J};
+  \node[blk, below left=6mm and 6mm of disc] (vfd) {VFD-101\\10\,hp, 18\,A};
+  \node[blk, below right=6mm and 6mm of disc] (xfmr) {CPT-1, 1\,kVA\\480 / 120\,VAC};
+  \node[blk, below=of xfmr] (ps) {24\,VDC supply\\10\,A};
+  \node[blk, below=of vfd] (m) {Motor M-101\\10\,hp};
+  \draw[thick] (src) -- (disc); \draw[thick] (disc) -| (vfd); \draw[thick] (disc) -| (xfmr);
+  \draw[thick] (xfmr) -- (ps); \draw[thick] (vfd) -- (m);
+  \node[right=3mm of src, align=left] {Panel SCCR 65\,kA $\geq$ 22\,kA available};
+\end{tikzpicture}
+\end{center}
+
+\textbf{When it is used.} Started in Stage 3--4 to size the feeder and disconnect, check SCCR (Section~\ref{sec:sccr}), and coordinate with the electrical engineer. Used by the electrician and maintenance to understand where power comes from.
+
+\section{Electrical Schematic}
+\textbf{What it is.} The detailed circuit drawing of the panel, drawn on numbered lines (rungs) with power on the left and right rails. It shows every device, contact, coil, fuse, terminal, and wire number, and cross-references between a coil and the contacts it operates. Wire and device numbering follows Section~\ref{sec:conductors}: a wire's number is the line where the signal starts, and a relay's tag is the line where its coil is.
+
+\textbf{Quick example} (one rung):
+\begin{center}
+\begin{tabular}{@{}P{1.51cm}P{15.85cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Line} & \textbf{Content} \\
+\midrule
+120 & Wire 120 from fuse F120 (X1) $\rightarrow$ PLC output DO-03 (card A04, terminal 5) $\rightarrow$ wire 121 $\rightarrow$ coil of relay CR121 $\rightarrow$ X2. Cross-reference under CR121: N.O. contact on line 214 (VFD-101 run). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{When it is used.} Drawn in Stage 4 and issued for the panel build in Stage 5. It is the main troubleshooting document for maintenance and is updated to as-built at closeout.
+
+\section{Panel Layout}
+\textbf{What it is.} A scaled drawing of the enclosure door (operator devices, nameplate, disconnect handle) and back panel (DIN rails, wire duct, components, terminal strips), with a bill of materials keyed to the drawing.
+
+\textbf{Quick example.} Back panel 30 $\times$ 24\,in: top row M580 rack and 24\,VDC supplies; second row control relays and fused terminals; bottom row field terminal strips TB1--TB4 with 20\% spare space; 2\,in wire duct between rows; door shows HMI cut-out, E-stop, reset, and nameplate.
+
+\textbf{When it is used.} Drawn in Stage 4 with the schematics, following the layout-consistency rules in Chapter~\ref{ch:hardware}. Used by the panel shop to build and by the designer to check heat (Appendix~\ref{app:eq-heat}) and space.
+
+\section{Wiring and Interconnection Diagrams}
+\textbf{What they are.} Point-to-point connection drawings or tables. A \emph{wiring diagram} shows the physical connection of each wire inside a panel (terminal to terminal). An \emph{interconnection diagram} shows connections between panels, junction boxes, and field devices, including the terminal plan at each end.
+
+\textbf{Quick example.} PT-210 (field) pins 1/2 $\rightarrow$ cable C-210 (2-conductor shielded) $\rightarrow$ JB-2 terminals 7/8 $\rightarrow$ cable C-JB2 pair 4 $\rightarrow$ CP-1 TB2 terminals 31/32 $\rightarrow$ analog input card A06 channel 3. Shield landed at CP-1 only.
+
+\textbf{When they are used.} Produced in Stage 4--5 for the panel shop and the electrician, and used for continuity checks and loop checks in Stages 5--6.
+
+\section{Cable Schedule}
+\textbf{What it is.} A table of every field cable.
+
+\textbf{Quick example.}
+\begin{center}
+\begin{small}
+\begin{tabular}{@{}P{1.74cm}P{4.14cm}P{2.72cm}P{2.61cm}P{2.50cm}P{1.95cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Cable} & \textbf{Type} & \textbf{From} & \textbf{To} & \textbf{Route} & \textbf{Length} \\
+\midrule
+C-210 & 2C \#18 shielded, PLTC & PT-210 & JB-2 TB 7--8 & Tray T3 & 12\,m \\
+C-101P & 4C \#10 VFD cable, shielded & CP-1 VFD-101 & M-101 & Conduit CD-4 & 25\,m \\
+C-ETH3 & Cat6 industrial, shielded & CP-1 switch port 3 & RIO-2 & Tray T1 & 60\,m \\
+\bottomrule
+\end{tabular}
+\end{small}
+\end{center}
+
+\textbf{When it is used.} Preliminary in Stage 4, finalized during construction. Used by the electrician to pull and terminate cable and by the estimator for quantities.
+
+\section{Supporting Lists}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{I/O list:} every PLC point with tag, description, signal type, range, card, channel, and terminal. Started in Stage 3, approved in Stage 4.
+  \item \textbf{Terminal plan:} each terminal strip with terminal number, internal wire, and field wire.
+  \item \textbf{Electrical bill of materials:} every part with manufacturer, part number, quantity, and drawing reference.
+\end{itemize}
+
+\section{How the Documents Differ}
+\begin{longtable}{@{}P{3.25cm}P{4.44cm}P{4.44cm}P{4.38cm}@{}}
+\caption{Comparison of Electrical Package Documents}\label{tab:drawing-compare} \\
+\toprule
+\rowcolor{tblhead}\textbf{Document} & \textbf{Answers the question} & \textbf{Level of detail} & \textbf{Main users} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Document} & \textbf{Answers the question} & \textbf{Level of detail} & \textbf{Main users} \\
+\midrule
+\endhead
+Single-line diagram & Where does power come from and how is it protected? & One line per circuit; ratings only & Electrical engineer, designer, maintenance \\
+Schematic & How does the circuit work? & Every device, contact, coil, and wire number & Designer, panel shop, maintenance \\
+Panel layout & Where does each part physically go? & Scaled positions, sizes, and BOM & Panel shop, designer \\
+Wiring / interconnection diagram & What connects to what, terminal to terminal? & Every wire end and terminal & Panel shop, electrician \\
+Cable schedule & Which cables are pulled, where, and how long? & One row per cable & Electrician, estimator \\
+I/O list & What does each PLC point do? & One row per I/O point & Controls, programmer, commissioning \\
+\bottomrule
+\end{longtable}

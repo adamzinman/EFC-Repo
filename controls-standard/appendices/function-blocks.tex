@@ -1,0 +1,139 @@
+\chapter{Function Block Reference}
+\label{app:function-blocks}
+This appendix documents the commonly used Derived Function Blocks (DFBs) in EFC's Control Expert projects, taken from the Control Expert data editor. Section~\ref{sec:reusable-fbs} explains how DFBs are designed and managed. For each block, the pin table lists its inputs, outputs, and input/outputs; where a pin is a data type, its members are listed in Appendix~\ref{app:data-types} and are not repeated here. Internal timers and working variables are omitted. Descriptions marked \tbd\ and names marked \textit{\textcolor{noteorange}{[check]}} still need to be confirmed.
+
+\section{DFB\_Analog\_Input}
+Scales an X80 analog input channel into a process value and passes the channel's health and diagnostic bits to the process value structure. Pairs with \texttt{DDT\_Process\_Value}.
+
+\begin{longtable}{@{}P{0.98cm}P{3.69cm}P{2.50cm}P{3.58cm}P{5.34cm}@{}}
+\caption{DFB\_Analog\_Input Pins}\label{tab:dfb-analog-input}\\
+\toprule \rowcolor{tblhead}\textbf{Pin} & \textbf{Name} & \textbf{Direction} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{5}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Pin} & \textbf{Name} & \textbf{Direction} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+1 & \texttt{Input} & Input & \chk{T\_U\_ANA\ldots} (X80 analog channel device DDT) & The analog input channel from the I/O module; members below.\\
+1 & \texttt{Raw\_Value} & Output & INT & Unscaled channel value.\\
+2 & \texttt{Eng\_Value} & Output & REAL & Scaled value in engineering units.\\
+3 & \texttt{PV} & Input/output & DDT\_Process\_Value & Process value structure, including its LL/L/H/HH alarms (\texttt{DDT\_AI\_Alarm}), \texttt{HW\_Fault}, \texttt{Value\_OOR}, \texttt{Underrange}, and \texttt{Overrange}.\\
+\bottomrule
+\end{longtable}
+Public variables: \texttt{Overrange} and \texttt{Underrange} (BOOL).
+
+\begin{longtable}{@{}P{4.97cm}P{2.38cm}P{9.58cm}@{}}
+\caption{X80 Analog Channel Members Used by DFB\_Analog\_Input}\label{tab:dfb-ai-channel}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description (Schneider)}\\ \midrule
+\endfirsthead
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description (Schneider)}\\ \midrule
+\endhead
+\texttt{FCT\_TYPE} & WORD & Function type\\
+\texttt{CH\_HEALTH} & BOOL & Channel health\\
+\texttt{CH\_WARNING} & BOOL & Channel warning\\
+\texttt{ANA.VALUE} & INT & Analog input value\\
+\texttt{ANA.FORCED\_VALUE} & INT & Forced value\\
+\texttt{ANA.FORCE\_CMD} & BOOL & Force command\\
+\texttt{ANA.FORCED\_STATE} & BOOL & Forced state\\
+\texttt{ANA.TRUE\_VALUE} & INT & Physical value\\
+\texttt{MEASURE\_STS} & INT & Measurement status\\
+\texttt{CH\_ALIGNED} & BOOL & Aligned channel\\
+\texttt{LOWER\_LIMIT} & BOOL & Measurement within lower limit\\
+\texttt{UPPER\_LIMIT} & BOOL & Measurement within upper limit\\
+\texttt{INT\_OFFSET\_ERROR} & BOOL & Internal offset error\\
+\texttt{INT\_REF\_ERROR} & BOOL & Internal reference error\\
+\texttt{POWER\_SUP\_ERROR} & BOOL & Power supply error\\
+\texttt{SPI\_COM\_ERROR} & BOOL & SPI communication error\\
+\bottomrule
+\end{longtable}
+
+\section{DFB\_Process\_Value}
+Evaluates the four analog alarms (LL, L, H, HH) of a process value, applying each alarm's on-delay, deadband, enable, and inhibit settings. Pairs with \texttt{DDT\_Process\_Value} and \texttt{DDT\_AI\_Alarm}.
+
+\begin{longtable}{@{}P{0.98cm}P{3.69cm}P{2.50cm}P{3.58cm}P{5.34cm}@{}}
+\caption{DFB\_Process\_Value Pins}\label{tab:dfb-process-value}\\
+\toprule \rowcolor{tblhead}\textbf{Pin} & \textbf{Name} & \textbf{Direction} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{5}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Pin} & \textbf{Name} & \textbf{Direction} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+1 & \texttt{PV} & Input/output & DDT\_Process\_Value & Process value whose LL/L/H/HH alarms are evaluated.\\
+2 & \texttt{Reset} & Input & BOOL & Resets latched alarms \tbd.\\
+\bottomrule
+\end{longtable}
+No outputs or public variables. Internally, one on-delay timer per alarm (\texttt{LL\_TMR}, \texttt{L\_TMR}, \texttt{H\_TMR}, \texttt{HH\_TMR}) uses each alarm's \texttt{DLY} setting.
+
+\section{DFB\_Device}
+Controls a motor or other on/off device: Off/Manual/Auto/Lockout modes, run command, feedback, runtime tracking, and stall detection. Pairs with \texttt{DDT\_Device}.
+
+\begin{longtable}{@{}P{0.98cm}P{3.69cm}P{2.50cm}P{3.58cm}P{5.34cm}@{}}
+\caption{DFB\_Device Pins}\label{tab:dfb-device}\\
+\toprule \rowcolor{tblhead}\textbf{Pin} & \textbf{Name} & \textbf{Direction} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{5}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Pin} & \textbf{Name} & \textbf{Direction} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+1 & \texttt{DEV} & Input/output & DDT\_Device & Device data structure (requests, permissives, command, feedback, alarms, runtime).\\
+? & \chk{Inputs} & Input & --- & The block's input pins were not visible in the reference screenshots; add them here.\\
+\bottomrule
+\end{longtable}
+Public variables: \texttt{HMI\_CMD} (BOOL), \texttt{Mode} (INT; Off, Auto, and Manual values from \texttt{DDT\_Mode}), \texttt{Runtime} (REAL), \texttt{Reset\_Runtime} (BOOL), and \texttt{Motor\_Stalled} (BOOL). Code sections: \texttt{Runtime\_Tracking} (structured text) and \texttt{Commands}.
+
+\section{DFB\_Valve}
+Controls an on/off valve with optional open/closed limit switch feedback: modes, open command, interlock and E-stop handling, feedback checking, and cycle counting. Pairs with \texttt{DDT\_Valve}. Written in ladder diagram (one \texttt{Commands} section).
+
+\begin{longtable}{@{}P{0.98cm}P{3.69cm}P{2.50cm}P{3.58cm}P{5.34cm}@{}}
+\caption{DFB\_Valve Pins}\label{tab:dfb-valve}\\
+\toprule \rowcolor{tblhead}\textbf{Pin} & \textbf{Name} & \textbf{Direction} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{5}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Pin} & \textbf{Name} & \textbf{Direction} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+1 & \texttt{Valve} & Input/output & DDT\_Valve & Valve data structure.\\
+2 & \texttt{Valve\_Output} & Output & BOOL & Output to the valve solenoid.\\
+3 & \texttt{Interlock} & Input & BOOL & Interlock; when active the valve goes to its safe state.\\
+4 & \texttt{Estop} & Input & BOOL & E-stop status; when active the valve goes to its safe state.\\
+5 & \texttt{Sys\_Auto} & Input & BOOL & System (unit) is in Auto mode.\\
+6 & \texttt{Sys\_Manual} & Input & BOOL & System (unit) is in Manual mode.\\
+7 & \texttt{Sys\_Off} & Input & BOOL & System (unit) is in Off mode.\\
+\bottomrule
+\end{longtable}
+No public variables. Internally, on- and off-delay timers handle feedback checking.
+
+\section{DFB\_Station}
+Runs one cylinder fill station: selection, venting, evacuation, pressurizing, sampling, filling, and disconnecting, with its scale, sequence, pressure transmitters, and three valves. Pairs with \texttt{DDT\_Station}. Code sections: \texttt{DataMapping} and \texttt{Monitoring} (structured text).
+
+\begin{longtable}{@{}P{0.98cm}P{3.69cm}P{2.50cm}P{3.58cm}P{5.34cm}@{}}
+\caption{DFB\_Station Pins}\label{tab:dfb-station}\\
+\toprule \rowcolor{tblhead}\textbf{Pin} & \textbf{Name} & \textbf{Direction} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{5}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Pin} & \textbf{Name} & \textbf{Direction} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+1 & \texttt{Station} & Input/output & DDT\_Station & Station data structure.\\
+2 & \texttt{Scale} & Input/output & DDT\_Scale & Station scale.\\
+3 & \texttt{Seq} & Input/output & DDT\_Seq & Station fill sequence.\\
+4 & \texttt{PT} & Input/output & DDT\_Process\_Value & Station pressure transmitter.\\
+5 & \texttt{InletValve} & Input/output & DDT\_Valve & Inlet valve.\\
+6 & \texttt{SampleValve} & Input/output & DDT\_Valve & Sample valve.\\
+7 & \texttt{VacuumValve} & Input/output & DDT\_Valve & Vacuum valve.\\
+8 & \texttt{Estop} & Input & BOOL & E-stop status.\\
+9 & \texttt{Upstream\_PT} & Input & DDT\_Process\_Value & Upstream (supply) pressure transmitter.\\
+\bottomrule
+\end{longtable}
+Public variables: \texttt{ONS\_Auto} and \texttt{ONS\_Manual} (BOOL; one-shots on a change to Auto or Manual \tbd), and the station status values below, which are written to \texttt{DDT\_Station.StatusEnum}.
+
+\begin{longtable}{@{}P{8.63cm}P{8.73cm}@{}}
+\caption{DFB\_Station Status Values (StatusEnum)}\label{tab:dfb-station-status}\\
+\toprule \rowcolor{tblhead}\textbf{Status} & \textbf{Value}\\ \midrule
+\endfirsthead
+\toprule \rowcolor{tblhead}\textbf{Status} & \textbf{Value}\\ \midrule
+\endhead
+\texttt{Disabled} & 0\\
+\texttt{ReadyToStart} & 10\\
+\texttt{ReadyToFill} & 20\\
+\texttt{Filling} & 30\\
+\texttt{Complete} & 40\\
+\texttt{Failed} & 50\\
+\texttt{Venting} & 60\\
+\texttt{Vacuuming} & 70\\
+\bottomrule
+\end{longtable}

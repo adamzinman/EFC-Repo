@@ -1,0 +1,209 @@
+\chapter{Important Equations and Calculations}
+\label{app:equations}
+
+This appendix collects the main design calculations referenced in Chapter~\ref{ch:hardware}. Each one is written as a short, step-by-step method with a worked example, and every equation links to a source that explains it in more detail.
+
+\section{Short-Circuit Current Rating (SCCR)}
+\label{app:eq-sccr}
+\textbf{Used in:} Section~\ref{sec:sccr}. The panel's SCCR must be equal to or greater than the available fault current where the panel is installed.
+
+\textbf{How to work it out (simple version).} UL 508A Supplement SB uses a ``weakest link'' approach: the panel is only as strong as its lowest-rated power component.
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Get the available fault current} at the panel location. This comes from the facility's electrical engineer, a short-circuit study, or the utility. Write it down; it goes on the drawings.
+  \item \textbf{List every component in the power circuit} --- main disconnect, fuses and breakers, power distribution blocks, motor starters and overloads, contactors, VFDs, and the primary side of control transformers. Control-circuit parts on the secondary of a control transformer usually do not count.
+  \item \textbf{Write down each component's SCCR} from its nameplate, datasheet, or the manufacturer's tested-combination table. If a part has no rating, UL 508A assigns it a low default value (often 5~kA), which usually ends up being the weak link.
+  \item \textbf{Take the lowest number.} That is the panel SCCR:
+\end{enumerate}
+\[
+  \text{SCCR}_{\text{panel}} = \min\left(\text{SCCR}_{1},\ \text{SCCR}_{2},\ \dots,\ \text{SCCR}_{n}\right) \;\geq\; I_{\text{available fault}}
+\]
+\begin{enumerate}[resume,itemsep=2pt]
+  \item \textbf{Compare it to the available fault current.} If the panel SCCR is too low, replace the weak component with a higher-rated one or use a manufacturer's tested combination (for example a specific fuse class protecting a VFD or a motor starter).
+\end{enumerate}
+UL 508A also lets you raise some component ratings when they are protected by current-limiting fuses or breakers. That is an advanced step --- ask before relying on it.
+
+\textbf{Example.} The facility says 22~kA is available at the panel.
+\begin{center}
+\small
+\begin{tabular}{@{}P{12.52cm}R{4.80cm}@{}}
+\toprule
+Component & SCCR \\ \midrule
+Main fused disconnect (Class J fuses) & 100 kA \\
+Power distribution block (stand-alone rating) & 10 kA \\
+Motor starter (manufacturer combination rating) & 65 kA \\
+VFD (with the fuses listed in its manual) & 65 kA \\
+Control transformer primary fuse holder (Class CC) & 200 kA \\ \midrule
+\textbf{Lowest value = panel SCCR} & \textbf{10 kA} \\
+\bottomrule
+\end{tabular}
+\end{center}
+10~kA is less than 22~kA, so the panel fails. Swapping the distribution block for one rated 100~kA when protected by Class J fuses makes the lowest value 65~kA, and $65 \geq 22$, so the panel passes and is marked ``SCCR: 65~kA.''
+
+\textit{Further reading:} \href{https://www.eaton.com/us/en-us/products/electrical-circuit-protection/short-circuit-current-ratings.html}{Eaton --- Short-Circuit Current Ratings (SCCR) resource page}; \href{https://www.eaton.com/content/dam/eaton/products/electrical-circuit-protection/fuses/solution-center/bus-ele-tech-lib-short-circuit-current-rating-calculations-and-marking-2008-spd.pdf}{Bussmann --- SCCR calculations and marking (UL 508A SB)}; \href{https://www.mersen.com/sites/default/files/files_imported_ep/TT-SCN1-Achieving-Higher-Short-Circuit-Current-Ratings-for-Industrial-Control-Panels-Tech-Topic.pdf}{Mersen --- Achieving higher SCCR for industrial control panels}.
+
+\section{Enclosure Heat and Cooling}
+\label{app:eq-heat}
+\textbf{Used in:} Section~\ref{sec:heat}. Check the heat at the hottest expected ambient temperature.
+
+\subsection*{Step 1 --- Add up the heat inside the panel}
+Add the heat loss (in watts) of every device. Use the ``power loss'' or ``heat dissipation'' value from each datasheet. Typical sources:
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Power supplies:} not all input power reaches the output. Heat $= P_{\text{out}}\left(\dfrac{1}{\eta} - 1\right)$, where $\eta$ is efficiency. A 240~W supply at 92\% efficiency gives off about 21~W.
+  \item \textbf{VFDs:} roughly 2--3\% of the drive's rated power, or use the datasheet value.
+  \item \textbf{PLC racks, I/O, switches, PCs:} use the datasheet watts (power drawn is roughly heat given off).
+  \item \textbf{Relays, contactor coils, transformers:} a few watts each; transformers list their losses.
+\end{itemize}
+\[
+  P_{\text{heat}} = \sum P_{\text{device}} \quad [\text{W}]
+\]
+
+\subsection*{Step 2 --- Work out how much heat the enclosure can shed on its own}
+A closed steel enclosure loses heat through its outside walls. How much it can lose depends on its exposed surface area and how much hotter you let the inside get compared to the room:
+\[
+  P_{\text{natural}} = k \times A \times \Delta T
+\]
+\begin{itemize}[itemsep=1pt]
+  \item $k \approx 5.5~\text{W}/(\text{m}^2\cdot\text{\textdegree C})$ for painted steel (about $0.28~\text{W}/(\text{ft}^2\cdot\text{\textdegree F})$).
+  \item $A$ = exposed surface area. Don't count a side that is mounted against a wall or another enclosure.
+  \item $\Delta T$ = maximum inside temperature you allow minus the maximum ambient temperature.
+\end{itemize}
+
+\subsection*{Step 3 --- Compare, and pick a cooling method}
+If $P_{\text{heat}} \leq P_{\text{natural}}$, natural cooling is enough. If not, add cooling:
+\[
+  \text{Fan airflow (CFM)} = \frac{3.17 \times P_{\text{heat}}~[\text{W}]}{\Delta T~[\text{\textdegree F}]}
+  \qquad\qquad
+  \text{AC size (BTU/hr)} = 3.412 \times P_{\text{total}}~[\text{W}]
+\]
+For an air conditioner, $P_{\text{total}}$ is the internal heat \emph{plus} the heat soaking in through the walls when the room is hotter than the panel ($k \times A \times (T_{\text{ambient}} - T_{\text{inside}})$). Add about 20--30\% margin to fan airflow for filter and airflow-path losses.
+
+\begin{center}
+\small
+\begin{tabular}{@{}P{8.66cm}P{8.66cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Situation} & \textbf{Use} \\ \midrule
+Heat load is below what the enclosure sheds on its own & \textbf{Natural cooling.} Sealed enclosure, no fan. \\
+Too much heat, but room air is clean, dry, and at least \textasciitilde5~\textdegree C (10~\textdegree F) cooler than the allowed inside temperature & \textbf{Filtered fan} (fan in, filtered vent out). Cheapest active option; filters need regular cleaning. \\
+Room air is dirty, wet, oily, or corrosive, or the panel must stay NEMA 4/4X/12, but the room is still cooler than the allowed inside temperature & \textbf{Air-to-air heat exchanger} (keeps the enclosure sealed). \\
+Room is as hot or hotter than the allowed inside temperature, or the heat load is large & \textbf{Air conditioner.} Also the usual choice for outdoor panels in direct sun. \\
+Hazardous (classified) location & Cooling equipment must be rated for the area (see Section~\ref{sec:c1d2}). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Example.} A wall-mounted 36" H $\times$ 30" W $\times$ 12" D steel enclosure. Room maximum is 30~\textdegree C and we want the inside to stay at or below 40~\textdegree C, so $\Delta T = 10$~\textdegree C (18~\textdegree F).
+\begin{itemize}[itemsep=1pt]
+  \item Exposed area (front, top, bottom, two sides; back is on the wall) $= 1080 + 720 + 864 = 2664~\text{in}^2 \approx 1.72~\text{m}^2$.
+  \item Natural capacity: $5.5 \times 1.72 \times 10 \approx 95$~W.
+  \item Heat load: 24~V power supply 21~W + PLC rack 40~W + industrial PC 25~W + network switch 10~W + two small VFDs 80~W $= 176$~W.
+  \item $176 > 95$, so natural cooling is not enough. The air is clean, so use a fan: $3.17 \times 176 / 18 \approx 31$~CFM; with 30\% margin, choose a filtered fan of at least \textbf{40~CFM}.
+  \item If the room could reach 45~\textdegree C instead, a fan can't cool below room temperature, so use an air conditioner: wall heat gain $= 5.5 \times 1.72 \times 5 \approx 47$~W, total $= 223$~W, and $3.412 \times 223 \approx 760$~BTU/hr. Choose the next standard size up (e.g., \textbf{1,000~BTU/hr}).
+\end{itemize}
+
+\textit{Further reading:} \href{https://www.nvent.com/sites/default/files/acquiadam/assets/Heat\%20dissipation_En_nVent_HOFFMAN_2.pdf}{nVent HOFFMAN --- Calculating heat dissipation in enclosures (white paper)}; \href{https://www.proventofan.com/how-to-calculate-electrical-enclosure-cooling-formula-example-and-fan-sizing/}{Electrical enclosure cooling --- fan airflow formula and example}.
+
+\section{Control Transformer Sizing}
+\label{app:transformer-sizing}
+\textbf{Applies to:} control power transformers (CPTs) that take plant power (for example 480~VAC) and make 120~VAC for panel control circuits --- power supplies, the PLC, contactor coils, fans, lights, and a service receptacle.
+
+\subsection{The Short Version}
+\begin{enumerate}[itemsep=2pt]
+  \item Decide how the transformer connects (primary and secondary voltage).
+  \item Add up the \textbf{sealed (steady) VA} of everything on 120~VAC.
+  \item Add 25\% and round up to the next standard size.
+  \item Check that the transformer can handle the \textbf{inrush} when coils pull in.
+  \item Size the primary and secondary fuses.
+  \item Pick a part and wire it per the nameplate.
+\end{enumerate}
+
+\subsection{Step-by-Step}
+\subsubsection*{Step 1 --- Decide how it connects}
+A 480~VAC \emph{delta} system has three hot lines and no neutral. A single-phase control transformer is connected \textbf{line-to-line} across two of the phases (for example L1 and L2), so its primary sees 480~V. The secondary is 120~V. One side of the secondary (X2) is bonded to ground to make the grounded (neutral) conductor; the other side (X1) is the fused hot.
+
+Most control transformers have dual-voltage windings (for example 240$\times$480 primary, 120$\times$240 secondary). You set the voltage with jumpers shown on the nameplate.
+
+\subsubsection*{Step 2 --- Add up the sealed VA}
+``Sealed'' VA is what each device draws once it is running. Get it from the datasheet; for power supplies use input VA (output power $\div$ efficiency $\div$ power factor), not output watts. Only count loads that can be on at the same time.
+\[
+  \text{VA}_{\text{sealed}} = \sum \text{VA}_{\text{each device}}
+\]
+
+\subsubsection*{Step 3 --- Add margin and round up}
+Add 25\% for growth and continuous loading, then pick the next standard size up. Common sizes are 50, 75, 100, 150, 250, 350, 500, 750, 1000, 1500, 2000, 3000, and 5000~VA.
+\[
+  \text{VA}_{\text{required}} = 1.25 \times \text{VA}_{\text{sealed}}
+\]
+
+\subsubsection*{Step 4 --- Check inrush}
+When a contactor or relay coil first pulls in, it draws several times its sealed VA for a few cycles. If many coils pull in at once, the transformer's output voltage dips; if it dips too far, coils chatter or don't close. Combine the sealed load with the inrush of the coils that can energize at the same moment:
+\[
+  \text{VA}_{\text{inrush selection}} = \sqrt{\left(\text{VA}_{\text{sealed}}\right)^2 + \left(\text{VA}_{\text{inrush}}\right)^2}
+\]
+Then look up the chosen transformer in the manufacturer's \emph{regulation} (inrush) chart, usually in the 90\% secondary voltage column at 40\% power factor. The transformer's listed inrush rating must be at least your calculated value. If not, go up one size.
+
+\subsubsection*{Step 5 --- Size the fuses}
+The National Electrical Code (NEC 450.3(B), and 430.72(C) for motor control circuits) sets the maximum fuse size. For a transformer with \emph{both} primary and secondary fuses:
+\begin{center}
+\small
+\begin{tabular}{@{}P{5.95cm}P{4.54cm}P{6.38cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Where} & \textbf{Rated current} & \textbf{Maximum fuse size} \\ \midrule
+Primary & any (with secondary fuse) & 250\% of primary current \\
+Secondary & 9 A or more & 125\% (next standard size allowed) \\
+Secondary & less than 9 A & 167\% \\
+Primary only (no secondary fuse) & 9 A or more & 125\% \\
+Primary only (no secondary fuse) & 2 A to 9 A & 167\% \\
+Primary only (no secondary fuse) & less than 2 A & 300\% (500\% allowed by 430.72(C) for control circuits) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\[
+  I_{\text{primary}} = \frac{\text{VA}}{V_{\text{primary}}}
+  \qquad\qquad
+  I_{\text{secondary}} = \frac{\text{VA}}{V_{\text{secondary}}}
+\]
+Use \textbf{time-delay} fuses (for example Class CC time-delay) on the primary so the transformer's own magnetizing inrush doesn't blow them. Both primary lines are fused because neither leg of a 480~V delta is grounded. On the secondary, fuse only X1; X2 is the grounded conductor.
+
+\subsection{Worked Example: 480~VAC Delta to 120~VAC}
+A panel is fed from a 3-phase, 480~VAC delta supply and needs 120~VAC control power. The 120~VAC loads are (example values --- use your actual datasheets):
+\begin{center}
+\small
+\begin{tabular}{@{}P{10.81cm}R{3.03cm}R{3.03cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Load} & \textbf{Sealed VA} & \textbf{Inrush VA} \\ \midrule
+24~VDC power supply, 240~W output (92\% efficient, PF 0.95) & 275 & --- \\
+Modicon BMXCPS3500 PLC power supply & 75 & --- \\
+Enclosure fan & 40 & --- \\
+LED panel light & 15 & --- \\
+Service receptacle (NEC counts 180~VA) & 180 & --- \\
+Three contactor coils (10~VA sealed / 100~VA inrush each) & 30 & 300 \\ \midrule
+\textbf{Total} & \textbf{615} & \textbf{300} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[itemsep=4pt]
+  \item \textbf{Connection.} Single-phase transformer, primary across L1--L2 at 480~V, secondary 120~V with X2 bonded to ground.
+  \item \textbf{Sealed VA} $= 615$~VA.
+  \item \textbf{Margin:} $1.25 \times 615 = 769$~VA $\Rightarrow$ next standard size is \textbf{1000~VA}.
+  \item \textbf{Inrush check} (all three contactors pulling in together):
+  \[
+    \sqrt{615^2 + 300^2} = \sqrt{378{,}225 + 90{,}000} \approx 684~\text{VA}
+  \]
+  Look up the 1000~VA model in the manufacturer's regulation chart (90\% column). Its inrush rating must be at least 684~VA; 1000~VA control transformers are normally rated well above that, so 1000~VA is fine. Confirm on the chart for the exact part.
+  \item \textbf{Fuses.}
+  \begin{itemize}[itemsep=1pt]
+    \item Primary current: $1000 / 480 = 2.08$~A. Maximum with secondary protection: $2.5 \times 2.08 = 5.2$~A $\Rightarrow$ \textbf{5~A time-delay Class CC}, one in each primary line (2 fuses).
+    \item Secondary current: $1000 / 120 = 8.33$~A. Less than 9~A, so the maximum is $1.67 \times 8.33 = 13.9$~A $\Rightarrow$ \textbf{10~A} fuse on X1 (leaves margin above the 8.33~A rating).
+  \end{itemize}
+  \item \textbf{Select a part.} For example, the \href{https://www.lamonde.com/ph1000mqmj.html}{Hammond Power Solutions PH1000MQMJ}: 1000~VA, 240$\times$480~V primary, 120$\times$240~V secondary. Jumper the primary for 480~V and the secondary for 120~V exactly as shown on its nameplate diagram. Add finger-safe fuse blocks for the primary and secondary fuses, or choose the factory fuse-kit version (PH1000MQMJ-FK) if available.
+\end{enumerate}
+
+\textbf{Result:} 1000~VA, 480~V to 120~V control transformer; 2 $\times$ 5~A time-delay primary fuses; 1 $\times$ 10~A secondary fuse on X1; X2 bonded to ground.
+
+\subsection{Further Reading}
+\begin{itemize}[itemsep=2pt]
+  \item \href{https://www.elliottelectric.com/StaticPages/ElectricalReferences/Guides/control-transformer-selection-guide.aspx}{Elliott Electric --- Control transformer selection guide (inrush VA equation and regulation chart)}
+  \item \href{https://literature.rockwellautomation.com/idc/groups/literature/documents/wp/1497-wp001_-en-p.pdf}{Rockwell Automation --- Proper selection of control circuit transformers (white paper)}
+  \item \href{https://electrical-engineering-portal.com/overcurrent-protection-transformer-nec-450-3}{Electrical Engineering Portal --- Overcurrent protection of transformers (NEC 450.3)}
+\end{itemize}

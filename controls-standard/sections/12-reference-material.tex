@@ -1,0 +1,134 @@
+\chapter{Reference Material}
+\section{Standards Referenced}\label{sec:standards-referenced}
+The project basis of design must identify the editions adopted by the jurisdiction and the editions contractually required. The table below lists each standard cited in this guide once, with the edition cited and where it is used. When a new edition is published, this is the one place to check what needs updating. Applicability must be determined per project.
+
+\begin{longtable}{@{}P{6.05cm}P{10.88cm}@{}}
+\caption{Standards Referenced}\label{tab:references}\\
+\toprule \rowcolor{tblhead}\textbf{Standard (edition cited)} & \textbf{Subject and where used in this guide}\\ \midrule
+\endfirsthead
+\multicolumn{2}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Standard (edition cited)} & \textbf{Subject and where used in this guide}\\ \midrule
+\endhead
+\multicolumn{2}{@{}l}{\textit{Electrical and machinery}} \\
+\href{https://link.nfpa.org/all-publications/70/2023}{NFPA 70 (NEC), 2023} & National Electrical Code. Art.~250 grounding and bonding (Section~\ref{sec:bonding}); 409.22 SCCR (Section~\ref{sec:sccr}); 450.3(B) transformer protection (Appendix~\ref{app:transformer-sizing}); Art.~501 Class I locations (Appendix~\ref{app:c1d2}). The 2026 edition is published; confirm the edition adopted by the jurisdiction. \\
+NFPA 70E, company-adopted edition & Electrical safe work practices and risk controls. \\
+\href{https://link.nfpa.org/all-publications/79/2024}{NFPA 79, 2024} & Electrical equipment of industrial machinery: stop categories and E-stop (Section~\ref{sec:estop}), technical documentation (Appendix~\ref{app:drawing-package}), testing and verification (Appendix~\ref{app:sample-fat}, Section~\ref{sec:change-testing}). \\
+\href{https://www.shopulstandards.com/ProductDetail.aspx?productId=UL508A}{UL 508A, 3rd ed. (2018), revised through 2025} & Industrial control panels: construction, markings, and SCCR (Supplement SB). \\
+\href{https://webstore.iec.ch/en/publication/26037}{IEC 60204-1:2016+A1:2021} & Electrical equipment of machines: stop categories, pushbutton and indicator colors (Section~\ref{sec:estop}), verification and retesting. \\
+ISO 13850:2015 & Emergency stop function (Section~\ref{sec:estop}). \\
+\href{https://www.iso.org/standard/73481.html}{ISO 13849-1:2023} & Safety-related parts of machinery control systems. \\
+\href{https://webstore.iec.ch/en/publication/59927}{IEC 62061:2021} & Functional safety of machinery safety-related control systems. \\
+\multicolumn{2}{@{}l}{\textit{Hazardous locations}} \\
+NFPA 496, 2024 & Purged and pressurized enclosures (Appendix~\ref{app:c1d2}). \\
+UL 121201, 9th ed. & Nonincendive equipment for Class I and II, Division 2 locations (Appendix~\ref{app:c1d2}). \\
+UL 698A, 4th ed. (2018, reaffirmed 2022) & Industrial control panels relating to hazardous locations (intrinsically safe circuits). \\
+\multicolumn{2}{@{}l}{\textit{Documentation}} \\
+IEC 61082-1:2014 & Preparation of documents used in electrotechnology (Appendix~\ref{app:drawing-package}). \\
+IEC 81346-1:2022 and 81346-2:2019 & Reference designations (Appendix~\ref{app:drawing-package}). \\
+IEEE 315-1975 (inactive-reserved) / IEC 60617 & Graphic symbols for electrical diagrams. \\
+ISA-5.1, adopted edition & Instrumentation symbols and identification. \\
+\multicolumn{2}{@{}l}{\textit{Process safety, alarms, and testing}} \\
+OSHA 29 CFR 1910.119 & Process safety management: (i) pre-startup safety review, (l) management of change (Sections~\ref{sec:online-changes} and~\ref{sec:change-testing}). \\
+IEC 61511-1:2016+A1:2017 / ANSI/ISA-84 & Functional safety for safety instrumented systems; bypass and modification rules. \\
+\href{https://www.isa.org/products/ansi-isa-18-2-2016-management-of-alarm-systems-for}{ANSI/ISA-18.2-2016} and IEC 62682:2022 & Alarm management lifecycle (Section~\ref{sec:alarm-mgmt} and Appendix~\ref{app:alarm-doc}). \\
+\href{https://www.isa.org/products/isa-101-01-2015-human-machine-interfaces-for}{ANSI/ISA-101.01-2015} & HMI philosophy, design, implementation, operation, and maintenance. \\
+IEC 62381:2024 (Ed.~3) & Factory, site, and site integration acceptance tests (Appendix~\ref{app:sample-fat}). \\
+ISA-TR18.2.7-2017 & Alarm management for packaged systems (Section~\ref{sec:packaged-equipment}). \\
+ISA-88 series, where applicable & Batch-control models, terminology, and modular structure. \\
+\multicolumn{2}{@{}l}{\textit{Cybersecurity}} \\
+IEC 62443-2-4:2023 (Ed.~2) & Security program requirements for IACS service providers (integrators and maintenance contractors) (Section~\ref{sec:contractor-cyber}). \\
+\href{https://www.isa.org/standards-and-publications/isa-standards/isa-iec-62443-series-of-standards}{ISA/IEC 62443-2-1:2024, 62443-3-2:2020, 62443-3-3:2013} & Security program (configuration management, logging), zones and conduits, and system security requirements (Chapter~\ref{ch:networking}, Section~\ref{sec:online-changes}). \\
+\href{https://csrc.nist.gov/pubs/sp/800/82/r3/final}{NIST SP 800-82 Rev.~3 (2023)} & OT cybersecurity guidance. A later revision must not replace Rev.~3 in project requirements until issued as final and adopted by EFC. \\
+CISA et al., \emph{Secure Connectivity Principles for OT} (2026) & Remote and external connectivity to OT (Section~\ref{sec:remote-access}). \\
+\bottomrule
+\end{longtable}
+
+Manufacturer manuals, certificates, and application notes must be retained for the actual product revision used. A web link is informational and does not replace a controlled project copy of required technical data.
+
+\section[EFC Internal References]{EFC Internal References \newmark}\label{sec:internal-refs}
+\begin{small}
+\begin{longtable}{@{}P{5.20cm}P{11.73cm}@{}}
+\caption{EFC Internal References}\label{tab:internal-refs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Item} & \textbf{What it is and where it is kept} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Item} & \textbf{What it is and where it is kept} \\
+\midrule
+\endhead
+This standard (LaTeX source) & Source for this document and its appendix PDFs. Rebuild the PDFs from the source; do not edit the PDFs. Each released revision is tagged in Git (\texttt{rev-G}, \texttt{rev-H}, \ldots). \\
+Separate appendix PDFs & One PDF per appendix, built with the main document, for handing to contractors (Section~\ref{sec:efc-provides}). \\
+PCLib (EFC Repo, \texttt{PCLib/}) & Proposed standard data types: the generator \texttt{gen\_pclib.py}, the Control Expert and Ignition import files, the member list, and the source of Appendix~\ref{app:data-types-future}. \\
+Current data types and DFBs & The DDTs and DFBs in Appendices~\ref{app:data-types} and~\ref{app:function-blocks}, kept in the Control Expert master library (Section~\ref{sec:udt}). \\
+Standard hardware selections & Chapter~\ref{ch:hardware}, with prices and ordering history kept in the hardware pricing archive. \\
+Perspective Screen Design Standard & Appendix~\ref{app:screen-design} and its fluid text style sheet. \\
+\bottomrule
+\end{longtable}
+\end{small}
+\note{A formal location for the EFC Repo (company Git server or hosted service) and who may change it have not been decided.}
+
+\section[Manufacturer Documentation]{Manufacturer Documentation \newmark}\label{sec:mfr-docs}
+The manuals below are the ones most often needed for EFC systems. Download the revision that matches the hardware firmware and software version in use and keep a copy with the project, as required above.
+
+\begin{small}
+\begin{longtable}{@{}P{6.60cm}P{2.80cm}P{7.53cm}@{}}
+\caption{Key Manufacturer Documents}\label{tab:mfr-docs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Document} & \textbf{Number} & \textbf{Use} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Document} & \textbf{Number} & \textbf{Use} \\
+\midrule
+\endhead
+\multicolumn{3}{@{}l}{\textit{Schneider Electric --- Modicon M580 and Control Expert}} \\
+\href{https://www.se.com/us/en/download/document/EIO0000001578/}{Modicon M580 Hardware Reference Manual} & EIO0000001578 & CPU, rack, power supply, and module hardware. \\
+\href{https://www.se.com/us/en/download/document/998-21389419_GMA-US/}{Designing Successful Modicon M580 Architectures} (white paper) & 998-21389419 & Choosing local, remote, and distributed I/O architectures (Chapter~\ref{ch:networking}). \\
+\href{https://www.se.com/us/en/download/document/HRB62666}{M580 Standalone: Frequently Used Architectures} & HRB62666 & Reference network layouts for single-CPU systems. \\
+\href{https://www.se.com/us/en/download/document/EIO0000001590/}{M580 Change Configuration on the Fly} & EIO0000001590 & Adding modules and I/O to a running system (Section~\ref{sec:online-changes}). \\
+Modicon Controllers Cybersecurity User Guide & EIO0000001999 & Hardening M580 PLCs and Control Expert (Section~\ref{sec:protocols} and Chapter~\ref{ch:networking}). \\
+\href{https://www.se.com/us/en/faqs/FAQ000208173/}{BMENUA0100 forbidden architectures} (FAQ) & FAQ000208173 & Check before finalizing the OPC UA module's network connections. \\
+\multicolumn{3}{@{}l}{\textit{Inductive Automation --- Ignition}} \\
+\href{https://docs.inductiveautomation.com/docs/8.1/intro}{Ignition 8.1 User Manual} & --- & Gateway, tags, alarms, Perspective (Chapter~\ref{ch:scada}). \\
+Ignition Security Hardening Guide & --- & Gateway security settings (Chapter~\ref{ch:networking}). \\
+\multicolumn{3}{@{}l}{\textit{AutomationDirect --- Productivity2000}} \\
+Productivity Suite help file and P2000 hardware user manual & P2-USER-M & Programming, Modbus mapping, and hardware for the low-cost PLC option. \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\section[Further Reading]{Further Reading \newmark}\label{sec:further-reading}
+\subsection*{Free papers}
+\begin{itemize}[itemsep=1pt]
+  \item B.~Hollifield, \emph{Understanding and Applying the ANSI/ISA-18.2 Alarm Management Standard} (PAS, 2010). Written for the 2009 edition, but still a clear summary of the alarm lifecycle and rationalization.
+  \item ISA, \emph{Industrial Cybersecurity for Small- and Medium-Sized Businesses} (updated 2024). A practical starting point for an OT security program.
+  \item ISAGCA, \emph{Quick Start Guide: An Overview of the ISA/IEC 62443 Standards} (2024). Which parts of the series apply to an asset owner, an integrator, and a product supplier.
+  \item ISAGCA, \emph{Leveraging ISA 62443-3-2 for IACS Risk Assessment} (2021). The zones, conduits, and risk assessment workflow.
+\end{itemize}
+
+\subsection*{ISA technical reports for sections still being developed}
+These are paid documents. ISA members can read them on ISA Pub Hub.
+\begin{small}
+\begin{longtable}{@{}P{7.20cm}P{9.73cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Document} & \textbf{Where it would help} \\
+\midrule
+\endhead
+ISA-TR101.01-2022, HMI Philosophy, and ISA-TR101.02-2019, HMI Usability and Performance & HMI Philosophy (Chapter~\ref{ch:scada}) and the screen design standard. \\
+ISA-TR18.2.1-2018, Alarm Philosophy; ISA-TR18.2.3, Basic Alarm Design & A site alarm philosophy and the alarm settings in the data types (Appendix~\ref{app:alarm-doc}). \\
+ISA-TR18.2.7-2017, Alarm Management When Utilizing Packaged Systems & Alarms from vendor packages (Section~\ref{sec:packaged-equipment}). \\
+ISA-TR88.00.02-2022, Machine and Unit States & Equipment state models in the data types. \\
+ANSI/ISA-106.00.01-2023 and related technical reports & Procedural automation for startup and shutdown sequences. \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\subsection*{Training}
+\begin{itemize}[itemsep=1pt]
+  \item \href{https://inductiveuniversity.com/}{Inductive University}: free Ignition training and the Ignition Core certification.
+  \item Schneider Electric training: Control Expert and M580 courses through the local distributor or Schneider's training centers.
+  \item Inductive Automation Forum and the Schneider Community \emph{Industrial Automation How-to} board: the most useful places to search for practical M580-to-Ignition questions.
+\end{itemize}

@@ -1,0 +1,33 @@
+\chapter{Terminology}\label{ch:terminology}
+\begin{description}[style=nextline,leftmargin=0pt]
+  \item[Alarm] An operator notification requiring a defined response within a defined time to prevent or mitigate an undesirable consequence.
+  \item[Warning] An advisory condition that increases awareness but does not meet the alarm definition.
+  \item[Fault] A detected abnormal condition of a device, signal, communication path, or control function.
+  \item[Control narrative] A written description of how a control system is intended to operate, including operating modes, sequences, permissives, interlocks, alarms, operator actions, failure responses, and interfaces with other equipment.
+  \item[Table of Interlocks and Permissives] A project document that lists the conditions that allow equipment to operate and the conditions that stop or prevent operation. It normally identifies the initiating condition, affected equipment or action, required response, reset behavior, and related notes. The project team may begin the table earlier, but it cannot be finalized until the PHA is complete and its controls-related recommendations have been incorporated.
+  \item[Process Hazard Analysis (PHA)] A structured review used by the project team to identify process hazards, evaluate existing safeguards, and recommend additional protection where needed. PHA results may create or change alarms, permissives, interlocks, and trips.
+  \item[Permissive] A non-safety interlock: a condition that must be satisfied before an action (opening a valve, starting a pump) may start or continue. A permissive is not a rated safety function and is not a substitute for one.
+  \item[Permissive setpoint] The value a permissive compares against. The operator may adjust it from SCADA, but only within a minimum and maximum that are hard-coded in the PLC and displayed on the SCADA screen. Example: the maximum pressure at which the vacuum pump lines may be opened. See Section~\ref{sec:setpoints}.
+  \item[Control interlock] Logic that prevents or stops an action to protect normal operation or equipment. It is implemented in the basic process control system unless the risk assessment requires independence.\footnote{EFC currently uses interlocks in the standard PLC to serve as its safety instrumented functions (SIFs); we do not yet design separate, integrity-rated SIFs. This is expected to change when safety PLCs are added to our systems, and this guide will be updated then.}
+  \item[Equipment protective interlock] A protective action intended principally to prevent equipment damage. Its required independence and integrity must be established by risk assessment.
+  \item[Emergency-stop function] A complementary protective measure intended to avert or reduce an existing hazard. It is not a substitute for safeguarding or risk reduction by design.
+  \item[Force-Guided Relay (FGR)] A relay whose contacts are mechanically linked so that if one contact welds shut, the others cannot change state. A safety relay can monitor one of the linked contacts to detect that fault. Used wherever a relay is part of an E-stop or other safety circuit (see Section~\ref{sec:estop}).
+  \item[Trip] An automatic transition to a defined safe or protective state.
+  \item[Bypass/Override] An authorized temporary defeat or substitution of a protective condition or output. It must be controlled, visible, time limited, and logged.
+  \item[Inhibit] Prevention of an alarm or protective action from operating while its initiating condition may still exist.
+  \item[Suppression] Prevention of an alarm based on a designed operating state or condition.
+  \item[Shelving] A time-limited operator action that temporarily removes an alarm from normal presentation while retaining its record.
+  \item[Safe state] The process or equipment condition defined by the risk assessment as producing an acceptable level of risk.
+  \item[First-out] Identification and retention of the initiating condition in a group of protective trips.
+  \item[Project Objective Document (POD)] The master scope document produced in Stage~0 (Project Evaluation) of the Project Execution Process. It states the project's high-level commercial and operational requirements and its initial business case, and is the basis for the Project Charter in Stage~1 (Section~\ref{sec:pep}).
+  \item[Gate review] The meeting at the end of each project stage where the required stakeholders decide whether the project moves to the next stage: Project Charter Approval, Preliminary Design Review (PDR), Critical Design Review (CDR), Manufacturing Readiness Review (MRR), Test Readiness Review (TRR), and Pre-Startup Safety Review (PSSR) (Table~\ref{tab:pep-overview}).
+  \item[Management of Change (MOC)] The controlled review, authorization, implementation, validation, and documentation of a change.
+  \item[Short-Circuit Current Rating (SCCR)] The maximum prospective short-circuit current at a stated voltage that an assembly or component can safely withstand under specified conditions. The panel SCCR must be at least equal to the available fault current at its installation point.
+  \item[Industrial PC (IPC)] A computer built for the plant floor or panel mounting rather than an office: fanless or filtered cooling, a wide operating temperature range, DIN-rail or panel mounting, 24\,VDC power, industrial-grade SSDs, and long product availability. EFC uses IPCs for Ignition Edge Panel stations, thin clients, and rugged gateways (Section~\ref{sec:computers}).
+  \item[Single-line diagram (SLD)] A simplified drawing of the power system that shows each circuit as one line: the incoming supply, disconnects, protective devices, transformers, and major loads with their ratings. See Section~\ref{sec:drawing-package} and Appendix~\ref{app:drawing-package}.
+  \item[Electrical schematic] The detailed circuit drawing of a panel or system, drawn on numbered lines (rungs), showing every device, contact, coil, terminal, and wire number and how they are connected.
+  \item[Cable schedule] A table listing every field cable: its tag, type, size, number of conductors, from and to points, route, and length.
+  \item[UDT / DDT] User-Defined Type; called a Derived Data Type (DDT) in Modicon Control Expert. A reusable data structure that bundles the data for one piece of equipment or signal into a single variable (Section~\ref{sec:udt}).
+  \item[DFB] Derived Function Block: a reusable block of PLC logic in Control Expert, used with a matching DDT (Section~\ref{sec:reusable-fbs}).
+  \item[FAT/SAT] Factory Acceptance Test and Site Acceptance Test, respectively.
+\end{description}

@@ -1,0 +1,298 @@
+\chapter{Modbus Addressing on the M580 and Productivity2000}
+\label{app:modbus}
+
+This appendix explains how Modbus works, how to set up Modbus addressing on our two PLC platforms --- the Modicon M580 (Control Expert Classic) and the AutomationDirect Productivity2000 (Productivity Suite) --- and how to match those addresses in Ignition. Software versions are listed in Section~\ref{sec:software-versions}.
+
+\textbf{When Modbus is used:} EFC's standards are OPC UA between the M580 and SCADA and EtherNet/IP for device communications (Section~\ref{sec:protocols}). Modbus is used for the backup and conversion cases: a device without EtherNet/IP, an EtherNet/IP option that is not available, an existing Modbus RTU system being converted to Ethernet, and Productivity2000 SCADA links (which have no OPC UA server).
+
+\textbf{Scope:} Modbus TCP, Modbus RTU where a device requires it, and Modbus/TCP Security.
+
+\section{Modbus Basics}
+Modbus is a request/response protocol: a client asks and a server answers. Servers never send data on their own, so every value SCADA shows was polled. All data lives in four tables.
+
+\begin{longtable}{@{}P{3.25cm}P{2.18cm}P{2.39cm}P{2.18cm}P{1.74cm}P{3.91cm}@{}}
+\toprule
+\textbf{Table} & \textbf{Size} & \textbf{Access} & \textbf{Legacy prefix} & \textbf{Read FC} & \textbf{Write FC} \\
+\midrule
+\endhead
+Coils & 1 bit & Read/write & 0xxxx & 01 & 05 single, 15 multiple \\
+Discrete inputs & 1 bit & Read-only & 1xxxx & 02 & --- \\
+Input registers & 16-bit word & Read-only & 3xxxx & 04 & --- \\
+Holding registers & 16-bit word & Read/write & 4xxxx & 03 & 06 single, 16 multiple \\
+\bottomrule
+\end{longtable}
+
+\subsection*{Function codes in common use}
+\begin{longtable}{@{}P{1.88cm}P{9.40cm}P{5.63cm}@{}}
+\toprule
+\textbf{FC} & \textbf{Name} & \textbf{Per-request limit} \\
+\midrule
+\endhead
+01 / 02 & Read coils / discrete inputs & 2000 bits \\
+03 / 04 & Read holding / input registers & 125 registers \\
+05 / 06 & Write single coil / register & 1 \\
+15 & Write multiple coils & 1968 bits \\
+16 & Write multiple registers & 123 registers \\
+22 & Mask write register (set bits inside a word) & 1 \\
+23 & Read/write multiple registers in one transaction & 125 read / 121 write \\
+43/14 & Read device identification & --- \\
+\bottomrule
+\end{longtable}
+
+\subsection*{Framing}
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Modbus RTU (serial):} binary frames on RS-485/RS-232 with a slave address (1--247) and CRC. One master per bus.
+  \item \textbf{Modbus TCP:} the same message with a 7-byte header (transaction ID, protocol ID, length, unit ID) on TCP port 502. No CRC.
+  \item \textbf{RTU over TCP:} raw RTU frames (with CRC) over a TCP socket, common on low-cost serial-to-Ethernet converters. Not the same as Modbus TCP; the client driver must match.
+  \item \textbf{Unit ID:} ignored by most native TCP devices (use 255 or 1). Through a gateway it selects the serial slave address.
+\end{itemize}
+
+\subsection*{Exception codes}
+\begin{longtable}{@{}P{1.41cm}P{5.40cm}P{10.10cm}@{}}
+\toprule
+\textbf{Code} & \textbf{Name} & \textbf{Usual cause} \\
+\midrule
+\endhead
+01 & Illegal function & Device does not support that FC (for example FC16 or FC22) \\
+02 & Illegal data address & Off-by-one, or a request spanning an undefined address \\
+03 & Illegal data value & Value out of range, or quantity above the device limit \\
+04 & Server device failure & Internal device fault \\
+06 & Server busy & Long command in progress; retry \\
+0A / 0B & Gateway path / target failed & Gateway cannot reach the serial device: unit ID, wiring, baud \\
+\bottomrule
+\end{longtable}
+
+\section{Addressing and Data Types}
+Most Modbus problems are an off-by-one address or a swapped word order. Settle both in writing for every device before building tags.
+
+\subsection*{Address notation}
+The protocol itself only carries a 0-based offset (0--65535) within a table. Documentation adds other numbering on top:
+\begin{longtable}{@{}P{5.87cm}P{3.52cm}P{7.51cm}@{}}
+\toprule
+\textbf{Notation} & \textbf{First holding register} & \textbf{Where it is used} \\
+\midrule
+\endhead
+Offset (0-based) & 0 & Wire captures, Modicon \%MW numbers, Ignition with zero-based on \\
+Register number (1-based) & 1 & Most device manuals, Ignition default \\
+Legacy 5-digit & 40001 & Older manuals; the leading 4 names the table \\
+Extended 6-digit & 400001 & Devices with more than 9999 registers; Productivity Suite \\
+\bottomrule
+\end{longtable}
+40001, 400001, 1-based HR1, and \%MW0 all point to the same register (offset 0). The conversion is:
+\[
+  \text{offset} = \text{register number} - 1 = \text{legacy address} - 40001 = \text{6-digit address} - 400001
+\]
+Confirm any vendor map by reading a known value before building the full tag set (\href{https://www.modbus.org/modbus-specifications}{Modbus Application Protocol Specification}).
+
+\subsection*{Data types and word order}
+\begin{itemize}[itemsep=2pt]
+  \item Modbus only defines bits and 16-bit words. INT/UINT use one register; DINT, UDINT, and REAL use two; LREAL and LINT use four; strings use one register per two characters.
+  \item Bytes within a register are big-endian. The order of the two words in a 32-bit value is not standardized: high word first (ABCD) or low word first (CDAB).
+  \item \textbf{The Modicon M580 stores 32-bit values low word first} in consecutive \%MW. Ignition must have \emph{Reverse Word Order} on for these devices.
+  \item Test with known values: 123.456 in a REAL and 70000 in a DINT. A word swap shows up as an obviously wrong number.
+\end{itemize}
+
+\section{Platform Comparison}
+\begin{longtable}{@{}P{3.90cm}P{6.50cm}P{6.50cm}@{}}
+\toprule
+& \textbf{Modicon M580 (Control Expert Classic)} & \textbf{Productivity2000 (Productivity Suite)} \\
+\midrule
+\endhead
+Where Modbus addresses come from & You assign them: located variables at fixed \%MW / \%M addresses & Assigned per tag in the Tag Database (MOD Start column), automatically or by hand \\
+Address numbering & \%MW\textit{n} = offset \textit{n} (0-based) & 6-digit, 1-based (e.g., 400001) as shown in the Tag Database \\
+32-bit word order & Low word first & Confirm with a test value (see Section~\ref{app:modbus:p2000}) \\
+Modbus TCP server & Built into the CPU, port 502 & Built into the CPU, port 502; enable on the Ethernet port \\
+Modbus RTU & Through an X80 serial module (BMXNOM0200) or a gateway & Built-in serial ports \\
+PLC as Modbus client & I/O scanning (DTM Browser) or READ\_VAR / WRITE\_VAR & MRX (read) and MWX (write) instructions \\
+Ignition settings & Zero-based on, Reverse Word Order on & Zero-based off (1-based); set word order to match the test value \\
+\bottomrule
+\end{longtable}
+
+\section{Step-by-Step: Modicon M580 in Control Expert Classic}
+\label{app:modbus:m580}
+The M580 is a Modbus TCP server on port 502 and can also act as a client. Only \textbf{located} variables (\%M, \%MW) can be read over Modbus; unlocated variables and DDT instances cannot. These steps are written for Control Expert Classic v16.2.
+
+\subsection*{Setting up the M580 as a Modbus server}
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Size the located memory.} In the Project Browser, open the CPU in the PLC bus configuration and go to its \emph{Configuration} tab. Set the number of \%M bits and \%MW words large enough for the full SCADA map plus room to grow (see the register map layout in Section~\ref{app:modbus:rules}).
+  \item \textbf{Declare located variables.} In the Data Editor, create each variable SCADA needs and enter its address in the \emph{Address} column, for example \texttt{PT101\_PV} (REAL) at \texttt{\%MW200}. Put REAL, DINT, and UDINT values on even addresses and never locate anything on the second word of a 32-bit value.
+  \item \textbf{Copy between your DDTs and the map.} DDT instances (DDT\_Process\_Value, DDT\_Device, and so on) can't be read over Modbus directly. In a dedicated section of the program, copy status values from the DDTs into the located map each scan, and copy commands and setpoints from the map back into the DDTs after checking limits.
+  \item \textbf{Lock down access.} On the CPU's \emph{Security} tab, enable the access control list and list only the Ignition servers and engineering stations allowed to connect. Enforce Security disables FTP, TFTP, HTTP, EtherNet/IP, SNMP, and DHCP/BOOTP; re-enable only what the project needs.
+  \item \textbf{Test.} Write known test values into a REAL and a DINT, then read them with a standalone Modbus client (Modbus Poll, QModMaster) before setting up Ignition.
+  \item \textbf{Ignition device settings.} Port 502, Zero-based Addressing \textbf{on}, Reverse Word Order \textbf{on}, timeout 2000~ms, 1 concurrent request.
+\end{enumerate}
+\textbf{Do not use FC04 (input registers) against the M580.} Its behavior depends on the \%IW configuration and changed in Control Expert 15.0. Use FC03 (holding registers).
+
+\subsection*{The M580 as a Modbus client}
+\begin{longtable}{@{}P{3.25cm}P{4.98cm}P{3.25cm}P{4.98cm}@{}}
+\toprule
+\textbf{Method} & \textbf{Setup} & \textbf{Function codes} & \textbf{Use for} \\
+\midrule
+\endhead
+I/O scanning & DTM Browser: add a generic Modbus device and define request lines with a repetition rate & FC03, 16, 23 only & Cyclic exchange with drives, meters, remote PLCs \\
+Explicit messaging & READ\_VAR / WRITE\_VAR with ADDM, or DATA\_EXCH & Coils, holding and input registers & Input registers, coils, occasional reads/writes \\
+\bottomrule
+\end{longtable}
+Both methods can run against the same device at the same time. Wrap explicit messaging in a standard DFB with timeout, retry, and diagnostics rather than hand-building each call. The M580 CPU has no serial Modbus port: use an X80 serial module (BMXNOM0200) or an external TCP-to-RTU gateway (Section~\ref{sec:protocol-converters}).
+
+\section{Step-by-Step: Productivity2000 in Productivity Suite}
+\label{app:modbus:p2000}
+The P2-622 CPU has a built-in Modbus TCP server and Modbus RTU on its serial ports. In Productivity Suite, Modbus addresses belong to tags.
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Enable the server.} In Hardware Configuration, open the CPU's Ethernet port settings and make sure the Modbus TCP server is enabled on port 502. For Modbus RTU, set the serial port's protocol to Modbus and set the address, baud rate, and parity to match the bus.
+  \item \textbf{Assign Modbus addresses to tags.} Open the Tag Database. Select the tags SCADA needs, right-click the \emph{MOD Start} column, and choose \emph{Auto Assign Modbus Address}; or type the address in yourself. Addresses appear in 6-digit, 1-based form (e.g., \texttt{400101}).
+  \item \textbf{Keep the map stable.} Assign addresses deliberately, in blocks that follow the register map layout in Section~\ref{app:modbus:rules}, so adding tags later doesn't shift existing addresses. Export the Tag Database to CSV and keep it with the project as the register map.
+  \item \textbf{Check 32-bit word order.} Put known values in a 32-bit integer and a float tag and read them with a Modbus client. Set Ignition's Reverse Word Order to whichever setting gives the correct values, and record the result in the register map.
+  \item \textbf{The P2 as a Modbus client.} Use the \emph{MRX} (Modbus Read) and \emph{MWX} (Modbus Write) instructions to read from or write to other Modbus devices, such as a meter or a VFD. Set the IP address (or serial port and slave address), function code, starting address, and word-swap option in the instruction. Trigger them on a timer and check the instruction's status bits for errors.
+  \item \textbf{Ignition device settings.} Port 502, Zero-based Addressing \textbf{off} (the P2 uses 1-based numbers), Reverse Word Order set from the test above.
+\end{enumerate}
+\note{Verify the exact menu names and word-order behavior against the Productivity Suite v4.7 help files on the first project, and update this section.}
+
+\section{Worked Example}
+A pressure reading \texttt{PT101} (REAL, 32-bit) is read by Ignition from each platform.
+\begin{longtable}{@{}P{3.25cm}P{6.82cm}P{6.82cm}@{}}
+\toprule
+\textbf{Step} & \textbf{Modicon M580} & \textbf{Productivity2000} \\
+\midrule
+\endhead
+PLC location & \texttt{PT101\_PV} located at \texttt{\%MW200}--\texttt{\%MW201} & Tag \texttt{PT101\_PV}, MOD Start \texttt{400201} (registers 400201--400202) \\
+Protocol offset & 200 & 200 \\
+Ignition device & Zero-based on, Reverse Word Order on & Zero-based off, word order per test \\
+Ignition tag path & \texttt{[M580\_R23]HRF200} & \texttt{[P2\_Skid1]HRF201} \\
+\bottomrule
+\end{longtable}
+Both tags read the same offset (200). The M580 path uses 200 because zero-based addressing is on; the Productivity path uses 201 because Ignition is set to 1-based numbering for that device.
+
+\section{Ignition Settings Reference}
+Perspective does not talk to Modbus directly. The Ignition Gateway's OPC UA module runs the Modbus driver as a device connection; OPC tags reference that device and Perspective views bind to the tags. On 8.1, reach serial devices through a TCP gateway.
+
+\begin{longtable}{@{}P{5.27cm}P{2.75cm}P{5.04cm}P{3.43cm}@{}}
+\toprule
+\textbf{Setting} & \textbf{Default} & \textbf{Function} & \textbf{M580 value} \\
+\midrule
+\endhead
+Port & 502 & Modbus TCP port & 502 \\
+Communication Timeout & 2000\,ms\,* & Response wait & 2000\,ms \\
+Concurrent Requests & 1\,* & Requests in flight & 1--2 \\
+Max Holding Registers per Request & 125 & Read size (8.3.1+: separate write, 123) & 125 / 123 \\
+Zero-based Addressing & Off\,* & On: HR0 = offset 0 & \textbf{On} \\
+Reverse Word Order & Off\,* & Swaps words of 32/64-bit values & \textbf{On} \\
+Span Gaps & On\,* & Reads across unused addresses & On if map contiguous \\
+Reverse String Byte Order & Off & Swaps bytes in string words & Test per device \\
+\bottomrule
+\end{longtable}
+\note{* Defaults to be verified on the company Gateway.}
+
+\textbf{Address syntax.} Item paths take the form \texttt{[Device]HRF200}. Designators: \texttt{C}/\texttt{DI} (bits), \texttt{HR}/\texttt{IR} (INT), \texttt{HRUS} (UINT), \texttt{HRI}/\texttt{HRUI} (DINT/UDINT), \texttt{HRF} (REAL), \texttt{HRD} (LREAL), \texttt{HRS}\textit{n}:\textit{len} (string). A bit in a register is \texttt{HR100.3} (requires FC22). A unit ID is prefixed as \texttt{[GW1]3.HR100}.
+
+\subsection*{M580 to Ignition cross-reference}
+With Zero-based Addressing and Reverse Word Order both on, the Ignition address number equals the \%MW number.
+\begin{longtable}{@{}P{3.91cm}P{2.39cm}P{1.74cm}P{2.18cm}P{2.82cm}P{2.61cm}@{}}
+\toprule
+\textbf{M580 variable} & \textbf{Type} & \textbf{Offset} & \textbf{Legacy} & \textbf{Ignition (0-based)} & \textbf{Ignition (1-based)} \\
+\midrule
+\endhead
+\%MW100 & INT & 100 & 400101 & \texttt{HR100} & \texttt{HR101} \\
+\%MW101 & UINT & 101 & 400102 & \texttt{HRUS101} & \texttt{HRUS102} \\
+\%MW200--201 & REAL & 200 & 400201 & \texttt{HRF200} & \texttt{HRF201} \\
+\%MW202--203 & DINT & 202 & 400203 & \texttt{HRI202} & \texttt{HRI203} \\
+\%MW300.3 & BOOL in word & 300 & 400301 & \texttt{HR300.3} & \texttt{HR301.3} \\
+\%M50 & EBOOL & 50 & 000051 & \texttt{C50} & \texttt{C51} \\
+\%MW400--409 & STRING[20] & 400 & 400401 & \texttt{HRS400:20} & \texttt{HRS401:20} \\
+\bottomrule
+\end{longtable}
+\note{Confirm whether Modicon strings require Reverse String Byte Order on the first project (R23).}
+
+\section{Modbus TCP in Practice}
+\begin{itemize}[itemsep=2pt]
+  \item Performance depends on the number of requests needed to cover the data. Design maps so the client reads a few large contiguous blocks (up to 125 registers per read, 123 per write).
+  \item Reading across unused addresses (span gaps) saves requests, but some devices return exception 02 for any undefined address in the block.
+  \item Embedded devices often accept few simultaneous clients. Count SCADA servers, redundant servers, historians, laptops, and other PLCs before adding a client.
+  \item Poll tiers: 250--500\,ms for operator-critical status, 1\,s for analogs, 5--30\,s for configuration and diagnostics.
+  \item Serial gateways are as slow as the serial bus. Use 19{,}200 baud or higher and keep gateway devices on their own driver connection.
+  \item \textbf{Security:} Modbus TCP has no authentication or encryption; any host that can reach port 502 can read and write every register. Modbus/TCP Security (TLS on port 802) exists but device support is limited, so protection relies on network segmentation, controller IP allow-lists, and firewall rules (Chapter~8).
+\end{itemize}
+
+\section{Company Rules}
+\label{app:modbus:rules}
+\subsection*{Device connections}
+\begin{itemize}[itemsep=2pt]
+  \item One Ignition device per PLC, named after the PLC tag on the System Layout drawing (e.g., \texttt{M580\_R23}).
+  \item Every M580 device: Zero-based Addressing on, Reverse Word Order on, port 502, timeout 2000\,ms, concurrent requests 1. These are fixed by this standard, not chosen per project.
+\end{itemize}
+
+\subsection*{Register map layout}
+The SCADA map is a dedicated, contiguous block, separate from PLC working memory. The ranges below are \%MW numbers on the M580; on the Productivity2000 use the same offsets (add 400001 for the 6-digit address).
+\begin{longtable}{@{}P{2.75cm}P{2.75cm}P{3.43cm}P{7.55cm}@{}}
+\toprule
+\textbf{Range} & \textbf{Area} & \textbf{Written by} & \textbf{Contents} \\
+\midrule
+\endhead
+0--99 & System & PLC & Heartbeat, PLC mode, first-out alarm, map version, comm status of scanned devices \\
+100--999 & Status & PLC & Fixed-size blocks per UDT instance \\
+1000--1499 & Setpoints & SCADA and PLC & Setpoints and alarm limits, REAL, engineering units \\
+1500--1999 & Commands & SCADA & Command words, cleared by the PLC after action \\
+2000+ & Spare & Either & Reserved growth \\
+\bottomrule
+\end{longtable}
+\begin{itemize}[itemsep=2pt]
+  \item 32-bit values start on even offsets; nothing overlaps the second word of a 32-bit value.
+  \item Analogs are REAL in engineering units. Scaled integers only where a third-party device requires them, with the factor documented.
+  \item The map version word is incremented on every layout change; Ignition alarms on a mismatch.
+\end{itemize}
+\note{Decide fixed block sizes for DDT\_Process\_Value and DDT\_Device (e.g., 16 and 8 words) so Ignition UDTs need only one base-address parameter.}
+
+\subsection*{Commands and writes}
+\begin{itemize}[itemsep=2pt]
+  \item SCADA never writes directly to an output or interlock. It writes a request; the PLC checks permissives and interlocks (DDT\_Interlock) and acts.
+  \item One command word per device (bit 0 start, bit 1 stop, bit 2 reset, \ldots). The PLC clears the word after processing it.
+  \item Setpoint writes are clamped in the PLC to engineering limits; out-of-range values are rejected and flagged.
+\end{itemize}
+
+\subsection*{Heartbeat and communication health}
+\begin{itemize}[itemsep=2pt]
+  \item The PLC increments a heartbeat word every second; Ignition alarms if it is unchanged for 10\,s.
+  \item Ignition writes a watchdog word every 5\,s; the PLC alarms and puts remote commands in a defined safe state if it goes stale.
+  \item Every Modbus device scanned by the PLC has a comm-healthy bit in the System area, alarmed in SCADA.
+\end{itemize}
+
+\subsection*{Third-party devices}
+Vendors and panel builders supply a register map spreadsheet with, for every point: name, table, address, \textbf{whether it is 0- or 1-based}, data type, word order, units and scaling, read/write, and poll tier. The header states supported function codes, maximum registers per request, connection limit, and unit ID. This is a Stage 1 input alongside the Standard Hardware Spreadsheet.
+
+\subsection*{Security}
+\begin{itemize}[itemsep=2pt]
+  \item Modbus stays inside the control-network zone. Firewall rules allow port 502 only from named Ignition servers and engineering stations.
+  \item The M580 access control list is enabled on every project and lists those hosts explicitly.
+  \item No Modbus over remote-access or vendor VPN paths.
+\end{itemize}
+\note{Decide whether to trial Modbus/TCP Security or a BMENUA0100 OPC UA module on a future project.}
+
+\section{Troubleshooting}
+\begin{longtable}{@{}P{4.69cm}P{5.40cm}P{6.81cm}@{}}
+\toprule
+\textbf{Symptom} & \textbf{Likely cause} & \textbf{Check / fix} \\
+\midrule
+\endhead
+Device stays ``Connecting'' & Route, IP, firewall, or M580 allow-list & Ping; test port 502 from the Gateway; check the CPU Security tab \\
+All tags Bad & Address outside map, or timeouts & Gateway log exception code \\
+Exception 01 & FC not supported & Disable write-multiple or bit writes for the device \\
+Exception 02 & Off-by-one or spanned gap & Toggle zero-based to confirm; disable Span Gaps \\
+Values shifted by one & Zero-based mismatch & Fix at the device setting \\
+REAL wrong magnitude & Word order, or HR used for REAL & Use HRF; check Reverse Word Order \\
+Strings pairwise swapped & Byte order in word & Toggle Reverse String Byte Order \\
+Intermittent Bad quality & Too many requests or clients & Consolidate blocks, slow tag groups, lengthen timeout \\
+Exception 0A / 0B & Gateway cannot reach slave & Unit ID, RS-485 wiring, baud/parity \\
+FC04 returns inputs on M580 & Control Expert 15.0 behavior & Use FC03 \\
+\bottomrule
+\end{longtable}
+Tools: Wireshark (Modbus/TCP dissector) on a mirrored port; a standalone Modbus client (e.g., Modbus Poll, QModMaster) to test the device independently of Ignition.
+
+\section{Sources}
+\begin{itemize}[itemsep=1pt]
+  \item Modbus Organization, \href{https://www.modbus.org/modbus-specifications}{Modbus Application Protocol Specification v1.1b3} and \href{https://assets.noviams.com/novi-file-uploads/modbus/pdfs-and-documents/MB-TCP-Security-v36_2021-07-30.pdf}{Modbus/TCP Security v36 (2021)}
+  \item Inductive Automation, \href{https://www.docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/opc-ua-drivers/modbus}{Ignition 8.1 Modbus driver}, \href{https://www.docs.inductiveautomation.com/docs/8.1/ignition-modules/opc-ua/opc-ua-drivers/modbus/modbus-addressing}{Modbus addressing}, \href{https://www.docs.inductiveautomation.com/docs/8.3/ignition-modules/opc-ua/opc-ua-drivers/modbus/connecting-to-modbus-device}{8.3 device settings}
+  \item Schneider Electric FAQs: \href{https://www.se.com/au/en/faqs/FAQ000223813/}{M580 Modbus client methods}, \href{https://www.se.com/uk/en/faqs/FAQ000222833/}{FC04 behavior}, \href{https://www.se.com/ca/en/faqs/FA282558/}{M580 Security tab}
+  \item \href{https://docs.cybus.io/2-4-2/guides/machine-connectivity/plcs-industrial-controllers/connecting-a-schneider-modicon-m580-plc}{Cybus: Connecting a Modicon M580} (located variables, addressing, and word order)
+  \item AutomationDirect, \href{https://www.automationdirect.com/productivity/software/softwarewhatsnew}{Productivity Suite --- What's New}; Productivity Suite built-in help (Tag Database, MRX/MWX instructions)
+  \item \href{https://www.plctalk.net/forums/threads/questions-about-programming-with-productivity-suite-software.112341/}{PLCtalk: Productivity Suite Modbus address auto-assignment}
+\end{itemize}

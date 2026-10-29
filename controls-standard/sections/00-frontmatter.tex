@@ -1,0 +1,46 @@
+\begin{titlepage}
+\centering
+\vspace*{1.4cm}
+\includegraphics[width=0.68\textwidth]{assets/efc-logo.png}\par
+\vspace{1.2cm}
+{\Large\bfseries \companyname\par}
+\vspace{1.6cm}
+{\Huge\bfseries\color{headblue}\documenttitle\par}
+\vfill
+\begin{tabular}{@{}rl@{}}
+\textbf{Date:} & \documentdate \\
+\textbf{Author:} & \documentauthor \\
+\textbf{Revision:} & \documentrevision
+\end{tabular}
+\vspace*{1.4cm}
+\end{titlepage}
+
+\chapter*{Revision History}
+\begin{longtable}{@{}P{1.08cm}P{3.90cm}P{2.82cm}P{8.67cm}@{}}
+\caption{Revision History}\label{tab:revision-history} \\
+\toprule
+\rowcolor{tblhead}\textbf{Rev} & \textbf{Date} & \textbf{Author} & \textbf{Description} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} (Revision History) continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Rev} & \textbf{Date} & \textbf{Author} & \textbf{Description} \\
+\midrule
+\endhead
+A & September 21, 2026 & \documentauthor & Initial rough draft. \\
+B & September 21, 2026 & \documentauthor & This was a test of the revision process. \\
+C & September 22, 2026 & \documentauthor & Added terminology and process definitions, selected panel-design guidance, scale and NAT-device comparisons, sequence guidance, common-system guidance for PDC compressors, and simplified SCADA/HMI standards. \\
+D & September 24, 2026 & \documentauthor & Reworked the guide for new controls hires, added PHA and interlock/permissive-table guidance, and expanded the analog-input terminal options. \\
+E & September 30, 2026 & \documentauthor & Aligned controls inputs and outputs with project execution phases 0--8; added the Stage 5A handoff, development and construction work, field wiring responsibility, and FAT Checkout timing. \\
+F & October 1, 2026 & \documentauthor & Simplified the overview and governance text; rewrote the design-process stages as summaries with numbered input, work, and output lists; trimmed contractor submittals; added PHA, setpoint, and future-practice notes; reorganized PLC hardware; added Phoenix Contact screw-terminal alternates, plain-language SCCR and enclosure-heat guidance with worked examples, protocol-converter and temperature-transmitter options, M580-as-gateway guidance with a network diagram, the OnLogic CL260 workstation, monitor tables, and Class I Div 2 equipment guidance; added the control transformer sizing appendix; added chapter/section page headers. \\
+G & October 1, 2026 & \documentauthor & Converted the design-process stage lists to simple tables; moved the PHA explanation into Section 5.3; added E-stop requirements (dual-channel, illuminated, PLC feedback, reset button, PLC-driven force-guided relay) and the FGR definition; added grounding and bonding guidance; moved the SCCR, enclosure heat, and transformer calculations into a new Important Equations appendix; moved panel networking to Chapter 8; expanded the VFD section with a drive table, control methods, and Safe Torque Off; added thin-client hosts and an Ignition server section; added software versions, the Control Expert Classic license, and legacy ICONICS notes; added the approved vendors list; added a Modbus addressing appendix for the M580 and Productivity2000; made all tables full width. \\
+H & October 13, 2026 & \documentauthor & Renamed the master file and added a build script that produces the full PDF and a separate PDF for each appendix; formalized the How to Use section and changed approvals to the Lead/Senior Controls Engineer; added the deliverables master list, permissive setpoints, an alarm list example, IPC and drawing-document terms, and footnotes citing the standards used with a Standards Referenced table; added OnLogic (pending); updated VFDs (Invertek), solenoid alternates, the air prep unit, scales (Mettler Toledo, Laumas TLB4), EKI gateways, industrial monitors and keyboards, and moved the NAT table into Chapter 6; reorganized servers and operator stations; rewrote source control, review/MOC, online changes, backup, and change testing; revised networking (protocol standards with OPC UA, corrected M580 topology, tiered security, hardening, time server) and simplified the accounts chapter; added Ignition login/SSO notes, data-type and function-block sections; added appendices for the Perspective screen design standard (replacing the scaling procedure), Edge Panel integration, electrical drawings, Class I Div 2 design, alarm documentation, data types, function blocks, Git, change testing, a sample FAT, and Cato/Claroty; rebuilt Chapter 3 around the company Project Execution Process (stage overview table and stage cards, with distinct work-performed and output lists); split the data type appendix into Current and a proposed Future (PCLib) library, and defined the PCLib Auto, Manual, Maintenance, and Out of service modes; widened the page margins and all tables. \\
+I & \documentdate & \documentauthor & Expanded Chapter 4 (contractor roles, information EFC provides, submittal review, packaged equipment, contractor software, testing and acceptance, site work, contractor cybersecurity, turnover); added Ignition version, PLC connection, alarm acknowledgment, and alarm priority numbering to Chapter 11; added internal references, manufacturer documents, further reading, and training to Chapter 12; added the \texttt{T\_DiaComp} diaphragm compressor type to Appendix~\ref{app:data-types-future} and linked it from the PDC Compressor section. \\
+\bottomrule
+\end{longtable}
+\textit{Lettered revisions are used before the initial approved release. Numbered revisions begin after formal approval.}
+\clearpage
+
+\tableofcontents
+%\listoftables Manual Edit by Author
+\clearpage

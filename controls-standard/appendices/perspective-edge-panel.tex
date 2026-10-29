@@ -1,0 +1,189 @@
+\chapter[Ignition Perspective vs.\ Edge Panel (8.1 / 8.3)]{Ignition Perspective vs.\ Edge Panel: Differences and Integration (8.1 / 8.3)}
+\label{app:edge-panel}
+\section{Overview}
+Perspective and Edge Panel are not competing products: Perspective is a visualization module, and Edge Panel is a license for a lightweight Edge gateway that can run Perspective (or Vision) with only two clients. The real comparison is a Standard Ignition gateway running Perspective versus an Edge gateway with the Panel product. The two integrate over the Gateway Network, mainly through a remote tag provider on the central server and Edge Sync Services for history, alarms, and audit data.
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Ignition Standard + Perspective:} the full platform. Unlimited tags, sessions, and database connections, multiple projects and tag providers. This is the central SCADA server.
+  \item \textbf{Ignition Edge Panel:} a local HMI at a machine or skid. It \href{https://docs.inductiveautomation.com/docs/8.3/other-editions/ignition-edge}{includes everything in Edge IIoT plus local visualization}, limited to one project, no databases, and short local history. It keeps running if the link to the central server drops.
+\end{itemize}
+Mixed versions work with limits: an 8.3 main server can take tags, history, and alarms from an 8.1 Edge Panel, but an 8.3 Edge cannot store data to an 8.1 main server. Details are in the version sections below.
+
+\section{Key Differences}
+The biggest practical limits of Edge Panel are two clients, one project, one tag provider, and no database connections; everything else is close to the standard platform.
+
+\begin{longtable}{@{}P{3.89cm}P{6.44cm}P{6.59cm}@{}}
+\caption{Standard Ignition vs.\ Edge Panel}\label{tab:edge-differences} \\
+\toprule
+\rowcolor{tblhead}\textbf{Area} & \textbf{Standard Ignition + Perspective} & \textbf{Edge Panel (running Perspective)} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Area} & \textbf{Standard Ignition + Perspective} & \textbf{Edge Panel (running Perspective)} \\
+\midrule
+\endhead
+Clients & Unlimited sessions (per license) & 2 Perspective sessions, or 2 Vision clients (1 local, 1 remote); one module at a time \\
+Projects & Unlimited, with inheritance & Exactly one project (default name ``Edge''), cannot be deleted \\
+Tags & Unlimited, multiple tag providers, remote providers & Unlimited tags, a single realtime tag provider \\
+Databases & Unlimited SQL connections, named queries, DB user sources & None; DB queries and bindings do not work \\
+Tag history & SQL Historian; 8.3 adds the Core Historian & Built-in Edge historian: 35 days or 10 million points, not configurable \\
+Alarm journal / audit & Database-backed, long retention & 7 days local each \\
+Long-term storage & Native & Via Sync Services to a central gateway \\
+Redundancy & Standard redundant pairs & Edge-to-Edge only; cannot fail over to a standard gateway \\
+Scripting, WebDev, EAM agent, OPC UA server & Yes & Yes (bundled into Panel and IIoT since 8.1.33) \\
+Third-party modules & Yes & Only if the vendor states Edge compatibility \\
+Graphics & Perspective components, Symbol Factory add-on & Perspective or Vision, Symbol Factory included \\
+\bottomrule
+\end{longtable}
+Views built on a standard Perspective project can be exported and imported into the Edge project and vice versa, as long as they avoid database features. Sources: \href{https://docs.inductiveautomation.com/docs/8.3/other-editions/ignition-edge}{Ignition Edge (8.3)}, \href{https://docs.inductiveautomation.com/docs/8.3/other-editions/ignition-edge/edge-panel}{Edge Panel (8.3)}.
+
+\section{Integration Options}
+The standard pattern is a Gateway Network connection from the Edge Panel to the central server, then a remote tag provider for live data and Sync Services for history, alarms, and audit records.
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,
+  box/.style={draw, rounded corners=3pt, align=center, fill=headblue!8, minimum width=4.3cm, minimum height=2.2cm},
+  lnk/.style={-{Stealth[length=2mm]}, thick}]
+  \node[box] (edge) at (0,0) {\textbf{Edge Panel gateway}\\(machine / skid HMI)\\[2pt]Local tags and devices\\Edge historian (35 days)\\Local Perspective session};
+  \node[box] (central) at (10.6,0) {\textbf{Central Ignition gateway}\\(plant SCADA server)\\[2pt]Remote tag provider\\SQL / Core historian\\Alarm journal, audit, EAM};
+  \draw[lnk] ([yshift=6mm]edge.east) -- node[above, font=\scriptsize]{1. Live tags (remote tag provider)} ([yshift=6mm]central.west);
+  \draw[lnk] (edge.east) -- node[above, font=\scriptsize]{2. Sync Services: history, alarms, audit} (central.west);
+  \draw[lnk] ([yshift=-6mm]central.west) -- node[below, font=\scriptsize]{3. EAM: backups, project sends, upgrades} ([yshift=-6mm]edge.east);
+\end{tikzpicture}
+\end{center}
+The Edge Panel keeps the local HMI running if the network drops; the central gateway gives plant-wide views and long-term storage. All three links run over the Gateway Network.
+
+\begin{longtable}{@{}P{3.57cm}P{4.66cm}P{4.12cm}P{4.16cm}@{}}
+\caption{Edge Panel Integration Methods}\label{tab:edge-integration} \\
+\toprule
+\rowcolor{tblhead}\textbf{Method} & \textbf{What it does} & \textbf{Needs on central} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Method} & \textbf{What it does} & \textbf{Needs on central} & \textbf{Notes} \\
+\midrule
+\endhead
+Remote tag provider (Gateway Network) & Central Perspective views read and write Edge tags live & Nothing extra & Main integration path; write/edit access set in Edge security \\
+Edge Sync Services & Pushes Edge tag history, alarm journal, and audit log to central storage & Historian, alarm journal, and audit profiles that allow remote storage & Edge buffers up to 35 days if the link is down \\
+EAM (agent on Edge) & Central backups, project sends, upgrades, license management & Enterprise Administration module & Edge acts as an agent \\
+Gateway messaging & Scripts call \texttt{system.\allowbreak{}util.\allowbreak{}sendMessage} / \texttt{sendRequest} between gateways & Message handlers in a central project & Good for events and recipes \\
+Remote alarm notification & Edge alarms trigger central notification pipelines & Alarm Notification module & Uses the Remote Gateway Notification profile \\
+MQTT (Sparkplug B) & Edge publishes tags to a broker; central subscribes & MQTT Engine module and a broker & Avoids Gateway Network version coupling \\
+OPC UA & Central connects to the Edge's OPC UA server & OPC UA client connection & 8.3 blocks anonymous writes by default \\
+\bottomrule
+\end{longtable}
+Shared screens: export views from the central Perspective project and import them into the single Edge project, or the reverse. Point bindings at the right tag provider on each side, and strip any database-backed features before importing to Edge.
+
+\section{Step-by-Step Setup}
+The procedure is the same on 8.1 and 8.3; mainly the gateway menu locations and security defaults change. 8.1 paths are approximate from the 8.1 manual layout, so confirm them on the gateway.
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Set Edge Panel to Perspective.} 8.1: Config \textgreater{} Gateway Settings \textgreater{} Edge Settings \textgreater{} Visualization Module. 8.3: Platform \textgreater{} System \textgreater{} Ignition Edge \textgreater{} Edge Settings tab. Switching faults the other module; restart the Designer after.
+  \item \textbf{Create the Gateway Network connection.} On the Edge, add an outgoing connection to the central server's address, port 8060 (SSL). Approve the certificate on the outgoing side, then approve the connection and certificate under Incoming Connections on the central server.
+  \begin{itemize}[itemsep=1pt]
+    \item 8.3 defaults \textbf{Require Two-Way Authentication} to true, so both ends must trust each other.
+    \item Mixed 8.1/8.3: \textbf{Allow Java Serialization} must be enabled on every 8.3 gateway.
+  \end{itemize}
+  \item \textbf{Allow Edge storage on the central server.} 8.1: Config \textgreater{} Security \textgreater{} Service Security, set Query and Storage for History, Alarm Journal, and Audit on the Edge's zone. 8.3: Platform \textgreater{} Security \textgreater{} Zones \textgreater{} Manage Policy \textgreater{} Query and Storage for the same three sections.
+  \item \textbf{Configure Sync Services on the Edge.} 8.3: Platform \textgreater{} System \textgreater{} Ignition Edge \textgreater{} Sync Services. Pick the central gateway, then the remote history provider, alarm journal, and audit profile, and enable each. Set batch size, frequency, and an optional schedule.
+  \item \textbf{Create the remote tag provider on the central server.} 8.3: Services \textgreater{} Tags \textgreater{} Create Tag Provider \textgreater{} Remote Tag Provider (Gateway Network). 8.1: Config \textgreater{} Tags \textgreater{} Realtime \textgreater{} Create new Realtime Tag Provider \textgreater{} Remote Tag Provider. Choose the Edge gateway and its provider.
+  \item \textbf{Grant write access on the Edge.} In the Edge's security zone policy (Service Security in 8.1, Zones \textgreater{} Manage Policy in 8.3), set the Edge tag provider's access level to ReadWrite, or ReadWriteEdit to edit tags from a remote Designer.
+  \item \textbf{Build the central views.} Bind Perspective components on the central server to the Edge tag provider, for example \texttt{[EdgeProvider]\allowbreak{}Area/\allowbreak{}Tag}. Query synced history through the central historian, not the Edge.
+  \item \textbf{Optional: EAM.} Install Enterprise Administration on the central server, make it the controller, and register the Edge as an agent for scheduled backups.
+  \item \textbf{Test failure modes.} Pull the network link and confirm the Edge HMI keeps running, the central server shows bad quality, and synced history back-fills when the link returns.
+\end{enumerate}
+Source: \href{https://www.docs.inductiveautomation.com/docs/8.3/other-editions/ignition-edge/edge-gateway/configuring-sync-services}{Configuring Sync Services (8.3)}.
+
+\section{8.1 vs.\ 8.3 Differences}
+Edge Panel's limits are the same in both versions; the differences are in gateway security, serialization, historians, and menu layout.
+
+\begin{longtable}{@{}P{3.89cm}P{5.62cm}P{7.42cm}@{}}
+\caption{Ignition 8.1 vs.\ 8.3 Differences Relevant to Edge Panel}\label{tab:edge-81-83} \\
+\toprule
+\rowcolor{tblhead}\textbf{Area} & \textbf{8.1} & \textbf{8.3} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Area} & \textbf{8.1} & \textbf{8.3} \\
+\midrule
+\endhead
+Edge Panel limits & 2 clients, 1 project, 35-day history (since 8.1.34; 7 days before) & Same \\
+Sync, EAM, Compute & Bundled into Panel and IIoT since 8.1.33 & Bundled \\
+Gateway Network serialization & Java serialization & Protobuf; Java serialization only allowed for 8.1 peers \\
+Two-way authentication & Off by default & On by default; both ends approve certificates \\
+Security settings & Service Security page & Moved into Security Zones \textgreater{} Manage Policy \\
+Gateway web pages & Config / Status menus & Platform / Services / Connections layout; role-based access, 8.1 permissions not carried over \\
+Central historian & SQL Tag Historian & SQL Historian plus new Core Historian (QuestDB); qualified path uses \texttt{sys:} and \texttt{prov:} instead of \texttt{drv:} for Core \\
+History scripting & \texttt{system.\allowbreak{}tag.\allowbreak{}queryTagHistory} etc. & \texttt{system.\allowbreak{}historian.\allowbreak{}*} preferred; old functions still work \\
+OPC UA & Anonymous clients can write by default & Anonymous clients read-only by default; new certificates on upgrade \\
+Modules & Hot swap allowed & Restart required to install or upgrade a module \\
+Launchers / Workstation & 8.1 launchers & 8.3 launchers work with 8.1 gateways, not the reverse \\
+Perspective & --- & Adds Drawing and Form components and Offline Mode; File Upload capped at 20\,MB by default \\
+Store and Forward & Max Records setting & Multi-threaded; renamed setting defaults to unlimited \\
+\bottomrule
+\end{longtable}
+If the Edge uses Perspective's newer 8.3 components, those views cannot be moved back to an 8.1 gateway. Source: \href{https://www.docs.inductiveautomation.com/docs/8.3/getting-started/installing-and-upgrading/ignition-8-upgrade-guide/81to83-upgrade-guide}{8.1 to 8.3 Upgrade Guide}.
+
+\section{Mixed Versions: Can They Be Integrated?}
+Yes, with one direction that works and one that loses data: an 8.3 central server with 8.1 Edge gateways is supported, but an 8.1 central server cannot store data synced from an 8.3 Edge. Inductive Automation's rule is to upgrade the central gateway that hosts history, alarm journal, and audit first, then the Edge and remote gateways.
+
+\begin{longtable}{@{}P{4.97cm}P{5.98cm}P{5.98cm}@{}}
+\caption{Mixed-Version Integration}\label{tab:edge-mixed} \\
+\toprule
+\rowcolor{tblhead}\textbf{Feature} & \textbf{Central 8.3, Edge 8.1} & \textbf{Central 8.1, Edge 8.3} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Feature} & \textbf{Central 8.3, Edge 8.1} & \textbf{Central 8.1, Edge 8.3} \\
+\midrule
+\endhead
+Gateway Network link & Works; enable Allow Java Serialization on the 8.3 side & Works; enable Allow Java Serialization on the 8.3 side \\
+Live tags (remote tag provider) & Read and write work & Read and write work \\
+Editing remote tag configs from the other version's Designer & Not supported & Not supported \\
+Sync Services (history, alarms, audit) & Works & Fails; data sits in the Edge buffer (35 days) then is lost \\
+Remote history / alarm journal / audit & Works & Fails, same reason \\
+EAM & 8.3 controller manages 8.1 agents; some resources (Gateway and Perspective event scripts) cannot be sent to 8.1 & Not recommended; upgrade the controller first \\
+MQTT Sparkplug B & Works; each gateway needs Cirrus Link modules matched to its own version & Works, same condition \\
+7.9 gateways & Cannot connect to any 8.3 gateway, even through a proxy & Same \\
+\bottomrule
+\end{longtable}
+
+Practical notes for a mixed period:
+\begin{itemize}[itemsep=1pt]
+  \item Put the latest 8.1 patch on every 8.1 gateway before connecting it to 8.3; Inductive Automation strongly advises this before upgrading.
+  \item An 8.3 gateway upgraded from 8.1 turns on Allow Java Serialization automatically; a fresh 8.3 install does not, so set it by hand.
+  \item Plan to turn Allow Java Serialization off once every gateway is on 8.3, since 8.3-to-8.3 traffic uses Protobuf.
+  \item Treat mixed versions as a transition state, not a long-term design; tag editing and project pushes across versions are limited.
+\end{itemize}
+For the planned 8.1 to 8.3 upgrade of the plant SCADA server, the order works in our favor: upgrade the central Perspective server first, confirm the Gateway Network shows the Edge as connected and sync is flowing, then upgrade the Edge Panel gateways.
+
+Sources: \href{https://www.docs.inductiveautomation.com/docs/8.3/getting-started/installing-and-upgrading/ignition-8-upgrade-guide/81to83-upgrade-guide}{8.1 to 8.3 Upgrade Guide}; \href{https://www.sdk-docs.inductiveautomation.com/docs/8.3/to-83-upgrade-guide/}{8.3 SDK Upgrade Guide}.
+
+\section{Checklist}
+Use this list when commissioning an Edge Panel against the central server or moving through the upgrade.
+\begin{itemize}[itemsep=1pt, label=$\square$]
+  \item Gateway backups (\texttt{.gwbk}) of central and every Edge before changes
+  \item Licenses confirmed 8.3-ready with the sales rep before upgrading
+  \item Third-party modules confirmed compatible with 8.3, and with Edge where used
+  \item Central server upgraded to 8.3 before any Edge gateway
+  \item Allow Java Serialization on for every 8.3 gateway while any 8.1 gateway remains
+  \item Certificates approved on both ends (two-way authentication)
+  \item Security zone on central allows Query and Storage for history, alarm journal, and audit
+  \item Sync Services enabled for all three data types and back-fill verified after a link outage
+  \item Remote tag provider created; Edge write access set deliberately (ReadWrite only where operators need it)
+  \item OPC UA write permissions re-mapped after 8.3 upgrade if any client connects anonymously
+  \item Edge HMI tested with the network unplugged
+  \item Allow Java Serialization turned off after the last gateway reaches 8.3
+\end{itemize}
+
+\section*{Sources}
+\begin{itemize}[itemsep=1pt]
+  \item \href{https://docs.inductiveautomation.com/docs/8.3/other-editions/ignition-edge}{Ignition Edge, 8.3 manual}
+  \item \href{https://docs.inductiveautomation.com/docs/8.3/other-editions/ignition-edge/edge-panel}{Edge Panel, 8.3 manual}
+  \item \href{https://www.docs.inductiveautomation.com/docs/8.3/other-editions/ignition-edge/edge-gateway/configuring-sync-services}{Configuring Sync Services, 8.3 manual}
+  \item \href{https://www.docs.inductiveautomation.com/docs/8.3/getting-started/installing-and-upgrading/ignition-8-upgrade-guide/81to83-upgrade-guide}{8.1 to 8.3 Upgrade Guide}
+  \item \href{https://www.sdk-docs.inductiveautomation.com/docs/8.3/to-83-upgrade-guide/}{8.1 to 8.3 SDK Upgrade Guide}
+  \item \href{https://www.docs.inductiveautomation.com/docs/8.1/system-architectures/edge-architectures}{Edge Architectures, 8.1 manual}
+\end{itemize}

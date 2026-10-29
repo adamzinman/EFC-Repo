@@ -1,0 +1,174 @@
+\chapter{PLC Standards}\label{ch:plc-standards}
+\section{Program Architecture}
+Programs must be organized by equipment or functional area with a documented execution order. Each project must provide a main routine, input processing, equipment modules, sequences, alarm/protective logic, communications, output processing, diagnostics, and HMI interface. Safety-related logic must reside in the approved safety architecture and must be clearly separated from ordinary control logic.
+
+IEC 61131-3 languages may be used according to purpose: ladder diagram for maintainable discrete/equipment logic, function block diagram for continuous control and reusable blocks, and structured text for calculations, data handling, and bounded iteration. Dense or obscure code must be avoided regardless of language.
+
+\section{Naming and Data Quality}
+Names must be descriptive, consistent, and traceable to P\&IDs and electrical drawings. Tags exposed outside the controller must include engineering units, range, description, quality/validity, and source where supported. PLC booleans must use \texttt{BOOL}; real process values must use \texttt{REAL} unless precision requirements justify another type. Retentive data must be explicitly identified and minimized.
+
+\section{Operating Modes and Commands}\label{sec:udt-modes}
+Equipment modules must distinguish Off, Manual, Auto, Maintenance/Lockout, and Simulation where applicable. HMI requests must not drive physical outputs directly; logic must validate mode, permissives, interlocks, ownership, and command timing. Manual mode must not bypass protective functions. On startup, mode and command restoration must follow the risk assessment and must not create an unexpected start.
+
+\subsection{Mode Definitions (PCLib)}\label{sec:pclib-modes}
+\future{These definitions apply to equipment built on the PCLib data types (Appendix~\ref{app:data-types-future}), which are not yet in use on projects. Existing systems keep the Off / Manual / Auto / Lockout pattern of the current types (Appendix~\ref{app:data-types}).}
+
+Every PCLib control module (valve, motor, drive, PID loop, and so on) carries a nested \texttt{T\_Mode} object named \texttt{Mode}. It has exactly four modes. The mode answers one question: \emph{who is allowed to command this device right now?}
+
+\begin{small}
+\begin{longtable}{@{}P{2.50cm}P{1.40cm}P{6.40cm}P{6.21cm}@{}}
+\caption{PCLib Equipment Modes}\label{tab:pclib-modes} \\
+\toprule
+\rowcolor{tblhead}\textbf{Mode} & \textbf{HMI} & \textbf{Who commands the device} & \textbf{Typical use} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Mode} & \textbf{HMI} & \textbf{Who commands the device} & \textbf{Typical use} \\
+\midrule
+\endhead
+\textbf{Auto} \par{\footnotesize\texttt{Sts\_Mode = 3}} & \textbf{A} & The program: the sequence, phase, or equipment module that owns the device (\texttt{Prog\_} commands). Operator start/stop/open/close commands are ignored. & Normal production under sequence or loop control. \\
+\textbf{Manual} \par{\footnotesize\texttt{Sts\_Mode = 2}} & \textbf{M} & The operator, from the SCADA faceplate (\texttt{Cmd\_} commands). Program commands are ignored. & Normal production when the operator runs the device by hand, for example during startup, upsets, or when a sequence is not running. \\
+\textbf{Maintenance} \par{\footnotesize\texttt{Sts\_Mode = 1}} & \textbf{MT} & Maintenance or controls personnel, from the SCADA faceplate, using the Maintenance security role. Program commands are ignored and the device cannot be acquired by any sequence. & Testing, stroking, calibrating, or troubleshooting a device while the rest of the system stays in service. \\
+\textbf{Out of service} \par{\footnotesize\texttt{Sts\_Mode = 0}} & \textbf{L} & Nobody. Outputs go to their de-energized (safe) state and all commands are ignored. & Device removed, isolated under LOTO, not yet installed, or failed and waiting for repair. \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\textbf{Rules that apply in every mode.}
+\begin{itemize}[itemsep=1pt]
+  \item Interlocks (\texttt{Inp\_IntlkOK}) stop running equipment in \emph{every} mode, including Manual and Maintenance. A mode never bypasses an interlock. An interlock may be bypassed only through the timed, authorized bypass of its \texttt{T\_Intlk} group, and only as allowed by the Table of Interlocks and Permissives.
+  \item Hardwired E-stops and safety functions are independent of the PLC mode.
+  \item Permissives (\texttt{Inp\_PermOK}) block a start in Auto and Manual.
+  \item Simulation (\texttt{Sim\_} members) is not a mode. It replaces the field signal and is shown separately on the faceplate.
+  \item SCADA requests a mode change; the PLC decides whether to accept it and reports the result in \texttt{Sts\_Mode}. SCADA never assumes the change took effect.
+\end{itemize}
+
+\textbf{Manual versus Maintenance.} Both let a person command the device directly, so they are easy to confuse. The difference is \emph{whether the device is still part of the process}:
+\begin{longtable}{@{}P{4.20cm}P{6.15cm}P{6.16cm}@{}}
+\toprule
+\rowcolor{tblhead} & \textbf{Manual (M)} & \textbf{Maintenance (MT)} \\
+\midrule
+\endhead
+Purpose & Running the process by hand & Working \emph{on} the device \\
+Who may select it & Operator role & Maintenance role (maintenance technicians, controls engineers) \\
+Still available to the process & Yes. A sequence can acquire the device and request Auto (\texttt{Prog\_Auto}). & No. The device cannot be acquired, and any phase or unit that needs it shows it as unavailable and will not start. \\
+Permissives & Active & Process permissives that exist only to protect the product or the batch may be marked as bypassable in Maintenance in the Table of Interlocks and Permissives. Equipment and personnel protection permissives stay active. \\
+Interlocks & Active & Active \\
+Process alarms from the device & Active & May be suppressed by design (ISA-18.2 state G) so operators are not flooded while the device is being worked on. Device fault and equipment-health alarms stay active. \\
+Run-time and start counters & Counted & Counted (maintenance runs are still wear) \\
+Leaving the mode & To Auto or Maintenance & To Manual only. The operator confirms the device state before returning it to Auto. \\
+\bottomrule
+\end{longtable}
+\note{Whether any permissive may be bypassed in Maintenance, and which process alarms are suppressed, is a design decision made per device, recorded in the Table of Interlocks and Permissives and the alarm list, and reviewed with the PHA. The default is that nothing is bypassed and nothing is suppressed.}
+
+\textbf{Mode changes.} All changes go through Manual, so the device never jumps between Auto and Maintenance or Out of service without a person in control:
+\begin{longtable}{@{}P{3.60cm}P{4.80cm}P{8.11cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Change} & \textbf{Requested by} & \textbf{Conditions} \\
+\midrule
+\endhead
+Manual $\rightarrow$ Auto & Operator (\texttt{Cmd\_Auto}) or owner (\texttt{Prog\_Auto}) & On entering Auto the device follows the owner's current command; owner logic must make that command match the device's state so there is no bump. \\
+Auto $\rightarrow$ Manual & Operator (\texttt{Cmd\_Man}) or owner (\texttt{Prog\_Man}) & Blocked while the owner holds a mode lock (\texttt{Prog\_Lock}), for example during a critical phase step. Outputs hold their last state, so the change is bumpless. \\
+Manual $\rightarrow$ Maintenance & Maintenance role (\texttt{Cmd\_Maint}) & Only when no sequence owns the device; a supervisor can force a release (\texttt{Cmd\_ForceRelease}). Not available where \texttt{Cfg\_NoMaint} is set. \\
+Maintenance $\rightarrow$ Manual & Maintenance role (\texttt{Cmd\_Man}) & Device must be in a known state (for example valve closed, motor stopped). \\
+Manual or Maintenance $\rightarrow$ Out of service & Maintenance role (\texttt{Cmd\_OOS}) & Outputs go to the safe state; the device's alarms go out of service (ISA-18.2 state H). \\
+Out of service $\rightarrow$ Manual & Maintenance role (\texttt{Cmd\_Man}) & After the device is reinstated and any LOTO is cleared. \\
+\bottomrule
+\end{longtable}
+
+\textbf{Power-up.} Each device starts in the mode set by \texttt{Cfg\_PowerUpMode}, which defaults to Manual. A device may power up in Auto only where the risk assessment shows it cannot cause an unexpected start. A device left Out of service should stay Out of service after a power cycle; \texttt{T\_Mode} does not do this yet, so it must be added to the library before PCLib is adopted \tbd.
+
+\textbf{SCADA indication.} The faceplate and every equipment symbol show the mode letter (A, M, MT, L) with the same colours on every screen (Appendix~\ref{app:screen-design}). Devices in Maintenance or Out of service are also listed on an overview screen so the shift can see what is not available to the process.
+
+\textbf{Relationship to the current types and to the standards.} Auto, Manual, and Out of service correspond to MTP Automatic, Operator, and Offline; Maintenance is an EFC extension, as ISA-88 defines only Automatic, Semi-automatic, and Manual. The current types' \emph{Lockout} becomes Out of service. The current \emph{Off} is not a mode in PCLib: a stopped device is simply stopped, in Manual or Auto.
+
+\subsection{Setpoint Limits}\label{sec:plc-setpoint-clamp}
+Operator-entered values are checked in the PLC, not only in SCADA. For permissive setpoints (Section~\ref{sec:setpoints}) the minimum and maximum are hard-coded in the PLC program; the PLC clamps or rejects any value outside them and reports the active limits to SCADA for display. The limits are changed only through a software revision, under MOC where Section~\ref{sec:review-release} applies.
+
+\section{Data Types (UDTs)}\label{sec:udt}
+A user-defined type (UDT) is a reusable data structure that bundles everything about one piece of equipment or one signal --- commands, status, setpoints, alarms, and diagnostics --- into a single variable. Modicon Control Expert calls these \textbf{DDTs} (Derived Data Types); UDT is the general term used by Ignition and most other platforms.
+
+\textbf{Why we use them:}
+\begin{itemize}[itemsep=1pt]
+  \item Every pump, valve, or analog input of the same kind has the same members with the same names, on every project.
+  \item They pair with reusable function blocks (Section~\ref{sec:reusable-fbs}): the block holds the logic, the DDT holds the data.
+  \item Programming, SCADA screens, and troubleshooting are faster because the structure is familiar.
+\end{itemize}
+
+\textbf{Rules of thumb:}
+\begin{itemize}[itemsep=1pt]
+  \item Name types with the \texttt{DDT\_} prefix (for example \texttt{DDT\_Valve}) and use one consistent capitalization style for member names.
+  \item Use the standard type library shared across projects; do not create project-specific copies of a standard type.
+  \item Changing a type changes every instance of it. Treat changes to standard types like any other controlled change (Section~\ref{sec:source-control}), and test them (Section~\ref{sec:change-testing}).
+  \item Analog scaling must handle divide-by-zero, invalid configuration, underrange, overrange, and bad quality. Alarm comparison must use the scaled value only when quality is acceptable, unless a separate instrument-fault alarm is intended.
+  \item Equipment types keep request, command, status, permissive, interlock, feedback, fault, warning, and runtime data as separate members.
+\end{itemize}
+The current data types, with their members, are listed in Appendix~\ref{app:data-types}. The proposed replacement library (PCLib), aligned with ISA-88, ISA-18.2, and ISA-101, is described in Appendix~\ref{app:data-types-future}; it is not yet in use on projects.
+
+\subsection{Using UDTs Between the PLC and SCADA}
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{One type on each side.} Each PLC data type has a matching Ignition UDT with the same member names and structure. A PLC instance (for example \texttt{P101} of type \texttt{DDT\_Motor\_VFD}) is brought into Ignition as one UDT instance, so faceplates and templates are built once per type and reused for every instance.
+  \item \textbf{OPC UA.} With the M580 standard (Section~\ref{sec:protocols}), Ignition browses the PLC variables and their DDT structure directly through the BMENUA0100. Only variables marked with the HMI attribute in Control Expert are exposed, so mark the instances SCADA needs and leave internal working variables unmarked.
+  \item \textbf{Read versus write.} SCADA writes only to request/command members (for example \texttt{HMI\_Auto}, \texttt{HMI\_CMD}) and operator setpoints. Status, interlock, and feedback members are read-only from SCADA. This matches the rule that HMI requests never drive outputs directly (Section~\ref{sec:udt-modes}).
+  \item \textbf{Keep both sides in sync.} When a PLC type changes, the matching Ignition UDT is updated in the same revision and both are tested together.
+  \item \textbf{Productivity2000.} Communication uses Modbus TCP, so each structure is mapped to consecutive registers and a register map is required (Appendix~\ref{app:modbus}).
+\end{itemize}
+
+\section{Interlocks and First-Out}
+Interlock logic must use a structured condition type rather than parallel unstructured arrays. Each condition must include enable, raw condition, active, latched, bypassed, first-out, message/identifier, and timestamp where supported. The summary must include any-active, trip-active, reset-permitted, bypass-present, and first-out index. The number of conditions must be sized by the reusable library and not silently truncated.
+
+Interlocks must fail to the defined state on bad or stale inputs when required by the risk assessment. Reset must not clear an active initiating condition. Bypasses must survive or clear on restart only as defined by the approved bypass policy.
+
+\section{Sequences}
+Sequences must use an explicit state model with named steps, entry actions, continuous actions, exit conditions, timeout, hold, abort, restart, and recovery behavior. The sequence structure must include active state, previous state, transition reason, elapsed time, timeout, permissive summary, faulted/held/complete status, and operator requests. Restart after download or power loss must be deterministic and risk assessed.
+
+\section{Communications and Diagnostics}
+Communications must include heartbeat or sequence checking where suitable, timeout, data-valid status, stale-data handling, and documented fail behavior. Raw received data must be separated from validated values used by control. Diagnostic status must be available to SCADA without flooding operators with non-actionable alarms.
+
+\section{Reusable Function Blocks}\label{sec:reusable-fbs}
+\subsection{What a Function Block Is}
+A reusable function block is a block of PLC logic written once and used for every pump, valve, analog input, or sequence of the same kind, so each one behaves the same way. In Control Expert these are \textbf{DFBs} (Derived Function Blocks). The current DFBs are documented in Appendix~\ref{app:function-blocks}.
+
+\subsection{The Standard Object: DFB, DDT, and Ignition UDT}
+Each standard equipment type is a matched set of three parts:
+\begin{itemize}[itemsep=1pt]
+  \item a \textbf{DFB} that holds the logic (for example \texttt{DFB\_Valve});
+  \item a \textbf{DDT} that holds the data (for example \texttt{DDT\_Valve}, Section~\ref{sec:udt}); and
+  \item an \textbf{Ignition UDT} with its faceplate and templates that present it on SCADA.
+\end{itemize}
+The three are designed, versioned, and changed together. A change to one is checked against the other two.
+
+\subsection{When to Make One}
+Make a DFB for logic that is used more than once or that represents a standard equipment type. One-off logic stays in the project program, where it is easier to read in place.
+
+\subsection{Design Rules}
+\begin{itemize}[itemsep=1pt]
+  \item Pass the equipment's DDT to the block as an input/output parameter, so the block reads and writes one structure.
+  \item No direct I/O addresses or global variables inside the block; everything comes through its pins.
+  \item Choose fail-safe default values for every input and parameter.
+  \item Start each block with a header comment giving its purpose, revision, author, and date.
+  \item Use the standard Off / Manual / Auto / Lockout mode pattern (Section~\ref{sec:udt-modes}).
+  \item Keep protective logic visible: interlocks and E-stop inputs come in through pins (for example \texttt{Interlock} and \texttt{Estop} on \texttt{DFB\_Valve}) so they can be seen and traced at the call, not buried inside the block.
+\end{itemize}
+
+\subsection{Library Management}
+Standard DFBs are kept in a master library (the Control Expert type library). Projects use copies; project-specific changes never overwrite the master. A DFB's revision follows the revision approach in Section~\ref{sec:source-control}. Changing a DFB that contains interlock or protective logic requires an MOC (Section~\ref{sec:review-release}) and a Change Test Record (Appendix~\ref{app:change-test}).
+\note{Formal library versioning is not current practice. Git (Appendix~\ref{app:git}) is the planned way to track library changes in the future.}
+
+\subsection{Testing}
+New or changed blocks are tested in the simulator before they are used, covering every mode, the interlock and E-stop inputs, and bad-quality inputs. The test is kept on file with the library.
+
+\subsection{Productivity2000}
+Productivity Suite does not use DFBs. Reusable logic is built with User Defined Instructions (UDIs, Productivity Suite v4.5 and later), which can be stored in a UDI library (v4.7 and later). The same rules apply: one UDI per equipment type, used with a matching data structure.
+
+\section{Common Systems}
+Common systems should use a consistent control structure, naming convention, HMI faceplate, alarm approach, and test procedure. Project-specific limits and options may vary, but the basic operator experience and PLC interface should remain recognizable from project to project.
+
+\subsection{PDC Compressor}\label{sec:pdc-compressor}
+The PDC compressor module should organize the package interface into operating mode, start/stop requests, permissives, active interlocks, running status, load state, process values, warnings, trips, first-out indication, and maintenance counters.
+
+The control narrative and code should address, as applicable, suction and discharge pressure, stage temperatures, cooling-water flow and temperature, hydraulic or oil-system status, diaphragm or process-gas leak detection, purge/vent status, valve position, motor feedback, vendor-panel communications, minimum stop time, and restart following a trip or power loss. Setpoints and shutdown actions must come from approved PDC documentation, the process design, and the project hazard review rather than from generic defaults.
+
+The proposed PCLib type for this package is \texttt{T\_DiaComp} (Appendix~\ref{app:data-types-future}, Section~\ref{sec:pclib-t-diacomp}) \newmark. It holds one nested motor for the shared crankshaft, stage 1 and stage 2 pressures, temperatures and head oil pressures, crankcase oil, cooling water, leak detection per stage, purge, diaphragm run-hour counters, and a first-out trip code.
+\future{\texttt{T\_DiaComp} replaces the current project-specific compressor type once it has been reviewed against the PDC documentation, the FBD logic, and the existing UDT.}

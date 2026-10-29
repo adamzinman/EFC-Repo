@@ -1,0 +1,86 @@
+\chapter{SCADA and HMI Standards}\label{ch:scada}
+\section{Ignition Architecture}
+Ignition is the preferred SCADA/HMI platform for new projects. The differences between a standard Ignition gateway and Ignition Edge Panel, and how the two are integrated, are covered in Appendix~\ref{app:edge-panel}. The project team should choose the Gateway, database, client, and redundancy arrangement based on system size, availability needs, performance, and recovery time. Operator workstations should normally run Perspective or Vision clients rather than host the production Gateway or database.
+
+Record the tag providers, projects, databases, historian, alarm pipelines, identity provider, certificates, modules, backups, and important external dependencies. Use a development or test environment when practical instead of making untested changes directly in production.
+
+\subsection[Version and Upgrades]{Version and Upgrades \newmark}\label{sec:ignition-version}
+EFC runs Ignition~8.1 (Table~\ref{tab:software-versions}). New projects are built on the version the site's Gateway runs; a project is not built on a newer version than the Gateway that will host it. Modules that are not part of the standard Ignition install (third-party drivers, Sepasoft, and similar) need EFC approval because they add licence, support, and upgrade dependencies.
+\future{An upgrade to Ignition~8.3 is planned. 8.3 keeps Gateway configuration as files on disk and adds a REST API, which changes how backups and source control work (Appendix~\ref{app:git}). Projects started before the upgrade should avoid features that do not carry over cleanly; the upgrade plan will list them.}
+
+\section{Project and Tag Design}
+Use shared projects, inheritance, UDTs, templates, and common scripts to avoid duplicating the same work across projects. Tag names and folders should follow the PLC equipment model and use consistent units, ranges, descriptions, quality handling, alarms, and history settings.
+
+Keep scripts readable and reusable. Log errors that will help with troubleshooting, but avoid repetitive logging that hides useful information. Where a tag, expression, binding, or shared function can do the job cleanly, prefer it over copying scripts into many components.
+
+\section[PLC Connections]{PLC Connections \newmark}\label{sec:ignition-plc-connections}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{One device connection per PLC}, named after the PLC (for example the project number and PLC name used in the file name, Section~\ref{sec:source-control}). Connection settings and the security mode are recorded in the system documentation.
+  \item \textbf{Protocols} follow Section~\ref{sec:protocols}: OPC UA to M580 PLCs through the BMENUA0100, Modbus TCP to Productivity2000, and the Logix driver to the existing ControlLogix systems.
+  \item \textbf{UDTs match PLC data types} member for member, so a PLC instance maps to one Ignition UDT instance with one parameter for its path (Section~\ref{sec:udt}).
+  \item \textbf{Scan rates} (tag groups) are chosen for what the data is used for. Use a normal rate (typically 1~s) for most tags, a slower rate for maintenance counters and configuration, and a faster rate only where an operator or a calculation needs it. Leased or driven tag groups can reduce load for tags that are only shown on some screens.
+  \item \textbf{Writes} from Ignition go only to command, setpoint, and configuration members (\texttt{Cmd\_}, \texttt{Prm\_}, \texttt{Cfg\_} and the current-type equivalents). Status and input members are read-only in the UDT. The PLC checks and clamps every written value (Section~\ref{sec:plc-setpoint-clamp}).
+  \item \textbf{Bad quality} is shown on the screen, never hidden behind the last good value.
+\end{itemize}
+
+\section{HMI Philosophy}
+Screens should make the current process condition easy to understand. Use color mainly to show abnormal conditions or items requiring attention. Do not rely on color alone; use text, symbols, and state indication as well. Navigation, faceplates, trends, units, decimal precision, manual controls, and alarm presentation should work the same way throughout the project.
+
+Use a clear display hierarchy, normally including overview, area, unit, equipment-detail, and diagnostic screens. Operators should be able to see the active mode, command ownership, equipment state, alarms, interlocks, and bypasses before issuing a command. Use confirmation prompts for consequential actions without adding unnecessary prompts to routine work.
+
+\section{Perspective Design}
+Perspective screens follow the Perspective Screen Design Standard in Appendix~\ref{app:screen-design}. Perspective views should be tested at the screen sizes and aspect ratios expected in service. Use responsive containers where resizing is required. Docked views, popups, embedded views, parameters, and message handlers should have clear interfaces and should not depend on fragile component paths.
+
+Startup and navigation scripts should be safe to run more than once, finish quickly, and handle missing tags or bad-quality data without breaking the view. Reusable views should not assume that every optional parameter is present.
+
+\section{Alarms}
+Configure Ignition alarms from the approved alarm list. Include the identifier, priority, message, cause, consequence, expected response, deadband, delay, shelving permissions, and any state-based suppression. Acknowledging an alarm does not clear the process condition that caused it.
+
+\textbf{Annunciation and acknowledgment.} Ignition annunciates alarms. For PLC data types that carry their own alarm state (the PCLib types, Appendix~\ref{app:data-types-future}), acknowledging the alarm in Ignition writes through to the alarm's \texttt{Cmd\_Ack} member in the PLC, so the PLC and SCADA states stay the same. Alarms are not acknowledged separately in two places. \newmark
+
+\textbf{Priority.} Alarm priority uses Ignition's built-in priority levels. PLC data types that carry a priority use the same numbers, so a priority set in the PLC carries straight into Ignition without a lookup table: \newmark
+
+\begin{small}
+\begin{longtable}{@{}P{1.40cm}P{3.20cm}P{12.33cm}@{}}
+\caption{Alarm Priority Numbering}\label{tab:alarm-priority} \\
+\toprule
+\rowcolor{tblhead}\textbf{Value} & \textbf{Ignition priority} & \textbf{Use} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblhead}\textbf{Value} & \textbf{Ignition priority} & \textbf{Use} \\
+\midrule
+\endhead
+0 & Diagnostic & Equipment and system diagnostics for maintenance; not shown on the operator alarm summary by default. \\
+1 & Low & Operator response needed, with time to respond and a minor consequence. \\
+2 & Medium & Prompt response needed to avoid an upset or equipment damage. \\
+3 & High & Immediate response needed to avoid a trip, release, or major equipment damage. \\
+4 & Critical & Reserved for the most severe consequences; use sparingly. \\
+\bottomrule
+\end{longtable}
+\end{small}
+\note{PCLib v1.00 (Appendix~\ref{app:data-types-future}) still numbers \texttt{Cfg\_Priority} 1=Emergency to 4=Low. The generator will be changed to the numbering above at the next PCLib revision.}
+Priority is assigned during alarm rationalization from the consequence and the time available to respond (Section~\ref{sec:alarm-mgmt} and Appendix~\ref{app:alarm-doc}), not chosen per tag by the programmer.
+
+Test alarm journals and notification pipelines, including loss and recovery of the database or notification service. Review nuisance, chattering, standing, and frequently occurring alarms after startup.
+
+\section{Historian and Data}
+Historize data that has a defined operating, quality, maintenance, regulatory, or analysis purpose. Choose the sampling mode, deadband, timestamp source, and retention period to match that purpose. Document store-and-forward behavior and how bad or uncertain quality is handled.
+
+Database connections should use managed credentials and only the permissions they need. Use encrypted connections when supported by the approved architecture.
+
+\section{Security and Audit}
+\subsection*{Individual accounts}\label{sec:ignition-accounts}
+Every operator, engineer, and other user should have their own Ignition account and be logged in before using the system. Individual logins mean that actions such as setpoint changes, alarm acknowledgments, and bypasses are recorded against a person, and that each user gets only the access their role needs.
+\note{Not currently implemented. This should be discussed in the near future, including how logins work on shared operator stations --- for example automatic logout after inactivity and a fast way to switch users at the station.}
+\future{Ignition Perspective can use single sign-on (SSO) through an identity provider using OpenID Connect 1.0 or SAML 2.0, such as Microsoft Entra ID (Azure AD) or Okta. Users would log in with their existing company account rather than a separate Ignition password, and accounts would be added or removed centrally when people join or leave. This works for Perspective, Vision, the Designer, and the Gateway in both 8.1 and 8.3, and is worth looking into, possibly with the parent company's IT group.}
+
+\subsection*{Roles and audit}
+Use the approved identity provider when practical and assign access by role. Typical roles include operator, maintenance, engineering, supervisor, and administrator. Audit important actions such as setpoint changes, alarm shelving, recipe changes, and security administration.
+
+OPC UA connections should use trusted certificates, a supported security policy (Basic256Sha256, sign and encrypt), named accounts with the minimum permissions needed, and no anonymous access (Section~\ref{sec:protocols}). Remove default accounts and unused connections before turnover.
+
+\section{Backup, Deployment, and Recovery}
+Create a Gateway backup before and after significant production changes and after commissioning. Record the Ignition version, installed modules, licenses, database dependencies, certificates, identity-provider settings, DNS/NTP needs, and restore steps.
+
+For critical systems, demonstrate that the backup can be restored and that the project can be rolled back if a deployment fails. Keep the accepted backup with the project turnover package.

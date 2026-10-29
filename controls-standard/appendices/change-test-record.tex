@@ -1,0 +1,100 @@
+\chapter{Change Test Record}
+\label{app:change-test}
+This form documents and tests a change to a system that has already been built (Section~\ref{sec:change-testing}). Use one form per change. Scale the test steps to the change: a screen text edit may need one line, while an interlock change needs a full functional test. Changes to interlocks and safety-related items require an approved MOC (Section~\ref{sec:review-release}) and, under process safety management, a pre-startup safety review before the equipment returns to service.\footnote{OSHA 29 CFR 1910.119(l) (management of change) and (i) (pre-startup safety review); IEC 61511-1:2016+A1:2017 (modification of safety instrumented functions); ISA/IEC 62443-2-1:2024, SPE~2 (change control); IEC 60204-1:2016+A1:2021, 18.7 and NFPA 79-2024, 18.7 (retesting after modification).}
+
+\newcommand{\ctfld}{\rule[-0.30cm]{0pt}{0.80cm}}
+\newcommand{\ctcb}{$\square$\ }
+
+\section{Change Identification}
+\begin{center}
+\begin{tabular}{@{}|P{3.91cm}|P{4.35cm}|P{3.48cm}|P{4.26cm}|@{}}
+\hline
+\ctfld \textbf{Change / MOC no.} & & \textbf{Date} & \\ \hline
+\ctfld \textbf{Project no. and system} & & \textbf{Requested by} & \\ \hline
+\ctfld \textbf{Software before (file name)} & \multicolumn{3}{P{13.00cm}|}{} \\ \hline
+\ctfld \textbf{Software after (file name)} & \multicolumn{3}{P{13.00cm}|}{} \\ \hline
+\end{tabular}
+\end{center}
+File names follow Section~\ref{sec:source-control} (for example \texttt{014\_R23-Column-PLC\_1}).
+
+\section{Change Type}
+\noindent\begin{tabular}{@{}P{5.62cm}P{5.62cm}P{5.68cm}@{}}
+\ctcb I/O (added, removed, or reassigned) & \ctcb Electrical (wiring, devices, power) & \ctcb Sequence \\
+\ctcb Interlock or permissive & \ctcb Setpoint limit (permissive/protective) & \ctcb Alarm \\
+\ctcb SCADA screen or tag & \ctcb Network & \ctcb Other: \underline{\hspace{3cm}} \\
+\end{tabular}
+
+\smallskip
+\textbf{MOC required?} \ctcb Yes (interlock, protective setpoint, permissive limit, bypass, E-stop or safety circuit) \quad \ctcb No
+
+\section{Description and Impact}
+\begin{center}
+\begin{tabular}{@{}|P{4.54cm}|P{12.30cm}|@{}}
+\hline
+\textbf{What is changing and why}\rule{0pt}{1.6cm} & \\ \hline
+\ctfld \textbf{Affected equipment} & \\ \hline
+\ctfld \textbf{Affected interlocks, permissives, and alarms} & \\ \hline
+\ctfld \textbf{Affected drawings and documents} & \\ \hline
+\end{tabular}
+\end{center}
+
+\section{Before the Change}
+\noindent\begin{tabular}{@{}P{8.63cm}P{8.73cm}@{}}
+\ctcb Backup of the running PLC/SCADA taken & \ctcb MOC approved (if required) \\
+\ctcb Operations notified and agreed timing & \ctcb Equipment in a safe state for the work \\
+\ctcb Bypasses or forces needed are recorded below & \ctcb Test steps reviewed by a second person \\
+\end{tabular}
+
+\smallskip
+Bypasses/forces applied (tag, reason, applied by): \underline{\hspace{7.0cm}}
+
+\section{Test Steps}
+\begin{small}
+\begin{longtable}{@{}|P{0.76cm}|P{3.91cm}|P{3.93cm}|P{4.03cm}|P{1.42cm}|P{1.09cm}|@{}}
+\caption{Change Test Steps}\label{tab:change-test-steps} \\
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Action} & \textbf{Expected result} & \textbf{Actual result} & \textbf{Pass / Fail} & \textbf{Init.} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Action} & \textbf{Expected result} & \textbf{Actual result} & \textbf{Pass / Fail} & \textbf{Init.} \\ \hline
+\endhead
+1 & \textit{Example:} With header pressure simulated at 40\,torr, set \texttt{HMI\_SP\_Max\_Vac\_Press} to 45\,torr and request the vacuum valve to open & Valve opens; permissive shown as met on SCADA & & & \\ \hline
+2 & \textit{Example:} Raise simulated pressure to 50\,torr and request the valve again & Valve does not open; permissive shown as not met with the reason & & & \\ \hline
+3 & \textit{Example:} Enter 120\,torr (above the hard-coded 100\,torr maximum) & PLC clamps to 100\,torr; SCADA shows the limit & & & \\ \hline
+4 &\ctfld & & & & \\ \hline
+5 &\ctfld & & & & \\ \hline
+6 &\ctfld & & & & \\ \hline
+7 &\ctfld & & & & \\ \hline
+8 &\ctfld & & & & \\ \hline
+\end{longtable}
+\end{small}
+
+\section{Regression and Abnormal-Condition Checks}
+Confirm that nothing connected to the change was affected. Check each item that applies:
+
+\noindent\begin{tabular}{@{}P{8.63cm}P{8.73cm}@{}}
+\ctcb Normal operation of related equipment & \ctcb Bad-quality / out-of-range signal behavior \\
+\ctcb Alarms and first-out indication & \ctcb Communication loss and recovery \\
+\ctcb Mode changes (Off/Manual/Auto/Lockout) & \ctcb Power loss and restart behavior \\
+\ctcb Operator security roles & \ctcb Other interlocks sharing the same inputs \\
+\end{tabular}
+
+\section{Documentation Updated}
+\noindent\begin{tabular}{@{}P{5.62cm}P{5.62cm}P{5.68cm}@{}}
+\ctcb Electrical drawings & \ctcb I/O list & \ctcb Control Narrative \\
+\ctcb Table of Interlocks and Permissives & \ctcb Alarm list & \ctcb Revision log / commit message \\
+\ctcb Backup saved (after change) & \ctcb Released file name (no date) & \ctcb N/A \\
+\end{tabular}
+
+\section{Return to Service and Sign-Off}
+\ctcb All bypasses and forces removed \quad \ctcb Equipment returned to normal mode \quad \ctcb Pre-startup safety review complete (if MOC)
+
+\begin{center}
+\begin{tabular}{@{}|P{4.35cm}|P{4.00cm}|P{4.56cm}|P{3.09cm}|@{}}
+\hline
+\rowcolor{tblhead}\textbf{Role} & \textbf{Name} & \textbf{Signature} & \textbf{Date} \\ \hline
+\ctfld Performed by & & & \\ \hline
+\ctfld Independently verified by & & & \\ \hline
+\ctfld Accepted by Operations & & & \\ \hline
+\end{tabular}
+\end{center}

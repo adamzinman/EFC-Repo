@@ -1,0 +1,69 @@
+/*
+ * Ignition Perspective 8.1.22+ Advanced Stylesheet
+ * Paste these rules into Perspective > Styles > stylesheet.css.
+ * If stylesheet.css is absent, right-click Styles > Enable Advanced Stylesheet.
+ * Select each Label and enter the unprefixed name in props.style.classes:
+ * equipmentName, processValue, processUnits, equipmentStatus,
+ * or interactionMessage.
+ * Compact P&ID callouts use compactName, compactValue, compactUnits.
+ *
+ * Example: a value Label uses props.style.classes = processValue.
+ * A separate units Label uses props.style.classes = processUnits.
+ * Do not enter .psc-processValue or include a leading dot on the component.
+ * The .psc- prefix is added by Perspective in the rendered session.
+ * The Perspective process views are designed at 1000 x 800. CSS vmin below
+ * measures the entire session viewport, NOT the 1000 x 800 view or an embedded
+ * template. These are bounded, viewport-responsive text sizes; they do not
+ * guarantee geometric scaling with the view. Windows display scaling, browser
+ * zoom, docks, and window size affect the computed font size. Test the actual
+ * view and its right dock on both workstations before using these rules.
+ *
+ * Do not set an inline fontSize on these Labels or a conflicting fontSize in
+ * the same Style Class; more specific/later rules may override these rules.
+ */
+
+.psc-equipmentName {
+    font-size: clamp(16px, 1.4815vmin, 32px);
+    line-height: 1.15;
+}
+
+.psc-processValue {
+    font-size: clamp(22px, 2.0371vmin, 44px);
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.psc-processUnits {
+    font-size: clamp(14px, 1.2963vmin, 28px);
+    line-height: 1.15;
+}
+
+.psc-equipmentStatus {
+    font-size: clamp(17px, 1.5741vmin, 34px);
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+.psc-interactionMessage {
+    font-size: clamp(16px, 1.4815vmin, 32px);
+    line-height: 1.25;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+/* Small P&ID callouts. Keep full messages in the equipment faceplate. */
+.psc-compactName {
+    font-size: clamp(12px, 1.1111vmin, 24px);
+    line-height: 1.1;
+}
+
+.psc-compactValue {
+    font-size: clamp(16px, 1.4815vmin, 32px);
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.psc-compactUnits {
+    font-size: clamp(12px, 1.1111vmin, 24px);
+    line-height: 1.1;
+}
