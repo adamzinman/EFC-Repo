@@ -38,11 +38,11 @@ The operator and maintenance dynamic window for a motor-driven equipment item (T
 
 **Maintenance** (level 2 and above). Shows run hours (`Run/Val_RunHrs`), starts (`Run/Val_Starts`), starts in the last hour (`Run/Val_StartsLastHr`), run hours since maintenance (`Run/Val_HrsSinceMaint`) and whether maintenance is due (`Run/Sts_MaintDue`). `RESET MAINT` writes `Run/Cmd_ResetMaint` (audited). `SIMULATE` toggles `Sim_En` (audited).
 
-**Configuration** (collapsible; the header click toggles `open_Configuration`, collapsed by default). Feedback time, restart delay, rated current, max starts per hour, the auto restart checkbox and the high current alarm limit. Below level 4 the numeric values show as read-only labels. At level 4 and above each numeric value has an entry bound bidirectionally to its tag, except Feedback time (`Cfg_FbkTime`) and Restart delay (`Cfg_RestartDly`), which are PCLib TIME in milliseconds: they are shown as `member / 1000` seconds and written as `int(round(value * 1000))` by a `props.value` onChange script (only when `origin == 'Browser'`) through `efc.ui.cmd(self, member, ..., 4, audit=True)`. Auto restart (`Cfg_AutoRestart`) follows the same pattern: below level 4 a read-only row shows `Yes` or `No`; at level 4 and above the row is hidden and the checkbox is shown. The entries have the literal enable `true`, so the level 4 rule is enforced only by visibility; the checkbox is also hidden below level 4.
+**Configuration** (level 1 and above, hidden below Operator; collapsible; the header click toggles `open_Configuration`, collapsed by default). Feedback time, restart delay, rated current, max starts per hour, the auto restart checkbox and the high current alarm limit. Below level 4 the numeric values show as read-only labels. At level 4 and above each numeric value has an entry that reads its tag one way, except Feedback time (`Cfg_FbkTime`) and Restart delay (`Cfg_RestartDly`), which are PCLib TIME in milliseconds: they are shown as `member / 1000` seconds and written as `int(round(value * 1000))` (scale 1000). Auto restart (`Cfg_AutoRestart`) follows the same pattern: below level 4 a read-only row shows `Yes` or `No`; at level 4 and above the row is hidden and the checkbox is shown. Every entry and the checkbox commit an edit from a `props.value` (checkbox: `props.selected`) onChange script (only when `origin == 'Browser'`) through `efc.ui.setValue(self, member, value, 4)`, which re-checks level 4, writes and audits old -> new; a refused or failed write refreshes the binding. The entries have the literal enable `true`; the checkbox is also hidden below level 4.
 
-**Role checks.** `view.custom.level` comes from the Perspective session (`session.props.auth.securityLevels`) through `efc.ui.level`, which matches the security-level names case-insensitively (site names through `efc.ui.ROLE_ALIASES`). It decides which controls are locked or hidden in the client. `efc.ui.cmd` and `efc.ui.ackAll` re-check the level (`efc.ui.userLevel`, the larger of the security levels and `session.props.auth.user.roles`). Below it they do not write: they log a warning and open the `Parts/AccessDenied` popup (decision 36; see [AccessDenied](../Parts/AccessDenied.md)). Failed writes are logged too. The Configuration entries (except the two TIME entries, which go through `efc.ui.cmd`) and the auto restart checkbox are bindings that write tags directly. Their only guards are their visibility and enable expressions. Real access control has to be enforced in Perspective security and the PLC logic.
+**Role checks.** `view.custom.level` comes from the Perspective session (`session.props.auth.securityLevels`) through `efc.ui.level`, which matches the security-level names case-insensitively (site names through `efc.ui.ROLE_ALIASES`). It decides which controls are locked or hidden in the client. `efc.ui.cmd`, `efc.ui.setValue` and `efc.ui.ackAll` re-check the level (`efc.ui.userLevel`, the larger of the security levels and `session.props.auth.user.roles`). Below it they do not write: they log a warning and open the `Parts/AccessDenied` popup (decision 36; see [AccessDenied](../Parts/AccessDenied.md)). Failed writes are logged too. The Configuration entries and the auto restart checkbox read their tags one way and write through `efc.ui.setValue` (level 4). Real access control has to be enforced in Perspective security and the PLC logic.
 
-**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, and the logger as a fallback record) only for calls with `audit=True`. In this view that means MAINT, OOS, RESET MAINT, SIMULATE and the Feedback time and Restart delay edits. Nothing audits AUTO, MAN, START, STOP, RESET, JOG, ACK, or the other configuration edits.
+**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, and the logger as a fallback record) for calls with `audit=True` and for every `efc.ui.setValue` write. In this view that means MAINT, OOS, RESET MAINT, SIMULATE and every Configuration edit (`EFC set`, old -> new). Nothing audits AUTO, MAN, START, STOP, RESET, JOG or ACK.
 
 ## Properties reference
 
@@ -64,7 +64,7 @@ Both have `paramDirection: input` and `persistent: true`. No output parameters.
 
 #### Tag mirrors (`custom.m_*`)
 
-There are 56 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The rest of the view reads tag values only through these mirrors. The Configuration entries and the auto restart checkbox are the exceptions: they also bind directly to their tags.
+There are 56 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The rest of the view reads tag values only through these mirrors. The Configuration entries and the auto restart checkbox are the exceptions: they also bind directly to their tags, one way.
 
 | Group | Members |
 |---|---|
@@ -90,7 +90,7 @@ None.
 
 ## Bindings reference
 
-Total: **153 bindings**: 57 at view root (1 `property` binding with a transform, plus 56 tag mirrors) and 96 on components. Types: 92 `expr`, 60 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 96.
+Total: **154 bindings**: 57 at view root (1 `property` binding with a transform, plus 56 tag mirrors) and 97 on components. Types: 93 `expr`, 60 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 97.
 
 ### View root
 
@@ -209,6 +209,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
+| root/Configuration | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true (hidden below Operator) |
 | root/Configuration/Header/Chevron | `props.text` | expr | `if({view.custom.open_Configuration}, '▾', '▸')` | Text content |
 | root/Configuration/Body | `position.display` | expr | `{view.custom.open_Configuration}` | Shown while expression is true |
 | root/Configuration/Body/R0 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
@@ -216,42 +217,46 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Configuration/Body/R0/EU | `props.text` | expr | `'s'` | Text content |
 | root/Configuration/Body/E0 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/E0/Entry | `props.value` | expr | `{view.custom.m_Cfg_FbkTime} / 1000` | Value in seconds (the PLC TIME is in milliseconds) |
-| root/Configuration/Body/E0/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: efc.ui.cmd(self, 'Cfg_FbkTime', int(round(currentValue.value * 1000)), 4, audit=True)` | Edit written as milliseconds, Engineer, audited |
+| root/Configuration/Body/E0/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_FbkTime', currentValue.value, 4, 1000): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue` as value * 1000 (milliseconds), level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E0/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R1 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R1/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_RestartDly} / 1000, '#,##0.###')` | Text content |
 | root/Configuration/Body/R1/EU | `props.text` | expr | `'s'` | Text content |
 | root/Configuration/Body/E1 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/E1/Entry | `props.value` | expr | `{view.custom.m_Cfg_RestartDly} / 1000` | Value in seconds (the PLC TIME is in milliseconds) |
-| root/Configuration/Body/E1/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: efc.ui.cmd(self, 'Cfg_RestartDly', int(round(currentValue.value * 1000)), 4, audit=True)` | Edit written as milliseconds, Engineer, audited |
+| root/Configuration/Body/E1/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_RestartDly', currentValue.value, 4, 1000): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue` as value * 1000 (milliseconds), level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E1/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R2 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R2/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_RatedAmps}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R2/EU | `props.text` | expr | `'A'` | Text content |
 | root/Configuration/Body/E2 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E2/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_RatedAmps` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E2/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_RatedAmps`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E2/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_RatedAmps', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E2/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R3 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R3/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_MaxStartsHr}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R3/EU | `props.text` | expr | `''` | Text content |
 | root/Configuration/Body/E3 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E3/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_MaxStartsHr` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E3/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_MaxStartsHr`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E3/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_MaxStartsHr', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E3/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R4 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R4/Val | `props.text` | expr | `if({view.custom.m_Cfg_AutoRestart}, 'Yes', 'No')` | Text content |
-| root/Configuration/Body/C4 | `props.selected` | tag (indirect) | tag `{0}/Cfg_AutoRestart` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/C4 | `props.selected` | tag (indirect) | tag `{0}/Cfg_AutoRestart`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/C4 | `props.selected` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_AutoRestart', bool(currentValue.value), 4): self.refreshBinding('props.selected')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/C4 | `props.enabled` | expr | `{view.custom.level} >= 4` | Enabled while expression is true |
 | root/Configuration/Body/C4 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/R5 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R5/Val | `props.text` | expr | `numberFormat({view.custom.m_Alm_HiCurrent_Cfg_Lim}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R5/EU | `props.text` | expr | `'A'` | Text content |
 | root/Configuration/Body/E5 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E5/Entry | `props.value` | tag (indirect) | tag `{0}/Alm_HiCurrent/Cfg_Lim` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E5/Entry | `props.value` | tag (indirect) | tag `{0}/Alm_HiCurrent/Cfg_Lim`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E5/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Alm_HiCurrent/Cfg_Lim', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E5/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 
 ## Scripts reference
 
-Total: **20 scripts**: 17 event scripts (11 `component.onActionPerformed`, 6 `dom` events: 1 `onClick` and the 5 JOG events) and 1 transform script (`custom.level`). 2 property-change `onChange` scripts (`props.value` of the TIME entries, see the end of the list). No `customMethods`, no `messageHandlers`.
+Total: **24 scripts**: 17 event scripts (11 `component.onActionPerformed`, 6 `dom` events: 1 `onClick` and the 5 JOG events) and 1 transform script (`custom.level`). 6 property-change `onChange` scripts (`props.value` of the Configuration entries and `props.selected` of the auto restart checkbox, see the end of the list). No `customMethods`, no `messageHandlers`.
 
 The button handlers below call `efc.ui` functions. Those functions are summarised after the list.
 
@@ -350,14 +355,48 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 
 ```python
 	if origin == 'Browser' and currentValue.value is not None:
-		efc.ui.cmd(self, 'Cfg_FbkTime', int(round(currentValue.value * 1000)), 4, audit=True)
+		if not efc.ui.setValue(self, 'Cfg_FbkTime', currentValue.value, 4, 1000):
+			self.refreshBinding('props.value')
 ```
 
 16. **`root/Configuration/Body/E1/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
 
 ```python
 	if origin == 'Browser' and currentValue.value is not None:
-		efc.ui.cmd(self, 'Cfg_RestartDly', int(round(currentValue.value * 1000)), 4, audit=True)
+		if not efc.ui.setValue(self, 'Cfg_RestartDly', currentValue.value, 4, 1000):
+			self.refreshBinding('props.value')
+```
+
+17. **`root/Configuration/Body/E2/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_RatedAmps', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+18. **`root/Configuration/Body/E3/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_MaxStartsHr', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+19. **`root/Configuration/Body/C4`**: `propConfig` `props.selected` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_AutoRestart', bool(currentValue.value), 4):
+			self.refreshBinding('props.selected')
+```
+
+20. **`root/Configuration/Body/E5/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Alm_HiCurrent/Cfg_Lim', currentValue.value, 4):
+			self.refreshBinding('props.value')
 ```
 
 ### Explanation of each handler
@@ -377,17 +416,22 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 | `Maintenance/ResetMaint` | `efc.ui.cmd(... 'Run/Cmd_ResetMaint', True, 2)` | `Run/Cmd_ResetMaint` | level 2 | yes |
 | `Maintenance/Sim` (SIMULATE) | `efc.ui.cmd(... 'Sim_En', not m_Sim_En, 2)` | `Sim_En` (toggle) | level 2 | yes |
 | `Configuration/Header` (dom click) | toggles `open_Configuration` | none | none | no |
-| `Configuration/Body/E0` (`Cfg_FbkTime` entry, onChange) | `efc.ui.cmd(... 'Cfg_FbkTime', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_FbkTime` (milliseconds) | level 4 | yes
-| `Configuration/Body/E1` (`Cfg_RestartDly` entry, onChange) | `efc.ui.cmd(... 'Cfg_RestartDly', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_RestartDly` (milliseconds) | level 4 | yes
+| `Configuration/Body/E0` (`Cfg_FbkTime` entry, onChange) | `efc.ui.setValue(... 'Cfg_FbkTime', value, 4, 1000)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_FbkTime` (milliseconds) | level 4 (`setValue`) | yes |
+| `Configuration/Body/E1` (`Cfg_RestartDly` entry, onChange) | `efc.ui.setValue(... 'Cfg_RestartDly', value, 4, 1000)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_RestartDly` (milliseconds) | level 4 (`setValue`) | yes |
+| `Configuration/Body/E2` (`Cfg_RatedAmps` entry, onChange) | `efc.ui.setValue(... 'Cfg_RatedAmps', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_RatedAmps` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E3` (`Cfg_MaxStartsHr` entry, onChange) | `efc.ui.setValue(... 'Cfg_MaxStartsHr', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_MaxStartsHr` | level 4 (`setValue`) | yes |
+| `Configuration/Body/C4` (`Cfg_AutoRestart` checkbox, onChange) | `efc.ui.setValue(... 'Cfg_AutoRestart', bool(value), 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_AutoRestart` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E5` (`Alm_HiCurrent/Cfg_Lim` entry, onChange) | `efc.ui.setValue(... 'Alm_HiCurrent/Cfg_Lim', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Alm_HiCurrent/Cfg_Lim` | level 4 (`setValue`) | yes |
 
-`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`; below it, `cmd` returns False after logging and opening the AccessDenied popup (unless `notify=False`). The Mode buttons, the command buttons, ACK and the maintenance buttons therefore use the level check. The two TIME entries use the level check (level 4); the other Configuration entries and the auto restart checkbox do not, because they are bindings.
+`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`; below it, `cmd` returns False after logging and opening the AccessDenied popup (unless `notify=False`). The Mode buttons, the command buttons, ACK and the maintenance buttons therefore use the level check. The Configuration entries and the auto restart checkbox use `efc.ui.setValue`, which applies the same check (level 4) and audits.
 
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.level(levels)`**: walks `session.props.auth.securityLevels` (nested `name`/`children`, a path string, or a plain role list) and returns the highest index, 0 to 5, of the names that match `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` case-insensitively (site names map through `efc.ui.ROLE_ALIASES`; no match gives 0). Bound to `custom.level`. `efc.ui.userLevel` (used by the checks in `cmd`, `ackAll`, `bypass`, `unbypass` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
+- **`efc.ui.level(levels)`**: walks `session.props.auth.securityLevels` (nested `name`/`children`, a path string, or a plain role list) and returns the highest index, 0 to 5, of the names that match `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` case-insensitively (site names map through `efc.ui.ROLE_ALIASES`; no match gives 0). Bound to `custom.level`. `efc.ui.userLevel` (used by the checks in `cmd`, `setValue`, `ackAll`, `bypass`, `unbypass` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
 - **`efc.ui.closeDynamic(component)`**: sizes the dock (`efc.ui.sizeDock`), then loads the page's stored `default` view and params (`session.custom.efcDw['<pageId>|<page path>']`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - **`efc.ui.cmd(component, member, value=True, minLevel=1, audit=False, notify=True)`**: the role-checked write described above. Below `minLevel` it does not write: with `notify` true it calls `efc.ui.denied` (a WARN log line and the `efcAccessDenied` popup, see [AccessDenied](../Parts/AccessDenied.md)), and it returns False either way. The JOG release events pass `notify=False`. Otherwise it writes through `_writeTags`, which logs any write that does not come back good, and returns True when the write was good. It writes the value once with `writeBlocking` and does not write it back. One-shot members depend on the PLC behaviour; `Cmd_Jog` is written TRUE on press and FALSE on release. Audits when `audit=True`.
-- **`efc.ui.denied(component, minLevel, action='')`**: logs `Refused <action> for <user> (<have>): needs <need>` at WARN level and opens the popup `efcAccessDenied` (`Templates/Dynamic Window/Parts/AccessDenied`, modal) with params `action`, `need`, `have` and `user`. Called by `cmd`, `ackAll`, `unbypass` and `dblCmd`. See [AccessDenied](../Parts/AccessDenied.md).
+- **`efc.ui.setValue(component, member, value, minLevel=4, scale=1)`**: the commit behind every entry field and checkbox (decisions 14, 27). It returns False on an empty `tagPath` or a None value. Below `minLevel` it calls `efc.ui.denied` (WARN log and AccessDenied popup) and returns False. With `scale` other than 1 it writes `int(round(value * scale))` (the TIME entries pass 1000). It reads the old value and returns True without writing when the value is unchanged; otherwise it writes through `_writeTags` and, on a good write, audits `EFC set` with target `<tagPath>/<member>` and value `'<old> -> <new>'`. It returns whether the write was good; on False the onChange script calls `self.refreshBinding(...)`, so the field shows the tag value again.
+- **`efc.ui.denied(component, minLevel, action='')`**: logs `Refused <action> for <user> (<have>): needs <need>` at WARN level and opens the popup `efcAccessDenied` (`Templates/Dynamic Window/Parts/AccessDenied`, modal) with params `action`, `need`, `have` and `user`. Called by `cmd`, `setValue`, `ackAll`, `bypass`, `unbypass` and `dblCmd`. See [AccessDenied](../Parts/AccessDenied.md).
 - **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true. Below level 1 it writes nothing and calls `efc.ui.denied` (WARN log and AccessDenied popup).
 - **`efc.ui.openDynamic`** (called from the template, not from this view): maps the template's type to a window and loads it into the `dw_Right` dock.
 - **`efc.ui.bypass` / `unbypass`**: exist in the module but are not called from this view. Interlock bypass is handled in the embedded `IntlkList` views, which are not in this file.
@@ -404,7 +448,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Sts_Local` | read | BOOL | In local control. |
 | `Sts_NotPerm` | read | BOOL | Permissive not healthy. |
 | `Val_Current` | read | REAL | Motor current (A). Also read by a trend pen. |
-| `Cfg_RatedAmps` | read/write | REAL | Motor nameplate full-load current (A). |
+| `Cfg_RatedAmps` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Motor nameplate full-load current (A). |
 | `Val_LoadPct` | read | REAL | Load (% of Cfg_RatedAmps). |
 | `Sts_NE107` | read | INT | NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M). |
 | `Cfg_Tag` | read | STRING[20] | Equipment / instrument tag, e.g. FT-101. |
@@ -449,11 +493,11 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Run/Val_HrsSinceMaint` | read | REAL | Run hours since last maintenance reset. |
 | `Run/Sts_MaintDue` | read | BOOL | Maintenance due. |
 | `Sim_En` | read / write (toggle) | BOOL | Simulation: ignore field I/O, logic generates feedback. |
-| `Cfg_FbkTime` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Time allowed for run feedback after start/stop. |
-| `Cfg_RestartDly` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Minimum stopped time before restart. |
-| `Cfg_MaxStartsHr` | read/write | INT | Maximum starts per hour, 0 = no limit. |
-| `Alm_HiCurrent/Cfg_Lim` | read/write | REAL | Alarm limit (EU) - from rationalisation / master alarm database. |
-| `Cfg_AutoRestart` | read/write | BOOL | Auto mode restarts after power loss / interlock clears. |
+| `Cfg_FbkTime` | read (shown as value / 1000); write value * 1000 via `efc.ui.setValue` (level 4, audited) | TIME | Time allowed for run feedback after start/stop. |
+| `Cfg_RestartDly` | read (shown as value / 1000); write value * 1000 via `efc.ui.setValue` (level 4, audited) | TIME | Minimum stopped time before restart. |
+| `Cfg_MaxStartsHr` | read; write via `efc.ui.setValue` (level 4, audited) | INT | Maximum starts per hour, 0 = no limit. |
+| `Alm_HiCurrent/Cfg_Lim` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Alarm limit (EU) - from rationalisation / master alarm database. |
+| `Cfg_AutoRestart` | read; write via `efc.ui.setValue` (level 4, audited) | BOOL | Auto mode restarts after power loss / interlock clears. |
 | `Perm` | read | T_Intlk | Passed as tagPath to the embedded `Templates/Dynamic Window/Parts/IntlkList` view |
 | `Intlk` | read | T_Intlk | Passed as tagPath to the embedded `Templates/Dynamic Window/Parts/IntlkList` view |
 | `Mode/Cmd_Auto` | write | BOOL | Operator request Automatic (one-shot). |
@@ -627,4 +671,4 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **STOP and RESET have no enable.** They are clickable at level 1 and above in any mode and state; below level 1 they show a lock and a press is refused with the AccessDenied popup.
 - **Restart countdown and readiness are not shown.** `Sts_RestartLeft`, `Sts_Ready` and `Sts_State` are not used. `Cfg_NoFbk` is not shown or editable here.
 - **Zero means no limit, and the dock does not say so.** `Cfg_MaxStartsHr` is 0 for no limit (PCLib comment). The Configuration row shows the raw number with no unit and no label for 0.
-- **High current limit is an alarm setpoint.** `Alm_HiCurrent/Cfg_Lim` is edited at level 4 in the Configuration section. It has no audit and no script check.
+- **High current limit is an alarm setpoint.** `Alm_HiCurrent/Cfg_Lim` is edited at level 4 in the Configuration section. It goes through `efc.ui.setValue` (level 4, audited) like the other entries.

@@ -26,11 +26,11 @@ The monitoring window for a heat exchanger (T_HeatEx). It is read-only: it has n
 
 **Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` ([Parts/Trend](../Parts/Trend.md)) with pens `Val_Clean` and `Val_UA`, over the window's tag. The embedded view's `expanded` param starts `false`. The Trend part toggles it itself, and the `position.basis` binding grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock. Both pens are plotted on one shared scale (see the notes).
 
-**Configuration** (collapsible; the header click toggles `open_Configuration`, collapsed at start). Seven items: design UA (`Cfg_DesignUA`, kW/K), minimum flow (`Cfg_MinFlow`), calculation filter (`Cfg_CalcFilt`, s), fouling limit (`Alm_Fouling/Cfg_Lim`, %), hot side dP limit (`Alm_HotDP/Cfg_Lim`), cold side dP limit (`Alm_ColdDP/Cfg_Lim`) and outlet temperature limit (`Alm_HiOutT/Cfg_Lim`, °C). Below level 4 each is a read-only row. At level 4 and above each is an entry bound bidirectionally to the tag. The entries' enable expression is the literal `true`. Their visibility is what limits them to level 4. Writes are not audited.
+**Configuration** (level 1 and above, hidden below Operator; collapsible; the header click toggles `open_Configuration`, collapsed at start). Seven items: design UA (`Cfg_DesignUA`, kW/K), minimum flow (`Cfg_MinFlow`), calculation filter (`Cfg_CalcFilt`, s), fouling limit (`Alm_Fouling/Cfg_Lim`, %), hot side dP limit (`Alm_HotDP/Cfg_Lim`), cold side dP limit (`Alm_ColdDP/Cfg_Lim`) and outlet temperature limit (`Alm_HiOutT/Cfg_Lim`, °C). Below level 4 each is a read-only row. At level 4 and above each is an entry that reads the tag one way. The entries' enable expression is the literal `true`. An edit (only when `origin == 'Browser'`) commits through `efc.ui.setValue(self, member, value, 4)`, which re-checks level 4, writes and audits old -> new; a refused or failed write refreshes the binding.
 
-**Role checks.** `view.custom.level` comes from the Perspective session (`session.props.auth.securityLevels`), mapped by `efc.ui.level` (case-insensitive, site names through `efc.ui.ROLE_ALIASES`). Only ACK checks the level in script (inside `efc.ui.ackAll`): its button stays visible with a lock below Operator, and a press below it logs a warning and opens the `Parts/AccessDenied` popup (decision 36; see [AccessDenied](../Parts/AccessDenied.md)). The configuration entries are protected by visibility only. Bindings do not check the level. Real access control has to be enforced in Perspective security and the PLC logic.
+**Role checks.** `view.custom.level` comes from the Perspective session (`session.props.auth.securityLevels`), mapped by `efc.ui.level` (case-insensitive, site names through `efc.ui.ROLE_ALIASES`). ACK checks the level in script (inside `efc.ui.ackAll`): its button stays visible with a lock below Operator, and a press below it logs a warning and opens the `Parts/AccessDenied` popup (decision 36; see [AccessDenied](../Parts/AccessDenied.md)). The configuration entries are shown at level 4 and re-checked by `efc.ui.setValue` (level 4, same popup). Real access control has to be enforced in Perspective security and the PLC logic.
 
-**Audit.** None. This view makes no `efc.ui.cmd` call with `audit=True`, and `efc.ui.ackAll` does not audit. Configuration writes go straight to the tags and are not audited.
+**Audit.** Configuration edits only: `efc.ui.setValue` audits each as `EFC set`, old -> new. This view makes no `efc.ui.cmd` call with `audit=True`, and `efc.ui.ackAll` does not audit.
 
 ## Properties reference
 
@@ -47,12 +47,12 @@ Both have `paramDirection: input` and `persistent: true`. No output parameters.
 
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
-| `view.custom.level` | `0` | property + script transform | `session.props.auth.securityLevels` → `return efc.ui.level(value)` | Role level 0-5 from `session.props.auth.securityLevels` via `efc.ui.level`. Gates the ACK button and the configuration entries (level 4). |
+| `view.custom.level` | `0` | property + script transform | `session.props.auth.securityLevels` → `return efc.ui.level(value)` | Role level 0-5 from `session.props.auth.securityLevels` via `efc.ui.level`. Gates the ACK button, the Configuration section (hidden below 1) and the configuration entries (level 4). |
 | `view.custom.open_Configuration` | `false` | none (written by script) | none | View-local toggle for the Configuration section. Set by the header click script; not bound to any tag; not persisted. |
 
 #### Tag mirrors (`custom.m_*`)
 
-There are 37 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The read-only display rows read tag values through these mirrors. The configuration entries and the ACK script read the tags directly.
+There are 37 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The read-only display rows read tag values through these mirrors. The configuration entries (one-way tag bindings) and the ACK script read the tags directly.
 
 | Group | Members |
 |---|---|
@@ -78,7 +78,7 @@ None.
 
 ## Bindings reference
 
-Total: **120 bindings**: 38 at view root (all `custom.*`, including 1 `property` binding with a transform) and 82 on components (75 `expr`, 7 `tag`). Types overall: 75 `expr`, 44 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only, so they are not counted.
+Total: **121 bindings**: 38 at view root (all `custom.*`, including 1 `property` binding with a transform) and 83 on components (76 `expr`, 7 `tag`). Types overall: 76 `expr`, 44 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only, so they are not counted.
 
 ### View root
 
@@ -151,54 +151,62 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
+| root/Configuration | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true (hidden below Operator) |
 | root/Configuration/Header/Chevron | `props.text` | expr | `if({view.custom.open_Configuration}, '▾', '▸')` | Text content |
 | root/Configuration/Body | `position.display` | expr | `{view.custom.open_Configuration}` | Shown while expression is true |
 | root/Configuration/Body/R0 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R0/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_DesignUA}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R0/EU | `props.text` | expr | `'kW/K'` | Text content |
 | root/Configuration/Body/E0 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E0/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_DesignUA` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E0/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_DesignUA`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E0/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_DesignUA', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E0/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R1 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R1/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_MinFlow}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R1/EU | `props.text` | expr | `''` | Text content |
 | root/Configuration/Body/E1 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E1/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_MinFlow` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E1/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_MinFlow`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E1/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_MinFlow', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E1/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R2 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R2/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_CalcFilt}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R2/EU | `props.text` | expr | `'s'` | Text content |
 | root/Configuration/Body/E2 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E2/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_CalcFilt` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E2/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_CalcFilt`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E2/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_CalcFilt', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E2/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R3 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R3/Val | `props.text` | expr | `numberFormat({view.custom.m_Alm_Fouling_Cfg_Lim}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R3/EU | `props.text` | expr | `'%'` | Text content |
 | root/Configuration/Body/E3 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E3/Entry | `props.value` | tag (indirect) | tag `{0}/Alm_Fouling/Cfg_Lim` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E3/Entry | `props.value` | tag (indirect) | tag `{0}/Alm_Fouling/Cfg_Lim`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E3/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Alm_Fouling/Cfg_Lim', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E3/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R4 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R4/Val | `props.text` | expr | `numberFormat({view.custom.m_Alm_HotDP_Cfg_Lim}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R4/EU | `props.text` | expr | `''` | Text content |
 | root/Configuration/Body/E4 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E4/Entry | `props.value` | tag (indirect) | tag `{0}/Alm_HotDP/Cfg_Lim` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E4/Entry | `props.value` | tag (indirect) | tag `{0}/Alm_HotDP/Cfg_Lim`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E4/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Alm_HotDP/Cfg_Lim', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E4/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R5 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R5/Val | `props.text` | expr | `numberFormat({view.custom.m_Alm_ColdDP_Cfg_Lim}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R5/EU | `props.text` | expr | `''` | Text content |
 | root/Configuration/Body/E5 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E5/Entry | `props.value` | tag (indirect) | tag `{0}/Alm_ColdDP/Cfg_Lim` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E5/Entry | `props.value` | tag (indirect) | tag `{0}/Alm_ColdDP/Cfg_Lim`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E5/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Alm_ColdDP/Cfg_Lim', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E5/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R6 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R6/Val | `props.text` | expr | `numberFormat({view.custom.m_Alm_HiOutT_Cfg_Lim}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R6/EU | `props.text` | expr | `'°C'` | Text content |
 | root/Configuration/Body/E6 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E6/Entry | `props.value` | tag (indirect) | tag `{0}/Alm_HiOutT/Cfg_Lim` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E6/Entry | `props.value` | tag (indirect) | tag `{0}/Alm_HiOutT/Cfg_Lim`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E6/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Alm_HiOutT/Cfg_Lim', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E6/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 
 ## Scripts reference
 
-Total: **4 scripts**: 3 event scripts (2 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). No `customMethods`, no `messageHandlers`, no property-change `onChange` scripts.
+Total: **11 scripts**: 3 event scripts (2 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). 7 property-change `onChange` scripts (`props.value` of the Configuration entries, see the end of the list). No `customMethods`, no `messageHandlers`.
 
 The button handlers call `efc.ui` functions, which are summarised after the list.
 
@@ -226,6 +234,62 @@ The button handlers call `efc.ui` functions, which are summarised after the list
 	return efc.ui.level(value)
 ```
 
+5. **`root/Configuration/Body/E0/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_DesignUA', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+6. **`root/Configuration/Body/E1/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_MinFlow', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+7. **`root/Configuration/Body/E2/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_CalcFilt', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+8. **`root/Configuration/Body/E3/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Alm_Fouling/Cfg_Lim', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+9. **`root/Configuration/Body/E4/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Alm_HotDP/Cfg_Lim', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+10. **`root/Configuration/Body/E5/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Alm_ColdDP/Cfg_Lim', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+11. **`root/Configuration/Body/E6/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Alm_HiOutT/Cfg_Lim', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
 ### Explanation of each handler
 
 | Handler | Action | Writes | Role check | Audit |
@@ -233,14 +297,22 @@ The button handlers call `efc.ui` functions, which are summarised after the list
 | `Header/Close` | `efc.ui.closeDynamic` restores the default dock view or closes the dock | none | none | no |
 | `Alarms/Ack` | `efc.ui.ackAll` on the five alarms | `Alm_*/Cmd_Ack`, only where `Sts_Unack` is true | level 1 (in `efc.ui.ackAll`) | no |
 | `Configuration/Header` (dom click) | toggles `open_Configuration` | none | none | no |
+| `Configuration/Body/E0` (`Cfg_DesignUA` entry, onChange) | `efc.ui.setValue(... 'Cfg_DesignUA', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_DesignUA` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E1` (`Cfg_MinFlow` entry, onChange) | `efc.ui.setValue(... 'Cfg_MinFlow', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_MinFlow` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E2` (`Cfg_CalcFilt` entry, onChange) | `efc.ui.setValue(... 'Cfg_CalcFilt', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_CalcFilt` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E3` (`Alm_Fouling/Cfg_Lim` entry, onChange) | `efc.ui.setValue(... 'Alm_Fouling/Cfg_Lim', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Alm_Fouling/Cfg_Lim` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E4` (`Alm_HotDP/Cfg_Lim` entry, onChange) | `efc.ui.setValue(... 'Alm_HotDP/Cfg_Lim', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Alm_HotDP/Cfg_Lim` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E5` (`Alm_ColdDP/Cfg_Lim` entry, onChange) | `efc.ui.setValue(... 'Alm_ColdDP/Cfg_Lim', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Alm_ColdDP/Cfg_Lim` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E6` (`Alm_HiOutT/Cfg_Lim` entry, onChange) | `efc.ui.setValue(... 'Alm_HiOutT/Cfg_Lim', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Alm_HiOutT/Cfg_Lim` | level 4 (`setValue`) | yes |
 
-This view has no `efc.ui.cmd` calls. The configuration entries and checkboxes are direct bidirectional bindings, with no script between the control and the tag.
+This view has no `efc.ui.cmd` calls. The configuration entries read their tags one way and write through `efc.ui.setValue` (level 4, audited).
 
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.level(levels)`**: walks `session.props.auth.securityLevels` (nested `name`/`children`, a path string, or a plain role list) and returns the highest index, 0 to 5, of the names that match `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` case-insensitively (site names map through `efc.ui.ROLE_ALIASES`; no match gives 0). Bound to `custom.level`. `efc.ui.userLevel` (used by the checks in `cmd`, `ackAll`, `bypass`, `unbypass` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
+- **`efc.ui.level(levels)`**: walks `session.props.auth.securityLevels` (nested `name`/`children`, a path string, or a plain role list) and returns the highest index, 0 to 5, of the names that match `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` case-insensitively (site names map through `efc.ui.ROLE_ALIASES`; no match gives 0). Bound to `custom.level`. `efc.ui.userLevel` (used by the checks in `cmd`, `setValue`, `ackAll`, `bypass`, `unbypass` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
 - **`efc.ui.closeDynamic(component)`**: sizes the dock (`efc.ui.sizeDock`), then loads the page's stored `default` view and params (`session.custom.efcDw['<pageId>|<page path>']`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - **`efc.ui.ackAll(component, alarms)`**: below level 1 it writes nothing and calls `efc.ui.denied` (WARN log and AccessDenied popup). Otherwise it reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true. No audit.
+- **`efc.ui.setValue(component, member, value, minLevel=4, scale=1)`**: the commit behind every entry field and checkbox (decisions 14, 27). It returns False on an empty `tagPath` or a None value. Below `minLevel` it calls `efc.ui.denied` (WARN log and AccessDenied popup) and returns False. With `scale` other than 1 it writes `int(round(value * scale))` (the TIME entries pass 1000). It reads the old value and returns True without writing when the value is unchanged; otherwise it writes through `_writeTags` and, on a good write, audits `EFC set` with target `<tagPath>/<member>` and value `'<old> -> <new>'`. It returns whether the write was good; on False the onChange script calls `self.refreshBinding(...)`, so the field shows the tag value again.
 - **`efc.ui.cmd`, `bypass`, `unbypass`, `dblCmd`**: not called from this view. `efc.ui.trend` is called by the Trend part, not here.
 
 ## Tag members used
@@ -249,10 +321,10 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
 
 | Member | Access (read/write) | Data type | Meaning |
 |---|---|---|---|
-| `Cfg_CalcFilt` | read/write (bidirectional) | REAL | Filter time constant for calculated values (s) |
+| `Cfg_CalcFilt` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Filter time constant for calculated values (s) |
 | `Cfg_Desc` | read | STRING[40] | Description shown on HMI faceplate |
-| `Cfg_DesignUA` | read/write (bidirectional) | REAL | Clean design UA (kW/K) |
-| `Cfg_MinFlow` | read/write (bidirectional) | REAL | Below this flow the calculations are frozen (kg/s) |
+| `Cfg_DesignUA` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Clean design UA (kW/K) |
+| `Cfg_MinFlow` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Below this flow the calculations are frozen (kg/s) |
 | `Cfg_Tag` | read | STRING[20] | Equipment / instrument tag, e.g. FT-101 |
 | `Sts_CalcValid` | read | BOOL | Inputs valid, calculations live |
 | `Inp_ColdFlow` | read | REAL | Cold side mass flow (kg/s) |
@@ -267,12 +339,12 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
 | `Val_Effect` | read | REAL | Thermal effectiveness (0-1); displayed x 100 as % |
 | `Val_LMTD` | read | REAL | Log mean temperature difference (K) |
 | `Val_UA` | read; also read by trend pens | REAL | Actual UA (kW/K) |
-| `Alm_ColdDP/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
+| `Alm_ColdDP/Cfg_Lim` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
 | `Alm_ColdDP/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_ColdDP/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_ColdDP/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_ColdDP/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_Fouling/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
+| `Alm_Fouling/Cfg_Lim` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
 | `Alm_Fouling/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_Fouling/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_Fouling/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
@@ -281,12 +353,12 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
 | `Alm_HeatBal/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_HeatBal/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_HeatBal/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_HiOutT/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
+| `Alm_HiOutT/Cfg_Lim` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
 | `Alm_HiOutT/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_HiOutT/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_HiOutT/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_HiOutT/Sts_Unack` | read | BOOL | Alarm unacknowledged |
-| `Alm_HotDP/Cfg_Lim` | read/write (bidirectional) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
+| `Alm_HotDP/Cfg_Lim` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Alarm limit (EU) - from rationalisation / master alarm database |
 | `Alm_HotDP/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low |
 | `Alm_HotDP/Cmd_Ack` | write (ackAll, only unacked) | BOOL | Operator acknowledge (one-shot) |
 | `Alm_HotDP/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
@@ -439,5 +511,4 @@ All paths are relative to `tagPath`. Types and meanings are taken verbatim from 
 - **Flow units.** `Inp_HotFlow` and `Inp_ColdFlow` are documented as kg/s in PCLib, but they are shown with no unit. `Cfg_MinFlow` is also shown with no unit, although PCLib gives it as kg/s.
 - **Values are not gated by CALC VALID.** When `Sts_CalcValid` is false the banner reads CALC INVALID, but the calculated rows still show their values. This view does not show whether the PLC holds the last valid results. Confirm the intended behaviour.
 - **Members not shown.** `Inp_HotDP`, `Inp_ColdDP`, `Val_DutyHot`, `Val_DutyCold`, `Val_HeatBal`, `Cfg_HotCp`, `Cfg_ColdCp` and `Cfg_CounterFlow` are defined in `T_HeatEx` but not displayed. The dP alarms (`Alm_HotDP`, `Alm_ColdDP`) act on dP values that this view never shows. The heat balance alarm (`Alm_HeatBal`) has no value row and no `Cfg_Lim` row, so its limit cannot be seen or changed from the dock.
-- **Configuration writes are not role-checked in script and not audited.** The only guard is the level 4 visibility of the entries. Design UA and the four alarm limits can be changed with no audit entry. ValveDiscrete audits its maintenance and simulate actions, so this is inconsistent. Confirm whether limit changes must be audited.
 - **Dp limit units.** The hot and cold dP limit rows show no unit. The PLC comment for `Inp_HotDP` gives kPa, but the limit members themselves are documented only as "Alarm limit (EU)". Confirm the units of `Alm_HotDP/Cfg_Lim` and `Alm_ColdDP/Cfg_Lim`.

@@ -667,7 +667,7 @@
    "tagPath": "[default]PID_Demo/P101"
   },
   "bindings": {
-   "ok": 264,
+   "ok": 262,
    "fail": 9
   }
  },
@@ -681,7 +681,7 @@
    "tagPath": "[default]PID_Demo/E401"
   },
   "bindings": {
-   "ok": 1451,
+   "ok": 1449,
    "fail": 15
   }
  },
@@ -710,7 +710,7 @@
    "tagPath": "[default]PID_Demo/TIC101"
   },
   "bindings": {
-   "ok": 780,
+   "ok": 776,
    "fail": 12
   }
  },
@@ -736,14 +736,14 @@
   "path": "Templates/Dynamic Window/Parts/BypassConfirm",
   "kind": "part",
   "png": "templates/Dynamic Window/Parts/BypassConfirm.png",
-  "size": "360\u00d7260",
+  "size": "360\u00d7290",
   "params": {
    "tagPath": "[default]PID_Demo/XV104",
    "idx": 0,
    "desc": "PSH-201 high pressure"
   },
   "bindings": {
-   "ok": 6,
+   "ok": 19,
    "fail": 3
   }
  },
@@ -806,7 +806,7 @@
    "tagPath": "[default]PV_Demo/PT001"
   },
   "bindings": {
-   "ok": 279,
+   "ok": 275,
    "fail": 9
   }
  },
@@ -820,7 +820,7 @@
    "tagPath": "[default]PID_Demo/P101"
   },
   "bindings": {
-   "ok": 1446,
+   "ok": 1444,
    "fail": 15
   }
  },
@@ -834,7 +834,7 @@
    "tagPath": "[default]PID_Demo/M601"
   },
   "bindings": {
-   "ok": 1549,
+   "ok": 1547,
    "fail": 15
   }
  },
@@ -874,7 +874,7 @@
    "tagPath": "[default]PID_Demo/FV101"
   },
   "bindings": {
-   "ok": 805,
+   "ok": 803,
    "fail": 12
   }
  },
@@ -888,7 +888,7 @@
    "tagPath": "[default]PID_Demo/XV101"
   },
   "bindings": {
-   "ok": 1360,
+   "ok": 1358,
    "fail": 15
   }
  },

@@ -33,11 +33,11 @@ The operator and maintenance dynamic window for a two-state valve (T_DValve). It
 
 **Maintenance** (level 2 and above). Shows run hours, starts, starts in the last hour, hours since maintenance and whether maintenance is due. `RESET MAINT` writes `Run/Cmd_ResetMaint` (audited). `SIMULATE` toggles `Sim_En` (audited).
 
-**Configuration** (collapsible; the header click toggles `open_Configuration`). Travel time is read-only below level 4 and editable at level 4 and above (`Cfg_TravelTime`, unit s; the PLC TIME is in milliseconds, so the row shows `Cfg_TravelTime / 1000` and the entry reads the mirror `/ 1000`; its `props.value` onChange script, only when `origin == 'Browser'`, writes `int(round(value * 1000))` through `efc.ui.cmd(self, 'Cfg_TravelTime', ..., 4, audit=True)`, Engineer and audited). The "Has open limit" and "Has closed limit" settings follow the same pattern: below level 4 each is a read-only row showing `Yes` or `No` from `Cfg_HasZSO` / `Cfg_HasZSC`; at level 4 and above the row is hidden and a checkbox, bidirectional to the tag, is shown (and enabled). The checkboxes write the tag directly through the binding; their only guard is visibility (their enable is `level >= 4`). The travel-time entry is guarded by visibility (its enable is the literal `true`) and by the level check in `efc.ui.cmd`.
+**Configuration** (level 1 and above, hidden below Operator; collapsible; the header click toggles `open_Configuration`). Travel time is read-only below level 4 and editable at level 4 and above (`Cfg_TravelTime`, unit s; the PLC TIME is in milliseconds, so the row shows `Cfg_TravelTime / 1000` and the entry reads the mirror `/ 1000`; its `props.value` onChange script, only when `origin == 'Browser'`, writes `int(round(value * 1000))` through `efc.ui.setValue(self, 'Cfg_TravelTime', value, 4, 1000)`, Engineer and audited). The "Has open limit" and "Has closed limit" settings follow the same pattern: below level 4 each is a read-only row showing `Yes` or `No` from `Cfg_HasZSO` / `Cfg_HasZSC`; at level 4 and above the row is hidden and a checkbox that reads the tag one way is shown (and enabled). The checkboxes commit from a `props.selected` onChange script through `efc.ui.setValue(self, member, bool(value), 4)`. Each write re-checks level 4 and is audited old -> new; a refused or failed write refreshes the binding. The travel-time entry's enable is the literal `true`; the checkboxes' is `level >= 4`.
 
-**Role checks.** `view.custom.level` comes from the Perspective session (`session.props.auth.securityLevels`) through `efc.ui.level`, which matches the security-level names case-insensitively (site names through `efc.ui.ROLE_ALIASES`). It decides which controls are locked or hidden in the client. `efc.ui.cmd` and `efc.ui.ackAll` re-check the level (`efc.ui.userLevel`, the larger of the security levels and `session.props.auth.user.roles`). Below it they do not write: they log a warning and open the `Parts/AccessDenied` popup (decision 36; see [AccessDenied](../Parts/AccessDenied.md)). Failed writes are logged too. Bindings do not check the level (the Configuration checkboxes write through bindings); the travel-time entry goes through `efc.ui.cmd`. Real access control has to be enforced in Perspective security and the PLC logic.
+**Role checks.** `view.custom.level` comes from the Perspective session (`session.props.auth.securityLevels`) through `efc.ui.level`, which matches the security-level names case-insensitively (site names through `efc.ui.ROLE_ALIASES`). It decides which controls are locked or hidden in the client. `efc.ui.cmd`, `efc.ui.setValue` and `efc.ui.ackAll` re-check the level (`efc.ui.userLevel`, the larger of the security levels and `session.props.auth.user.roles`). Below it they do not write: they log a warning and open the `Parts/AccessDenied` popup (decision 36; see [AccessDenied](../Parts/AccessDenied.md)). Failed writes are logged too. No binding writes a tag: the travel-time entry and the Configuration checkboxes go through `efc.ui.setValue`. Real access control has to be enforced in Perspective security and the PLC logic.
 
-**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, falling back to the logger) for MAINT, OOS, RESET MAINT, SIMULATE and travel-time edits. It does not audit AUTO, MAN, OPEN, CLOSE, RESET or ACK.
+**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, falling back to the logger) for MAINT, OOS, RESET MAINT, SIMULATE and every Configuration edit (`EFC set`, old -> new). It does not audit AUTO, MAN, OPEN, CLOSE, RESET or ACK.
 
 ## Properties reference
 
@@ -85,7 +85,7 @@ None.
 
 ## Bindings reference
 
-Total: **114 bindings**: 44 at view root (all `custom.*`, including 1 `property` binding with a transform) and 70 on components. Types: 68 `expr`, 45 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 70.
+Total: **115 bindings**: 44 at view root (all `custom.*`, including 1 `property` binding with a transform) and 71 on components. Types: 69 `expr`, 45 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and counted in the 71.
 
 ### View root
 
@@ -197,6 +197,7 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
+| root/Configuration | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true (hidden below Operator) |
 | root/Configuration/Header/Chevron | `props.text` | expr | `if({view.custom.open_Configuration}, '▾', '▸')` | Text content |
 | root/Configuration/Body | `position.display` | expr | `{view.custom.open_Configuration}` | Shown while expression is true |
 | root/Configuration/Body/R0 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
@@ -204,22 +205,24 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Configuration/Body/R0/EU | `props.text` | expr | `'s'` | Text content |
 | root/Configuration/Body/E0 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/E0/Entry | `props.value` | expr | `{view.custom.m_Cfg_TravelTime} / 1000` | Value in seconds (the PLC TIME is in milliseconds) |
-| root/Configuration/Body/E0/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: efc.ui.cmd(self, 'Cfg_TravelTime', int(round(currentValue.value * 1000)), 4, audit=True)` | Edit written as milliseconds, Engineer, audited |
+| root/Configuration/Body/E0/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_TravelTime', currentValue.value, 4, 1000): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue` as value * 1000 (milliseconds), level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E0/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R1 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R1/Val | `props.text` | expr | `if({view.custom.m_Cfg_HasZSO}, 'Yes', 'No')` | Text content |
-| root/Configuration/Body/C1 | `props.selected` | tag (indirect) | tag `{0}/Cfg_HasZSO` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/C1 | `props.selected` | tag (indirect) | tag `{0}/Cfg_HasZSO`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/C1 | `props.selected` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_HasZSO', bool(currentValue.value), 4): self.refreshBinding('props.selected')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/C1 | `props.enabled` | expr | `{view.custom.level} >= 4` | Enabled while expression is true |
 | root/Configuration/Body/C1 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/R2 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R2/Val | `props.text` | expr | `if({view.custom.m_Cfg_HasZSC}, 'Yes', 'No')` | Text content |
-| root/Configuration/Body/C2 | `props.selected` | tag (indirect) | tag `{0}/Cfg_HasZSC` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/C2 | `props.selected` | tag (indirect) | tag `{0}/Cfg_HasZSC`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/C2 | `props.selected` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_HasZSC', bool(currentValue.value), 4): self.refreshBinding('props.selected')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/C2 | `props.enabled` | expr | `{view.custom.level} >= 4` | Enabled while expression is true |
 | root/Configuration/Body/C2 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 
 ## Scripts reference
 
-Total: **14 scripts**: 12 event scripts (11 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). 1 property-change `onChange` script (`props.value` of the TIME entries, see the end of the list). No `customMethods`, no `messageHandlers`.
+Total: **16 scripts**: 12 event scripts (11 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). 3 property-change `onChange` scripts (`props.value` of the travel-time entry and `props.selected` of the two checkboxes, see the end of the list). No `customMethods`, no `messageHandlers`.
 
 The button handlers below call `efc.ui` functions. Those functions are summarised after the list.
 
@@ -305,7 +308,24 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 
 ```python
 	if origin == 'Browser' and currentValue.value is not None:
-		efc.ui.cmd(self, 'Cfg_TravelTime', int(round(currentValue.value * 1000)), 4, audit=True)
+		if not efc.ui.setValue(self, 'Cfg_TravelTime', currentValue.value, 4, 1000):
+			self.refreshBinding('props.value')
+```
+
+15. **`root/Configuration/Body/C1`**: `propConfig` `props.selected` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_HasZSO', bool(currentValue.value), 4):
+			self.refreshBinding('props.selected')
+```
+
+16. **`root/Configuration/Body/C2`**: `propConfig` `props.selected` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_HasZSC', bool(currentValue.value), 4):
+			self.refreshBinding('props.selected')
 ```
 
 ### Explanation of each handler
@@ -324,16 +344,19 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 | `Maintenance/ResetMaint` | `efc.ui.cmd(... 'Run/Cmd_ResetMaint', True, 2)` | `Run/Cmd_ResetMaint` | level 2 | yes |
 | `Maintenance/Sim` | `efc.ui.cmd(... 'Sim_En', not m_Sim_En, 2)` | `Sim_En` (toggle) | level 2 | yes |
 | `Configuration/Header` (dom click) | toggles `open_Configuration` | none | none | no |
-| `Configuration/Body/E0` (`Cfg_TravelTime` entry, onChange) | `efc.ui.cmd(... 'Cfg_TravelTime', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_TravelTime` (milliseconds) | level 4 | yes
+| `Configuration/Body/E0` (`Cfg_TravelTime` entry, onChange) | `efc.ui.setValue(... 'Cfg_TravelTime', value, 4, 1000)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_TravelTime` (milliseconds) | level 4 (`setValue`) | yes |
+| `Configuration/Body/C1` (`Cfg_HasZSO` checkbox, onChange) | `efc.ui.setValue(... 'Cfg_HasZSO', bool(value), 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_HasZSO` | level 4 (`setValue`) | yes |
+| `Configuration/Body/C2` (`Cfg_HasZSC` checkbox, onChange) | `efc.ui.setValue(... 'Cfg_HasZSC', bool(value), 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_HasZSC` | level 4 (`setValue`) | yes |
 
-`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`; below it, `cmd` returns False after logging and opening the AccessDenied popup (unless `notify=False`). The Mode, Commands, Ack and Maintenance buttons and the travel-time entry therefore use the level check; the Configuration checkboxes, which are bindings, do not.
+`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`; below it, `cmd` returns False after logging and opening the AccessDenied popup (unless `notify=False`). The Mode, Commands, Ack and Maintenance buttons therefore use the level check; the travel-time entry and the Configuration checkboxes use `efc.ui.setValue`, which applies the same check (level 4) and audits.
 
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.level(levels)`**: walks `session.props.auth.securityLevels` (nested `name`/`children`, a path string, or a plain role list) and returns the highest index, 0 to 5, of the names that match `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` case-insensitively (site names map through `efc.ui.ROLE_ALIASES`; no match gives 0). Bound to `custom.level`. `efc.ui.userLevel` (used by the checks in `cmd`, `ackAll`, `bypass`, `unbypass` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
+- **`efc.ui.level(levels)`**: walks `session.props.auth.securityLevels` (nested `name`/`children`, a path string, or a plain role list) and returns the highest index, 0 to 5, of the names that match `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` case-insensitively (site names map through `efc.ui.ROLE_ALIASES`; no match gives 0). Bound to `custom.level`. `efc.ui.userLevel` (used by the checks in `cmd`, `setValue`, `ackAll`, `bypass`, `unbypass` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
 - **`efc.ui.closeDynamic(component)`**: sizes the dock (`efc.ui.sizeDock`), then loads the page's stored `default` view and params (`session.custom.efcDw['<pageId>|<page path>']`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - **`efc.ui.cmd(component, member, value=True, minLevel=1, audit=False, notify=True)`**: the role-checked write described above. Below `minLevel` it does not write: with `notify` true it calls `efc.ui.denied` (a WARN log line and the `efcAccessDenied` popup, see [AccessDenied](../Parts/AccessDenied.md)), and it returns False either way. The JOG release events pass `notify=False`. Otherwise it writes through `_writeTags`, which logs any write that does not come back good, and returns True when the write was good. Audits when `audit=True`.
-- **`efc.ui.denied(component, minLevel, action='')`**: logs `Refused <action> for <user> (<have>): needs <need>` at WARN level and opens the popup `efcAccessDenied` (`Templates/Dynamic Window/Parts/AccessDenied`, modal) with params `action`, `need`, `have` and `user`. Called by `cmd`, `ackAll`, `unbypass` and `dblCmd`. See [AccessDenied](../Parts/AccessDenied.md).
+- **`efc.ui.setValue(component, member, value, minLevel=4, scale=1)`**: the commit behind every entry field and checkbox (decisions 14, 27). It returns False on an empty `tagPath` or a None value. Below `minLevel` it calls `efc.ui.denied` (WARN log and AccessDenied popup) and returns False. With `scale` other than 1 it writes `int(round(value * scale))` (the TIME entries pass 1000). It reads the old value and returns True without writing when the value is unchanged; otherwise it writes through `_writeTags` and, on a good write, audits `EFC set` with target `<tagPath>/<member>` and value `'<old> -> <new>'`. It returns whether the write was good; on False the onChange script calls `self.refreshBinding(...)`, so the field shows the tag value again.
+- **`efc.ui.denied(component, minLevel, action='')`**: logs `Refused <action> for <user> (<have>): needs <need>` at WARN level and opens the popup `efcAccessDenied` (`Templates/Dynamic Window/Parts/AccessDenied`, modal) with params `action`, `need`, `have` and `user`. Called by `cmd`, `setValue`, `ackAll`, `bypass`, `unbypass` and `dblCmd`. See [AccessDenied](../Parts/AccessDenied.md).
 - **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true. Below level 1 it writes nothing and calls `efc.ui.denied` (WARN log and AccessDenied popup).
 - **`efc.ui.bypass` / `unbypass`**: exist in the module but are not called from this view. Interlock bypass is handled in the embedded `IntlkList` views, which are not in this file.
 
@@ -361,8 +384,8 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Mode/Sts_OOS` | read | BOOL | Out of service - MTP Offline |
 | `Inp_ZSO` | read | BOOL | Open limit switch |
 | `Inp_ZSC` | read | BOOL | Closed limit switch |
-| `Cfg_HasZSO` | read/write (bidirectional) | BOOL | Open limit switch fitted |
-| `Cfg_HasZSC` | read/write (bidirectional) | BOOL | Closed limit switch fitted |
+| `Cfg_HasZSO` | read; write via `efc.ui.setValue` (level 4, audited) | BOOL | Open limit switch fitted |
+| `Cfg_HasZSC` | read; write via `efc.ui.setValue` (level 4, audited) | BOOL | Closed limit switch fitted |
 | `Sts_NE107` | read | INT | NAMUR NE107 status: 0=Good 1=Failure (F) 2=Function check (C) 3=Out of specification (S) 4=Maintenance required (M) |
 | `Alm_FailOpen/Sts_Active` | read | BOOL | Alarm active (after delays and latch) |
 | `Alm_FailOpen/Sts_Unack` | read | BOOL | Alarm unacknowledged |
@@ -385,7 +408,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Run/Val_HrsSinceMaint` | read | REAL | Run hours since last maintenance reset |
 | `Run/Sts_MaintDue` | read | BOOL | Maintenance due |
 | `Sim_En` | read / write (toggle) | BOOL | Simulation: ignore field I/O, logic generates feedback |
-| `Cfg_TravelTime` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Maximum travel time before failure alarm |
+| `Cfg_TravelTime` | read (shown as value / 1000); write value * 1000 via `efc.ui.setValue` (level 4, audited) | TIME | Maximum travel time before failure alarm |
 | `Perm` | read | T_Intlk | Passed as tagPath to embedded IntlkList view |
 | `Intlk` | read | T_Intlk | Passed as tagPath to embedded IntlkList view |
 | `Mode/Cmd_Auto` | write | BOOL | Operator request Automatic (one-shot) |
@@ -517,7 +540,6 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **Commands do not check the device state.** OPEN and CLOSE are not disabled by `Sts_Opened`, `Sts_Closed`, `Sts_Fault` or `Mode/Sts_OOS`. The template's enable (`custom.canCmd`) checks OOS but not fault. The double-tap (`efc.ui.dblCmd`) checks fault but not OOS. The three rules differ.
 - **RESET is always enabled at level 1 and above**, including outside MAN. Below level 1 it shows a lock and a press is refused with the AccessDenied popup.
 - **Mode buttons have no enable binding.** Clicking MAN or AUTO is always possible, whatever the current state; below level 1 the click is refused with the AccessDenied popup (lock icon on the button).
-- **Configuration writes are not role-checked in script.** Their only guard is the UI enable expression. This is a binding-level write, not an `efc.ui` call.
 - **Trend expand is owned by the Trend part.** `expanded` is an `inout` param of `Templates/Dynamic Window/Parts/Trend`. This view only seeds it with `false` and resizes the embed from it.
 - **Alarm rows** map `Cfg_Priority` through a `case()` with a default of `Medium`. Each row reads `Sts_Active` and `Sts_Unack` directly from its alarm member. The `Perm` and `Intlk` structures are shown by the embedded `IntlkList` views, which are not in this file.
 - **Sts_State is not used.** The PCLib member `Sts_State` is not read by this view. The banner computes its own state from the feedback flags.

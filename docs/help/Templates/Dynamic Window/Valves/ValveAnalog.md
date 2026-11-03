@@ -23,7 +23,7 @@ The operator and maintenance dynamic window for an analog control valve (T_CValv
 
 **Commands** (all levels; the buttons are locked below level 1, with the tooltip "Requires Operator access"). The section shows these controls:
 - `RESET` writes `Cmd_Reset`. It has no enable condition, so it is clickable in any state.
-- `Pos` is a manual position entry (%) bound bidirectionally to `Cmd_ManPos`. It is shown at level 1 and above only, and is enabled when `Mode/Sts_Man && !Sts_Intlk`.
+- `Pos` is a manual position entry (%) that reads `Cmd_ManPos` one way; an edit commits through `efc.ui.setValue(self, 'Cmd_ManPos', value, 1)` (level re-checked, audited, binding refreshed if refused or failed). It is shown at level 1 and above only, and is enabled when `Mode/Sts_Man && !Sts_Intlk`.
 - Five preset buttons (0, 25, 50, 75 and 100 %) each write `Cmd_ManPos` through `efc.ui.cmd` at level 1. Their enable expression is the entry's condition OR'd with `level < 1` (`({view.custom.level} < 1) || (Mode/Sts_Man && !Sts_Intlk)`), so a press below Operator reaches `efc.ui.cmd` and is refused with the popup.
 - A hint line reads "Position entry and presets enabled in MAN, not interlocked".
 
@@ -35,13 +35,13 @@ The operator and maintenance dynamic window for an analog control valve (T_CValv
 
 **Trend.** Embeds `Templates/Dynamic Window/Parts/Trend` with pens `Val_Demand` and `Val_Pos`. The embedded view's `expanded` param starts `false`. It is declared `inout` in `Templates/Dynamic Window/Parts/Trend`, so the trend part toggles it and the value flows back to this embed. The `position.basis` binding (`{this.props.params.expanded}`) then grows the trend from 15.741 vh to 70.370 vh. The expansion is local to the trend and does not widen the dock (see [Parts/Trend.md](../Parts/Trend.md)).
 
-**Configuration** (collapsible; the header click toggles `open_Configuration`, collapsed by default). It holds seven values: Output min, Output max, Rate up, Rate down, Deviation limit, Deviation time and Tight shutoff. Below level 4 each shows as a read-only label. At level 4 and above each has a numeric entry bound bidirectionally to its tag, except Deviation time (`Cfg_DevTime`, a PCLib TIME in milliseconds), which is shown as `Cfg_DevTime / 1000` seconds and written as `int(round(value * 1000))` by a `props.value` onChange script (only when `origin == 'Browser'`) through `efc.ui.cmd(self, 'Cfg_DevTime', ..., 4, audit=True)`. The entries have the literal enable `true`, so the level 4 rule is enforced only by visibility; the Deviation time entry is also checked in `efc.ui.cmd`.
+**Configuration** (level 1 and above, hidden below Operator; collapsible; the header click toggles `open_Configuration`, collapsed by default). It holds seven values: Output min, Output max, Rate up, Rate down, Deviation limit, Deviation time and Tight shutoff. Below level 4 each shows as a read-only label. At level 4 and above each has a numeric entry that reads its tag one way, except Deviation time (`Cfg_DevTime`, a PCLib TIME in milliseconds), which is shown as `Cfg_DevTime / 1000` seconds and written as `int(round(value * 1000))` (scale 1000). Every entry commits an edit from a `props.value` onChange script (only when `origin == 'Browser'`) through `efc.ui.setValue(self, member, value, 4)`, which re-checks level 4, writes and audits old -> new; a refused or failed write refreshes the binding. The entries have the literal enable `true`.
 
 **Maintenance.** None. This window has no maintenance section, run-hour counters or SIMULATE button. `Sim_En` is not referenced. Simulation shows only as the SIM chip in the banner.
 
-**Role checks.** `view.custom.level` comes from the Perspective session (`session.props.auth.securityLevels`) through `efc.ui.level`, which matches the security-level names case-insensitively (site names through `efc.ui.ROLE_ALIASES`). It decides which controls are locked or hidden in the client. `efc.ui.cmd` and `efc.ui.ackAll` re-check the level (`efc.ui.userLevel`, the larger of the security levels and `session.props.auth.user.roles`). Below it they do not write: they log a warning and open the `Parts/AccessDenied` popup (decision 36; see [AccessDenied](../Parts/AccessDenied.md)). Failed writes are logged too. The manual position entry and the Configuration entries (except Deviation time, which goes through `efc.ui.cmd`) are bindings that write tags directly. Their only guards are their visibility and enable expressions. Real access control has to be enforced in Perspective security and the PLC logic.
+**Role checks.** `view.custom.level` comes from the Perspective session (`session.props.auth.securityLevels`) through `efc.ui.level`, which matches the security-level names case-insensitively (site names through `efc.ui.ROLE_ALIASES`). It decides which controls are locked or hidden in the client. `efc.ui.cmd`, `efc.ui.setValue` and `efc.ui.ackAll` re-check the level (`efc.ui.userLevel`, the larger of the security levels and `session.props.auth.user.roles`). Below it they do not write: they log a warning and open the `Parts/AccessDenied` popup (decision 36; see [AccessDenied](../Parts/AccessDenied.md)). Failed writes are logged too. The manual position entry (level 1) and the Configuration entries (level 4) read their tags one way and write through `efc.ui.setValue`. Real access control has to be enforced in Perspective security and the PLC logic.
 
-**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, and the logger as a fallback record) only for calls with `audit=True`, which here means MAINT, OOS and Deviation time edits. Nothing audits AUTO, MAN, RESET, the presets, ACK, the manual position entry or the other configuration edits.
+**Audit.** `efc.ui` writes an audit entry (`system.util.audit`, and the logger as a fallback record) for calls with `audit=True` (MAINT, OOS) and for every `efc.ui.setValue` write (the manual position entry and every Configuration edit, `EFC set`, old -> new). Nothing audits AUTO, MAN, RESET, the presets or ACK.
 
 ## Properties reference
 
@@ -63,7 +63,7 @@ Both have `paramDirection: input` and `persistent: true`. No output parameters.
 
 #### Tag mirrors (`custom.m_*`)
 
-There are 34 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The rest of the view reads tag values only through these mirrors. The manual position entry and the Configuration entries are the exceptions: they bind directly to their tags.
+There are 34 tag-mirror properties. Each `custom.m_<member>` (with `/` replaced by `_`) has an indirect, read-only tag binding to `{view.params.tagPath}/<member>` (`bidirectional: false`, fallback delay 2.5 s), and its default is `null`. The rest of the view reads tag values only through these mirrors. The manual position entry and the Configuration entries are the exceptions: they bind directly to their tags, one way.
 
 | Group | Members |
 |---|---|
@@ -88,7 +88,7 @@ None.
 
 ## Bindings reference
 
-Total: **139 bindings**: 35 at view root (1 `property` binding with a transform, plus 34 tag mirrors) and 104 on components. Types: 97 `expr`, 41 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 104.
+Total: **140 bindings**: 35 at view root (1 `property` binding with a transform, plus 34 tag mirrors) and 105 on components. Types: 98 `expr`, 41 `tag`, 1 `property`. `params.tagPath` and `params.tType` have `paramDirection` only. Embedded-view `params.*` values and `position.basis` are component bindings and are counted in the 105.
 
 ### View root
 
@@ -135,7 +135,8 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | root/Commands/Body/Buttons/B0 | `props.image.icon.path` | expr | `if({view.custom.level} < 1, 'material/lock', '')` | Shows a lock icon on the button while the user is below Operator |
 | root/Commands/Body/Buttons/B0 | `meta.tooltip.enabled` | expr | `{view.custom.level} < 1` | Tooltip "Requires Operator access" shown while expression is true |
 | root/Commands/Body/Pos | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true |
-| root/Commands/Body/Pos/Entry | `props.value` | tag (indirect) | tag `{0}/Cmd_ManPos` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Commands/Body/Pos/Entry | `props.value` | tag (indirect) | tag `{0}/Cmd_ManPos`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Commands/Body/Pos/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cmd_ManPos', currentValue.value, 1): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 1, audited; a refused or failed write refreshes the binding |
 | root/Commands/Body/Pos/Entry | `props.enabled` | expr | `{view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk}` | Enabled while expression is true |
 | root/Commands/Body/Presets/P0 | `props.enabled` | expr | `({view.custom.level} < 1) || ({view.custom.m_Mode_Sts_Man} && !{view.custom.m_Sts_Intlk})` | Enabled while expression is true. Below the needed level the button is enabled so the press reaches `efc.ui` (decision 36). |
 | root/Commands/Body/Presets/P0 | `props.image.icon.path` | expr | `if({view.custom.level} < 1, 'material/lock', '')` | Shows a lock icon on the button while the user is below Operator |
@@ -198,55 +199,62 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
+| root/Configuration | `position.display` | expr | `{view.custom.level} >= 1` | Shown while expression is true (hidden below Operator) |
 | root/Configuration/Header/Chevron | `props.text` | expr | `if({view.custom.open_Configuration}, '▾', '▸')` | Text content |
 | root/Configuration/Body | `position.display` | expr | `{view.custom.open_Configuration}` | Shown while expression is true |
 | root/Configuration/Body/R0 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R0/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_OutMin}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R0/EU | `props.text` | expr | `'%'` | Text content |
 | root/Configuration/Body/E0 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E0/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_OutMin` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E0/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_OutMin`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E0/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_OutMin', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E0/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R1 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R1/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_OutMax}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R1/EU | `props.text` | expr | `'%'` | Text content |
 | root/Configuration/Body/E1 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E1/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_OutMax` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E1/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_OutMax`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E1/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_OutMax', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E1/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R2 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R2/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_RateUp}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R2/EU | `props.text` | expr | `'%/s'` | Text content |
 | root/Configuration/Body/E2 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E2/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_RateUp` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E2/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_RateUp`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E2/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_RateUp', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E2/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R3 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R3/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_RateDn}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R3/EU | `props.text` | expr | `'%/s'` | Text content |
 | root/Configuration/Body/E3 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E3/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_RateDn` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E3/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_RateDn`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E3/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_RateDn', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E3/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R4 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R4/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_DevLim}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R4/EU | `props.text` | expr | `'%'` | Text content |
 | root/Configuration/Body/E4 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E4/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_DevLim` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E4/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_DevLim`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E4/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_DevLim', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E4/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R5 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R5/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_DevTime} / 1000, '#,##0.###')` | Text content |
 | root/Configuration/Body/R5/EU | `props.text` | expr | `'s'` | Text content |
 | root/Configuration/Body/E5 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
 | root/Configuration/Body/E5/Entry | `props.value` | expr | `{view.custom.m_Cfg_DevTime} / 1000` | Value in seconds (the PLC TIME is in milliseconds) |
-| root/Configuration/Body/E5/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: efc.ui.cmd(self, 'Cfg_DevTime', int(round(currentValue.value * 1000)), 4, audit=True)` | Edit written as milliseconds, Engineer, audited |
+| root/Configuration/Body/E5/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_DevTime', currentValue.value, 4, 1000): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue` as value * 1000 (milliseconds), level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E5/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 | root/Configuration/Body/R6 | `position.display` | expr | `!({view.custom.level} >= 4)` | Shown while expression is true |
 | root/Configuration/Body/R6/Val | `props.text` | expr | `numberFormat({view.custom.m_Cfg_TightShut}, '#,##0.###')` | Text content |
 | root/Configuration/Body/R6/EU | `props.text` | expr | `'%'` | Text content |
 | root/Configuration/Body/E6 | `position.display` | expr | `{view.custom.level} >= 4` | Shown while expression is true |
-| root/Configuration/Body/E6/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_TightShut` (bidirectional); refs {"0": "{view.params.tagPath}"} | Read/write tag value |
+| root/Configuration/Body/E6/Entry | `props.value` | tag (indirect) | tag `{0}/Cfg_TightShut`; refs {"0": "{view.params.tagPath}"} | Tag value, read one way |
+| root/Configuration/Body/E6/Entry | `props.value` onChange | script | `if origin == 'Browser' and currentValue.value is not None: if not efc.ui.setValue(self, 'Cfg_TightShut', currentValue.value, 4): self.refreshBinding('props.value')` | Edit committed through `efc.ui.setValue`, level 4, audited; a refused or failed write refreshes the binding |
 | root/Configuration/Body/E6/Entry | `props.enabled` | expr | `true` | Enabled while expression is true |
 
 ## Scripts reference
 
-Total: **15 scripts**: 13 event scripts (12 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). 1 property-change `onChange` script (`props.value` of the TIME entries, see the end of the list). No `customMethods`, no `messageHandlers`.
+Total: **22 scripts**: 13 event scripts (12 `component.onActionPerformed`, 1 `dom.onClick`) and 1 transform script (`custom.level`). 8 property-change `onChange` scripts (`props.value` of the manual position and Configuration entries, see the end of the list). No `customMethods`, no `messageHandlers`.
 
 The button handlers below call `efc.ui` functions. Those functions are summarised after the list.
 
@@ -334,11 +342,68 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 	return efc.ui.level(value)
 ```
 
-15. **`root/Configuration/Body/E5/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+15. **`root/Commands/Body/Pos/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
 
 ```python
 	if origin == 'Browser' and currentValue.value is not None:
-		efc.ui.cmd(self, 'Cfg_DevTime', int(round(currentValue.value * 1000)), 4, audit=True)
+		if not efc.ui.setValue(self, 'Cmd_ManPos', currentValue.value, 1):
+			self.refreshBinding('props.value')
+```
+
+16. **`root/Configuration/Body/E0/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_OutMin', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+17. **`root/Configuration/Body/E1/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_OutMax', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+18. **`root/Configuration/Body/E2/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_RateUp', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+19. **`root/Configuration/Body/E3/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_RateDn', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+20. **`root/Configuration/Body/E4/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_DevLim', currentValue.value, 4):
+			self.refreshBinding('props.value')
+```
+
+21. **`root/Configuration/Body/E5/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_DevTime', currentValue.value, 4, 1000):
+			self.refreshBinding('props.value')
+```
+
+22. **`root/Configuration/Body/E6/Entry`**: `propConfig` `props.value` `onChange` (written only when `origin == 'Browser'`).
+
+```python
+	if origin == 'Browser' and currentValue.value is not None:
+		if not efc.ui.setValue(self, 'Cfg_TightShut', currentValue.value, 4):
+			self.refreshBinding('props.value')
 ```
 
 ### Explanation of each handler
@@ -358,16 +423,24 @@ The button handlers below call `efc.ui` functions. Those functions are summarise
 | `Commands/Presets/P100` (100 %) | `efc.ui.cmd(... 'Cmd_ManPos', 100.0, 1)` | `Cmd_ManPos` | level 1 | no |
 | `Alarms/Ack` | `efc.ui.ackAll` on the three alarms | `Alm_*/Cmd_Ack` where unacked | level 1 | no |
 | `Configuration/Header` (dom click) | toggles `open_Configuration` | none | none | no |
-| `Configuration/Body/E5` (`Cfg_DevTime` entry, onChange) | `efc.ui.cmd(... 'Cfg_DevTime', int(round(value * 1000)), 4)`, only when `origin == 'Browser'` | `Cfg_DevTime` (milliseconds) | level 4 | yes
+| `Commands/Body/Pos` (`Cmd_ManPos` entry, onChange) | `efc.ui.setValue(... 'Cmd_ManPos', value, 1)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cmd_ManPos` | level 1 (`setValue`) | yes |
+| `Configuration/Body/E0` (`Cfg_OutMin` entry, onChange) | `efc.ui.setValue(... 'Cfg_OutMin', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_OutMin` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E1` (`Cfg_OutMax` entry, onChange) | `efc.ui.setValue(... 'Cfg_OutMax', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_OutMax` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E2` (`Cfg_RateUp` entry, onChange) | `efc.ui.setValue(... 'Cfg_RateUp', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_RateUp` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E3` (`Cfg_RateDn` entry, onChange) | `efc.ui.setValue(... 'Cfg_RateDn', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_RateDn` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E4` (`Cfg_DevLim` entry, onChange) | `efc.ui.setValue(... 'Cfg_DevLim', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_DevLim` | level 4 (`setValue`) | yes |
+| `Configuration/Body/E5` (`Cfg_DevTime` entry, onChange) | `efc.ui.setValue(... 'Cfg_DevTime', value, 4, 1000)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_DevTime` (milliseconds) | level 4 (`setValue`) | yes |
+| `Configuration/Body/E6` (`Cfg_TightShut` entry, onChange) | `efc.ui.setValue(... 'Cfg_TightShut', value, 4)`, only when `origin == 'Browser'`; `refreshBinding` on False | `Cfg_TightShut` | level 4 (`setValue`) | yes |
 
-`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`; below it, `cmd` returns False after logging and opening the AccessDenied popup (unless `notify=False`). The Mode buttons, RESET, the presets and ACK therefore use the level check. The Deviation time entry uses the level check (level 4); the manual position entry and the other Configuration entries do not, because they are bindings.
+`efc.ui.cmd` writes `view.params.tagPath + '/' + member` with `system.tag.writeBlocking` only when `userLevel >= minLevel`; below it, `cmd` returns False after logging and opening the AccessDenied popup (unless `notify=False`). The Mode buttons, RESET, the presets and ACK therefore use the level check. The manual position entry (level 1) and the Configuration entries (level 4) use `efc.ui.setValue`, which applies the same check and audits.
 
 ### Library functions used (`projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.level(levels)`**: walks `session.props.auth.securityLevels` (nested `name`/`children`, a path string, or a plain role list) and returns the highest index, 0 to 5, of the names that match `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` case-insensitively (site names map through `efc.ui.ROLE_ALIASES`; no match gives 0). Bound to `custom.level`. `efc.ui.userLevel` (used by the checks in `cmd`, `ackAll`, `bypass`, `unbypass` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
+- **`efc.ui.level(levels)`**: walks `session.props.auth.securityLevels` (nested `name`/`children`, a path string, or a plain role list) and returns the highest index, 0 to 5, of the names that match `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` case-insensitively (site names map through `efc.ui.ROLE_ALIASES`; no match gives 0). Bound to `custom.level`. `efc.ui.userLevel` (used by the checks in `cmd`, `setValue`, `ackAll`, `bypass`, `unbypass` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
 - **`efc.ui.closeDynamic(component)`**: sizes the dock (`efc.ui.sizeDock`), then loads the page's stored `default` view and params (`session.custom.efcDw['<pageId>|<page path>']`) back into the `dw_Right` dock, or closes the dock if there is no default. Writes no tags.
 - **`efc.ui.cmd(component, member, value=True, minLevel=1, audit=False, notify=True)`**: the role-checked write described above. Below `minLevel` it does not write: with `notify` true it calls `efc.ui.denied` (a WARN log line and the `efcAccessDenied` popup, see [AccessDenied](../Parts/AccessDenied.md)), and it returns False either way. The JOG release events pass `notify=False`. Otherwise it writes through `_writeTags`, which logs any write that does not come back good, and returns True when the write was good. It writes the value once with `writeBlocking` and does not write it back. One-shot members therefore depend on the PLC clearing them. Audits when `audit=True`.
-- **`efc.ui.denied(component, minLevel, action='')`**: logs `Refused <action> for <user> (<have>): needs <need>` at WARN level and opens the popup `efcAccessDenied` (`Templates/Dynamic Window/Parts/AccessDenied`, modal) with params `action`, `need`, `have` and `user`. Called by `cmd`, `ackAll`, `unbypass` and `dblCmd`. See [AccessDenied](../Parts/AccessDenied.md).
+- **`efc.ui.setValue(component, member, value, minLevel=4, scale=1)`**: the commit behind every entry field and checkbox (decisions 14, 27). It returns False on an empty `tagPath` or a None value. Below `minLevel` it calls `efc.ui.denied` (WARN log and AccessDenied popup) and returns False. With `scale` other than 1 it writes `int(round(value * scale))` (the TIME entries pass 1000). It reads the old value and returns True without writing when the value is unchanged; otherwise it writes through `_writeTags` and, on a good write, audits `EFC set` with target `<tagPath>/<member>` and value `'<old> -> <new>'`. It returns whether the write was good; on False the onChange script calls `self.refreshBinding(...)`, so the field shows the tag value again.
+- **`efc.ui.denied(component, minLevel, action='')`**: logs `Refused <action> for <user> (<have>): needs <need>` at WARN level and opens the popup `efcAccessDenied` (`Templates/Dynamic Window/Parts/AccessDenied`, modal) with params `action`, `need`, `have` and `user`. Called by `cmd`, `setValue`, `ackAll`, `bypass`, `unbypass` and `dblCmd`. See [AccessDenied](../Parts/AccessDenied.md).
 - **`efc.ui.ackAll(component, alarms)`**: reads `<alarm>/Sts_Unack` for the listed alarms, then writes `<alarm>/Cmd_Ack` = True for those that are true. Below level 1 it writes nothing and calls `efc.ui.denied` (WARN log and AccessDenied popup).
 - **`efc.ui.openDynamic`** (called from the template, not from this view): maps the template's type to a window and loads it into the `dw_Right` dock.
 - **`efc.ui.bypass` / `unbypass`**: exist in the module but are not called from this view. Interlock bypass is handled in the embedded `IntlkList` views, which are not in this file.
@@ -405,14 +478,14 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 | `Alm_IntlkTrip/Sts_Active` | read | BOOL | Alarm active (after delays and latch). |
 | `Alm_IntlkTrip/Sts_Unack` | read | BOOL | Alarm unacknowledged. |
 | `Alm_IntlkTrip/Cfg_Priority` | read | INT | Rationalised priority: 1=Critical 2=High 3=Medium 4=Low. |
-| `Cfg_OutMin` | read/write | REAL | Minimum output (%). |
-| `Cfg_OutMax` | read/write | REAL | Maximum output (%). |
-| `Cfg_RateUp` | read/write | REAL | Opening rate limit (%/s), 0 = none. |
-| `Cfg_RateDn` | read/write | REAL | Closing rate limit (%/s), 0 = none. |
-| `Cfg_DevLim` | read/write | REAL | Position deviation alarm limit (%). |
-| `Cfg_DevTime` | read (shown as value / 1000); write value * 1000 via `efc.ui.cmd` | TIME | Deviation must persist this long. |
-| `Cfg_TightShut` | read/write | REAL | Demand below this (%) forces 0 for tight shut-off. |
-| `Cmd_ManPos` | read/write | REAL | Operator manual demand (%). |
+| `Cfg_OutMin` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Minimum output (%). |
+| `Cfg_OutMax` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Maximum output (%). |
+| `Cfg_RateUp` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Opening rate limit (%/s), 0 = none. |
+| `Cfg_RateDn` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Closing rate limit (%/s), 0 = none. |
+| `Cfg_DevLim` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Position deviation alarm limit (%). |
+| `Cfg_DevTime` | read (shown as value / 1000); write value * 1000 via `efc.ui.setValue` (level 4, audited) | TIME | Deviation must persist this long. |
+| `Cfg_TightShut` | read; write via `efc.ui.setValue` (level 4, audited) | REAL | Demand below this (%) forces 0 for tight shut-off. |
+| `Cmd_ManPos` | read; write via `efc.ui.setValue` (level 1, audited) | REAL | Operator manual demand (%). |
 | `Intlk` | read | T_Intlk | Passed as tagPath to the embedded `Templates/Dynamic Window/Parts/IntlkList` view |
 | `Mode/Cmd_Auto` | write | BOOL | Operator request Automatic (one-shot). |
 | `Mode/Cmd_Man` | write | BOOL | Operator request Manual (one-shot). |
@@ -571,7 +644,7 @@ All paths are relative to `tagPath`. Types come from `types/PCLib_Members.csv` (
 - **Banner fallback shows OPEN.** The last banner case is `true`, so any state that is not FAULT, INTERLOCKED or CLOSED is shown as `OPEN nn %`, including mid-travel and idle states. T_CValve has no opening or closing member, so travel direction is not shown.
 - **Position shown without feedback.** The banner's `OPEN nn %` always uses `Val_Pos`, and the PCLib comment says `Val_Pos` is the demand when there is no feedback. The Position row, however, is hidden when `Cfg_HasFbk` is false. Confirm whether the banner percentage should be shown in that case.
 - **Manual position does not check faults.** The entry and presets are enabled by `Mode/Sts_Man && !Sts_Intlk` only. They do not check `Sts_Fault`. The double-tap rule in `efc/ui/code.py` (`READY_FALSE`, which applies to T_DValve and T_Motor only) does check `Sts_Fault`. The discrete dock's OPEN and CLOSE rule does not. T_CValve has no `Sts_Avail`, `Sts_Local` or `Sts_NotPerm`, so none of those are checked here.
-- **The manual position entry bypasses `efc.ui.cmd`.** It is a bidirectional tag binding to `Cmd_ManPos`. Its only role control is visibility (level 1), and it is not audited. The presets use `efc.ui.cmd` (checked, not audited). Both are level 1, so the result is the same in practice, but the two paths differ.
-- **Configuration is not role-checked in script or audited.** The entries (except Deviation time, which uses `efc.ui.cmd` and is audited) write tags directly through bindings, and the view does not validate values (for example Output min against Output max). The enable expression is the literal `true`, so level 4 is enforced only by visibility.
+- **Manual position entry and presets are audited differently.** The entry commits `Cmd_ManPos` through `efc.ui.setValue` (level 1, audited old -> new). The presets use `efc.ui.cmd` (level 1, not audited).
+- **Configuration values are not validated.** The entries go through `efc.ui.setValue` (level 4, audited), but neither the view nor `setValue` checks values (for example Output min against Output max).
 - **`Cfg_HasFbk` cannot be changed here.** It controls the Position and Deviation rows, but it is not in the Configuration section and is not written by this view.
 - **RESET is always enabled, and the mode buttons have no enable.** RESET has no enable expression, so it is clickable in any state; below level 1 it shows a lock and a press is refused with the AccessDenied popup. The four mode buttons also have no enable expression. The position entry and presets are the only manual controls with an enable, and it is `Mode/Sts_Man && !Sts_Intlk`.

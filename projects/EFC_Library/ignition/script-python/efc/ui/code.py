@@ -290,22 +290,63 @@ def cmd(component, member, value=True, minLevel=OPERATOR, audit=False, notify=Tr
     return ok
 
 
-def bypass(component, intlkPath, idx, reason):
-    """BypassConfirm popup: Supervisor+ with a reason; written to the audit log."""
-    reason = (reason or '').strip()
-    if userLevel(component) < SUPERVISOR or not reason:
+def setValue(component, member, value, minLevel=ENGINEER, scale=1):
+    """Entry field or checkbox commit (decisions 14, 27): fields read the tag one way and call this from an onChange
+    script, so the level is re-checked here and every change is audited as 'old -> new'. scale (e.g. 1000 for PLC
+    TIME in ms) multiplies the entered value before the write. Below the level: AccessDenied popup, nothing written.
+    Returns True when the write came back good; the field then refreshes its binding on False."""
+    base = _p(component.view.params, 'tagPath') or ''
+    if not base or value is None:
         return False
-    _writeTags(['%s/Cmd_Bypass/%d' % (intlkPath, idx)], [True], 'bypass')
+    if userLevel(component) < minLevel:
+        denied(component, minLevel, _target(component, member))
+        return False
+    if scale != 1:
+        value = int(round(value * scale))
+    tp = base + '/' + member
+    old = system.tag.readBlocking([tp])[0].value
+    if old == value:
+        return True
+    ok = _writeTags([tp], [value], 'setValue')
+    if ok:
+        _audit(component, 'EFC set', tp, '%s -> %s' % (old, value))
+    return ok
+
+
+def bypass(component, intlkPath, idx, reason):
+    """BypassConfirm popup (decision 10): Supervisor+, a reason, Cfg_Bypassable[idx] and Inp_BypassPerm, all checked here,
+    not only in the UI. The PLC times the bypass out at Cfg_BypassMax. Returns '' when bypassed, else why not (shown in
+    the popup)."""
+    reason = (reason or '').strip()
+    if userLevel(component) < SUPERVISOR:
+        denied(component, SUPERVISOR, 'Bypass %d' % idx)
+        return 'Requires Supervisor access.'
+    if not reason:
+        return 'Enter a reason.'
+    byp, perm = [q.value for q in system.tag.readBlocking(['%s/Cfg_Bypassable/%d' % (intlkPath, idx),
+                                                           '%s/Inp_BypassPerm' % intlkPath])]
+    if not byp:
+        return 'This condition is not bypassable.'
+    if not perm:
+        return 'Bypass is not permitted now (Inp_BypassPerm is off).'
+    if not _writeTags(['%s/Cmd_Bypass/%d' % (intlkPath, idx)], [True], 'bypass'):
+        return 'The bypass command was not written. See the gateway log.'
     _audit(component, 'EFC bypass', '%s/%d' % (intlkPath, idx), reason)
-    return True
+    return ''
 
 
-def unbypass(component, intlkPath, idx):
+def unbypass(component, intlkPath, idx, reason):
+    """BypassConfirm popup in unbypass mode: Supervisor+ with a reason, audited. Returns '' when done, else why not."""
+    reason = (reason or '').strip()
     if userLevel(component) < SUPERVISOR:
         denied(component, SUPERVISOR, 'Unbypass %d' % idx)
-        return
-    _writeTags(['%s/Cmd_Unbypass/%d' % (intlkPath, idx)], [True], 'unbypass')
-    _audit(component, 'EFC unbypass', '%s/%d' % (intlkPath, idx))
+        return 'Requires Supervisor access.'
+    if not reason:
+        return 'Enter a reason.'
+    if not _writeTags(['%s/Cmd_Unbypass/%d' % (intlkPath, idx)], [True], 'unbypass'):
+        return 'The unbypass command was not written. See the gateway log.'
+    _audit(component, 'EFC unbypass', '%s/%d' % (intlkPath, idx), reason)
+    return ''
 
 
 def _almSource(tagPath, member):
