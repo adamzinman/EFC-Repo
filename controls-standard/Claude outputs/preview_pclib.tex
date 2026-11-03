@@ -1,0 +1,21 @@
+% Self-contained preview of pclib-data-types.tex (approximates preamble.tex). In the Controls Standard, \input the appendix instead.
+\documentclass[11pt,letterpaper]{report}
+\usepackage[letterpaper,margin=0.75in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{longtable,booktabs,array}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\definecolor{tblhead}{HTML}{D9D9D9}
+\definecolor{noteorange}{HTML}{B45309}\definecolor{newgreen}{HTML}{1B7A3D}\definecolor{headblue}{HTML}{2E5C8A}
+\newcommand{\note}[1]{\par\noindent\textit{\textcolor{noteorange}{[#1]}}\par\vspace{4pt}}
+\newcommand{\newmark}{\textbf{\textcolor{newgreen}{\small\ NEW}}}
+\setlength{\LTpre}{4pt}\setlength{\LTpost}{8pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.12}
+\AtBeginDocument{\let\EFCus\_\renewcommand{\_}{\EFCus\allowbreak}\pdfstringdefDisableCommands{\let\allowbreak\relax}}
+\begin{document}
+\tableofcontents
+\appendix
+\input{pclib-data-types}
+\end{document}

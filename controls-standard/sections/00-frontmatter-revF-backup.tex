@@ -1,0 +1,42 @@
+\begin{titlepage}
+\centering
+\vspace*{1.4cm}
+\includegraphics[width=0.68\textwidth]{assets/efc-logo.png}\par
+\vspace{1.2cm}
+{\Large\bfseries \companyname\par}
+\vspace{1.6cm}
+{\Huge\bfseries\color{headblue}\documenttitle\par}
+\vfill
+\begin{tabular}{@{}rl@{}}
+\textbf{Date:} & \documentdate \\
+\textbf{Author:} & \documentauthor \\
+\textbf{Revision:} & \documentrevision
+\end{tabular}
+\vspace*{1.4cm}
+\end{titlepage}
+
+\chapter*{Revision History}
+\begin{longtable}{@{}p{1.2cm}llp{7.2cm}@{}}
+\caption{Revision History}\label{tab:revision-history} \\
+\toprule
+\rowcolor{tblhead}\textbf{Rev} & \textbf{Date} & \textbf{Author} & \textbf{Description} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} (Revision History) continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Rev} & \textbf{Date} & \textbf{Author} & \textbf{Description} \\
+\midrule
+\endhead
+A & September 21, 2026 & \documentauthor & Initial rough draft. \\
+C & September 22, 2026 & \documentauthor & Added terminology and process definitions, selected panel-design guidance, scale and NAT-device comparisons, sequence guidance, common-system guidance for PDC compressors, and simplified SCADA/HMI standards. \\
+D & September 24, 2026 & \documentauthor & Reworked the guide for new controls hires, added PHA and interlock/permissive-table guidance, and expanded the analog-input terminal options. \\
+E & September 30, 2026 & \documentauthor & Aligned controls inputs and outputs with project execution phases 0--8; added the Stage 5A handoff, development and construction work, field wiring responsibility, and FAT Checkout timing. \\
+F & \documentdate & \documentauthor & Simplified the overview and governance text; rewrote the design-process stages as summaries with numbered input, work, and output lists; trimmed contractor submittals; added PHA, setpoint, and future-practice notes; reorganized PLC hardware; added Phoenix Contact screw-terminal alternates, plain-language SCCR and enclosure-heat guidance with worked examples, protocol-converter and temperature-transmitter options, M580-as-gateway guidance with a network diagram, the OnLogic CL260 workstation, monitor tables, and Class I Div 2 equipment guidance; added the control transformer sizing appendix; added chapter/section page headers. \\
+\bottomrule
+\end{longtable}
+\textit{Lettered revisions are used before the initial approved release. Numbered revisions begin after formal approval.}
+\clearpage
+
+\tableofcontents
+\listoftables
+\clearpage

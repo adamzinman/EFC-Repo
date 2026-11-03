@@ -1,0 +1,101 @@
+% ============================================================
+%  Controls Standard — shared preamble
+% ============================================================
+%  Loaded by "Controls Standard.tex" and by every standalone
+%  appendix wrapper in standalone/, so all PDFs share one look.
+% ============================================================
+% ---------- Packages ----------
+\usepackage[letterpaper,margin=0.75in]{geometry}  % page size/margins
+\usepackage[table]{xcolor}                     % color, incl. table row shading
+\usepackage{longtable}                         % multi-page tables
+\usepackage{booktabs}                          % \toprule/\midrule/\bottomrule
+\usepackage{array}                             % extended column types (p{})
+\usepackage{amsmath}                           % equations (\text, aligned)
+\usepackage{amssymb}                           % \varnothing and other math symbols
+\usepackage{tikz}                              % network diagrams
+\usetikzlibrary{positioning,fit,arrows.meta,shapes.geometric,backgrounds}
+\usepackage{enumitem}                          % [itemsep=...] list spacing
+% In standalone appendix builds, xr imports the master's labels (must load before hyperref)
+\ifdefined\EFCstandalone\usepackage{xr}\fi
+\usepackage{hyperref}                          % clickable TOC / links
+\usepackage{titlesec}                          % custom \chapter/\section styling
+\usepackage{parskip}                           % paragraph spacing, no indent
+\usepackage{fancyhdr}                          % page footer (page numbers)
+\usepackage{colortbl}                          % \rowcolor in tables
+\usepackage{pdflscape}                         % landscape pages (wide tables)
+\usepackage{graphicx}                          % company logo and figures
+\usepackage{tabularx}                          % flexible-width tables
+\usepackage{ragged2e}                          % improved paragraph columns
+\usepackage[most]{tcolorbox}                 % stage cards (Chapter 3)
+\renewcommand{\arraystretch}{1.12}           % a little more space between table rows
+\setlength{\emergencystretch}{2em}           % fewer overfull lines with long names and paths
+
+% P{width}: ragged-right paragraph column (avoids stretched text in narrow cells)
+\newcolumntype{P}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}  % right-aligned paragraph column
+
+% ---------- Color palette ----------
+\definecolor{noteorange}{HTML}{B45309}  % open item / TBD callouts
+\definecolor{newgreen}{HTML}{1B7A3D}    % "NEW" tag on freshly added content
+\definecolor{warnred}{HTML}{B91C1C}     % security/redaction warnings
+\definecolor{headblue}{HTML}{2E5C8A}    % chapter/section headings
+\definecolor{tblhead}{HTML}{D9D9D9}     % table header row shading
+
+% ---------- Heading style ----------
+\titleformat{\chapter}[hang]{\normalfont\Large\bfseries\color{headblue}}{\thechapter.}{0.5em}{}
+\titleformat{\section}[hang]{\normalfont\large\bfseries\color{headblue}}{\thesection}{0.5em}{}
+\titleformat{\subsection}[hang]{\normalfont\bfseries\color{headblue}}{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}[hang]{\normalfont\bfseries\itshape}{\thesubsubsection}{0.5em}{}
+
+% ---------- Custom commands ----------
+% \note{...}  — orange bracketed open item / TBD / confirm-with-group callout
+\newcommand{\note}[1]{\par\noindent\textit{\textcolor{noteorange}{[#1]}}\par\vspace{4pt}}
+% \newmark    — small green "NEW" marker for content added after the original draft
+\newcommand{\newmark}{\textbf{\textcolor{newgreen}{\small\ NEW}}}
+\newcommand{\pid}{\ P\&ID}
+% Manufacturer product-page links used in hardware tables.
+\newcommand{\separt}[1]{\href{https://www.se.com/us/en/product/#1/}{#1}}
+\newcommand{\wagopart}[1]{\href{https://www.wago.com/us/p/#1}{#1}}
+\newcommand{\adpart}[1]{\href{https://www.automationdirect.com/adc/shopping/catalog/programmable_controllers/productivity2000_plcs_\%28micro-modular\%29/cpus/#1}{#1}}
+\newcommand{\pcpart}[2]{\href{#1}{#2}}
+% \pxpart{order-no} — Phoenix Contact product page by 7-digit order number
+\newcommand{\pxpart}[1]{\href{https://www.phoenixcontact.com/us/products/#1}{#1}}
+% \tbd — red italic placeholder for a description still to be supplied
+\newcommand{\tbd}{\textit{\textcolor{warnred}{TBD}}}
+% \chk{...} — name or value that could not be read and must be checked
+\newcommand{\chk}[1]{#1\,\textit{\textcolor{noteorange}{[check]}}}
+% \future{...} — blue callout for items planned for the future (not current practice)
+\definecolor{futureblue}{HTML}{1D4ED8}
+\newcommand{\future}[1]{\par\noindent\textit{\textcolor{futureblue}{[Future: #1]}}\par\vspace{4pt}}
+
+% ---------- Page header and footer ----------
+% Header: current chapter (top left) and current section (top right).
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{\ifnum\value{chapter}>0 \thechapter.\ \fi#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ \ #1}}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyhead[R]{\small\nouppercase{\rightmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% Allow line breaks after underscores (long tag and type names in tables)
+\AtBeginDocument{\let\EFCus\_\renewcommand{\_}{\EFCus\allowbreak}\pdfstringdefDisableCommands{\let\allowbreak\relax}}
+
+% ---------- Links ----------
+\hypersetup{colorlinks=true, linkcolor=headblue, urlcolor=headblue}
+
+% ---------- Document metadata ----------
+% These values are used on both the title page and latest revision row.
+% \today updates to the date on which LaTeX compiles the document.
+\newcommand{\companyname}{EFC Gases \& Advanced Materials}
+\newcommand{\documenttitle}{Controls Standard}
+\newcommand{\documentdate}{\today}
+\newcommand{\documentauthor}{A. Zinman}
+\input{revision}  % defines \documentrevision (single place to change the revision letter)
+
+\title{\textbf{\documenttitle}}
+\date{\documentdate}
+\author{\documentauthor}

@@ -1,5 +1,10 @@
 # EFC Ignition Library
 
+## Controls standards
+
+[EFC Controls Standard](controls-standard/README.md) lives in this repository as the primary document location, including the complete LaTeX sources, supporting files, [full released PDFs](controls-standard/pdf/), and [appendix PDFs](controls-standard/Appendix%20PDFs/). Commit source changes and their released PDFs together. The Google Drive folder is a legacy copy.
+
+
 Every EFC Ignition Perspective design (**Ignition 8.1**, ready for 8.3) in one repo: the projects, the generators that build them, tags, symbols and design docs. [`docs/inventory.md`](docs/inventory.md) lists every design and its status.
 
 Everything ships as **one Perspective project, `EFC_Library`** (no parent). Its views live under a single `Templates/` tree:

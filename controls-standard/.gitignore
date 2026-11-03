@@ -1,0 +1,12 @@
+# Temporary LaTeX files; released and reference PDFs remain tracked.
+build/
+*.aux
+*.log
+*.lot
+*.lof
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+/Controls Standard.pdf

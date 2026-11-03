@@ -1,0 +1,21 @@
+\chapter{Networking and OT Cybersecurity}
+\section{Architecture}
+Industrial networks must use a documented zones-and-conduits architecture consistent with ISA/IEC 62443 and company IT/OT policy. Control, supervisory, safety, vendor/package, enterprise, remote-access, and internet-facing functions must be separated when their risk or trust differs. Inter-zone traffic must pass through managed routing or firewall controls and follow a least-functionality, default-deny rule.
+
+\section{Addressing}
+IP addresses and VLANs must be assigned through the company IP address management process. A project number must not be inserted directly into an octet unless the resulting address and subnet have been allocated. The subnet mask must create the intended boundary; a /16 network must not be treated as though different third octets are isolated. Static addresses, reserved addresses, gateways, VLAN IDs, DNS names, and ownership must be recorded in the network schedule.
+
+\section{Network Equipment}
+Managed industrial switches must be used unless the basis of design documents why an unmanaged switch is acceptable. Required features must be selected for the application and may include VLANs, access control, port security, SNMPv3, redundant ring protocol, quality of service, multicast/IGMP management, time synchronization, diagnostics, configuration backup, and event logging. Unused switch ports and services must be disabled where supported.
+
+\section{Communications}
+The project must maintain an approved data-flow matrix identifying source, destination, protocol, port, purpose, owner, and security control. Unencrypted or unauthenticated industrial protocols must remain within controlled zones and must not be routed to enterprise or external networks without a documented compensating control. OPC UA must use trusted certificates, supported security policies, authenticated identities, and the minimum required permissions.
+
+\section{Remote Access}
+Direct inbound access to PLCs, HMIs, or panel devices from the internet is prohibited. Remote access must use the company-managed VPN or equivalent secure access service, MFA, named accounts, approved jump host, authorization, session logging where available, and time-limited vendor access. Permanent vendor modems or cloud tunnels require documented cybersecurity approval.
+
+\section{System Hardening and Maintenance}
+Projects must maintain an asset inventory containing hardware, software, firmware, network identity, owner, criticality, support status, and backup location. Default credentials must be changed; unnecessary services must be disabled; removable media must follow company policy; and security patches must be evaluated and tested based on risk. Vulnerability remediation must consider safety and availability and use compensating controls when immediate patching is not practical.
+
+\section{Time, Logging, and Recovery}
+Controllers, SCADA, workstations, network devices, and security systems must use an approved time source and consistent time zone. Security and operational events must be retained according to company policy. The design must document recovery priorities, replacement configurations, backups, and the test interval for restoring critical OT assets.

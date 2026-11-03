@@ -1,0 +1,34 @@
+\chapter{Process Definition and Protective Functions}
+\section{Permissives, Interlocks, and SIFs}
+A permissive is a condition that must be satisfied before an action may start or continue. A control interlock prevents or stops an action to protect normal operation or equipment. Neither term, by itself, indicates that the function is safety rated.
+
+A \textbf{Safety Instrumented Function (SIF)} is a specific protective function that uses one or more sensors, a logic solver, and one or more final elements to move a process to a defined safe state or keep it there. Each SIF must be identified through the applicable risk-assessment and functional-safety process, with its required integrity, independence, testing, bypass controls, and safe-state behavior documented.
+
+\section{Control Narrative}
+The control narrative must describe how the system is intended to operate. It must cover operating modes, startup, normal operation, shutdown, abnormal operation, restart following power or communication loss, manual and maintenance operation, permissives, interlocks, SIF interfaces, trips, alarms, operator actions, and interfaces with packaged equipment. Each output must have a defined de-energized condition and loss-of-communications response.
+
+The process engineer normally owns the Control Narrative. Controls Engineering uses it, together with the P\&IDs and equipment information, as the main basis for detailed PLC and SCADA development.
+
+\section{Table of Interlocks and Permissives}
+Begin the Table of Interlocks and Permissives as the process design develops so it can support early software planning and project discussions. Do not treat it as final until the PHA is complete. After the PHA, update the table to include the approved controls-related recommendations and have the project team review the result before using it as the final programming and test basis.
+
+\section{Risk Classification}
+Every protective action must be classified as basic control, equipment protection, process interlock, machinery safety function, or SIF. Classification must be based on the project risk assessment rather than on the PLC location or the name used in software. Safety functions must not rely on the standard PLC unless the selected architecture and device are suitable for the required integrity.
+
+Where machinery safety applies, the project must select and document an appropriate methodology such as ISO 13849-1 or IEC 62061. Where process functional safety applies, the project must use the applicable IEC 61511/ISA 84 lifecycle. The assessment must identify required risk reduction, architecture, diagnostics, proof testing, validation, and independence.
+
+\section{Protective Function Requirements}
+For each trip or safety function, the design record must state the initiating conditions, setpoint basis, voting, time delay, safe state, latching, reset location, restart behavior, first-out indication, bypass rules, loss-of-power behavior, loss-of-communication behavior, proof-test interval, and validation method.
+
+Automatic reset or restart is prohibited where it can create a hazard. Reset must not initiate motion or process flow unless separately justified and risk assessed. Reset must only clear a latched condition after the initiating cause is no longer present.
+
+\section{Bypass and Override Control}
+Bypasses, overrides, and inhibits must require authorized access, a stated reason, a defined expiration, visible HMI indication, event logging, and shift/operations communication. Safety-function bypasses require the process defined by the applicable safety lifecycle and MOC policy. Software must not conceal an active bypass after restart.
+
+\section{Setpoints}
+Operator-adjustable setpoints must have approved engineering limits, units, default values, access level, change logging, and validation. Protective setpoints must be traceable to the hazard analysis or equipment limitation and must not be adjustable from the HMI unless specifically authorized by the risk assessment and MOC process.
+
+\section{Alarm Management}
+The project must apply the alarm lifecycle in ANSI/ISA-18.2. Each alarm must have a unique identifier, cause, consequence, required response, priority, maximum response time, setpoint basis, deadband, delay, operating-state applicability, shelving/suppression rules, and test method. Priority must be based on consequence severity and available response time, not equipment importance alone.
+
+Alarm systems must detect and manage chattering, fleeting, stale, standing, and frequently occurring alarms. Suppression by design must be state based and documented. Shelving must be time limited, access controlled, visible, and auditable. Alarm performance must be reviewed after startup and periodically during operation.

@@ -1,0 +1,65 @@
+\chapter{Parent Company Network and Remote Access Platforms}
+\label{app:cato-claroty}
+\future{EFC is still adopting these platforms from the parent company. The details below describe the products in general; how they apply to EFC sites depends on how the parent company's IT/OT team has deployed them, and should be confirmed with that team.}
+
+This appendix summarizes the two platforms used by the parent company: \textbf{Cato Networks}, the network and security platform, and \textbf{Claroty xDome Secure Access}, used for remote access to PLCs and other plant equipment. (Claroty is sometimes heard as ``Clarity.'')
+
+\section{Cato Networks (Cato SASE Cloud)}
+\subsection{What It Is}
+Cato is a Secure Access Service Edge (SASE) platform: a cloud service that replaces traditional site-to-site VPNs, branch firewalls, and remote-access VPNs with a single managed network and security service.\footnote{Cato Networks, Knowledge Base, \emph{Welcome to Cato Networks} and \emph{What is Cato's ZTNA solution}; Cato Networks press release, \emph{Cato Introduces Industry's First SASE-native IoT/OT Security Solution}, December 10, 2024.}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Cato SASE Cloud:} a global network of points of presence (PoPs) that carries traffic between sites and users and applies security inspection: SD-WAN, next-generation firewall, secure web gateway, threat prevention, and zero-trust network access (ZTNA).
+  \item \textbf{Cato Socket:} an appliance installed at each site that connects the site to the Cato cloud over encrypted tunnels and provides a local (LAN) firewall.
+  \item \textbf{Cato Client:} software for Windows, macOS, Linux, iOS, Android, and Chromebook that connects remote users, with multi-factor authentication and device posture checks. Clientless browser access is also available.
+\end{itemize}
+
+\subsection{IoT/OT Features}
+In December 2024 Cato added IoT/OT security to the platform:
+\begin{itemize}[itemsep=1pt]
+  \item automatic discovery and classification of connected devices (type, manufacturer, and version);
+  \item policies by device type or group, for example limiting what a PLC or HMI may talk to; and
+  \item threat prevention for those devices through DNS security, intrusion prevention, and anti-malware.
+\end{itemize}
+Cato's published material does not describe industrial-protocol (Modbus, EtherNet/IP) inspection; protocol-level control inside the plant remains the job of the controls network design in Chapter~\ref{ch:networking}.
+
+\subsection{What It Means for Controls}
+\begin{itemize}[itemsep=1pt]
+  \item The plant and business networks connect to the rest of the company through the Cato Socket. The controls networks in Chapter~\ref{ch:networking} stay behind their own NAT/firewall boundary (or the M580 gateway); Cato does not replace that boundary.
+  \item Any connection between the controls network and the plant network or the wider company (SCADA clients, historian replication, remote access) should be agreed with corporate IT as a defined rule, not left open.
+  \item Remote engineering access to PLCs should use Claroty (below), which is built for that purpose, rather than general Cato remote access straight into a controls network.
+\end{itemize}
+
+\section{Claroty xDome Secure Access}
+\subsection{What It Is}
+Claroty is an OT cybersecurity company. \textbf{xDome Secure Access} (formerly Claroty SRA) is its remote access product for cyber-physical systems: it lets engineers and vendors reach PLCs, HMIs, and engineering workstations in a plant under control and with a full record.\footnote{Claroty, \emph{xDome Secure Access} product page and solution brief.}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Zero-trust access:} each user is given access to specific devices only, with multi-factor authentication and a credential vault so device passwords are not shared with the user.
+  \item \textbf{Approval workflows and just-in-time access:} a user requests a session; an approver (for example the site engineer) grants it, including from a mobile device, for a set time.
+  \item \textbf{Session recording and live monitoring:} sessions are logged and can be video-recorded; an administrator can watch a live session and disconnect it.
+  \item \textbf{No inbound firewall openings:} the site component connects outward, so no inbound ports are opened into the plant network.
+  \item \textbf{Access methods:} browser-based RDP, SSH, VNC, and HTTP/S without installing an agent, plus ``micro-tunnels'' for OT-specific protocols so thick-client engineering software can reach a PLC.
+  \item \textbf{Deployment:} as a cloud (SaaS) service or on premises.
+\end{itemize}
+
+\subsection{How We Would Use It}
+\begin{itemize}[itemsep=1pt]
+  \item An EFC engineer or a vendor requests access to a specific PLC or engineering workstation for a stated reason and time window.
+  \item After approval, they connect either to an engineering workstation inside the plant (by RDP) that has Control Expert or Productivity Suite installed, or through a micro-tunnel from their own laptop to the PLC.
+  \item Online changes made this way still follow Sections~\ref{sec:review-release}, \ref{sec:online-changes}, and~\ref{sec:change-testing}; the session recording becomes part of the change record.
+  \item Vendor accounts are time-limited and named, in line with Chapter~9.
+\end{itemize}
+
+\section{How the Two Fit Together}
+\begin{center}
+\begin{tabular}{@{}P{3.68cm}P{6.59cm}P{6.66cm}@{}}
+\toprule
+\rowcolor{tblhead} & \textbf{Cato Networks} & \textbf{Claroty xDome Secure Access} \\
+\midrule
+Layer & Company network and security (WAN, firewall, user access) & OT remote access to specific plant devices \\
+Main users & Corporate IT; all company users & Controls engineers, maintenance, and vendors \\
+At the site & Cato Socket at the plant network edge & Site component inside the plant, connecting outward \\
+Controls role & Carries and protects traffic to and from the plant & Controls, approves, and records sessions to PLCs and HMIs \\
+\bottomrule
+\end{tabular}
+\end{center}
+See also Sections~\ref{sec:remote-access} (Remote Access) and~\ref{sec:hardening} (System Hardening) and Chapter~9 (Accounts and Access Control).

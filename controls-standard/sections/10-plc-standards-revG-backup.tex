@@ -1,0 +1,100 @@
+\chapter{PLC Standards}
+\section{Program Architecture}
+Programs must be organized by equipment or functional area with a documented execution order. Each project must provide a main routine, input processing, equipment modules, sequences, alarm/protective logic, communications, output processing, diagnostics, and HMI interface. Safety-related logic must reside in the approved safety architecture and must be clearly separated from ordinary control logic.
+
+IEC 61131-3 languages may be used according to purpose: ladder diagram for maintainable discrete/equipment logic, function block diagram for continuous control and reusable blocks, and structured text for calculations, data handling, and bounded iteration. Dense or obscure code must be avoided regardless of language.
+
+\section{Naming and Data Quality}
+Names must be descriptive, consistent, and traceable to P\&IDs and electrical drawings. Tags exposed outside the controller must include engineering units, range, description, quality/validity, and source where supported. PLC booleans must use \texttt{BOOL}; real process values must use \texttt{REAL} unless precision requirements justify another type. Retentive data must be explicitly identified and minimized.
+
+\section{Operating Modes and Commands}
+Equipment modules must distinguish Off, Manual, Auto, Maintenance/Lockout, and Simulation where applicable. HMI requests must not drive physical outputs directly; logic must validate mode, permissives, interlocks, ownership, and command timing. Manual mode must not bypass protective functions. On startup, mode and command restoration must follow the risk assessment and must not create an unexpected start.
+
+\section{Process Value Structure}
+\begin{longtable}{@{}P{3.61cm}P{3.61cm}P{8.42cm}@{}}
+\caption{DDT\_Process\_Value Minimum Members}\label{tab:ddt-process-value}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+Raw & INT or DINT & Unscaled channel value.\\
+Raw\_Min / Raw\_Max & DINT & Configured raw endpoints.\\
+PV & REAL & Scaled engineering value.\\
+Eng\_Min / Eng\_Max & REAL & Engineering range endpoints.\\
+Units & STRING[16] & Engineering-unit text or enumerated unit identifier.\\
+Quality & DINT & Valid, uncertain, bad, stale, simulated, or platform equivalent.\\
+Timestamp & DDT or native time & Time of last valid update where required.\\
+LL / L / H / HH & DDT\_AI\_Alarm & Analog alarm instances.\\
+HW\_Fault & BOOL & Module or channel diagnostic fault.\\
+Underrange / Overrange & BOOL & Signal is below/above valid instrument range.\\
+Simulated & BOOL & Value is under authorized simulation.\\
+\bottomrule
+\end{longtable}
+
+Scaling must handle divide-by-zero, invalid configuration, underrange, overrange, and bad quality. Alarm comparison must use the scaled value only when quality is acceptable, unless a separate instrument-fault alarm is intended.
+
+\section{Analog Alarm Structure}
+\begin{longtable}{@{}P{3.61cm}P{3.61cm}P{8.42cm}@{}}
+\caption{DDT\_AI\_Alarm Minimum Members}\label{tab:ddt-ai-alarm}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+SP & REAL & Rationalized alarm setpoint.\\
+DB & REAL & Deadband in engineering units.\\
+OnDelay / OffDelay & TIME & Qualified activation and clearing delays.\\
+Enabled & BOOL & Alarm is configured for use.\\
+Active & BOOL & Qualified alarm condition exists.\\
+Latched & BOOL & Condition has latched where required.\\
+Acked & BOOL & Acknowledgment state when managed in PLC.\\
+Suppressed & BOOL & State-based designed suppression is active.\\
+Shelved & BOOL & HMI/SCADA shelving indication when exchanged.\\
+Priority & INT & Rationalized priority enumeration.\\
+\bottomrule
+\end{longtable}
+
+\section{Equipment Module Structure}
+Equipment modules must expose separate request, command, status, permissive, interlock, feedback, fault, warning, runtime, simulation, and diagnostic data. The minimum pattern is shown below; specialized modules may extend it.
+
+\begin{longtable}{@{}P{3.97cm}P{3.61cm}P{8.06cm}@{}}
+\caption{DDT\_Device Minimum Members}\label{tab:ddt-device}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+ModeReq / ModeAct & INT or enum & Requested and active operating mode.\\
+StartReq / StopReq / ResetReq & BOOL & Momentary validated requests.\\
+RunCmd & BOOL & Final logical run command before output mapping.\\
+Running / Stopped & BOOL & Processed equipment status.\\
+AutoPerm / ManPerm & BOOL & Mode-specific permissive summaries.\\
+Interlock & DDT\_Interlock & Protective/control interlock summary.\\
+FeedbackFault & BOOL & Command and feedback disagree after timeout.\\
+Fault / Warning & BOOL & Aggregated condition summaries.\\
+Available & BOOL & Equipment is healthy and eligible for control.\\
+RuntimeSec & UDINT & Retentive accumulated runtime with controlled reset.\\
+CommOK / DataValid & BOOL & Communications and exchanged data are valid.\\
+Simulated & BOOL & Authorized simulation is active.\\
+\bottomrule
+\end{longtable}
+
+\section{Interlocks and First-Out}
+Interlock logic must use a structured condition type rather than parallel unstructured arrays. Each condition must include enable, raw condition, active, latched, bypassed, first-out, message/identifier, and timestamp where supported. The summary must include any-active, trip-active, reset-permitted, bypass-present, and first-out index. The number of conditions must be sized by the reusable library and not silently truncated.
+
+Interlocks must fail to the defined state on bad or stale inputs when required by the risk assessment. Reset must not clear an active initiating condition. Bypasses must survive or clear on restart only as defined by the approved bypass policy.
+
+\section{Sequences}
+Sequences must use an explicit state model with named steps, entry actions, continuous actions, exit conditions, timeout, hold, abort, restart, and recovery behavior. The sequence structure must include active state, previous state, transition reason, elapsed time, timeout, permissive summary, faulted/held/complete status, and operator requests. Restart after download or power loss must be deterministic and risk assessed.
+
+\section{Communications and Diagnostics}
+Communications must include heartbeat or sequence checking where suitable, timeout, data-valid status, stale-data handling, and documented fail behavior. Raw received data must be separated from validated values used by control. Diagnostic status must be available to SCADA without flooding operators with non-actionable alarms.
+
+\section{Reusable Function Blocks}
+Reusable blocks must have an owner, semantic version, interface definition, revision history, test record, supported controller/software versions, and migration notes. Changes that alter behavior or interfaces require regression testing. Project-specific modifications must not overwrite the controlled master library.
+
+\section{Common Systems}
+Common systems should use a consistent control structure, naming convention, HMI faceplate, alarm approach, and test procedure. Project-specific limits and options may vary, but the basic operator experience and PLC interface should remain recognizable from project to project.
+
+\subsection{PDC Compressor}
+The PDC compressor module should organize the package interface into operating mode, start/stop requests, permissives, active interlocks, running status, load state, process values, warnings, trips, first-out indication, and maintenance counters.
+
+The control narrative and code should address, as applicable, suction and discharge pressure, stage temperatures, cooling-water flow and temperature, hydraulic or oil-system status, diaphragm or process-gas leak detection, purge/vent status, valve position, motor feedback, vendor-panel communications, minimum stop time, and restart following a trip or power loss. Setpoints and shutdown actions must come from approved PDC documentation, the process design, and the project hazard review rather than from generic defaults.

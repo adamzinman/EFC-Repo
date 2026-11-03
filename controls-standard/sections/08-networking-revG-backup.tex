@@ -1,0 +1,116 @@
+\chapter{Networking and OT Cybersecurity}
+\section{Architecture}
+Industrial networks must use a documented zones-and-conduits architecture consistent with ISA/IEC 62443 and company IT/OT policy. Control, supervisory, safety, vendor/package, enterprise, remote-access, and internet-facing functions must be separated when their risk or trust differs. Inter-zone traffic must pass through managed routing or firewall controls and follow a least-functionality, default-deny rule.
+
+\subsection{Panel Networking}\label{sec:panel-networking}
+The normal application is isolation of a local controls network while exposing selected devices, such as the PLC, to the larger plant network through 1:1 NAT. Device Level Ring (DLR) support is not required for this use case. There are two ways to do this:
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{A NAT/security appliance} between the plant network and the local controls network (Table~\ref{tab:nat-options}). This is the most flexible option and the right choice when several devices need to be reached from the plant network.
+  \item \textbf{The Modicon M580 itself as the gateway} (Section~\ref{sec:m580-gateway}). This avoids an extra box when only the PLC's data needs to reach SCADA.
+\end{enumerate}
+Figure~\ref{fig:network-layout} shows both layouts.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw, rounded corners=2pt, align=center, minimum height=8mm, inner sep=3pt, fill=white},
+  net/.style={draw, fill=headblue!12, rounded corners=2pt, align=center, minimum height=6mm, inner sep=3pt},
+  link/.style={-, thick},
+  every node/.style={align=center}
+]
+% ---------- (a) NAT appliance ----------
+\node[font=\small\bfseries, anchor=west] at (-7.9,5.9) {(a) NAT / security appliance};
+\node[net, minimum width=7.2cm] (plantA) at (-4.3,3.8) {Plant network (e.g., 10.x.x.x)};
+\node[box] (scadaA) at (-4.3,4.9) {Ignition gateway / SCADA};
+\draw[link] (scadaA) -- (scadaA |- plantA.north);
+\node[box, fill=noteorange!12] (nat) at (-4.3,2.6) {NAT / firewall appliance\\(e.g., SCALANCE S615, Moxa NAT-102)\\\scriptsize 1:1 NAT exposes only the PLC (and HMI)};
+\draw[link] (plantA) -- (nat);
+\node[net, minimum width=7.2cm] (localA) at (-4.3,1.3) {Local controls network (e.g., 192.168.1.x), managed switch};
+\draw[link] (nat) -- (localA);
+\node[box] (plcA) at (-7.2,0.0) {M580\\PLC};
+\node[box] (hmiA) at (-5.75,0.0) {IPC /\\HMI};
+\node[box] (vfdA) at (-4.3,0.0) {VFDs};
+\node[box] (solA) at (-2.85,0.0) {EX260\\valves};
+\node[box] (gwA) at (-1.4,0.0) {Modbus\\gateway};
+\foreach \n in {plcA,hmiA,vfdA,solA,gwA} \draw[link] (\n.north) -- (\n.north |- localA.south);
+\node[box, font=\scriptsize] (serA) at (-1.4,-1.25) {Serial (RS-485)\\instruments};
+\draw[link, dashed] (gwA) -- (serA);
+
+% ---------- (b) M580 as gateway ----------
+\node[font=\small\bfseries, anchor=west] at (0.6,5.9) {(b) M580 as the gateway};
+\node[net, minimum width=6.4cm] (plantB) at (3.9,3.8) {Plant network};
+\node[box] (scadaB) at (3.9,4.9) {Ignition gateway / SCADA};
+\draw[link] (scadaB) -- (scadaB |- plantB.north);
+% M580 rack
+\node[box, minimum width=1.5cm, minimum height=1.3cm, fill=headblue!6] (noc) at (1.75,2.3) {\scriptsize BMENOC0301\\\scriptsize (backplane\\\scriptsize port off)};
+\node[box, minimum width=1.5cm, minimum height=1.3cm, fill=headblue!6] (cpu) at (3.7,2.3) {\scriptsize BMEP58\\\scriptsize CPU};
+\node[box, minimum width=1.5cm, minimum height=1.3cm, fill=headblue!6] (io) at (5.35,2.3) {\scriptsize X80\\\scriptsize I/O};
+\node[draw, dashed, rounded corners=3pt, inner sep=4pt, fit=(noc)(cpu)(io), label={[font=\scriptsize, align=left]right:M580 rack\\data crosses\\only through\\the PLC\\program}] (rack) {};
+\draw[link] (plantB.south -| noc.north) -- (noc.north);
+\node[net, minimum width=6.4cm] (localB) at (3.9,0.6) {Device network (CPU ports) --- local switch};
+\draw[link] (cpu.south) -- (cpu.south |- localB.north);
+\node[box] (hmiB) at (1.6,-0.6) {IPC /\\HMI};
+\node[box] (vfdB) at (3.1,-0.6) {VFDs};
+\node[box] (solB) at (4.6,-0.6) {EX260\\valves};
+\node[box] (rioB) at (6.2,-0.6) {RIO drop\\BMXCRA};
+\foreach \n in {hmiB,vfdB,solB,rioB} \draw[link] (\n.north) -- (\n.north |- localB.south);
+\end{tikzpicture}}
+\caption{Typical panel network layouts. In (a) an appliance translates addresses so only selected devices are visible on the plant network. In (b) the M580 keeps the two networks physically separate and SCADA reads the PLC through the BMENOC0301.}
+\label{fig:network-layout}
+\end{figure}
+
+\subsection{Using the Modicon M580 as a Gateway}\label{sec:m580-gateway}
+An M580 can act as the boundary between the plant network and the local controls network without a separate NAT device. The idea is simple: give the PLC two separate network connections and let \emph{only the PLC program} pass data between them.
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Local side.} Connect the local devices (HMI, VFDs, valve banks, RIO drops) to the CPU's Ethernet device-network ports. The CPU scans them as usual.
+  \item \textbf{Plant side.} Add a \separt{BMENOC0301} in the rack and connect its ports to the plant network. In Control Expert, leave the module's \emph{Ethernet backplane port disabled}. Schneider's documentation notes that a BMENOC03$\cdot$1 installed without enabling the backplane port is isolated from the rest of the M580 Ethernet network, so the plant network can't see the local devices.
+  \item \textbf{Give SCADA the data it needs.} Ignition connects to the PLC through the BMENOC0301 (for example with Modbus TCP) and reads and writes only the PLC's own variables. Data from local devices reaches SCADA because the PLC program copies it into those variables.
+  \item \textbf{Optional OPC UA.} A \separt{BMENUA0100} can serve the PLC's data to Ignition over OPC UA on its own port, with certificates and user accounts for security.
+\end{enumerate}
+\textbf{Limitations.} SCADA can't talk directly to a VFD or other local device this way --- everything goes through the PLC. If you need to reach local devices directly (for example to configure a drive from the plant network), use a NAT appliance instead. The \separt{BMENOC0321} control-network module can route traffic between networks (IP forwarding), but that is a routed design, not an isolated one, so it needs the same security review as a NAT appliance. Confirm the exact module configuration in Control Expert for each project.
+
+\textit{Further reading:} \href{https://filedn.eu/l6oFb0aAwOAyRLLaUMiUmzz/CE_HELP/eng/BMENOC03x1/BMENOC03x1_D-SE-0035359.htm}{Schneider Electric --- The BMENOC0301/11 modules in Modicon M580 networks}.
+
+\subsection{NAT and Security Appliance Options}
+The following ranking should be used as a starting point; final selection must consider company cybersecurity requirements, availability, support, and the required number of NAT mappings and ports.
+
+\begin{longtable}{@{}P{0.60cm}P{3.40cm}P{5.41cm}P{5.80cm}@{}}
+\caption{NAT and Security Appliance Options for Local Controls Networks}\label{tab:nat-options} \\
+\toprule
+\rowcolor{tblhead}\textbf{\#} & \textbf{Device} & \textbf{Fit for the Application} & \textbf{Reasoning and Cautions} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblhead}\textbf{\#} & \textbf{Device} & \textbf{Fit for the Application} & \textbf{Reasoning and Cautions} \\
+\midrule
+\endhead
+1 & \href{https://www.siemens.com/global/en/products/automation/industrial-communication/industrial-security/scalance-s.html}{Siemens SCALANCE S615} & Best overall fit when the device will be both the security boundary and the 1:1 NAT appliance. & Strong stateful firewall and industrial-security features. Provides better traffic control than a NAT-only device, with additional configuration effort. \\
+2 & \href{https://www.moxa.com/en/products/industrial-network-infrastructure/secure-routers/secure-nat-gateways/nat-102-series}{Moxa NAT-102} & Strong fit for a compact, straightforward 1:1 NAT deployment. & NAT-focused architecture with basic filtering. Well suited when ease of deployment matters more than advanced firewall functions. \\
+3 & \href{https://www.weidmueller.com/en/products/automation_software/industrial_ethernet/security_router/index.jsp}{Weidm\"uller IE-SR-4GT} & Strong fit where Gigabit networking, stateful firewalling, NAT, and VPN are useful. & Suitable for a formal network boundary. Confirm the exact ordering code and local product support. \\
+4 & \href{https://www.belden.com/products/networking-cybersecurity/industrial-cybersecurity/industrial-firewalls/eagle}{Hirschmann EAGLE20/EAGLE30} & Excellent fit for higher-security or more complex installations. & Advanced firewall and routing functions, but usually more costly and complex than a small system needs. \\
+5 & \href{https://www.phoenixcontact.com/en-us/products/nat-switch-fl-nat-2008-2702881}{Phoenix Contact FL NAT 2008} & Good fit when several local switch ports and NAT are desired in one device. & Convenient eight-port format. Confirm that its filtering meets the plant security standard. \\
+6 & \href{https://www.rockwellautomation.com/en-us/products/hardware/allen-bradley/network-security-and-infrastructure/1783-natr.html}{Allen-Bradley 1783-NATR} & Functional for straightforward address translation, including 1:1 NAT. & Easy to apply, but firewall capability is limited. DLR and Rockwell-integration advantages do not benefit the M580 application. \\
+7 & \href{https://www.se.com/ww/en/product/TCSEFEC23F3F21/}{Schneider Electric TCSEFEC23F3F21} & Strong architectural alignment with Schneider/Modicon systems. & Attractive for M580 integration, but lifecycle and availability must be confirmed because of discontinuation risk. \\
+8 & \href{https://www.se.com/ww/en/product/TCSEFEA23F3F22/}{Schneider Electric ConneXium Tofino TCSEFEA23F3F22} & Better suited to industrial firewalling than to simple 1:1 NAT. & Not the most natural fit for selective NAT, and discontinuation risk reduces its value for new designs. \\
+\bottomrule
+\end{longtable}
+
+\section{Addressing}
+IP addresses and VLANs must be assigned through the company IP address management process. A project number must not be inserted directly into an octet unless the resulting address and subnet have been allocated. The subnet mask must create the intended boundary; a /16 network must not be treated as though different third octets are isolated. Static addresses, reserved addresses, gateways, VLAN IDs, DNS names, and ownership must be recorded in the network schedule.
+
+\section{Network Equipment}
+Managed industrial switches must be used unless the basis of design documents why an unmanaged switch is acceptable. Required features must be selected for the application and may include VLANs, access control, port security, SNMPv3, redundant ring protocol, quality of service, multicast/IGMP management, time synchronization, diagnostics, configuration backup, and event logging. Unused switch ports and services must be disabled where supported.
+
+\section{Communications}
+The project must maintain an approved data-flow matrix identifying source, destination, protocol, port, purpose, owner, and security control. Unencrypted or unauthenticated industrial protocols must remain within controlled zones and must not be routed to enterprise or external networks without a documented compensating control. OPC UA must use trusted certificates, supported security policies, authenticated identities, and the minimum required permissions.
+
+\section{Remote Access}
+Direct inbound access to PLCs, HMIs, or panel devices from the internet is prohibited. Remote access must use the company-managed VPN or equivalent secure access service, MFA, named accounts, approved jump host, authorization, session logging where available, and time-limited vendor access. Permanent vendor modems or cloud tunnels require documented cybersecurity approval.
+
+\section{System Hardening and Maintenance}
+Projects must maintain an asset inventory containing hardware, software, firmware, network identity, owner, criticality, support status, and backup location. Default credentials must be changed; unnecessary services must be disabled; removable media must follow company policy; and security patches must be evaluated and tested based on risk. Vulnerability remediation must consider safety and availability and use compensating controls when immediate patching is not practical.
+
+\section{Time, Logging, and Recovery}
+Controllers, SCADA, workstations, network devices, and security systems must use an approved time source and consistent time zone. Security and operational events must be retained according to company policy. The design must document recovery priorities, replacement configurations, backups, and the test interval for restoring critical OT assets.

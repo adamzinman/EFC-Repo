@@ -1,0 +1,88 @@
+\chapter{Software Version Control with Git}
+\label{app:git}
+\future{this appendix describes the planned Git integration from Section~\ref{sec:source-control}. It is not current practice. Until it is adopted, the manual file-naming rules in Section~\ref{sec:source-control} apply.}
+
+\section{Git Basics for Controls Engineers}
+Git is a version control tool. It keeps the full history of a set of files in a \emph{repository} (``repo''), so you can see what changed, when, by whom, and why, and go back to any earlier version.
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Commit:} a saved snapshot of the files with a short message describing the change. Commit at meaningful points, not every save.
+  \item \textbf{Tag:} a permanent label on a commit. Tags mark revisions: \texttt{rev-C} during development, \texttt{rev-0} at turnover, \texttt{rev-1} and later after turnover.
+  \item \textbf{Branch:} a parallel line of work, used to try a change without disturbing the released version. Most projects need only a main branch.
+  \item \textbf{Remote:} a shared copy of the repo on a company server (for example GitHub, GitLab, or Azure DevOps, as chosen with IT), so the history is not lost with one laptop.
+  \item \textbf{.gitignore:} a list of files Git should not track (temporary, generated, or machine-specific files).
+\end{itemize}
+
+\textbf{How the EFC rules map onto Git:}
+\begin{itemize}[itemsep=1pt]
+  \item One repository per project (for example \texttt{014\_R23-Column}), holding the PLC and SCADA folders.
+  \item Lettered development revisions and Rev~0 become tags; the date suffix in file names is no longer needed because Git records the date of every commit.
+  \item A change made under MOC is committed with the MOC number in the message (for example \texttt{MOC-2027-014: raise PT-210 HH limit}) and tagged as a new revision.
+  \item The companion revision log (Section~\ref{sec:source-control}) can be generated from the tag and commit messages.
+\end{itemize}
+
+\section{Control Expert Classic}
+\textbf{The problem.} The normal project file (\texttt{.STU}) is binary, so Git can store it but cannot show what changed inside it. Control Expert has no built-in Git support.
+
+\textbf{The approach.} Commit the binary project together with a full text export of the same version:
+\begin{itemize}[itemsep=1pt]
+  \item \texttt{.STU} --- the working project file (or \texttt{.STA}, the archive, which can only be created after the project is built).
+  \item \texttt{.XEF} --- a full project export in XML. It can be made at any stage and imported to rebuild the project (then saved as \texttt{.STU}, rebuilt, and downloaded). Because it is text, Git can show changes to logic, variables, and configuration.
+  \item \texttt{.ZEF} --- the XEF export plus the DTM (device) configuration; use it when the project has DTMs, such as EtherNet/IP devices.
+\end{itemize}
+XML differences are readable but noisy. Schneider's Control Expert DIF utility compares two exports more clearly, and third-party tools (for example Copia) provide Git-based version control with graphical LD/ST/FBD differences for Control Expert.\footnote{Schneider Electric, Control Expert help, \emph{User Application and Project File Formats}; Copia Automation, \emph{Schneider Control Expert} support documentation.}
+
+\textbf{Routine:}
+\begin{enumerate}[itemsep=1pt]
+  \item Save the project and build it.
+  \item \textit{File \textgreater{} Export Project} to \texttt{.XEF} (or \texttt{.ZEF}) in the repo folder, using the same name as the project.
+  \item Commit both files with a message describing the change; tag it if it is a revision.
+\end{enumerate}
+\textbf{Exclude:} \texttt{.BAK} automatic backups and temporary files.
+
+\section{Productivity Suite}
+\textbf{The problem.} The project file (\texttt{.adpro}) is also binary, and Productivity Suite has no Git support.
+
+\textbf{The approach.} Commit the \texttt{.adpro} file together with the tag database CSV export (\textit{Tag Database \textgreater{} Export}, which produces \texttt{\_basic.csv} and \texttt{\_extended.csv} files) so tag changes are visible in Git. Logic changes are not visible as text; use Productivity Suite's built-in \textbf{Project Compare} (available since v2.0) to compare two committed versions, and describe the logic change in the commit message.
+
+\textbf{Routine:} save the project, export the tag database to the repo folder, commit both, and tag revisions. Reusable User Defined Instructions (UDIs) exported to the UDI library can be kept in a shared library repository.
+
+\section{Ignition 8.1}
+Ignition projects are stored on the gateway as folders of files, which suits Git well.
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Where:} \texttt{<Ignition install>/\allowbreak{}data/\allowbreak{}projects/\allowbreak{}<project name>}. Views, scripts, named queries, and other resources are stored as folders containing \texttt{resource.json} plus content files (for example \texttt{view.json} or \texttt{code.py}). Create the repository in the project folder (or in \texttt{data/projects} for several projects).
+  \item \textbf{Ignore:} the \texttt{.resources} folder and other generated files.
+  \item \textbf{Pulling changes onto a gateway:} after a \texttt{git pull}, tell the gateway to pick up the files with \texttt{system.\allowbreak{}project.\allowbreak{}requestScan()} (gateway scope), or a scan endpoint module, so the Designer and clients see the update.
+  \item \textbf{Not in the project folder:} gateway settings such as tag providers and tags, device connections, database connections, users, and alarm pipelines are stored in the gateway's internal database. Back these up with a gateway backup (\texttt{.gwbk}), which is all-or-nothing, and export tags to JSON so tag changes can also be committed.
+\end{itemize}
+Inductive Automation recommends Git on the project folder to move work between development, test, and production gateways.\footnote{Inductive Automation, \emph{Ignition 8 Deployment Best Practices} (8.1 documentation); \texttt{system.\allowbreak{}project.\allowbreak{}requestScan} (8.1 scripting reference).}
+
+\section{Changes With Ignition 8.3}
+Ignition 8.3 (released September 16, 2025, a long-term support release) was designed with Git-based version control in mind:\footnote{Inductive Automation, \emph{Ignition 8.3 Version Control Guide} and \emph{New in 8.3} documentation; \emph{8.1 to 8.3 Upgrade Guide}.}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Whole-gateway configuration as files.} All gateway configuration moves from the internal database to files under \texttt{data/config} (for example tags under \texttt{data/\allowbreak{}config/\allowbreak{}resources/\allowbreak{}core/\allowbreak{}ignition/\allowbreak{}tag-definition}), so devices, tags, connections, and other settings can be committed along with projects.
+  \item \textbf{Scan endpoints.} The REST API provides \texttt{/\allowbreak{}data/\allowbreak{}api/\allowbreak{}v1/\allowbreak{}scan/\allowbreak{}config} and \texttt{/\allowbreak{}data/\allowbreak{}api/\allowbreak{}v1/\allowbreak{}scan/\allowbreak{}projects}, and the gateway has a \textit{Scan File System} button, to load pulled changes.
+  \item \textbf{Deployment modes.} One configuration can hold settings for development, test, and production, selected on each gateway with the JVM argument \texttt{-Dignition.\allowbreak{}config.\allowbreak{}mode=<mode>}. Environment-specific values (addresses, credentials) no longer need separate copies of the project.
+  \item \textbf{REST API} with a generated OpenAPI description at \texttt{/openapi}, and \textbf{secrets management} so passwords are not stored in committed files.
+  \item \textbf{.gitignore template} provided by Inductive Automation; exclude \texttt{valueStore.idb} and some Vision binary resources.
+\end{itemize}
+\textbf{What changes for us at the upgrade:} the repository can cover the whole gateway, not just projects; gateway backups become a recovery tool rather than the only record of configuration; and moving a tested change from a development gateway to production becomes a Git pull plus a scan. Note that 8.3 no longer allows hot-swapping modules, so module installs still need a restart.
+
+\section{Checklists}
+\textbf{Control Expert:}
+\begin{itemize}[itemsep=1pt, label=$\square$]
+  \item Project saved and built; \texttt{.XEF}/\texttt{.ZEF} exported with the same name
+  \item \texttt{.STU} (or \texttt{.STA}) and export committed together with a clear message
+  \item Revision tagged; MOC number in the message where applicable
+\end{itemize}
+\textbf{Productivity Suite:}
+\begin{itemize}[itemsep=1pt, label=$\square$]
+  \item \texttt{.adpro} saved; tag database CSVs exported
+  \item Logic change described in the commit message (checked with Project Compare)
+  \item Revision tagged
+\end{itemize}
+\textbf{Ignition:}
+\begin{itemize}[itemsep=1pt, label=$\square$]
+  \item Project folder committed; \texttt{.gitignore} in place
+  \item 8.1: tags exported to JSON and a gateway backup taken; 8.3: \texttt{data/config} committed
+  \item After a pull, project (and 8.3 config) scan triggered and the change tested
+\end{itemize}

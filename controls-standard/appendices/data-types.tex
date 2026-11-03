@@ -1,0 +1,309 @@
+\chapter{PLC Data Type Reference (Current)}
+\label{app:data-types}
+This appendix lists the PLC data types (DDTs) used in EFC's Control Expert projects. Section~\ref{sec:udt} explains how they are used. The first three tables are the minimum member lists defined by this standard; the remaining tables document the types in the current program library, taken from the Control Expert data editor. Descriptions marked \tbd\ have not been confirmed yet.
+\future{A replacement library (PCLib) has been proposed and is described in Appendix~\ref{app:data-types-future}. Until it is adopted, the types in this appendix remain the standard for existing and new projects.}
+
+\note{Naming in the current library is not fully consistent: \texttt{AI\_Sensors} has no \texttt{DDT\_} prefix, and member capitalization differs between types (for example \texttt{Auto\_Perm} in \texttt{DDT\_Valve} and \texttt{AUTO\_PERM} in \texttt{DDT\_Motor\_VFD}). Align these the next time the library is revised.}
+
+\section{DDT\_Process\_Value}
+\begin{longtable}{@{}P{3.90cm}P{3.90cm}P{9.10cm}@{}}
+\caption{DDT\_Process\_Value Minimum Members}\label{tab:ddt-process-value}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+Raw & INT or DINT & Unscaled channel value.\\
+Raw\_Min / Raw\_Max & DINT & Configured raw endpoints.\\
+PV & REAL & Scaled engineering value.\\
+Eng\_Min / Eng\_Max & REAL & Engineering range endpoints.\\
+Units & STRING[16] & Engineering-unit text or enumerated unit identifier.\\
+Quality & DINT & Valid, uncertain, bad, stale, simulated, or platform equivalent.\\
+Timestamp & DDT or native time & Time of last valid update where required.\\
+LL / L / H / HH & DDT\_AI\_Alarm & Analog alarm instances.\\
+HW\_Fault & BOOL & Module or channel diagnostic fault.\\
+Underrange / Overrange & BOOL & Signal is below/above valid instrument range.\\
+Simulated & BOOL & Value is under authorized simulation.\\
+\bottomrule
+\end{longtable}
+
+
+\section{DDT\_AI\_Alarm}
+\begin{longtable}{@{}P{3.90cm}P{3.90cm}P{9.10cm}@{}}
+\caption{DDT\_AI\_Alarm Minimum Members}\label{tab:ddt-ai-alarm}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+SP & REAL & Rationalized alarm setpoint.\\
+DB & REAL & Deadband in engineering units.\\
+OnDelay / OffDelay & TIME & Qualified activation and clearing delays.\\
+Enabled & BOOL & Alarm is configured for use.\\
+Active & BOOL & Qualified alarm condition exists.\\
+Latched & BOOL & Condition has latched where required.\\
+Acked & BOOL & Acknowledgment state when managed in PLC.\\
+Suppressed & BOOL & State-based designed suppression is active.\\
+Shelved & BOOL & HMI/SCADA shelving indication when exchanged.\\
+Priority & INT & Rationalized priority enumeration.\\
+\bottomrule
+\end{longtable}
+
+\section{DDT\_Device}
+
+\begin{longtable}{@{}P{4.29cm}P{3.90cm}P{8.71cm}@{}}
+\caption{DDT\_Device Minimum Members}\label{tab:ddt-device}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+ModeReq / ModeAct & INT or enum & Requested and active operating mode.\\
+StartReq / StopReq / ResetReq & BOOL & Momentary validated requests.\\
+RunCmd & BOOL & Final logical run command before output mapping.\\
+Running / Stopped & BOOL & Processed equipment status.\\
+AutoPerm / ManPerm & BOOL & Mode-specific permissive summaries.\\
+Interlock & DDT\_Interlock & Protective/control interlock summary.\\
+FeedbackFault & BOOL & Command and feedback disagree after timeout.\\
+Fault / Warning & BOOL & Aggregated condition summaries.\\
+Available & BOOL & Equipment is healthy and eligible for control.\\
+RuntimeSec & UDINT & Retentive accumulated runtime with controlled reset.\\
+CommOK / DataValid & BOOL & Communications and exchanged data are valid.\\
+Simulated & BOOL & Authorized simulation is active.\\
+\bottomrule
+\end{longtable}
+
+
+\section{AI\_Sensors}
+Analog sensor data with its four alarm states.
+
+\begin{longtable}{@{}P{4.54cm}P{2.59cm}P{9.79cm}@{}}
+\caption{AI\_Sensors Members}\label{tab:ddt-ai-sensors}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+\texttt{PV} & REAL & Scaled process value in engineering units.\\
+\texttt{Raw} & REAL & Unscaled value from the input channel.\\
+\texttt{Rate} & REAL & Rate of change of the process value \tbd (units per time).\\
+\texttt{Fraction} & REAL & \tbd\\
+\texttt{LL\_Alarm} & BOOL & The low-low alarm is active.\\
+\texttt{LL\_Alarm\_Acked} & BOOL & The low-low alarm has been acknowledged.\\
+\texttt{Lo\_Alarm} & BOOL & The low alarm is active.\\
+\texttt{Lo\_Alarm\_Acked} & BOOL & The low alarm has been acknowledged.\\
+\texttt{Hi\_Alarm} & BOOL & The high alarm is active.\\
+\texttt{Hi\_Alarm\_Acked} & BOOL & The high alarm has been acknowledged.\\
+\texttt{HH\_Alarm} & BOOL & The high-high alarm is active.\\
+\texttt{HH\_Alarm\_Acked} & BOOL & The high-high alarm has been acknowledged.\\
+\bottomrule
+\end{longtable}
+\section{DDT\_Discrete}
+Discrete input with an override for testing and maintenance.
+
+\begin{longtable}{@{}P{4.54cm}P{2.59cm}P{9.79cm}@{}}
+\caption{DDT\_Discrete Members}\label{tab:ddt-discrete}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+\texttt{Override\_Enb} & BOOL & Override is enabled for this input; the PLC uses \texttt{Override\_Sig} instead of the field signal.\\
+\texttt{Override\_Sig} & BOOL & Value used for the input while the override is enabled.\\
+\texttt{Fault} & BOOL & Input fault (for example a channel or wiring fault) \tbd.\\
+\bottomrule
+\end{longtable}
+\section{DDT\_Setpoint}
+Operator setpoint with a default value.
+
+\begin{longtable}{@{}P{4.54cm}P{2.59cm}P{9.79cm}@{}}
+\caption{DDT\_Setpoint Members}\label{tab:ddt-setpoint}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+\texttt{SP} & REAL & Active setpoint value.\\
+\texttt{Default} & REAL & Default value loaded on first scan or reset \tbd.\\
+\bottomrule
+\end{longtable}
+\section{DDT\_Valve}
+On/off valve with limit switch feedback; used with \texttt{DFB\_Valve}.
+
+\begin{longtable}{@{}P{4.54cm}P{2.59cm}P{9.79cm}@{}}
+\caption{DDT\_Valve Members}\label{tab:ddt-valve}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+\texttt{REQ} & BOOL & Open request from the program (automatic mode).\\
+\texttt{Auto\_Perm} & BOOL & Permissive summary for automatic operation; all conditions met.\\
+\texttt{Man\_Perm} & BOOL & Permissive summary for manual operation; all conditions met.\\
+\texttt{HMI\_Auto} & BOOL & SCADA request to switch to Auto.\\
+\texttt{HMI\_Manual} & BOOL & SCADA request to switch to Manual.\\
+\texttt{HMI\_Off} & BOOL & SCADA request to switch to Off.\\
+\texttt{HMI\_Lockout} & BOOL & SCADA request to switch to Lockout.\\
+\texttt{CMD} & BOOL & Final open command to the output.\\
+\texttt{ZSO} & BOOL & Open limit switch feedback (valve is open).\\
+\texttt{ZSC} & BOOL & Closed limit switch feedback (valve is closed).\\
+\texttt{HMI\_CMD} & BOOL & SCADA open/close command used in Manual mode.\\
+\texttt{Interlock} & BOOL & Interlock active; the valve is forced to its safe state.\\
+\texttt{Cycle\_Count} & DINT & Number of open/close cycles (maintenance counter).\\
+\texttt{Reset\_Count} & BOOL & Request to reset the cycle count.\\
+\texttt{Feedback\_Enabled} & BOOL & Limit switch feedback is fitted and checked (enables feedback-fault detection).\\
+\texttt{Auto} & BOOL & Valve is in Auto mode.\\
+\texttt{Manual} & BOOL & Valve is in Manual mode.\\
+\texttt{Off} & BOOL & Valve is in Off mode.\\
+\texttt{LockedOut} & BOOL & Valve is locked out.\\
+\bottomrule
+\end{longtable}
+\section{DDT\_Motor\_VFD}
+Motor driven by a variable frequency drive.
+
+\begin{longtable}{@{}P{4.54cm}P{2.59cm}P{9.79cm}@{}}
+\caption{DDT\_Motor\_VFD Members}\label{tab:ddt-motor-vfd}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+\texttt{REQ} & BOOL & Start request from the program (automatic mode).\\
+\texttt{INTERLOCK} & BOOL & Run interlock active; the motor is stopped.\\
+\texttt{AUTO\_PERM} & BOOL & Permissive summary for automatic operation.\\
+\texttt{AUTO} & BOOL & Motor is in Auto mode.\\
+\texttt{MANUAL} & BOOL & Motor is in Manual mode.\\
+\texttt{OFF} & BOOL & Motor is in Off mode.\\
+\texttt{LOCKOUT} & BOOL & Motor is in the locked-out (service) mode \tbd.\\
+\texttt{HMI\_AUTO} & BOOL & SCADA command to switch to Auto.\\
+\texttt{HMI\_MANUAL} & BOOL & SCADA command to switch to Manual.\\
+\texttt{HMI\_OFF} & BOOL & SCADA command to switch to Off.\\
+\texttt{HMI\_LOCKOUT} & BOOL & SCADA command to switch to Lockout.\\
+\texttt{CMD} & BOOL & Final motor run command to the drive.\\
+\texttt{YI} & BOOL & Motor running feedback from the drive.\\
+\texttt{WARNING} & BOOL & Motor warning is active.\\
+\texttt{ALARM} & BOOL & Motor alarm (fault) is active.\\
+\texttt{SPD\_AUTO} & REAL & Speed command used in Auto mode (from the program).\\
+\texttt{SPD\_MANUAL} & REAL & Speed command used in Manual mode (from SCADA).\\
+\texttt{SPD\_CMD} & REAL & Output speed command sent to the drive.\\
+\texttt{RUNTIME} & REAL & Accumulated runtime of the motor \tbd (units).\\
+\texttt{HMI\_RESET\_RUNTIME} & BOOL & SCADA request to reset the runtime.\\
+\bottomrule
+\end{longtable}
+\section{DDT\_Scale}
+Scale or weight transmitter interface.
+
+\begin{longtable}{@{}P{4.54cm}P{2.59cm}P{9.79cm}@{}}
+\caption{DDT\_Scale Members}\label{tab:ddt-scale}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+\texttt{GrossWeight} & REAL & Gross weight reading.\\
+\texttt{TareWeight} & REAL & Stored tare weight.\\
+\texttt{NetWeight} & REAL & Net weight (gross minus tare).\\
+\texttt{TareCmd} & BOOL & Command to tare the scale.\\
+\texttt{ZeroCmd} & BOOL & Command to zero the scale.\\
+\texttt{ResetScale} & BOOL & Command to reset the scale or its communications \tbd.\\
+\texttt{Stable} & BOOL & Weight reading is stable (no motion).\\
+\texttt{Warning} & BOOL & Scale warning is active.\\
+\texttt{Alarm} & BOOL & Scale alarm is active.\\
+\texttt{Fault} & BOOL & Scale or communication fault.\\
+\texttt{Msg} & STRING & Status or error message text.\\
+\bottomrule
+\end{longtable}
+\section{DDT\_Seq}
+Sequence control and status.
+
+\begin{longtable}{@{}P{4.54cm}P{2.59cm}P{9.79cm}@{}}
+\caption{DDT\_Seq Members}\label{tab:ddt-seq}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+\texttt{Disabled} & BOOL & Sequence is disabled.\\
+\texttt{Ready} & BOOL & Sequence is ready to start (all start conditions met).\\
+\texttt{Running} & BOOL & Sequence is running.\\
+\texttt{Msg} & string[255] & Current status message for the operator.\\
+\texttt{Start} & BOOL & Start request.\\
+\texttt{Abort} & BOOL & Abort request; the sequence goes to its safe state.\\
+\texttt{ShowCont} & BOOL & \tbd (likely shows the Continue prompt on SCADA).\\
+\texttt{Pop\_Msg} & string[255] & Message shown in an operator pop-up \tbd.\\
+\texttt{State} & DINT & Current step (state) number.\\
+\texttt{Continue} & BOOL & Operator confirmation to continue past a hold point.\\
+\texttt{Alarm} & DINT & Active sequence alarm code \tbd.\\
+\texttt{Complete} & BOOL & Sequence has completed.\\
+\texttt{Percent\_Complete} & REAL & Progress of the sequence, 0--100\%.\\
+\texttt{HMI\_Auto} & BOOL & SCADA request to switch to Auto.\\
+\texttt{HMI\_Manual} & BOOL & SCADA request to switch to Manual.\\
+\texttt{HMI\_Off} & BOOL & SCADA request to switch to Off.\\
+\texttt{Auto} & BOOL & Sequence is in Auto mode.\\
+\texttt{Manual} & BOOL & Sequence is in Manual mode.\\
+\texttt{Off} & BOOL & Sequence is in Off mode.\\
+\texttt{Ack} & BOOL & Operator acknowledgment \tbd.\\
+\texttt{HMI\_Pause} & BOOL & SCADA request to pause the sequence.\\
+\texttt{Paused} & BOOL & Sequence is paused.\\
+\texttt{HMI\_Topfill} & BOOL & SCADA request for a top-fill \tbd.\\
+\bottomrule
+\end{longtable}
+\section{DDT\_Station}
+Application-specific type for a cylinder fill station; used with \texttt{DFB\_Station}.
+
+\begin{longtable}{@{}P{4.54cm}P{2.59cm}P{9.79cm}@{}}
+\caption{DDT\_Station Members}\label{tab:ddt-station}\\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule \rowcolor{tblhead}\textbf{Member} & \textbf{Type} & \textbf{Description}\\ \midrule
+\endhead
+\texttt{TargetWeight} & REAL & Target fill weight.\\
+\texttt{ReadyToStart} & BOOL & Station is ready to start \tbd.\\
+\texttt{ReadyToFill} & BOOL & Station is ready to fill \tbd.\\
+\texttt{Active} & BOOL & Station is filling.\\
+\texttt{Complete} & BOOL & Station has successfully completed the fill \tbd.\\
+\texttt{Deadband} & REAL & Fill deadband around the target weight \tbd.\\
+\texttt{HMI\_Select} & BOOL & SCADA request to select this station.\\
+\texttt{HMI\_Reset} & BOOL & SCADA request to reset the station.\\
+\texttt{Selected} & BOOL & Station is selected.\\
+\texttt{Venting} & BOOL & Station is venting.\\
+\texttt{Vacuuming} & BOOL & Station is being evacuated.\\
+\texttt{Recovering} & BOOL & Station is recovering gas \tbd.\\
+\texttt{Vacuumed} & BOOL & Evacuation is complete.\\
+\texttt{Press\_Balanced} & BOOL & Pressures are balanced \tbd.\\
+\texttt{Disabled} & BOOL & Station is disabled.\\
+\texttt{Failed} & BOOL & Station fill has failed.\\
+\texttt{PT\_Valid} & BOOL & Station pressure transmitter reading is valid.\\
+\texttt{PT\_Diff} & REAL & Pressure difference \tbd.\\
+\texttt{InletREQ} & BOOL & Inlet valve request.\\
+\texttt{InletCMD} & BOOL & Inlet valve command.\\
+\texttt{SampleREQ} & BOOL & Sample valve request.\\
+\texttt{SampleCMD} & BOOL & Sample valve command.\\
+\texttt{VacuumREQ} & BOOL & Vacuum valve request.\\
+\texttt{VacuumCMD} & BOOL & Vacuum valve command.\\
+\texttt{PT} & REAL & Station pressure.\\
+\texttt{Press\_Max} & REAL & Maximum allowed station pressure \tbd.\\
+\texttt{TareCMD} & BOOL & Command to tare the station scale.\\
+\texttt{ZeroCMD} & BOOL & Command to zero the station scale.\\
+\texttt{GrossWeight} & REAL & Gross weight.\\
+\texttt{TareWeight} & REAL & Tare weight.\\
+\texttt{NetWeight} & REAL & Net weight.\\
+\texttt{StatusEnum} & INT & Station status code (see the \texttt{StatusEnum} values in Appendix~\ref{app:function-blocks}).\\
+\texttt{Msg} & string[255] & Status message for the operator.\\
+\texttt{ScaleLoaded} & BOOL & A cylinder is on the scale \tbd.\\
+\texttt{ScaleTared} & BOOL & Scale has been tared.\\
+\texttt{Fill\_Rate} & REAL & Fill rate \tbd (units).\\
+\texttt{HMI\_SP\_Max\_Vac\_Press} & REAL & Operator setpoint: maximum pressure at which the vacuum lines may be opened (permissive setpoint, Section~\ref{sec:setpoints}).\\
+\texttt{TotalWeight} & REAL & Total weight \tbd.\\
+\texttt{SampleWeight} & REAL & Sample weight \tbd.\\
+\texttt{SamplePress} & REAL & Sample pressure \tbd.\\
+\texttt{Pressurizing} & BOOL & Station is building pressure.\\
+\texttt{Sampling} & BOOL & Station is sampling.\\
+\texttt{HighPressWarningReq} & BOOL & Station maximum-pressure warning request \tbd.\\
+\texttt{PressurizeReqd} & BOOL & Pressurizing is required \tbd.\\
+\texttt{SampleReqd} & BOOL & Sampling is required \tbd.\\
+\texttt{Filling} & BOOL & Station is filling.\\
+\texttt{Disconnecting} & BOOL & Station is disconnecting.\\
+\texttt{HMI\_Disc} & BOOL & SCADA request to disconnect.\\
+\texttt{Purged} & BOOL & Station has been purged.\\
+\texttt{Light} & BOOL & Station indicator light \tbd.\\
+\bottomrule
+\end{longtable}

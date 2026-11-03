@@ -1,0 +1,16 @@
+% Standalone build of one appendix of the Controls Standard.
+% Run build-all.bat (from the Controls Standard folder) rather than
+% compiling this file directly; it needs build/master-refs.aux and
+% appendix-numbers.tex from the main document.
+\documentclass[11pt]{report}
+\def\EFCstandalone{}
+\input{preamble}
+\externaldocument[M-]{build/master-refs}
+\input{appendix-numbers}
+\newcommand{\EFCappkey}{sample-fat}
+\newcommand{\EFCapptitle}{Sample FAT Document}
+\input{standalone/appendix-common}
+\begin{document}
+\EFCstartappendix
+\input{appendices/sample-fat}
+\end{document}

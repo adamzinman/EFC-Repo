@@ -1,0 +1,53 @@
+\chapter{Overview}
+\section{Purpose}
+This guide explains how EFC approaches the design, implementation, testing, commissioning, documentation, operation, and maintenance of industrial control systems. It is written primarily for engineers who are new to EFC projects and is intended to help them build systems that are safe, supportable, repeatable, secure, and consistent.
+
+\section{Scope}
+The guide covers PLCs, remote I/O, industrial control panels, operator workstations, HMI/SCADA systems, industrial networks, instrumentation interfaces, packaged-equipment integration, and the related project documents. It applies to internal engineering work and to contractors unless a project specification gives a more stringent requirement.
+
+This document does not replace the adopted electrical code, the requirements of the Authority Having Jurisdiction (AHJ), a project risk assessment, a process hazard analysis, or a machine-safety/functional-safety assessment. The project engineer must identify the governing jurisdiction and applicable editions at project initiation.
+
+\section{How to Use This Guide}\label{sec:how-to-use}
+This guide does not need to be read cover to cover. Start with the parts that apply to the current stage of the project and return to the rest as needed.
+
+\subsection*{Where to start}
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Selecting parts or designing a panel:} Chapter~\ref{ch:hardware} (Hardware).
+  \item \textbf{Writing PLC or SCADA code:} use the PLC and SCADA standards chapters and the related appendices.
+  \item \textbf{Working with a contractor or panel shop:} the Working with Contractors chapter lists what they are expected to provide\textit{\textcolor{futureblue}{[Future: A document will be made that will be a standard Panel Build Contract and well as one for the Electrical Contractors used.  These will be attached as appendices when available.]}}.
+\end{itemize}
+
+\subsection*{What the key words mean}
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Must} --- required for safety, code compliance, security, or a basic EFC practice. If a requirement cannot be met, discuss it with the Lead/Senior Controls Engineer before proceeding.
+  \item \textbf{Should} --- the expected practice. A different approach may be used when the project requires it, provided the reason is documented.
+  \item \textbf{May} --- a permitted option.
+\end{itemize}
+
+\subsection*{How to read the notes in this guide}
+\begin{itemize}[itemsep=2pt]
+  \item \textit{\textcolor{noteorange}{[Orange bracketed text]}} marks an open question or an item that still needs a decision. It should not be treated as settled.
+  \item \textit{\textcolor{futureblue}{[Future: blue bracketed text]}} marks something planned for later. It is not part of the current process.
+  \item \tbd\ in red marks a description that has not been supplied yet.
+  \item A green \newmark\ tag marks content that was recently added.
+  \item Blue text is a link. Links to manufacturers and outside references are provided for convenience; keep a controlled copy of any datasheet the project depends on.
+  \item Footnotes identify the standard (and edition) where text is taken directly from a code or standard.
+\end{itemize}
+
+\subsection*{When the guide does not fit the project}
+Every project is a little different. If something in this guide does not fit, or appears to be wrong, raise it with the Lead/Senior Controls Engineer. Changes for a single project are recorded as a deviation (see Section~\ref{sec:governance}); changes that should apply to all projects go into the next revision of this guide.
+
+\section{Governance}\label{sec:governance}
+Controls Engineering owns this guide, and the Lead/Senior Controls Engineer (or someone they choose) approves changes to it. We review it at least once a year, or sooner if it is required.
+
+If a project needs to do something differently, write it down in the design basis as a deviation. Include what requirement you're not meeting, why, what the risk is, what you're doing instead, who approved it, and when it will be closed out. A deviation only applies to that one project; it doesn't change the guide for anyone else.
+\textit{\textcolor{futureblue}{[Future: Create a standard deviation document.]}}
+
+\section{Controlled Layers}
+Controls documentation must be maintained in four layers:
+\begin{enumerate}[itemsep=2pt]
+  \item Engineering requirements.
+  \item Approved hardware and software catalog, including lifecycle status \textit{\textcolor{futureblue}{[Future: to be added]}}.
+  \item Version-controlled reusable PLC, SCADA, and drawing libraries.
+  \item Project-specific design, test, configuration, and validation records.
+\end{enumerate}
