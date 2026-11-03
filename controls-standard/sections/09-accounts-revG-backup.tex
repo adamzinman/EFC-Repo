@@ -1,0 +1,15 @@
+\chapter{Accounts and Access Control}
+\section{Identity Requirements}
+Named individual accounts must be used for normal engineering, administration, and operator access. Shared administrator accounts are limited to controlled break-glass or platform constraints. Roles must follow least privilege and separate operator, maintenance, engineering, security administration, and system administration duties where supported.
+
+\section{Authentication}
+MFA must be required for remote access, privileged enterprise-connected systems, and other locations required by company policy. Passwords and secrets must be stored in the approved password vault and must not appear in source code, drawings, screenshots, or this standard. Default credentials must be changed before connection to an operational network.
+
+\section{Service and Emergency Accounts}
+Service accounts must be non-interactive where supported, have the minimum permissions required, use unique managed secrets, and have a documented owner and dependency. Break-glass credentials must be vaulted, monitored, tested, and reviewed after use. Systems must not depend on a contractor's personal identity after turnover.
+
+\section{Lifecycle and Audit}
+Access must be approved by the asset owner, reviewed periodically, and removed promptly when no longer required. Privileged actions, configuration changes, alarm shelving, setpoint changes, and login failures must be logged where the platform supports it. Contractor and vendor access must have an expiration date.
+
+\section{Credential Transfer}
+At turnover, credentials, certificates, recovery codes, service-account dependencies, and license accounts must be transferred through an approved secure method. Credentials must never be transmitted in an unencrypted project document or ordinary email.

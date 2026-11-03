@@ -1,0 +1,103 @@
+\chapter{Alarm List and Alarm Documentation}
+\label{app:alarm-doc}
+\future{the alarm documentation described in this appendix is not implemented at EFC yet. It shows what a formal alarm-management practice would look like so it can be discussed and adopted in stages.}
+
+\section{The Standards}
+Alarm management is governed by ANSI/ISA-18.2 and its international equivalent IEC 62682. Both define an alarm \emph{lifecycle}: write the rules (philosophy), decide which alarms are justified and how each should be set (rationalization), build them, operate and maintain them, and measure how the system performs. ISA has also published technical reports that explain each step in more depth.\footnote{ANSI/ISA-18.2-2016, \emph{Management of Alarm Systems for the Process Industries}; IEC 62682:2022 (Ed.~2); ISA technical reports TR18.2.1 (alarm philosophy, 2018), TR18.2.2 (identification and rationalization, 2016), TR18.2.3 (basic alarm design), TR18.2.4 (enhanced and advanced alarm methods), TR18.2.5 (monitoring, assessment, and auditing), TR18.2.6 (batch and discrete processes), and TR18.2.7 (packaged systems).}
+
+\section{The Three Main Documents}
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Alarm philosophy} --- the site rules: what qualifies as an alarm, how priorities are assigned, colors and sounds, shelving and suppression rules, who approves changes, and performance targets. Written once for the site and reused on every project.
+  \item \textbf{Rationalization} --- the review of each proposed alarm against the philosophy by a small team (process, operations, controls). Each alarm is either justified and fully defined, or rejected with a reason.
+  \item \textbf{Master alarm database (alarm list)} --- the result: one record per alarm with all of the fields below. It is the source for configuring Ignition and for testing.
+\end{itemize}
+
+\section{Alarm Record Fields}
+\begin{longtable}{@{}P{4.53cm}P{12.83cm}@{}}
+\caption{Alarm Record Fields}\label{tab:alarm-fields} \\
+\toprule
+\rowcolor{tblhead}\textbf{Field} & \textbf{Meaning} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Field} & \textbf{Meaning} \\
+\midrule
+\endhead
+Tag / alarm ID & Unique identifier, normally the instrument tag plus the alarm type (PT-210.HI). \\
+Description & Short message shown to the operator. \\
+Alarm type & High, low, deviation, rate of change, discrete (state), fault, or bad quality. \\
+Setpoint & Value at which the alarm activates, in engineering units. \\
+Deadband & How far the value must return before the alarm clears; prevents chattering. \\
+On / off delay & How long the condition must persist before the alarm activates or clears; filters short spikes. \\
+Cause & What most likely made the condition happen. \\
+Consequence & What happens if the operator does nothing. \\
+Operator response & The specific action the operator takes. \\
+Maximum response time & How long the operator has before the consequence occurs. \\
+Priority & Assigned from consequence and response time (Section~\ref{sec:alarm-priority}). \\
+Operating-state applicability & Process states in which the alarm is meaningful (for example running but not shut down). \\
+Suppression / shelving rules & When the alarm is suppressed by design, and who may shelve it and for how long. \\
+Setpoint basis & Where the setpoint came from (PHA, equipment limit, operating experience). \\
+Test method & How the alarm is proven during FAT and commissioning. \\
+\bottomrule
+\end{longtable}
+
+\section{Worked Examples}
+\begin{small}
+\begin{longtable}{@{}P{2.18cm}P{2.18cm}P{2.72cm}P{1.52cm}P{4.03cm}P{3.04cm}@{}}
+\caption{Example Alarm List Entries}\label{tab:alarm-examples} \\
+\toprule
+\rowcolor{tblhead}\textbf{Tag} & \textbf{Type} & \textbf{SP / DB / delay} & \textbf{Priority} & \textbf{Cause $\rightarrow$ consequence} & \textbf{Response (time)} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Tag} & \textbf{Type} & \textbf{SP / DB / delay} & \textbf{Priority} & \textbf{Cause $\rightarrow$ consequence} & \textbf{Response (time)} \\
+\midrule
+\endhead
+PT-210.HI & High process & 50\,torr / 5\,torr / 10\,s & Medium & Vacuum pump degraded or header leak $\rightarrow$ evacuation stalls & Check pump and header (15\,min) \\
+TT-305.LO & Low process & $-$180\,\textdegree C / 2\,\textdegree C / 30\,s & High & Loss of cooling $\rightarrow$ column upset and off-spec product & Check refrigeration; reduce feed (5\,min) \\
+FIC-120.DEV & Deviation & $\pm$10\% of setpoint / 2\% / 60\,s & Low & Valve sticking or loop out of tune $\rightarrow$ slow drift from target & Check valve position; switch to manual if needed (30\,min) \\
+M-101.FLT & Discrete fault & VFD fault bit / --- / 0\,s & Medium & Drive trip $\rightarrow$ pump stops, station cannot fill & Read VFD fault code; reset or call maintenance (15\,min) \\
+PT-210.BADQ & Bad quality & Signal $<$3.6\,mA or comm loss / --- / 5\,s & Medium & Transmitter or wiring failure $\rightarrow$ loss of pressure indication and permissive & Treat value as unknown; check transmitter (10\,min) \\
+PT-210.LO & Low process (state suppressed) & 5\,torr / 1\,torr / 10\,s & Low & Only meaningful while venting; suppressed by design in other states & Check vent valve (30\,min) \\
+LT-400.HI & \textit{Rejected} & --- & --- & Duplicates the HH alarm on the same tank and has no separate operator action & Rejected in rationalization; HH alarm retained \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\section{Assigning Priority}\label{sec:alarm-priority}
+Priority comes from two questions: how bad is the consequence, and how much time does the operator have? Equipment importance alone does not set priority.
+\begin{center}
+\begin{tabular}{@{}P{5.14cm}P{3.79cm}P{3.79cm}P{3.79cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Time to respond} & \textbf{Minor consequence} & \textbf{Major consequence} & \textbf{Severe consequence} \\
+\midrule
+More than 30 minutes & Not an alarm (use a warning) & Low & Low \\
+10 to 30 minutes & Low & Low & Medium \\
+3 to 10 minutes & Low & Medium & High \\
+Less than 3 minutes & Medium & High & High \\
+\bottomrule
+\end{tabular}
+\end{center}
+A typical healthy distribution is roughly 80\% low, 15\% medium, and 5\% high priority alarms. Consequence categories (minor, major, severe) are defined in the site alarm philosophy for safety, environment, product, and equipment.
+
+\section{Performance Targets}
+The following benchmarks, commonly cited from ISA-18.2, are guidance for reviewing alarm performance after startup:
+\begin{itemize}[itemsep=1pt]
+  \item Average alarm rate per operator: about 6 per hour is very likely acceptable; about 12 per hour is the most that is manageable.
+  \item Alarm floods (more than 10 alarms in 10 minutes): less than 1\% of the time.
+  \item The 10 most frequent alarms: less than 1 to 5\% of all alarms.
+  \item Chattering and fleeting alarms: zero.
+  \item Standing (stale) alarms: fewer than 5 on any day, with a plan to clear them.
+  \item Unauthorized suppression: zero.
+\end{itemize}
+
+\section{Where It Fits in Ignition}
+\begin{itemize}[itemsep=1pt]
+  \item Alarms are configured on tags, normally in the Ignition UDT for each equipment type (Section~\ref{sec:udt}), with setpoint, deadband, delays, priority, and the display message from the alarm list. Cause, consequence, and response can be stored as associated data and shown in the alarm faceplate.
+  \item State-based suppression is driven by expressions on the alarm's enabled property.
+  \item Shelving is limited by role and time in the alarm status table configuration.
+  \item The alarm journal records activations, acknowledgments, and shelving for the performance review; notification pipelines handle call-outs.
+\end{itemize}
+See also Section~\ref{sec:alarm-mgmt} and the Alarms section of Chapter~11.

@@ -1,0 +1,100 @@
+\chapter{Perspective Screen and Template Scaling Procedure}
+\label{app:perspective-scaling}
+\setlength{\emergencystretch}{3em}
+
+\textbf{Applies to:} Ignition Perspective 8.1 process views designed at 1000 $\times$ 800, deployed on 1920 $\times$ 1080 and 3840 $\times$ 2160 operator displays. Recheck the procedure during migration to 8.3. The view size, physical monitor resolution, and session viewport are three different measurements.
+
+\section{Purpose and design basis}
+Create one maintainable set of process screens and reusable equipment views. Use the actual 1000 $\times$ 800 view canvas as the coordinate reference. The target monitors are 16:9; the design canvas is 5:4. Uniformly scaling a 5:4 canvas into 16:9 space leaves unused space, unless the screen is redesigned, cropped, or stretched. Windows scaling, browser zoom, Workstation mode, taskbars, and docked views also change the usable viewport. Record those settings for each workstation class before selecting font sizes or evaluating fit.
+
+The process diagram shall preserve geometry. Operator text and controls shall remain legible and usable at the smallest deployed viewport. Physical 4K resolution alone does not require larger CSS font sizes; at 200\% operating-system scaling, the available CSS viewport may resemble a 1080p display.
+
+\section{Set up the page and process view}
+\begin{enumerate}[leftmargin=*,itemsep=3pt]
+\item Identify the deployed screen modes: display resolution, OS scaling, browser or Perspective Workstation, browser zoom, fullscreen/window mode, and dock dimensions. Measure the actual viewport available to the primary view.
+\item Create the representative process view with a default size of 1000 $\times$ 800. Set its root Coordinate Container \texttt{props.mode} to \texttt{percent}. If the complete diagram must preserve its original 5:4 geometry, set \texttt{props.aspectRatio} to \texttt{5:4}. Do not set \texttt{16:9} merely because the monitor is 16:9. If the process content has a different intended ratio, measure that content area separately.
+\item Keep navigation, alarms, and supporting panels in separate Flex containers or docked views. Decide how to use spare space around a 5:4 diagram on a 16:9 monitor. If filling all available width is required, redesign the layout for that width rather than distorting the symbols and pipes.
+\item Add equipment as Embedded View instances. Place the instances with relative positions in the parent Coordinate Container. For a design coordinate $(x,y,w,h)$ in the 1000 $\times$ 800 reference, use $(x/1000,y/800,w/1000,h/800)$. For example, a valve at $(250,200)$ with a 24 $\times$ 24 footprint uses $(0.25,0.25,0.024,0.03)$.
+\item Keep a consistent process-layer order for background, pipes, equipment, indicators, and interactive overlays. Check that resized overlays still line up with their symbols.
+\end{enumerate}
+
+\section{Build reusable equipment templates}
+Each valve, motor, pump, compressor, and process-value display shall be its own parameterized view. The template default size is a \emph{design footprint}, not the SVG's intrinsic resolution. For a dense 1000 $\times$ 800 P\&ID, begin with compact symbols and short callouts. The values below are trial dimensions on that design canvas; actual content and operator interaction determine the final sizes.
+
+\begin{center}
+\begin{tabular}{@{}p{5.05cm}p{3.73cm}p{6.86cm}@{}}
+\toprule
+Template & Starting footprint & Contents / sizing check\\ \midrule
+Valve symbol & 24 $\times$ 24 px & Separate interactive hit region if needed\\
+Motor symbol & 28 $\times$ 28 px & State on symbol; name nearby\\
+Pump symbol & 32 $\times$ 28 px & State on symbol; name nearby\\
+Compressor symbol & 40 $\times$ 32 px & State on symbol; details in faceplate\\
+Valve with short callout & 60 $\times$ 36 px & Brief tag or state only\\
+Process value callout & 104 $\times$ 42 px & Short tag; value and units\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[leftmargin=*,itemsep=3pt]
+\item Use a compact symbol view when only the SVG and state are needed. Use a separate short callout or a symbol-plus-callout view when the tag and value must travel with it. Long messages and command details belong in an equipment faceplate or popup. A Percent Coordinate Container suits spatial symbol assemblies; a Flex Container suits flowing text.
+\item Give each SVG a correct \texttt{viewBox} and preserve its intrinsic aspect ratio. In an Image component use a containing fit, not a fill mode that distorts the symbol. If individual SVG parts must change color from bindings, use an appropriate embedded SVG/Drawing strategy and validate it in the installed 8.1 minor version.
+\item Use view parameters for equipment identity, tag paths, name, units, and optional state. Bind SVG color, status text, and process values within the template. Include explicit bad-quality and communication-loss states.
+\item Size the parent Embedded View instance to the intended footprint. Inspect the Embedded View's width and height default settings. Start with both set to \texttt{false} for a resizable instance, then verify no scrollbars, clipping, or unexpected internal sizing. These settings are not a universal text-scaling switch.
+\item Keep commands, status messages, and numeric values as Perspective components when they must be interactive or data-bound. A separate text component can scale independently of its adjacent SVG; its style must be tested explicitly.
+\end{enumerate}
+
+\section{Text, interaction, and state rules}
+The Percent Coordinate Container scales component bounds and locations, but a label's CSS font size needs its own rule. Keep SVG geometry and interactive text as distinct components within each template. Apply named Style Classes to the actual Label components; inspect components that expose separate internal text-style properties.
+
+\subsection{Define text roles}
+Use the existing text roles for full-size callouts, faceplates, and details. For compact P\&ID callouts, start with \texttt{compactName}, \texttt{compactValue}, and \texttt{compactUnits} in the companion CSS file. Their base sizes are 12, 16, and 12 CSS px respectively. Do not place full status sentences inside a small symbol. These are trial values, not Ignition requirements or a substitute for operator review.
+
+\begin{center}
+\begin{tabular}{@{}p{4.91cm}p{3.62cm}p{7.11cm}@{}}
+\toprule
+Style Class & Base font size & Use\\ \midrule
+\texttt{equipmentName} & 16 px & Equipment tag and short name, e.g., P-101\\
+\texttt{processValue} & 20--24 px bold & Primary numeric reading\\
+\texttt{processUnits} & 14--16 px & psig, $^\circ$C, GPM\\
+\texttt{equipmentStatus} & 16--18 px bold & RUNNING, FAULT, LOCAL\\
+\texttt{interactionMessage} & 16--18 px & Disabled command or interlock message\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Use the fluid text stylesheet}
+For Ignition 8.1.22 or later, use the accompanying \texttt{Perspective-Fluid-Text-Styles.css} in the project's Advanced Stylesheet. In the Designer, expand Perspective \(\rightarrow\) Styles. If \texttt{stylesheet.css} does not exist, right-click Styles and select \emph{Enable Advanced Stylesheet}. Open \texttt{stylesheet.css}, paste the supplied CSS rules, and save the project. This file is a paste-ready stylesheet, not a standalone one-click Style Class import.
+
+On each Label, enter the unprefixed name in \texttt{props.style.classes}. For a compact value use \texttt{compactValue}; a separate units Label uses \texttt{compactUnits}. The full-size roles listed above are for larger displays. Perspective adds the \texttt{.psc-} prefix to CSS selectors. Enter the class name on the component without this prefix or a leading dot. Do not set a competing inline \texttt{fontSize}.
+
+The CSS uses \texttt{clamp(minimum, fluid size, maximum)}. For example, \texttt{clamp(16px, 1.4815vmin, 32px)} produces roughly 16 px at a 1920 $\times$ 1080 CSS viewport and 32 px at 3840 $\times$ 2160. It changes continuously between those \emph{viewport} sizes. \texttt{vmin} does not measure the 1000 $\times$ 800 view or an individual Embedded View. If the diagram retains a fixed 1000 $\times$ 800 rendered size while the viewport grows, these font rules can outgrow the callouts. In that case, keep compact fonts fixed or base sizing on the rendered view container after validating browser support. At 200\% OS scaling, a 3840-pixel display may expose a viewport near 1920 CSS pixels. Docks, browser chrome, and zoom also affect the result. Check both workstations.
+
+If the installed 8.1 minor version predates the Advanced Stylesheet feature, enter the corresponding \texttt{clamp()} value directly as the Label's \texttt{props.style.fontSize} or use ordinary Style Classes after confirming the expression renders correctly in that version. Keep those values centralized when the project is upgraded.
+
+\subsection{Provide room for labels and interactions}
+Enlarging the font does not enlarge its allocated label box automatically. Reserve space for the longest equipment identifier, negative sign, precision, units, and worst-case status. Keep number and units in separate components if their sizes differ. Use a Flex Container for a symbol with flowing text, or increase the template and label footprints at larger layouts. For long messages, define a two-line wrap area or show a short state on the diagram with detail in a faceplate or popup. Do not shrink text until arbitrary messages fit or let it overlap neighboring equipment.
+
+Keep an interactive target large enough to select reliably; 44 $\times$ 44 CSS px is a starting trial for touch operation, subject to site HMI requirements and operator review. A 24 px visual symbol can have a larger transparent hit region, but adjacent hit regions must not overlap. Show abnormal state with text or symbols as well as color. Keep confirmation, permissive, interlock, and command feedback visible and unambiguous.
+
+\subsection{Worked example: process value template}
+Create a compact instance of \texttt{Templates/Process Value} around 104 $\times$ 42 on the 1000 $\times$ 800 canvas. Put a short tag on the first line and the reading plus units on the second, using \texttt{compactName}, \texttt{compactValue}, and \texttt{compactUnits}. Represent bad quality with an unmistakable short indicator and show the full message in the faceplate. Test the longest actual tag, \texttt{-9999.99 psig}, and a bad-quality state. If they do not fit, widen the callout or abbreviate the tag consistently; do not hide or truncate critical values. Place several instances in the representative process screen and check both workstation configurations, including the right dock.
+
+\section{Verification and acceptance}
+\begin{enumerate}[leftmargin=*,itemsep=3pt]
+\item Build one representative view containing at least one of each template type, the longest expected equipment name and message, a bad-quality value, an alarmed item, and a command target.
+\item Open the session on actual 1920 $\times$ 1080 and 3840 $\times$ 2160 stations with their deployed OS scaling, zoom, docks, and Workstation/browser mode. Record the effective viewport dimensions.
+\item Confirm symbols and pipes retain alignment and shape; no view has unwanted scrollbars, clipping, overlap, or stretched SVGs. Inspect labels, units, number precision, quality indication, and long messages.
+\item Confirm every interactive target can be selected reliably and that popups and commands remain visible. Check normal, running, stopped, fault, alarm, disabled, and communication-loss conditions relevant to each template.
+\item Repeat the test after upgrading to 8.3, including representative SVG color bindings, embedded view sizing, style classes, and interaction behavior. Record any changes before releasing the upgraded project.
+\end{enumerate}
+
+\section{Maintenance rule}
+Keep this appendix source in the Controls Standard LaTeX project. When changing the screen or template sizing guidance, update this file, the standalone procedure PDF, and the compiled Controls Standard PDF in the same revision. Record the affected Ignition version and recheck the two deployed screen configurations.
+
+\section*{Ignition documentation}
+\begin{itemize}[leftmargin=*]
+\item \href{https://www.docs.inductiveautomation.com/docs/8.1/appendix/components/perspective-components/perspective-container-palette/perspective-coordinate-container}{Perspective Coordinate Container (8.1)}
+\item \href{https://www.docs.inductiveautomation.com/docs/8.1/ignition-modules/perspective/views-in-perspective/embedded-views}{Embedded Views (8.1)}
+\item \href{https://www.docs.inductiveautomation.com/docs/8.1/ignition-modules/perspective/styles/style-classes}{Style Classes (8.1)}
+\item \href{https://www.docs.inductiveautomation.com/docs/8.1/ignition-modules/perspective/working-with-perspective-components/images-and-icons-in-perspective}{Images and Icons in Perspective (8.1)}
+\end{itemize}

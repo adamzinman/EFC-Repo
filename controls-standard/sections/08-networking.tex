@@ -1,0 +1,168 @@
+\chapter{Networking and OT Cybersecurity}\label{ch:networking}
+\section{Architecture}\label{sec:net-architecture}
+Industrial networks are separated into zones (groups of devices that need the same level of protection) connected through controlled conduits, following the ISA/IEC 62443 approach and company IT/OT policy.\footnote{ISA/IEC 62443-3-2:2020 (security risk assessment, zones and conduits) and ISA/IEC 62443-3-3:2013 (system security requirements and security levels); NIST SP 800-82 Rev.~3 (2023), \emph{Guide to Operational Technology (OT) Security}.} The aim is a level of protection that matches the system's size and risk, without making the system hard to operate and support.
+
+\textbf{Every panel:}
+\begin{itemize}[itemsep=1pt]
+  \item Keep each panel's devices on a local controls network, separated from the plant network by a NAT/security appliance or by the M580 itself (Section~\ref{sec:panel-networking}).
+  \item Expose only the devices that must be reached from the plant network (usually the PLC, sometimes the HMI), and allow only the traffic they need.
+  \item Keep unencrypted industrial protocols (Modbus TCP, EtherNet/IP) inside the controls zones; they are not routed to the business network or the internet.
+  \item Change default passwords and disable unused services and switch ports (Section~\ref{sec:hardening}).
+\end{itemize}
+
+\textbf{Larger or higher-risk systems} (plant-wide SCADA, multiple panels sharing a network, remote access, or connections to the business network) also need:
+\begin{itemize}[itemsep=1pt]
+  \item A firewall between zones with allow-only rules, and VLANs where several zones share switches.
+  \item A data-flow list identifying each connection's source, destination, protocol, port, purpose, and owner. For a single panel, the NAT mapping list and the Stage 4 network map serve this purpose.
+  \item Central logging of security events and a documented recovery plan.
+\end{itemize}
+
+\subsection{Panel Networking}\label{sec:panel-networking}
+The normal application isolates a local controls network while exposing selected devices, such as the PLC, to the larger plant network through 1:1 NAT. Device Level Ring (DLR) support is not required for this use case. There are two ways to do this:
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{A NAT/security appliance} between the plant network and the local controls network (Table~\ref{tab:nat-options} in Chapter~\ref{ch:hardware}). This is the most flexible option and the right choice when several devices need to be reached from the plant network.
+  \item \textbf{The Modicon M580 itself as the gateway} (Section~\ref{sec:m580-gateway}). This avoids an extra box when only the PLC's data needs to reach SCADA.
+\end{enumerate}
+Figure~\ref{fig:network-layout} shows both layouts.
+
+\textbf{What makes layout (a) work:}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Default gateway.} Every exposed device on the local network must have its default gateway set to the NAT appliance's inside (local) address. Without this, replies to the plant network have no route back.\footnote{Rockwell Automation 1783-NATR user manual: all machine nodes must have their gateway IP set to the NATR private address. Rockwell/Cisco, \emph{Deploying Network Address Translation within a Converged Plantwide Ethernet Architecture} (ENET-TD007).}
+  \item \textbf{What crosses the NAT.} SCADA polling crosses 1:1 NAT without trouble: OPC UA, Modbus TCP, and EtherNet/IP explicit messaging. Multicast traffic does not translate through NAT, so EtherNet/IP I/O (implicit) connections between the PLC and its drives, valve banks, and remote I/O stay on the local network.
+  \item \textbf{Standard panels.} Because each panel is hidden behind its own NAT, every panel can reuse the same local subnet template. This keeps panel designs, spares, and vendor setups the same from project to project; only the plant-side (outside) addresses are unique.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw, rounded corners=2pt, align=center, minimum height=8mm, inner sep=3pt, fill=white},
+  net/.style={draw, fill=headblue!12, rounded corners=2pt, align=center, minimum height=6mm, inner sep=3pt},
+  link/.style={-, thick},
+  every node/.style={align=center}
+]
+% ---------- (a) NAT appliance ----------
+\node[font=\small\bfseries, anchor=west] at (-7.9,5.9) {(a) NAT / security appliance};
+\node[net, minimum width=7.2cm] (plantA) at (-4.3,3.8) {Plant network (e.g., 10.x.x.x)};
+\node[box] (scadaA) at (-4.3,4.9) {Ignition gateway / SCADA};
+\draw[link] (scadaA) -- (scadaA |- plantA.north);
+\node[box, fill=noteorange!12] (nat) at (-4.3,2.6) {NAT / firewall appliance\\(e.g., SCALANCE S615, Moxa NAT-102)\\\scriptsize 1:1 NAT exposes only the PLC (and HMI)};
+\draw[link] (plantA) -- (nat);
+\node[net, minimum width=7.2cm] (localA) at (-4.3,1.3) {Local controls network (same subnet template on every panel)};
+\draw[link] (nat) -- (localA);
+\node[box] (plcA) at (-7.2,0.0) {M580\\PLC};
+\node[box] (hmiA) at (-5.75,0.0) {IPC /\\HMI};
+\node[box] (vfdA) at (-4.3,0.0) {VFDs};
+\node[box] (solA) at (-2.85,0.0) {EX260\\valves};
+\node[box] (gwA) at (-1.4,0.0) {Modbus\\gateway};
+\foreach \n in {plcA,hmiA,vfdA,solA,gwA} \draw[link] (\n.north) -- (\n.north |- localA.south);
+\node[box, font=\scriptsize] (serA) at (-1.4,-1.25) {Serial (RS-485)\\instruments};
+\draw[link, dashed] (gwA) -- (serA);
+\node[font=\scriptsize, align=left, anchor=west] at (-8.0,-1.25) {Exposed devices: default\\gateway = NAT inside address};
+
+% ---------- (b) M580 as gateway ----------
+\node[font=\small\bfseries, anchor=west] at (0.6,5.9) {(b) M580 as the gateway};
+\node[net, minimum width=7.4cm] (plantB) at (4.4,3.8) {Plant network};
+\node[box] (scadaB) at (4.4,4.9) {Ignition gateway / SCADA};
+\draw[link] (scadaB) -- (scadaB |- plantB.north);
+% M580 rack
+\node[box, minimum width=1.95cm, minimum height=1.3cm, fill=headblue!6] (nua) at (1.30,2.3) {\scriptsize BMENUA0100\\\scriptsize OPC UA server};
+\node[box, minimum width=1.95cm, minimum height=1.3cm, fill=headblue!6] (cpu) at (3.35,2.3) {\scriptsize BMEP582040\\\scriptsize CPU};
+\node[box, minimum width=1.95cm, minimum height=1.3cm, fill=headblue!6] (nos) at (5.40,2.3) {\scriptsize BMENOS0300\\\scriptsize DIO ports};
+\node[box, minimum width=1.20cm, minimum height=1.3cm, fill=headblue!6] (io) at (7.10,2.3) {\scriptsize X80\\\scriptsize I/O};
+\node[draw, dashed, rounded corners=3pt, inner sep=4pt, fit=(nua)(cpu)(nos)(io), label={[font=\scriptsize, align=left]right:M580 rack\\data crosses\\only through\\the PLC\\program}] (rack) {};
+\draw[link] (plantB.south -| nua.north) -- (nua.north);
+% RIO main ring from CPU (ring drawn as out-and-back)
+\node[box] (rioB) at (1.70,-0.05) {RIO drop\\BMXCRA31210};
+\draw[link, rounded corners=3pt] ([xshift=-3mm]cpu.south) -- ([xshift=-3mm]cpu.south |- 0,0.95) -| (rioB.north);
+\draw[link, rounded corners=3pt] (rioB.east) -| ([xshift=3mm]cpu.south);
+\node[font=\scriptsize] at (1.70,-0.80) {RIO main ring (RIO drops only)};
+% DIO cloud from NOS
+\node[net, minimum width=3.6cm] (dio) at (6.40,0.55) {DIO cloud (managed switch)};
+\draw[link] (nos.south) -- (nos.south |- dio.north);
+\node[box] (hmiB) at (5.15,-0.75) {IPC /\\HMI};
+\node[box] (vfdB) at (6.35,-0.75) {VFDs};
+\node[box] (solB) at (7.60,-0.75) {EX260\\valves};
+\foreach \n in {hmiB,vfdB,solB} \draw[link] (\n.north) -- (\n.north |- dio.south);
+\end{tikzpicture}}
+\caption{Typical panel network layouts. In (a) an appliance translates addresses so only selected devices are visible on the plant network. In (b) the M580 keeps the networks separate: SCADA reads PLC variables through the BMENUA0100 OPC UA server, remote I/O drops are on the RIO main ring, and distributed devices are on a separate DIO cloud connected through a BMENOS0300 (or a dual-ring switch).}
+\label{fig:network-layout}
+\end{figure}
+
+\subsection{Using the Modicon M580 as a Gateway}\label{sec:m580-gateway}
+An M580 can act as the boundary between the plant network and the local controls network without a separate NAT device. The idea is simple: give the PLC separate network connections and let \emph{only the PLC program} pass data between them.
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Local side.} Remote I/O drops go on the RIO main ring from the CPU's ports. Distributed devices (HMI, VFDs, valve banks, gateways) go on a separate DIO cloud, connected through a BMENOS0300 module, a dual-ring switch, or a BMENOC0301/11 --- never directly on the RIO ring. Schneider does not permit RIO modules in a DIO cloud or DIO devices directly on the main ring.\footnote{Schneider Electric, \emph{Modicon M580 Standalone System Planning Guide} (HRB62666) and \emph{System Planning Guide for Complex Topologies} (NHA58892). CPUs ending in ``40'' (e.g., BMEP582040) support RIO; those ending in ``20'' support local and DIO only.}
+  \item \textbf{Plant side (standard).} Add a \separt{BMENUA0100} OPC UA module and connect its control port to the plant network. Ignition connects to it as an OPC UA client and browses the PLC variables by name (Section~\ref{sec:protocols}). Configure the module's cybersecurity (it ships with a Secured/Standard mode rotary switch) and confirm in the module configuration that it does not forward traffic between its control port and the device network.
+  \item \textbf{Plant side (alternative).} Where Modbus TCP or EtherNet/IP explicit access is needed instead, add a \separt{BMENOC0301} and leave its \emph{Ethernet backplane port disabled} (the default). Schneider's documentation states that the module is then isolated from the rest of the M580 Ethernet network, so the plant network can't see the local devices; the module still exchanges data with the CPU over the X~Bus backplane. Bench test the access to CPU variables in this configuration before relying on it.
+  \item \textbf{Give SCADA the data it needs.} SCADA reads and writes only the PLC's own variables. Data from local devices reaches SCADA because the PLC program copies it into those variables.
+\end{enumerate}
+\textbf{Limitations.} SCADA can't talk directly to a VFD or other local device this way --- everything goes through the PLC. If you need to reach local devices directly (for example to configure a drive from the plant network), use a NAT appliance instead. The \separt{BMENOC0321} control-network module can route traffic between networks (IP forwarding), but that is a routed design, not an isolated one, so it needs the same security review as a NAT appliance. Confirm the exact module configuration in Control Expert for each project.
+
+\textit{Further reading:} \href{https://filedn.eu/l6oFb0aAwOAyRLLaUMiUmzz/CE_HELP/eng/BMENOC03x1/BMENOC03x1_D-SE-0035359.htm}{Schneider Electric --- The BMENOC0301/11 modules in Modicon M580 networks}; \href{https://www.se.com/us/en/product/BMENUA0100/communication-module-modicon-m580-opc-ua/}{Schneider Electric --- BMENUA0100 OPC UA module}.
+
+\section{Communication Protocol Standards}\label{sec:protocols}
+\textbf{PLC to SCADA: OPC UA.} Modicon M580 PLCs communicate with the Ignition SCADA server over OPC UA through the \separt{BMENUA0100} module.
+\begin{itemize}[itemsep=1pt]
+  \item Ignition connects as an OPC UA client and browses the PLC variables by name, so no register maps are needed and each PLC data type maps directly to an Ignition UDT (Section~\ref{sec:udt}).
+  \item Expose variables in Control Expert under \textit{Tools \textgreater{} Project Settings \textgreater{} General \textgreater{} PLC embedded data \textgreater{} Data dictionary}. Selecting \textit{Only HMI variables} limits OPC UA access to variables with the HMI attribute set in the data editor; use it so SCADA only sees what it needs.
+  \item Use certificate-based security (policy Basic256Sha256, sign and encrypt), named user accounts with the minimum permissions, and the module's Secured mode. Anonymous access is not used.
+  \item The M580 CPU itself has only an OPC UA \emph{client} (firmware 4.10 and later); the OPC UA \emph{server} for SCADA is the BMENUA0100.
+\end{itemize}
+
+\textbf{Device communications: EtherNet/IP by default, Modbus TCP as the backup.} Communication between the PLC and drives, valve banks, scales, IPCs, and similar devices defaults to \textbf{EtherNet/IP}. \textbf{Modbus TCP} may be used:
+\begin{itemize}[itemsep=1pt]
+  \item as a backup when a device does not support EtherNet/IP or its EtherNet/IP option is not available (for example the Invertek OPT-3-MTPEG-IN case in Section~\ref{sec:vfd}); or
+  \item to convert an existing Modbus RTU (serial) system to Ethernet through a gateway such as the EKI-122x (Section~\ref{sec:protocol-converters}).
+\end{itemize}
+Modbus addressing and setup are covered in Appendix~\ref{app:modbus}.
+
+\textbf{Exceptions.}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Productivity2000} has no OPC UA server and Ignition has no native Productivity driver, so its SCADA link uses Modbus TCP with a documented register map.
+  \item The two existing \textbf{ControlLogix} systems (Rare Gas column and Helium system) use Ignition's Allen-Bradley Logix driver.
+\end{itemize}
+
+\section{Addressing}
+IP addresses and VLANs must be assigned through the company IP address management process. A project number must not be inserted directly into an octet unless the resulting address and subnet have been allocated. The subnet mask must create the intended boundary; a /16 network must not be treated as though different third octets are isolated. Static addresses, reserved addresses, gateways, VLAN IDs, DNS names, and ownership must be recorded in the network schedule.
+
+Do not use the common vendor default subnets (192.168.0.x and 192.168.1.x) for local controls networks. Many devices and laptops ship on those subnets, and plugging one in causes address conflicts.
+
+\section{Network Equipment}
+Managed industrial switches must be used unless the basis of design documents why an unmanaged switch is acceptable. Required features must be selected for the application and may include VLANs, access control, port security, SNMPv3, redundant ring protocol, quality of service, multicast/IGMP management (needed where EtherNet/IP I/O traffic is present), time synchronization, diagnostics, configuration backup, and event logging. Unused switch ports and services must be disabled where supported. Unmanaged switches are never used on an M580 RIO ring.
+
+\section{Remote Access}\label{sec:remote-access}
+Direct inbound access to PLCs, HMIs, or panel devices from the internet is prohibited. Remote access must use the company-managed secure access service, MFA, named accounts, authorization, session logging where available, and time-limited vendor access. Permanent vendor modems or cloud tunnels require documented cybersecurity approval.\footnote{CISA, NCSC-UK, FBI, et al., \emph{Secure Connectivity Principles for Operational Technology (OT)}, January 2026; CISA et al., \emph{Guide to Securing Remote Access Software}, June 2023.}
+
+For the parent company's network and remote access platforms, Cato Networks and Claroty xDome Secure Access, see Appendix~\ref{app:cato-claroty}.
+
+\section{System Hardening and Maintenance}\label{sec:hardening}
+\note{Nothing is currently done to harden controls systems. A hardening plan should be discussed and adopted.}
+
+The plan should cover:
+\begin{itemize}[itemsep=1pt]
+  \item An asset list: what is installed, its firmware and software versions, and who owns it.
+  \item Changing default passwords on every device.
+  \item Turning off unused services (for example FTP, HTTP, and TFTP on PLCs) and unused switch ports.
+  \item A practical approach to firmware and Windows updates that weighs security against uptime.
+\end{itemize}
+Vendor guidance: Schneider Electric, \emph{Modicon Controllers Platform --- Cyber Security Reference Manual} (EIO0000001999); Inductive Automation, \href{https://inductiveautomation.com/resources/article/ignition-security-hardening-guide}{Ignition Security Hardening Guide}.
+
+\textbf{A NAT device is a good first step.}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Hides the local network.} Only the devices you choose (usually the PLC, sometimes the HMI) can be reached from the plant network. VFDs, valve banks, gateways, and everything else stay invisible.
+  \item \textbf{Protects devices that can't be hardened.} Many drives, gateways, and older devices can't be patched or locked down. Putting them behind NAT protects them without touching each one --- a ``compensating control'' in ISA/IEC 62443 terms.
+  \item \textbf{One place to control access.} With a firewall-capable appliance (Table~\ref{tab:nat-options}), allow-only rules (for example, SCADA server to PLC on the OPC UA port only) and logging live in one box instead of being set on every device.
+  \item \textbf{Keeps panels standard.} Every panel can reuse the same local subnet, so panel designs, spares, and vendor setups stay the same from project to project.
+\end{itemize}
+
+\section{Time, Logging, and Recovery}
+Controllers, SCADA, workstations, network devices, and security systems should use an approved time source and a consistent time zone. Security and operational events must be retained according to company policy. The design must document recovery priorities, replacement configurations, backups, and the test interval for restoring critical OT assets.
+
+\future{set up a plant time server so all controls equipment is synchronized to one source. This will be investigated with IT.}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Why it matters:} alarm and event timestamps, historian data, and the first-out records of trips (Chapter~\ref{ch:plc-standards}) can only be compared across systems if every device uses the same clock.
+  \item \textbf{Likely approach:} IT provides an NTP server on the plant network, or the controls network gets its own (for example a GPS-referenced appliance). PLCs, Ignition servers, IPCs, and managed switches sync to it as NTP clients. The M580 CPU can be an NTP client (a BMENOC03x1 can also update the CPU time), and Productivity2000 CPUs sync over SNTP using the Network Time Service instruction.
+  \item \textbf{Questions for IT:} which server to use, whether controls networks behind NAT can reach it, and which time zone or UTC convention to standardize on.
+\end{itemize}

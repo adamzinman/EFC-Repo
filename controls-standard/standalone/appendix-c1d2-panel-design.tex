@@ -1,0 +1,16 @@
+% Standalone build of one appendix of the Controls Standard.
+% Run build-all.bat (from the Controls Standard folder) rather than
+% compiling this file directly; it needs build/master-refs.aux and
+% appendix-numbers.tex from the main document.
+\documentclass[11pt]{report}
+\def\EFCstandalone{}
+\input{preamble}
+\externaldocument[M-]{build/master-refs}
+\input{appendix-numbers}
+\newcommand{\EFCappkey}{c1d2-panel-design}
+\newcommand{\EFCapptitle}{Class I Div 2 Panel Design}
+\input{standalone/appendix-common}
+\begin{document}
+\EFCstartappendix
+\input{appendices/c1d2-panel-design}
+\end{document}

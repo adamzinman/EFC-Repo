@@ -1,0 +1,674 @@
+\chapter{Hardware}\label{ch:hardware}
+\section{PLC}
+\subsection{Primary Selection --- Modicon}
+\begin{small}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{3.0cm}P{2.8cm}P{3.3cm}P{6.5cm}@{}}
+\caption{Modicon PLC Hardware --- Primary Selection}\label{tab:modicon} \\
+\toprule
+\rowcolor{tblhead}\textbf{Type} & \textbf{Part Number} & \textbf{Required Cable / Interface} & \textbf{Description} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Type} & \textbf{Part Number} & \textbf{Required Cable / Interface} & \textbf{Description} \\
+\midrule
+\endhead
+PLC CPU & \separt{BMEP582040} & N/A & Modicon M580 standalone processor; 8 MB memory; supports up to 61 Ethernet devices and eight X80 remote I/O racks. \\
+Power Supply & \separt{BMXCPS3500} & N/A & Modicon X80 power supply; 100--240 VAC input; 36 W. \\
+Ethernet Communication & \separt{BMENOC0301} & Ethernet & Modicon M580 Ethernet network option module. Can also be used to separate networks (see Section~\ref{sec:m580-gateway}). \\
+OPC UA Communication & \separt{BMENUA0100} & Ethernet & Modicon M580 OPC UA communication module. \\
+Remote I/O Drop & \separt{BMXCRA31210} & Ethernet/IP & X80 Ethernet RIO drop adapter with service port and advanced features. \\
+Serial Communication & \separt{BMXNOM0200} & RS-232 / RS-485 & Two-port Modbus serial communication module. \\
+Digital Input, 16-point & \separt{BMXDDI1602} & \separt{BMXFCC203} / \separt{ABE7H16CR21} & 24 VDC discrete input module. \\
+Digital Input, 32-point & \separt{BMXDDI3202K} & \separt{BMXFCC203} / \separt{ABE7H16CR21} & 32 positive-logic, 24 VDC discrete inputs. \\
+Digital Output, 16-point & \separt{BMXDDO1602} & \separt{BMXFCC203} / \separt{ABE7H16CR21} & 24 VDC transistor output module. \\
+Digital Output, 32-point & \separt{BMXDDO3202K} & \separt{BMXFCC203} / \separt{ABE7H16CR21} & 32 positive-logic, 24 VDC transistor outputs. \\
+Digital Output, 64-point & \separt{BMXDDO6402K} & \separt{BMXFCC203} / \separt{ABE7H16CR21} & 64 positive-logic, 24 VDC transistor outputs. \\
+Analog Input, 8-channel & \separt{BMXAMI0810} & \separt{BMXFTA300} & High-level analog input module; 0--20 mA, 4--20 mA, and $\pm$10 V. \\
+Analog Output, 8-channel & \separt{BMXAMO0802} & \separt{BMXFTA302} / \separt{ABE7CPA02} & Eight-channel X80 analog output module. \\
+RTD / Thermocouple Input & \separt{BMXART0814} & \separt{BMXFCW301S} & Eight-channel isolated low-level analog input module (see Section~\ref{sec:temperature}). \\
+Ethernet Backplane, 12-slot & \separt{BMEXBP1200} & N/A & Modicon X80 12-slot Ethernet backplane. \\
+Standard Backplane, 12-slot & \separt{BMXXBP1200} & N/A & Modicon M340/X80 12-slot DIN-rail backplane. \\
+Backplane Extension Kit & \separt{BMXXBE2005} & N/A & Modicon M340/X80 backplane extension kit. \\
+Digital I/O Cable & \separt{BMXFCC203} & 40-way to dual HE10 & Two-meter prefabricated digital I/O cord set. \\
+Digital I/O Sub-base & \separt{ABE7H16CR21} & HE10 & Passive 16-channel ABE7 connection sub-base. \\
+Analog Input Cable & \separt{BMXFTA300} & 28-way to SUB-D 25 & Three-meter analog input cord set. \\
+Analog Output Cable & \separt{BMXFTA302} & 20-way to SUB-D 25 & Three-meter analog output cord set. \\
+Analog Distribution Base & \separt{ABE7CPA02} & SUB-D 25 & Passive distribution base for eight analog channels. \\
+RTD / TC Cable & \separt{BMXFCW301S} & 40-way to flying leads & Three-meter shielded low-level analog cord set. \\
+Fiber Media Converter & \pcpart{https://www.phoenixcontact.com/en-pc/products/fo-converters-mc-1000-mm-st-1329818}{MC 1000-MM ST} & 100Base-TX / multimode ST fiber & Phoenix Contact 10/100 Mbps multimode fiber-optic media converter. \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\subsection{Low-Cost Option --- AutomationDirect Productivity2000}
+For low-cost applications, the standard PLC is the AutomationDirect Productivity2000 P2-622 CPU.
+
+\begin{small}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{3.0cm}P{2.6cm}P{10.1cm}@{}}
+\caption{AutomationDirect Productivity2000 --- Low-Cost Option}\label{tab:productivity2000} \\
+\toprule
+\rowcolor{tblhead}\textbf{Type} & \textbf{Part Number} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Type} & \textbf{Part Number} & \textbf{Notes} \\
+\midrule
+\endhead
+CPU & \adpart{p2-622} & 50 MB memory; 2 Ethernet ports; 2 serial ports (RS-232/485); USB-C; microSD slot; small OLED display. Needs Productivity Suite v4.0.1 or later. \\
+DC Power Supply & \href{https://www.automationdirect.com/adc/shopping/catalog/programmable_controllers/productivity2000_plcs_\%28micro-modular\%29/power_supplies/p2-02dc}{P2-02DC} & 24 VDC input. One per base. \\
+7-Slot Base & \href{https://www.automationdirect.com/adc/shopping/catalog/programmable_controllers/productivity2000_plcs_\%28micro-modular\%29/bases/p2-07b}{P2-07B} & Holds the power supply, CPU, and seven I/O modules. DIN-rail or panel mount. \\
+Analog Input & \href{https://www.automationdirect.com/adc/shopping/catalog/programmable_controllers/productivity2000_plcs_\%28micro-modular\%29/analog_i-z-o/p2-08ad-1}{P2-08AD-1} & 8 channels, 4--20 mA, 16-bit. Needs external 24 VDC.\textsuperscript{\dag} \\
+Analog Output & \href{https://www.automationdirect.com/adc/shopping/catalog/programmable_controllers/productivity2000_plcs_\%28micro-modular\%29/analog_i-z-o/p2-08da-1}{P2-08DA-1} & 8 channels, 4--20 mA, 16-bit. Needs external 24 VDC.\textsuperscript{\dag} \\
+Digital Input & \href{https://www.automationdirect.com/adc/shopping/catalog/programmable_controllers/productivity2000_plcs_\%28micro-modular\%29/dc_i-z-o/p2-16nd3-1}{P2-16ND3-1} & 16 points, 12--24 VDC, sinking or sourcing; 2 commons.\textsuperscript{\dag} \\
+Digital Output & \href{https://www.automationdirect.com/adc/shopping/catalog/programmable_controllers/productivity2000_plcs_\%28micro-modular\%29/dc_i-z-o/p2-16td1p}{P2-16TD1P} & 16 points, 12--24 VDC sinking; 0.25 A per point; short-circuit protected.\textsuperscript{\dag} \\
+\bottomrule
+\end{longtable}
+\end{small}
+\textsuperscript{\dag}\textit{\small Each I/O module also needs a P2-RTB / P2-RTB-1 terminal block or a ZIPLink cable.}
+
+Productivity2000 may be selected for a stand-alone, non-safety application with limited I/O, no high-availability requirement, a simple network interface, and no requirement for M580/X80 compatibility. Modicon M580 must be used when remote I/O, system growth, network segmentation, advanced diagnostics, redundancy, large memory, or integration with an existing Modicon architecture is required. The basis of design must record the selection. Remote I/O and termination hardware not listed above require technical approval before design release.
+
+\subsection{Panel Layout Consistency}
+Where a project includes multiple panels performing a similar function (e.g., a column control panel repeated across several production lines, or system variants that share a common core), panel layout --- DIN rail arrangement, sizing, and general internal organization --- should be kept as consistent as possible across those panels, even when their I/O content differs.
+
+\textbf{Rule of thumb:} Design to the largest/worst-case variant for that panel type, and let smaller variants carry unused space rather than designing a unique layout for each. This trades a small amount of panel real estate for a significant reduction in fabrication variability, which matters most when panels are outsourced to a panel builder --- a consistent design lets the builder run a repeatable process instead of building bespoke panels project to project.
+
+This applies at the panel-type level, not across unrelated equipment --- the goal is consistency among panels that do the same job, not one universal panel layout for the whole system.
+
+\note{A Panel Layout Design Guide is in development. Once it is added as an appendix, a cross-reference to it will be placed here.}
+
+\subsection{Local vs.\ Remote I/O Placement}\label{sec:local-remote-io}
+Whether a field device is wired to local or remote I/O must be based on lifecycle cost, cable length and voltage drop, analog signal integrity, fault containment, availability, environmental and hazardous-area classification, maintenance access, network loading, spare capacity, local power, and safe behavior following a communication failure. Physical distance is one input, not the sole criterion:
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Local I/O:} used when the device/area is close enough to the primary panel that direct wiring is practical.
+  \item \textbf{Remote I/O:} used when distance makes direct wiring impractical (cable run length, voltage drop, install cost). A remote drop is placed near the equipment cluster it serves (e.g., near a feed or fill section) and connected back to the primary panel via the plant network.
+\end{itemize}
+This decision should be made per functional area (e.g., column, feed, fill) based on the facility layout, not assumed to be the same across every project. This decision cannot be made from the P\&ID alone --- it requires the system layout drawing (see Stage 4 in Section~\ref{sec:stage4}) showing physical distances between functional areas.
+
+\section{Panel Components}
+\subsection{Terminal Blocks}
+This subsection lists the standard WAGO terminal blocks approved for use in panel builds under this standard, organized by use case. Except where noted, all part numbers are DIN-rail mount, push-in CAGE CLAMP\textregistered\ termination with push-button release.
+
+\begin{small}
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}P{2.3cm}P{2.5cm}P{4.9cm}P{1.2cm}P{1.3cm}P{1.9cm}P{1.0cm}@{}}
+\caption{Terminal Blocks (WAGO)}\label{tab:terminal-blocks} \\
+\toprule
+\rowcolor{tblhead}\textbf{Use Case} & \textbf{PN} & \textbf{Description} & \textbf{Size} & \textbf{Color} & \textbf{Rating} & \textbf{Cost} \\
+\midrule
+\endfirsthead
+\multicolumn{7}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Use Case} & \textbf{PN} & \textbf{Description} & \textbf{Size} & \textbf{Color} & \textbf{Rating} & \textbf{Cost} \\
+\midrule
+\endhead
+24 VDC Distribution & \wagopart{2202-1404} & 4-conductor through terminal block, push-button & 2.5 mm\textsuperscript{2} & Blue & 24 A / 800 V & \$5.87 \\
+Fused Terminals (1/4 x 1-1/4") & \wagopart{2206-1631/1000-541} & 2-conductor fuse terminal block, pivoting fuse holder, blown-fuse LED (12--30 V) & 6 mm\textsuperscript{2} & Grey & 10 A (fuse sets protection) & Quote \\
+Fused Terminals (5 x 20 mm) & \wagopart{2202-1811/1000-541} & 4-conductor fuse terminal block, pivoting fuse holder, blown-fuse LED (12--30 V) & 2.5 mm\textsuperscript{2} & Grey & 6.3 A (fuse sets protection) & Quote \\
+Analog Outputs & \wagopart{2202-2201} & Double-deck through terminal block, push-button & 2.5 mm\textsuperscript{2} & Grey & 24 A / 800 V & Quote \\
+Analog Inputs & \wagopart{280-560} & 3-conductor sensor terminal block (triple-deck), colored conductor entries & 2.5 mm\textsuperscript{2} & Grey & 20 A / 400 V & Quote \\
+Analog Inputs (Alternate) & \href{https://www.wago.com/us/rail-chassis-terminal-blocks/3-conductor-sensor-terminal-block/p/2020-5311}{2020-5311} & 3-conductor sensor terminal block for PNP sensors, pluggable signal level & 1 mm\textsuperscript{2} & Grey & 13.5 A / 250 V & Quote \\
+Digital Inputs & \wagopart{2202-1201} & 2-conductor through terminal block, push-button & 2.5 mm\textsuperscript{2} & Grey & 24 A / 800 V & \$2.46 \\
+Digital Outputs & \wagopart{857-304} & Relay module, 1 changeover (SPDT) contact, 24 VDC coil, status LED & 6 mm wide & Grey & 6 A (contact) & \$17.02 \\
+Ground -- Single & \wagopart{2202-1207} & 2-conductor ground terminal block, push-button & 2.5 mm\textsuperscript{2} & Green-Yellow & 24 A / 800 V & \$7.28 \\
+Ground -- Double & \wagopart{2202-1407} & 4-conductor ground terminal block, push-button & 2.5 mm\textsuperscript{2} & Green-Yellow & 24 A / 800 V & \$15.18 \\
+\bottomrule
+\end{longtable}
+\end{small}
+\textit{\small Costs are budgetary single-unit snapshots retained for estimating. ``Quote'' indicates that procurement must obtain current pricing. The 857-304 is an active relay module; its size is module width. Separate terminal colors/markers must be selected for DC common, 120 VAC line and neutral, and externally energized circuits. Ratings must be checked against conductor size, circuit protection, temperature, and panel SCCR.}
+
+\subsubsection*{Accessories}
+\begin{longtable}{@{}P{2.6cm}P{13cm}@{}}
+\caption{WAGO TOPJOB S Accessories}\label{tab:wago-accessories} \\
+\toprule
+\rowcolor{tblhead}\textbf{Part Number} & \textbf{Description} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Part Number} & \textbf{Description} \\
+\midrule
+\endhead
+\wagopart{2002-1291} & End and intermediate plate, 0.8 mm thick \\
+\wagopart{209-191} & Separator, for Ex e / Ex i applications \\
+\wagopart{2002-2292} & End plate / end cover, for 2002 double-deck terminal blocks (orange) \\
+\wagopart{2009-115} & WMB-Inline marking strips (for Smart Printer), white, 5 mm width, 1,500 pieces per roll \\
+\wagopart{2002-410} & Cross-connector, pluggable, 10-pole, for 2.5 mm\textsuperscript{2} TOPJOB S terminal blocks, 25 A max, IP20 \\
+\bottomrule
+\end{longtable}
+
+\subsubsection*{Screw-Terminal Alternates (Phoenix Contact)}
+\note{WAGO does not make screw-clamp terminal blocks; its range is spring-clamp (push-in CAGE CLAMP\textregistered) only. When a project, customer, or panel shop requires screw terminals, use the Phoenix Contact UT (screw connection) equivalents below.}
+
+\begin{small}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{3.0cm}P{3.4cm}P{1.9cm}P{7.3cm}@{}}
+\caption{Phoenix Contact Screw-Terminal Alternates to WAGO Items}\label{tab:phoenix-alternates} \\
+\toprule
+\rowcolor{tblhead}\textbf{WAGO PN} & \textbf{Phoenix Contact Type} & \textbf{Order No.} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{WAGO PN} & \textbf{Phoenix Contact Type} & \textbf{Order No.} & \textbf{Notes} \\
+\midrule
+\endhead
+\multicolumn{4}{@{}l}{\textit{Terminal blocks (Table~\ref{tab:terminal-blocks})}} \\
+2202-1404 & UT 2,5-QUATTRO BU & \pxpart{3044555} & 4-conductor feed-through, blue, 2.5 mm\textsuperscript{2} --- 24 VDC distribution. \\
+2206-1631/1000-541 & UK 10-DREHSILED 24 (6,3X32) & \pxpart{3005646} & Fuse terminal for 6.3 x 32 mm (1/4 x 1-1/4") fuses, 24 V blown-fuse LED. \\
+2202-1811/1000-541 & UT 4-HESILED 24 (5X20) & \pxpart{3046090} & Fuse terminal for 5 x 20 mm fuses, 24 V blown-fuse LED. \\
+2202-2201 & UTTB 2,5 & \pxpart{3044636} & Double-level feed-through, grey --- analog outputs. \\
+280-560 & UT 2,5-3L & \pxpart{3214259} & Three-level terminal block --- analog inputs (sensor wiring). \\
+2020-5311 & UT 2,5-3L & \pxpart{3214259} & No direct pluggable screw equivalent; use the same three-level block. \\
+2202-1201 & UT 2,5 & \pxpart{3044076} & 2-conductor feed-through, grey --- digital inputs. \\
+857-304 & PLC-RSC- 24DC/21 & \pxpart{2966171} & Relay module, 1 changeover contact, 24 VDC coil, screw connection --- digital outputs. \\
+2202-1207 & UT 2,5-PE & \pxpart{3044092} & 2-conductor ground terminal, green-yellow. \\
+2202-1407 & UT 2,5-QUATTRO-PE & \pxpart{3044568} & 4-conductor ground terminal, green-yellow. \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Accessories (Table~\ref{tab:wago-accessories})}} \\
+2002-1291 & D-UT 2,5/10 & \pxpart{3047028} & End cover for UT 2,5 / UT 2,5-QUATTRO blocks. \\
+209-191 & ATP-UT & \pxpart{3047167} & Partition (separating) plate for UT blocks. \\
+2002-2292 & D-UTTB 2,5/4 & \pxpart{3047293} & End cover for UTTB 2,5 double-level blocks. \\
+2009-115 & UC-TM 5 & \pxpart{0818108} & Blank terminal markers, 5 mm --- print with the Phoenix marking system. \\
+2002-410 & FBS 10-5 & \pxpart{3030213} & 10-position plug-in bridge (jumper) for 5.2 mm pitch UT 2,5 blocks. \\
+\bottomrule
+\end{longtable}
+\end{small}
+\textit{\small These are suggested equivalents for size and function. Before ordering, check wire range, current/voltage rating, color, and that accessories fit the exact block family. Fuse terminals and relay modules in particular should be checked against the circuit they protect or switch.}
+
+\section{Industrial Control Panel Design}
+This section explains the main design checks for a control panel in plain terms. If something here doesn't make sense or doesn't fit your project, ask before you design around it.
+
+\subsection{Codes, Listing, and Nameplate}
+Three documents set most of the rules for our panels: NFPA 70 (the National Electrical Code), NFPA 79 (electrical equipment on industrial machinery), and UL 508A (how industrial control panels are built and rated). Design panels using the UL 508A approach.
+
+\future{formally identifying which edition of each code applies (and any local changes) is something we plan to do for each project. It is not current practice.}
+
+A panel is only \emph{UL Listed} if a UL-certified shop builds it and applies a UL label. The purchase specification should say whether the project needs a listed panel. If it doesn't, the panel and drawings must not say or imply that it is UL Listed.
+
+Every panel needs a nameplate that shows: supply voltage, phase, and frequency; full-load current; SCCR (see Section~\ref{sec:sccr}); enclosure type rating (for example NEMA 4X); and the drawing number.
+
+\subsection{SCCR and Circuit Protection}\label{sec:sccr}
+\textbf{What SCCR is.} If a short circuit happens somewhere downstream, a huge burst of current flows for a split second before a fuse or breaker clears it. The panel's \textbf{Short-Circuit Current Rating (SCCR)} is the largest of these fault currents the panel can survive without catching fire or blowing apart. It is given in kA (thousands of amps) at a stated voltage, for example ``SCCR: 65~kA at 480~VAC.''
+
+\textbf{The rule:} the panel's SCCR must be \emph{equal to or greater than} the available fault current where the panel is installed.
+
+\textbf{How to work it out (simple version).} UL 508A Supplement SB uses a ``weakest link'' approach: the panel is only as strong as its lowest-rated power component.
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Get the available fault current} at the panel location. This comes from the facility's electrical engineer, a short-circuit study, or the utility. Write it down; it goes on the drawings.
+  \item \textbf{List every component in the power circuit} --- main disconnect, fuses and breakers, power distribution blocks, motor starters and overloads, contactors, VFDs, and the primary side of control transformers. Control-circuit parts on the secondary of a control transformer usually do not count.
+  \item \textbf{Write down each component's SCCR} from its nameplate, datasheet, or the manufacturer's tested-combination table. If a part has no rating, UL 508A assigns it a low default value (often 5~kA), which usually ends up being the weak link.
+  \item \textbf{Take the lowest number.} That is the panel SCCR:
+\end{enumerate}
+\[
+  \text{SCCR}_{\text{panel}} = \min\left(\text{SCCR}_{1},\ \text{SCCR}_{2},\ \dots,\ \text{SCCR}_{n}\right) \;\geq\; I_{\text{available fault}}
+\]
+\begin{enumerate}[resume,itemsep=2pt]
+  \item \textbf{Compare it to the available fault current.} If the panel SCCR is too low, replace the weak component with a higher-rated one or use a manufacturer's tested combination (for example a specific fuse class protecting a VFD or a motor starter).
+\end{enumerate}
+UL 508A also lets you raise some component ratings when they are protected by current-limiting fuses or breakers. That is an advanced step --- ask before relying on it.
+
+\textbf{Example.} The facility says 22~kA is available at the panel.
+\begin{center}
+\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+Component & SCCR \\ \midrule
+Main fused disconnect (Class J fuses) & 100 kA \\
+Power distribution block (stand-alone rating) & 10 kA \\
+Motor starter (manufacturer combination rating) & 65 kA \\
+VFD (with the fuses listed in its manual) & 65 kA \\
+Control transformer primary fuse holder (Class CC) & 200 kA \\ \midrule
+\textbf{Lowest value = panel SCCR} & \textbf{10 kA} \\
+\bottomrule
+\end{tabular}
+\end{center}
+10~kA is less than 22~kA, so the panel fails. Swapping the distribution block for one rated 100~kA when protected by Class J fuses makes the lowest value 65~kA, and $65 \geq 22$, so the panel passes and is marked ``SCCR: 65~kA.''
+
+\textit{Further reading:} \href{https://www.eaton.com/us/en-us/products/electrical-circuit-protection/short-circuit-current-ratings.html}{Eaton --- Short-Circuit Current Ratings (SCCR) resource page}; \href{https://www.eaton.com/content/dam/eaton/products/electrical-circuit-protection/fuses/solution-center/bus-ele-tech-lib-short-circuit-current-rating-calculations-and-marking-2008-spd.pdf}{Bussmann --- SCCR calculations and marking (UL 508A SB)}; \href{https://www.mersen.com/sites/default/files/files_imported_ep/TT-SCN1-Achieving-Higher-Short-Circuit-Current-Ratings-for-Industrial-Control-Panels-Tech-Topic.pdf}{Mersen --- Achieving higher SCCR for industrial control panels}.
+
+\textbf{Circuit protection.} Every circuit needs the right protection: feeders, branch circuits, motors (overloads), control circuits, and transformers (see Appendix~\ref{app:transformer-sizing}). Each protective device must be able to interrupt the fault current it could see. Show the protection on the schematics.
+
+\subsection{Disconnects and Emergency Stops}
+\textbf{Disconnect.} Each panel needs a way to shut off all incoming power, usually a door-mounted handle. It should be interlocked with the door so the door can't be opened with power on, except by a qualified person using the defeat feature.
+
+\textbf{Emergency stop (E-stop).} An E-stop is for emergencies only, not for normal process stops. If the risk assessment calls for one:
+\begin{itemize}[itemsep=1pt]
+  \item Use safety-rated parts and wiring where the risk assessment requires it.
+  \item It must latch (stay pressed) until someone resets it by hand.
+  \item Resetting it must not restart anything dangerous by itself.
+\end{itemize}
+
+\subsection{Power Distribution and Segregation}
+\textbf{Keep high voltage separate.} When you can, put 240/480 VAC equipment (drives, motor starters, the main disconnect) in a different enclosure from the 24 VDC and 120 VAC controls. That way someone can work on the PLC without being exposed to 480~V. If that's not practical, use barriers, spacing, separate wire routing, and clear labels.
+
+\textbf{Keep wiring types apart.} Route power, control, analog, safety, and network wiring separately to reduce electrical noise and the chance that one fault takes out several systems. Show shield termination, grounding, and cable entry on the drawings. Never put a switch or fuse in the protective ground (PE).
+
+\subsection{Control Power, Heat, and Capacity}\label{sec:heat}
+\textbf{Sizing power.} Size power supplies and transformers for the steady load, the start-up (inrush) surge, and future additions. Leave at least \textbf{20\% spare} power-supply capacity and panel space unless the project says otherwise. Appendix~\ref{app:transformer-sizing} walks through sizing a control transformer.
+
+\textbf{Heat.} Everything in the panel gives off heat. If the inside gets too hot, electronics fail early --- most PLCs, power supplies, and PCs are rated to about 40--55~\textdegree C inside the panel. Check the heat at the hottest expected ambient temperature, and also think about condensation, dust, corrosive air, washdown, and how filters will be maintained.
+
+\subsubsection*{Step 1 --- Add up the heat inside the panel}
+Add the heat loss (in watts) of every device. Use the ``power loss'' or ``heat dissipation'' value from each datasheet. Typical sources:
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Power supplies:} not all input power reaches the output. Heat $= P_{\text{out}}\left(\dfrac{1}{\eta} - 1\right)$, where $\eta$ is efficiency. A 240~W supply at 92\% efficiency gives off about 21~W.
+  \item \textbf{VFDs:} roughly 2--3\% of the drive's rated power, or use the datasheet value.
+  \item \textbf{PLC racks, I/O, switches, PCs:} use the datasheet watts (power drawn is roughly heat given off).
+  \item \textbf{Relays, contactor coils, transformers:} a few watts each; transformers list their losses.
+\end{itemize}
+\[
+  P_{\text{heat}} = \sum P_{\text{device}} \quad [\text{W}]
+\]
+
+\subsubsection*{Step 2 --- Work out how much heat the enclosure can shed on its own}
+A closed steel enclosure loses heat through its outside walls. How much it can lose depends on its exposed surface area and how much hotter you let the inside get compared to the room:
+\[
+  P_{\text{natural}} = k \times A \times \Delta T
+\]
+\begin{itemize}[itemsep=1pt]
+  \item $k \approx 5.5~\text{W}/(\text{m}^2\cdot\text{\textdegree C})$ for painted steel (about $0.28~\text{W}/(\text{ft}^2\cdot\text{\textdegree F})$).
+  \item $A$ = exposed surface area. Don't count a side that is mounted against a wall or another enclosure.
+  \item $\Delta T$ = maximum inside temperature you allow minus the maximum ambient temperature.
+\end{itemize}
+
+\subsubsection*{Step 3 --- Compare, and pick a cooling method}
+If $P_{\text{heat}} \leq P_{\text{natural}}$, natural cooling is enough. If not, add cooling:
+\[
+  \text{Fan airflow (CFM)} = \frac{3.17 \times P_{\text{heat}}~[\text{W}]}{\Delta T~[\text{\textdegree F}]}
+  \qquad\qquad
+  \text{AC size (BTU/hr)} = 3.412 \times P_{\text{total}}~[\text{W}]
+\]
+For an air conditioner, $P_{\text{total}}$ is the internal heat \emph{plus} the heat soaking in through the walls when the room is hotter than the panel ($k \times A \times (T_{\text{ambient}} - T_{\text{inside}})$). Add about 20--30\% margin to fan airflow for filter and airflow-path losses.
+
+\begin{center}
+\small
+\begin{tabular}{@{}P{7.6cm}P{7.6cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Situation} & \textbf{Use} \\ \midrule
+Heat load is below what the enclosure sheds on its own & \textbf{Natural cooling.} Sealed enclosure, no fan. \\
+Too much heat, but room air is clean, dry, and at least \textasciitilde5~\textdegree C (10~\textdegree F) cooler than the allowed inside temperature & \textbf{Filtered fan} (fan in, filtered vent out). Cheapest active option; filters need regular cleaning. \\
+Room air is dirty, wet, oily, or corrosive, or the panel must stay NEMA 4/4X/12, but the room is still cooler than the allowed inside temperature & \textbf{Air-to-air heat exchanger} (keeps the enclosure sealed). \\
+Room is as hot or hotter than the allowed inside temperature, or the heat load is large & \textbf{Air conditioner.} Also the usual choice for outdoor panels in direct sun. \\
+Hazardous (classified) location & Cooling equipment must be rated for the area (see Section~\ref{sec:c1d2}). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Example.} A wall-mounted 36" H $\times$ 30" W $\times$ 12" D steel enclosure. Room maximum is 30~\textdegree C and we want the inside to stay at or below 40~\textdegree C, so $\Delta T = 10$~\textdegree C (18~\textdegree F).
+\begin{itemize}[itemsep=1pt]
+  \item Exposed area (front, top, bottom, two sides; back is on the wall) $= 1080 + 720 + 864 = 2664~\text{in}^2 \approx 1.72~\text{m}^2$.
+  \item Natural capacity: $5.5 \times 1.72 \times 10 \approx 95$~W.
+  \item Heat load: 24~V power supply 21~W + PLC rack 40~W + industrial PC 25~W + network switch 10~W + two small VFDs 80~W $= 176$~W.
+  \item $176 > 95$, so natural cooling is not enough. The air is clean, so use a fan: $3.17 \times 176 / 18 \approx 31$~CFM; with 30\% margin, choose a filtered fan of at least \textbf{40~CFM}.
+  \item If the room could reach 45~\textdegree C instead, a fan can't cool below room temperature, so use an air conditioner: wall heat gain $= 5.5 \times 1.72 \times 5 \approx 47$~W, total $= 223$~W, and $3.412 \times 223 \approx 760$~BTU/hr. Choose the next standard size up (e.g., \textbf{1,000~BTU/hr}).
+\end{itemize}
+
+\textit{Further reading:} \href{https://www.nvent.com/sites/default/files/acquiadam/assets/Heat\%20dissipation_En_nVent_HOFFMAN_2.pdf}{nVent HOFFMAN --- Calculating heat dissipation in enclosures (white paper)}; \href{https://www.proventofan.com/how-to-calculate-electrical-enclosure-cooling-formula-example-and-fan-sizing/}{Electrical enclosure cooling --- fan airflow formula and example}.
+
+\subsection{Conductors, Identification, and Termination}
+\textbf{Wire.} Pick wire size, insulation, and temperature rating to match the current, the terminal it lands on, and the bend room available.
+
+\textbf{Numbering.} A wire's number is the drawing line where that signal starts. A relay's or contactor's tag is the drawing line where its coil is. Label every wire and terminal at both ends. Wires that stay live when the panel disconnect is off (for example, powered from another panel) must be clearly marked, usually with orange (or yellow) wire and a warning label.
+
+\textbf{Colors.} Show the wire color scheme on the project drawings and use it consistently:
+\begin{itemize}[itemsep=1pt]
+  \item 24 VDC control (+): \textbf{blue}.
+  \item Protective ground (PE): \textbf{green/yellow}.
+  \item Neutrals, AC control wiring, and externally powered wiring each get their own distinct, code-compliant color.
+\end{itemize}
+
+\section{Other Hardware}
+\subsection{VFDs}
+VFD selection must be approved by Controls and Electrical Engineering. Required features include an industrial Ethernet protocol compatible with the project, hardwired safe stop where required by risk assessment, local disconnect coordination, motor overload protection, line/load reactor or filtering evaluation, fault history, parameter backup, and documented behavior on communication loss and power restoration. The project must document harmonic, cable-length, motor-insulation, grounding, and EMC considerations.
+\subsection{Solenoids}
+\begin{enumerate}[itemsep=2pt]
+  \item Need to standardize airline size, preferably metric (4 or 6mm), since most solenoid providers use metric.
+  \item SMC EX260 Ethernet/IP Operated Solenoid Bank --- standard solenoid bank for most projects using EtherNet/IP for I/O communication. Must incorporate a dump valve upstream of the solenoid to be controlled by the system.
+  \begin{enumerate}
+    \item SY300 and SY5000 series have imperial options.
+  \end{enumerate}
+\end{enumerate}
+
+\subsubsection*{Approved Manifold Base Model --- SS5Y3-10S}
+SS5Y3-10S (SY3000 Series Manifold, Side Ported, EX260 Integrated-type for Output Serial Transmission System) is the standard solenoid bank manifold for most projects using EtherNet/IP for I/O communication. The final part number is built per-project from the configuration fields below; the ones marked ``standard'' should be held constant across projects, and the ones marked ``project-specific'' are selected based on the panel's actual valve count and layout.
+
+\begin{longtable}{@{}P{3.6cm}P{7.6cm}P{4.2cm}@{}}
+\caption{SS5Y3-10S Manifold Configuration Fields}\label{tab:ss5y3} \\
+\toprule
+\rowcolor{tblhead}\textbf{Field} & \textbf{Selection} & \textbf{Status} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Field} & \textbf{Selection} & \textbf{Status} \\
+\midrule
+\endhead
+SI unit & EA --- EtherNet/IP, 32 outputs, M12 & Standard \\
+A, B port size & C6 --- 6 mm push-in fitting & Standard (change only if flow requires) \\
+Mounting & DIN rail (D / A / B) & Standard \\
+Valve stations & 2--24 & Per project \\
+P, E port location & U, D, or both sides & Per project \\
+SUP/EXH block & Internal pilot, internal pilot with silencer, or external pilot & Per project \\
+DIN rail length & Standard, or specified length 3--24 & Per project \\
+\bottomrule
+\end{longtable}
+The manifold must include documented safe-state behavior and a separately controlled upstream dump valve where required by the risk assessment. Spare stations and output capacity must be included where practical.
+
+\subsection{Scales}
+\begin{small}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{3.0cm}P{5.3cm}P{3.5cm}P{3.5cm}@{}}
+\caption{Approved Scale and Weight-Indicator Options}\label{tab:scales} \\
+\toprule
+\rowcolor{tblhead}\textbf{Device} & \textbf{Capabilities} & \textbf{EtherNet/IP} & \textbf{Modbus TCP} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblhead}\textbf{Device} & \textbf{Capabilities} & \textbf{EtherNet/IP} & \textbf{Modbus TCP} \\
+\midrule
+\endhead
+\href{https://www.ricelake.com/resources/catalogs/sct-2200-catalog-page}{Rice Lake SCT-2200} & DIN-rail weight transmitter for connecting load-cell weighing systems to a PLC or supervisory network. Intended for control-panel integration rather than use as a full operator scale terminal. & Supported through the dedicated SCT-2200 EtherNet/IP fieldbus module. & Supported through the dedicated SCT-2200 Modbus TCP/IP fieldbus module. Specify the required protocol module when ordering. \\
+\href{https://www.minebea-intec.com/en/industrial-scales/weight-indicators/weight-indicator-combics}{Minebea Intec Combics 3} & Graphic-display industrial indicator for more complex weighing applications. Supports checkweighing, totaling, product memory, optional filling functions, statistics, and optional second weighing points. & Available using the B10 EtherNet/IP fieldbus option. Confirm the complete indicator and interface configuration when ordering. & Native Modbus TCP support was not confirmed in current manufacturer literature. The optional Ethernet TCP/IP interface must not be assumed to provide Modbus TCP. \\
+\href{https://www.minebea-intec.com/en/industrial-scales/weight-indicators/weight-indicator-combics}{Minebea Intec Combics 2} & Backlit LCD industrial indicator for basic weighing, counting, checkweighing, totaling, and related applications. An Ex version is available for applicable classified-area installations. & Available using the B10 EtherNet/IP fieldbus option on compatible configurations. Confirm model compatibility when ordering. & Native Modbus TCP support was not confirmed in current manufacturer literature. Use EtherNet/IP or an approved gateway when Modbus TCP integration is required. \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\subsection{Protocol Converters}\label{sec:protocol-converters}
+Use a protocol converter (gateway) when a device only speaks a serial or other protocol that the PLC or SCADA can't read directly --- most often an instrument with a Modbus RTU (RS-485) port that needs to appear on Modbus TCP. Use the simple Modbus gateway when that's all you need; use a Red Lion when you need other protocols, more ports, or local data logging.
+
+\begin{small}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{2.9cm}P{3.6cm}P{3.6cm}P{3.6cm}@{}}
+\caption{Protocol Converter Options}\label{tab:protocol-converters} \\
+\toprule
+\rowcolor{tblhead} & \textbf{Advantech EKI-1222-CE} & \textbf{Red Lion DA10D} & \textbf{Red Lion DA30D} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblhead} & \textbf{Advantech EKI-1222-CE} & \textbf{Red Lion DA10D} & \textbf{Red Lion DA30D} \\
+\midrule
+\endhead
+Best for & Simple Modbus RTU/ASCII $\leftrightarrow$ Modbus TCP & Basic multi-protocol conversion & Multi-protocol conversion with logging, web server, or expansion \\
+Serial ports & 2 $\times$ RS-232/422/485 (DB9) & 1 $\times$ RS-232, 1 $\times$ RS-232/485 & 2 $\times$ RS-232, 1 $\times$ RS-485 \\
+Ethernet & 2 $\times$ 10/100 RJ45 & 1 $\times$ 10/100 & 1 $\times$ 10/100 \\
+Protocols & Modbus serial (master/slave) and Modbus TCP (client/server) & 300+ industrial drivers & 300+ industrial drivers \\
+Capacity / features & Up to 64 TCP connections and 64 serial devices & SD card; no data logging or web server & SD card, data logging, web server, virtual HMI, expansion slot (e.g., fieldbus cards) \\
+Configuration & Web browser / utility & Crimson software & Crimson software \\
+Power & 12--48 VDC & 24 VDC $\pm$20\% & 10--30 VDC \\
+Hazardous location & C1D2 per distributor listing --- confirm on label & None listed & UL Class I Div 2, Groups A--D \\
+Mounting & DIN rail or panel & DIN rail & DIN rail \\
+Approx. price & \$392 (AutomationDirect, Oct 2026) & Quote & Quote \\
+Links & \href{https://www.automationdirect.com/adc/shopping/catalog/communications/protocol_gateways/modbus_gateways/eki-1222-ce}{AutomationDirect page}, \href{https://cdn.automationdirect.com/static/manuals/advantechmbgateway/advmbgatewayum.pdf}{manual} & \href{https://cdn.logic-control.com/docs/red-lion/Datasheets/Data\%20Stations/DA10D_and_DA30D_Datasheet.pdf}{Datasheet} & \href{https://cdn.logic-control.com/docs/red-lion/Datasheets/Data\%20Stations/DA10D_and_DA30D_Datasheet.pdf}{Datasheet} \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\subsection{Panel Networking}
+The normal application is isolation of a local controls network while exposing selected devices, such as the PLC, to the larger plant network through 1:1 NAT. Device Level Ring (DLR) support is not required for this use case. There are two ways to do this:
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{A NAT/security appliance} between the plant network and the local controls network (Table~\ref{tab:nat-options}). This is the most flexible option and the right choice when several devices need to be reached from the plant network.
+  \item \textbf{The Modicon M580 itself as the gateway} (Section~\ref{sec:m580-gateway}). This avoids an extra box when only the PLC's data needs to reach SCADA.
+\end{enumerate}
+Figure~\ref{fig:network-layout} shows both layouts.
+
+\begin{figure}[htbp]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw, rounded corners=2pt, align=center, minimum height=8mm, inner sep=3pt, fill=white},
+  net/.style={draw, fill=headblue!12, rounded corners=2pt, align=center, minimum height=6mm, inner sep=3pt},
+  link/.style={-, thick},
+  every node/.style={align=center}
+]
+% ---------- (a) NAT appliance ----------
+\node[font=\small\bfseries, anchor=west] at (-7.9,5.9) {(a) NAT / security appliance};
+\node[net, minimum width=7.2cm] (plantA) at (-4.3,3.8) {Plant network (e.g., 10.x.x.x)};
+\node[box] (scadaA) at (-4.3,4.9) {Ignition gateway / SCADA};
+\draw[link] (scadaA) -- (scadaA |- plantA.north);
+\node[box, fill=noteorange!12] (nat) at (-4.3,2.6) {NAT / firewall appliance\\(e.g., SCALANCE S615, Moxa NAT-102)\\\scriptsize 1:1 NAT exposes only the PLC (and HMI)};
+\draw[link] (plantA) -- (nat);
+\node[net, minimum width=7.2cm] (localA) at (-4.3,1.3) {Local controls network (e.g., 192.168.1.x), managed switch};
+\draw[link] (nat) -- (localA);
+\node[box] (plcA) at (-7.2,0.0) {M580\\PLC};
+\node[box] (hmiA) at (-5.75,0.0) {IPC /\\HMI};
+\node[box] (vfdA) at (-4.3,0.0) {VFDs};
+\node[box] (solA) at (-2.85,0.0) {EX260\\valves};
+\node[box] (gwA) at (-1.4,0.0) {Modbus\\gateway};
+\foreach \n in {plcA,hmiA,vfdA,solA,gwA} \draw[link] (\n.north) -- (\n.north |- localA.south);
+\node[box, font=\scriptsize] (serA) at (-1.4,-1.25) {Serial (RS-485)\\instruments};
+\draw[link, dashed] (gwA) -- (serA);
+
+% ---------- (b) M580 as gateway ----------
+\node[font=\small\bfseries, anchor=west] at (0.6,5.9) {(b) M580 as the gateway};
+\node[net, minimum width=6.4cm] (plantB) at (3.9,3.8) {Plant network};
+\node[box] (scadaB) at (3.9,4.9) {Ignition gateway / SCADA};
+\draw[link] (scadaB) -- (scadaB |- plantB.north);
+% M580 rack
+\node[box, minimum width=1.5cm, minimum height=1.3cm, fill=headblue!6] (noc) at (1.75,2.3) {\scriptsize BMENOC0301\\\scriptsize (backplane\\\scriptsize port off)};
+\node[box, minimum width=1.5cm, minimum height=1.3cm, fill=headblue!6] (cpu) at (3.7,2.3) {\scriptsize BMEP58\\\scriptsize CPU};
+\node[box, minimum width=1.5cm, minimum height=1.3cm, fill=headblue!6] (io) at (5.35,2.3) {\scriptsize X80\\\scriptsize I/O};
+\node[draw, dashed, rounded corners=3pt, inner sep=4pt, fit=(noc)(cpu)(io), label={[font=\scriptsize, align=left]right:M580 rack\\data crosses\\only through\\the PLC\\program}] (rack) {};
+\draw[link] (plantB.south -| noc.north) -- (noc.north);
+\node[net, minimum width=6.4cm] (localB) at (3.9,0.6) {Device network (CPU ports) --- local switch};
+\draw[link] (cpu.south) -- (cpu.south |- localB.north);
+\node[box] (hmiB) at (1.6,-0.6) {IPC /\\HMI};
+\node[box] (vfdB) at (3.1,-0.6) {VFDs};
+\node[box] (solB) at (4.6,-0.6) {EX260\\valves};
+\node[box] (rioB) at (6.2,-0.6) {RIO drop\\BMXCRA};
+\foreach \n in {hmiB,vfdB,solB,rioB} \draw[link] (\n.north) -- (\n.north |- localB.south);
+\end{tikzpicture}}
+\caption{Typical panel network layouts. In (a) an appliance translates addresses so only selected devices are visible on the plant network. In (b) the M580 keeps the two networks physically separate and SCADA reads the PLC through the BMENOC0301.}
+\label{fig:network-layout}
+\end{figure}
+
+\subsubsection*{Using the Modicon M580 as a Gateway}\label{sec:m580-gateway}
+An M580 can act as the boundary between the plant network and the local controls network without a separate NAT device. The idea is simple: give the PLC two separate network connections and let \emph{only the PLC program} pass data between them.
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Local side.} Connect the local devices (HMI, VFDs, valve banks, RIO drops) to the CPU's Ethernet device-network ports. The CPU scans them as usual.
+  \item \textbf{Plant side.} Add a \separt{BMENOC0301} in the rack and connect its ports to the plant network. In Control Expert, leave the module's \emph{Ethernet backplane port disabled}. Schneider's documentation notes that a BMENOC03$\cdot$1 installed without enabling the backplane port is isolated from the rest of the M580 Ethernet network, so the plant network can't see the local devices.
+  \item \textbf{Give SCADA the data it needs.} Ignition connects to the PLC through the BMENOC0301 (for example with Modbus TCP) and reads and writes only the PLC's own variables. Data from local devices reaches SCADA because the PLC program copies it into those variables.
+  \item \textbf{Optional OPC UA.} A \separt{BMENUA0100} can serve the PLC's data to Ignition over OPC UA on its own port, with certificates and user accounts for security.
+\end{enumerate}
+\textbf{Limitations.} SCADA can't talk directly to a VFD or other local device this way --- everything goes through the PLC. If you need to reach local devices directly (for example to configure a drive from the plant network), use a NAT appliance instead. The \separt{BMENOC0321} control-network module can route traffic between networks (IP forwarding), but that is a routed design, not an isolated one, so it needs the same security review as a NAT appliance. Confirm the exact module configuration in Control Expert for each project.
+
+\textit{Further reading:} \href{https://filedn.eu/l6oFb0aAwOAyRLLaUMiUmzz/CE_HELP/eng/BMENOC03x1/BMENOC03x1_D-SE-0035359.htm}{Schneider Electric --- The BMENOC0301/11 modules in Modicon M580 networks}.
+
+\subsubsection*{NAT and Security Appliance Options}
+The following ranking should be used as a starting point; final selection must consider company cybersecurity requirements, availability, support, and the required number of NAT mappings and ports.
+
+\begin{footnotesize}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{0.6cm}P{3.4cm}P{5.4cm}P{5.8cm}@{}}
+\caption{NAT and Security Appliance Options for Local Controls Networks}\label{tab:nat-options} \\
+\toprule
+\rowcolor{tblhead}\textbf{\#} & \textbf{Device} & \textbf{Fit for the Application} & \textbf{Reasoning and Cautions} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblhead}\textbf{\#} & \textbf{Device} & \textbf{Fit for the Application} & \textbf{Reasoning and Cautions} \\
+\midrule
+\endhead
+1 & \href{https://www.siemens.com/global/en/products/automation/industrial-communication/industrial-security/scalance-s.html}{Siemens SCALANCE S615} & Best overall fit when the device will be both the security boundary and the 1:1 NAT appliance. & Strong stateful firewall and industrial-security features. Provides better traffic control than a NAT-only device, with additional configuration effort. \\
+2 & \href{https://www.moxa.com/en/products/industrial-network-infrastructure/secure-routers/secure-nat-gateways/nat-102-series}{Moxa NAT-102} & Strong fit for a compact, straightforward 1:1 NAT deployment. & NAT-focused architecture with basic filtering. Well suited when ease of deployment matters more than advanced firewall functions. \\
+3 & \href{https://www.weidmueller.com/en/products/automation_software/industrial_ethernet/security_router/index.jsp}{Weidm\"uller IE-SR-4GT} & Strong fit where Gigabit networking, stateful firewalling, NAT, and VPN are useful. & Suitable for a formal network boundary. Confirm the exact ordering code and local product support. \\
+4 & \href{https://www.belden.com/products/networking-cybersecurity/industrial-cybersecurity/industrial-firewalls/eagle}{Hirschmann EAGLE20/EAGLE30} & Excellent fit for higher-security or more complex installations. & Advanced firewall and routing functions, but usually more costly and complex than a small system needs. \\
+5 & \href{https://www.phoenixcontact.com/en-us/products/nat-switch-fl-nat-2008-2702881}{Phoenix Contact FL NAT 2008} & Good fit when several local switch ports and NAT are desired in one device. & Convenient eight-port format. Confirm that its filtering meets the plant security standard. \\
+6 & \href{https://www.rockwellautomation.com/en-us/products/hardware/allen-bradley/network-security-and-infrastructure/1783-natr.html}{Allen-Bradley 1783-NATR} & Functional for straightforward address translation, including 1:1 NAT. & Easy to apply, but firewall capability is limited. DLR and Rockwell-integration advantages do not benefit the M580 application. \\
+7 & \href{https://www.se.com/ww/en/product/TCSEFEC23F3F21/}{Schneider Electric TCSEFEC23F3F21} & Strong architectural alignment with Schneider/Modicon systems. & Attractive for M580 integration, but lifecycle and availability must be confirmed because of discontinuation risk. \\
+8 & \href{https://www.se.com/ww/en/product/TCSEFEA23F3F22/}{Schneider Electric ConneXium Tofino TCSEFEA23F3F22} & Better suited to industrial firewalling than to simple 1:1 NAT. & Not the most natural fit for selective NAT, and discontinuation risk reduces its value for new designs. \\
+\bottomrule
+\end{longtable}
+\end{footnotesize}
+
+\subsection{Temperature Sensors \& Transmitters}\label{sec:temperature}
+\textbf{Wiring temperature sensors to the PLC.} There are two ways to get an RTD or thermocouple reading into the PLC:
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Directly into a temperature card.} Wire the sensor straight to an RTD/thermocouple input card such as the Modicon \separt{BMXART0814} (8 channels). There is no extra device per sensor, but the card itself is fairly expensive and uses a rack slot.
+  \item \textbf{Through a transmitter.} A small DIN-rail transmitter next to the terminals converts the sensor signal to 4--20~mA, which goes to an ordinary analog input card. Each sensor needs its own transmitter, but the 4--20~mA signal is less sensitive to noise and long wire runs, and it can share an analog card with pressure and flow signals.
+\end{enumerate}
+\textbf{How to choose:} it mostly comes down to how many temperature signals the panel has. With only a few, transmitters are cheaper than buying a dedicated temperature card. Once there are enough temperature signals to fill most of a card (roughly six or more in one panel), a temperature card is usually the better buy. Also consider spare slots, distance from the sensor, and whether a 4--20~mA signal is needed by anything else.
+
+\note{Use \textbf{3-wire RTDs} as our standard. The third wire lets the PLC card or transmitter cancel out the resistance of the lead wires, which would otherwise read as extra temperature. 2-wire RTDs should not be used except for very short runs; 4-wire RTDs are only needed for high-accuracy measurements.}
+
+\begin{small}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{3.3cm}P{3.9cm}P{4.2cm}P{4.0cm}@{}}
+\caption{Temperature Transmitter Options}\label{tab:temp-transmitters} \\
+\toprule
+\rowcolor{tblhead} & \textbf{AutomationDirect ProSense SC6-7102 (current)} & \textbf{Phoenix Contact MINI MCR-2-RTD-UI / -TC-UI} & \textbf{Acromag TT230 series (TT235 / TT233)} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblhead} & \textbf{AutomationDirect ProSense SC6-7102 (current)} & \textbf{Phoenix Contact MINI MCR-2-RTD-UI / -TC-UI} & \textbf{Acromag TT230 series (TT235 / TT233)} \\
+\midrule
+\endhead
+Input & RTD or thermocouple (one universal model) & RTD (2/3/4-wire) model or thermocouple model & TT235: isolated RTD; TT233: thermocouple/mV \\
+Output & 4--20 mA, loop powered (5.5--35 VDC) & Configurable current/voltage (4--20 mA, etc.) & 4--20 mA, loop powered \\
+Power & From the loop & 24 VDC supply (or DIN-rail power bus) & From the loop (12--32 VDC) \\
+Isolation & Yes & Yes (3-way) & TT235 isolated; check TT233 \\
+Setup & PC software & DIP switches or software & USB software or mobile app \\
+Hazardous location & Hazardous-location rated (FM, UL) & UL Class I Div 2, ATEX/IECEx & UL Class I Div 2, ATEX/IECEx Zone 2 \\
+Why choose it & Current standard; one part for both sensor types; low cost (\$200, Oct 2026) & Very compact; same family as other Phoenix signal conditioners; DIP-switch setup with no PC & Slim 12.5 mm width; loop powered like the SC6-7102; easy USB setup \\
+Links & \href{https://www.automationdirect.com/pn/SC6-7102}{Product page}, \href{https://cdn.automationdirect.com/static/specs/sc6sigcond.pdf}{specs} & \href{https://www.phoenixcontact.com/en-us/products/temperature-transmitter-mini-mcr-2-rtd-ui-2902049}{2902049 (RTD)}, \href{https://www.phoenixcontact.com/en-us/products/temperature-transmitter-mini-mcr-2-tc-ui-2902055}{2902055 (TC)} & \href{https://acromag.com/shop/signal-conditioning-network-i-o/process-transmitters/rtd-input-signal-converters/tt235-transmitter-isolated-rtd-input-loop-power}{TT235}, \href{https://www.acromag.com/wp-content/uploads/2019/08/TT230-Series-Summary-Guide.pdf}{TT230 guide} \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\section{Operator Workstation}
+\subsection{Default PC}
+\subsubsection*{Standard PC vs Industrial PC}
+The standard operator PC is the OnLogic CL260. It is configured to run \href{https://inductiveautomation.com/ignition/edge/panel}{Ignition Edge Panel} (a local Ignition gateway plus the operator display on the same PC) on both Ignition 8.1 and 8.3, and meets or beats the previous CL250 configuration in every area.
+
+\begin{small}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{2.6cm}P{4.4cm}P{7.2cm}P{1.3cm}@{}}
+\caption{Approved Ignition Operator Workstation Hardware}\label{tab:operator-workstation-hardware} \\
+\toprule
+\rowcolor{tblhead}\textbf{System} & \textbf{Ignition Application} & \textbf{Hardware Overview} & \textbf{Cost} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{System} & \textbf{Ignition Application} & \textbf{Hardware Overview} & \textbf{Cost} \\
+\midrule
+\endhead
+OnLogic\newline\href{https://www.onlogic.com/store/adsk-cl260/}{CL260} & Ignition Edge Panel 8.1 and 8.3 (local gateway plus Perspective/Vision client on the same PC). Also suitable as a thin-client workstation for a central gateway. Not intended as a central gateway or database server. &
+\textbf{CPU:} Intel N250, 4 cores (higher-performing option of the two offered)\newline
+\textbf{Memory:} 8 GB LPDDR5-4800 (soldered; the only size offered)\newline
+\textbf{Storage:} industrial M.2 NVMe SSD, 256 GB preferred, 128 GB minimum\newline
+\textbf{OS:} Windows 11 IoT Enterprise LTSC 2024\newline
+\textbf{Video:} 2 $\times$ USB-C with DisplayPort 1.4 (supports 4K at 60 Hz); needs a USB-C to DisplayPort cable\newline
+\textbf{Network:} 2 $\times$ 1 GbE\newline
+\textbf{Power:} 12--24 VDC terminal block (run from panel 24 VDC; no adapter needed)\newline
+\textbf{Mounting:} DIN rail (MTD109 bracket) & Quote \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\textit{\small Ignition's published minimum is a dual-core processor, 4 GB RAM, and 10 GB of free disk (\href{https://docs.inductiveautomation.com/docs/8.3/getting-started/startup-guide/downloading-and-installing-ignition}{Ignition 8.3 install guide}; \href{https://www.docs.inductiveautomation.com/docs/8.1/getting-started/quick-start-guide/download-and-install}{8.1 install guide}). Edge Panel runs the gateway and the client on one PC, so 8 GB and an SSD with room for logs and backups give comfortable headroom. Do not use both network ports to bridge the plant and local networks. Confirm the selected Windows release against the Ignition version's supported-OS list before ordering, and get current pricing from \href{https://www.onlogic.com/store/adsk-cl260/}{OnLogic} (\href{https://support.onlogic.com/product-documentation/industrial-products/cl200-series/cl260}{CL260 technical documentation}).}
+
+\subsection{Default Monitor}
+\note{Any screen selected must have a \textbf{16:9 aspect ratio} (e.g., 1920 $\times$ 1080 or 3840 $\times$ 2160) to work properly with the current SCADA screen design standard (see Appendix~\ref{app:perspective-scaling}).}
+
+\subsubsection*{Standard Thin-Client Setup}
+For a normal operator station (thin client or Edge Panel PC in a control room or clean area), use a generic 32" non-touch UHD monitor at 3840 $\times$ 2160.
+
+\begin{small}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{3.6cm}P{4.0cm}P{6.6cm}P{1.4cm}@{}}
+\caption{Standard Thin-Client Monitors}\label{tab:monitors-standard} \\
+\toprule
+\rowcolor{tblhead}\textbf{Part / Model} & \textbf{Item} & \textbf{Description} & \textbf{Cost} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Part / Model} & \textbf{Item} & \textbf{Description} & \textbf{Cost} \\
+\midrule
+\endhead
+Generic & 32" UHD monitor & Any 32", 16:9, 3840 $\times$ 2160, non-touch monitor with DisplayPort input and VESA mount. & --- \\
+\href{https://www.amazon.com/dp/B07CS3JGPC}{Samsung LU32J590UQNXZA} (example) & Samsung 32" UJ59 4K UHD & 31.5" VA panel, 3840 $\times$ 2160, 16:9, 60 Hz; HDMI and DisplayPort; VESA mountable. Example of a generic monitor that meets the requirement. & --- \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\subsubsection*{Industrial Monitor with Keyboard (Hope Industrial)}
+For panel-mounted or plant-floor stations, the first choice is the \href{https://store.hopeindustrial.com/products/panel-mount-monitors}{Hope Industrial} 23.8" panel-mount touch monitor with a matching fold-down industrial keyboard.
+
+\begin{small}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{3.6cm}P{4.0cm}P{6.6cm}P{1.4cm}@{}}
+\caption{Industrial Monitor and Keyboard (Hope Industrial)}\label{tab:monitors-hope} \\
+\toprule
+\rowcolor{tblhead}\textbf{Part / Model} & \textbf{Item} & \textbf{Description} & \textbf{Cost} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Part / Model} & \textbf{Item} & \textbf{Description} & \textbf{Cost} \\
+\midrule
+\endhead
+HIS-ML23.8-FPVB & 23.8" panel mount monitor, edge-to-edge, PCAP multi-touch & 23.8" industrial monitor; HazLoc rated; NEMA 4X, IP65/66/69/69K; 100--240 VAC or 10.8--26.4 VDC input. & \$1,420 \\
+KB-R3-WMT-BLK-4-USB & Industrial wall-mount folding keyboard, full travel, touchpad & Sealed to NEMA 4, IP65/66; HazLoc rated; black powder-coated carbon steel; USB; 3.8 m (12.5 ft) cable. & \$1,150 \\
+SP-23.8 & 23.8" display screen protector & Acrylic hard-coat, anti-glare. Dry environments only. & \$20 \\
+CDP-06 & DisplayPort cable, 1.8 m & DisplayPort male-to-male, 1.8 m (6 ft). & \$19 \\
+CUSB-06 & USB cable, 1.8 m & USB A-to-B, 1.8 m (6 ft) (for touch). & \$8 \\
+\bottomrule
+\end{longtable}
+\end{small}
+\textit{\small Prices are from a Hope Industrial quote (October 2026) and are for budgeting only. The 23.8" monitor is 16:9.}
+
+\subsection{Class 1 -- Div 2 Zone Hardware}\label{sec:c1d2}
+\textbf{What Class I, Division 2 means.} A Class I, Division 2 (C1D2) area is a place where flammable gas or vapor is \emph{not} normally present, but could be if something goes wrong --- a leaking fitting, a failed seal, or a release during maintenance. Equipment there must not be able to ignite that gas if it does show up. The area-classification drawing tells you which areas are C1D2 and which gas groups (A, B, C, D) and temperature class (T-code) apply.
+
+\textbf{The basic rules:}
+\begin{itemize}[itemsep=2pt]
+  \item Everything installed in the area must be \textbf{rated for it}: the label must show Class I, Division 2 (or Zone 2), the right gas group, and a temperature code (T-code) suitable for the gas.
+  \item Putting ordinary equipment inside a box does \textbf{not} make it safe for the area, unless the box is a purged/pressurized enclosure built for that purpose.
+  \item The wiring method matters too: conduit with seals, or cable and fittings rated for the area.
+  \item The area-classification drawing and the AHJ have the final say. UL 698A and NFPA 496 apply when you use intrinsically safe barriers or purged enclosures.
+\end{itemize}
+
+\textbf{Ways to make a system C1D2 safe:}
+\begin{enumerate}[itemsep=2pt]
+  \item \textbf{Buy C1D2-rated devices.} The simplest approach. Many PLCs, I/O, power supplies, gateways, transmitters, monitors, and switches are available with a C1D2 rating.
+  \item \textbf{Nonincendive wiring.} Low-energy circuits that can't make a spark hot enough to ignite the gas. Allowed in Division 2 with properly rated devices.
+  \item \textbf{Intrinsic safety (IS) barriers.} Limit the energy going out to field sensors so they can't ignite gas even under fault. Used when field devices are in a Division 1 area or when IS is preferred.
+  \item \textbf{Purged/pressurized enclosures (Type Z).} Keep the inside of the panel at a slight positive pressure with clean air or nitrogen so gas can't get in. This lets ordinary equipment, such as a PC, be used inside.
+  \item \textbf{Keep it out of the area.} Often the cheapest option: put the panel in an unclassified room and run only rated field devices into the area.
+\end{enumerate}
+
+\begin{small}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}P{3.0cm}P{4.6cm}P{4.2cm}P{3.8cm}@{}}
+\caption{Class I, Division 2 Equipment Examples and Use Cases}\label{tab:c1d2-equipment} \\
+\toprule
+\rowcolor{tblhead}\textbf{Component Type} & \textbf{Example Product(s)} & \textbf{Typical Use Case} & \textbf{What to Check} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Component Type} & \textbf{Example Product(s)} & \textbf{Typical Use Case} & \textbf{What to Check} \\
+\midrule
+\endhead
+Operator display \& keyboard & \href{https://store.hopeindustrial.com/products/panel-mount-monitors}{Hope Industrial HIS-ML23.8} monitor and KB-R3 keyboard (Table~\ref{tab:monitors-hope}) & Operator station on the plant floor in a C1D2 area & HazLoc marking on the label; the PC driving it must be outside the area or in a purged enclosure \\
+Purge / pressurization system & \href{https://www.pepperl-fuchs.com/en/products/hazardous-area-products-and-solutions/purge-and-pressurization-systems/type-z-purge-and-pressurization-systems-gp32695}{Pepperl+Fuchs Bebco EPS Type Z} & Using an ordinary PC, VFD, or other non-rated equipment inside a panel in the area & Type Z for Division 2; clean air or N\textsubscript{2} supply; loss-of-pressure alarm \\
+Intrinsic safety barriers / isolators & Pepperl+Fuchs K-System or Phoenix Contact MACX MCR-EX isolators & Field sensors in a Division 1 area wired to a panel in Division 2 or a safe area & Entity parameters of barrier, cable, and field device must match \\
+Signal conditioners / transmitters & \href{https://www.phoenixcontact.com/en-us/products/temperature-transmitter-mini-mcr-2-rtd-ui-2902049}{Phoenix MINI MCR-2}, \href{https://acromag.com/shop/signal-conditioning-network-i-o/process-transmitters/rtd-input-signal-converters/tt235-transmitter-isolated-rtd-input-loop-power}{Acromag TT230}, \href{https://www.automationdirect.com/pn/SC6-7102}{ProSense SC6-7102} (Table~\ref{tab:temp-transmitters}) & Temperature and analog signal conditioning in a panel located in the area & C1D2 marking and installation instructions (often require a suitable enclosure) \\
+Protocol gateways & \href{https://cdn.logic-control.com/docs/red-lion/Datasheets/Data\%20Stations/DA10D_and_DA30D_Datasheet.pdf}{Red Lion DA30D}; \href{https://www.automationdirect.com/adc/shopping/catalog/communications/protocol_gateways/modbus_gateways/eki-1222-ce}{Advantech EKI-1222-CE} (Table~\ref{tab:protocol-converters}) & Serial instrument integration from inside a C1D2 panel & DA30D is C1D2; confirm the EKI rating on the label \\
+Conduit seals & \href{https://www.eaton.com/content/dam/eaton/products/conduit-cable-and-wire-management/crouse-hinds/catalog-pages/crouse-hinds-eys-ezs-conduit-sealing-fittings-catalog-page.pdf}{Crouse-Hinds EYS sealing fittings} & Where conduit leaves the classified area or enters an enclosure, to stop gas traveling through the conduit & Seal location per NEC 501.15; fill with the approved compound after wiring \\
+Cable and cord fittings & Hazardous-location cable glands (e.g., Crouse-Hinds or Hubbell HazLoc glands) & Bringing cable (instead of conduit) into enclosures & Fitting and cable type both listed for the area \\
+Lighting, fans, and AC units & HazLoc-rated LED fixtures; C1D2-rated enclosure fans and air conditioners & Panel lighting and cooling for panels located in the area & Rated for the class/division and T-code; cooling sized per Section~\ref{sec:heat} \\
+Pushbuttons and pilot lights & Hazardous-location operators or nonincendive-rated devices & Local start/stop stations and indicators in the field & Rating on each device; nonincendive circuit documentation \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\textit{Further reading:} \href{https://www.pepperl-fuchs.com/en-us/products/hazardous-area-products-and-solutions/purge-and-pressurization-systems-gp32661}{Pepperl+Fuchs --- Purge and pressurization systems}; \href{https://www.eaton.com/content/dam/eaton/products/conduit-cable-and-wire-management/crouse-hinds/catalog-pages/crouse-hinds-eys-ezs-conduit-sealing-fittings-catalog-page.pdf}{Crouse-Hinds --- EYS/EZS sealing fittings}.

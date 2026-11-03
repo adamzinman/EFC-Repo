@@ -1,0 +1,75 @@
+\chapter{Process Definition and Protective Functions}\label{ch:process-definition}
+\section{Permissives, Interlocks, and SIFs}\label{sec:permissives-interlocks}
+A permissive is a non-safety interlock: a condition that must be satisfied before an action may start or continue (for example, header pressure below a limit before the vacuum pump lines may be opened). A control interlock prevents or stops an action to protect normal operation or equipment. Neither term, by itself, indicates that the function is safety rated.
+
+A \textbf{Safety Instrumented Function (SIF)} is a protective function that uses one or more sensors, a logic solver, and one or more final elements to move a process to a defined safe state or keep it there. EFC currently implements this kind of protection as interlocks in the standard PLC rather than as separate, integrity-rated SIFs (see the footnote on \emph{Control interlock} in Chapter~\ref{ch:terminology}). This is expected to change when safety PLCs are added to our systems.
+
+\section{Control Narrative}
+The control narrative must describe how the system is intended to operate. It must cover operating modes, startup, normal operation, shutdown, abnormal operation, restart following power or communication loss, manual and maintenance operation, permissives, interlocks, SIF interfaces, trips, alarms, operator actions, and interfaces with packaged equipment. Each output must have a defined de-energized condition and loss-of-communications response.
+
+The process engineer normally owns the Control Narrative. Controls Engineering uses it, together with the P\&IDs and equipment information, as the main basis for detailed PLC and SCADA development.
+
+\section{Table of Interlocks and Permissives}
+Begin the Table of Interlocks and Permissives as the process design develops so it can support early software planning and project discussions. Do not treat it as final until the PHA is complete.
+
+\textbf{How we use the PHA to build the interlocks.}
+\begin{enumerate}[itemsep=2pt]
+  \item The project team (process, controls, operations, and EHS) walks through the P\&IDs one section at a time and asks ``what could go wrong here?'' --- for example no flow, high pressure, high temperature, or a valve in the wrong position.
+  \item For each credible problem, the team writes down the cause, what would happen, and what already protects against it.
+  \item Where the existing protection isn't enough, the team makes a recommendation --- often a new alarm, permissive, or interlock.
+  \item Controls adds each approved recommendation as a row in the Table of Interlocks and Permissives: what triggers it, what it does, and how it resets.
+  \item That row becomes part of the PLC program and is tested during FAT and commissioning.
+\end{enumerate}
+A formal risk classification of each protective function (for example under ISO 13849 or IEC 61511) is not currently part of our process.
+
+After the PHA, update the table to include the approved controls-related recommendations and have the project team review the result before using it as the final programming and test basis.
+
+\section{Protective Function Requirements}\label{sec:protective-function-reqs}
+\future{this section describes a practice we plan to adopt. It is not currently part of the EFC design process. When adopted, it fits into Stage 4 --- Detailed Engineering (Section~\ref{sec:stage4}), alongside the Interlock Matrix, and the records would be checked during Stage 6 commissioning.}
+
+For each trip or safety function, the design record must state the initiating conditions, setpoint basis, voting, time delay, safe state, latching, reset location, restart behavior, first-out indication, bypass rules, loss-of-power behavior, loss-of-communication behavior, proof-test interval, and validation method.
+
+Automatic reset or restart is prohibited where it can create a hazard. Reset must not initiate motion or process flow unless separately justified and risk assessed. Reset must only clear a latched condition after the initiating cause is no longer present.
+
+\section{Bypass and Override Control}
+\future{this section should be added to our process in the future. It is not part of the current plan.}
+
+Bypasses, overrides, and inhibits must require authorized access, a stated reason, a defined expiration, visible HMI indication, event logging, and shift/operations communication. Safety-function bypasses require the process defined by the applicable safety lifecycle and MOC policy. Software must not conceal an active bypass after restart.
+
+\section{Setpoints}\label{sec:setpoints}
+A \textbf{setpoint} is a target or limit value the control system works with --- for example a tank level the fill valve aims for, or the pressure at which an alarm goes off. A setpoint is a \emph{number}. Permissives and interlocks (Section~\ref{sec:permissives-interlocks} and Chapter~\ref{ch:terminology}) are \emph{logic}: a permissive decides whether an action is allowed to start or continue, and an interlock stops or blocks an action. Many permissives and interlocks compare a reading against a setpoint (``stop the pump if pressure is above the high-pressure trip setpoint''), but changing the setpoint only changes \emph{when} the logic acts --- the permissive or interlock logic itself is unchanged.
+
+Because of that, treat the three kinds of setpoints differently:
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Operating setpoints} (control targets and normal alarm limits) may be operator-adjustable. Each must have approved engineering limits, units, a default value, an access level, change logging, and validation.
+  \item \textbf{Permissive setpoints} (the values permissives compare against, such as the maximum pressure at which the vacuum pump lines may be opened) may be adjusted by the operator, but only within a minimum and maximum that are hard-coded in the PLC and cannot be changed from SCADA. The limits are displayed on the SCADA screen next to the setpoint so the operator can see the allowed range. Each permissive setpoint must have units, a default value, an access level, and change logging, and the PLC must reject or clamp any entry outside the limits (Section~\ref{sec:plc-setpoint-clamp}). Where a hard-coded limit comes from an equipment rating or the PHA, it must be traceable to that source in the same way as a protective setpoint, so the operator can only make the permissive \emph{more} conservative, never less. Each permissive setpoint is listed in the Table of Interlocks and Permissives with its default, limits, and source. (Example in the current library: \texttt{DDT\_Station.HMI\_SP\_Max\_Vac\_Press}, Appendix~\ref{app:data-types}.)
+  \item \textbf{Protective setpoints} (the values that trigger interlocks and trips) must be traceable to the PHA or an equipment limit and must not be adjustable from the HMI unless specifically authorized by the risk assessment and MOC process.
+\end{itemize}
+
+\section{Alarm Management}\label{sec:alarm-mgmt}
+\note{Alarm management at EFC is currently informal. A formal alarm-management procedure should be put in place; until then, use the requirements below as guidance.}
+
+The project must apply the alarm lifecycle in ANSI/ISA-18.2.\footnote{ANSI/ISA-18.2-2016, \emph{Management of Alarm Systems for the Process Industries}; the international equivalent is IEC 62682:2022 (Ed.~2).} Each alarm must have a unique identifier, cause, consequence, required response, priority, maximum response time, setpoint basis, deadband, delay, operating-state applicability, shelving/suppression rules, and test method. Priority must be based on consequence severity and available response time, not equipment importance alone.
+
+Alarm systems must detect and manage chattering, fleeting, stale, standing, and frequently occurring alarms. Suppression by design must be state based and documented. Shelving must be time limited, access controlled, visible, and auditable. Alarm performance must be reviewed after startup and periodically during operation.
+
+\subsection*{Example alarm list entry}
+An alarm list (the master alarm database) records every alarm and the decisions behind it. One example entry is shown below; Appendix~\ref{app:alarm-doc} gives the full field list, more examples, and the governing standards.
+
+\begin{center}
+\begin{tabular}{@{}P{4.53cm}P{12.82cm}@{}}
+\toprule
+\rowcolor{tblhead}\textbf{Field} & \textbf{Value} \\
+\midrule
+Tag / alarm ID & PT-210.HI \\
+Description & Vacuum header pressure high \\
+Setpoint / deadband & 50 torr / 5 torr \\
+On delay & 10\,s \\
+Priority & Medium \\
+Cause & Vacuum pump stopped or degraded, or a leak on the header \\
+Consequence & Station evacuation stalls; product fill delayed \\
+Operator response & Check the vacuum pump status and running current; inspect the header for an open valve or leak \\
+Maximum response time & 15 minutes \\
+\bottomrule
+\end{tabular}
+\end{center}

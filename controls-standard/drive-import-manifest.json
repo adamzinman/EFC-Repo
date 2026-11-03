@@ -1,0 +1,800 @@
+[
+  {
+    "source": "appendix-numbers.tex",
+    "repository": "appendix-numbers.tex",
+    "sha256": "4A0C11DCEB06118CEB846A2AA74FAEBF89E58687BD13D18566E5004B8FD82BF5",
+    "bytes": 869
+  },
+  {
+    "source": "build-all.bat",
+    "repository": "build-all.bat",
+    "sha256": "8CB40498D7186D7AD91B1A0E121816EB015AF6E0C30CF22426305E6F2155267D",
+    "bytes": 1888
+  },
+  {
+    "source": "Controls Standard rev-H.pdf",
+    "repository": "pdf\\Controls Standard rev-H.pdf",
+    "sha256": "D1A3C374CD594F8AF58460884C725954DE5D09F797D3B8AC298A943C89BE2B73",
+    "bytes": 774695
+  },
+  {
+    "source": "Controls Standard rev-I.pdf",
+    "repository": "pdf\\Controls Standard rev-I.pdf",
+    "sha256": "98F004A92744CDD1DCA2DF29434FC27B933C6E16F46D6421E125136B1FDC980A",
+    "bytes": 939023
+  },
+  {
+    "source": "Controls Standard.tex",
+    "repository": "Controls Standard.tex",
+    "sha256": "DA30434560F4B10944555C5751F7FFC53EB2E991CC358B12E0EF9E4FF84ABEE6",
+    "bytes": 2177
+  },
+  {
+    "source": "master-revG-backup.tex",
+    "repository": "master-revG-backup.tex",
+    "sha256": "5DA88380CEDEA9E4CFE29AA11AC106976824F547624D0520546E23C5EE6EE101",
+    "bytes": 6186
+  },
+  {
+    "source": "master.pdf",
+    "repository": "master.pdf",
+    "sha256": "59293B97CCDB7DF3101AC859650A4F7D7B32D422B1521A1AD6810B0D3A5250B8",
+    "bytes": 1046705
+  },
+  {
+    "source": "master.tex",
+    "repository": "master.tex",
+    "sha256": "C9327A0F324272A671124FE00F55901C44AA2CBBC1A72D64108DF18F9ED565F4",
+    "bytes": 253
+  },
+  {
+    "source": "Perspective-Fluid-Text-Styles.css",
+    "repository": "Perspective-Fluid-Text-Styles.css",
+    "sha256": "131F6DF5F68AB650C9167A979152E25D193DA19D92357405D891886A13B8B5D8",
+    "bytes": 2281
+  },
+  {
+    "source": "preamble.tex",
+    "repository": "preamble.tex",
+    "sha256": "081B9E2E4CEF51D21D446F18FA1C9C881D000497A8A96380EC5038D5D0365776",
+    "bytes": 6080
+  },
+  {
+    "source": "README.md",
+    "repository": "README.md",
+    "sha256": "CE71371286E09E84F83969948F0649596A61A1E350ED8E0680CABD6B0D679166",
+    "bytes": 1823
+  },
+  {
+    "source": "revision.tex",
+    "repository": "revision.tex",
+    "sha256": "404634764FE2EFB0F698734FCA17FB9F0F92FE5FE1EC6C2A30034D99C8665D76",
+    "bytes": 182
+  },
+  {
+    "source": "sections\\00-frontmatter-revE-backup.tex",
+    "repository": "sections\\00-frontmatter-revE-backup.tex",
+    "sha256": "2D94AAFB9ABF3F5A0DE01B37A56B49981E4F340385FF668E97E81C4DFA87D210",
+    "bytes": 1818
+  },
+  {
+    "source": "sections\\00-frontmatter-revF-backup.tex",
+    "repository": "sections\\00-frontmatter-revF-backup.tex",
+    "sha256": "24C918694E33D725BAA4F0128081A83E3D4FDBD807A287158B62B1C7917AD308",
+    "bytes": 2498
+  },
+  {
+    "source": "sections\\00-frontmatter-revG-backup.tex",
+    "repository": "sections\\00-frontmatter-revG-backup.tex",
+    "sha256": "AA8B12EB4C35F03B8A4E34CB39DC9DC4D27B2D2EEA86D49C53C7EC57A2AD70BC",
+    "bytes": 3329
+  },
+  {
+    "source": "sections\\00-frontmatter.tex",
+    "repository": "sections\\00-frontmatter.tex",
+    "sha256": "9179D67CA6857964E58AA2ECD3A7EA4CA99F9DD74E425B307C06B1D220709A2B",
+    "bytes": 5644
+  },
+  {
+    "source": "sections\\01-overview-revE-backup.tex",
+    "repository": "sections\\01-overview-revE-backup.tex",
+    "sha256": "9E6F32326CD82B85B8E282AFE9FDE1D572A8C3F42DFBFC5BD8CD89BB2F6A1F4A",
+    "bytes": 2494
+  },
+  {
+    "source": "sections\\01-overview-revG-backup.tex",
+    "repository": "sections\\01-overview-revG-backup.tex",
+    "sha256": "6C1C4AB8FCE4F7B2881BA5C603C192041C695EBE9FC98D4B9DE6466A2543E144",
+    "bytes": 4560
+  },
+  {
+    "source": "sections\\01-overview.tex",
+    "repository": "sections\\01-overview.tex",
+    "sha256": "33751199305D6F8FB120395871B7190AF9CA59B93A6395368B79F6DFAB9FC346",
+    "bytes": 4691
+  },
+  {
+    "source": "sections\\02-terminology-revE-backup.tex",
+    "repository": "sections\\02-terminology-revE-backup.tex",
+    "sha256": "A36DB7773EC14AF8D5F977E525E99E883E3083B3310618903EDA8805F4DE443E",
+    "bytes": 3694
+  },
+  {
+    "source": "sections\\02-terminology-revF-backup.tex",
+    "repository": "sections\\02-terminology-revF-backup.tex",
+    "sha256": "D94C28B9CE51D11E0850BA4D98FFAD813690EF17B6F67D352FB925AD5F4E1240",
+    "bytes": 3791
+  },
+  {
+    "source": "sections\\02-terminology-revG-backup.tex",
+    "repository": "sections\\02-terminology-revG-backup.tex",
+    "sha256": "4FE100BF8172F8D5EB2F8519FABAAFD719900AF2EDCE9383A352D65A7BDB3B60",
+    "bytes": 4113
+  },
+  {
+    "source": "sections\\02-terminology.tex",
+    "repository": "sections\\02-terminology.tex",
+    "sha256": "3A15FC6589C8E4FA9A71FFCD9221174061AC61EEA5AEA984DDFDAD0D0A27D93B",
+    "bytes": 6618
+  },
+  {
+    "source": "sections\\03-design-process-revE-backup.tex",
+    "repository": "sections\\03-design-process-revE-backup.tex",
+    "sha256": "DFA58BDD5AAE40AC64FDF9E6F4694D487B1709523F7FA3A822513BE4598F3EDE",
+    "bytes": 17069
+  },
+  {
+    "source": "sections\\03-design-process-revF-backup.tex",
+    "repository": "sections\\03-design-process-revF-backup.tex",
+    "sha256": "16E27EF3F3A6D0760C8839B4C3A1413EE0FE0CFE406E272C90D9850A66F35138",
+    "bytes": 16228
+  },
+  {
+    "source": "sections\\03-design-process-revG-backup.tex",
+    "repository": "sections\\03-design-process-revG-backup.tex",
+    "sha256": "3FD851A93E6A0767A3FF5F996696F38F70333DA254C3168B89577610CA0C7343",
+    "bytes": 16083
+  },
+  {
+    "source": "sections\\03-design-process.tex",
+    "repository": "sections\\03-design-process.tex",
+    "sha256": "994D9C56E8D9F80DAD47097BD075F1D1E3A9F86A897BB7157391E4D73BE0DF30",
+    "bytes": 32870
+  },
+  {
+    "source": "sections\\04-working-with-contractors-revE-backup.tex",
+    "repository": "sections\\04-working-with-contractors-revE-backup.tex",
+    "sha256": "0BB3C7986DE90CEF4DABC649A65EF06E5D34FF71E494AA93C0AEA1BD06F6B741",
+    "bytes": 2125
+  },
+  {
+    "source": "sections\\04-working-with-contractors-revF-backup.tex",
+    "repository": "sections\\04-working-with-contractors-revF-backup.tex",
+    "sha256": "ABA4388BB38C322DDCAB63B313D43A0D851CD19997852A37B6C1242E2E0167FB",
+    "bytes": 1460
+  },
+  {
+    "source": "sections\\04-working-with-contractors-revG-backup.tex",
+    "repository": "sections\\04-working-with-contractors-revG-backup.tex",
+    "sha256": "CB2E28811BA6B00628DC8DC90EF29DF39965FD402CC9FB16047EADF968125E68",
+    "bytes": 4165
+  },
+  {
+    "source": "sections\\04-working-with-contractors.tex",
+    "repository": "sections\\04-working-with-contractors.tex",
+    "sha256": "BFDF916B83C8872D2D1EC86E12ECA008F0FE198DE945C8064BB3B7A1CA155CF0",
+    "bytes": 14631
+  },
+  {
+    "source": "sections\\05-process-definition-revE-backup.tex",
+    "repository": "sections\\05-process-definition-revE-backup.tex",
+    "sha256": "599545FECD41C3E071186926358EBD046F8E56480D8B853126D64795D7FA4D20",
+    "bytes": 4772
+  },
+  {
+    "source": "sections\\05-process-definition-revF-backup.tex",
+    "repository": "sections\\05-process-definition-revF-backup.tex",
+    "sha256": "F8FF33CF85C36C019FE5F50CA2A2F5A6FBF3856C4262E07DD15AA42A3BE92E29",
+    "bytes": 6565
+  },
+  {
+    "source": "sections\\05-process-definition-revG-backup.tex",
+    "repository": "sections\\05-process-definition-revG-backup.tex",
+    "sha256": "0BE37FEF0583A5533C986402D42BC465F3CF44D5B4F3AE67B2EEFB5749258AF2",
+    "bytes": 6633
+  },
+  {
+    "source": "sections\\05-process-definition.tex",
+    "repository": "sections\\05-process-definition.tex",
+    "sha256": "DECE7CB95CBD4266DF02F8E5DF3555C7C9B6D629AEEDF409E720658C30E089D3",
+    "bytes": 8904
+  },
+  {
+    "source": "sections\\06-hardware-ADD-hmi-mounting-height.tex",
+    "repository": "sections\\06-hardware-ADD-hmi-mounting-height.tex",
+    "sha256": "807DAA06EA9AC023D140E08D55211F6BAA65FE8AD31708620DA44CCE96C2309C",
+    "bytes": 3691
+  },
+  {
+    "source": "sections\\06-hardware-revE-backup.tex",
+    "repository": "sections\\06-hardware-revE-backup.tex",
+    "sha256": "EE160F4C03131016016D6615DB3875022FDADF43B47DDD309F2A965AC43A44CA",
+    "bytes": 28132
+  },
+  {
+    "source": "sections\\06-hardware-revF-backup.tex",
+    "repository": "sections\\06-hardware-revF-backup.tex",
+    "sha256": "98CDBB5E1710A1A9AB87F88FF126ACB3C5E89C7F336491E5B76C53AD4731638F",
+    "bytes": 62517
+  },
+  {
+    "source": "sections\\06-hardware-revG-backup.tex",
+    "repository": "sections\\06-hardware-revG-backup.tex",
+    "sha256": "19F438D914D1305F4F7030AFE6BE01543B8223F6746333957E3F2B7FE7D202B7",
+    "bytes": 65263
+  },
+  {
+    "source": "sections\\06-hardware.tex",
+    "repository": "sections\\06-hardware.tex",
+    "sha256": "8DF6FF77FB1C651946FD53DAABF829B08FD43ACD25F55909FE7BC164DC5DD3E0",
+    "bytes": 80792
+  },
+  {
+    "source": "sections\\07-software-revF-backup.tex",
+    "repository": "sections\\07-software-revF-backup.tex",
+    "sha256": "9C804857EE301B5F9ECF55CF12404FF7E1A974F08AFEA800213B132958D1EA02",
+    "bytes": 2603
+  },
+  {
+    "source": "sections\\07-software-revG-backup.tex",
+    "repository": "sections\\07-software-revG-backup.tex",
+    "sha256": "4F69B452EDCE5CDFC702A8948A0EF430443DCC6A2A773644BAF4B72885574401",
+    "bytes": 5500
+  },
+  {
+    "source": "sections\\07-software.tex",
+    "repository": "sections\\07-software.tex",
+    "sha256": "8E2DE28DA19D02BB0A900F097EA88A717F4575F12D0BD903FF5F85952C8AE32D",
+    "bytes": 11058
+  },
+  {
+    "source": "sections\\08-networking-revF-backup.tex",
+    "repository": "sections\\08-networking-revF-backup.tex",
+    "sha256": "FC4BDFCA6AA5B78BC69D376F480A2CBB944AD3D7BE4914B2E56A20CA3E22FCBD",
+    "bytes": 3246
+  },
+  {
+    "source": "sections\\08-networking-revG-backup.tex",
+    "repository": "sections\\08-networking-revG-backup.tex",
+    "sha256": "00380624837EAE110AC5C1BD6AC3874EACF3B7AAD5A328CD5A96BC92B4C23BAA",
+    "bytes": 12777
+  },
+  {
+    "source": "sections\\08-networking.tex",
+    "repository": "sections\\08-networking.tex",
+    "sha256": "7A950A17BF0C177EE14B35F385137CD5EFAF9A4A78A57DE225E5C2CC3963BCF0",
+    "bytes": 18343
+  },
+  {
+    "source": "sections\\09-accounts-revG-backup.tex",
+    "repository": "sections\\09-accounts-revG-backup.tex",
+    "sha256": "7C35B5645887467415AFBB9F42A02E0D495CA3F9802FD4B0361652D27109AABB",
+    "bytes": 1804
+  },
+  {
+    "source": "sections\\09-accounts.tex",
+    "repository": "sections\\09-accounts.tex",
+    "sha256": "9DA81C1BD1FA12CF123C2719A8A31142E9F3A9C5196289D070B1BBBDB634D5C6",
+    "bytes": 1259
+  },
+  {
+    "source": "sections\\10-plc-standards-revF-backup.tex",
+    "repository": "sections\\10-plc-standards-revF-backup.tex",
+    "sha256": "29798E29E10E2F038CFEDCEA9139177D7A3473BA17E63A71E2E37E9AE8B98744",
+    "bytes": 8348
+  },
+  {
+    "source": "sections\\10-plc-standards-revG-backup.tex",
+    "repository": "sections\\10-plc-standards-revG-backup.tex",
+    "sha256": "11DA6DA28D19D0493E6051BD5C85E5DDC7CECC93D00ADF01C6EA9281DD808008",
+    "bytes": 8371
+  },
+  {
+    "source": "sections\\10-plc-standards.tex",
+    "repository": "sections\\10-plc-standards.tex",
+    "sha256": "FAAFA63CCDA8F6084A8C1E12A424A5203CDC7119EB689796ABD9CEE0A066BA43",
+    "bytes": 19525
+  },
+  {
+    "source": "sections\\11-scada-standards-revG-backup.tex",
+    "repository": "sections\\11-scada-standards-revG-backup.tex",
+    "sha256": "FA246DD1741A7A813EC057C59D59FAFBE1714AFC82A44EDCFC3A43F962445467",
+    "bytes": 4518
+  },
+  {
+    "source": "sections\\11-scada-standards.tex",
+    "repository": "sections\\11-scada-standards.tex",
+    "sha256": "E42BC314F6C62F8732824EC93775E7E6E4B3CC6EF198A3AE4ABD0F3AAEB3D4AE",
+    "bytes": 10246
+  },
+  {
+    "source": "sections\\12-reference-material-revF-backup.tex",
+    "repository": "sections\\12-reference-material-revF-backup.tex",
+    "sha256": "85E4E303C316170E586E9442BC45B827DA54032ABF13D6302D6CEC56BC1E9282",
+    "bytes": 2787
+  },
+  {
+    "source": "sections\\12-reference-material-revG-backup.tex",
+    "repository": "sections\\12-reference-material-revG-backup.tex",
+    "sha256": "ABB056336FDA1BE7B9EB60EC8FDA52D29BB73885C008DF308F273AA59385E7B4",
+    "bytes": 2790
+  },
+  {
+    "source": "sections\\12-reference-material.tex",
+    "repository": "sections\\12-reference-material.tex",
+    "sha256": "A6DDFED71DAAE9A60F8E27862DFAD89ACF4138ECBBC74631FEB276F555D46DD2",
+    "bytes": 12139
+  },
+  {
+    "source": "appendices\\alarm-documentation.tex",
+    "repository": "appendices\\alarm-documentation.tex",
+    "sha256": "7AED8CD946DD5BD93726752C9B795A17F0FFC4D3B190FA5180554C1A75B5CD65",
+    "bytes": 7907
+  },
+  {
+    "source": "appendices\\c1d2-panel-design.tex",
+    "repository": "appendices\\c1d2-panel-design.tex",
+    "sha256": "710B32C1385C44EFF3C22552207615779DDD91680C73ABD7266BBB5DDF75FF7B",
+    "bytes": 10052
+  },
+  {
+    "source": "appendices\\cato-claroty.tex",
+    "repository": "appendices\\cato-claroty.tex",
+    "sha256": "486CC790609261167917CDBCB2DF578CDEFBF987D94883A7A08161D8D888D8DD",
+    "bytes": 6200
+  },
+  {
+    "source": "appendices\\change-test-record.tex",
+    "repository": "appendices\\change-test-record.tex",
+    "sha256": "DBEC0E9BF11598970E62C7FB3D2B454E1F7D79F9ABEFF04C085560C0F0B38D66",
+    "bytes": 5503
+  },
+  {
+    "source": "appendices\\data-types-future.tex",
+    "repository": "appendices\\data-types-future.tex",
+    "sha256": "A28C3E37689425AA96B874B79BAE32B8F08DBA53453A64756376997762FD8E86",
+    "bytes": 129983
+  },
+  {
+    "source": "appendices\\data-types.tex",
+    "repository": "appendices\\data-types.tex",
+    "sha256": "9C54D64F4131549F0B490F13798090CFAE146F76BECAD853E5F655B99ED95A91",
+    "bytes": 17149
+  },
+  {
+    "source": "appendices\\electrical-drawing-package.tex",
+    "repository": "appendices\\electrical-drawing-package.tex",
+    "sha256": "3596F349B86045F2C9087F70EEDCE1962026C1CF395676F64B2B95A6F7755734",
+    "bytes": 7681
+  },
+  {
+    "source": "appendices\\function-blocks.tex",
+    "repository": "appendices\\function-blocks.tex",
+    "sha256": "C909E796FD4581B517AF79B9EE8522CE85BF44A317DF1859F302E6FBF5723036",
+    "bytes": 9195
+  },
+  {
+    "source": "appendices\\git-version-control.tex",
+    "repository": "appendices\\git-version-control.tex",
+    "sha256": "8E9242C08B62F3CDF692EB9316747BF6B81C4168138E47DF54906738E5D716FE",
+    "bytes": 9132
+  },
+  {
+    "source": "appendices\\important-equations.tex",
+    "repository": "appendices\\important-equations.tex",
+    "sha256": "B1F561B6B35BB3AC340EA17DC4FEBC8EDCAF0769F42769DDA6A0C5F413E1EEC6",
+    "bytes": 15927
+  },
+  {
+    "source": "appendices\\modbus-revG-backup.tex",
+    "repository": "appendices\\modbus-revG-backup.tex",
+    "sha256": "78F9334615CD4830DD809BFC818EB9916C8D4AC632DEC3D30400ADAEF7238B26",
+    "bytes": 22691
+  },
+  {
+    "source": "appendices\\modbus.tex",
+    "repository": "appendices\\modbus.tex",
+    "sha256": "8172B5F8FC175FE12DF6F4A4D6CD5CE175596DDFB420885DD9CA9BD4D8462F72",
+    "bytes": 23016
+  },
+  {
+    "source": "appendices\\pclib-data-types.tex",
+    "repository": "appendices\\pclib-data-types.tex",
+    "sha256": "B9649CDF989D9D9B98B85BA6A13A41A3D79D5B0B8038EB0384DDD0C20B63E99A",
+    "bytes": 123610
+  },
+  {
+    "source": "appendices\\perspective-edge-panel.tex",
+    "repository": "appendices\\perspective-edge-panel.tex",
+    "sha256": "BCB445FFA962B1626CBE65A70CD1E062931FEC5F7038DD6A87B183E9584519B4",
+    "bytes": 17593
+  },
+  {
+    "source": "appendices\\perspective-screen-design.tex",
+    "repository": "appendices\\perspective-screen-design.tex",
+    "sha256": "9C79C3601B6087CAE4EEBD456D5671E8705121FF0AB5DA3FCDFE6B16D9EE59BD",
+    "bytes": 9529
+  },
+  {
+    "source": "appendices\\Perspective-Screen-Scaling-Procedure.tex",
+    "repository": "appendices\\Perspective-Screen-Scaling-Procedure.tex",
+    "sha256": "E77A697229F675B74877675863E0C1774B11A9809FDAEE9860E8FC50BF92F7F7",
+    "bytes": 444
+  },
+  {
+    "source": "appendices\\perspective-screen-scaling-revF-backup.tex",
+    "repository": "appendices\\perspective-screen-scaling-revF-backup.tex",
+    "sha256": "80AB008923B1A0CAF9EEEB2D5AEEC568351ADD6B8AE6D5A932AF26175A833075",
+    "bytes": 12924
+  },
+  {
+    "source": "appendices\\perspective-screen-scaling-revG-backup.tex",
+    "repository": "appendices\\perspective-screen-scaling-revG-backup.tex",
+    "sha256": "E8C38CBD96EA8D493E3D22CA5D6965EA9F2C182C59A32F3467CDA60C0BE33AD1",
+    "bytes": 12930
+  },
+  {
+    "source": "appendices\\perspective-screen-scaling.tex",
+    "repository": "appendices\\perspective-screen-scaling.tex",
+    "sha256": "E8C38CBD96EA8D493E3D22CA5D6965EA9F2C182C59A32F3467CDA60C0BE33AD1",
+    "bytes": 12930
+  },
+  {
+    "source": "appendices\\sample-fat.tex",
+    "repository": "appendices\\sample-fat.tex",
+    "sha256": "B394C255722F272166054353C7618E83140B6138C03ED462155EF489DAE03161",
+    "bytes": 12451
+  },
+  {
+    "source": "appendices\\transformer-sizing-revF-backup.tex",
+    "repository": "appendices\\transformer-sizing-revF-backup.tex",
+    "sha256": "65AB45578C71BF0DBDD5F0728B853C8DB44297650E52554726C42F8FBBAFBD54",
+    "bytes": 7270
+  },
+  {
+    "source": "assets\\efc-logo.png",
+    "repository": "assets\\efc-logo.png",
+    "sha256": "9ED6A1924F78E4367C58C89862A23F901E8059D71FFB84F8D7C2811272A5A0A7",
+    "bytes": 51442
+  },
+  {
+    "source": "references\\ddt-extract.md",
+    "repository": "references\\ddt-extract.md",
+    "sha256": "40C7D62A73ED45585D22D120A5DEF107D07B00ADCEEAF6FEB12EFC63FE4D20D6",
+    "bytes": 3650
+  },
+  {
+    "source": "references\\dfb-extract.md",
+    "repository": "references\\dfb-extract.md",
+    "sha256": "5CC90A7BBDFE3E4948A156E9AA36A41EC204B9D56B92DE17EE048FA39E79EC62",
+    "bytes": 2674
+  },
+  {
+    "source": "references\\modicon-hardware-pricing-archive.csv",
+    "repository": "references\\modicon-hardware-pricing-archive.csv",
+    "sha256": "122274C4778B10ED6FA418BE7773BF121A5B8A163278F751A6174496AC50AA16",
+    "bytes": 2058
+  },
+  {
+    "source": "references\\PCLib UDT Standards.md",
+    "repository": "references\\PCLib UDT Standards.md",
+    "sha256": "10CF844CF0BFC72A7ECA96EC2026E659AE925D9A50DA9E57589DCFD2DBEE5933",
+    "bytes": 84713
+  },
+  {
+    "source": "references\\Perspective_Screen_Design_Standard.pdf",
+    "repository": "references\\Perspective_Screen_Design_Standard.pdf",
+    "sha256": "FAD0010E0E3F699E01FBAFC98D30B54B134C7B826D985B089B81BCDBDD2DD748",
+    "bytes": 11170
+  },
+  {
+    "source": "references\\REV-H-CHANGES.md",
+    "repository": "references\\REV-H-CHANGES.md",
+    "sha256": "0864BF6E82AFD9F7732C193E2F465BE4BED1D6D001C5AE58F52C7F592CD50B57",
+    "bytes": 13925
+  },
+  {
+    "source": "references\\REV-I-CHANGES.md",
+    "repository": "references\\REV-I-CHANGES.md",
+    "sha256": "C4547D85041707A4F3AA136CC665C85CAA3E4398E4644BA488C6A843D1106FA7",
+    "bytes": 2086
+  },
+  {
+    "source": "standalone\\appendix-alarm-documentation.tex",
+    "repository": "standalone\\appendix-alarm-documentation.tex",
+    "sha256": "4D8A2113E12924FED752432F60B734489CF5FE41C12128F03F8F8ACB653BBD81",
+    "bytes": 601
+  },
+  {
+    "source": "standalone\\appendix-c1d2-panel-design.tex",
+    "repository": "standalone\\appendix-c1d2-panel-design.tex",
+    "sha256": "A663F7D0DD689CEA3E4E6CE4A79B39429AE1FB79B58F51F00BFFCE0D8A92A5C0",
+    "bytes": 595
+  },
+  {
+    "source": "standalone\\appendix-cato-claroty.tex",
+    "repository": "standalone\\appendix-cato-claroty.tex",
+    "sha256": "A82028C3D85BF887C30A9FCBD534E5EC6E756EDF48DB2DE91C288A7FC10D24B1",
+    "bytes": 575
+  },
+  {
+    "source": "standalone\\appendix-change-test-record.tex",
+    "repository": "standalone\\appendix-change-test-record.tex",
+    "sha256": "DC4325A4790452F5C909ABBFCC2129B73A2FE7ECC8459CD3715DD27798722DE5",
+    "bytes": 589
+  },
+  {
+    "source": "standalone\\appendix-common.tex",
+    "repository": "standalone\\appendix-common.tex",
+    "sha256": "91ED297898467D61B9BAB13654FD2907A42DE23E117956C8DC9071D6D3EFE721",
+    "bytes": 2019
+  },
+  {
+    "source": "standalone\\appendix-data-types-future.tex",
+    "repository": "standalone\\appendix-data-types-future.tex",
+    "sha256": "05CE18F1D8AD901498F50D8BA09CFF1E7BC615D9503B7AE8A9F5A6A864254969",
+    "bytes": 601
+  },
+  {
+    "source": "standalone\\appendix-data-types.tex",
+    "repository": "standalone\\appendix-data-types.tex",
+    "sha256": "073EA9FD79975660E11BF9F149D1648C92B929A8E86524C7A57DB49A5DF136DE",
+    "bytes": 588
+  },
+  {
+    "source": "standalone\\appendix-electrical-drawing-package.tex",
+    "repository": "standalone\\appendix-electrical-drawing-package.tex",
+    "sha256": "842067E571904415F03223C619765B3139F3C1D0618E483907FE74954AD3EDA2",
+    "bytes": 613
+  },
+  {
+    "source": "standalone\\appendix-function-blocks.tex",
+    "repository": "standalone\\appendix-function-blocks.tex",
+    "sha256": "1FBD5AA332571CCDD36FB9171B0CFE4199112AB725754AD32183886A5E7B4E23",
+    "bytes": 589
+  },
+  {
+    "source": "standalone\\appendix-git-version-control.tex",
+    "repository": "standalone\\appendix-git-version-control.tex",
+    "sha256": "A9296F3E6230CCC0936974BAE3EFDD31F4BF14638AABCD5AB86B2EE13B8F2141",
+    "bytes": 606
+  },
+  {
+    "source": "standalone\\appendix-important-equations.tex",
+    "repository": "standalone\\appendix-important-equations.tex",
+    "sha256": "C29053E5E2B24F8A31B40F29C84933E53A963347C32ABA7E5AE78442E816B2DA",
+    "bytes": 592
+  },
+  {
+    "source": "standalone\\appendix-modbus.tex",
+    "repository": "standalone\\appendix-modbus.tex",
+    "sha256": "34BF95103C75444FB4966150EA6FB5E6564C1B96544482CCCE90448997F27E77",
+    "bytes": 564
+  },
+  {
+    "source": "standalone\\appendix-perspective-edge-panel.tex",
+    "repository": "standalone\\appendix-perspective-edge-panel.tex",
+    "sha256": "11E6A4F81D95AE148989181B2299B7D9C32C5B3FFDDAC092584F28CBF0D694DF",
+    "bytes": 604
+  },
+  {
+    "source": "standalone\\appendix-perspective-screen-design.tex",
+    "repository": "standalone\\appendix-perspective-screen-design.tex",
+    "sha256": "704EAE9830C743B431179BD439157F11B651BF4D28C04D1252B7441A8D607DD6",
+    "bytes": 619
+  },
+  {
+    "source": "standalone\\appendix-sample-fat.tex",
+    "repository": "standalone\\appendix-sample-fat.tex",
+    "sha256": "FA73A9721D78CFE44A2A6E5A9B630AE1537AD50F9D70B9B61F3AE07FB4707542",
+    "bytes": 574
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix A - Perspective Screen Design Standard.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix A - Perspective Screen Design Standard.pdf",
+    "sha256": "B9B690FEA89A536107CD9DEF16C4CD3B51A16E7472F862D74F2CC26479FE07D9",
+    "bytes": 134550
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix B - Perspective vs Edge Panel.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix B - Perspective vs Edge Panel.pdf",
+    "sha256": "0B13B6669E378A2A9B0528A727DE6C965DDBD208528398B880FAA2E56188059D",
+    "bytes": 170645
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix C - Important Equations.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix C - Important Equations.pdf",
+    "sha256": "40FDF6D25A1F5A5EEF76A6A30F8E2E9FAB1107DB063461F7872314EA9ADE4518",
+    "bytes": 162592
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix D - Electrical Drawing Package.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix D - Electrical Drawing Package.pdf",
+    "sha256": "81ABE8E4F3AA04562437B2D08A19CD4240511E626A35ADB168340286FB62EE2A",
+    "bytes": 161190
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix E - Class I Div 2 Panel Design.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix E - Class I Div 2 Panel Design.pdf",
+    "sha256": "BFF63CC3E54A50AD8C18E1F2CD8A5841AB975698D2232A3098BE265FCB9A0F24",
+    "bytes": 140514
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix F - Modbus Addressing.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix F - Modbus Addressing.pdf",
+    "sha256": "CBA9ADBC25220CBF17A94570ED3A3A243DCC9CE954A838F69805FDCED549E7B3",
+    "bytes": 152464
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix G - Alarm List and Documentation.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix G - Alarm List and Documentation.pdf",
+    "sha256": "B32D2DB041688E83B4C2AE9D44934FADB6AA08421074CF87295E6DF99C38FFD1",
+    "bytes": 155022
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix H - PLC Data Type Reference.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix H - PLC Data Type Reference.pdf",
+    "sha256": "0579F786495FB5BBEE249DE1299E22F0AA99A12A9F091E7B9D6AB14B8C13B53D",
+    "bytes": 128875
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix I - Function Block Reference.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix I - Function Block Reference.pdf",
+    "sha256": "BDB6AAEFC9B680BA2DC595CAB90D6B7D5D1976A8CCF6AE36ED6E6A04ACCCE6B0",
+    "bytes": 109530
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix J - Software Version Control with Git.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix J - Software Version Control with Git.pdf",
+    "sha256": "544245D0E5217877FB21F766500D731FAB4F1A1B78A2AE967EAB14A21EE2A8E1",
+    "bytes": 187106
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix K - Change Test Record.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix K - Change Test Record.pdf",
+    "sha256": "BBCFE58B0D426D7C0F82117321759C8C540F364772789317E5D31B178F328B09",
+    "bytes": 142389
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix L - Sample FAT Document.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix L - Sample FAT Document.pdf",
+    "sha256": "DFB712FBB45208716453889B95A9FE2A7918E09AC80D36A1783D898B2115870B",
+    "bytes": 189635
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-H - Appendix M - Cato and Claroty.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-H - Appendix M - Cato and Claroty.pdf",
+    "sha256": "1C9AA72492D86016D38562F0E60C4187D3D1EDE9F9A845DBEFB86B9D293DB35D",
+    "bytes": 137788
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix A - Perspective Screen Design Standard.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix A - Perspective Screen Design Standard.pdf",
+    "sha256": "E14B98D99B866B4A35153DFACC8C362E78BD32A4A7A61321D532054BECE65229",
+    "bytes": 134697
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix B - Perspective vs Edge Panel.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix B - Perspective vs Edge Panel.pdf",
+    "sha256": "650F5BA9245857F569F3659D02838AB4C4514C6419150AB5711AB167CA63D6DF",
+    "bytes": 170642
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix C - Important Equations.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix C - Important Equations.pdf",
+    "sha256": "70D775677A952FF1E94E985E7DD7910CDAAD93F056C0273B412D843A6DC66AB2",
+    "bytes": 162591
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix D - Electrical Drawing Package.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix D - Electrical Drawing Package.pdf",
+    "sha256": "0BB854F9288BFED00A2889D859FFD232E9EEA2897735DBD6A44118D1762A2D0E",
+    "bytes": 161350
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix E - Class I Div 2 Panel Design.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix E - Class I Div 2 Panel Design.pdf",
+    "sha256": "1176C61E5292661964BC11FBCCAAF9FB356665152722C8CC15182B721FA615E4",
+    "bytes": 140363
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix F - Modbus Addressing.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix F - Modbus Addressing.pdf",
+    "sha256": "55B94BF60709E0FDCC44EDC62159558CCD374E494685848BCBCD3EE393274356",
+    "bytes": 152620
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix G - Alarm List and Documentation.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix G - Alarm List and Documentation.pdf",
+    "sha256": "1595A6766E603805170D41CE517C157940047D4FED0A0ED82905FACF6164CC19",
+    "bytes": 155033
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix H - PLC Data Type Reference (Current).pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix H - PLC Data Type Reference (Current).pdf",
+    "sha256": "9A48B280D0103A93E0877774810CC5F9623265DA9AEB9C05BE6F24847C8E4F73",
+    "bytes": 131990
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix I - PLC Data Type Reference (Future).pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix I - PLC Data Type Reference (Future).pdf",
+    "sha256": "DCC599C7209057EFCB52BCBCE14A57E7C54F91910B213FE79B9B206F4A2918A0",
+    "bytes": 271595
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix J - Function Block Reference.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix J - Function Block Reference.pdf",
+    "sha256": "968F4A59F29539891BA9624639945F247042E75D2B96DF397BEE7220829CE892",
+    "bytes": 109969
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix K - Software Version Control with Git.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix K - Software Version Control with Git.pdf",
+    "sha256": "BAB263E8C1BD741611262462F31B35771A30AD345B2B653868D2AA16118AE7F2",
+    "bytes": 187787
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix L - Change Test Record.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix L - Change Test Record.pdf",
+    "sha256": "88EBC75086873177549FEDAA12EDA167BCF67C945F5367CA58D4F78D034A3A68",
+    "bytes": 141357
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix M - Sample FAT Document.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix M - Sample FAT Document.pdf",
+    "sha256": "FA0FCF9F317F48A7DE2416F83D1EBAD64EA936665F22267B7D12F9F5EA1B4A52",
+    "bytes": 189740
+  },
+  {
+    "source": "Appendix PDFs\\Controls Standard rev-I - Appendix N - Cato and Claroty.pdf",
+    "repository": "Appendix PDFs\\Controls Standard rev-I - Appendix N - Cato and Claroty.pdf",
+    "sha256": "71BCD496A32EAFCB214F9028AF372B90D49E9D9D2442B38BFCED7057C06F6579",
+    "bytes": 137496
+  },
+  {
+    "source": "Claude outputs\\Chapter 3 table option A revised.pdf",
+    "repository": "Claude outputs\\Chapter 3 table option A revised.pdf",
+    "sha256": "C07E82820E094B77CA555CD075E6CDCE76D2E8D68737E1901D995B074F6996C8",
+    "bytes": 91992
+  },
+  {
+    "source": "Claude outputs\\Chapter 3 table options.pdf",
+    "repository": "Claude outputs\\Chapter 3 table options.pdf",
+    "sha256": "06987FE7DF107029C81822E763B1084712E946109C060D77ED94200E08B212CE",
+    "bytes": 101855
+  },
+  {
+    "source": "Claude outputs\\Controls Standard rev-H - your markup (applied).pdf",
+    "repository": "Claude outputs\\Controls Standard rev-H - your markup (applied).pdf",
+    "sha256": "EEED810FB12C9FF64605438CDCE41FAF78DA6F962D36E83F74D60643B79DF979",
+    "bytes": 779105
+  },
+  {
+    "source": "Claude outputs\\preview_pclib.tex",
+    "repository": "Claude outputs\\preview_pclib.tex",
+    "sha256": "5CB2E3B6B6A70CDBE3608020D783C631630FCD662193F82A277F016CECD9BE90",
+    "bytes": 1044
+  },
+  {
+    "source": "Claude outputs\\REV-I-CHANGES.md",
+    "repository": "Claude outputs\\REV-I-CHANGES.md",
+    "sha256": "15DFEA5ACC9484993BCBF62352C0DF9E92FDC19E8EF98C55F82A912C8ED62F66",
+    "bytes": 6042
+  },
+  {
+    "source": "tools\\gen_future_appendix.py",
+    "repository": "tools\\gen_future_appendix.py",
+    "sha256": "3FB819F84FD4A4F0677D92B2F57C9EFBBE964013132E8CB0B921BD20C27B3262",
+    "bytes": 17173
+  }
+]

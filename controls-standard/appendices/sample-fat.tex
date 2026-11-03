@@ -1,0 +1,188 @@
+\chapter{Sample FAT Document}
+\label{app:sample-fat}
+This appendix is a \textbf{sample} Factory Acceptance Test (FAT) document, laid out as a template with a few example rows completed for project \texttt{014\_R23-Column-PLC}. It is the ``FAT Checkout document'' of Chapter~\ref{ch:design-process}: outlined in Stage~4, procedures and expected results completed by late Stage~5, and actual results recorded in Stage~5A. The structure follows IEC 62381, and the electrical tests follow the testing and verification chapter of NFPA 79.\footnote{IEC 62381:2024 (Ed.~3), \emph{Automation systems in the process industry --- Factory acceptance test (FAT), site acceptance test (SAT), and site integration test (SIT)}; NFPA 79-2024, Ch.~18 (18.2 continuity of the effective ground-fault current path, 18.3 insulation resistance, 18.4 voltage tests, 18.6 functional tests); IEC 60204-1:2016+A1:2021, Cl.~18; UL 508A, 3rd ed. (panel construction and markings).} Remove the examples and adapt the sections to each project.
+
+\newcommand{\fatcb}{$\square$}
+\newcommand{\fatfld}{\rule[-0.28cm]{0pt}{0.75cm}}
+
+\section{Cover and Approval}
+\begin{center}
+\begin{tabular}{@{}|P{4.35cm}|P{4.00cm}|P{3.26cm}|P{4.39cm}|@{}}
+\hline
+\textbf{Project no. / name} & 014 / R23 Column & \textbf{System} & Column control panel CP-1 \\ \hline
+\textbf{FAT document revision} & C & \textbf{Test dates} & \\ \hline
+\textbf{PLC software (file)} & \texttt{014\_R23-Column-PLC\_C\_261002} & \textbf{SCADA project} & \\ \hline
+\textbf{Panel builder} & & \textbf{Test location} & \\ \hline
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{@{}|P{4.35cm}|P{4.00cm}|P{4.56cm}|P{3.09cm}|@{}}
+\hline
+\rowcolor{tblhead}\textbf{Witness / approval} & \textbf{Name} & \textbf{Signature} & \textbf{Date} \\ \hline
+\fatfld EFC Controls & & & \\ \hline
+\fatfld Panel builder / vendor & & & \\ \hline
+\fatfld Operations & & & \\ \hline
+\end{tabular}
+\end{center}
+
+\section{Scope, References, and Test Setup}
+\textbf{Scope:} the CP-1 control panel, its PLC program, and the SCADA screens for the R23 column, tested at the panel builder's shop before shipment. Field devices are simulated; tests that need the field are listed in Section~\ref{sec:fat-open} for commissioning (SAT).
+
+\textbf{References} (record the revision used): electrical schematics and panel layout; I/O list; Control Narrative; Table of Interlocks and Permissives; alarm list; network map and address list.
+
+\textbf{Test setup:} how field signals are simulated (loop calibrator, switches, PLC simulation), the SCADA computer used, and the test equipment with calibration dates (multimeter, insulation tester, loop calibrator).
+
+\section{Entry Criteria}
+\noindent\begin{tabular}{@{}P{8.63cm}P{8.73cm}@{}}
+\fatcb\ Drawings at the revision under test & \fatcb\ Builder's own pre-FAT checks complete and signed \\
+\fatcb\ PLC and SCADA software revision recorded & \fatcb\ Test procedures reviewed and approved \\
+\fatcb\ Test equipment calibrated & \fatcb\ Open items from earlier reviews listed \\
+\end{tabular}
+
+\section{Documentation and Visual Inspection}
+\begin{small}
+\begin{longtable}{@{}|P{0.76cm}|P{6.51cm}|P{4.76cm}|P{1.31cm}|P{2.23cm}|@{}}
+\caption{FAT --- Documentation and Visual Inspection}\label{tab:fat-visual} \\
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Check} & \textbf{Result / remarks} & \textbf{P/F} & \textbf{Init.} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Check} & \textbf{Result / remarks} & \textbf{P/F} & \textbf{Init.} \\ \hline
+\endhead
+V1 & Nameplate: voltage, phase, frequency, FLA, SCCR, enclosure type, drawing number & & & \\ \hline
+V2 & UL label present (if a listed panel is required) & & & \\ \hline
+V3 & Components match the bill of materials and panel layout & & & \\ \hline
+V4 & Wire numbers and terminal markers at both ends, per schematic & & & \\ \hline
+V5 & Wire colors per the project scheme; externally powered wiring identified & & & \\ \hline
+V6 & Bonding: back panel, door jumper, DIN rails, ground bar (Section~\ref{sec:bonding}) & & & \\ \hline
+V7 & High-voltage separation, barriers, and warning labels & & & \\ \hline
+V8 & Spare space and spare terminals as specified (at least 20\%) & & & \\ \hline
+V9 & Workmanship: duct fill, strain relief, no damaged insulation, torque marks & & & \\ \hline
+\end{longtable}
+\end{small}
+
+\section{Electrical Tests}
+\begin{small}
+\begin{longtable}{@{}|P{0.76cm}|P{5.11cm}|P{3.49cm}|P{3.54cm}|P{1.09cm}|P{1.15cm}|@{}}
+\caption{FAT --- Electrical Tests}\label{tab:fat-electrical} \\
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Test} & \textbf{Acceptance} & \textbf{Measured} & \textbf{P/F} & \textbf{Init.} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Test} & \textbf{Acceptance} & \textbf{Measured} & \textbf{P/F} & \textbf{Init.} \\ \hline
+\endhead
+E1 & Continuity of the protective bonding circuit from the PE terminal to each exposed metal part & Low resistance per NFPA 79 18.2 & & & \\ \hline
+E2 & Insulation resistance, power circuits to PE (electronics disconnected) & $\geq$ 1\,M$\Omega$ at 500\,VDC & & & \\ \hline
+E3 & Power-up: incoming voltage, control transformer secondary, 24\,VDC supplies & Within $\pm$5\% of nominal & \textit{Example:} 24.1\,VDC & \textit{P} & \textit{AZ} \\ \hline
+E4 & UPS (if fitted): transfer on loss of input & PLC and network stay powered & & & \\ \hline
+E5 & Fuses and breakers: ratings match the schematic & As drawn & & & \\ \hline
+\end{longtable}
+\end{small}
+
+\section{I/O Point-to-Point Checks}
+Each point is checked from the terminal (simulated field signal) through the PLC to the SCADA screen. Analog inputs are checked at 0, 25, 50, 75, and 100\% of range.
+\begin{small}
+\begin{longtable}{@{}|P{1.86cm}|P{3.28cm}|P{2.08cm}|P{3.03cm}|P{2.71cm}|P{0.88cm}|P{0.88cm}|@{}}
+\caption{FAT --- I/O Checks}\label{tab:fat-io} \\
+\hline
+\rowcolor{tblhead}\textbf{Tag} & \textbf{Description} & \textbf{Card / ch.} & \textbf{Simulated / expected} & \textbf{PLC / SCADA reading} & \textbf{P/F} & \textbf{Init.} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{tblhead}\textbf{Tag} & \textbf{Description} & \textbf{Card / ch.} & \textbf{Simulated / expected} & \textbf{PLC / SCADA reading} & \textbf{P/F} & \textbf{Init.} \\ \hline
+\endhead
+\textit{ZSC-110} & \textit{V-110 closed limit (DI)} & \textit{A02 / 4} & \textit{Switch closed $\rightarrow$ 1} & \textit{1 / Closed} & \textit{P} & \textit{AZ} \\ \hline
+\textit{SV-110} & \textit{V-110 solenoid (DO)} & \textit{A04 / 2} & \textit{Command on $\rightarrow$ 24\,V at TB3-12} & \textit{24.0\,V} & \textit{P} & \textit{AZ} \\ \hline
+\textit{PT-210} & \textit{Vacuum header (AI, 0--100\,torr)} & \textit{A06 / 3} & \textit{4 / 8 / 12 / 16 / 20\,mA $\rightarrow$ 0 / 25 / 50 / 75 / 100\,torr} & \textit{0.1 / 25.0 / 50.0 / 75.1 / 99.9} & \textit{P} & \textit{AZ} \\ \hline
+\textit{FCV-120} & \textit{Feed valve (AO)} & \textit{A07 / 1} & \textit{0 / 50 / 100\% $\rightarrow$ 4 / 12 / 20\,mA} & & & \\ \hline
+\fatfld & & & & & & \\ \hline
+\end{longtable}
+\end{small}
+
+\section{Communications and Network}
+\noindent\begin{tabular}{@{}P{8.63cm}P{8.73cm}@{}}
+\fatcb\ IP addresses match the address list & \fatcb\ All EtherNet/IP devices connected and healthy \\
+\fatcb\ SCADA connects over OPC UA with security enabled & \fatcb\ NAT mappings and firewall rules as designed \\
+\fatcb\ Loss of a device: alarm and fail-safe action & \fatcb\ Loss of SCADA: PLC continues to control safely \\
+\end{tabular}
+
+\section{E-Stop and Safety Circuit Tests}
+\begin{small}
+\begin{longtable}{@{}|P{0.76cm}|P{6.40cm}|P{6.28cm}|P{0.98cm}|P{1.14cm}|@{}}
+\caption{FAT --- E-Stop and Safety Circuits}\label{tab:fat-estop} \\
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Test (Section~\ref{sec:estop})} & \textbf{Expected result} & \textbf{P/F} & \textbf{Init.} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Test} & \textbf{Expected result} & \textbf{P/F} & \textbf{Init.} \\ \hline
+\endhead
+S1 & Press each E-stop in turn & Safety relay drops out; outputs and STO removed; E-stop lights; PLC/SCADA show which E-stop & & \\ \hline
+S2 & Open each channel separately (jumper removed) & Safety relay trips and will not reset (cross-fault / channel fault detected) & & \\ \hline
+S3 & Release E-stop; observe reset light & Light blinks (reset required); no restart & & \\ \hline
+S4 & Press and release reset & Safety relay resets; light steady; equipment does not start by itself & & \\ \hline
+S5 & Hold reset button pressed during E-stop release & No reset until button is released (monitored manual reset) & & \\ \hline
+S6 & PLC drops the force-guided relay output & System trips as for an E-stop & & \\ \hline
+S7 & VFD STO status read by PLC during E-stop & SCADA shows drive in STO & & \\ \hline
+\end{longtable}
+\end{small}
+
+\section{Functional Tests From the Control Narrative}
+\begin{small}
+\begin{longtable}{@{}|P{0.76cm}|P{6.10cm}|P{6.59cm}|P{0.98cm}|P{1.14cm}|@{}}
+\caption{FAT --- Functional Tests}\label{tab:fat-functional} \\
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Test} & \textbf{Expected result} & \textbf{P/F} & \textbf{Init.} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Test} & \textbf{Expected result} & \textbf{P/F} & \textbf{Init.} \\ \hline
+\endhead
+F1 & Mode changes Off / Manual / Auto / Lockout for each device & Mode follows request only when permitted; SCADA shows mode & & \\ \hline
+F2 & Start the fill sequence with all permissives met & Steps run in order per the Control Narrative & & \\ \hline
+F3 & Permissive: set the max vacuum-open pressure setpoint to its minimum and maximum limits, and try a value outside them & Values within limits accepted; outside values clamped; limits shown on SCADA & & \\ \hline
+F4 & Each interlock in the Table of Interlocks and Permissives & Correct action; first-out shows the initiating condition; reset only after the cause clears & & \\ \hline
+F5 & Each alarm in the alarm list & Activates at setpoint after delay; clears with deadband; correct priority and message & & \\ \hline
+F6 & Bypass (if used) & Requires authorization; visible on SCADA; logged & & \\ \hline
+\end{longtable}
+\end{small}
+
+\section{Abnormal and Recovery Tests}
+\noindent\begin{tabular}{@{}P{8.63cm}P{8.73cm}@{}}
+\fatcb\ Power loss and restore: no unexpected start & \fatcb\ PLC stop/run: outputs to defined state \\
+\fatcb\ Analog bad quality (open loop, $<$3.6\,mA) & \fatcb\ SCADA disconnect and reconnect \\
+\fatcb\ Download/restart: sequences restart as designed & \fatcb\ Device communication loss \\
+\end{tabular}
+
+\section{SCADA/HMI Tests}
+\noindent\begin{tabular}{@{}P{8.63cm}P{8.73cm}@{}}
+\fatcb\ Navigation and every screen opens & \fatcb\ Screen scaling at deployed resolutions (Appendix~\ref{app:screen-design}) \\
+\fatcb\ Faceplates match the device data types & \fatcb\ Security roles: operator vs.\ engineer rights \\
+\fatcb\ Trends and history recording & \fatcb\ Alarm display, acknowledge, shelving \\
+\end{tabular}
+
+\section{Punch List and Field Tests}\label{sec:fat-open}
+\begin{small}
+\begin{longtable}{@{}|P{0.87cm}|P{6.43cm}|P{1.75cm}|P{2.40cm}|P{1.96cm}|P{1.72cm}|@{}}
+\caption{FAT --- Punch List}\label{tab:fat-punch} \\
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Item} & \textbf{Severity} & \textbf{Owner} & \textbf{Due} & \textbf{Closed} \\ \hline
+\endfirsthead
+\hline
+\rowcolor{tblhead}\textbf{\#} & \textbf{Item} & \textbf{Severity} & \textbf{Owner} & \textbf{Due} & \textbf{Closed} \\ \hline
+\endhead
+\textit{P1} & \textit{PT-210 faceplate shows wrong units (psig instead of torr)} & \textit{Minor} & \textit{Controls} & \textit{Before shipment} & \\ \hline
+\textit{P2} & \textit{Field test: verify V-110 stroke time (needs air at site)} & \textit{Field} & \textit{Controls} & \textit{Stage 6} & \\ \hline
+\fatfld & & & & & \\ \hline
+\end{longtable}
+\end{small}
+Severity: \textit{Critical} (must be fixed before shipment), \textit{Minor} (may ship; fix by a date), \textit{Field} (can only be tested on site).
+
+\section{Final Acceptance}
+\fatcb\ All tests passed or recorded on the punch list \quad \fatcb\ No open critical items \quad \fatcb\ Software revision and backup recorded
+
+\begin{center}
+\begin{tabular}{@{}|P{4.35cm}|P{4.00cm}|P{4.56cm}|P{3.09cm}|@{}}
+\hline
+\rowcolor{tblhead}\textbf{FAT accepted by} & \textbf{Name} & \textbf{Signature} & \textbf{Date} \\ \hline
+\fatfld EFC Controls & & & \\ \hline
+\fatfld Panel builder / vendor & & & \\ \hline
+\end{tabular}
+\end{center}

@@ -1,0 +1,32 @@
+% =====================================================================
+% ADDITION FOR 06-hardware.tex  (prepared for Rev J)
+% Insert in \section{Servers, Computers, and Operator Stations},
+% directly AFTER the "Industrial Keyboards" subsubsection (and its
+% italic notes paragraph) and BEFORE
+% \subsection{Class 1 -- Div 2 Zone Hardware}\label{sec:c1d2}
+% =====================================================================
+
+\subsection{Operator Station Mounting Height}\label{sec:hmi-height}
+These rules apply to every operator display: panel-door HMIs and touch monitors, swing-arm monitors, wall-mounted plant-floor stations, and control-room desks. Measure every height from the surface the operator actually stands or sits on (finished floor, platform, or grating), not from the floor at the base of the panel.
+
+\begin{itemize}[itemsep=2pt]
+  \item \textbf{Standing operator:} the screen centerline must be \textbf{1500~mm (59~in) $\pm$100~mm} above the standing surface.
+  \item \textbf{Whole active area:} every touch target and on-screen control must sit between \textbf{600~mm (24~in)} and \textbf{1700~mm (67~in)} above the standing surface.
+  \item \textbf{Seated operator} (control-room desk or console): the screen centerline should be about 1050--1200~mm (41--47~in) above the floor, with the top of the screen at or below seated eye level.
+\end{itemize}
+
+\textbf{Why 1500~mm.} A screen is easiest to read when it sits at or slightly below eye level, so the operator looks about 10--20\textdegree\ downward.\footnote{ISO 9241-5, \emph{Ergonomic requirements for office work with visual display terminals --- Part 5: Workstation layout and postural requirements}; ANSI/HFES 100-2007, \emph{Human Factors Engineering of Computer Workstations}.} Standing eye height ranges from roughly 1450~mm (a small woman) to roughly 1750~mm (a tall man). A 1500~mm centerline keeps the screen readable and the touch targets within easy reach across that range, without anyone stretching up or stooping down.
+
+\textbf{Why 600~mm and 1700~mm.} A touch HMI is an operator control device. NFPA 79 and IEC 60204-1 require hand-operated control devices to be at least 0.6~m above the servicing level and readily within reach of the normal working position.\footnote{NFPA 79-2024, Chapter 10 (operator interface and control devices); IEC 60204-1:2016+A1:2021, 10.1.2.} The 1700~mm upper limit keeps the top of the screen within comfortable reach for a short operator.\footnote{ISO 14738:2002, \emph{Safety of machinery --- Anthropometric requirements for the design of workstations at machinery}.}
+
+\textbf{Accessibility.} If the project or site requires ADA accessibility at an operator station, the touch area must instead fall within the 380--1220~mm (15--48~in) reach range, which puts the centerline at about 1100--1200~mm. The project specification must say whether this applies.\footnote{2010 ADA Standards for Accessible Design, 308 (reach ranges).}
+
+\textbf{Practical points:}
+\begin{itemize}[itemsep=2pt]
+  \item Mount the HMI on the enclosure door or a swing arm, not deep inside the panel, so the operator can reach it squarely.
+  \item Avoid placing the screen directly under overhead lights or facing a window, where glare washes it out.
+  \item If the screen has to sit low, tilt it slightly upward toward the operator.
+  \item The panel layout drawing (Section~\ref{sec:drawing-package}) must dimension the HMI centerline from the operator's standing surface.
+\end{itemize}
+
+\note{The 1700~mm upper limit is an EFC ergonomic choice based on ISO 14738 rather than a hard code limit. Confirm it during review, along with whether any sites require ADA-compliant operator stations.}
