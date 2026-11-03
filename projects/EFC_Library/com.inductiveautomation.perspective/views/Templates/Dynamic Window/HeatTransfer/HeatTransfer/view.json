@@ -3130,6 +3130,16 @@
             "classes": "Container/GroupBox Util/Gap/S"
           }
         },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "{view.custom.level} >= 1"
+              }
+            }
+          }
+        },
         "children": [
           {
             "type": "ia.container.flex",
@@ -3399,9 +3409,13 @@
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
-                            "bidirectional": true,
+                            "bidirectional": false,
                             "fallbackDelay": 2.5
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Cfg_DesignUA', currentValue.value, 4):\n\t\t\tself.refreshBinding('props.value')"
                         }
                       },
                       "props.enabled": {
@@ -3609,9 +3623,13 @@
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
-                            "bidirectional": true,
+                            "bidirectional": false,
                             "fallbackDelay": 2.5
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Cfg_MinFlow', currentValue.value, 4):\n\t\t\tself.refreshBinding('props.value')"
                         }
                       },
                       "props.enabled": {
@@ -3819,9 +3837,13 @@
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
-                            "bidirectional": true,
+                            "bidirectional": false,
                             "fallbackDelay": 2.5
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Cfg_CalcFilt', currentValue.value, 4):\n\t\t\tself.refreshBinding('props.value')"
                         }
                       },
                       "props.enabled": {
@@ -4029,9 +4051,13 @@
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
-                            "bidirectional": true,
+                            "bidirectional": false,
                             "fallbackDelay": 2.5
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Alm_Fouling/Cfg_Lim', currentValue.value, 4):\n\t\t\tself.refreshBinding('props.value')"
                         }
                       },
                       "props.enabled": {
@@ -4239,9 +4265,13 @@
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
-                            "bidirectional": true,
+                            "bidirectional": false,
                             "fallbackDelay": 2.5
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Alm_HotDP/Cfg_Lim', currentValue.value, 4):\n\t\t\tself.refreshBinding('props.value')"
                         }
                       },
                       "props.enabled": {
@@ -4449,9 +4479,13 @@
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
-                            "bidirectional": true,
+                            "bidirectional": false,
                             "fallbackDelay": 2.5
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Alm_ColdDP/Cfg_Lim', currentValue.value, 4):\n\t\t\tself.refreshBinding('props.value')"
                         }
                       },
                       "props.enabled": {
@@ -4659,9 +4693,13 @@
                             "references": {
                               "0": "{view.params.tagPath}"
                             },
-                            "bidirectional": true,
+                            "bidirectional": false,
                             "fallbackDelay": 2.5
                           }
+                        },
+                        "onChange": {
+                          "enabled": null,
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Alm_HiOutT/Cfg_Lim', currentValue.value, 4):\n\t\t\tself.refreshBinding('props.value')"
                         }
                       },
                       "props.enabled": {

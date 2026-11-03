@@ -874,7 +874,7 @@
               "component": {
                 "onActionPerformed": {
                   "config": {
-                    "script": "\t# Momentary pulse: set the PLC bit, release it 1 s later (harmless if the PLC clears it first).\n\tif efc.ui.cmd(self, 'Cmd_Select', True, 1):\n\t\tpath = self.view.params.tagPath + \"/Cmd_Select\"\n\t\tdef _release(p=path):\n\t\t\timport time\n\t\t\ttime.sleep(1.0)\n\t\t\tsystem.tag.writeBlocking([p], [False])\n\t\tsystem.util.invokeAsynchronous(_release)"
+                    "script": "\t# Momentary pulse: set the PLC bit, release it 1 s later (harmless if the PLC clears it first).\n\tif efc.ui.cmd(self, 'Cmd_Select', True, 1, audit=True):\n\t\tpath = self.view.params.tagPath + \"/Cmd_Select\"\n\t\tdef _release(p=path):\n\t\t\timport time\n\t\t\ttime.sleep(1.0)\n\t\t\tsystem.tag.writeBlocking([p], [False])\n\t\tsystem.util.invokeAsynchronous(_release)"
                   },
                   "scope": "G",
                   "type": "script"
@@ -1981,9 +1981,12 @@
                                     "references": {
                                       "0": "{view.params.tagPath}"
                                     },
-                                    "fallbackDelay": 2.5,
-                                    "bidirectional": true
+                                    "fallbackDelay": 2.5
                                   }
+                                },
+                                "onChange": {
+                                  "enabled": null,
+                                  "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Prm_TargetWt', currentValue.value, 1):\n\t\t\tself.refreshBinding('props.value')"
                                 }
                               },
                               "props.enabled": {
@@ -2116,9 +2119,12 @@
                                     "references": {
                                       "0": "{view.params.tagPath}"
                                     },
-                                    "fallbackDelay": 2.5,
-                                    "bidirectional": true
+                                    "fallbackDelay": 2.5
                                   }
+                                },
+                                "onChange": {
+                                  "enabled": null,
+                                  "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Prm_SampleWt', currentValue.value, 1):\n\t\t\tself.refreshBinding('props.value')"
                                 }
                               },
                               "props.enabled": {
@@ -2274,9 +2280,12 @@
                                     "references": {
                                       "0": "{view.params.tagPath}"
                                     },
-                                    "fallbackDelay": 2.5,
-                                    "bidirectional": true
+                                    "fallbackDelay": 2.5
                                   }
+                                },
+                                "onChange": {
+                                  "enabled": null,
+                                  "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Prm_MaxPress', currentValue.value, 1):\n\t\t\tself.refreshBinding('props.value')"
                                 }
                               },
                               "props.enabled": {
@@ -2399,9 +2408,12 @@
                                     "references": {
                                       "0": "{view.params.tagPath}"
                                     },
-                                    "fallbackDelay": 2.5,
-                                    "bidirectional": true
+                                    "fallbackDelay": 2.5
                                   }
+                                },
+                                "onChange": {
+                                  "enabled": null,
+                                  "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Prm_PrefillPress', currentValue.value, 1):\n\t\t\tself.refreshBinding('props.value')"
                                 }
                               },
                               "props.enabled": {
@@ -2784,6 +2796,16 @@
                           "type": "script"
                         }
                       }
+                    },
+                    "propConfig": {
+                      "props.enabled": {
+                        "binding": {
+                          "type": "expr",
+                          "config": {
+                            "expression": "{view.custom.level} >= 1"
+                          }
+                        }
+                      }
                     }
                   },
                   {
@@ -2820,7 +2842,7 @@
                       "component": {
                         "onActionPerformed": {
                           "config": {
-                            "script": "\tcmd = self.view.custom.pendingCmd\n\tself.view.custom.pendingCmd = \"\"\n\tmember = {\"Tare\": \"Cmd_Tare\", \"Zero\": \"Cmd_Zero\", \"Reset\": \"Cmd_Reset\"}.get(cmd)\n\tif member and efc.ui.cmd(self, member, True, 1):\n\t\tpath = self.view.params.tagPath + \"/\" + member\n\t\tdef _release(p=path):\n\t\t\timport time\n\t\t\ttime.sleep(1.0)\n\t\t\tsystem.tag.writeBlocking([p], [False])\n\t\tsystem.util.invokeAsynchronous(_release)"
+                            "script": "\tcmd = self.view.custom.pendingCmd\n\tself.view.custom.pendingCmd = \"\"\n\tmember = {\"Tare\": \"Cmd_Tare\", \"Zero\": \"Cmd_Zero\", \"Reset\": \"Cmd_Reset\"}.get(cmd)\n\t# Re-check the lock at confirm time: the state may have changed since the command was picked.\n\tlocked = self.view.custom.s.resetLocked if cmd == \"Reset\" else self.view.custom.s.tzLocked\n\tif member and not locked and efc.ui.cmd(self, member, True, 1, audit=True):\n\t\tpath = self.view.params.tagPath + \"/\" + member\n\t\tdef _release(p=path):\n\t\t\timport time\n\t\t\ttime.sleep(1.0)\n\t\t\tsystem.tag.writeBlocking([p], [False])\n\t\tsystem.util.invokeAsynchronous(_release)"
                           },
                           "scope": "G",
                           "type": "script"

@@ -1,12 +1,15 @@
 {
   "custom": {
     "level": 0,
-    "reason": ""
+    "m_Cfg_BypassMax": null,
+    "reason": "",
+    "error": ""
   },
   "params": {
     "tagPath": "",
     "idx": 0,
-    "desc": ""
+    "desc": "",
+    "action": "bypass"
   },
   "propConfig": {
     "custom.level": {
@@ -23,6 +26,20 @@
         ]
       }
     },
+    "custom.m_Cfg_BypassMax": {
+      "binding": {
+        "type": "tag",
+        "config": {
+          "mode": "indirect",
+          "tagPath": "{0}/Cfg_BypassMax",
+          "references": {
+            "0": "{view.params.tagPath}"
+          },
+          "bidirectional": false,
+          "fallbackDelay": 2.5
+        }
+      }
+    },
     "params.tagPath": {
       "paramDirection": "input",
       "persistent": true
@@ -34,12 +51,16 @@
     "params.desc": {
       "paramDirection": "input",
       "persistent": true
+    },
+    "params.action": {
+      "paramDirection": "input",
+      "persistent": true
     }
   },
   "props": {
     "defaultSize": {
       "width": 360,
-      "height": 260
+      "height": 290
     }
   },
   "root": {
@@ -74,6 +95,16 @@
           "text": "Bypass condition",
           "style": {
             "classes": "Text/Title"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({view.params.action} = 'unbypass', 'Remove bypass', 'Bypass condition')"
+              }
+            }
           }
         }
       },
@@ -115,9 +146,19 @@
           "grow": 0
         },
         "props": {
-          "text": "Supervisor or higher. The reason and your user name go to the audit log; the bypass times out at the block's Cfg_BypassMax.",
+          "text": "",
           "style": {
             "classes": "Text/Caption Text/Mod/Wrap"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({view.params.action} = 'unbypass', 'Supervisor or higher. The reason and your user name go to the audit log.', 'Supervisor or higher. The reason and your user name go to the audit log. The PLC ends the bypass after ' + try(toStr(toInt({view.custom.m_Cfg_BypassMax} / 60000)), '?') + ' min (Cfg_BypassMax).')"
+              }
+            }
           }
         }
       },
@@ -144,6 +185,41 @@
               "config": {
                 "path": "view.custom.reason",
                 "bidirectional": true
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "Error"
+        },
+        "position": {
+          "shrink": 0,
+          "grow": 0
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "classes": "Text/Body Text/Mod/Wrap"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "{view.custom.error}"
+              }
+            }
+          },
+          "position.display": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "len({view.custom.error}) > 0"
               }
             }
           }
@@ -222,6 +298,14 @@
                     "expression": "{view.custom.level} >= 3 && len(trim({view.custom.reason})) > 0"
                   }
                 }
+              },
+              "props.text": {
+                "binding": {
+                  "type": "expr",
+                  "config": {
+                    "expression": "if({view.params.action} = 'unbypass', 'UNBYPASS', 'BYPASS')"
+                  }
+                }
               }
             },
             "events": {
@@ -230,7 +314,7 @@
                   "type": "script",
                   "scope": "G",
                   "config": {
-                    "script": "\tif efc.ui.bypass(self, self.view.params.tagPath, self.view.params.idx, self.view.custom.reason):\n\t\tsystem.perspective.closePopup('efcBypass')"
+                    "script": "\tfn = efc.ui.unbypass if self.view.params.action == 'unbypass' else efc.ui.bypass\n\terr = fn(self, self.view.params.tagPath, self.view.params.idx, self.view.custom.reason)\n\tself.view.custom.error = err\n\tif not err:\n\t\tsystem.perspective.closePopup('efcBypass')"
                   }
                 }
               }

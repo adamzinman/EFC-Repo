@@ -120,19 +120,16 @@ def fmt(e, f="#,##0.0"): return f"numberFormat({e}, '{f}')"
 TIME_SCALE = 1000        # PLC TIME members arrive in milliseconds; the docks show and edit seconds
 
 def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmtstr="#,##0.0", scale=None, grey=False):
-    """Numeric setpoint bound bidirectionally to the member; hidden below minlvl.
+    """Numeric setpoint; hidden below minlvl. No bidirectional binding (decisions 14, 27): props.value reads the member
+    (or mirror / scale) and a props.value onChange script (origin == 'Browser' only) commits through efc.ui.setValue,
+    which re-checks minlvl, writes and audits old -> new; a refused or failed write refreshes the binding.
     grey=True: shown below minlvl but greyed (props.enabled gains the level check; only `show` controls display).
-    scale (e.g. TIME_SCALE): the tag holds value * scale. The entry then reads the mirror / scale and a props.value
-    onChange script (origin == 'Browser' only) writes int(round(value * scale)) through efc.ui.cmd, Engineer, audited."""
+    scale (e.g. TIME_SCALE): the tag holds value * scale; setValue writes int(round(value * scale))."""
     en = enabled or "true"
     if grey:
         en = f"({lvl(minlvl)}) && ({en})"
-    pc = {"props.value": tag(member, bidi=True), "props.enabled": expr(en)}
-    if scale:
-        wr = (f"if origin == 'Browser' and currentValue.value is not None:\n"
-              f"\tefc.ui.cmd(self, {member!r}, int(round(currentValue.value * {scale})), {ENG}, audit=True)")
-        pc["props.value"] = {"binding": expr(f"{vw.m(member)} / {scale}")["binding"],
-                             "onChange": {"enabled": None, "script": "\t" + wr.replace("\n", "\n\t")}}
+    pc = {"props.value": commit(tag(member) if not scale else expr(f"{vw.m(member)} / {scale}"), member, minlvl, scale or 1),
+          "props.enabled": expr(en)}
     num = comp("ia.input.numeric-entry-field", "Entry", {"format": fmtstr, "style": {"classes": "Input/Setpoint"}},
                {"shrink": 0, "basis": v(120)}, pc)
     if grey:
@@ -143,8 +140,17 @@ def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmts
     return flex(name, "row", [label("Lbl", text, "Text/Caption Text/Mod/Upper", grow=1), num, label("EU", unit, "Text/Units", basis=v(40))],
                 basis=v(28), pc=disp, extra={"alignItems": "center", "style": {"classes": "", "gap": v(6)}})
 
+def commit(read, member, minlvl, scale=1, cast=""):
+    """A read binding plus the onChange script that writes a user's edit through efc.ui.setValue (see entry)."""
+    val = f"{cast}(currentValue.value)" if cast else "currentValue.value"
+    sc = f", {scale}" if scale != 1 else ""
+    wr = (f"if origin == 'Browser' and currentValue.value is not None:\n"
+          f"\tif not efc.ui.setValue(self, {member!r}, {val}, {minlvl}{sc}):\n"
+          f"\t\tself.refreshBinding('props.{'selected' if cast == 'bool' else 'value'}')")
+    return {"binding": read["binding"], "onChange": {"enabled": None, "script": "\t" + wr.replace("\n", "\n\t")}}
+
 def check(name, text, member, minlvl, hide=False):
-    pc = {"props.selected": tag(member, bidi=True), "props.enabled": expr(lvl(minlvl))}
+    pc = {"props.selected": commit(tag(member), member, minlvl, cast="bool"), "props.enabled": expr(lvl(minlvl))}
     if hide: pc["position.display"] = expr(lvl(minlvl))            # hidden, not greyed, below minlvl
     return comp("ia.input.checkbox", name, {"text": text, "style": {"classes": "Input/Check"}}, {"shrink": 0, "basis": v(24)}, pc)
 
@@ -301,7 +307,7 @@ def config(vw, entries, name="Configuration", title="Configuration"):
         else:
             kids.append(row(f"R{i}", text, fmt(vw.m(mem), "#,##0.###"), repr(unit), show="!(" + lvl(ENG) + ")"))
             kids.append(entry(vw, f"E{i}", text, mem, ENG, unit, fmtstr="#,##0.###"))
-    return section(name, title, kids, collapsible=True, vw=vw)
+    return section(name, title, kids, show=lvl(OP), collapsible=True, vw=vw)
 
 GAPS = {v(2): "Util/Gap/XS", v(4): "Util/Gap/S", v(6): "Util/Gap/M", v(8): "Util/Gap/L"}
 def classify(o):
@@ -570,6 +576,11 @@ def io_card():
     return path, view
 
 # ----------------------------------------------------------------- parts
+def popup(i, action):
+    return (f"system.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={{'tagPath': "
+            f"self.view.params.tagPath, 'idx': {i}, 'desc': self.view.custom.m_Cfg_CondDesc_{i}, 'action': '{action}'}}, "
+            f"modal=True, showCloseIcon=False)")
+
 def intlk_list():
     """Templates/Dynamic Window/Parts/IntlkList: one T_Intlk (16 conditions). Bypass/unbypass Supervisor+ (reason, audit); reset Maint+."""
     vw = View()
@@ -584,9 +595,9 @@ def intlk_list():
             led, label("Desc", "", "Text/Caption Text/Mod/Ellipsis", grow=1, pc={"props.text": expr(desc)}),
             label("Left", "", "Indicator/Badge", pc={"props.text": expr(f"'BYPASSED ' + toInt({left} / 60000) + ' min'"),
                                                      "position.display": expr(byp)}),
-            button("Byp", "BYPASS", f"system.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={{'tagPath': self.view.params.tagPath, 'idx': {i}, 'desc': self.view.custom.m_Cfg_CondDesc_{i}}}, modal=True, showCloseIcon=False)",
+            button("Byp", "BYPASS", popup(i, "bypass"),
                    cls="Button/Small", show=f"{lvl(SUP)} && {bpa} && !{byp}", grow=0),
-            button("Unbyp", "UNBYP", f"efc.ui.unbypass(self, self.view.params.tagPath, {i})", cls="Button/Small", show=f"{lvl(SUP)} && {byp}", grow=0),
+            button("Unbyp", "UNBYP", popup(i, "unbypass"), cls="Button/Small", show=f"{lvl(SUP)} && {byp}", grow=0),
         ], basis=v(24), pc={"position.display": expr(used)}, extra={"alignItems": "center", "style": {"classes": "", "gap": v(4)}}))
     root = flex("root", "column", [
         flex("Header", "row", [label("Title", "", "Text/Subheader Text/Mod/Upper", grow=1, pc={"props.text": expr("{view.params.title}")}),
@@ -603,26 +614,40 @@ def intlk_list():
                                      "props": {"defaultSize": {"width": W - 16, "height": 120}}, "root": root}
 
 def bypass_confirm():
+    """Templates/Dynamic Window/Parts/BypassConfirm: bypass or unbypass one T_Intlk condition (param action), Supervisor+,
+    reason required, audited (decision 10). efc.ui.bypass / unbypass re-check everything and return '' or the reason
+    they refused, which the popup shows instead of closing. The PLC ends a bypass at Cfg_BypassMax."""
     vw = View()
-    ok = ("if efc.ui.bypass(self, self.view.params.tagPath, self.view.params.idx, self.view.custom.reason):\n"
+    unb = "{view.params.action} = 'unbypass'"
+    ok = ("fn = efc.ui.unbypass if self.view.params.action == 'unbypass' else efc.ui.bypass\n"
+          "err = fn(self, self.view.params.tagPath, self.view.params.idx, self.view.custom.reason)\n"
+          "self.view.custom.error = err\n"
+          "if not err:\n"
           "\tsystem.perspective.closePopup('efcBypass')")
+    mx = vw.m("Cfg_BypassMax")
     root = flex("root", "column", [
-        label("Title", "Bypass condition", "Text/Title"),
+        label("Title", "Bypass condition", "Text/Title", pc={"props.text": expr(f"if({unb}, 'Remove bypass', 'Bypass condition')")}),
         label("Desc", "", "Text/Body", pc={"props.text": expr("{view.params.desc}")}),
-        label("Note", "Supervisor or higher. The reason and your user name go to the audit log; the bypass times out "
-                      "at the block's Cfg_BypassMax.", "Text/Caption Text/Mod/Wrap"),
+        label("Note", "", "Text/Caption Text/Mod/Wrap", pc={"props.text": expr(
+            f"if({unb}, 'Supervisor or higher. The reason and your user name go to the audit log.', "
+            f"'Supervisor or higher. The reason and your user name go to the audit log. The PLC ends the bypass after ' + "
+            f"try(toStr(toInt({mx} / 60000)), '?') + ' min (Cfg_BypassMax).')")}),
         comp("ia.input.text-field", "Reason", {"placeholder": "Reason (required)", "style": {"classes": "Input/Field"}},
              {"shrink": 0, "basis": v(32)}, {"props.text": {"binding": {"type": "property", "config": {"path": "view.custom.reason", "bidirectional": True}}}}),
+        label("Error", "", "Text/Body Text/Mod/Wrap", pc={"props.text": expr("{view.custom.error}"),
+                                                                        "position.display": expr("len({view.custom.error}) > 0")}),
         flex("Buttons", "row", [button("Cancel", "CANCEL", "system.perspective.closePopup('efcBypass')", cls="Button/Default"),
                                 button("Ok", "BYPASS", ok, cls="Button/Danger",
                                        enabled=f"{lvl(SUP)} && len(trim({{view.custom.reason}})) > 0")],
              basis=v(36), extra={"style": {"classes": "", "gap": v(6)}}),
     ], extra={"style": {"classes": "Container/Popup", "gap": v(8)}})
+    root["children"][-1]["children"][1]["propConfig"]["props.text"] = expr(f"if({unb}, 'UNBYPASS', 'BYPASS')")
     vw.custom["reason"] = ""
-    params = {"tagPath": "", "idx": 0, "desc": ""}
+    vw.custom["error"] = ""
+    params = {"tagPath": "", "idx": 0, "desc": "", "action": "bypass"}
     pc = dict(vw.pc, **{"params." + p: {"paramDirection": "input", "persistent": True} for p in params})
     return "Templates/Dynamic Window/Parts/BypassConfirm", {"custom": vw.custom, "params": params, "propConfig": pc,
-                                         "props": {"defaultSize": {"width": 360, "height": 260}}, "root": root}
+                                         "props": {"defaultSize": {"width": 360, "height": 290}}, "root": root}
 
 def shelve_confirm():
     """Templates/Dynamic Window/Parts/ShelveConfirm: shelve a PLC alarm's Ignition alarm (decision 37). Presets from

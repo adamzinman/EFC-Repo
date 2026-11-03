@@ -3720,6 +3720,16 @@
             "classes": "Container/GroupBox Util/Gap/S"
           }
         },
+        "propConfig": {
+          "position.display": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "{view.custom.level} >= 1"
+              }
+            }
+          }
+        },
         "children": [
           {
             "type": "ia.container.flex",
@@ -3989,7 +3999,7 @@
                         },
                         "onChange": {
                           "enabled": null,
-                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tefc.ui.cmd(self, 'Cfg_TravelTime', int(round(currentValue.value * 1000)), 4, audit=True)"
+                          "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Cfg_TravelTime', currentValue.value, 4, 1000):\n\t\t\tself.refreshBinding('props.value')"
                         }
                       },
                       "props.enabled": {
@@ -4123,9 +4133,13 @@
                         "references": {
                           "0": "{view.params.tagPath}"
                         },
-                        "bidirectional": true,
+                        "bidirectional": false,
                         "fallbackDelay": 2.5
                       }
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Cfg_HasZSO', bool(currentValue.value), 4):\n\t\t\tself.refreshBinding('props.selected')"
                     }
                   },
                   "props.enabled": {
@@ -4247,9 +4261,13 @@
                         "references": {
                           "0": "{view.params.tagPath}"
                         },
-                        "bidirectional": true,
+                        "bidirectional": false,
                         "fallbackDelay": 2.5
                       }
+                    },
+                    "onChange": {
+                      "enabled": null,
+                      "script": "\tif origin == 'Browser' and currentValue.value is not None:\n\t\tif not efc.ui.setValue(self, 'Cfg_HasZSC', bool(currentValue.value), 4):\n\t\t\tself.refreshBinding('props.selected')"
                     }
                   },
                   "props.enabled": {

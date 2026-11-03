@@ -8,7 +8,7 @@
 
 For each view.json it collects
   - indirect tag bindings whose path is {0}/Member... or {1}/Member... (references {view.params.tagPath}),
-  - tag paths built in scripts and expressions as tagPath + '/Member' (efc.ui.cmd / pulse members, writeBlocking paths,
+  - tag paths built in scripts and expressions as tagPath + '/Member' (efc.ui.cmd / pulse / setValue members, writeBlocking paths,
     queryTagHistory pens),
 works out which type the view binds (its params.tType, or the type of the window / part that embeds it) and asserts
 every member path exists in that type (folders, nested UDT instances and `.engUnit`-style tag properties included).
@@ -106,7 +106,7 @@ def walk(o):
 
 
 SCRIPT_MEMBER = re.compile(r"""(?:tagPath|base|p|tp)\s*\+\s*['"]/([A-Za-z_][\w/\.]*)['"]""")
-UI_MEMBER = re.compile(r"""efc\.ui\.(?:cmd|pulse)\(self,\s*['"]([\w/\.]+)['"]""")
+UI_MEMBER = re.compile(r"""efc\.ui\.(?:cmd|pulse|setValue)\(self,\s*['"]([\w/\.]+)['"]""")
 
 
 def members_of(view, text):
