@@ -480,12 +480,6 @@
     "bytes": 2674
   },
   {
-    "source": "references\\modicon-hardware-pricing-archive.csv",
-    "repository": "references\\modicon-hardware-pricing-archive.csv",
-    "sha256": "122274C4778B10ED6FA418BE7773BF121A5B8A163278F751A6174496AC50AA16",
-    "bytes": 2058
-  },
-  {
     "source": "references\\PCLib UDT Standards.md",
     "repository": "references\\PCLib UDT Standards.md",
     "sha256": "10CF844CF0BFC72A7ECA96EC2026E659AE925D9A50DA9E57589DCFD2DBEE5933",
