@@ -24,8 +24,8 @@
    "useButton": false
   },
   "bindings": {
-   "ok": 113,
-   "fail": 0
+   "ok": 118,
+   "fail": 3
   }
  },
  {
@@ -38,8 +38,8 @@
    "tagPath": "[default]PID_Demo/XV101"
   },
   "bindings": {
-   "ok": 113,
-   "fail": 0
+   "ok": 118,
+   "fail": 3
   }
  },
  {
@@ -52,8 +52,8 @@
    "tagPath": "[default]PID_Demo/XV102"
   },
   "bindings": {
-   "ok": 113,
-   "fail": 0
+   "ok": 118,
+   "fail": 3
   }
  },
  {
@@ -64,8 +64,8 @@
   "size": "120\u00d7116",
   "params": {},
   "bindings": {
-   "ok": 103,
-   "fail": 0
+   "ok": 108,
+   "fail": 3
   }
  },
  {
@@ -78,8 +78,8 @@
    "tagPath": "[default]PID_Demo/B301"
   },
   "bindings": {
-   "ok": 105,
-   "fail": 0
+   "ok": 110,
+   "fail": 3
   }
  },
  {
@@ -92,8 +92,8 @@
    "tagPath": "[default]PID_Demo/K202"
   },
   "bindings": {
-   "ok": 103,
-   "fail": 0
+   "ok": 108,
+   "fail": 3
   }
  },
  {
@@ -106,8 +106,8 @@
    "tagPath": "[default]PID_Demo/K201"
   },
   "bindings": {
-   "ok": 103,
-   "fail": 0
+   "ok": 108,
+   "fail": 3
   }
  },
  {
@@ -118,8 +118,8 @@
   "size": "120\u00d7116",
   "params": {},
   "bindings": {
-   "ok": 103,
-   "fail": 0
+   "ok": 108,
+   "fail": 3
   }
  },
  {
@@ -132,8 +132,8 @@
    "tagPath": "[default]PID_Demo/P101"
   },
   "bindings": {
-   "ok": 107,
-   "fail": 0
+   "ok": 112,
+   "fail": 3
   }
  },
  {
@@ -144,8 +144,8 @@
   "size": "120\u00d7116",
   "params": {},
   "bindings": {
-   "ok": 121,
-   "fail": 0
+   "ok": 126,
+   "fail": 3
   }
  },
  {
@@ -158,8 +158,8 @@
    "tagPath": "[default]PID_Demo/P102"
   },
   "bindings": {
-   "ok": 121,
-   "fail": 0
+   "ok": 126,
+   "fail": 3
   }
  },
  {
@@ -170,8 +170,8 @@
   "size": "120\u00d7116",
   "params": {},
   "bindings": {
-   "ok": 111,
-   "fail": 0
+   "ok": 116,
+   "fail": 3
   }
  },
  {
@@ -185,8 +185,8 @@
    "useButton": false
   },
   "bindings": {
-   "ok": 105,
-   "fail": 0
+   "ok": 110,
+   "fail": 3
   }
  },
  {
@@ -199,8 +199,8 @@
    "tagPath": "[default]PID_Demo/M601"
   },
   "bindings": {
-   "ok": 111,
-   "fail": 0
+   "ok": 116,
+   "fail": 3
   }
  },
  {
@@ -211,8 +211,8 @@
   "size": "120\u00d7116",
   "params": {},
   "bindings": {
-   "ok": 107,
-   "fail": 0
+   "ok": 112,
+   "fail": 3
   }
  },
  {
@@ -225,8 +225,8 @@
    "tagPath": "[default]PID_Demo/E401"
   },
   "bindings": {
-   "ok": 105,
-   "fail": 0
+   "ok": 110,
+   "fail": 3
   }
  },
  {
@@ -266,6 +266,84 @@
   "params": {},
   "bindings": {
    "ok": 2085,
+   "fail": 0
+  }
+ },
+ {
+  "group": "Analog indicators",
+  "path": "Templates/AnalogIndicator/A_RangeBar",
+  "kind": "template",
+  "png": "templates/AnalogIndicator/A_RangeBar.png",
+  "size": "256\u00d7120",
+  "params": {
+   "tagPath": "[default]KPI/KPI_101",
+   "LabelMode": "Both",
+   "ShowMinMax": true,
+   "Format": "#,##0.0"
+  },
+  "bindings": {
+   "ok": 234,
+   "fail": 0
+  }
+ },
+ {
+  "group": "Analog indicators",
+  "path": "Templates/AnalogIndicator/B_PointerScale",
+  "kind": "template",
+  "png": "templates/AnalogIndicator/B_PointerScale.png",
+  "size": "128\u00d7330",
+  "params": {
+   "tagPath": "[default]KPI/KPI_101",
+   "ShowLimitType": true,
+   "ShowLimitValue": true,
+   "Format": "#,##0.0"
+  },
+  "bindings": {
+   "ok": 244,
+   "fail": 0
+  }
+ },
+ {
+  "group": "Analog indicators",
+  "path": "Templates/AnalogIndicator/C_CompactRow",
+  "kind": "template",
+  "png": "templates/AnalogIndicator/C_CompactRow.png",
+  "size": "200\u00d746",
+  "params": {
+   "tagPath": "[default]KPI/KPI_101",
+   "Header": "Tag",
+   "Format": "#,##0.0"
+  },
+  "bindings": {
+   "ok": 222,
+   "fail": 0
+  }
+ },
+ {
+  "group": "Analog indicators",
+  "path": "Templates/AnalogIndicator/D_MiniColumn",
+  "kind": "template",
+  "png": "templates/AnalogIndicator/D_MiniColumn.png",
+  "size": "64\u00d7200",
+  "params": {
+   "tagPath": "[default]KPI/KPI_101",
+   "Header": "Tag",
+   "Format": "#,##0.0"
+  },
+  "bindings": {
+   "ok": 222,
+   "fail": 0
+  }
+ },
+ {
+  "group": "Analog indicators",
+  "path": "Templates/AnalogIndicator/_Examples",
+  "kind": "demo",
+  "png": "templates/AnalogIndicator/_Examples.png",
+  "size": "900\u00d7420",
+  "params": {},
+  "bindings": {
+   "ok": 1366,
    "fail": 0
   }
  },
@@ -351,8 +429,8 @@
    "tagPath": "[default]Station_Demo/Station_1"
   },
   "bindings": {
-   "ok": 195,
-   "fail": 0
+   "ok": 211,
+   "fail": 3
   }
  },
  {
@@ -365,7 +443,7 @@
    "tagPath": "[default]Station_Demo/Station_1"
   },
   "bindings": {
-   "ok": 89,
+   "ok": 134,
    "fail": 0
   }
  },
@@ -377,8 +455,8 @@
   "size": "1920\u00d71080",
   "params": {},
   "bindings": {
-   "ok": 1413,
-   "fail": 3
+   "ok": 1673,
+   "fail": 15
   }
  },
  {
@@ -589,8 +667,8 @@
    "tagPath": "[default]PID_Demo/P101"
   },
   "bindings": {
-   "ok": 207,
-   "fail": 6
+   "ok": 264,
+   "fail": 9
   }
  },
  {
@@ -603,8 +681,8 @@
    "tagPath": "[default]PID_Demo/E401"
   },
   "bindings": {
-   "ok": 1342,
-   "fail": 12
+   "ok": 1451,
+   "fail": 15
   }
  },
  {
@@ -632,8 +710,25 @@
    "tagPath": "[default]PID_Demo/TIC101"
   },
   "bindings": {
-   "ok": 721,
-   "fail": 9
+   "ok": 780,
+   "fail": 12
+  }
+ },
+ {
+  "group": "Dynamic windows (dw_Right dock)",
+  "path": "Templates/Dynamic Window/Parts/AccessDenied",
+  "kind": "part",
+  "png": "templates/Dynamic Window/Parts/AccessDenied.png",
+  "size": "360\u00d7170",
+  "params": {
+   "action": "XV101 Cmd_Open",
+   "need": "Operator",
+   "have": "Guest",
+   "user": "jsmith"
+  },
+  "bindings": {
+   "ok": 4,
+   "fail": 0
   }
  },
  {
@@ -643,9 +738,9 @@
   "png": "templates/Dynamic Window/Parts/BypassConfirm.png",
   "size": "360\u00d7260",
   "params": {
-   "tagPath": "[default]PID_Demo/XV101/Intlk",
+   "tagPath": "[default]PID_Demo/XV104",
    "idx": 0,
-   "desc": "Low level"
+   "desc": "PSH-201 high pressure"
   },
   "bindings": {
    "ok": 6,
@@ -659,11 +754,27 @@
   "png": "templates/Dynamic Window/Parts/IntlkList.png",
   "size": "384\u00d7120",
   "params": {
-   "tagPath": "[default]PID_Demo/XV101/Intlk",
-   "title": "Interlocks"
+   "tagPath": "[default]PID_Demo/XV104",
+   "title": "Permissives"
   },
   "bindings": {
-   "ok": 526,
+   "ok": 530,
+   "fail": 3
+  }
+ },
+ {
+  "group": "Dynamic windows (dw_Right dock)",
+  "path": "Templates/Dynamic Window/Parts/ShelveConfirm",
+  "kind": "part",
+  "png": "templates/Dynamic Window/Parts/ShelveConfirm.png",
+  "size": "360\u00d7300",
+  "params": {
+   "tagPath": "[default]PID_Demo/XV101",
+   "member": "Alm_FailOpen",
+   "desc": "Fail to open"
+  },
+  "bindings": {
+   "ok": 14,
    "fail": 3
   }
  },
@@ -695,8 +806,8 @@
    "tagPath": "[default]PV_Demo/PT001"
   },
   "bindings": {
-   "ok": 211,
-   "fail": 6
+   "ok": 279,
+   "fail": 9
   }
  },
  {
@@ -709,8 +820,8 @@
    "tagPath": "[default]PID_Demo/P101"
   },
   "bindings": {
-   "ok": 1322,
-   "fail": 12
+   "ok": 1446,
+   "fail": 15
   }
  },
  {
@@ -723,8 +834,8 @@
    "tagPath": "[default]PID_Demo/M601"
   },
   "bindings": {
-   "ok": 1385,
-   "fail": 12
+   "ok": 1549,
+   "fail": 15
   }
  },
  {
@@ -737,7 +848,7 @@
    "tagPath": "[default]Station_1"
   },
   "bindings": {
-   "ok": 267,
+   "ok": 283,
    "fail": 3
   }
  },
@@ -763,8 +874,8 @@
    "tagPath": "[default]PID_Demo/FV101"
   },
   "bindings": {
-   "ok": 722,
-   "fail": 9
+   "ok": 805,
+   "fail": 12
   }
  },
  {
@@ -777,8 +888,8 @@
    "tagPath": "[default]PID_Demo/XV101"
   },
   "bindings": {
-   "ok": 1273,
-   "fail": 12
+   "ok": 1360,
+   "fail": 15
   }
  },
  {
@@ -789,8 +900,8 @@
   "size": "1920\u00d71080",
   "params": {},
   "bindings": {
-   "ok": 1634,
-   "fail": 0
+   "ok": 1699,
+   "fail": 39
   }
  },
  {

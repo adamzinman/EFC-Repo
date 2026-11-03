@@ -47,11 +47,13 @@ Priority is fault, then opened, then closed, then transition.
 
 **Name and tooltip.** The label shows `Cfg_Tag`, or the last segment of tagPath if `Cfg_Tag` is empty. The tooltip shows `Cfg_Desc`, if non-empty.
 
-**Command button (`PB`).** Visible only when `useButton` is true and the valve is in MAN. Enabled when `custom.canCmd` is true: MAN, available, not LOCAL, not OOS, and either a close is pending (`cmd`) or the valve is not permissive-missing and not interlocked. Clicking writes `Cmd_Close` if `Out_Open` is true, otherwise `Cmd_Open`, with `True`. Tooltip: "Local control", "Manual mode required", "Close" or "Open".
+**Command button (`PB`).** Visible only when `useButton` is true and the valve is in MAN. Enabled when `custom.canCmd` is true (MAN, available, not LOCAL, not OOS, and either a close is pending (`cmd`) or the valve is not permissive-missing and not interlocked) or when `custom.locked` is true. Clicking writes `Cmd_Close` if `Out_Open` is true, otherwise `Cmd_Open`, with `True`. Tooltip: "Requires Operator access" (locked), "Local control", "Manual mode required", "Close" or "Open".
 
 **Touch mode (double-tap).** With `useButton = false` and `dblCmd = true`, the `Symbol` double-click calls `efc.ui.dblCmd(self)`. Details are in the Scripts section below.
 
-**Security.** The PB button script calls `efc.ui.cmd(self, m, True, 1)`, which re-checks the Operator level (1) and writes no audit record. The enable expression is a second guard. The double-tap path also checks the role (Operator or higher).
+**Access lock.** `custom.level` is the user's level (0 to 5), bound to `session.props.auth.securityLevels`. `custom.locked` is true when `useButton` is true, the valve is in MAN and the level is below 1 (below Operator). While locked, the `Lock` icon (`material/lock`, class `Indicator/Lock`, pointer events off) is drawn over `PB`, and `PB` stays enabled so the press reaches `efc.ui.cmd`. The press is then refused: `efc.ui.cmd` logs a warning and opens the `Parts/AccessDenied` popup (see [AccessDenied](../Dynamic%20Window/Parts/AccessDenied.md)). Nothing is written.
+
+**Security.** The PB button script calls `efc.ui.cmd(self, m, True, 1)`, which re-checks the Operator level (1) and writes no audit record. Below Operator it refuses the write, logs it and opens the AccessDenied popup. The enable expression is a second guard for the other conditions. The double-tap path also checks the role (Operator or higher) and opens the same popup below it.
 
 ## Properties reference
 
@@ -99,6 +101,8 @@ Every property below has a binding (none is set by a script), so the source colu
 | `view.custom.line` | `"#262626"` | expr | `if({view.custom.state} = 3, "#D50000", case({view.custom.alarm}, 1, "#00A3E0", 2, "#FFD200", 3, "#FF7A00", 4, "#D50000", "#262626"))` | Outline colour: #D50000 when faulted; else alarm 1 #00A3E0, 2 #FFD200, 3 #FF7A00, 4 #D50000; default #262626. |
 | `view.custom.lw` | `4.167` | expr | `if({view.custom.alarm} > 0 \|\| {view.custom.state} = 3, 8.333, 4.167)` | Outline width: 8.333 when `alarm` > 0 or faulted, else 4.167. |
 | `view.custom.con` | `"#262626"` | expr | `if({view.custom.state} = 3, "#F2F2F2", "#262626")` | Not referenced anywhere in the view (defined and bound, unused). |
+| `view.custom.level` | `0` | property | `session.props.auth.securityLevels`, transform `return efc.ui.level(value)` | The user's highest role level, 0 (Guest) to 5 (Admin). Feeds `locked`. |
+| `view.custom.locked` | `false` | expr | `{view.params.useButton} && coalesce({view.custom.man}, false) && {view.custom.level} < 1` | True when the `PB` button is shown and the user is below Operator. Enables `PB` and shows `Lock`. |
 | `view.custom.canCmd` | `false` | expr | `coalesce({view.custom.man}, false) && coalesce({view.custom.avail}, true) && !coalesce({view.custom.local}, false) && !coalesce({view.custom.oos}, false) && (coalesce({view.custom.cmd}, false) \|\| (!coalesce({view.custom.permMissing}, false) && !coalesce({view.custom.intlk}, false)))` | True when man AND avail AND not local AND not oos AND (cmd OR (not permMissing AND not intlk)). Enables PB. |
 
 ### Component-level custom properties
@@ -107,11 +111,11 @@ None. The components carry no `custom` properties.
 
 ### Session, page and message payloads
 
-None. The template reads no `session.*` or `page.*` values and sends no messages. Its writes are the PB button script (through `efc.ui.cmd`) and the double-tap path (`efc.ui.dblCmd`).
+The template reads `session.props.auth.securityLevels` (for `custom.level`) and no `page.*` values, and sends no messages. Its writes are the PB button script (through `efc.ui.cmd`) and the double-tap path (`efc.ui.dblCmd`).
 
 ## Bindings reference
 
-Total: **45 bindings** (26 at view root in `custom.*`, 19 on components). Types: 29 `expr`, 16 `tag`. No transforms. `params.*` entries have `paramDirection` only and are not bindings.
+Total: **48 bindings** (28 at view root in `custom.*`, 20 on components). Types: 31 `expr`, 16 `tag`, 1 `property`. One transform (`custom.level`). `params.*` entries have `paramDirection` only and are not bindings.
 
 ### View root
 
@@ -163,8 +167,14 @@ The view-root bindings drive the custom properties. Each one is listed with its 
 | Component | Property | Type | Source | Effect |
 |---|---|---|---|---|
 | root/PB | `meta.visible` | expr | `{view.params.useButton} && coalesce({view.custom.man}, false)` | Shown while expression is true |
-| root/PB | `props.enabled` | expr | `{view.custom.canCmd}` | Enabled while expression is true |
+| root/PB | `props.enabled` | expr | `{view.custom.canCmd} \|\| {view.custom.locked}` | Enabled while expression is true. Stays enabled when locked so the press reaches `efc.ui.cmd`. |
 | root/PB | `meta.tooltip.text` | expr | `if(coalesce({view.custom.local}, false), "Local control", if(!coalesce({view.custom.man}, false), "Manual mode required", if(coalesce({view.custom.cmd}, false), "Close", "Open")))` | Tooltip |
+
+### `root/Lock`
+
+| Component | Property | Type | Source | Effect |
+|---|---|---|---|---|
+| root/Lock | `meta.visible` | expr | `{view.custom.locked}` | Lock icon shown over `PB` while the user is below Operator |
 
 ## Scripts reference
 
@@ -195,9 +205,9 @@ Total: **3 event scripts**, no `customMethods`, no `messageHandlers`, no propert
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
 - **`efc.ui.openDynamic(component)`**: picks the window from `dockId`, or from `BY_TYPE[tType]`. For `T_DValve` that is `dw_ValveDiscrete`, which maps to `Templates/Dynamic Window/Valves/ValveDiscrete`. If no window is found, logs a warning and stops. Otherwise it loads it into the page's `dw_Right` dock with `params:{tagPath: dwTagPath or tagPath}` and opens the dock (`efc.ui.showDock`). It does not check the user's role and does not write to the tag.
-- **`efc.ui.cmd(component, member, value, minLevel, audit)`**: returns unless the user's level is at least `minLevel`; otherwise writes `value` to `<tagPath>/<member>` and, with `audit=True`, writes an audit record. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
-- **`efc.ui.dblCmd(component)`**: returns immediately unless all of these hold: `useButton` false, `dblCmd` true, `tType` in `DBL_CMD` (only `T_DValve` and `T_Motor`), and the user's level is 1 (Operator) or higher. It then reads `Sts_Opened`, `Mode/Sts_Man`, `Sts_Avail`, `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault`. It writes nothing unless `Mode/Sts_Man` and `Sts_Avail` are true and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are all false. When it does write, it sends `Cmd_Close` if `Sts_Opened` is true, else `Cmd_Open`, with `True`. It does not check `Mode/Sts_OOS`.
-- **Role levels** (`efc.ui.level`): the highest index in `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` gives 0 to 5. Operator is 1. Used by the dock; `dblCmd` uses `userLevel >= 1`.
+- **`efc.ui.cmd(component, member, value=True, minLevel=1, audit=False, notify=True)`**: if the user's level is below `minLevel` it does not write. With `notify` true it calls `efc.ui.denied` (logs a WARN line and opens the `efcAccessDenied` popup, see [AccessDenied](../Dynamic%20Window/Parts/AccessDenied.md)); either way it returns False. Otherwise it writes `value` to `<tagPath>/<member>` through `_writeTags`, which logs any write that does not come back good, and, with `audit=True`, writes an audit record. It returns True when the write was good. The PB button calls it with the chosen `Cmd_*` member, `True` and level 1, no audit.
+- **`efc.ui.dblCmd(component)`**: returns immediately unless all of these hold: `useButton` false, `dblCmd` true, `tType` in `DBL_CMD` (only `T_DValve` and `T_Motor`), and the user's level is 1 (Operator) or higher; below that it calls `efc.ui.denied` (WARN log and AccessDenied popup) and stops. It then reads `Sts_Opened`, `Mode/Sts_Man`, `Sts_Avail`, `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault`. It writes nothing unless `Mode/Sts_Man` and `Sts_Avail` are true and `Sts_Intlk`, `Sts_NotPerm`, `Sts_Local` and `Sts_Fault` are all false. When it does write, it sends `Cmd_Close` if `Sts_Opened` is true, else `Cmd_Open`, with `True`. It does not check `Mode/Sts_OOS`.
+- **Role levels** (`efc.ui.level(levels)`): walks the security-level tree from `session.props.auth.securityLevels` (or a plain role list), matches each name case-insensitively against `['Guest','Operator','Maintenance','Supervisor','Engineer','Admin']` (site names via `efc.ui.ROLE_ALIASES`) and returns the highest index, 0 to 5. Operator is 1. Bound as `custom.level`. `efc.ui.userLevel` (used by `cmd` and `dblCmd`) takes the larger of this and the level from `session.props.auth.user.roles`.
 - **`efc.ui.closeDynamic`** is not called from this view. The dock's close button calls it.
 
 ## Tag members used
@@ -239,6 +249,7 @@ The alarm expression reads `<tagPath>/*` through `isAlarmActiveFiltered`, not a 
     - `M` (ia.display.label)
     - `Status` (ia.display.label)
   - `PB` (ia.input.button)
+  - `Lock` (ia.display.icon, material/lock, class Indicator/Lock)
 ```
 
 ## Notes and open questions

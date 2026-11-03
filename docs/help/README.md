@@ -62,6 +62,7 @@ Not covered: the `_Demo` and `_Examples` screens, which are demonstration pages 
 | `Templates/Dynamic Window/HeatTransfer/Heater` | [Templates/Dynamic Window/HeatTransfer/Heater.md](Templates/Dynamic%20Window/HeatTransfer/Heater.md) |
 | `Templates/Dynamic Window/IO/IOCard` | [Templates/Dynamic Window/IO/IOCard.md](Templates/Dynamic%20Window/IO/IOCard.md) |
 | `Templates/Dynamic Window/Loops/Loop` | [Templates/Dynamic Window/Loops/Loop.md](Templates/Dynamic%20Window/Loops/Loop.md) |
+| `Templates/Dynamic Window/Parts/AccessDenied` | [Templates/Dynamic Window/Parts/AccessDenied.md](Templates/Dynamic%20Window/Parts/AccessDenied.md) |
 | `Templates/Dynamic Window/Parts/BypassConfirm` | [Templates/Dynamic Window/Parts/BypassConfirm.md](Templates/Dynamic%20Window/Parts/BypassConfirm.md) |
 | `Templates/Dynamic Window/Parts/IntlkList` | [Templates/Dynamic Window/Parts/IntlkList.md](Templates/Dynamic%20Window/Parts/IntlkList.md) |
 | `Templates/Dynamic Window/Parts/Trend` | [Templates/Dynamic Window/Parts/Trend.md](Templates/Dynamic%20Window/Parts/Trend.md) |

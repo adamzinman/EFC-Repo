@@ -6,7 +6,10 @@ and the efc.ui script library (windows open in the right dock dw_Right, decision
 Every window is 400 x 860 at 1080p (37.04vh x 79.63vh, decision 25), binds one EFCLib v1 T_ type through
 view.params.tagPath and uses EFC_Styles classes only. Role levels (efc.ui.ROLES): 1 Operator commands and
 setpoints, 2 Maintenance MAINT/OOS/JOG/simulate/maint reset, 3 Supervisor bypass + shelving (reason, audit),
-4 Engineer limits, configuration and tuning. Controls below the user's level are hidden, not greyed.
+4 Engineer limits, configuration and tuning. Alarm shelving (decision 37) is Ignition's own alarm shelving only (the
+PLC Cmd_Shelve is not driven from the HMI). Command buttons (mode, commands, ACK, RESET) below the user's level
+stay visible with a lock and a press opens Parts/AccessDenied (decision 36); other controls below the level are hidden.
+The level is efc.ui.level(session.props.auth.securityLevels).
 """
 import os, re, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
@@ -14,6 +17,8 @@ from common import PERSPECTIVE, dump, write, resource_json, project_json, projec
 
 PROJECT = "EFC_Docks"
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import efc_ui as _ui                    # constants only at import time (SHELVE_PRESETS, SHELVE_MAX_MIN); no Ignition calls
 W, H = 400, 860
 def v(px): return f"{px / 10.8:.3f}vh"
 
@@ -48,21 +53,32 @@ def label(name, text="", cls="Text/Label", grow=0, basis=None, pc=None):
     if basis: pos["basis"] = basis
     return comp("ia.display.label", name, {"text": text, "style": {"classes": cls}}, pos, pc)
 
-def button(name, text, body, cls="Button/Command", show=None, enabled=None, grow=1):
-    pc = {}
-    if show: pc["position.display"] = expr(show)
-    if enabled: pc["props.enabled"] = expr(enabled)
-    return comp("ia.input.button", name, {"text": text, "style": {"classes": cls}}, {"shrink": 0, "grow": grow, "basis": v(32)},
-                pc or None, events=on_action(body))
-
 def lvl(n): return f"{{view.custom.level}} >= {n}"
 OP, MAINT, SUP, ENG = 1, 2, 3, 4
+ROLE_NAMES = ["Guest", "Operator", "Maintenance", "Supervisor", "Engineer", "Admin"]
+
+def button(name, text, body, cls="Button/Command", show=None, enabled=None, grow=1, need=None):
+    """need: minimum role level of a command button (decision 36). Below it the button stays visible and pressable
+    with a lock icon and a 'Requires <role> access' tooltip; efc.ui refuses the press and opens Parts/AccessDenied."""
+    pc, props, meta = {}, {"text": text, "style": {"classes": cls}}, None
+    if show: pc["position.display"] = expr(show)
+    if need:
+        locked = f"{{view.custom.level}} < {need}"
+        props["image"] = {"icon": {"path": "", "color": "#1F1F1F"}, "position": "left", "width": 14, "height": 14}
+        pc["props.image.icon.path"] = expr(f"if({locked}, 'material/lock', '')")
+        pc["meta.tooltip.enabled"] = expr(locked)
+        meta = {"enabled": False, "text": f"Requires {ROLE_NAMES[need]} access"}
+        if enabled: enabled = f"({locked}) || ({enabled})"
+    if enabled: pc["props.enabled"] = expr(enabled)
+    b = comp("ia.input.button", name, props, {"shrink": 0, "grow": grow, "basis": v(32)}, pc or None, events=on_action(body))
+    if meta: b["meta"]["tooltip"] = meta
+    return b
 
 class View:
     """Collects the T_ members a window reads; each becomes custom.<key> with an indirect tag binding."""
     def __init__(self):
         self.custom, self.pc = {"level": 0}, {
-            "custom.level": {"binding": {"type": "property", "config": {"path": "session.props.auth.user.roles"},
+            "custom.level": {"binding": {"type": "property", "config": {"path": "session.props.auth.securityLevels"},
                                          "transforms": [{"type": "script", "code": "\treturn efc.ui.level(value)"}]}}}
     def m(self, member):
         k = "m_" + re.sub(r"\W", "_", member)
@@ -103,11 +119,15 @@ def fmt(e, f="#,##0.0"): return f"numberFormat({e}, '{f}')"
 
 TIME_SCALE = 1000        # PLC TIME members arrive in milliseconds; the docks show and edit seconds
 
-def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmtstr="#,##0.0", scale=None):
+def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmtstr="#,##0.0", scale=None, grey=False):
     """Numeric setpoint bound bidirectionally to the member; hidden below minlvl.
+    grey=True: shown below minlvl but greyed (props.enabled gains the level check; only `show` controls display).
     scale (e.g. TIME_SCALE): the tag holds value * scale. The entry then reads the mirror / scale and a props.value
     onChange script (origin == 'Browser' only) writes int(round(value * scale)) through efc.ui.cmd, Engineer, audited."""
-    pc = {"props.value": tag(member, bidi=True), "props.enabled": expr(enabled or "true")}
+    en = enabled or "true"
+    if grey:
+        en = f"({lvl(minlvl)}) && ({en})"
+    pc = {"props.value": tag(member, bidi=True), "props.enabled": expr(en)}
     if scale:
         wr = (f"if origin == 'Browser' and currentValue.value is not None:\n"
               f"\tefc.ui.cmd(self, {member!r}, int(round(currentValue.value * {scale})), {ENG}, audit=True)")
@@ -115,9 +135,13 @@ def entry(vw, name, text, member, minlvl, unit="", enabled=None, show=None, fmts
                              "onChange": {"enabled": None, "script": "\t" + wr.replace("\n", "\n\t")}}
     num = comp("ia.input.numeric-entry-field", "Entry", {"format": fmtstr, "style": {"classes": "Input/Setpoint"}},
                {"shrink": 0, "basis": v(120)}, pc)
-    s = lvl(minlvl) + (f" && ({show})" if show else "")
+    if grey:
+        disp = {"position.display": expr(show)} if show else {}
+    else:
+        s = lvl(minlvl) + (f" && ({show})" if show else "")
+        disp = {"position.display": expr(s)}
     return flex(name, "row", [label("Lbl", text, "Text/Caption Text/Mod/Upper", grow=1), num, label("EU", unit, "Text/Units", basis=v(40))],
-                basis=v(28), pc={"position.display": expr(s)}, extra={"alignItems": "center", "style": {"classes": "", "gap": v(6)}})
+                basis=v(28), pc=disp, extra={"alignItems": "center", "style": {"classes": "", "gap": v(6)}})
 
 def check(name, text, member, minlvl, hide=False):
     pc = {"props.selected": tag(member, bidi=True), "props.enabled": expr(lvl(minlvl))}
@@ -147,7 +171,7 @@ def mode_section(vw, base="Mode/"):
     m = lambda x: vw.m(base + x)
     cur = f"if({m('Sts_OOS')}, 'OOS', if({m('Sts_Maint')}, 'MAINT', if({m('Sts_Man')}, 'MAN', 'AUTO')))"
     btn = lambda n, t, mem, lv, active: button(n, t, f"efc.ui.cmd(self, '{base}{mem}', True, {lv}, audit={lv >= MAINT})",
-                                               show=lvl(lv), cls="Button/Toggle/Off")
+                                               need=lv, cls="Button/Toggle/Off")
     b = [btn("Auto", "AUTO", "Cmd_Auto", OP, "Sts_Auto"), btn("Man", "MAN", "Cmd_Man", OP, "Sts_Man"),
          btn("Maint", "MAINT", "Cmd_Maint", MAINT, "Sts_Maint"), btn("OOS", "OOS", "Cmd_OOS", MAINT, "Sts_OOS")]
     for x, s in zip(b, ["Sts_Auto", "Sts_Man", "Sts_Maint", "Sts_OOS"]):
@@ -164,19 +188,20 @@ def ready_expr(vw, perm=True, avail=True, mode=True):
 
 def commands(vw, buttons, extra=(), hint="Enabled in MAN, available, permitted, not interlocked, not LOCAL"):
     """buttons: [(TEXT, member, class, minlvl, enabled_expr or None)] - uniform size, one row of up to four."""
-    b = [button(f"B{i}", t, f"efc.ui.cmd(self, '{mem}', True, {lv})", cls=cls, show=lvl(lv), enabled=en)
+    b = [button(f"B{i}", t, f"efc.ui.cmd(self, '{mem}', True, {lv})", cls=cls, need=lv, enabled=en)
          for i, (t, mem, cls, lv, en) in enumerate(buttons)]
     for x, (t, mem, cls, lv, en) in zip(b, buttons):
         if mem == "Cmd_Jog":                                       # hold-to-jog: TRUE on press, FALSE on release / leave
-            # press writes only while the button is enabled (DOM events can still fire on a disabled button); release always writes
+            # press writes only while the button is enabled (DOM events can still fire on a disabled button); release always
+            # writes, without the AccessDenied popup (the press already showed it)
             x["events"] = {"dom": {k: script((f"if self.props.enabled:\n\tefc.ui.cmd(self, '{mem}', True, {lv})" if val else
-                                              f"efc.ui.cmd(self, '{mem}', False, {lv})")) for k, val in
+                                              f"efc.ui.cmd(self, '{mem}', False, {lv}, notify=False)")) for k, val in
                                    (("onMouseDown", True), ("onTouchStart", True), ("onMouseUp", False),
                                     ("onMouseLeave", False), ("onTouchEnd", False))}}
     kids = [flex("Buttons", "row", b, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})] + list(extra)
     if hint:
         kids.append(label("Hint", hint, "Text/Micro Text/Color/Muted"))
-    return section("Commands", "Commands", kids, show=lvl(OP))
+    return section("Commands", "Commands", kids)
 
 def intlk(name, title, sub):
     """Embedded Templates/Dynamic Window/Parts/IntlkList for the T_Intlk member `sub` (Perm or Intlk)."""
@@ -184,21 +209,63 @@ def intlk(name, title, sub):
                                           "params": {"tagPath": "", "title": title}}, {"shrink": 0},
                 {"props.params.tagPath": expr(f"{{view.params.tagPath}} + '/{sub}'")})
 
+def _shelved_transform(mem):
+    """Binding transform for one row's custom.sh_<member>. Input: efc.ui.shelvedMap's 'Alm_X=12,Alm_Y=0' (or ''). Output:
+    minutes left for mem (0 = no expiry), or -1 when mem is not shelved."""
+    body = ("try:\n"
+            "\ts = ',' + str(value or '') + ','\n"
+            "\ti = s.find(',@@M@@=')\n"
+            "\tif i < 0:\n"
+            "\t\treturn -1\n"
+            "\tj = i + len(',@@M@@=')\n"
+            "\treturn int(s[j:s.find(',', j)])\n"
+            "except Exception:\n"
+            "\treturn -1").replace("@@M@@", mem)
+    return "\t" + body.replace("\n", "\n\t")
+
+def _dur(minutes):
+    return f"{minutes} min" if minutes < 60 else f"{minutes // 60} h"
+
 def alarms(vw, items):
-    """items: [(member, text)] - T_Alarm / T_AlmLim members; ACK acknowledges the unacked ones."""
+    """items: [(member, text)] - T_Alarm / T_AlmLim members; ACK acknowledges the unacked ones.
+    Shelving (decision 37, Ignition's alarm shelving only): one view custom `shelved` polls efc.ui.shelvedMap every 5 s (now(5000) + script transform)
+    ('Alm_X=12,...' for the shelved members). Each row's custom sh_<member> is its minutes left (-1 = not shelved), read
+    from that string by a binding transform. SHELVE (Supervisor+, not shelved) opens ShelveConfirm; UNSHELVE (Supervisor+,
+    shelved) calls efc.ui.unshelve. Rows show a SHELVED chip while shelved."""
+    names = [m for m, _ in items]
+    # polled like Parts/Trend: now(5000) re-runs the transform every 5 s (runScript is not on the 8.1 expression list check_81 uses)
+    vw.custom["shelved"] = ""
+    vw.pc["custom.shelved"] = {"binding": {"type": "expr", "config": {"expression": "len({view.params.tagPath}) + toMillis(now(5000)) * 0"},
+                               "transforms": [{"type": "script", "code": "\treturn efc.ui.shelvedMap(self.view.params.tagPath, %r)" % ",".join(names)}]}}
     rows = []
     for i, (mem, text) in enumerate(items):
         a, u = vw.m(mem + "/Sts_Active"), vw.m(mem + "/Sts_Unack")
         p = vw.m(mem + "/Cfg_Priority")
         pri = f"case(toInt({p}), 1, 'Critical', 2, 'High', 3, 'Medium', 4, 'Low', 'Medium')"
         cls = f"if({a}, 'Alarm/' + {pri} + if({u}, '/Unacked', '/Fill'), if({u}, 'Alarm/Status/ClearedUnacked', 'Text/Caption Text/Color/Muted'))"
-        rows.append(label(f"A{i}", text, "Text/Caption", pc={"props.style.classes": cls_expr(cls, "Text/Caption Text/Color/Muted")}))
-    names = [m for m, _ in items]
+        key = "sh_" + re.sub(r"\W", "_", mem)
+        vw.custom[key] = -1
+        vw.pc["custom." + key] = {"binding": {"type": "expr", "config": {"expression": "{view.custom.shelved}"},
+                                              "transforms": [{"type": "script", "code": _shelved_transform(mem)}]}}
+        sh = "{view.custom." + key + "}"
+        chip = label(f"Shelved{i}", "", "Indicator/Badge",
+                     pc={"props.text": expr(f"if({sh} > 0, 'SHELVED ' + toStr({sh}) + ' min', 'SHELVED')"),
+                         "position.display": expr(f"{sh} >= 0")})
+        shelve = button(f"Shelve{i}", "SHELVE",
+                        f"system.perspective.openPopup('efcShelve', 'Templates/Dynamic Window/Parts/ShelveConfirm', "
+                        f"params={{'tagPath': self.view.params.tagPath, 'member': {mem!r}, 'desc': {text!r}}}, "
+                        f"modal=True, showCloseIcon=False)",
+                        cls="Button/Small", show=f"{lvl(SUP)} && {sh} < 0", grow=0)
+        unshelve = button(f"Unshelve{i}", "UNSHELVE", f"efc.ui.unshelve(self, {mem!r})", cls="Button/Small",
+                          show=f"{lvl(SUP)} && {sh} >= 0", grow=0)
+        rows.append(flex(f"R{i}", "row", [
+            label(f"A{i}", text, "Text/Caption", grow=1, pc={"props.style.classes": cls_expr(cls, "Text/Caption Text/Color/Muted")}),
+            chip, shelve, unshelve], extra={"alignItems": "center", "style": {"classes": "", "gap": v(4)}}))
     any_a = " || ".join(vw.m(m + "/Sts_Active") for m in names)
     return section("Alarms", "Alarms", [
         label("None", "No active alarms", "Text/Caption Text/Color/Muted", pc={"position.display": expr(f"!({any_a})")}),
         flex("List", "column", rows, extra={"style": {"classes": "", "gap": v(2)}}),
-        button("Ack", "ACK", f"efc.ui.ackAll(self, {names!r})", cls="Button/Default", show=lvl(OP), grow=0)])
+        button("Ack", "ACK", f"efc.ui.ackAll(self, {names!r})", cls="Button/Default", need=OP, grow=0)])
 
 def trend(pens, title="History"):
     """Embedded Templates/Dynamic Window/Parts/Trend; its expanded param (in/out) grows the graph to about 400 x 760 inside the window
@@ -298,7 +365,7 @@ def valve_discrete():
 def valve_analog():
     vw = View(); m = vw.m
     rd = f"{m('Mode/Sts_Man')} && !{m('Sts_Intlk')}"
-    presets = [button(f"P{p}", f"{p}%", f"efc.ui.cmd(self, 'Cmd_ManPos', {float(p)}, 1)", cls="Button/Default", enabled=rd) for p in (0, 25, 50, 75, 100)]
+    presets = [button(f"P{p}", f"{p}%", f"efc.ui.cmd(self, 'Cmd_ManPos', {float(p)}, 1)", cls="Button/Default", enabled=rd, need=OP) for p in (0, 25, 50, 75, 100)]
     return window("Templates/Dynamic Window/Valves/ValveAnalog", "T_CValve", vw, [
         header(vw),
         banner(vw, [(" || ".join(f"isNull({m(x)}) || !isGood({m(x)})" for x in ("Val_Pos", "Sts_Closed")), "UNKNOWN", "State/Unknown"),
@@ -307,7 +374,7 @@ def valve_analog():
                [(m("Sts_Sim"), "SIM"), (m("Sts_RateLim"), "RATE LIM")]),
         mode_section(vw),
         commands(vw, [("RESET", "Cmd_Reset", "Button/Default", OP, None)],
-                 extra=[entry(vw, "Pos", "Manual position", "Cmd_ManPos", OP, "%", enabled=rd),
+                 extra=[entry(vw, "Pos", "Manual position", "Cmd_ManPos", OP, "%", enabled=rd, grey=True),
                         flex("Presets", "row", presets, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})],
                  hint="Position entry and presets enabled in MAN, not interlocked"),
         section("Values", "Values", [row("Dem", "Demand", fmt(m("Val_Demand")), "'%'"),
@@ -359,9 +426,9 @@ def rotating():
 def vfd():
     def cmd(vw):
         rd = f"{vw.m('Mode/Sts_Man')} && {vw.m('Sts_Avail')}"
-        return [entry(vw, "Spd", "Speed", "Cmd_Spd", OP, "", enabled=rd),
-                flex("Dir", "row", [button("Fwd", "FWD", "efc.ui.cmd(self, 'Cmd_Rev', False, 1)", cls="Button/Default", enabled=rd),
-                                    button("Rev", "REV", "efc.ui.cmd(self, 'Cmd_Rev', True, 1)", cls="Button/Default", enabled=rd)],
+        return [entry(vw, "Spd", "Speed", "Cmd_Spd", OP, "", enabled=rd, grey=True),
+                flex("Dir", "row", [button("Fwd", "FWD", "efc.ui.cmd(self, 'Cmd_Rev', False, 1)", cls="Button/Default", enabled=rd, need=OP),
+                                    button("Rev", "REV", "efc.ui.cmd(self, 'Cmd_Rev', True, 1)", cls="Button/Default", enabled=rd, need=OP)],
                      basis=v(32), pc={"position.display": expr(vw.m("Cfg_Reversible"))}, extra={"style": {"classes": "", "gap": v(4)}})]
     def vals(vw):
         m = vw.m; eu = m("Cfg_SpdEU")
@@ -390,7 +457,7 @@ def heater():
         commands(vw, [("ON", "Cmd_On", "Button/Start", OP, rd), ("OFF", "Cmd_Off", "Button/Stop", OP, None),
                       ("RESET", "Cmd_Reset", "Button/Default", OP, None)],
                  extra=[label("ResetHint", "High-limit trip resets at the limit device.", "Text/Micro Text/Color/Muted"),
-                        entry(vw, "Pwr", "Power demand", "Cmd_Pwr", OP, "%", enabled=rd, show=pwr)]),
+                        entry(vw, "Pwr", "Power demand", "Cmd_Pwr", OP, "%", enabled=rd, show=pwr, grey=True)]),
         section("Values", "Values", [row("Type", "Control", ctype), row("Dem", "Power demand", fmt(m("Val_PwrDemand")), "'%'", show=pwr),
                                      row("Duty", "Duty", fmt(m("Val_Duty")), "'%'", show=pwr), row("Pwr", "Power", fmt(m("Val_Power")), "'kW'"),
                                      row("Cur", "Current", fmt(m("Val_Current")), "'A'", show=amps), row("Load", "Load", fmt(m("Val_LoadPct"), "0"), "'%'", show=amps),
@@ -454,7 +521,7 @@ def process_value():
 def loop():
     vw = View(); m = vw.m
     eu = m("Cfg_PVEU")
-    mb = lambda n, t, mem, sts: button(n, t, f"efc.ui.cmd(self, '{mem}', True, 1)", cls="Button/Toggle/Off", show=lvl(OP))
+    mb = lambda n, t, mem, sts: button(n, t, f"efc.ui.cmd(self, '{mem}', True, 1)", cls="Button/Toggle/Off", need=OP)
     b = []
     for n, t, mem, sts in (("Man", "MAN", "Cmd_Man", "Sts_Man"), ("Auto", "AUTO", "Cmd_Auto", "Sts_Auto"), ("Cas", "CAS", "Cmd_Cas", "Sts_Cas")):
         x = mb(n, t, mem, sts); x["propConfig"]["props.style.classes"] = cls_expr(f"if({m(sts)}, 'Button/Toggle/On', 'Button/Toggle/Off')", "Button/Toggle/Off"); b.append(x)
@@ -463,11 +530,11 @@ def loop():
         banner(vw, [(m("Sts_Intlk"), "INTERLOCKED", "State/Fault"), (m("Sts_Track"), "TRACKING", "State/Transition"),
                     (m("Sts_Cas"), "CASCADE", "State/Running"), (m("Sts_Auto"), "AUTO", "State/Running"), (m("Sts_Man"), "MANUAL", "State/Stopped")],
                [(m("Sts_WindupHi"), "WINDUP HI"), (m("Sts_WindupLo"), "WINDUP LO"), (m("Sts_SPRamping"), "RAMPING")]),
-        section("Mode", "Mode", [flex("Buttons", "row", b, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})], show=lvl(OP)),
+        section("Mode", "Mode", [flex("Buttons", "row", b, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}})]),
         section("Values", "Values", [row("PV", "PV", fmt(m("Val_PV")), eu), row("SP", "SP", fmt(m("Val_SP")), eu),
                                      row("CV", "Output", fmt(m("Out_CV")), "'%'"), row("Err", "Error", fmt(m("Val_Err")), eu),
-                                     entry(vw, "SPe", "Setpoint", "Cmd_SP", OP, "", enabled=f"!{m('Sts_Cas')}"),
-                                     entry(vw, "CVe", "Output", "Cmd_CV", OP, "%", enabled=m("Sts_Man"))]),
+                                     entry(vw, "SPe", "Setpoint", "Cmd_SP", OP, "", enabled=f"!{m('Sts_Cas')}", grey=True),
+                                     entry(vw, "CVe", "Output", "Cmd_CV", OP, "%", enabled=m("Sts_Man"), grey=True)]),
         intlk("Intlk", "Interlocks", "Intlk"),
         alarms(vw, [("Alm_DevH", "Deviation high"), ("Alm_DevL", "Deviation low"), ("Alm_PVBad", "PV bad")]),
         trend(["Val_PV", "Val_SP", "Out_CV"]),
@@ -528,7 +595,7 @@ def intlk_list():
              extra={"alignItems": "center"}),
         *rows,
         button("Reset", "RESET", "efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)", cls="Button/Default",
-               show=f"{lvl(MAINT)} && {m('Sts_ResetReq')}", grow=0),
+               show=m('Sts_ResetReq'), need=MAINT, grow=0),
     ], extra={"style": {"classes": "Container/GroupBox", "gap": v(2)}})
     params = {"tagPath": "", "title": ""}
     pc = dict(vw.pc, **{"params." + p: {"paramDirection": "input", "persistent": True} for p in params})
@@ -556,6 +623,56 @@ def bypass_confirm():
     pc = dict(vw.pc, **{"params." + p: {"paramDirection": "input", "persistent": True} for p in params})
     return "Templates/Dynamic Window/Parts/BypassConfirm", {"custom": vw.custom, "params": params, "propConfig": pc,
                                          "props": {"defaultSize": {"width": 360, "height": 260}}, "root": root}
+
+def shelve_confirm():
+    """Templates/Dynamic Window/Parts/ShelveConfirm: shelve a PLC alarm's Ignition alarm (decision 37). Presets from
+    efc_ui.SHELVE_PRESETS (max SHELVE_MAX_MIN), reason required, Supervisor+. efc.ui.shelve checks the level and the reason
+    again and writes the audit record."""
+    vw = View()
+    ok = ("if efc.ui.shelve(self, self.view.params.member, self.view.custom.minutes, self.view.custom.reason):\n"
+          "\tsystem.perspective.closePopup('efcShelve')")
+    pb = [button(f"P{m}", _dur(m), f"self.view.custom.minutes = {m}", cls="Button/Toggle/Off") for m in _ui.SHELVE_PRESETS]
+    for b, m in zip(pb, _ui.SHELVE_PRESETS):
+        b.setdefault("propConfig", {})["props.style.classes"] = cls_expr(
+            f"if({{view.custom.minutes}} = {m}, 'Button/Toggle/On', 'Button/Toggle/Off')", "Button/Toggle/Off")
+    root = flex("root", "column", [
+        label("Title", "Shelve alarm", "Text/Title"),
+        label("Desc", "", "Text/Body", pc={"props.text": expr("{view.params.desc}")}),
+        label("Note", "Supervisor or higher. Hides this alarm in Ignition (alarm table, journal, template outline) for the "
+                      "chosen time. The PLC alarm stays active. The reason and your user name go to the audit log.",
+              "Text/Caption Text/Mod/Wrap"),
+        flex("Presets", "row", pb, basis=v(32), extra={"style": {"classes": "", "gap": v(4)}}),
+        comp("ia.input.text-field", "Reason", {"placeholder": "Reason (required)", "style": {"classes": "Input/Field"}},
+             {"shrink": 0, "basis": v(32)}, {"props.text": {"binding": {"type": "property", "config": {"path": "view.custom.reason", "bidirectional": True}}}}),
+        flex("Buttons", "row", [button("Cancel", "CANCEL", "system.perspective.closePopup('efcShelve')", cls="Button/Default"),
+                                button("Ok", "SHELVE", ok, cls="Button/Danger",
+                                       enabled=f"{lvl(SUP)} && len(trim({{view.custom.reason}})) > 0")],
+             basis=v(36), extra={"style": {"classes": "", "gap": v(6)}}),
+    ], extra={"style": {"classes": "Container/Popup", "gap": v(8)}})
+    vw.custom["reason"] = ""
+    vw.custom["minutes"] = 60
+    params = {"tagPath": "", "member": "", "desc": ""}
+    pc = dict(vw.pc, **{"params." + p: {"paramDirection": "input", "persistent": True} for p in params})
+    return "Templates/Dynamic Window/Parts/ShelveConfirm", {"custom": vw.custom, "params": params, "propConfig": pc,
+                                         "props": {"defaultSize": {"width": 360, "height": 300}}, "root": root}
+
+def access_denied():
+    """Templates/Dynamic Window/Parts/AccessDenied: efc.ui.denied opens it when a command is pressed below the user's level."""
+    msg = "{view.params.action} + ' requires ' + {view.params.need} + ' access or higher.'"
+    who = ("if(len({view.params.user}) > 0, 'Signed in as ' + {view.params.user} + ' (' + {view.params.have} + ').', "
+           "'Not signed in (' + {view.params.have} + ').')")
+    root = flex("root", "column", [
+        label("Title", "Invalid access level", "Text/Subheader"),
+        label("Msg", "", "Text/Body Text/Mod/Wrap", pc={"props.text": expr(msg)}),
+        label("Who", "", "Text/Caption Text/Mod/Wrap", pc={"props.text": expr(who)}),
+        label("Note", "Nothing was written.", "Text/Caption"),
+        flex("Buttons", "row", [button("Ok", "OK", "system.perspective.closePopup('efcAccessDenied')", cls="Button/Default")],
+             basis=v(36), extra={"justify": "flex-end", "style": {"classes": "", "gap": v(6)}}),
+    ], extra={"style": {"classes": "Container/Popup", "gap": v(8)}})
+    params = {"action": "", "need": "", "have": "", "user": ""}
+    pc = {"params." + p: {"paramDirection": "input", "persistent": True} for p in params}
+    return "Templates/Dynamic Window/Parts/AccessDenied", {"custom": {}, "params": params, "propConfig": pc,
+                                           "props": {"defaultSize": {"width": 360, "height": 170}}, "root": root}
 
 RANGES = [("24h", 1440), ("8h", 480), ("1h", 60), ("30m", 30), ("5m", 5)]
 def trend_part():
@@ -638,7 +755,7 @@ def trends_overview():
 
 # ----------------------------------------------------------------- write
 VIEWS = [valve_discrete, valve_analog, rotating, vfd, heater, heat_transfer, process_value, loop, io_card,
-         intlk_list, bypass_confirm, trend_part, trends_overview]
+         intlk_list, bypass_confirm, shelve_confirm, access_denied, trend_part, trends_overview]
 
 def build():
     proj = project_dir(PROJECT)

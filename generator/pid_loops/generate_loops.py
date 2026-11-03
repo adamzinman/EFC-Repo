@@ -566,8 +566,13 @@ def demo():
                              {"path": "PID/Templates/Loop_" + vname, "params": {"tagPath": "[default]PID_Demo/" + lp, "label": ""}},
                              None, {"x": 20 + i * (w + 24), "y": y, "width": w, "height": h}))
         y += h + 24
-    root = comp("ia.container.coord", "root", {"mode": "fixed", "style": {"backgroundColor": "#DADDE1"}}, kids)
-    return view_json(root, (1000, y + 10), {}, {}, {})
+    size = (1000, y + 10)
+    for k in kids:                               # percent mode: positions are fractions of the design size (scales with the viewport)
+        b = k["position"]
+        k["position"] = {"x": round(b["x"] / size[0], 4), "y": round(b["y"] / size[1], 4),
+                         "width": round(b["width"] / size[0], 4), "height": round(b["height"] / size[1], 4)}
+    root = comp("ia.container.coord", "root", {"mode": "percent", "style": {"backgroundColor": "#DADDE1"}}, kids)
+    return view_json(root, size, {}, {}, {})
 
 
 # ================================================================= write project

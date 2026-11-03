@@ -13,7 +13,7 @@
       "binding": {
         "type": "property",
         "config": {
-          "path": "session.props.auth.user.roles"
+          "path": "session.props.auth.securityLevels"
         },
         "transforms": [
           {

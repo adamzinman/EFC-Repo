@@ -25,7 +25,9 @@
     "line": "#262626",
     "lw": 4.167,
     "con": "#262626",
-    "canCmd": false
+    "canCmd": false,
+    "level": 0,
+    "locked": false
   },
   "params": {
     "tagPath": "[default]PID_Demo/XV103",
@@ -330,6 +332,28 @@
         "type": "expr",
         "config": {
           "expression": "coalesce({view.custom.man}, false) && coalesce({view.custom.avail}, true) && !coalesce({view.custom.local}, false) && !coalesce({view.custom.oos}, false) && (coalesce({view.custom.cmd}, false) || (!coalesce({view.custom.permMissing}, false) && !coalesce({view.custom.intlk}, false)))"
+        }
+      }
+    },
+    "custom.level": {
+      "binding": {
+        "type": "property",
+        "config": {
+          "path": "session.props.auth.securityLevels"
+        },
+        "transforms": [
+          {
+            "type": "script",
+            "code": "\treturn efc.ui.level(value)"
+          }
+        ]
+      }
+    },
+    "custom.locked": {
+      "binding": {
+        "type": "expr",
+        "config": {
+          "expression": "{view.params.useButton} && coalesce({view.custom.man}, false) && {view.custom.level} < 1"
         }
       }
     },
@@ -767,7 +791,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "{view.custom.canCmd}"
+                "expression": "{view.custom.canCmd} || {view.custom.locked}"
               }
             }
           },
@@ -775,7 +799,7 @@
             "binding": {
               "type": "expr",
               "config": {
-                "expression": "if(coalesce({view.custom.local}, false), \"Local control\", if(!coalesce({view.custom.man}, false), \"Manual mode required\", if(coalesce({view.custom.cmd}, false), \"Close\", \"Open\")))"
+                "expression": "if({view.custom.locked}, \"Requires Operator access\", if(coalesce({view.custom.local}, false), \"Local control\", if(!coalesce({view.custom.man}, false), \"Manual mode required\", if(coalesce({view.custom.cmd}, false), \"Close\", \"Open\"))))"
               }
             }
           }
@@ -787,6 +811,36 @@
               "scope": "G",
               "config": {
                 "script": "\tm = 'Cmd_Close' if self.view.custom.cmd else 'Cmd_Open'\n\tefc.ui.cmd(self, m, True, 1)"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.icon",
+        "version": 0,
+        "meta": {
+          "name": "Lock"
+        },
+        "position": {
+          "x": 0.025,
+          "y": 0.65,
+          "width": 0.15,
+          "height": 0.18
+        },
+        "props": {
+          "path": "material/lock",
+          "color": "#1F1F1F",
+          "style": {
+            "classes": "Indicator/Lock"
+          }
+        },
+        "propConfig": {
+          "meta.visible": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "{view.custom.locked}"
               }
             }
           }

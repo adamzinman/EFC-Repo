@@ -891,6 +891,7 @@ GROUPS = [
     ("Rotating equipment", "Templates/Rotating/"),
     ("Heat transfer", "Templates/HeatTransfer/"),
     ("Process values", "Templates/ProcessValues/"),
+    ("Analog indicators", "Templates/AnalogIndicator/"),
     ("PID loops", "Templates/Loops/"),
     ("Station faceplates", "Templates/Station/"),
     ("x80 I/O card faceplates", "Templates/IO/"),
@@ -900,15 +901,18 @@ GROUPS = [
 IO_NAMES = {}
 PARAM_OVERRIDES = {f"Templates/IO/Faceplates/{m}": {"cardPath": f"[default]IO_Demo/Rack0/{f}"} for f, m, *_ in IO_CARDS}
 DW = "Templates/Dynamic Window/"                 # the windows are not embedded anywhere, so render them on a demo instance
+# Popups take their own params. There is no demo T_Intlk instance: the interlock list comes from XV104 (Intlk folder, PSH-201 condition).
 PARAM_OVERRIDES.update({
     DW + "Valves/ValveDiscrete": {"tagPath": "[default]PID_Demo/XV101"}, DW + "Valves/ValveAnalog": {"tagPath": "[default]PID_Demo/FV101"},
     DW + "Rotating/Rotating": {"tagPath": "[default]PID_Demo/P101"}, DW + "Rotating/VFD": {"tagPath": "[default]PID_Demo/M601"},
     DW + "HeatTransfer/Heater": {"tagPath": "[default]PID_Demo/E401"}, DW + "HeatTransfer/HeatTransfer": {"tagPath": "[default]PID_Demo/P101"},
     DW + "ProcessValues/ProcessValue": {"tagPath": "[default]PV_Demo/PT001"}, DW + "Loops/Loop": {"tagPath": "[default]PID_Demo/TIC101"},
     DW + "Station/Station": {"tagPath": "[default]Station_1"}, DW + "IO/IOCard": {"tagPath": "[default]IO_Demo/Rack0/R0S5", "model": "BMXAMI0810"},
-    DW + "Parts/IntlkList": {"tagPath": "[default]PID_Demo/XV101/Intlk", "title": "Interlocks"},
+    DW + "Parts/IntlkList": {"tagPath": "[default]PID_Demo/XV104"},
     DW + "Parts/Trend": {"tagPath": "[default]PV_Demo/PT001", "pens": ["PV"]},
-    DW + "Parts/BypassConfirm": {"tagPath": "[default]PID_Demo/XV101/Intlk", "idx": 0, "desc": "Low level"}})
+    DW + "Parts/BypassConfirm": {"tagPath": "[default]PID_Demo/XV104", "idx": 0, "desc": "PSH-201 high pressure"},
+    DW + "Parts/AccessDenied": {"action": "XV101 Cmd_Open", "need": "Operator", "have": "Guest", "user": "jsmith"},
+    DW + "Parts/ShelveConfirm": {"tagPath": "[default]PID_Demo/XV101", "member": "Alm_FailOpen", "desc": "Fail to open"}})
 
 def main():
     global TAGS
@@ -925,7 +929,7 @@ def main():
             if not v.startswith(pre):
                 continue
             rest = v[len(pre):]
-            kind = "demo" if "/_Demo" in "/" + rest or rest.startswith("_Demo") else "part" if rest.startswith("Parts/") else "template"
+            kind = "demo" if "/_Demo" in "/" + rest or "/_Examples" in "/" + rest else "part" if rest.startswith("Parts/") else "template"
             items.append((group, v, kind))
     items += [("Library", "Templates/_Demo", "demo"), ("Library", "Styles/_Catalog", "demo")]
     out_t = os.path.join(OUT, "templates")
