@@ -1,6 +1,6 @@
 # efc.ui reference
 
-`efc.ui` is the project script module behind the EFC dynamic windows. It opens a device's window in the page's right dock, sends operator commands to PLC `Cmd_` members, checks the user's access level before each command, writes the bypass and unbypass requests, and builds the trend graph. Everything in this page is taken from the code as it stands in `generator/docks/efc_ui.py`. Where the code and a steward decision disagree, the difference is listed in section 9.
+`efc.ui` is the project script module behind the EFC dynamic windows. It opens a device's window in the page's right dock, sends operator commands to PLC `Cmd_` members, checks the user's access level before each command, commits entry-field and checkbox edits with an audit record, writes the bypass and unbypass requests, and builds the trend graph. Everything in this page is taken from the code as it stands in `generator/docks/efc_ui.py`. Where the code and a steward decision disagree, the difference is listed in section 9.
 
 ## Contents
 
@@ -32,7 +32,7 @@ Edit `efc_ui.py`, never `code.py`. A build overwrites `code.py`.
 
 **Who uses it.** Three kinds of caller:
 
-- **Template and window event scripts** (generated): symbol `onClick` and `onDoubleClick`, the window ✕ button, command, mode, preset and ACK buttons, the bypass and unbypass buttons, and the trend part's history binding.
+- **Template and window event scripts** (generated): symbol `onClick` and `onDoubleClick`, the window ✕ button, command, mode, preset and ACK buttons, the entry-field and checkbox onChange scripts, the BypassConfirm OK button, and the trend part's history binding.
 - **Hand-built views** in `projects/` and `imported/`: the Station window (source `imported/EFC_StationFaceplates/.../Station_Sidebar`), the Station tile, `Station_Fill` and the I/O slot tile.
 - **Other generators**: `generator/build_pid.py`, `generator/build_pv.py`, `generator/analog_indicators/gen_analog_indicators.py` and `generator/pid_loops/generate_loops.py` write `efc.ui` calls into template events.
 
@@ -165,7 +165,7 @@ Functions appear in file order. "Required level" is the minimum `userLevel` the 
 - **Signature:** `userLevel(component)`
 - **Does:** returns `max(level(auth.securityLevels), level(auth.user.roles))`, where `auth = component.session.props.auth`.
 - **Errors:** the line `auth = component.session.props.auth` is a plain attribute read, not guarded. A session without `props.auth` raises. The two level reads are guarded by `_p`.
-- **Called by:** `cmd`, `denied`, `bypass`, `unbypass`, `ackAll`, `dblCmd`, and the Station window and `Station_Fill` scripts (`efc.ui.userLevel(self) < 1` before `denied`).
+- **Called by:** `cmd`, `setValue`, `denied`, `bypass`, `unbypass`, `ackAll`, `dblCmd`, and the Station window and `Station_Fill` scripts (`efc.ui.userLevel(self) < 1` before `denied`).
 
 ### `denied(component, minLevel, action='')`
 
@@ -182,7 +182,8 @@ Functions appear in file order. "Required level" is the minimum `userLevel` the 
 - **Required level:** none. This is the refusal path.
 - **Called by:**
   - `cmd`, when the level is too low and `notify` is true;
-  - `unbypass` (`'Unbypass <idx>'`);
+  - `setValue`, when the level is too low (`<tag> <member>`);
+  - `bypass` (`'Bypass <idx>'`) and `unbypass` (`'Unbypass <idx>'`);
   - `ackAll` (`'<tag> ACK'`);
   - `dblCmd` (`'<tag> double-tap command'`);
   - the Station window and `Station_Fill` scripts for Tare, Zero and Reset (minimum 1).
@@ -191,13 +192,13 @@ Functions appear in file order. "Required level" is the minimum `userLevel` the 
 
 - **Does:** builds a short label for logs and popups. Takes the last segment of `view.params.tagPath` after the last `/` and `]`, then appends `member`. Example: `[default]Plant/XV101` with `Cmd_Open` gives `XV101 Cmd_Open`. An empty path gives just the member.
 - **Side effects:** none.
-- **Called by:** `cmd` (denial action), `ackAll`, `dblCmd`.
+- **Called by:** `cmd` and `setValue` (denial action), `ackAll`, `dblCmd`.
 
 ### `_writeTags(paths, values, what)`
 
 - **Does:** calls `system.tag.writeBlocking(paths, values)`. For each result whose quality is not good, logs `<what>: write <path> failed: <quality>`. Returns `True` only if every write was good. An empty list returns `True`.
 - **Errors:** an exception from `writeBlocking` itself is not caught; it reaches the calling button script.
-- **Called by:** `cmd` (`what='cmd'`), `bypass` (`'bypass'`), `unbypass` (`'unbypass'`), `ackAll` (`'ackAll'`), `dblCmd` (`'dblCmd'`).
+- **Called by:** `cmd` (`what='cmd'`), `setValue` (`'setValue'`), `bypass` (`'bypass'`), `unbypass` (`'unbypass'`), `ackAll` (`'ackAll'`), `dblCmd` (`'dblCmd'`).
 
 ### `_state(component)`
 
@@ -261,7 +262,7 @@ Functions appear in file order. "Required level" is the minimum `userLevel` the 
   2. `system.util.audit(action=action, actionTarget=target, actionValue=str(value), actor=user)`, inside `try`. Any exception is swallowed without a warning.
   3. Logs `AUDIT <action> <target> <value> by <user>` at info, whether or not step 2 worked.
 - **Side effects:** an audit record (if the audit profile accepts it) and an info line.
-- **Called by:** `cmd` (when `audit=True`, action `'EFC write'`), `bypass` (`'EFC bypass'`), `unbypass` (`'EFC unbypass'`).
+- **Called by:** `cmd` (when `audit=True`, action `'EFC write'`), `setValue` (`'EFC set'`), `bypass` (`'EFC bypass'`), `unbypass` (`'EFC unbypass'`), `shelve` and `unshelve`.
 
 ### `cmd(component, member, value=True, minLevel=OPERATOR, audit=False, notify=True)`
 
@@ -286,31 +287,54 @@ Functions appear in file order. "Required level" is the minimum `userLevel` the 
   - the window `commands()` and `button()` helper: mode buttons (`build_docks.py` `mode_section`, minimum 1 for AUTO and MAN, 2 for MAINT and OOS with `audit=True`), command and preset buttons, FWD and REV, and the jog press and release;
   - `maint()`: RESET MAINT and SIMULATE, both minimum 2 with `audit=True`;
   - `intlk_list()`: RESET, minimum 2 with `audit=True`;
-  - `entry(..., scale=TIME_SCALE)`: an Engineer (4) setpoint, `audit=True` (section 9);
   - the Loop mode buttons (`minLevel` 1);
-  - the Station window and `Station_Fill` scripts: `Cmd_Select` (minimum 1, momentary) and the pending Tare, Zero and Reset commands (minimum 1, momentary).
+  - the Station window and `Station_Fill` scripts: `Cmd_Select` (minimum 1, `audit=True`, momentary) and the pending Tare, Zero and Reset commands (minimum 1, `audit=True`, momentary; Confirm re-checks `s.tzLocked` or `s.resetLocked` first and writes nothing when locked).
+
+Entry fields and checkboxes do not call `cmd`; they use `setValue`.
+
+### `setValue(component, member, value, minLevel=ENGINEER, scale=1)`
+
+- **Does:**
+  1. `base = view.params.tagPath` (via `_p`, `''` if missing). If `base` is empty or `value` is `None`, returns `False`.
+  2. If `userLevel(component) < minLevel`: calls `denied(component, minLevel, _target(component, member))` and returns `False`. No write.
+  3. If `scale != 1`: `value = int(round(value * scale))`.
+  4. `tp = base + '/' + member`; reads the old value with `system.tag.readBlocking([tp])`.
+  5. If the old value equals `value`, returns `True` without writing or auditing.
+  6. `ok = _writeTags([tp], [value], 'setValue')`. If `ok`: `_audit(component, 'EFC set', tp, '<old> -> <new>')`.
+  7. Returns `ok`.
+- **Parameters:**
+  - `member`: a member path relative to the view's tag, such as `Cmd_SP` or `Alm_H/Cfg_Lim`.
+  - `value`: the value the user entered (checkboxes pass `bool(...)`).
+  - `minLevel`: default `ENGINEER` (4). The generator passes the control's own level.
+  - `scale`: the TIME entries pass `TIME_SCALE` (1000): the window shows seconds and the PLC member holds milliseconds.
+- **Returns:** `True` if the write was good or the value was unchanged. `False` if refused, if the arguments were empty or if the write failed.
+- **Side effects:** one tag read; one tag write when the value changed; on refusal, a warning and possibly the popup; on a failed write, a warning; on a good write, one audit record.
+- **Required level:** `minLevel`, checked against `userLevel`.
+- **Called by:** the `props.value` (checkbox: `props.selected`) onChange script of every `entry()` and `check()` in the generated windows (decisions 14 and 27). The script runs only when `origin == 'Browser'` and the value is not `None`, and calls `self.refreshBinding(...)` when `setValue` returns `False`, so the field shows the tag value again. The fields read the tag one way (a tag binding, or the mirror / 1000 for TIME members); none is bidirectional. Levels: Operator (1) for Loop `Cmd_SP` and `Cmd_CV`, valve `Cmd_ManPos`, VFD `Cmd_Spd` and heater `Cmd_Pwr`; Maintenance (2) for Process Value `Sim_En` and `Sim_PV`; Engineer (4) for configuration, tuning and alarm-limit entries and checkboxes. Also called by the Station window and `Station_Fill` setpoint fields (minimum 1; `steward/tools/fix_station_roles.py`).
 
 ### `bypass(component, intlkPath, idx, reason)`
 
 - **Does:**
   1. `reason = (reason or '').strip()`.
-  2. If `userLevel < SUPERVISOR` or `reason` is empty, returns `False`. Silent: no write, no log, no popup.
-  3. `_writeTags(['<intlkPath>/Cmd_Bypass/<idx>'], [True], 'bypass')`.
-  4. `_audit(component, 'EFC bypass', '<intlkPath>/<idx>', reason)`.
-  5. Returns `True`.
-- **Returns:** `True` after the write attempt, even if the write failed. The caller closes its popup on `True`.
-- **Side effects:** one tag write and one audit record (written after the write attempt, whatever its result).
+  2. If `userLevel < SUPERVISOR`: calls `denied(component, SUPERVISOR, 'Bypass <idx>')` and returns `'Requires Supervisor access.'`.
+  3. If `reason` is empty, returns `'Enter a reason.'`.
+  4. Reads `<intlkPath>/Cfg_Bypassable/<idx>` and `<intlkPath>/Inp_BypassPerm`. If the first is false, returns `'This condition is not bypassable.'`; if the second is false, returns `'Bypass is not permitted now (Inp_BypassPerm is off).'`.
+  5. `_writeTags(['<intlkPath>/Cmd_Bypass/<idx>'], [True], 'bypass')`. If it fails, returns `'The bypass command was not written. See the gateway log.'`.
+  6. `_audit(component, 'EFC bypass', '<intlkPath>/<idx>', reason)`.
+  7. Returns `''`.
+- **Returns:** `''` when the bypass was written, else the reason it refused. The popup shows that text and stays open; it closes only on `''`.
+- **Side effects:** a tag read; one tag write and one audit record when all checks pass (no audit when the write failed); the AccessDenied popup below Supervisor.
+- **Required level:** Supervisor (3), plus a non-empty reason, `Cfg_Bypassable[idx]` and `Inp_BypassPerm`.
+- **Called by:** the BypassConfirm view's OK button in bypass mode (`build_docks.py` `bypass_confirm()`). It is called with the BypassConfirm view's `params.tagPath` (the IntlkList path, ending in `/Perm` or `/Intlk`), `params.idx` and `custom.reason`.
+- **Not done here:** a bypass duration. Decision 10 asks for durations up to `Cfg_BypassMax`, but `T_Intlk` has no member to send one, so every bypass runs to `Cfg_BypassMax` (PLC logic). The popup shows `Cfg_BypassMax` in minutes.
+
+### `unbypass(component, intlkPath, idx, reason)`
+
+- **Does:** `reason = (reason or '').strip()`. If `userLevel < SUPERVISOR`, calls `denied(component, SUPERVISOR, 'Unbypass <idx>')` and returns `'Requires Supervisor access.'`. If `reason` is empty, returns `'Enter a reason.'`. Otherwise writes `<intlkPath>/Cmd_Unbypass/<idx>` = `True` (`'unbypass'`); if that fails, returns `'The unbypass command was not written. See the gateway log.'`; else calls `_audit(component, 'EFC unbypass', '<intlkPath>/<idx>', reason)` and returns `''`.
+- **Returns:** `''` when done, else the reason it refused (same convention as `bypass`).
+- **Side effects:** one write and, after a good write, one audit record with the reason.
 - **Required level:** Supervisor (3), plus a non-empty reason.
-- **Called by:** the BypassConfirm view's BYPASS button (`build_docks.py` `bypass_confirm()`). It is called with the BypassConfirm view's `params.tagPath` (the IntlkList path, ending in `/Intlk`), `params.idx` and `custom.reason`.
-- **Not checked here:** `Inp_BypassPerm` (named in decision 10) and the duration (`Cfg_BypassMax` is only mentioned in the popup text).
-
-### `unbypass(component, intlkPath, idx)`
-
-- **Does:** if `userLevel < SUPERVISOR`, calls `denied(component, SUPERVISOR, 'Unbypass <idx>')` and returns. Otherwise writes `<intlkPath>/Cmd_Unbypass/<idx>` = `True` (`'unbypass'`) and calls `_audit(component, 'EFC unbypass', '<intlkPath>/<idx>')` with no value.
-- **Returns:** `None`.
-- **Side effects:** one write and one audit record. The audit record is written even if the write failed.
-- **Required level:** Supervisor (3).
-- **Called by:** the IntlkList UNBYP button (`build_docks.py` `intlk_list()`). The button is shown only at Supervisor and above, so the denial path is a fallback.
+- **Called by:** the BypassConfirm view's OK button in unbypass mode. The IntlkList UNBYP button (shown only at Supervisor and above) opens BypassConfirm with `action: 'unbypass'` (issue #8); it no longer calls `unbypass` directly.
 
 ### `_almSource(tagPath, member)`
 
@@ -451,6 +475,8 @@ Example: the Manual button on a device symbol (`minLevel` 1), or a window comman
    1. **Write good**: `cmd` returns `True`. If `audit`, an `EFC write` audit record and `AUDIT` info line are written.
    2. **Write bad** (missing member, bad quality): `cmd` logs `cmd: write <path> failed: <quality>`, returns `False`. If `audit`, the audit record is still written.
 
+An entry field or checkbox edit follows the same refusal path through `setValue` (its onChange script runs only for `origin == 'Browser'`). An allowed edit is written only when it differs from the tag value and is audited as `EFC set`, old -> new, after a good write. A refused or failed edit returns `False` and the script calls `self.refreshBinding(...)`, so the field snaps back to the tag value.
+
 ### 5.5 Jog press and release (`Cmd_Jog`, `notify=False`)
 
 1. `onMouseDown` and `onTouchStart`: `if self.props.enabled: efc.ui.cmd(self, 'Cmd_Jog', True, 2)`. The button is enabled only in MAINT mode with the other ready conditions met, or when locked (lock icon shown).
@@ -478,19 +504,19 @@ Example: the Manual button on a device symbol (`minLevel` 1), or a window comman
 
 **Bypass:**
 
-1. An IntlkList row shows BYPASS when `lvl(SUP)`, the condition is `Cfg_Bypassable`, and it is not already bypassed. Its inline script calls `system.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath', 'idx', 'desc'}, ...)`. This popup script is inline in the view, not `efc.ui`.
-2. BypassConfirm shows the reason field (`custom.reason`). The Ok button is enabled when the level is Supervisor and the trimmed reason is not empty. The view enforces this, not `efc.ui`.
-3. Ok runs `efc.ui.bypass(self, tagPath, idx, reason)`.
-   - Level below Supervisor, or reason empty: returns `False`. The popup stays open with no message.
-   - Otherwise: writes `<tagPath>/Cmd_Bypass/<idx>` = `True`, writes the audit record `EFC bypass` (target `<tagPath>/<idx>`, value = reason), and returns `True`.
-4. On `True`, the popup closes with `closePopup('efcBypass')`. The write result is not checked (section 9).
+1. An IntlkList row shows BYPASS when `lvl(SUP)`, the condition is `Cfg_Bypassable`, and it is not already bypassed. Its inline script calls `system.perspective.openPopup('efcBypass', 'Templates/Dynamic Window/Parts/BypassConfirm', params={'tagPath', 'idx', 'desc', 'action': 'bypass'}, ...)`. This popup script is inline in the view, not `efc.ui`.
+2. BypassConfirm shows the reason field (`custom.reason`) and a note with the PLC timeout (`Cfg_BypassMax` in minutes). The Ok button (BYPASS) is enabled when the level is Supervisor and the trimmed reason is not empty.
+3. Ok runs `efc.ui.bypass(self, tagPath, idx, reason)` and stores the result in `custom.error`.
+   - Below Supervisor (AccessDenied popup too), empty reason, `Cfg_Bypassable[idx]` false, `Inp_BypassPerm` false or a failed write: returns the reason as text. The popup stays open and shows it in its Error label.
+   - Otherwise: writes `<tagPath>/Cmd_Bypass/<idx>` = `True`, writes the audit record `EFC bypass` (target `<tagPath>/<idx>`, value = reason), and returns `''`.
+4. On `''`, the popup closes with `closePopup('efcBypass')`.
 5. Cancel only closes the popup.
 
 **Unbypass:**
 
-1. The UNBYP button (shown at Supervisor and above, when bypassed) runs `efc.ui.unbypass(self, tagPath, idx)`.
-2. Below Supervisor: refused with the popup (`'Unbypass <idx>'`).
-3. Otherwise writes `<tagPath>/Cmd_Unbypass/<idx>` = `True` and writes the audit record `EFC unbypass` (no value). The audit is written whether or not the write succeeded.
+1. The UNBYP button (shown at Supervisor and above, when bypassed) opens the same BypassConfirm popup with `action: 'unbypass'` (title "Remove bypass", button UNBYPASS, reason required).
+2. Ok runs `efc.ui.unbypass(self, tagPath, idx, reason)`. Below Supervisor: refused with the AccessDenied popup (`'Unbypass <idx>'`) and `'Requires Supervisor access.'`; empty reason: `'Enter a reason.'`.
+3. Otherwise writes `<tagPath>/Cmd_Unbypass/<idx>` = `True` and, after a good write, the audit record `EFC unbypass` with the reason; returns `''` and the popup closes. A failed write returns an error text and no audit.
 
 ### 5.9 Trend history query
 
@@ -539,7 +565,7 @@ Example: the Manual button on a device symbol (`minLevel` 1), or a window comman
 | Use | Source | Where |
 |---|---|---|
 | Lock icon, tooltip, visibility of sections and controls (`custom.level`) | `securityLevels` only | Generated windows, Station window, device templates |
-| Enforcement in `cmd`, `denied`, `bypass`, `unbypass`, `ackAll`, `dblCmd` (`userLevel`) | `max(securityLevels, user.roles)` | `efc.ui` functions |
+| Enforcement in `cmd`, `setValue`, `denied`, `bypass`, `unbypass`, `ackAll`, `dblCmd` (`userLevel`) | `max(securityLevels, user.roles)` | `efc.ui` functions |
 
 So a user whose role is only in `session.props.auth.user.roles` can press a locked button and have it work, while the button still shows a lock. Section 9 lists this.
 
@@ -547,11 +573,11 @@ So a user whose role is only in `session.props.auth.user.roles` can press a lock
 
 | Level | Role | Typical use in the windows |
 |---|---|---|
-| 0 | Guest | No role matched. Every command button shows a lock. No Operator-level control works. |
-| 1 | Operator | AUTO and MAN, OPEN and CLOSE, START and STOP, setpoints, presets, FWD and REV, ACK, double-tap, Manual button |
+| 0 | Guest | No role matched. Every command button shows a lock. No Operator-level control works. Configuration, Tuning and Limits sections are hidden. |
+| 1 | Operator | AUTO and MAN, OPEN and CLOSE, START and STOP, setpoints, presets, FWD and REV, ACK, double-tap, Manual button; sees the Configuration, Tuning and Limits sections read-only |
 | 2 | Maintenance | MAINT and OOS mode, JOG, RESET MAINT, SIMULATE, the Maintenance section, Maintenance-level simulation |
 | 3 | Supervisor | Bypass and unbypass (BYPASS and UNBYP are hidden below this level) |
-| 4 | Engineer | Configuration and tuning edits, alarm limits. Only time-valued entries (scaled) are audit-logged. |
+| 4 | Engineer | Configuration and tuning edits, alarm limits. Every edit is audit-logged by `setValue` (old -> new). |
 | 5 | Admin | Ranks above Engineer. No window control uses it as a minimum. |
 
 Interlock RESET in IntlkList is `need=MAINT` with `minLevel` 2 (Maintenance), not Supervisor.
@@ -564,12 +590,12 @@ Three ways a control is restricted in the windows (decisions 27 and 36):
 |---|---|---|
 | **Locked** (`button(..., need=...)`) | Command buttons: mode, commands, presets, FWD and REV, ACK, interlock RESET, JOG, the Manual button | Visible, lock icon, tooltip "Requires <role> access". Pressing it is refused and shows the AccessDenied popup. |
 | **Greyed** (`entry(..., grey=True)`) | Setpoint and position entries (Operator): Loop SP and CV, valve manual position, VFD speed, heater power | Visible but disabled below the level. |
-| **Hidden** (`lvl(...)` in `position.display`) | Maintenance section, bypass and unbypass (Supervisor), configuration and tuning values (Engineer), alarm limits (Engineer) | Not shown below the level. |
+| **Hidden** (`lvl(...)` in `position.display`) | Configuration, Tuning and Limits sections (Operator; `config()` passes `show=lvl(OP)`), Maintenance section, bypass and unbypass (Supervisor), configuration and tuning entries (Engineer; read-only rows below), alarm limits (Engineer) | Not shown below the level. |
 
 ### 6.5 What is enforced where
 
 - `cmd` and the other functions in section 4 re-check the level before each write they make. For those writes they are the only check in this module.
-- Bidirectional tag bindings (`entry` without `scale`, and `check`) write straight to the tag without calling `efc.ui`. For these, the only restriction is the client-side `props.enabled` or `position.display`. This is section 9, item 1.
+- No window control writes through a bidirectional tag binding. `entry` and `check` read the tag one way and commit through `setValue` from an onChange script, so their level is re-checked on the gateway too.
 - This is an HMI aid. Access must be enforced by Perspective security (page and view roles) and by the PLC (permissives, interlocks, and the commands the PLC accepts).
 
 ---
@@ -587,13 +613,13 @@ All messages go to the logger `efc.ui`, obtained with `system.util.getLogger('ef
 | warn | `Refused <action> for <user or 'not signed in'> (<have role>): needs <need role>` | `denied` | Every refused command, including presses whose popup the 1.5 s dedupe suppressed. Not written when `cmd` is called with `notify=False`. |
 | warn | `denied: dedupe check failed: <error>` | `denied` | Reading or writing `session.custom.efcDenied` fails. The popup still opens. |
 | warn | `denied: could not open Templates/Dynamic Window/Parts/AccessDenied: <error>` | `denied` | `openPopup` raised. |
-| warn | `<what>: write <tag path> failed: <quality>` | `_writeTags` with `what` = `cmd`, `bypass`, `unbypass`, `ackAll` or `dblCmd` | A write returned a bad quality (for example, a missing member). |
+| warn | `<what>: write <tag path> failed: <quality>` | `_writeTags` with `what` = `cmd`, `setValue`, `bypass`, `unbypass`, `ackAll` or `dblCmd` | A write returned a bad quality (for example, a missing member). |
 | warn | `openWindow: unknown dynamic window <dw>` | `openWindow` | A script calls `openWindow` with an id not in `WINDOWS`. |
 | warn | `openDynamic: no window for tType=<tType> dockId=<dockId>` | `openDynamic` | A symbol's `tType` and `dockId` give no window. |
 | warn | `trend: queryTagHistory failed for <base>: <error>` | `trend` | The history query raised. The graph is empty. |
-| info | `AUDIT <action> <target> <value> by <user>` | `_audit` | Every audited action (section 7.3). Written after the write attempt, even if the write failed. |
+| info | `AUDIT <action> <target> <value> by <user>` | `_audit` | Every audited action (section 7.3). For `cmd`, written after the write attempt even if the write failed; `setValue`, `bypass` and `unbypass` audit only a good write. |
 
-Not logged: ACK, the double-tap readiness refusal, the bypass refusal (no level or no reason), the jog release refusal, and a trend query with no data.
+Not logged: ACK, the double-tap readiness refusal, the bypass and unbypass refusals other than the level (no reason, not bypassable, no `Inp_BypassPerm`; the text is shown in the popup instead), an unchanged `setValue`, the jog release refusal, and a trend query with no data.
 
 ### 7.3 Audit records
 
@@ -601,17 +627,17 @@ Not logged: ACK, the double-tap readiness refusal, the bypass refusal (no level 
 
 | Action | Target | Value | Written by |
 |---|---|---|---|
-| `EFC write` | full tag path of the member | the value written | `cmd(..., audit=True)`: MAINT and OOS mode buttons, RESET MAINT, SIMULATE, IntlkList RESET, and Engineer scaled entries (time values) |
-| `EFC bypass` | `<intlkPath>/<idx>` | the reason text | `bypass` |
-| `EFC unbypass` | `<intlkPath>/<idx>` | empty | `unbypass` |
+| `EFC write` | full tag path of the member | the value written | `cmd(..., audit=True)`: MAINT and OOS mode buttons, RESET MAINT, SIMULATE, IntlkList RESET, Station Select and the Station Tare, Zero and Reset commands |
+| `EFC set` | full tag path of the member | `<old> -> <new>` | `setValue`: every entry field and checkbox edit in the windows, and the Station setpoints (written only after a good write of a changed value) |
+| `EFC bypass` | `<intlkPath>/<idx>` | the reason text | `bypass` (after a good write) |
+| `EFC unbypass` | `<intlkPath>/<idx>` | the reason text | `unbypass` (after a good write) |
 | `EFC shelve` | the Ignition alarm source path (`prov:...:/alm:Alarm`) | `<minutes> min: <reason>` | `shelve` (written after the shelve call succeeds; not written on a refused or failed call) |
 | `EFC unshelve` | the Ignition alarm source path | empty | `unshelve` (written after a successful unshelve call) |
 
 Notes:
 
 - `EFC write` is written whether or not the write succeeded (`cmd` writes the audit after `_writeTags`, regardless of its result).
-- Engineer scaled entries log only the new value. Decision 14 asks for old to new.
-- Ordinary Engineer configuration values (no scale) are not audited (section 9).
+- `EFC set` records old -> new (decision 14). TIME entries record milliseconds, the value actually written.
 
 ---
 
@@ -640,15 +666,15 @@ Notes:
 
 Each item was checked in the code. The decision reference is given where the code and a steward decision differ.
 
-1. **Bidirectional entries and checkboxes bypass `efc.ui`.** `entry(...)` without `scale`, and `check(...)`, bind `props.value` or `props.selected` to the tag with `tag(..., bidi=True)`. They write without `cmd`, without a level re-check, without a log line and without an audit record. This covers Loop `Cmd_SP` and `Cmd_CV`, valve `Cmd_ManPos`, VFD `Cmd_Spd`, heater `Cmd_Pwr`, Process Value `Sim_En` and `Sim_PV`, and every Engineer configuration value that is not time-scaled and every Engineer checkbox. Decision 27 says writes go through `efc.ui.cmd`; this is not true for these controls. Decision 14 asks for audit-logged configuration edits with old to new values; plain configuration edits are not audited.
+1. **Entry and checkbox values are not range-checked.** `setValue` re-checks the level and audits, but it does not compare a value with any limit (for example `Cfg_SPMin` and `Cfg_SPMax`, or Output min against Output max). The PLC must clamp.
 2. **Commands are one-shot and the PLC must clear them.** `cmd` writes `True` and nothing writes `False`. The exceptions are `Cmd_Jog` (released by the window on release) and the Station window's `Cmd_Select`, `Cmd_Tare`, `Cmd_Zero`, `Cmd_Reset` (released by a 1 s timer in the view script, not by `efc.ui`). If the PLC does not clear a `Cmd_` member, it stays `True`.
-3. **`bypass` returns `True` even when the write failed.** BypassConfirm closes on `True`, so a failed write is only visible in the log. Decision 10 also asks for `Inp_BypassPerm` and duration presets. Neither is in `efc.ui` or `build_docks.py`. `Cfg_BypassMax` is named in the popup text only.
+3. **Bypass duration cannot be chosen (decision 10, issue #8 partly open).** `bypass` checks `Inp_BypassPerm` and `Cfg_Bypassable`, but decision 10 also asks for duration presets up to `Cfg_BypassMax`. `T_Intlk` has no member to receive a duration, so every bypass runs to `Cfg_BypassMax` (shown in minutes in BypassConfirm; the timeout is PLC logic).
 4. **Shelving state is polled, and the poll is unverified.** Shelving (decision 37) uses `system.alarm.shelve`, `unshelve` and `getShelvedPaths`, and the `shelved` binding polls `shelvedMap` every 5 s (`now(5000)` plus a script transform). The code assumes `getShelvedPaths` items have `getPath()` (whose string is the alarm source path) and `getExpiration()`; this was not checked against a running 8.1 gateway. A shelve or unshelve shows in the window within 5 s, not at once. The Alarm Status Table's own shelve bypasses `efc.ui` (no audit line).
 5. **Two level sources.** Locks and visibility use `securityLevels` only. Enforcement uses `max(securityLevels, user.roles)`. A user whose level comes only from roles can press a locked button. Decision 36 names `securityLevels` as the source.
 6. **No default dock is wired.** `setDefaultDock` has no caller in `projects/` or `imported/`, and no view has a `defaultDock` param. Decision 2 and the Station window documentation (`docs/station-faceplates.md`) refer to a screen-level `setDefaultDock`. Until a screen calls it, ✕ closes the dock. Decision 32 leaves close without a default open.
 7. **ACK has no log line, no audit, and does not read `Sts_Active`.** It acknowledges every alarm whose `Sts_Unack` is truthy.
-8. **`audit=True` writes the audit record even when the write fails** (`cmd`, `unbypass`). `bypass` does the same.
-9. **`_audit` reads `auth.user.userName` without a guard.** If `props.auth.user` is missing, the exception reaches the caller after a write has already succeeded (for `cmd` and `bypass`).
+8. **`cmd(..., audit=True)` writes the audit record even when the write fails.** `setValue`, `bypass` and `unbypass` audit only a good write.
+9. **`_audit` reads `auth.user.userName` without a guard.** If `props.auth.user` is missing, the exception reaches the caller after a write has already succeeded (for `cmd`, `setValue`, `bypass` and `unbypass`).
 10. **Three pens at most.** `trend` computes one path per pen, but the Trend view has three path elements (`pen0`, `pen1`, `pen2`). Extra pens are computed and not drawn. All current windows pass three or fewer.
 11. **`dblCmd` infers the state from one member.** For `T_DValve`, anything other than `Sts_Opened` sends `Cmd_Open`, including while moving. It does not read quality codes; a `None` value counts as not ready.
 12. **Double tap also runs the click.** The symbol has both `onClick` and `onDoubleClick`, so a double tap also calls `openDynamic`. This follows from the wiring; it was not observed in a running session.
