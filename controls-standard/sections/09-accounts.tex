@@ -1,0 +1,11 @@
+\chapter{Accounts and Access Control}\label{ch:accounts}
+\section{Identity Requirements}
+Named individual accounts should be used for normal engineering, administration, and operator access. Shared administrator accounts are limited to controlled emergency (``break-glass'') use or platform constraints. Roles should follow least privilege and separate operator, maintenance, engineering, security administration, and system administration duties where supported.
+\note{Individual accounts are not currently implemented. See Section~\ref{sec:ignition-accounts} for the Ignition login discussion.}
+\note{It would be good to adopt policies covering:
+\begin{itemize}[itemsep=1pt]
+  \item Logins and passwords: multi-factor authentication for remote access, storing passwords in a password manager (never in code, drawings, or documents), and changing default passwords.
+  \item Shared and emergency accounts: service accounts and ``break-glass'' emergency logins, who owns them, and how they are stored.
+  \item Account lifecycle: who approves access, periodic reviews, removing access when people leave, and expiration dates for vendor accounts.
+  \item Handing over credentials at turnover, so EFC is not left depending on a contractor's login.
+\end{itemize}}

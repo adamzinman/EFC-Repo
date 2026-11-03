@@ -1,0 +1,112 @@
+\chapter{Class I, Division 2 Panel Design}
+\label{app:c1d2}
+This appendix explains what changes when a control panel, or the equipment it serves, is located in a Class I, Division 2 (C1D2) area instead of an unclassified area. It complements the equipment examples in Section~\ref{sec:c1d2}. The rules come mainly from NEC Article 501, with NFPA 496 for purged enclosures.\footnote{NFPA 70 (NEC) 2023: 501.10(B) (Division 2 wiring methods), 501.15 (sealing), 501.30 (grounding and bonding), 501.105 and 501.115 (instruments, relays, switches, and other arcing devices). NFPA 496-2024 (purged and pressurized enclosures). UL 121201, 9th ed. (nonincendive equipment). Clause numbers are from the 2023 NEC; confirm them against the edition adopted by the jurisdiction.} The area-classification drawing and the AHJ have the final say on every point below.
+
+\section{Start From the Area Classification}
+Before any design work, get the area-classification drawing and record for the panel location and each field device:
+\begin{itemize}[itemsep=1pt]
+  \item Class and division (or zone) --- for example Class I, Division 2.
+  \item Gas group (A, B, C, or D) of the flammable material. Hydrogen is Group B; most hydrocarbons are Group C or D.
+  \item The temperature code (T-code) needed, based on the autoignition temperature of the gas.
+  \item The classified-area boundaries, which determine where seals are needed.
+\end{itemize}
+If the panel can be placed in an unclassified room with only rated field devices in the classified area, this is usually the simplest and cheapest design.
+
+\section{Equipment Selection}
+Every piece of equipment installed in the area must be listed and marked for it, for example \textit{Class I, Div~2, Groups A--D, T4}. Read the actual label or certificate, not a catalog summary. Common ways equipment qualifies:
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Nonincendive equipment} (UL 121201): cannot ignite the gas in normal operation. Many PLCs, I/O modules, power supplies, gateways, IPCs, and monitors are available this way.
+  \item \textbf{Hermetically sealed or nonincendive contacts}: for relays, switches, and pilot devices.
+  \item \textbf{Explosionproof enclosures}: for devices that cannot otherwise be rated.
+  \item \textbf{Purged/pressurized (Type Z) enclosures}: allow ordinary equipment inside a protected enclosure.
+\end{itemize}
+Listed equipment usually comes with installation conditions (a suitable enclosure, a maximum ambient, a required barrier). These conditions are part of the rating and must be shown on the drawings.
+
+\section{Arcing and Sparking Devices}
+In a normal panel, any relay, contactor, breaker, pushbutton, or fuse may be used. In a C1D2 panel, devices whose contacts open and close in normal operation must use one of the following:\footnote{NFPA 70-2023, 501.105(B) and 501.115(B).}
+\begin{itemize}[itemsep=1pt]
+  \item contacts that are hermetically sealed, oil-immersed, or nonincendive;
+  \item a nonincendive circuit, where the energy available cannot ignite the gas;
+  \item an explosionproof enclosure; or
+  \item a purged (Type Z) enclosure.
+\end{itemize}
+Fuses need the same attention: cartridge fuses and non-indicating, current-limiting fuses are generally permitted in general-purpose enclosures under specific conditions; check the listed conditions before using fused terminals or fuse holders.
+
+\section{Heat and Temperature Code}
+Surface temperatures of equipment must stay below the T-code limit for the gas. Panel PCs, power supplies, transformers, VFDs, and resistors run hot. Use the T-code on each device's marking, and check the enclosure heat calculation (Appendix~\ref{app:eq-heat}) at the highest expected ambient so devices stay within their rated ambient.
+
+\section{Wiring Methods}
+A normal panel may use any wiring method suitable for the building. In a C1D2 area the wiring method is part of the protection.\footnote{NFPA 70-2023, 501.10(B).}
+\begin{itemize}[itemsep=1pt]
+  \item Permitted methods include threaded rigid metal conduit and IMC, and listed cable types such as PLTC, ITC, MC, and TC (exposed-run versions where required), with fittings listed for the location.
+  \item Where flexibility is needed, use flexible metal conduit, liquidtight flexible conduit, or flexible cord rated for the location, with bonding jumpers.
+  \item Nonincendive field wiring may use any wiring method suitable for unclassified locations, but must be kept separate from other circuits and installed per the control drawing.
+\end{itemize}
+
+\section{Seals}
+Seals stop gas or flames traveling through conduit into another area or into an enclosure.\footnote{NFPA 70-2023, 501.15.}
+\begin{itemize}[itemsep=1pt]
+  \item A \textbf{boundary seal} is required where conduit leaves the Division 2 area for an unclassified area, located near the boundary.
+  \item A seal is required where conduit enters an enclosure that is required to be explosionproof.
+  \item Seals are filled with the listed sealing compound only after the conductors are pulled, and the fitting must be accessible.
+\end{itemize}
+
+\section{Grounding and Bonding Differences}
+The bonding rules in Section~\ref{sec:bonding} still apply, with one important difference: locknut-bushing and double-locknut connections cannot be relied on for bonding between the classified location and the point of grounding. Use bonding jumpers or bonding-type fittings instead, including across flexible conduit.\footnote{NFPA 70-2023, 501.30(A) and (B).}
+
+\section{Nonincendive Field Wiring and Intrinsic Safety}
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Nonincendive field wiring} connects a nonincendive field device to associated nonincendive apparatus. It must follow the manufacturer's control drawing, including cable capacitance and inductance limits.
+  \item \textbf{Intrinsic safety (IS) barriers or isolators} are used when field devices are in a Division 1 area or when IS is preferred. The entity parameters of the barrier, cable, and field device must match, and IS wiring must be separated from all other wiring and identified (typically light blue). Panels with IS circuits follow UL 698A.
+\end{itemize}
+
+\section{Purged and Pressurized Enclosures (Type Z)}
+A Type Z purge reduces the inside of an enclosure in a Division 2 area to unclassified, so ordinary equipment such as a PC or VFD can be used. NFPA 496 requires a clean air or inert gas supply, an initial purge before power is applied, and an alarm or indication on loss of pressure.\footnote{NFPA 496-2024.} The purge system itself must be rated for the location, and the alarm must go to a place where someone will respond.
+
+\section{Marking, Documentation, and Maintenance}
+\begin{itemize}[itemsep=1pt]
+  \item Mark the panel and drawings with the area classification it is designed for.
+  \item Add warning labels where required, for example ``Do not open when an explosive atmosphere may be present'' or ``Do not disconnect while circuit is live unless area is known to be non-hazardous.''
+  \item Keep the control drawings, certificates, and installation instructions of every rated device with the project files.
+  \item Maintenance: do not open energized equipment or disconnect live connectors unless the area is confirmed non-hazardous (gas testing or a hot-work permit), and replace only with parts carrying the same rating.
+\end{itemize}
+
+\section{Side-by-Side Comparison}
+\begin{longtable}{@{}P{3.68cm}P{6.16cm}P{7.09cm}@{}}
+\caption{Normal Panel vs.\ Class I, Division 2 Panel}\label{tab:c1d2-compare} \\
+\toprule
+\rowcolor{tblhead}\textbf{Topic} & \textbf{Normal (unclassified) panel} & \textbf{Class I, Division 2 panel} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Topic} & \textbf{Normal (unclassified) panel} & \textbf{Class I, Division 2 panel} \\
+\midrule
+\endhead
+Equipment & Any listed industrial equipment & Only equipment listed and marked for C1D2 (or Zone 2), right group and T-code \\
+Relays, switches, breakers & Any type & Hermetically sealed, nonincendive, oil-immersed, or in an explosionproof or purged enclosure \\
+Enclosure & Chosen for environment (NEMA 4X, 12, etc.) & Same, unless an explosionproof or purged enclosure is needed for unrated devices \\
+Temperature & Rated ambient of devices & Also below the T-code limit for the gas \\
+Wiring method & Any suitable method & Listed methods (conduit, PLTC, ITC, MC, TC) with listed fittings \\
+Seals & Not required & Boundary seals; seals at explosionproof enclosures \\
+Bonding & Locknuts acceptable & Bonding jumpers or bonding fittings; locknuts not relied on \\
+Field devices & Any & Rated devices, nonincendive field wiring, or IS barriers \\
+PCs and HMIs & Any IPC & Rated IPC/monitor, thin client in a rated display, or PC in a purged enclosure \\
+Documentation & Standard package & Plus area classification, control drawings, certificates, warning labels \\
+Maintenance & Normal LOTO & Plus gas testing or permit before opening live equipment \\
+\bottomrule
+\end{longtable}
+
+\section{Design Checklist}
+\begin{itemize}[itemsep=1pt, label=$\square$]
+  \item Area classification, gas group, and T-code recorded for the panel and every field device
+  \item Option of locating the panel in an unclassified area considered
+  \item Every device in the area listed and marked for C1D2 (or Zone 2) with the correct group and T-code; installation conditions shown on drawings
+  \item Arcing devices hermetically sealed, nonincendive, or protected by enclosure or purge
+  \item Heat calculation done at the highest ambient; T-codes checked
+  \item Wiring methods, fittings, and seals shown on the drawings
+  \item Bonding jumpers specified where locknuts would otherwise be relied on
+  \item Nonincendive and IS circuits follow control drawings and are separated and identified
+  \item Purge system (if used) rated, with loss-of-pressure alarm to a monitored location
+  \item Warning labels, certificates, and control drawings included in the turnover package
+\end{itemize}

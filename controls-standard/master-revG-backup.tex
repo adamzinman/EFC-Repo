@@ -1,0 +1,122 @@
+% ============================================================
+%  Controls Standard — Master Document
+% ============================================================
+%  This file holds the document class, all package imports,
+%  color definitions, custom commands, and title metadata.
+%  It compiles the standard by \input-ing each chapter file
+%  from sections/ in order. Compile THIS file (not the files
+%  in sections/, which are not standalone documents).
+%
+%  Build:
+%    pdflatex -interaction=nonstopmode master.tex
+%    pdflatex -interaction=nonstopmode master.tex   (run twice
+%      for TOC/page-number cross-references to resolve)
+% ============================================================
+
+\documentclass[11pt]{report}
+
+% ---------- Packages ----------
+\usepackage[letterpaper,margin=1in]{geometry}  % page size/margins
+\usepackage[table]{xcolor}                     % color, incl. table row shading
+\usepackage{longtable}                         % multi-page tables
+\usepackage{booktabs}                          % \toprule/\midrule/\bottomrule
+\usepackage{array}                             % extended column types (p{})
+\usepackage{amsmath}                           % equations (\text, aligned)
+\usepackage{amssymb}                           % \varnothing and other math symbols
+\usepackage{tikz}                              % network diagrams
+\usetikzlibrary{positioning,fit,arrows.meta,shapes.geometric,backgrounds}
+\usepackage{enumitem}                          % [itemsep=...] list spacing
+\usepackage{hyperref}                          % clickable TOC / links
+\usepackage{titlesec}                          % custom \chapter/\section styling
+\usepackage{parskip}                           % paragraph spacing, no indent
+\usepackage{fancyhdr}                          % page footer (page numbers)
+\usepackage{colortbl}                          % \rowcolor in tables
+\usepackage{pdflscape}                         % landscape pages (wide tables)
+\usepackage{graphicx}                          % company logo and figures
+\usepackage{tabularx}                          % flexible-width tables
+\usepackage{ragged2e}                          % improved paragraph columns
+
+% P{width}: ragged-right paragraph column (avoids stretched text in narrow cells)
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}  % right-aligned paragraph column
+
+% ---------- Color palette ----------
+\definecolor{noteorange}{HTML}{B45309}  % open item / TBD callouts
+\definecolor{newgreen}{HTML}{1B7A3D}    % "NEW" tag on freshly added content
+\definecolor{warnred}{HTML}{B91C1C}     % security/redaction warnings
+\definecolor{headblue}{HTML}{2E5C8A}    % chapter/section headings
+\definecolor{tblhead}{HTML}{D9D9D9}     % table header row shading
+
+% ---------- Heading style ----------
+\titleformat{\chapter}[hang]{\normalfont\Large\bfseries\color{headblue}}{\thechapter.}{0.5em}{}
+\titleformat{\section}[hang]{\normalfont\large\bfseries\color{headblue}}{\thesection}{0.5em}{}
+\titleformat{\subsection}[hang]{\normalfont\bfseries\color{headblue}}{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}[hang]{\normalfont\bfseries\itshape}{\thesubsubsection}{0.5em}{}
+
+% ---------- Custom commands ----------
+% \note{...}  — orange bracketed open item / TBD / confirm-with-group callout
+\newcommand{\note}[1]{\par\noindent\textit{\textcolor{noteorange}{[#1]}}\par\vspace{4pt}}
+% \newtag     — small green "NEW" marker for content added after the original draft
+\newcommand{\newtag}{\textbf{\textcolor{newgreen}{\small\ NEW}}}
+% Manufacturer product-page links used in hardware tables.
+\newcommand{\separt}[1]{\href{https://www.se.com/us/en/product/#1/}{#1}}
+\newcommand{\wagopart}[1]{\href{https://www.wago.com/us/p/#1}{#1}}
+\newcommand{\adpart}[1]{\href{https://www.automationdirect.com/adc/shopping/catalog/programmable_controllers/productivity2000_plcs_\%28micro-modular\%29/cpus/#1}{#1}}
+\newcommand{\pcpart}[2]{\href{#1}{#2}}
+% \pxpart{order-no} — Phoenix Contact product page by 7-digit order number
+\newcommand{\pxpart}[1]{\href{https://www.phoenixcontact.com/us/products/#1}{#1}}
+% \future{...} — blue callout for items planned for the future (not current practice)
+\definecolor{futureblue}{HTML}{1D4ED8}
+\newcommand{\future}[1]{\par\noindent\textit{\textcolor{futureblue}{[Future: #1]}}\par\vspace{4pt}}
+
+% ---------- Page header and footer ----------
+% Header: current chapter (top left) and current section (top right).
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{\ifnum\value{chapter}>0 \thechapter.\ \fi#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ \ #1}}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyhead[R]{\small\nouppercase{\rightmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% ---------- Links ----------
+\hypersetup{colorlinks=true, linkcolor=headblue, urlcolor=headblue}
+
+% ---------- Document metadata ----------
+% These values are used on both the title page and latest revision row.
+% \today updates to the date on which LaTeX compiles the document.
+\newcommand{\companyname}{EFC Gases \& Advanced Materials}
+\newcommand{\documenttitle}{Controls Standard}
+\newcommand{\documentdate}{\today}
+\newcommand{\documentauthor}{A. Zinman}
+\newcommand{\documentrevision}{G}
+
+\title{\textbf{\documenttitle}}
+\date{\documentdate}
+\author{\documentauthor}
+
+% ============================================================
+\begin{document}
+
+\input{sections/00-frontmatter}
+\input{sections/01-overview}
+\input{sections/02-terminology}
+\input{sections/03-design-process}
+\input{sections/04-working-with-contractors}
+\input{sections/05-process-definition}
+\input{sections/06-hardware}
+\input{sections/07-software}
+\input{sections/08-networking}
+\input{sections/09-accounts}
+\input{sections/10-plc-standards}
+\input{sections/11-scada-standards}
+\input{sections/12-reference-material}
+\appendix
+\input{appendices/perspective-screen-scaling}
+\input{appendices/important-equations}
+\input{appendices/modbus}
+
+\end{document}

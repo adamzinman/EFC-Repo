@@ -1,0 +1,61 @@
+\chapter{Software Lifecycle}
+\section{Approved Platforms}
+Schneider Electric Control Expert is the primary Modicon programming platform; Productivity Suite is used for approved Productivity2000 applications; and Ignition is the standard SCADA/HMI platform for new projects. Projects must use a company-approved release that remains supported by the vendor and is compatible with installed firmware and modules. The approved version register must be maintained separately from this standard so security and compatibility updates do not require a full standards revision.
+
+\subsection{Current Software Versions}\label{sec:software-versions}
+\begin{longtable}{@{}P{3.32cm}P{4.10cm}P{2.15cm}P{5.66cm}@{}}
+\caption{Programming and SCADA Software Versions}\label{tab:software-versions} \\
+\toprule
+\rowcolor{tblhead}\textbf{Platform} & \textbf{Software} & \textbf{Version} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblhead}\textbf{Platform} & \textbf{Software} & \textbf{Version} & \textbf{Notes} \\
+\midrule
+\endhead
+Schneider Modicon M580 & EcoStruxure Control Expert Classic & v16.2 & EFC standard PLC platform. License ordering below. \\
+AutomationDirect Productivity2000 & \href{https://www.automationdirect.com/productivity/software/softwarewhatsnew}{Productivity Suite} & v4.7 & Latest full release listed by AutomationDirect (October 2026). The P2-622 CPU needs v4.0.1 or later. Free download. \\
+Allen-Bradley ControlLogix & Studio 5000 Logix Designer (Logix5000) & v38 & \textbf{Not an EFC standard platform.} Used only to support the two existing systems that run on ControlLogix PLCs: the Rare Gas column and the Helium system. New projects use the M580 (or Productivity2000 for small systems) per Chapter~\ref{ch:hardware}. \\
+Ignition (SCADA/HMI) & Inductive Automation Ignition & 8.1 & EFC standard SCADA/HMI platform; upgrade to 8.3 planned. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Control Expert Classic License}
+New engineering seats use a \textbf{Large (L)} license, which covers M580 programming. The older paper license (CEXSPUCZLSPMZZ) was discontinued in 2022; order the digital (node-locked) license instead.
+\begin{longtable}{@{}P{3.61cm}P{8.22cm}P{3.81cm}@{}}
+\caption{Control Expert Classic License Ordering}\label{tab:ce-license} \\
+\toprule
+\rowcolor{tblhead}\textbf{Part Number} & \textbf{Description} & \textbf{Last Quote} \\
+\midrule
+\endfirsthead
+\toprule
+\rowcolor{tblhead}\textbf{Part Number} & \textbf{Description} & \textbf{Last Quote} \\
+\midrule
+\endhead
+\separt{CEXSPUCZLSPAZZ} & Control Expert Classic --- Large (L) --- single license (1 user), digital node-locked license & \textit{\textcolor{noteorange}{[pending]}} \\
+\bottomrule
+\end{longtable}
+\note{Add the last quoted price for CEXSPUCZLSPAZZ. If several engineers need seats, ask the distributor about team (multi-user) license options.}
+
+\subsection{ICONICS SCADA (Legacy)}\label{sec:iconics}
+Most of our legacy systems use \textbf{ICONICS} SCADA software (the GENESIS family). ICONICS is \textbf{not} used on new projects; Ignition is the standard SCADA/HMI going forward.
+\begin{itemize}[itemsep=1pt]
+  \item Existing ICONICS systems are maintained as they are. Changes to them follow the same change, backup, and testing rules as the rest of this chapter.
+  \item Moving a system from ICONICS to Ignition is done as a planned project, not piece by piece during other work.
+\end{itemize}
+\note{Current ICONICS version(s) in use: to be confirmed.}
+
+\section{Environments and Source Control}
+PLC, HMI, scripts, configuration exports, drawings, and test procedures must be stored in the approved version-control or document-control system. Development, test, and production environments must be separated where practical. Each production release must have a unique identifier, release notes, approval, source snapshot, dependency list, firmware/software versions, and restorable backup.
+
+\section{Review and Release}
+Changes must be peer reviewed for logic, safe-state behavior, cybersecurity, alarms, performance, maintainability, and test coverage. No unreviewed development file must be placed in production except under an approved emergency-change process. Release records must identify affected requirements, tests performed, discrepancies, rollback plan, and person deploying the change.
+
+\section{Online Changes and Forces}
+Online edits, forces, simulations, and overrides must be authorized, risk assessed, logged, clearly indicated, and removed or incorporated into the controlled source before closeout. Forces must not be used as permanent logic. A current upload and verified backup must be captured after any production change.
+
+\section{Backup and Recovery}
+Backups must include native source, runtime/export files, PLC memory and configuration, HMI/Gateway backup, network-device configurations, drive parameters, database schema, certificates, licenses, and recovery instructions. Restore procedures must be tested before turnover and periodically thereafter. Backups must be protected from unauthorized modification and from loss with the controlled system.
+
+\section{Testing}
+Testing must be traceable to requirements and include normal operation, boundary values, bad quality, open/short or out-of-range analog signals, communication loss, power loss and restoration, device faults, permissives, trips, alarms, manual modes, restart prevention, security roles, backup, and rollback. Safety functions require independent validation appropriate to their lifecycle.

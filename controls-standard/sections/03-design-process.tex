@@ -1,0 +1,572 @@
+\chapter{Design Process}\label{ch:design-process}
+\future{this chapter needs a thorough review before it is treated as final.}
+
+\section{Getting Started}\label{ch:getting-started}
+Collect the information that will shape the controls work as it becomes available: project goals and schedule, P\&IDs, equipment and valve lists, process descriptions, layout drawings, utility and power information, area classification, and network requirements. Keep a list of open questions, assumptions, and who will answer them. The bulk of controls engineering starts near the end of Stage 3; Stage 2 is for early discussions and planning.
+
+\section{Project Execution Phases}\label{sec:pep}
+EFC runs projects through the company Project Execution Process (PEP): nine stages (0--8), each ending in a gate review where the stakeholders approve the project to move on. The Project Sponsor is accountable for Stage~0 and the Project Manager for Stages 1--8. Controls work follows the same stage numbers and names. The stages are practical handoffs, so work may overlap; check the inputs before promising the outputs. Stage 5A is an added controls handoff within Construction; it does not renumber the company stages.
+
+\begingroup
+\renewcommand{\arraystretch}{1.35}
+\rowcolors{2}{headblue!10}{white}
+\begin{longtable}{@{}P{1.15cm}P{3.20cm}P{3.60cm}P{3.60cm}R{2.00cm}R{2.11cm}@{}}
+\caption{Project Execution Process Overview}\label{tab:pep-overview} \\
+\toprule
+\rowcolor{tblhead}\textbf{Stage} & \textbf{Name} & \textbf{Gate review} & \textbf{Outgoing master scope document} & \textbf{\small Project maturity} & \textbf{\small Engineering maturity} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Stage} & \textbf{Name} & \textbf{Gate review} & \textbf{Outgoing master scope document} & \textbf{\small Project maturity} & \textbf{\small Engineering maturity} \\
+\midrule
+\endhead
+\textbf{0} & Project Evaluation & Project Prioritization Team & Project Objective Document (POD) & 1\% & 1\% \\
+\textbf{1} & Project Initiation & Project Charter Approval & Project Charter & 3--5\% & 5--10\% \\
+\textbf{2} & Preliminary Engineering & Preliminary Design Review (PDR) & Preliminary Design Package (PDP) & 10--20\% & 30\% \\
+\textbf{3} & Basic Engineering & Critical Design Review (CDR) & Critical Design Package (CDP) & 20--35\% & 60\% \\
+\textbf{4} & Detailed Engineering & Manufacturing Readiness Review (MRR) & Issued for Construction (IFC) drawings & 30--60\% & 90--100\% \\
+\textbf{5} & Construction & Test Readiness Review (TRR); Mechanical Completion & As-built drawings & 80--90\% & 98--100\% \\
+\textbf{6} & Commissioning & Pre-Startup Safety Review (PSSR) & As-built drawings & 90--100\% & 100\% \\
+\textbf{7} & Startup/\allowbreak Qualification & Transfer to Operations & As-built drawings & 98--100\% & 100\% \\
+\textbf{8} & Project Closeout & --- & As-built drawings & 100\% & 100\% \\
+\bottomrule
+\end{longtable}
+\endgroup
+
+Each stage below has a stage card. The title bar shows who is accountable and the gate that ends the stage, and the card contains:
+\begin{itemize}[itemsep=0pt,topsep=2pt]
+  \item \textbf{Required controls inputs} --- what controls needs to start the stage.
+  \item \textbf{Controls outputs} --- \textit{what} controls hands over at the gate: documents, files, or hardware.
+  \item \textbf{Controls work performed} --- \textit{how} controls gets there: the activities and coordination behind the outputs.
+  \item \textbf{Relevant engineering deliverables} --- documents other disciplines produce in the stage that controls uses.
+\end{itemize}
+The footer gives the outgoing master scope document, maturity, and gate outcome.
+
+% Local helpers for the stage cards
+\newenvironment{stagecard}[2]{%
+  \begin{tcolorbox}[enhanced,breakable,colback=white,colframe=headblue,boxrule=0.6pt,arc=2pt,
+    title={#1\hfill #2},fonttitle=\small\bfseries,left=6pt,right=6pt,top=4pt,bottom=4pt,
+    before skip=4pt,after skip=10pt]\small}%
+  {\end{tcolorbox}}
+\newcommand{\stagesummary}[1]{\textit{#1}\par}
+\newcommand{\stagehead}[1]{\textbf{\color{headblue}#1}}
+% \stagefoot{outgoing master scope document}{project maturity}{engineering maturity}{gate outcome}
+\newcommand{\stagefoot}[4]{\footnotesize\textbf{Outgoing master scope document:} #1\par
+  \textbf{Project maturity:} #2\qquad \textbf{Engineering maturity:} #3\par
+  \textbf{Gate outcome:} #4\par}
+
+\subsection{Stage 0 --- Project Evaluation}\label{ch:stage-0}
+\begin{stagecard}{Accountable: Project Sponsor}{Gate: Project Prioritization Team}
+\stagesummary{Define high-level commercial and operational requirements, and develop the initial business case and associated CAPEX/OPEX assumptions. There is no meaningful controls involvement at this point.}
+\tcbline
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Required Controls Inputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item N/A
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Controls Outputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item N/A
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagehead{Controls Work Performed}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item N/A
+\end{itemize}
+\tcbline
+\stagehead{Relevant Engineering Deliverables}\par
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item N/A
+\end{itemize}
+\tcbline
+\stagefoot{Project Objective Document (POD)}{1\%}{1\%}{the project is approved or rejected, and a Project Manager is assigned.}
+\end{stagecard}
+
+\subsection{Stage 1 --- Project Initiation}
+\begin{stagecard}{Accountable: Project Manager}{Gate: Project Charter Approval}
+\stagesummary{The Project Manager/Engineer engages the end customer to understand their specific needs and expands the POD into a Project Charter: capacity, raw material and final product specifications, analytical and storage requirements, target CAPEX/OPEX and timeline, applicable regulations and standards, the technology to be used, and the project's assumptions, risks, exclusions, and scope boundaries. If needed, the Controls Engineer can be brought in to assist with this effort.}
+\tcbline
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Required Controls Inputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Approved project direction
+  \item Team contacts
+  \item Overall project goal
+  \item Estimated timeline (if available)
+  \item What is known about the equipment and site
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Controls Outputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item List of open controls questions and key interfaces
+  \item Ongoing support as needed
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagehead{Controls Work Performed}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Get read into the project: goals, schedule, site, and equipment.
+  \item Flag anything in the draft charter that affects controls, such as other systems, vendors, or utilities that controls will need to interface with.
+  \item Answer controls questions from the Project Manager as the charter develops.
+\end{itemize}
+\tcbline
+\stagehead{Relevant Engineering Deliverables}\par
+\begin{minipage}[t]{0.485\linewidth}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Estimated target timeline (milestone schedule)
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Project team assignments
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagefoot{Project Charter}{3--5\%}{5--10\%}{the project is approved for preliminary engineering, the project team is assigned, and a budget code is issued.}
+\end{stagecard}
+
+\subsection{Stage 2 --- Preliminary Engineering}
+\begin{stagecard}{Accountable: Project Manager}{Gate: Preliminary Design Review (PDR)}
+\stagesummary{The technology is finalized and the 30\% design deliverables are completed: process flow, preliminary P\&IDs, preliminary layout, and utility requirements. Cost and schedule estimates are updated and any long-lead procurement is recommended. Controls involvement is increasing: controls works through the operating approach with the process engineer and sketches possible panel, platform, and network arrangements, while full electrical design and PLC programming come later.}
+\tcbline
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Required Controls Inputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Rough P\&IDs (developed during this stage)
+  \item Early process description
+  \item Likely system location
+  \item Preliminary schedule
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Controls Outputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Sketches of possible panels, control platform, and network arrangement (assumptions marked)
+  \item Identify likely long-lead controls items
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagehead{Controls Work Performed}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Talk through how the process should run with the process engineer, and write down any assumptions you make along the way.
+  \item Look at where panels could go and which control platform and network layout fit the process and site.
+  \item Check lead times with vendors so long-lead hardware can be added to the project's procurement list early.
+\end{itemize}
+\tcbline
+\stagehead{Relevant Engineering Deliverables}\par
+\begin{minipage}[t]{0.485\linewidth}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Block Flow Diagram
+  \item Process Flow Diagram
+  \item Preliminary P\&ID
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Preliminary layout and utility requirements
+  \item Preliminary Design Review presentation
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagefoot{Preliminary Design Package (PDP)}{10--20\%}{30\%}{the project is approved for 60\% engineering, and long-lead procurements are approved or deferred.}
+\end{stagecard}
+
+\subsection{Stage 3 --- Basic Engineering}
+\begin{stagecard}{Accountable: Project Manager}{Gate: Critical Design Review (CDR)}
+\stagesummary{The 60\% design deliverables are completed and the cost and schedule are baselined. The P\&IDs are brought to a level ready for the PHA, and the preliminary Interlock Matrix and Control Narrative are started. This is when the bulk of controls engineering begins: the I/O is counted, the panel concept is chosen, and long-lead parts (often PLC hardware) are ordered once the project team approves them.}
+\tcbline
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Required Controls Inputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Preliminary Design Package (PDP)
+  \item Developing P\&IDs
+  \item Preliminary system layout
+  \item Equipment and utility information
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Controls Outputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Preliminary I/O list
+  \item Panel concept (central or remote panels)
+  \item Controls input to the preliminary Interlock Matrix and Control Narrative
+  \item Controls loads for the electrical load list
+  \item Controls hardware quotes and RFP/bid scope
+  \item Long-lead orders placed (often PLC components)
+  \item Record of spare capacity and open uncertainty
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagehead{Controls Work Performed}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Count the I/O from the P\&IDs and walk through the list with the project team.
+  \item Near the end of the stage, weigh one central panel against remote panels based on the layout and I/O locations.
+  \item Plan how 240/480 VAC power equipment will be separated from 120 VAC and 24 VDC controls.
+  \item Work with the process engineer on the interlocks, permissives, and operating sequence.
+  \item Gather vendor pricing for the cost estimate.
+  \item Get the project team's approval of quantities and assumptions before ordering long-lead parts.
+  \item Hold detailed schematics and the final I/O list for Stage 4.
+\end{itemize}
+\tcbline
+\stagehead{Relevant Engineering Deliverables}\par
+\begin{minipage}[t]{0.485\linewidth}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item P\&ID (ready for PHA)
+  \item EBOM (about 80\% ready for procurement)
+  \item Equipment specifications
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Updated layout drawing and utility requirements
+  \item Class 3 cost estimate (about $\pm$20\%) and Level 3 schedule
+  \item Critical Design Review presentation
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagefoot{Critical Design Package (CDP)}{20--35\%}{60\%}{the project is approved for detailed engineering, and the final budget and schedule baseline is approved.}
+\end{stagecard}
+
+\subsection{Stage 4 --- Detailed Engineering}\label{sec:stage4}
+\begin{stagecard}{Accountable: Project Manager}{Gate: Manufacturing Readiness Review (MRR)}
+\stagesummary{The PHA is completed, the detailed engineering deliverables are finished, procurements are released, and Issued for Construction (IFC) drawings are released. This is the main controls design stage: using the P\&IDs, Control Narrative, Interlock Matrix, PHA results, and layout, controls produces the full electrical package --- I/O list, schematics, panel layouts, bill of materials, and network map.}
+\tcbline
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Required Controls Inputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Critical Design Package (CDP)
+  \item Completed P\&IDs
+  \item Interlock Matrix (Table of Interlocks and Permissives)
+  \item Control Narrative
+  \item System layout drawing
+  \item PHA results and approved controls recommendations (obtain before treating the interlock table as final)
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Controls Outputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Approved I/O list
+  \item Electrical schematics and panel layouts, issued for construction
+  \item Electrical bill of materials
+  \item Network map and preliminary cable schedule
+  \item Panel shop RFP/bid package
+  \item Preliminary SCADA layout and operator navigation mockup (Visio, \href{https://www.drawio.com/}{draw.io}, or similar)
+  \item Controls portion of the commissioning/startup/test plan
+  \item FAT Checkout document outline
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagehead{Controls Work Performed}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Take part in the PHA and close the controls-related action items.
+  \item Where an input is still in progress, draft what you can and keep its assumptions open for review.
+  \item Place panels and remote I/O from the physical layout (see Section~\ref{sec:local-remote-io}).
+  \item Size racks, cards, terminals, and power from the I/O list.
+  \item Confirm high-voltage separation and the panel build scope with the project team.
+  \item Line up the resources needed from other departments and vendors for testing.
+  \item Start the FAT Checkout outline from the Control Narrative and Interlock Matrix; specific checks are added as the design develops.
+  \item Release the controls procurements and issue the drawings for construction.
+  \item \textit{\textcolor{futureblue}{[Future: write a protective-function design record for each trip (see Section~\ref{sec:protective-function-reqs}). This would be developed here alongside the Interlock Matrix and checked during Stage 6 commissioning.]}}
+\end{itemize}
+\tcbline
+\stagehead{Relevant Engineering Deliverables}\par
+\begin{minipage}[t]{0.485\linewidth}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item PHA and PHA design action items
+  \item Updated P\&ID, EBOM, Interlock Matrix, and Control Narrative
+  \item Updated layout drawing and utility requirements
+  \item Updated electrical load list
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Updated RFPs and bid packages for the other scopes
+  \item Updated project execution plan (construction, commissioning, startup, and turnover details)
+  \item FMEA (if required)
+  \item Manufacturing Readiness Review presentation
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagefoot{Issued for Construction (IFC) drawings}{30--60\%}{90--100\%}{the project is approved for fabrication and construction.}
+\end{stagecard}
+
+\subsection{Stage 5 --- Construction}
+\begin{stagecard}{Accountable: Project Manager}{Gate: Test Readiness Review (TRR) and Mechanical Completion}
+\stagesummary{The project is executed to the plan, budget, and schedule; progress, issues, risks, and non-conformances are tracked; and the commissioning and test plan is developed. The panel shop builds the panels while controls writes the PLC program and SCADA/\allowbreak HMI application in parallel. Late in the stage, the electrician connects the field devices to the panels, and the stage ends when the system is mechanically complete and the test plan is approved.}
+\tcbline
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Required Controls Inputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item IFC drawings (released Stage 4 electrical package)
+  \item Approved purchasing and panel-shop scope
+  \item Current Control Narrative and Interlock Matrix
+  \item Access to the project development environment
+  \item Construction schedule coordinated with mechanical and electrical contractors
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Controls Outputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Built electrical panels
+  \item PLC program, targeting about 95\% completion by end of Stage 5
+  \item SCADA/HMI application, targeting about 95\% completion by end of Stage 5
+  \item Finished network diagram
+  \item FAT Checkout document with complete procedures and expected results
+  \item As-built markups of the electrical drawings and I/O list
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagehead{Controls Work Performed}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Coordinate parts delivery and the panel build with the contractor or panel shop, and answer their questions.
+  \item Write the PLC and SCADA/HMI code in parallel with the physical build.
+  \item Add procedures and expected results to the FAT Checkout document (started in Stage 4) as each part of the program is finished; it becomes part of the commissioning and test plan.
+  \item Late in the stage, the electrical contractor connects the field devices to their panels and is responsible for verifying those connections (identification and continuity checks). Support that checkout and capture any approved field changes. The contractor's wiring checks do not replace controls I/O and functional testing.
+  \item Provide controls status for project updates and the Test Readiness Review.
+\end{itemize}
+\tcbline
+\stagehead{Relevant Engineering Deliverables}\par
+\begin{minipage}[t]{0.485\linewidth}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Project updates
+  \item Commissioning and test plan
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Test Readiness Review presentation
+  \item Mechanical Completion form
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagefoot{As-built drawings}{80--90\%}{98--100\%}{the test plan is approved, the project is mechanically complete and ready for test, and an operator is assigned to support commissioning and act as the transfer representative.}
+\end{stagecard}
+
+\subsection{Stage 5A --- PLC and SCADA Completion}
+\begin{stagecard}{Accountable: Controls Engineer}{Gate: Within Stage 5, before the TRR}
+\stagesummary{A controls-only handoff within Stage 5, before the Test Readiness Review. Controls finishes the PLC and SCADA applications, runs as much of the FAT Checkout as possible before going to the field, and makes clean, versioned backups.}
+\tcbline
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Required Controls Inputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Near-complete Stage 5 applications
+  \item Built panels
+  \item Current field wiring and network information
+  \item Completed FAT Checkout procedure
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Controls Outputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Completed PLC and SCADA/HMI programs
+  \item Versioned backups
+  \item FAT Checkout actual results and open items
+  \item As-built connection information available at handoff
+  \item List of remaining field-dependent tests, clearly identified for commissioning
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagehead{Controls Work Performed}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Close out the development punch list.
+  \item Bench-test against the built panels: run every FAT Checkout procedure that does not need field equipment, simulating field signals where practical.
+  \item Back up the applications (Section~\ref{sec:source-control}) before going to site.
+  \item Flag the tests that need field equipment so commissioning picks them up.
+\end{itemize}
+\end{stagecard}
+The completed PLC and SCADA programs, together with the as-built connection information available at handoff, are required inputs to Stage 6.
+
+\subsection{Stage 6 --- Commissioning}
+\begin{stagecard}{Accountable: Project Manager}{Gate: Pre-Startup Safety Review (PSSR)}
+\stagesummary{The commissioning and test plan is executed and the commissioning and test report is written. Everything is installed and wired: controls checks every field signal end to end, then tests sequences, alarms, and interlocks with the project team before equipment is run. The stage ends with the Pre-Startup Safety Review (PSSR).}
+\tcbline
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Required Controls Inputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Completed PLC and SCADA/HMI programs from Stage 5A
+  \item Versioned backups
+  \item Built panels and installed mechanical equipment
+  \item Verified field wiring
+  \item Current I/O list and as-built drawings
+  \item Approved commissioning and test plan, including the FAT Checkout with available results and open items
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Controls Outputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Field signal check results (scaling, direction, valve/motor action, fail states, comms, safety circuits)
+  \item Sequence, alarm, permissive, interlock, shutdown, and abnormal-condition test results
+  \item Controls sections of the commissioning and test report
+  \item Punch-list ownership and status
+  \item Software change log
+  \item New versioned backups
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagehead{Controls Work Performed}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Walk each field signal end to end with a technician or operator, from the device through the PLC to the SCADA screen.
+  \item Work through the commissioning and test plan with the project team, starting with safety circuits and interlocks.
+  \item Run equipment only after wiring and safety checks are complete.
+  \item Keep the punch list current, log software changes as they happen, and back up after significant changes.
+  \item Support the PSSR.
+\end{itemize}
+\tcbline
+\stagehead{Relevant Engineering Deliverables}\par
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Pre-Startup Safety Review (PSSR)
+  \item As-built drawings
+\end{itemize}
+\tcbline
+\stagefoot{As-built drawings}{90--100\%}{100\%}{the system is ready for startup and chemical introduction.}
+\end{stagecard}
+
+\subsection{Stage 7 --- Startup/Qualification}
+\begin{stagecard}{Accountable: Project Manager}{Gate: Transfer to Operations}
+\stagesummary{The startup and qualification plan is executed, the startup/qualification summary report is written, operators are trained, and the transfer documentation is finalized. Controls tunes loops, confirms the system behaves correctly under real operating conditions, supports qualification testing, and hands over the as-built software as Rev~0.}
+\tcbline
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Required Controls Inputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Commissioning records and PSSR approval
+  \item Resolved critical punch-list items
+  \item Approved operating limits
+  \item Startup and qualification plan
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Controls Outputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Tuned control loops
+  \item Confirmed normal and fault behavior under operating conditions
+  \item Qualification test support records
+  \item Released Rev~0 PLC and SCADA software and backups
+  \item Software revision log and list of remaining issues
+  \item Operator training records
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagehead{Controls Work Performed}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Bring equipment, and then the process, online with the process engineer, operators, and vendors.
+  \item Tune loops under real process conditions and capture the final values.
+  \item Watch for nuisance alarms and unexpected behavior, and fix or log them.
+  \item Support the qualification tests required by the project.
+  \item Train operators on the actual screens, alarms, and recovery steps.
+  \item Follow Section~\ref{sec:source-control} for the Rev~0 release, and add the controls documents to the transfer-to-operations package.
+\end{itemize}
+\tcbline
+\stagehead{Relevant Engineering Deliverables}\par
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Startup/qualification summary report
+  \item Transfer to Operations package
+\end{itemize}
+\tcbline
+\stagefoot{As-built drawings}{98--100\%}{100\%}{the project is transferred to Operations.}
+\end{stagecard}
+
+\subsection{Stage 8 --- Project Closeout}
+\begin{stagecard}{Accountable: Project Manager}{Gate: None}
+\stagesummary{All process safety information is filed in the appropriate controlled location, the project documentation is archived, lessons learned are documented, and the project is closed financially. Controls closes or hands off remaining items and stores a complete, final set of files so the next person can support the system.}
+\tcbline
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Required Controls Inputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Startup and qualification results
+  \item Field changes
+  \item Open-item status
+  \item Final panel and software configurations
+\end{itemize}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.485\linewidth}
+\stagehead{Controls Outputs}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Final PLC and SCADA source code and backups
+  \item As-built schematics and panel layouts
+  \item I/O and cable lists
+  \item Final network diagram and address list
+  \item Current Control Narrative and Interlock Matrix
+  \item Test records
+  \item Manuals
+  \item Relevant configuration files
+  \item Controls lessons learned
+\end{itemize}
+\end{minipage}
+\tcbline
+\stagehead{Controls Work Performed}
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Close remaining controls items, or hand them off with a named owner.
+  \item Bring drawings, lists, and documents to as-built.
+  \item File the controls process safety information (Interlock Matrix, Control Narrative, alarm list) in the controlled location, and the rest in the project location so the next person can support the system.
+  \item Review the project with the team and capture what went well and what to change.
+\end{itemize}
+\tcbline
+\stagehead{Relevant Engineering Deliverables}\par
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+  \item Final project report
+  \item Archived project documentation and process safety information
+\end{itemize}
+\tcbline
+\stagefoot{As-built drawings}{100\%}{100\%}{the project is closed.}
+\end{stagecard}
+
+\section{Typical Design Deliverables}
+The stage outputs above are the working checklist, and Section~\ref{sec:deliverables-master} combines them into a single list. Scale the detail to the project, but keep the I/O list, Control Narrative, Interlock Matrix, electrical package (Section~\ref{sec:drawing-package}), network diagram, software backups, checkout records, and as-built documentation in step with the actual system. Larger or higher-risk projects may also need formal calculations, cybersecurity records, alarm documentation, and validation records.
+
+\section{Reviews and Changes}
+Bring in the people who will design, build, operate, maintain, and support the system when their input is useful. Track important review comments and open items. When a late change affects hardware, safety, software behavior, testing, or documentation, check the impact and update the affected files.
+
+\section{Controls Deliverables Master List}\label{sec:deliverables-master}
+The table below gathers every output listed for the controls engineer in Stages 1--8. Items that are developed over several stages are shown once, with the stages in which they are created or updated.
+
+\begin{longtable}{@{}P{5.62cm}P{4.65cm}P{6.66cm}@{}}
+\caption{Controls Deliverables Master List}\label{tab:deliverables-master} \\
+\toprule
+\rowcolor{tblhead}\textbf{Deliverable} & \textbf{Stage(s) Created / Updated} & \textbf{Final Form at Handoff} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Deliverable} & \textbf{Stage(s) Created / Updated} & \textbf{Final Form at Handoff} \\
+\midrule
+\endhead
+Opinion on platform, integration, and panel scope; flagged risks (if requested) & 0 & Superseded by the basis of design \\
+Open controls questions and key interfaces & 1; updated throughout & Closed or formally transferred (Stage 8) \\
+Panel, platform, and network concept sketches; panel concept & 2--3 & Superseded by the Stage 4 package \\
+FAT Checkout document & 4 (outline); 5 (procedures); 5A (results); 6 (field tests) & Completed record with actual results (sample in Appendix~\ref{app:sample-fat}) \\
+I/O list & 3 (preliminary); 4 (approved); 5--6 (updated) & As-built I/O list \\
+Long-lead item orders & 2 (identified); 3 (ordered) & Purchase records \\
+Controls hardware quotes and RFP/bid scope; panel shop bid package & 3--4 & Purchase records \\
+Controls input to the Interlock Matrix and Control Narrative; electrical load list & 3--4 & Current approved versions \\
+PHA controls action items & 4 & Closed in the PHA record \\
+Controls portion of the commissioning/startup/test plan & 4--5 & Part of the approved test plan \\
+Record of spare capacity and open uncertainty & 3 & Folded into the basis of design \\
+Electrical bill of materials & 4 & As-built bill of materials \\
+Electrical schematics and panel layouts & 4; updated 5--7 & As-built schematics and panel layouts \\
+Network map and address list & 4 (map); 5 (finished diagram) & Final network diagram and address list \\
+Cable schedule & 4 (preliminary); 5--6 (updated) & Final cable list \\
+SCADA layout and operator navigation mockup & 4 & Superseded by the SCADA/HMI application \\
+Built electrical panels & 5 & Installed panels with nameplates \\
+PLC program & 5 (about 95\%); 5A (complete); 6--7 (changes) & Final source code and backups, Rev~0 (Section~\ref{sec:source-control}) \\
+SCADA/HMI application & 5 (about 95\%); 5A (complete); 6--7 (changes) & Final project export and gateway backup, Rev~0 \\
+Versioned backups & 5A, 6, 7 & Final backups (Section~\ref{sec:backup}) \\
+List of field-dependent tests & 5A & Closed during Stage 6 \\
+Field signal check results & 6 & Test records \\
+Sequence, alarm, permissive, interlock, shutdown, and abnormal-condition test results & 6 & Test records \\
+Controls sections of the commissioning and test report & 6 & Commissioning/test report \\
+Punch list with owners and status & 6--7 & Closed or formally transferred \\
+Software change and revision log & 6--7 & Final revision log \\
+Tuned control loops & 7 & Tuning values captured in the final backups \\
+Qualification test support records & 7 & Test records \\
+Operator training records & 7 & Training record \\
+Control Narrative and Interlock Matrix (current) & Maintained 4--8 & Current approved versions \\
+Manuals and relevant configuration files & 8 & Stored with the project files \\
+Controls lessons learned & 8 & Final project report \\
+\bottomrule
+\end{longtable}
+

@@ -1,0 +1,18 @@
+\chapter{Software Lifecycle}
+\section{Approved Platforms}
+Schneider Electric Control Expert is the primary Modicon programming platform; Productivity Suite is used for approved Productivity2000 applications; and Ignition is the standard SCADA/HMI platform for new projects. Projects must use a company-approved release that remains supported by the vendor and is compatible with installed firmware and modules. The approved version register must be maintained separately from this standard so security and compatibility updates do not require a full standards revision.
+
+\section{Environments and Source Control}
+PLC, HMI, scripts, configuration exports, drawings, and test procedures must be stored in the approved version-control or document-control system. Development, test, and production environments must be separated where practical. Each production release must have a unique identifier, release notes, approval, source snapshot, dependency list, firmware/software versions, and restorable backup.
+
+\section{Review and Release}
+Changes must be peer reviewed for logic, safe-state behavior, cybersecurity, alarms, performance, maintainability, and test coverage. No unreviewed development file must be placed in production except under an approved emergency-change process. Release records must identify affected requirements, tests performed, discrepancies, rollback plan, and person deploying the change.
+
+\section{Online Changes and Forces}
+Online edits, forces, simulations, and overrides must be authorized, risk assessed, logged, clearly indicated, and removed or incorporated into the controlled source before closeout. Forces must not be used as permanent logic. A current upload and verified backup must be captured after any production change.
+
+\section{Backup and Recovery}
+Backups must include native source, runtime/export files, PLC memory and configuration, HMI/Gateway backup, network-device configurations, drive parameters, database schema, certificates, licenses, and recovery instructions. Restore procedures must be tested before turnover and periodically thereafter. Backups must be protected from unauthorized modification and from loss with the controlled system.
+
+\section{Testing}
+Testing must be traceable to requirements and include normal operation, boundary values, bad quality, open/short or out-of-range analog signals, communication loss, power loss and restoration, device faults, permissives, trips, alarms, manual modes, restart prevention, security roles, backup, and rollback. Safety functions require independent validation appropriate to their lifecycle.

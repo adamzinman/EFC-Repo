@@ -1,0 +1,142 @@
+\chapter{Working with Contractors}
+\section{Scope and Responsibility}
+The purchase specification must identify the contractor's design responsibility, applicable codes and editions, required certifications, supplied hardware/software, interfaces, exclusions, schedule, review milestones, testing, commissioning support, training, warranty, and turnover deliverables. Acceptance by EFC does not relieve the contractor of code compliance or design responsibility.
+
+\section[Contractor Roles]{Contractor Roles \newmark}\label{sec:contractor-roles}
+Most EFC projects use more than one outside firm. The table lists the usual roles and what each one is normally responsible for. One company can hold more than one role (for example, a panel shop that also writes the PLC program); the purchase specification states which roles each contractor holds.
+
+\begin{small}
+\begin{longtable}{@{}P{3.10cm}P{6.60cm}P{7.23cm}@{}}
+\caption{Typical Contractor Roles}\label{tab:contractor-roles} \\
+\toprule
+\rowcolor{tblhead}\textbf{Role} & \textbf{Typical scope} & \textbf{Main controls deliverables} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Role} & \textbf{Typical scope} & \textbf{Main controls deliverables} \\
+\midrule
+\endhead
+Panel builder & Builds control panels to EFC or contractor drawings; may also do the panel design. & Panel drawings and BOM, nameplate data, SCCR and heat calculations when requested, panel test record. \\
+Electrical contractor & Installs conduit, cable, field devices, and panels at site; terminates and checks field wiring. & Cable schedule and termination records, loop-check sign-off, red-line markups for as-builts. \\
+System integrator & Writes the PLC and SCADA software; may also do the controls design. & PLC and SCADA source files, I/O list, control narrative updates, FAT/SAT procedures and records. \\
+Equipment (package) vendor & Supplies a skid or machine with its own controls (for example a compressor package). & Interface list, vendor drawings and manuals, source code or a documented interface, alarm and trip list. \\
+Instrument and valve suppliers & Supply and configure field instruments, valves, and analyzers. & Datasheets, calibration certificates, configuration files, hazardous-location certificates. \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\section[Information EFC Provides]{Information EFC Provides \newmark}\label{sec:efc-provides}
+At the kickoff meeting, EFC gives the contractor what it needs to work to this standard. As applicable, this includes:
+\begin{itemize}[itemsep=1pt]
+  \item This standard and the appendices that apply to the contractor's scope (separate appendix PDFs are available).
+  \item The standard hardware selections (Chapter~\ref{ch:hardware}) and any project-specific exceptions.
+  \item The standard data types and function blocks (Appendices~\ref{app:data-types} and~\ref{app:function-blocks}) as Control Expert import files, and the Perspective Screen Design Standard (Appendix~\ref{app:screen-design}).
+  \item The project number and file-naming rules (Section~\ref{sec:source-control}).
+  \item IP addresses, subnets, and device names assigned by EFC (Chapter~\ref{ch:networking}). Contractors do not choose addresses for devices on EFC networks.
+  \item P\&IDs, the Table of Interlocks and Permissives, the control narrative, and the alarm list, at their current revision (Chapter~\ref{ch:process-definition}).
+  \item The drawing title block and the EFC review contacts.
+\end{itemize}
+The contractor confirms in writing that it has received these items and lists any it cannot meet before work starts.
+
+\section{Required Submittals}
+Before fabrication or programming, contractors must submit the basis of design, component data, schematics, panel layout, I/O list, and bill of material.
+
+The following submittals are \textbf{optional} and are requested only when the project calls for them:
+\begin{itemize}[itemsep=1pt]
+  \item SCCR calculation (see Section~\ref{sec:sccr})
+  \item Enclosure heat calculation (see Section~\ref{sec:heat})
+  \item Network architecture
+\end{itemize}
+Deviations from this standard must be clearly listed; silence does not constitute approval.
+
+\subsection[Submittal Review]{Submittal Review \newmark}\label{sec:submittal-review}
+EFC reviews each submittal and returns it with one of the following statuses:
+\begin{itemize}[itemsep=1pt]
+  \item \textbf{Approved} --- proceed.
+  \item \textbf{Approved as noted} --- proceed, incorporating the comments; resubmit only if a comment asks for it.
+  \item \textbf{Revise and resubmit} --- do not fabricate or program against this submittal; correct and resubmit.
+  \item \textbf{For information only} --- no review was made.
+\end{itemize}
+Comments are tracked in a comment log that lists each comment, the contractor's response, and how it was closed. Each resubmittal carries a new revision letter and clouds or otherwise marks what changed. Fabrication, programming, and ordering of long-lead items start only after the related submittal is Approved or Approved as noted, unless EFC agrees otherwise in writing.
+\note{EFC's review turnaround time and the review form are not yet defined. Agree them with the contractor at kickoff until they are.}
+
+\section{Panel Fabrication}
+The purchase order must state whether a UL Listed industrial control panel is required. When listing is not required, panels must still follow the documented UL 508A design approach and this standard, but drawings and nameplates must not imply a UL Listing that does not exist. Fabricators must be qualified for the voltage, SCCR, environmental, and hazardous-location requirements of the project.
+
+\section[Packaged Equipment]{Packaged Equipment \newmark}\label{sec:packaged-equipment}
+Skids and machines bought with their own control system must fit into the plant controls without special handling. The purchase specification should require:
+\begin{itemize}[itemsep=1pt]
+  \item A Modicon M580 or other EFC-standard PLC where the vendor can supply one. Where the vendor's standard controller is used instead, the purchase specification lists it as a deviation.
+  \item A documented interface to the plant control system: each signal's name, direction, data type, units, and meaning. Data exchange uses the protocols in Section~\ref{sec:protocols}. A Modbus interface includes a register map in the format of Appendix~\ref{app:modbus}.
+  \item E-stop, shutdown, and permissive signals that cross between the package and the plant are hardwired, not only sent over the network.
+  \item Package alarms delivered with priority, cause, consequence, and operator response, so they can be added to the plant alarm list (ANSI/ISA-18.2; ISA-TR18.2.7 covers alarms from packaged systems).
+  \item Unlocked source code, or a written agreement on what EFC receives instead (Section~\ref{sec:contractor-software}).
+  \item No remote-access device or cellular modem in the package. Vendor remote support uses EFC's remote access platform (Section~\ref{sec:remote-access}).
+\end{itemize}
+
+\section[PLC and SCADA Software by Contractors]{PLC and SCADA Software by Contractors \newmark}\label{sec:contractor-software}
+Contractors who write PLC or SCADA software for EFC must follow Chapters~\ref{ch:software}, \ref{ch:plc-standards}, and~\ref{ch:scada}, and in particular:
+\begin{itemize}[itemsep=1pt]
+  \item Use the software versions in Table~\ref{tab:software-versions} unless EFC approves another version in writing.
+  \item Use the EFC standard data types and function blocks. New or modified types are submitted for review before use.
+  \item Do not password-protect, lock, or encrypt program sections, DFBs, or Ignition resources. If protection is required for a specific reason, the passwords are handed over to EFC at turnover.
+  \item Do not include time-limited functions, license locks, or logic that stops the system for commercial reasons.
+  \item Name files according to Section~\ref{sec:source-control} and deliver the complete source at each milestone: Control Expert \texttt{.STU} plus a \texttt{.ZEF} or \texttt{.XEF} export, Productivity Suite \texttt{.adpro}, and an Ignition Gateway backup or project export.
+  \item Software licenses bought for the project are registered to EFC, not to the contractor.
+\end{itemize}
+EFC owns the delivered source and may modify it or give it to other contractors. The purchase order should say so.
+
+\section[Testing and Acceptance]{Testing and Acceptance \newmark}\label{sec:contractor-testing}
+The contractor writes the test procedures and runs the tests; EFC witnesses and signs. A Factory Acceptance Test (FAT) at the contractor's shop is held before shipment, using the format in Appendix~\ref{app:sample-fat}. Open items go on a punch list with an owner and a due date; equipment ships only when EFC agrees the remaining items can be closed at site. The Site Acceptance Test (SAT) repeats the checks that shipping and installation can affect, adds loop checks and tests with the real process, and closes the FAT punch list. Changes made after the FAT are tested as described in Section~\ref{sec:change-testing}.
+
+\section[Site Work]{Site Work \newmark}\label{sec:contractor-site-work}
+Contractors working at an EFC site follow the site's safety rules, permits, and lockout/tagout procedures, which take precedence over anything in this standard. In addition:
+\begin{itemize}[itemsep=1pt]
+  \item Work in Class~I, Division~2 areas follows Appendix~\ref{app:c1d2} and the site's hot-work rules.
+  \item Downloads, online changes, and forces on a running system are made only with EFC's approval and follow Section~\ref{sec:online-changes}.
+  \item Laptops and other devices are connected to EFC controls networks only with EFC's approval, and only to the network and port EFC assigns.
+  \item The contractor removes temporary jumpers, forces, test logic, and temporary accounts before turnover, and lists anything that must stay.
+\end{itemize}
+
+\section[Contractor Cybersecurity]{Contractor Cybersecurity \newmark}\label{sec:contractor-cyber}
+IEC~62443-2-4\footnote{IEC 62443-2-4:2023 (Ed.~2), \emph{Security for industrial automation and control systems --- Part 2-4: Security program requirements for IACS service providers}.} sets out what an asset owner can require of integration and maintenance service providers. EFC does not require formal compliance. At a minimum, contractors must:
+\begin{itemize}[itemsep=1pt]
+  \item Change every default password on delivered equipment before it goes into operation, and hand the credentials to EFC as described in Chapter~\ref{ch:accounts}. Credentials are never written in drawings, code comments, or e-mail.
+  \item Disable services, ports, and protocols that the system does not use.
+  \item Scan laptops and removable media for malware before connecting them to EFC equipment.
+  \item Report any suspected security incident on an EFC system to EFC immediately.
+\end{itemize}
+
+\section[Turnover and Closeout]{Turnover and Closeout \newmark}\label{sec:contractor-turnover}
+Turnover deliverables are listed in the Controls Deliverables Master List (Section~\ref{sec:deliverables-master}) and include, as applicable, as-built drawings, final source files at Rev~0 (Section~\ref{sec:source-control}), the FAT and SAT records, instrument and device configuration files, manuals and certificates, spare-parts lists, and operator and maintenance training. The warranty period and the support contact for it are stated in the purchase order.
+\note{A standard warranty period and post-startup support terms have not been set. Define them per project in the purchase order until they are.}
+
+\section{Approved Vendors}\label{sec:vendors}
+The vendors below are approved for controls hardware, services, and support. Use the contact listed where there is one; otherwise call the main number.
+
+\begin{longtable}{@{}P{3.43cm}P{3.85cm}P{2.78cm}P{2.78cm}P{3.21cm}@{}}
+\caption{Approved Vendors}\label{tab:vendors} \\
+\toprule
+\rowcolor{tblhead}\textbf{Company} & \textbf{Location} & \textbf{Contact} & \textbf{Phone} & \textbf{What We Use Them For} \\
+\midrule
+\endfirsthead
+\multicolumn{5}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Company} & \textbf{Location} & \textbf{Contact} & \textbf{Phone} & \textbf{What We Use Them For} \\
+\midrule
+\endhead
+\href{https://www.mdciautomation.com/}{MDCI Automation} & Hatfield, PA & Jeff DiTrolio & \textit{\textcolor{noteorange}{[to be added]}} & \textit{\textcolor{noteorange}{[to be added]}} \\
+\href{https://automationdistribution.com/}{ADI (Automation Distribution)} & 2398 North Penn Rd, Hatfield, PA 19440 & Art McEvoy & 888-600-3080 (main) & \textit{\textcolor{noteorange}{[to be added]}} \\
+United Electric Supply & 1111 N. Broad St, Lansdale, PA 19446 (closest branch to Hatfield) & --- & 215-368-1960 & \textit{\textcolor{noteorange}{[to be added]}} \\
+\href{https://www.ifm.com/us/en}{ifm efector, inc.} & 1100 Atwater Dr, Malvern, PA 19355 (US headquarters) & --- & 800-441-8246 & \textit{\textcolor{noteorange}{[to be added]}} \\
+\href{https://us.wiautomation.com/}{WIAutomation} & Online; operated by Vision Automation SA, Lugano, Switzerland & --- & +41 91 21 01 366 (customer support) & \textit{\textcolor{noteorange}{[to be added]}} \\
+\href{https://www.nealsystems.com/}{Neal Systems, Inc.} & 122 Terry Dr, Newtown, PA 18940 & --- & 215-968-7577 & \textit{\textcolor{noteorange}{[to be added]}} \\
+\href{https://www.automationdirect.com/}{AutomationDirect} & 3505 Hutchinson Rd, Cumming, GA 30040 & --- & 800-633-0405 (sales); 770-844-4200 (tech support) & \textit{\textcolor{noteorange}{[to be added]}} \\
+\href{https://www.airlinehyd.com/}{Airline Hydraulics} & 3557 Progress Dr, Bensalem, PA 19020 & --- & \textit{\textcolor{noteorange}{[confirm]}} & \textit{\textcolor{noteorange}{[to be added]}} \\
+\href{https://www.kendallelectric.com/}{Kendall Electric} & 15 Colwell Ln, Conshohocken, PA 19428 & --- & 610-832-9000 & \textit{\textcolor{noteorange}{[to be added]}} \\
+\href{https://www.onlogic.com/}{OnLogic} \textit{\textcolor{noteorange}{[pending approval]}} & 435 Community Dr, South Burlington, VT 05403 & --- & 802-861-2300 & Industrial PCs (IPCs) \\
+\bottomrule
+\end{longtable}
+\note{Add direct phone numbers for Jeff DiTrolio (MDCI) and Art McEvoy (ADI), MDCI's main number, and Airline Hydraulics' Bensalem number, and fill in what each vendor is used for. ``Niel Systems'' was taken to be Neal Systems, Inc., and ``Kendal Electric'' to be Kendall Electric; confirm. OnLogic's approval as a vendor is pending.}
+

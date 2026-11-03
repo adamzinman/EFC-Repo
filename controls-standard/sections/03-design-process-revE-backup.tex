@@ -1,0 +1,433 @@
+\chapter{Design Process}
+\section{Getting Started}
+Collect the information that will shape the controls work as it becomes available: project goals and schedule, P\&IDs, equipment and valve lists, process descriptions, layout drawings, utility and power information, area classification, and network requirements. Keep a list of open questions, assumptions, and who will answer them. The bulk of controls engineering starts near the end of Stage 3; Stage 2 is for early discussions and planning.
+
+\section{Project Execution Phases}
+Use the project execution phase numbers and names below when planning controls work. These are practical handoffs, so work may overlap. For each phase, check the inputs before promising the listed outputs. Stage 5A is an added controls handoff between Construction and Commissioning; it does not renumber the company phases.
+
+\subsection{Stage 0 --- Project Evaluation}
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 0 --- Required Controls Inputs}\label{tab:stage0-inputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endhead
+Proposed process \\
+Rough scope \\
+Likely site \\
+Any early questions about automation \\
+\bottomrule
+\end{longtable}
+
+If asked, give a high-level opinion on platform, integration, panel scope, and obvious technical or schedule risks. There is normally no detailed controls design in this phase.
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 0 --- Controls Outputs}\label{tab:stage0-outputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endhead
+High-level opinion on platform and integration approach (if requested) \\
+High-level opinion on panel scope (if requested) \\
+Flagged technical or schedule risks (if requested) \\
+\bottomrule
+\end{longtable}
+
+\subsection{Stage 1 --- Project Initiation}
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 1 --- Required Controls Inputs}\label{tab:stage1-inputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endhead
+Approved project direction \\
+Team contacts \\
+Overall project goal \\
+General schedule \\
+What is known about the equipment and site \\
+\bottomrule
+\end{longtable}
+
+Get read into the project. Record open controls questions, key interfaces, and the information needed for preliminary engineering.
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 1 --- Controls Outputs}\label{tab:stage1-outputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endhead
+List of open controls questions and key interfaces \\
+Confirmed owner of the P\&IDs \\
+Confirmed owner of the Control Narrative \\
+Confirmed owner of the Interlock Matrix \\
+Confirmed owner of the layout drawing \\
+\bottomrule
+\end{longtable}
+
+\subsection{Stage 2 --- Preliminary Engineering}
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 2 --- Required Controls Inputs}\label{tab:stage2-inputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endhead
+Rough P\&IDs \\
+Early process description \\
+Likely system location \\
+Preliminary schedule \\
+\bottomrule
+\end{longtable}
+
+Discuss the broad operating approach with the process engineer, with assumptions clearly marked. These are high-level discussions, not the start of full electrical design or PLC programming.
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 2 --- Controls Outputs}\label{tab:stage2-outputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endhead
+Sketches of possible panels, control platform, and network arrangement (assumptions marked) \\
+FAT Checkout document outline (started; specific checks added as design develops) \\
+\bottomrule
+\end{longtable}
+
+\subsection{Stage 3 --- Basic Engineering}
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 3 --- Required Controls Inputs}\label{tab:stage3-inputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endhead
+Developing P\&IDs \\
+Preliminary system layout \\
+Equipment and utility information \\
+Enough scope to identify likely long-lead hardware \\
+\bottomrule
+\end{longtable}
+
+Near the end of the phase, consider whether one central panel or remote panels make sense, and identify the likely separation of 240/480 VAC power equipment from 120 VAC and 24 VDC controls. Once the project team approves the quantities and assumptions needed for procurement, order necessary long-lead items, often PLC components. Detailed schematics and the final I/O list belong in Stage 4.
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 3 --- Controls Outputs}\label{tab:stage3-outputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endhead
+Preliminary I/O count and panel concept \\
+Preliminary I/O list, reviewed with the project team \\
+Long-lead item orders placed (often PLC components), once approved \\
+Record of spare capacity or remaining uncertainty \\
+\bottomrule
+\end{longtable}
+
+\subsection{Stage 4 --- Detailed Engineering}\label{sec:stage4}
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 4 --- Required Controls Inputs}\label{tab:stage4-inputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endhead
+Completed P\&IDs \\
+Interlock Matrix (Table of Interlocks and Permissives) \\
+Control Narrative \\
+System layout drawing \\
+Applicable PHA results and approved controls recommendations (obtain before treating the interlock table as final) \\
+\bottomrule
+\end{longtable}
+
+If an input is still in progress, identify what can be drafted and keep its assumptions open for review. Use the physical layout to place panels and remote I/O; use the I/O list to size the racks, cards, terminals, and power. Confirm high-voltage separation and the panel build package with the project team.
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 4 --- Controls Outputs}\label{tab:stage4-outputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endhead
+Approved I/O list \\
+Electrical bill of materials \\
+Electrical schematics \\
+Panel layouts \\
+Network map \\
+Preliminary cable schedule \\
+Preliminary SCADA layout and operator navigation mockup (Visio, \href{https://www.drawio.com/}{draw.io}, or similar) \\
+\bottomrule
+\end{longtable}
+
+\noindent\textit{Suggested handoff between Stages 4 and 5: Building (Pre-Construction).} The project team could use this name for the period when design is released, the panel shop is lined up, and material orders are completed. It is a proposed planning note, not an additional numbered company phase.
+
+\subsection{Stage 5 --- Development \& Construction}
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 5 --- Required Controls Inputs}\label{tab:stage5-inputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endhead
+Released Stage 4 electrical package \\
+Approved purchasing and panel-shop scope \\
+Current Control Narrative and Interlock Matrix \\
+Access to the project development environment \\
+Construction schedule coordinated with mechanical and electrical contractors \\
+\bottomrule
+\end{longtable}
+
+Receive the parts and have the contractor or panel shop build the electrical panels. Develop the PLC program and SCADA/HMI application in parallel with the physical build. Continue expanding the FAT Checkout document started in Stage 2; its procedures and expected results should be complete by late Stage 5, ready for execution and later recording of actual results.
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 5 --- Controls Outputs}\label{tab:stage5-outputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endhead
+Built electrical panels \\
+PLC program, targeting about 95\% completion by end of Stage 5 \\
+SCADA/HMI application, targeting about 95\% completion by end of Stage 5 \\
+Finished network diagram \\
+FAT Checkout document with complete procedures and expected results \\
+\bottomrule
+\end{longtable}
+
+Late in Stage 5, once the panels and mechanical system are built, the electrical contractor (electrician) connects the equipment, sensors, motors, heaters, and other field devices to their respective panels. The electrician is responsible for correct installation and verification of those connections, including identification and continuity checks. Controls engineering supports checkout, resolves design questions, and records approved changes in the drawings and I/O list. Do not treat the contractor's wiring verification as a substitute for controls I/O and functional testing.
+
+\subsection{Stage 5A --- PLC and SCADA Completion}
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 5A --- Required Controls Inputs}\label{tab:stage5a-inputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endhead
+Near-complete Stage 5 applications \\
+Built panels \\
+Current field wiring and network information \\
+Completed FAT Checkout procedure \\
+\bottomrule
+\end{longtable}
+
+Finish the PLC and SCADA/HMI applications, resolve development punch-list items, and make versioned backups. Carry out available panel and integrated testing using the FAT Checkout document; record the actual results and open items. Any remaining field-dependent tests must be clearly identified for commissioning.
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 5A --- Controls Outputs}\label{tab:stage5a-outputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endhead
+Completed PLC and SCADA/HMI programs \\
+Versioned backups \\
+FAT Checkout actual results and open items \\
+As-built connection information available at handoff \\
+List of remaining field-dependent tests, clearly identified for commissioning \\
+\bottomrule
+\end{longtable}
+
+The completed PLC and SCADA programs, together with the as-built connection information available at handoff, are required inputs to Stage 6.
+
+\subsection{Stage 6 --- Commissioning}
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 6 --- Required Controls Inputs}\label{tab:stage6-inputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endhead
+Completed PLC and SCADA/HMI programs from Stage 5A \\
+Versioned backups \\
+Built panels \\
+Installed mechanical equipment \\
+Verified field wiring \\
+Current I/O list and drawings \\
+FAT Checkout document with available results and open items \\
+\bottomrule
+\end{longtable}
+
+Check each field signal through the PLC and SCADA, including scaling, signal direction, valve action, motor rotation, fail states, communications, and safety circuits. Then test sequences, alarms, permissives, interlocks, shutdowns, power recovery, and abnormal conditions with the project team. Equipment operation follows completed wiring and safety checks.
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 6 --- Controls Outputs}\label{tab:stage6-outputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endhead
+Field signal check results (scaling, direction, valve/motor action, fail states, comms, safety circuits) \\
+Sequence, alarm, permissive, interlock, shutdown, and abnormal-condition test results \\
+Punch-list ownership and status \\
+Software change log \\
+New versioned backups \\
+\bottomrule
+\end{longtable}
+
+\subsection{Stage 7 --- Startup/Qualification}
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 7 --- Required Controls Inputs}\label{tab:stage7-inputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endhead
+Commissioning records \\
+Resolved critical punch-list items \\
+Approved operating limits \\
+Agreed startup plan \\
+\bottomrule
+\end{longtable}
+
+Bring equipment and then the process online with the process engineer, operators, and vendors. Tune controls, confirm expected normal and fault behavior under operating conditions, and support qualification tests required by the project. Train operators on the actual screens, alarms, and recovery steps.
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 7 --- Controls Outputs}\label{tab:stage7-outputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endhead
+Tuned control loops \\
+Confirmed normal and fault behavior under operating conditions \\
+Qualification test support records \\
+Software revision log and list of remaining issues \\
+Trained operators \\
+\bottomrule
+\end{longtable}
+
+\subsection{Stage 8 --- Project Closeout}
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 8 --- Required Controls Inputs}\label{tab:stage8-inputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Required Controls Inputs} \\
+\midrule
+\endhead
+Startup and qualification results \\
+Field changes \\
+Open-item status \\
+Final panel and software configurations \\
+\bottomrule
+\end{longtable}
+
+Close or formally transfer remaining controls items. Store the approved set in the project location so the next person can support the system.
+
+\begin{longtable}{@{}p{13.5cm}@{}}
+\caption{Stage 8 --- Controls Outputs}\label{tab:stage8-outputs} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endfirsthead
+\multicolumn{1}{@{}l}{\small\textit{Table \thetable{} continued}} \\
+\toprule
+\rowcolor{tblhead}\textbf{Controls Outputs} \\
+\midrule
+\endhead
+Final PLC and SCADA source code and backups \\
+As-built schematics and panel layouts \\
+I/O and cable lists \\
+Final network diagram and address list \\
+Current Control Narrative and Interlock Matrix \\
+Test records \\
+Manuals \\
+Relevant configuration files \\
+\bottomrule
+\end{longtable}
+
+\section{Typical Design Deliverables}
+The phase outputs above are the working checklist. Scale the detail to the project, but keep the I/O list, Control Narrative, Interlock Matrix, electrical package, network diagram, software backups, checkout records, and as-built documentation in step with the actual system. Larger or higher-risk projects may also need formal calculations, cybersecurity records, alarm documentation, and validation records.
+
+\section{Reviews and Changes}
+Bring in the people who will design, build, operate, maintain, and support the system when their input is useful. Track important review comments and open items. When a late change affects hardware, safety, software behavior, testing, or documentation, check the impact and update the affected files.
