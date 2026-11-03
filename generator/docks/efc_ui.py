@@ -7,9 +7,9 @@
 #   template symbol onDoubleClick:  efc.ui.dblCmd(self)
 #   window close button:            efc.ui.closeDynamic(self)
 #   screen root onStartup:          efc.ui.setDefaultDock(self, viewPath, params)   (optional default dock view)
-# Access (decision 33): the user's level comes from session.props.auth.securityLevels. Command buttons below the user's
+# Access (decision 36): the user's level comes from session.props.auth.securityLevels. Command buttons below the user's
 # level stay visible with a lock; a press anyway is refused here, logged, and answered with the AccessDenied popup.
-# Alarm shelving (decision 34): Supervisor+ shelves a PLC alarm's Ignition alarm (system.alarm.shelve) for a chosen
+# Alarm shelving (decision 37): Supervisor+ shelves a PLC alarm's Ignition alarm (system.alarm.shelve) for a chosen
 # time with a reason, audit-logged. Only Ignition's shelving is used: the PLC alarm (Cmd_Shelve) is not driven from here.
 
 # The one right-side dock every dynamic window opens in (Page Configuration dock id)
@@ -113,7 +113,7 @@ def userLevel(component):
 
 
 def denied(component, minLevel, action=''):
-    """A command the user's level doesn't allow: log it and open the AccessDenied popup (decision 33)."""
+    """A command the user's level doesn't allow: log it and open the AccessDenied popup (decision 36)."""
     have = userLevel(component)
     need = ROLES[max(0, min(minLevel, len(ROLES) - 1))]
     user = _p(_p(component.session.props.auth, 'user'), 'userName') or ''
@@ -260,7 +260,7 @@ def unbypass(component, intlkPath, idx):
 
 
 def _almSource(tagPath, member):
-    """Ignition alarm source path of a T_Alarm / T_AlmLim member (decision 34): '[prov]Path/To/Dev' + 'Alm_X' ->
+    """Ignition alarm source path of a T_Alarm / T_AlmLim member (decision 37): '[prov]Path/To/Dev' + 'Alm_X' ->
     'prov:prov:/tag:Path/To/Dev/Alm_X/Sts_Active:/alm:Alarm'. A path without a [provider] prefix uses provider 'default'."""
     tp = str(tagPath or '').strip()
     prov = 'default'
@@ -274,7 +274,7 @@ def _almSource(tagPath, member):
 def shelve(component, member, minutes, reason):
     """ShelveConfirm popup: shelve the Ignition alarm of PLC alarm `member` on the popup's tagPath for `minutes`
     (clamped to 1..SHELVE_MAX_MIN). Supervisor+ with a non-empty reason; written to the audit log. The PLC alarm stays
-    active (decision 34). Returns True when the shelve call was made, so the popup can close."""
+    active (decision 37). Returns True when the shelve call was made, so the popup can close."""
     reason = (reason or '').strip()
     if userLevel(component) < SUPERVISOR:
         denied(component, SUPERVISOR, _target(component, 'Shelve ' + member))

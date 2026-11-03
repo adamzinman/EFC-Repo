@@ -7,7 +7,7 @@ Dynamic window they open: `Templates/Dynamic Window/Rotating/Rotating` (see [Rot
 
 ## Overview
 
-These are single-device symbols for a two-state drive (T_Motor): start/stop with run feedback and a run output. Each shows the run state as a fill colour, an alarm or fault outline, P and I badges, a status line (STOPPED, RUNNING, STARTING, STOPPING or FAULT), an M label, and a Start/Stop button in manual mode. Below Operator access the button stays visible under a lock icon (decision 33). The family shares one set of params, custom properties, bindings, scripts and tag members. The views differ in symbol geometry, default `tagPath`, `custom.lw` values, which SVG elements are bound, and (for two views) the `I` badge position. See the differences table.
+These are single-device symbols for a two-state drive (T_Motor): start/stop with run feedback and a run output. Each shows the run state as a fill colour, an alarm or fault outline, P and I badges, a status line (STOPPED, RUNNING, STARTING, STOPPING or FAULT), an M label, and a Start/Stop button in manual mode. Below Operator access the button stays visible under a lock icon (decision 36). The family shares one set of params, custom properties, bindings, scripts and tag members. The views differ in symbol geometry, default `tagPath`, `custom.lw` values, which SVG elements are bound, and (for two views) the `I` badge position. See the differences table.
 
 - **Default size:** 120 x 116 (`props.defaultSize`) for all 11 views.
 - **Bound to:** one T_Motor instance through `params.tagPath`. The default `tagPath` is per view (see the table).

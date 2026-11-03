@@ -179,7 +179,7 @@ def symbol(s, L, custom, dbl):
     return img
 
 def access_lock(L, custom, cfg, btn):
-    """Decision 33: below Operator the Manual button stays pressable under a lock icon; efc.ui.cmd refuses the press
+    """Decision 36: below Operator the Manual button stays pressable under a lock icon; efc.ui.cmd refuses the press
     and opens the AccessDenied popup. The level comes from session.props.auth.securityLevels (efc.ui.level)."""
     custom.update({"level": 0, "locked": False})
     cfg["custom.level"] = {"binding": {"type": "property", "config": {"path": "session.props.auth.securityLevels"},

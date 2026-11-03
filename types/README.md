@@ -78,7 +78,7 @@ Nested DDTs (`Mode`, `Alm_*`, `Run`, `Drv`...) are nested UDT instances. Arrays 
 Perspective Alarm Status Table and alarm journal. The alarm is enabled by `Cfg_En`, and its priority comes from
 `Cfg_Priority` (1=Critical 2=High 3=Medium 4=Low). Acknowledging in Ignition runs a tag event script that writes
 `Cmd_Ack` to the PLC, so the PLC alarm state (ISA-18.2) stays authoritative. HMI shelving uses Ignition's alarm
-shelving (decision 34): the PLC alarm stays active, and `Cmd_Shelve` / `Sts_Shelved` are not driven by the HMI library
+shelving (decision 37): the PLC alarm stays active, and `Cmd_Shelve` / `Sts_Shelved` are not driven by the HMI library
 (they remain available for PLC-side logic).
 
 

@@ -28,7 +28,7 @@ One interlock or permissive group (`T_Intlk`) with up to 16 conditions. It shows
 
 **RESET.** One button under the rows, shown to every level while `Sts_ResetReq` is TRUE (conditions healthy, reset required). Below Maintenance (level 2) it shows a lock icon and the tooltip "Requires Maintenance access". It calls `efc.ui.cmd(self, 'Cmd_Reset', True, 2, audit=True)`, which re-checks the role level (Maintenance, 2) and writes an `EFC write` audit record. Below level 2 nothing is written: the press is logged and answered with the [AccessDenied](./AccessDenied.md) popup.
 
-**Role levels** come from `efc.ui.level` on `session.props.auth.securityLevels` (names matched case-insensitively, site names through `efc.ui.ROLE_ALIASES`): 0 Guest, 1 Operator, 2 Maintenance, 3 Supervisor, 4 Engineer, 5 Admin. The rows use `custom.level` for the button visibility (BYPASS and UNBYP, Supervisor (3) and above, stay hidden below it) and for the RESET lock. RESET needs Maintenance (2) and above; below it the button is visible with a lock (decision 33).
+**Role levels** come from `efc.ui.level` on `session.props.auth.securityLevels` (names matched case-insensitively, site names through `efc.ui.ROLE_ALIASES`): 0 Guest, 1 Operator, 2 Maintenance, 3 Supervisor, 4 Engineer, 5 Admin. The rows use `custom.level` for the button visibility (BYPASS and UNBYP, Supervisor (3) and above, stay hidden below it) and for the RESET lock. RESET needs Maintenance (2) and above; below it the button is visible with a lock (decision 36).
 
 ### Bypass, unbypass and the BypassConfirm popup
 

@@ -1,4 +1,4 @@
-"""Rule (decision 33): Templates/Dynamic Window/Station/Station (imported Station_Sidebar) setpoints and commands are Operator+ (level 1).
+"""Rule (decision 36): Templates/Dynamic Window/Station/Station (imported Station_Sidebar) setpoints and commands are Operator+ (level 1).
 - custom.level binds session.props.auth.securityLevels -> efc.ui.level (same as the generated windows).
 - Input/Setpoint fields stay greyed out below Operator (no lock).
 - Command buttons (Button/*, except the dynamic-window close button and the local-only Cancel) stay enabled below Operator

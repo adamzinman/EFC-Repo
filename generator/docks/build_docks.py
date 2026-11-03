@@ -6,9 +6,9 @@ and the efc.ui script library (windows open in the right dock dw_Right, decision
 Every window is 400 x 860 at 1080p (37.04vh x 79.63vh, decision 25), binds one EFCLib v1 T_ type through
 view.params.tagPath and uses EFC_Styles classes only. Role levels (efc.ui.ROLES): 1 Operator commands and
 setpoints, 2 Maintenance MAINT/OOS/JOG/simulate/maint reset, 3 Supervisor bypass + shelving (reason, audit),
-4 Engineer limits, configuration and tuning. Alarm shelving (decision 34) is Ignition's own alarm shelving only (the
+4 Engineer limits, configuration and tuning. Alarm shelving (decision 37) is Ignition's own alarm shelving only (the
 PLC Cmd_Shelve is not driven from the HMI). Command buttons (mode, commands, ACK, RESET) below the user's level
-stay visible with a lock and a press opens Parts/AccessDenied (decision 33); other controls below the level are hidden.
+stay visible with a lock and a press opens Parts/AccessDenied (decision 36); other controls below the level are hidden.
 The level is efc.ui.level(session.props.auth.securityLevels).
 """
 import os, re, sys
@@ -58,7 +58,7 @@ OP, MAINT, SUP, ENG = 1, 2, 3, 4
 ROLE_NAMES = ["Guest", "Operator", "Maintenance", "Supervisor", "Engineer", "Admin"]
 
 def button(name, text, body, cls="Button/Command", show=None, enabled=None, grow=1, need=None):
-    """need: minimum role level of a command button (decision 33). Below it the button stays visible and pressable
+    """need: minimum role level of a command button (decision 36). Below it the button stays visible and pressable
     with a lock icon and a 'Requires <role> access' tooltip; efc.ui refuses the press and opens Parts/AccessDenied."""
     pc, props, meta = {}, {"text": text, "style": {"classes": cls}}, None
     if show: pc["position.display"] = expr(show)
@@ -228,7 +228,7 @@ def _dur(minutes):
 
 def alarms(vw, items):
     """items: [(member, text)] - T_Alarm / T_AlmLim members; ACK acknowledges the unacked ones.
-    Shelving (decision 34, Ignition's alarm shelving only): one view custom `shelved` polls efc.ui.shelvedMap every 5 s (now(5000) + script transform)
+    Shelving (decision 37, Ignition's alarm shelving only): one view custom `shelved` polls efc.ui.shelvedMap every 5 s (now(5000) + script transform)
     ('Alm_X=12,...' for the shelved members). Each row's custom sh_<member> is its minutes left (-1 = not shelved), read
     from that string by a binding transform. SHELVE (Supervisor+, not shelved) opens ShelveConfirm; UNSHELVE (Supervisor+,
     shelved) calls efc.ui.unshelve. Rows show a SHELVED chip while shelved."""
@@ -616,7 +616,7 @@ def bypass_confirm():
                                          "props": {"defaultSize": {"width": 360, "height": 260}}, "root": root}
 
 def shelve_confirm():
-    """Templates/Dynamic Window/Parts/ShelveConfirm: shelve a PLC alarm's Ignition alarm (decision 34). Presets from
+    """Templates/Dynamic Window/Parts/ShelveConfirm: shelve a PLC alarm's Ignition alarm (decision 37). Presets from
     efc_ui.SHELVE_PRESETS (max SHELVE_MAX_MIN), reason required, Supervisor+. efc.ui.shelve checks the level and the reason
     again and writes the audit record."""
     vw = View()

@@ -521,7 +521,7 @@ Example: the Manual button on a device symbol (`minLevel` 1), or a window comman
 1. A shelved row (`custom.sh_<member> >= 0`) and `lvl(SUP)` show UNSHELVE, which runs `efc.ui.unshelve(self, member)`.
 2. Below Supervisor: refused with the popup. Otherwise `system.alarm.unshelve(path=[<source>])` and the audit record `EFC unshelve`.
 
-**Notes:** the PLC alarm is never written. `Cmd_Shelve` and `Sts_Shelved` are not used here (decision 34). The Alarm Status Table's own shelve does not call `efc.ui`.
+**Notes:** the PLC alarm is never written. `Cmd_Shelve` and `Sts_Shelved` are not used here (decision 37). The Alarm Status Table's own shelve does not call `efc.ui`.
 
 ## 6. Access levels
 
@@ -558,7 +558,7 @@ Interlock RESET in IntlkList is `need=MAINT` with `minLevel` 2 (Maintenance), no
 
 ### 6.4 Locked, greyed or hidden
 
-Three ways a control is restricted in the windows (decisions 27 and 33):
+Three ways a control is restricted in the windows (decisions 27 and 36):
 
 | Mode | Used for | What the user sees |
 |---|---|---|
@@ -643,8 +643,8 @@ Each item was checked in the code. The decision reference is given where the cod
 1. **Bidirectional entries and checkboxes bypass `efc.ui`.** `entry(...)` without `scale`, and `check(...)`, bind `props.value` or `props.selected` to the tag with `tag(..., bidi=True)`. They write without `cmd`, without a level re-check, without a log line and without an audit record. This covers Loop `Cmd_SP` and `Cmd_CV`, valve `Cmd_ManPos`, VFD `Cmd_Spd`, heater `Cmd_Pwr`, Process Value `Sim_En` and `Sim_PV`, and every Engineer configuration value that is not time-scaled and every Engineer checkbox. Decision 27 says writes go through `efc.ui.cmd`; this is not true for these controls. Decision 14 asks for audit-logged configuration edits with old to new values; plain configuration edits are not audited.
 2. **Commands are one-shot and the PLC must clear them.** `cmd` writes `True` and nothing writes `False`. The exceptions are `Cmd_Jog` (released by the window on release) and the Station window's `Cmd_Select`, `Cmd_Tare`, `Cmd_Zero`, `Cmd_Reset` (released by a 1 s timer in the view script, not by `efc.ui`). If the PLC does not clear a `Cmd_` member, it stays `True`.
 3. **`bypass` returns `True` even when the write failed.** BypassConfirm closes on `True`, so a failed write is only visible in the log. Decision 10 also asks for `Inp_BypassPerm` and duration presets. Neither is in `efc.ui` or `build_docks.py`. `Cfg_BypassMax` is named in the popup text only.
-4. **Shelving state is polled, and the poll is unverified.** Shelving (decision 34) uses `system.alarm.shelve`, `unshelve` and `getShelvedPaths`, and the `shelved` binding polls `shelvedMap` every 5 s (`now(5000)` plus a script transform). The code assumes `getShelvedPaths` items have `getPath()` (whose string is the alarm source path) and `getExpiration()`; this was not checked against a running 8.1 gateway. A shelve or unshelve shows in the window within 5 s, not at once. The Alarm Status Table's own shelve bypasses `efc.ui` (no audit line).
-5. **Two level sources.** Locks and visibility use `securityLevels` only. Enforcement uses `max(securityLevels, user.roles)`. A user whose level comes only from roles can press a locked button. Decision 33 names `securityLevels` as the source.
+4. **Shelving state is polled, and the poll is unverified.** Shelving (decision 37) uses `system.alarm.shelve`, `unshelve` and `getShelvedPaths`, and the `shelved` binding polls `shelvedMap` every 5 s (`now(5000)` plus a script transform). The code assumes `getShelvedPaths` items have `getPath()` (whose string is the alarm source path) and `getExpiration()`; this was not checked against a running 8.1 gateway. A shelve or unshelve shows in the window within 5 s, not at once. The Alarm Status Table's own shelve bypasses `efc.ui` (no audit line).
+5. **Two level sources.** Locks and visibility use `securityLevels` only. Enforcement uses `max(securityLevels, user.roles)`. A user whose level comes only from roles can press a locked button. Decision 36 names `securityLevels` as the source.
 6. **No default dock is wired.** `setDefaultDock` has no caller in `projects/` or `imported/`, and no view has a `defaultDock` param. Decision 2 and the Station window documentation (`docs/station-faceplates.md`) refer to a screen-level `setDefaultDock`. Until a screen calls it, ✕ closes the dock. Decision 32 leaves close without a default open.
 7. **ACK has no log line, no audit, and does not read `Sts_Active`.** It acknowledges every alarm whose `Sts_Unack` is truthy.
 8. **`audit=True` writes the audit record even when the write fails** (`cmd`, `unbypass`). `bypass` does the same.
