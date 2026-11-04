@@ -52,4 +52,3 @@ for %%f in (standalone\appendix-*.tex) do (
 echo.
 echo Done.
 pause
-

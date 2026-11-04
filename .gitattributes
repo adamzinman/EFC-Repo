@@ -18,3 +18,4 @@ projects/**/*.json linguist-generated=true
 *.xef  -text
 *.st   -text
 *.zef  binary
+*.pdf  binary
