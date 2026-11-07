@@ -18,6 +18,10 @@
         "BaseTag": {
           "dataType": "String",
           "value": ""
+        },
+        "HistProvider": {
+          "dataType": "String",
+          "value": ""
         }
       },
       "tags": [
@@ -246,7 +250,17 @@
           "documentation": "KPI value (EU) after filter / simulation - use this in logic and HMI",
           "tooltip": "KPI value (EU) after filter / simulation - use this in logic and HMI",
           "dataType": "Float4",
-          "readOnly": true
+          "readOnly": true,
+          "historyEnabled": {
+            "bindType": "Expression",
+            "value": "len(\"{HistProvider}\") > 0"
+          },
+          "historyProvider": {
+            "bindType": "parameter",
+            "binding": "{HistProvider}"
+          },
+          "historicalDeadbandStyle": "Analog",
+          "sampleMode": "OnChange"
         },
         {
           "name": "Val_PVPct",
@@ -376,6 +390,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_HH"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -404,6 +425,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_H"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }
@@ -434,6 +462,13 @@
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_L"
               }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
+              }
             }
           }
         },
@@ -462,6 +497,13 @@
               "value": {
                 "bindType": "parameter",
                 "binding": "{BaseTag}.Alm_LL"
+              }
+            },
+            "HistProvider": {
+              "dataType": "String",
+              "value": {
+                "bindType": "parameter",
+                "binding": "{HistProvider}"
               }
             }
           }

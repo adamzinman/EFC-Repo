@@ -11,7 +11,7 @@ PV design **1.3.0**. Generator: `generator/build_pv.py`. Ships inside `projects/
 **Status:** v1.1–v1.3 have not been re-tested on the gateway yet.
 
 ## Requirements and decisions
-- Ignition Perspective 8.1, ready for the 8.3 upgrade. Uses EFC_Styles. Templates live in **Views/Templates/ProcessValues**. Set `tagPath` to a `T_AI` instance. The views also accept `tType` (default `T_AI`), `dockId` and `dwTagPath` for dynamic-window selection.
+- Ignition Perspective 8.1, ready for the 8.3 upgrade. Uses EFC_Styles. Templates live in **Views/Templates/ProcessValues**. Set `tagPath` to a `T_AI` instance. The views also accept `tType` (default `T_AI`), `dockId` and `dwTagPath` for dynamic-window selection. A click runs `efc.ui.openDynamic(self)` and opens `dw_ProcessValue` (`Templates/Dynamic Window/ProcessValues/ProcessValue`) in the page's `dw_Right` dock.
 - **Two templates**, both 100×50 white rounded cards with a shadow:
   - **A1 `PV_StatusStrip`** (primary).
   - **B2 `PV_RangeBar`**, styled like A1.
@@ -25,7 +25,7 @@ PV design **1.3.0**. Generator: `generator/build_pv.py`. Ships inside `projects/
 - **Alarm state:** expressions use direct PLC tag mirrors: `Alm_Bad` and `Alm_HH/H/L/LL` supply `Sts_Active`, `Sts_Unack` and `Cfg_Priority`. Codes are -1 for none, otherwise state × 10 + internal priority (active acknowledged = 0, active unacknowledged = 1, cleared unacknowledged = 2). PLC priorities 1 Critical / 2 High / 3 Medium / 4 Low map to internal ranks 4 / 3 / 2 / 1. `Sts_ORng` and `Sts_URng` produce Diagnostic range chips without an acknowledgement state. `custom.tick` still binds to `now(1000)`, but nothing reads it; these views have no `queryStatus` transform.
 - **A1 strip:** fault first, then the highest active priority (blinking if any item is unacked), then the faded cleared color, otherwise Normal.
 - **B2 track:** a percent-mode coordinate container holding the base bands, the priority overlays, a frame and the SVG pointer. The range is in the Track tooltip.
-- **Scaling:** all sizes are in vh.
+- **Scaling:** all sizes are in vh. In a flex container, set the template's `position.basis` in vh (`9.63vh` in a row, `5vh` in a column), not the pixel basis the Designer fills in, or the value row clips on screens taller than 1080p. See [placing templates in a flex container](library-reference.md#placing-templates-in-a-flex-container).
 - **Dynamic window:** a single click calls `efc.ui.openDynamic(self)`. `T_AI` selects `dw_ProcessValue`, now `Templates/Dynamic Window/ProcessValues/ProcessValue` in the right-side `dw_Right` Perspective dock (PR #36, October 24, 2026; decisions 31–32). See [page setup](library-reference.md#page-setup-the-dw_right-dock) and detailed help for [PV_StatusStrip](help/Templates/ProcessValues/PV_StatusStrip.md) and [PV_RangeBar](help/Templates/ProcessValues/PV_RangeBar.md).
 
 ## Open items

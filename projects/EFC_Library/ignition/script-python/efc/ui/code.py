@@ -7,9 +7,16 @@
 #   template symbol onDoubleClick:  efc.ui.dblCmd(self)
 #   window close button:            efc.ui.closeDynamic(self)
 #   screen root onStartup:          efc.ui.setDefaultDock(self, viewPath, params)   (optional default dock view)
+# Access (decision 36): the user's level comes from session.props.auth.securityLevels. Command buttons below the user's
+# level stay visible with a lock; a press anyway is refused here, logged, and answered with the AccessDenied popup.
+# Alarm shelving (decision 37): Supervisor+ shelves a PLC alarm's Ignition alarm (system.alarm.shelve) for a chosen
+# time with a reason, audit-logged. Only Ignition's shelving is used: the PLC alarm (Cmd_Shelve) is not driven from here.
 
 # The one right-side dock every dynamic window opens in (Page Configuration dock id)
 DOCK_ID = 'dw_Right'
+# Design page 1920 x 1080: px sizes are design px and scale with the viewport (decision 33). Page Configuration only
+# takes a dock size in px, so sizeDock keeps the dock at 400 design px = 37.04 vh on any screen (800 px at 4K).
+DESIGN_H, DOCK_W = 1080, 400
 
 # Dynamic-window id -> view path
 WINDOWS = {
@@ -24,9 +31,22 @@ BY_TYPE = {
     'T_Heater': 'dw_Heater', 'T_HeatEx': 'dw_HeatTransfer', 'T_AI': 'dw_ProcessValue', 'T_KPI': 'dw_ProcessValue',
     'T_PID': 'dw_Loop', 'T_Station': 'dw_Station', 'native': 'dw_IOCard',
 }
-# Role hierarchy, low to high (Controls Standard HMI rules)
+# Role hierarchy, low to high (Controls Standard HMI rules). Matched case-insensitively against every name in the
+# user's security levels (Authenticated/Roles/<role>, or a custom security level of the same name).
 ROLES = ['Guest', 'Operator', 'Maintenance', 'Supervisor', 'Engineer', 'Admin']
 OPERATOR, MAINT, SUPERVISOR, ENGINEER = 1, 2, 3, 4
+# Site role or security-level names that mean one of ROLES (lower case -> ROLES name). Add the gateway's names here.
+ROLE_ALIASES = {'administrator': 'Admin', 'administrators': 'Admin', 'operators': 'Operator',
+                'supervisors': 'Supervisor', 'engineers': 'Engineer', 'engineering': 'Engineer'}
+# Popup shown when a command is refused for the user's access level
+DENIED_POPUP = 'efcAccessDenied'
+DENIED_VIEW = 'Templates/Dynamic Window/Parts/AccessDenied'
+
+# Shelve durations offered in ShelveConfirm (minutes) and the longest one allowed (matches T_Alarm Cfg_MaxShelf T#8H)
+# Pen paths drawn by Templates/Dynamic Window/Parts/Trend (build_docks.trend_part)
+TREND_PATHS = 3
+SHELVE_PRESETS = [15, 60, 240, 480]
+SHELVE_MAX_MIN = 480
 
 # Two-state devices that accept a double-tap command: type -> (state member, cmd if on, cmd if off)
 DBL_CMD = {
@@ -52,18 +72,87 @@ def _p(params, name, default=None):
     return default if v is None else v
 
 
-def level(roles):
-    """Highest role level the user holds (0 Guest .. 5 Admin). Bound by every window as custom.level."""
+def _names(node, out):
+    """Every name in session.props.auth.securityLevels (nested {name, children}), a path string
+    ('Authenticated/Roles/Operator') or a plain list of role names."""
+    if node is None:
+        return out
+    if isinstance(node, basestring):
+        out.extend(node.split('/'))
+        return out
+    name = _p(node, 'name')
+    if name is not None:
+        out.append(str(name))
+        return _names(_p(node, 'children'), out)
+    try:
+        for n in node:
+            _names(n, out)
+    except TypeError:
+        pass
+    return out
+
+
+def _rank(name):
+    n = str(name).strip().lower()
+    n = ROLE_ALIASES.get(n, n).lower()
+    for i, r in enumerate(ROLES):
+        if r.lower() == n:
+            return i
+    return 0
+
+
+def level(levels):
+    """Highest role level (0 Guest .. 5 Admin) in the user's security levels (or a list of role names).
+    Bound by every window and command template as custom.level from session.props.auth.securityLevels."""
     best = 0
-    for r in (roles or []):
-        r = str(r)
-        if r in ROLES:
-            best = max(best, ROLES.index(r))
+    for n in _names(levels, []):
+        best = max(best, _rank(n))
     return best
 
 
 def userLevel(component):
-    return level(component.session.props.auth.user.roles)
+    auth = component.session.props.auth
+    return max(level(_p(auth, 'securityLevels')), level(_p(_p(auth, 'user'), 'roles')))
+
+
+def denied(component, minLevel, action=''):
+    """A command the user's level doesn't allow: log it and open the AccessDenied popup (decision 36)."""
+    have = userLevel(component)
+    need = ROLES[max(0, min(minLevel, len(ROLES) - 1))]
+    user = _p(_p(component.session.props.auth, 'user'), 'userName') or ''
+    _log().warn('Refused %s for %s (%s): needs %s' % (action, user or 'not signed in', ROLES[have], need))
+    # JOG fires efc.ui.cmd on both onMouseDown and onTouchStart: one touch would open the popup twice
+    try:
+        now = system.date.toMillis(system.date.now())
+        s = component.session.custom
+        last = getattr(s, 'efcDenied', None) or {}
+        if _p(last, 'action') == action and 0 <= now - (_p(last, 't', 0) or 0) < 1500:
+            return
+        s.efcDenied = {'action': action, 't': now}
+    except Exception as e:
+        _log().warn('denied: dedupe check failed: %s' % e)
+    try:
+        system.perspective.openPopup(DENIED_POPUP, DENIED_VIEW,
+                                     params={'action': action, 'need': need, 'have': ROLES[have], 'user': user},
+                                     title='Invalid access level', modal=True, showCloseIcon=True, overlayDismiss=True)
+    except Exception as e:
+        _log().warn('denied: could not open %s: %s' % (DENIED_VIEW, e))
+
+
+def _target(component, member):
+    """'XV101 Cmd_Open' for log lines and the AccessDenied popup."""
+    tp = _p(component.view.params, 'tagPath', '') or ''
+    return ('%s %s' % (tp.split('/')[-1].split(']')[-1], member)).strip()
+
+
+def _writeTags(paths, values, what):
+    """writeBlocking, logging any write that doesn't come back good (missing member, read-only, bad quality)."""
+    ok = True
+    for p, q in zip(paths, system.tag.writeBlocking(paths, values)):
+        if not q.isGood():
+            ok = False
+            _log().warn('%s: write %s failed: %s' % (what, p, q))
+    return ok
 
 
 def _state(component):
@@ -85,14 +174,52 @@ def _write(component, **changes):
     s.efcDw = d
 
 
-def showDock(path, params=None):
-    """Load a view into the right dock (DOCK_ID) on the calling page and open it."""
+def dockSize(viewportHeight):
+    """Dock width in screen px for this viewport height (400 at 1080, 800 at 2160)."""
+    try:
+        h = float(viewportHeight or 0)
+    except (TypeError, ValueError):
+        h = 0
+    return int(round(h * DOCK_W / DESIGN_H)) if h > 0 else DOCK_W
+
+
+def _viewportHeight(component):
+    """page.props.dimensions.viewport.height, or None when not reported yet (dimensions.enabled is off by default
+    and the browser only sends the values on page startup and resize, so the first call after a page load may
+    see None: dockSize then falls back to 400)."""
+    try:
+        dims = component.page.props.dimensions
+    except Exception:
+        return None
+    try:
+        if not dims.enabled:
+            dims.enabled = True
+    except Exception:
+        pass
+    try:
+        return dims.viewport.height
+    except Exception:
+        return None
+
+
+def sizeDock(component):
+    """Scale the right dock to the page viewport: a screen calls it from a change script on
+    page.props.dimensions.viewport.height so a resized window keeps the dock at 37.04 vh."""
+    system.perspective.alterDock(DOCK_ID, {'size': dockSize(_viewportHeight(component))})
+
+
+def showDock(path, params=None, component=None):
+    """Load a view into the right dock (DOCK_ID) on the calling page and open it. One alterDock call carries size,
+    view and params (alterDock replaces the dock's altered state, so two calls must not be relied on to merge)."""
     params = dict(params or {})
-    system.perspective.alterDock(DOCK_ID, {'view': path, 'viewParams': params})
+    cfg = {'view': path, 'viewParams': params}
+    if component is not None:
+        cfg['size'] = dockSize(_viewportHeight(component))
+    system.perspective.alterDock(DOCK_ID, cfg)
     system.perspective.openDock(DOCK_ID, params=params)
 
 
-def openWindow(dw, tagPath, model=None):
+def openWindow(dw, tagPath, model=None, component=None):
     """Open dynamic window `dw` (a WINDOWS id) for tagPath in the right dock."""
     if dw not in WINDOWS:
         _log().warn('openWindow: unknown dynamic window %s' % dw)
@@ -100,7 +227,7 @@ def openWindow(dw, tagPath, model=None):
     params = {'tagPath': tagPath or ''}
     if model:
         params['model'] = model
-    showDock(WINDOWS[dw], params)
+    showDock(WINDOWS[dw], params, component)
 
 
 def openDynamic(component):
@@ -111,15 +238,20 @@ def openDynamic(component):
         _log().warn('openDynamic: no window for tType=%s dockId=%s' % (_p(p, 'tType'), _p(p, 'dockId')))
         return
     tp = _p(p, 'dwTagPath') or _p(p, 'tagPath') or _p(p, 'cardPath') or ''
-    openWindow(dw, tp, _p(p, 'model'))
+    if not tp:
+        _log().warn('openDynamic: no tagPath on %s' % component.view.id)
+        return
+    openWindow(dw, tp, _p(p, 'model'), component)
 
 
 def setDefaultDock(component, viewPath, params=None):
-    """Screen onStartup (optional): remember and show the page's default right-dock view."""
+    """Screen onStartup: size the right dock, then remember and show the page's default view (its trends overview)."""
     if viewPath:
         params = dict(params or {})
         _write(component, default={'path': viewPath, 'params': params})
-        showDock(viewPath, params)
+        showDock(viewPath, params, component)
+    else:
+        sizeDock(component)
 
 
 def closeDynamic(component):
@@ -127,7 +259,7 @@ def closeDynamic(component):
     s, pid, st = _state(component)
     d = st.get('default') or {}
     if d.get('path'):
-        showDock(d['path'], d.get('params'))
+        showDock(d['path'], d.get('params'), component)
     else:
         system.perspective.closeDock(DOCK_ID)
 
@@ -141,14 +273,21 @@ def _audit(component, action, target, value=''):
     _log().info('AUDIT %s %s %s by %s' % (action, target, value, user))
 
 
-def cmd(component, member, value=True, minLevel=OPERATOR, audit=False):
-    """Window button: write one member of the window's tag, if the user's role allows it."""
+def cmd(component, member, value=True, minLevel=OPERATOR, audit=False, notify=True):
+    """Command button: write one member of the view's tag if the user's level allows it. Below the level the write
+    is refused, logged and (notify) answered with the AccessDenied popup; release events pass notify=False."""
+    base = _p(component.view.params, 'tagPath') or ''
+    if not base:
+        return False
     if userLevel(component) < minLevel:
-        return
-    tp = component.view.params.tagPath + '/' + member
-    system.tag.writeBlocking([tp], [value])
+        if notify:
+            denied(component, minLevel, _target(component, member))
+        return False
+    tp = base + '/' + member
+    ok = _writeTags([tp], [value], 'cmd')
     if audit:
         _audit(component, 'EFC write', tp, value)
+    return ok
 
 
 def bypass(component, intlkPath, idx, reason):
@@ -156,27 +295,109 @@ def bypass(component, intlkPath, idx, reason):
     reason = (reason or '').strip()
     if userLevel(component) < SUPERVISOR or not reason:
         return False
-    system.tag.writeBlocking(['%s/Cmd_Bypass/%d' % (intlkPath, idx)], [True])
+    _writeTags(['%s/Cmd_Bypass/%d' % (intlkPath, idx)], [True], 'bypass')
     _audit(component, 'EFC bypass', '%s/%d' % (intlkPath, idx), reason)
     return True
 
 
 def unbypass(component, intlkPath, idx):
     if userLevel(component) < SUPERVISOR:
+        denied(component, SUPERVISOR, 'Unbypass %d' % idx)
         return
-    system.tag.writeBlocking(['%s/Cmd_Unbypass/%d' % (intlkPath, idx)], [True])
+    _writeTags(['%s/Cmd_Unbypass/%d' % (intlkPath, idx)], [True], 'unbypass')
     _audit(component, 'EFC unbypass', '%s/%d' % (intlkPath, idx))
+
+
+def _almSource(tagPath, member):
+    """Ignition alarm source path of a T_Alarm / T_AlmLim member (decision 37): '[prov]Path/To/Dev' + 'Alm_X' ->
+    'prov:prov:/tag:Path/To/Dev/Alm_X/Sts_Active:/alm:Alarm'. A path without a [provider] prefix uses provider 'default'."""
+    tp = str(tagPath or '').strip()
+    prov = 'default'
+    if tp.startswith('['):
+        end = tp.find(']')
+        if end > 0:
+            prov, tp = tp[1:end], tp[end + 1:]
+    return 'prov:%s:/tag:%s/%s/Sts_Active:/alm:Alarm' % (prov, tp.strip('/'), member)
+
+
+def shelve(component, member, minutes, reason):
+    """ShelveConfirm popup: shelve the Ignition alarm of PLC alarm `member` on the popup's tagPath for `minutes`
+    (clamped to 1..SHELVE_MAX_MIN). Supervisor+ with a non-empty reason; written to the audit log. The PLC alarm stays
+    active (decision 37). Returns True when the shelve call was made, so the popup can close."""
+    reason = (reason or '').strip()
+    if userLevel(component) < SUPERVISOR:
+        denied(component, SUPERVISOR, _target(component, 'Shelve ' + member))
+        return False
+    if not reason:
+        return False
+    src = _almSource(_p(component.view.params, 'tagPath', ''), member)
+    try:
+        mins = max(1, min(SHELVE_MAX_MIN, int(minutes)))
+        system.alarm.shelve(path=[src], timeoutMinutes=mins)
+    except Exception as e:
+        _log().warn('shelve: %s failed: %s' % (src, e))
+        return False
+    _audit(component, 'EFC shelve', src, '%d min: %s' % (mins, reason))
+    return True
+
+
+def unshelve(component, member):
+    """Unshelve button: Supervisor+ only; clears the Ignition shelving of PLC alarm `member` and is audit-logged."""
+    if userLevel(component) < SUPERVISOR:
+        denied(component, SUPERVISOR, _target(component, 'Unshelve ' + member))
+        return False
+    src = _almSource(_p(component.view.params, 'tagPath', ''), member)
+    try:
+        system.alarm.unshelve(path=[src])
+    except Exception as e:
+        _log().warn('unshelve: %s failed: %s' % (src, e))
+        return False
+    _audit(component, 'EFC unshelve', src)
+    return True
+
+
+def shelvedMap(tagPath, members):
+    """Window binding (now(5000) expression + script transform, polled every 5 s): which of the window's alarm members are shelved in Ignition. `members` is a
+    list or a comma-separated string of member names. Returns 'Alm_X=12,Alm_Y=0' (minutes left, 0 = no expiry) for the
+    shelved ones, or '' when none. A string rather than a dict: each row reads its own entry with a binding transform
+    (build_docks.alarms). Never raises."""
+    try:
+        names = members.split(',') if isinstance(members, basestring) else list(members or [])
+        names = [n.strip() for n in names if n and n.strip()]
+        if not names or not str(tagPath or '').strip():
+            return ''
+        srcs = {}
+        for m in names:
+            srcs[_almSource(tagPath, m)] = m
+        now = system.date.toMillis(system.date.now())
+        out = []
+        for item in system.alarm.getShelvedPaths():
+            src = str(item.getPath())
+            if src not in srcs:
+                continue
+            exp, left = item.getExpiration(), 0
+            if exp is not None:
+                ms = max(0, system.date.toMillis(exp) - now)
+                left = (ms + 59999) // 60000                # whole minutes, rounded up
+            out.append('%s=%d' % (srcs[src], left))
+        return ','.join(out)
+    except Exception as e:
+        _log().warn('shelvedMap: %s: %s' % (tagPath, e))
+        return ''
 
 
 def ackAll(component, alarms):
     """ACK button: acknowledge every unacked PLC alarm member listed (Operator+)."""
-    if userLevel(component) < OPERATOR:
+    base = _p(component.view.params, 'tagPath') or ''
+    if not base:
         return
-    base = component.view.params.tagPath
+    if userLevel(component) < OPERATOR:
+        denied(component, OPERATOR, _target(component, 'ACK'))
+        return
     vals = system.tag.readBlocking([base + '/' + a + '/Sts_Unack' for a in alarms])
     paths = [base + '/' + a + '/Cmd_Ack' for a, q in zip(alarms, vals) if q.value]
     if paths:
-        system.tag.writeBlocking(paths, [True] * len(paths))
+        _writeTags(paths, [True] * len(paths), 'ackAll')
 
 
 def _num(v):
@@ -189,7 +410,9 @@ def _num(v):
 
 def trend(base, pens, minutes, w, h):
     """Templates/Dynamic Window/Parts/Trend transform: SVG path per pen over the last `minutes` from tag history."""
-    out = {'d': [''] * len(pens), 'lo': '', 'hi': ''}
+    # Parts/Trend always draws TREND_PATHS pen paths bound to d[0..2]: pad d so a window with fewer pens leaves no
+    # missing index (a missing index reads as Bad_NotFound, which try() in the binding does not catch)
+    out = {'d': [''] * max(TREND_PATHS, len(pens or [])), 'lo': '', 'hi': ''}
     if not base or not pens:
         return out
     try:
@@ -218,11 +441,16 @@ def trend(base, pens, minutes, w, h):
 def dblCmd(component):
     """Double-click/tap on the symbol in touch mode: toggle a two-state device (Operator+).
     Sent only when the template has useButton = false and dblCmd = true, the device is
-    in Manual and available, and nothing blocks it."""
+    in Manual and available, and nothing blocks it. Below Operator: refused with the AccessDenied popup."""
     p = component.view.params
-    if _p(p, 'useButton') or not _p(p, 'dblCmd') or _p(p, 'tType') not in DBL_CMD or userLevel(component) < OPERATOR:
+    if _p(p, 'useButton') or not _p(p, 'dblCmd') or _p(p, 'tType') not in DBL_CMD:
         return
-    base = p.tagPath
+    if userLevel(component) < OPERATOR:
+        denied(component, OPERATOR, _target(component, 'double-tap command'))
+        return
+    base = _p(p, 'tagPath') or ''
+    if not base:
+        return
     state, cmdOn, cmdOff = DBL_CMD[p.tType]
     paths = [base + '/' + m for m in [state] + READY_TRUE + READY_FALSE]
     v = [q.value for q in system.tag.readBlocking(paths)]
@@ -230,4 +458,4 @@ def dblCmd(component):
     blocked = v[1 + len(READY_TRUE):]
     if not all(ready) or any(blocked):
         return
-    system.tag.writeBlocking([base + '/' + (cmdOn if isOn else cmdOff)], [True])
+    _writeTags([base + '/' + (cmdOn if isOn else cmdOff)], [True], 'dblCmd')

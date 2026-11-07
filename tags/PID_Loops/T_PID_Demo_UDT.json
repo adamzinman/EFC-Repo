@@ -1,6 +1,12 @@
 {
   "name": "T_PID_Demo",
   "tagType": "UdtType",
+  "parameters": {
+    "HistProvider": {
+      "dataType": "String",
+      "value": ""
+    }
+  },
   "tags": [
     {
       "name": "Cfg_Tag",
@@ -42,21 +48,51 @@
       "tagType": "AtomicTag",
       "valueSource": "memory",
       "dataType": "Float4",
-      "value": 0.0
+      "value": 0.0,
+      "historyEnabled": {
+        "bindType": "Expression",
+        "value": "len(\"{HistProvider}\") > 0"
+      },
+      "historyProvider": {
+        "bindType": "parameter",
+        "binding": "{HistProvider}"
+      },
+      "historicalDeadbandStyle": "Analog",
+      "sampleMode": "OnChange"
     },
     {
       "name": "Val_SP",
       "tagType": "AtomicTag",
       "valueSource": "memory",
       "dataType": "Float4",
-      "value": 0.0
+      "value": 0.0,
+      "historyEnabled": {
+        "bindType": "Expression",
+        "value": "len(\"{HistProvider}\") > 0"
+      },
+      "historyProvider": {
+        "bindType": "parameter",
+        "binding": "{HistProvider}"
+      },
+      "historicalDeadbandStyle": "Analog",
+      "sampleMode": "OnChange"
     },
     {
       "name": "Out_CV",
       "tagType": "AtomicTag",
       "valueSource": "memory",
       "dataType": "Float4",
-      "value": 0.0
+      "value": 0.0,
+      "historyEnabled": {
+        "bindType": "Expression",
+        "value": "len(\"{HistProvider}\") > 0"
+      },
+      "historyProvider": {
+        "bindType": "parameter",
+        "binding": "{HistProvider}"
+      },
+      "historicalDeadbandStyle": "Analog",
+      "sampleMode": "OnChange"
     },
     {
       "name": "Cmd_SP",

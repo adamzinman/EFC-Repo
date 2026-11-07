@@ -90,20 +90,65 @@ A single click opens `Templates/Dynamic Window/Valves/ValveDiscrete` in `dw_Righ
 - The PLC must enforce permissives and interlocks itself; the HMI badges are information only.
 - A very fast click can produce a short pulse. If your scan could miss it, have the PLC reset PB and delete the release events on the button.
 
+## Tag history for process values
+The PCLib UDTs (`types/export/PCLib_Ignition81.json`) have a `HistProvider` parameter: the name of the tag history provider (historian database). When it is set on an instance, `Val_PV` of `T_AI`, `T_KPI` and `T_Analyzer` and `Val_PV` / `Val_SP` / `Out_CV` of `T_PID` are historized (analog deadband, on change). Leave it empty for no history. The dynamic-window trends and the planned trends overview read this history, so set it on every process-value instance (decision 34).
+
 ## Page setup: the dw_Right dock
 Dynamic windows (`Templates/Dynamic Window/<category>/`) open in one right-side Perspective dock per page, id `dw_Right` (decision 31). A template click runs `efc.ui.openDynamic(self)`, which loads the window into that dock with `system.perspective.alterDock` and opens it with `system.perspective.openDock`. This needs **Ignition 8.1.19 or later** (the library minimum is 8.1.22).
 
 In each page's **Page Configuration**, add a **right dock**:
 - id `dw_Right`
 - view: the page's trends overview as the initial view (shown when the page loads; a click replaces it with the device's window)
-- size 400 px at 1080p (37.04 vh equivalent; the window is 400 x 860, decision 25)
+- size 400 (any value: `efc.ui.sizeDock` rescales it to 37.04 vh on every open, close and screen startup, so 400 px at 1080p and 800 px at 4K, decision 33)
 - display "visible": the dock is always present (decision 32)
 - content "cover": the dock covers the right-hand section of the shell
 - handle "hide"
 
-To make the trends overview the view a window's close button returns to, call `efc.ui.setDefaultDock(self, viewPath, params)` in the screen's root `onStartup`. A window's close button then puts that view back. Without a default, the close button closes the dock.
+All px sizes in the library are design px on a 1920 x 1080 page and scale with the viewport (vh / vw). Page Configuration takes a dock size in px only, so the scaling is done in script: every dock view (the windows and the trends overview) watches `page.props.dimensions.viewport.height` and calls `efc.ui.sizeDock(self)` (page dimensions need Ignition 8.1.7+; `sizeDock` turns `page.props.dimensions.enabled` on).
 
-Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=None)` opens a window by its id (`dw_ValveDiscrete`, `dw_Loop`, ...), and `efc.ui.showDock(path, params)` loads any view.
+### Trends overview (the default view)
+`Templates/Dynamic Window/TrendsOverview` charts every process value on the screen: one Power Chart plot per variable type (pressure, temperature, flow, level, analysis, speed, electrical, weight, volume, vibration, percent, length, other), stacked, each with its own axis labelled with the unit; 30 min by default, buttons for 5 m to 24 h. It needs tag history on the values (decision 34, `HistProvider`) and a Tag Historian licence.
+
+How it knows what is on the screen: Perspective cannot list a page's templates, so the process-value templates (`PV_StatusStrip`, `PV_RangeBar`, `AnalogIndicator/*`) register their tag with `efc.pv` when they start and remove it when they stop (root `onStartup` / `onShutdown`, plus a change script on `tagPath`). The overview reads that registry on startup, on the page message `efc.pvChanged` and every 5 s, and rebuilds the chart only when the set of values changed. A template inside a dynamic window or popup sets its `census` param to false so its value is not charted twice. The variable type comes from the engineering unit (`efc.pv.VAR_TYPES`); for `%`, lengths and a missing unit the ISA letter of the tag name decides (P, T, F, L, A, S, W...), else the value lands in "Other". Limits: 6 plots, 8 pens per plot.
+
+Project setup: `efc.ui.setDefaultDock(self, 'Templates/Dynamic Window/TrendsOverview')` in each screen's root `onStartup`, and the Gateway **Session Shutdown** event `efc.pv.purgeSession(session.props.id)` (a closed browser tab does not shut its views down until the session ends). The dock views carry the viewport-height change script themselves, so screens no longer need one.
+
+To make the trends overview the view a window's close button returns to, call `efc.ui.setDefaultDock(self, viewPath, params)` in the screen's root `onStartup`; it sizes the dock, shows that view and remembers it in `session.custom.efcDw` under the key `<pageId>|<page path>` (so a default set on one screen does not leak into the next after `navigate()`). A window's close button (`efc.ui.closeDynamic(self)`) then puts that view back. Without a default, the close button closes the dock.
+
+Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=None)` opens a window by its id (`dw_ValveDiscrete`, `dw_Loop`, ...), and `efc.ui.showDock(path, params)` loads any view. Neither resizes the dock; call `efc.ui.sizeDock(self)` first if the page has not. The constants are `efc.ui.DOCK_ID` (`'dw_Right'`), `DESIGN_H` (1080) and `DOCK_W` (400); `efc.ui.dockSize(viewportHeight)` returns the px width for a viewport height.
+
+Full reference: [efc.ui](efc-ui.md).
+
+## Access levels: the lock and the AccessDenied popup
+The user's level comes from the Perspective session's security levels, `session.props.auth.securityLevels` (decision 36). `efc.ui.level` takes the highest of `Guest` 0, `Operator` 1, `Maintenance` 2, `Supervisor` 3, `Engineer` 4 and `Admin` 5 found anywhere in that tree, so both `Authenticated/Roles/Operator` and a custom security level named `Operator` count. Names are matched without regard to case. If your gateway uses other names, map them in `efc.ui.ROLE_ALIASES` (for example `'administrator': 'Admin'`); a user whose roles match nothing is Guest. The lock and visibility bindings read `securityLevels`; the server-side check in `efc.ui` takes the higher of `securityLevels` and `session.props.auth.user.roles`.
+
+- **Command buttons below the user's level stay visible with a lock.** This covers the template Manual button and, in the dynamic windows, the mode, command, preset, FWD/REV, ACK and interlock RESET buttons. The tooltip says which role is needed.
+- **A press anyway is refused.** `efc.ui.cmd` writes nothing, logs a warning to the `efc.ui` logger and opens `Templates/Dynamic Window/Parts/AccessDenied`: "Invalid access level", what was pressed, the role it needs, and who is signed in. Double-tap commands and ACK behave the same. If the same action is refused again within 1.5 s (a touch fires both mouse and touch events), the second refusal is logged but opens no second popup.
+- **Failed writes are logged too.** When a write comes back bad (missing member, read-only tag, bad quality), `efc.ui` logs the tag path and the quality.
+- Sections and controls that are Supervisor+ or Engineer+ (bypass, alarm limits, configuration, tuning, the Maintenance section) stay hidden below their level, as before (decision 27).
+- The HMI check is a convenience, not security: enforce access in Perspective security and the PLC.
+
+Full reference: [efc.ui](efc-ui.md).
+
+## Alarm shelving
+
+Shelving hides a PLC alarm in Ignition for a chosen time (decision 37). It uses Ignition's own alarm shelving; the PLC is not changed.
+
+- **Where to shelve:** the Alarms section of a dynamic window. Each alarm row that is not shelved has a SHELVE button, visible to Supervisor and above only (decisions 27 and 36: hidden below the level, not locked). SHELVE opens a popup with 15 min, 1 h, 4 h and 8 h presets (the longest is 8 h, the T_Alarm `Cfg_MaxShelf` default), a required reason, and a SHELVE button that stays disabled until a reason is typed. The popup closes when the shelve is made.
+- **Unshelve:** a shelved row shows a SHELVED chip with the minutes left (a chip with no minutes means no expiry) and an UNSHELVE button, also Supervisor and above.
+- **Audit:** each shelve writes `EFC shelve` (the alarm source, the minutes and the reason) and each unshelve writes `EFC unshelve` to the audit log, with the user name. See [efc.ui section 7](efc-ui.md#73-audit-records).
+- **What shelving does:** Ignition hides the alarm from the alarm status table, the alarm journal views and the template alarm outline until the timeout or an unshelve. **The PLC alarm stays active.** `Cmd_Shelve` and `Sts_Shelved` are not driven by the HMI library; they remain available for PLC-side logic.
+- **Alarm Status Table:** the table's built-in shelve is a second way to shelve. Enable it in the Designer, check the table's shelving and toolbar properties for your 8.1 version, and set the component's security so only Supervisor and above can use it. The table's own shelve does not go through `efc.ui`, so it does not write the `EFC shelve` audit line.
+
+## Placing templates in a flex container
+Template text is sized in vh, so it grows with the screen. The box a template sits in has to grow the same way, or the text outgrows it and clips. When you drop a template into a flex container, the Designer sets the child's `position.basis` to a pixel size. That pins the box: at 1080p it fits, but on a taller screen the vh text gets bigger while the box doesn't, and the bottom row is cut off with a scrollbar.
+
+Set `position.basis` in vh instead, with `grow` and `shrink` at 0:
+- Basis is the size along the parent's direction: width in a row, height in a column.
+- Convert the template's default size at 1080p: px / 10.8 = vh. For example, `PV_StatusStrip` (104 × 54) is `9.63vh` in a row and `5vh` in a column.
+- `basis: auto` also works if the box should size itself from its content.
+
+`Templates/ProcessValues/_Demo` shows the pattern: each strip sits in a row with `basis: 9.63vh`, grow 0, shrink 0. In a coordinate container, use percent mode for the same reason: fixed mode pins the box in pixels.
 
 ## Symbols & colors
 | State | Fill | Notes |
@@ -139,7 +184,7 @@ Scripts can also open the dock directly: `efc.ui.openWindow(dw, tagPath, model=N
 
 ## Ignition 8.1 compatibility
 Both projects target **Ignition 8.1** and pass `generator/check_81.py`, a static import check:
-- **Project zips:** `project.json` sits at the zip root (title, parent, enabled, inheritable). Every resource uses the 8.1 layout: `com.inductiveautomation.perspective/<type>/<path>/` plus `resource.json` (scope `G`, version 1).
+- **Project zips:** `project.json` sits at the zip root (title, parent, enabled, inheritable). Every resource uses the 8.1 layout: `com.inductiveautomation.perspective/<type>/<path>/` plus `resource.json` (scope `G`, version 1). The `efc/ui` script resource is the exception: scope `A`, so gateway and client scripts can both call it.
 - **Style classes:** in the 8.1 `style.json` form (`base.style` plus `variants` with `pseudo`).
 - **Coordinate containers:** percent mode, with every child position a 0–1 fraction (the 8.1 format).
 - **Expression functions:** only 8.1 functions are used: `case`, `if`, `indexOf`, `lastIndexOf`, `len`, `numberFormat`, `substring`, `coalesce`, `toStr`, `try`, `forceQuality`, `isAlarmActiveFiltered`. The earlier `endsWith()` call doesn't exist in 8.1 and was replaced with `indexOf()`.

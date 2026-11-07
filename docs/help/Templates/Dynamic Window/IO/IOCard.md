@@ -11,7 +11,7 @@ A read-only summary of one X80 I/O card: model, rack, slot, card description and
 
 - **Default size:** 400 x 860 (`props.defaultSize`). The root is a scrolling column (`Container/Scroll`).
 - **Parameters:** `tagPath` (the card UDT instance), `tType` (default `native`), and `model` (the card model, for example `BMXDDI1602`).
-- **How it is opened:** a single click on the SlotTile runs `efc.ui.openDynamic(self)` when the tile's `model` is set. `openDynamic` maps `dockId` `dw_IOCard` to `Templates/Dynamic Window/IO/IOCard`, takes the tag path from `dwTagPath`, then `tagPath`, then `cardPath` (SlotTile passes `cardPath`), passes `model` along, and loads `Templates/Dynamic Window/IO/IOCard` into the page's `dw_Right` dock with params `{tagPath, model}` (`system.perspective.alterDock`) and opens the dock.
+- **How it is opened:** a single click on the SlotTile runs `efc.ui.openDynamic(self)` when the tile's `model` is set. `openDynamic` maps `dockId` `dw_IOCard` to `Templates/Dynamic Window/IO/IOCard`, takes the tag path from `dwTagPath`, then `tagPath`, then `cardPath` (SlotTile passes `cardPath`), passes `model` along, and loads `Templates/Dynamic Window/IO/IOCard` into the page's `dw_Right` dock with params `{tagPath, model}` (`system.perspective.alterDock`) and opens the dock (`system.perspective.openDock`). Before that it runs `efc.ui.sizeDock(self)`, which sets the dock size to 37.04 vh (400 px at 1080p, 800 px at 4K, decision 33).
 - **Native DDT:** the card is a native x80 device type (`tType` `native`), not a PCLib UDT. See Tag members used.
 - **Generated view:** yes, `io_card()` in `generator/docks/build_docks.py`.
 
@@ -48,7 +48,7 @@ All three params have `paramDirection: input` and `persistent: true`. There are 
 
 | Path | Default | Binding | Source | What it holds / drives |
 |---|---|---|---|---|
-| `view.custom.level` | `0` | property, transform `return efc.ui.level(value)` | `session.props.auth.user.roles` | Highest role level. Not used by any binding or script in this view. |
+| `view.custom.level` | `0` | property, transform `return efc.ui.level(value)` | `session.props.auth.securityLevels` | Highest role level. Not used by any binding or script in this view. |
 | `view.custom.m_Module_MOD_ERROR` | `null` | tag | `{0}/Module/MOD_ERROR` | Module error bit. Drives the banner (null or bad quality shows UNKNOWN). |
 | `view.custom.m_Rack` | `null` | tag | `{0}/Rack` | Rack number. Drives the header and the Rack row. |
 | `view.custom.m_Slot` | `null` | tag | `{0}/Slot` | Slot number. Drives the header and the Slot row. |
@@ -61,9 +61,9 @@ None. The components carry no `custom` properties.
 
 ### Session, page and message payloads
 
-- Reads `session.props.auth.user.roles` (through `level`, unused).
+- Reads `session.props.auth.securityLevels` (through `level`, unused).
 - Opens the popup `io_<tagPath>` on `Templates/IO/Faceplates/<model>`.
-- Writes no tags and no `session.custom` value. The window's close button reads the page default from `session.custom.efcDw` and changes the `dw_Right` dock (through `closeDynamic`).
+- Writes no tags and no `session.custom` value. The window's close button reads the page default from `session.custom.efcDw['<pageId>|<page path>']` and changes the `dw_Right` dock's size and view (through `closeDynamic`, which calls `efc.ui.sizeDock`).
 
 ## Bindings reference
 
@@ -121,12 +121,12 @@ Total: **2 event scripts** (`onActionPerformed`) and **1 transform script**. No 
    ```python
    return efc.ui.level(value)
    ```
-   Converts the user's roles to a level from 0 to 5. Its value is not used in this view.
+   Converts the user's security levels to a level from 0 to 5 (case-insensitive name match, site names through `efc.ui.ROLE_ALIASES`). Its value is not used in this view.
 
 ### Library functions called by this view (`efc.ui`, `projects/EFC_Library/ignition/script-python/efc/ui/code.py`)
 
-- **`efc.ui.closeDynamic(component)`**: writes the page's default path and params back as the current ones.
-- **`efc.ui.level(roles)`**: the transform above.
+- **`efc.ui.closeDynamic(component)`**: sizes the dock (`efc.ui.sizeDock`), then loads the page's default view and params (`session.custom.efcDw['<pageId>|<page path>']`, set by `efc.ui.setDefaultDock`) back into the `dw_Right` dock, or closes the dock if the page has no default.
+- **`efc.ui.level(levels)`**: the transform above.
 - **`efc.ui.openDynamic(component)`** (called by SlotTile, not by this view): sets `dw_IOCard` (`Templates/Dynamic Window/IO/IOCard`) with `tagPath` and `model`.
 
 ## Tag members used

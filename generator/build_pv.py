@@ -9,7 +9,7 @@ Writes (relative to the repo root):
   tags/PV_Demo_Tags.json        Demo UDT T_AI_Demo (EFCLib v1 member names) + 5 instances (import at the [default] provider root)
   docs/pv-style-index.md        Every PV style class and what it is for
 Normally run from the repo root:  python3 build.py
-Only template parameter: tagPath (path to a DDT_Process_Value instance, e.g. [default]Area1/PT002).
+Template parameters: tagPath (a T_AI instance, e.g. [default]PV_Demo/PT001), tType, dockId, dwTagPath (click opens dw_ProcessValue in the dw_Right dock).
 """
 import json, os, re, shutil
 from urllib.parse import quote
@@ -249,8 +249,18 @@ def strip_classes():
             f'   if({{view.custom.clearedPri}} >= 0, "PV/Strip/" + {PRI_NAME("{view.custom.clearedPri}")} + " Alarm/Mod/ClearedUnacked",\n'
             '    "PV/Strip/Normal"))))')
 
+# Root events: click opens the dynamic window; startup / shutdown and a tagPath change keep the page's process-value
+# registry (efc.pv) current, so the trends overview charts what is on screen (decision 35).
+PV_EVENTS = {"system": {"onStartup": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.register(self)"}},
+                       "onShutdown": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.unregister(self)"}}},
+           "dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}
+TAGPATH_CHANGE = {"paramDirection": "input", "persistent": True, "onChange": {"enabled": None, "script": "\tefc.pv.rebind(self, previousValue, currentValue)"}}
+
 def view(root, custom_defaults, prop_config, w, h):
-    return {"custom": custom_defaults, "params": {"tagPath": "", "tType": "T_AI", "dockId": "", "dwTagPath": ""}, "propConfig": prop_config,
+    prop_config = dict(prop_config)
+    prop_config["params.tagPath"] = TAGPATH_CHANGE
+    prop_config["params.census"] = {"paramDirection": "input", "persistent": True}
+    return {"custom": custom_defaults, "params": {"tagPath": "", "tType": "T_AI", "dockId": "", "dwTagPath": "", "census": True}, "propConfig": prop_config,
             "props": {"defaultSize": {"width": w, "height": h}}, "root": root}
 
 # ----------------------------------------------------------------- A1: PV_StatusStrip
@@ -261,7 +271,7 @@ def build_a1():
                 justify="space-between")
     card = flex("Card", "row", [strip, body], "PV/Card", {"basis": "auto", "grow": 1, "shrink": 1}, justify="flex-start", align="stretch")
     root = flex("root", "column", [card], "PV/Shell Util/Pointer", justify="flex-start", align="stretch")
-    root["events"] = {"dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}
+    root["events"] = PV_EVENTS                         # click opens dw_ProcessValue; startup/shutdown register the value (efc.pv)
     return view(root, common_defaults(), common_custom(), 104, 54)
 
 # ----------------------------------------------------------------- B2: PV_RangeBar
@@ -330,7 +340,7 @@ def build_b2():
     card = flex("Card", "column", [header_row(), value_row("PV/ValueSmall"), track], "PV/Card PV/BodyBar",
                 {"basis": "auto", "grow": 1, "shrink": 1}, justify="space-between")
     root = flex("root", "column", [card], "PV/Shell Util/Pointer", justify="flex-start", align="stretch")
-    root["events"] = {"dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}
+    root["events"] = PV_EVENTS                         # click opens dw_ProcessValue; startup/shutdown register the value (efc.pv)
     return view(root, defaults, pc, 104, 54)
 
 # ----------------------------------------------------------------- demo view
@@ -389,8 +399,8 @@ def build_tags():
             mem("Cfg_Lim", "Float4", lim), mem("Cfg_En", "Boolean", True), mem("Cfg_Priority", "Int2", PRI[pri]),
             mem("Sts_Suppressed", "Boolean", False),
             expr("Sts_Active", "Boolean", act, alarms=alarm(name, pri)), expr("Sts_Unack", "Boolean", act)]}
-    udt = {"name": "T_AI_Demo", "tagType": "UdtType", "tags": [   # memory stand-in with the EFCLib v1 T_AI member names
-        mem("Val_PV", "Float4", 28.2),
+    udt = {"name": "T_AI_Demo", "tagType": "UdtType", "parameters": {"HistProvider": {"dataType": "String", "value": ""}}, "tags": [   # memory stand-in with the EFCLib v1 T_AI member names
+        mem("Val_PV", "Float4", 28.2, historyEnabled={"bindType": "Expression", "value": 'len("{HistProvider}") > 0'}, historyProvider={"bindType": "parameter", "binding": "{HistProvider}"}, historicalDeadbandStyle="Analog", sampleMode="OnChange"),   # historized when the instance names a HistProvider
         expr("Cfg_Tag", "String", '"{InstanceName}"'),
         mem("Cfg_Desc", "String", "Demo pressure transmitter"),
         mem("Cfg_EU", "String", "PSIG"),

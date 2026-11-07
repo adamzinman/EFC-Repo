@@ -44,6 +44,10 @@ def run(*args, **kw):
     subprocess.run([sys.executable, *args], cwd=GEN, check=True, **kw)
 
 
+def run_tool(name, *args):
+    subprocess.run([sys.executable, os.path.join(ROOT, "tools", name), *args], cwd=ROOT, check=True)
+
+
 def unzip_to(zp, dest):
     """Replace dest with the zip's contents (files only; directory entries are implied)."""
     if os.path.exists(dest):
@@ -89,8 +93,6 @@ def generate(preview):
     v = VERSION["version"]
     run("build_styles.py", stdout=subprocess.DEVNULL)
     run("build_pid.py")
-    if preview:
-        run("preview_pid.py")
 
     # build the generated parts (EFC_Styles, PID_Symbols) in projects/; merge_library() moves them to build/components/
     unzip_to(os.path.join(BUILD, "styles", "EFC_Styles.zip"), os.path.join(PROJECTS, "EFC_Styles"))
@@ -117,7 +119,8 @@ def generate(preview):
     if preview:
         run("render_views.py")            # docs/previews/templates/<Category>/<Name>.png, one per view
         os.makedirs(os.path.join(ROOT, "docs", "previews"), exist_ok=True)
-        shutil.copy(os.path.join(BUILD, "pid", "preview.png"), os.path.join(ROOT, "docs", "previews", "templates.png"))
+        # templates.png is the render of the real Templates/_Demo view (preview_pid.py mirrored the retired PID_* UDTs)
+        shutil.copy(os.path.join(ROOT, "docs", "previews", "templates", "_Demo.png"), os.path.join(ROOT, "docs", "previews", "templates.png"))
 
 
 def relocate(part, rel):
@@ -173,6 +176,8 @@ def merge_library():
                                         "the parent of an HMI project."), f, indent=2); f.write("\n")
     guard_window_classes(lib)
     check_view_refs(lib)
+    run_tool("check_bindings.py")         # every bound member exists in the UDT the view binds (tools/check_bindings.py)
+    run_tool("test_efc_pv.py")            # efc.pv registry / grouping unit test (CPython, fake system)
 
 
 def guard_window_classes(lib):
@@ -274,6 +279,9 @@ def main():
     a = ap.parse_args()
     if not a.check:
         generate(a.preview)
+    else:
+        run_tool("check_bindings.py")     # CI: the committed views still bind only members their UDTs have
+        run_tool("test_efc_pv.py")
     zips = make_dist() if (a.dist or a.check) else None
     if zips is None:                      # check from temporary zips so the check always runs
         import tempfile

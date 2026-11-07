@@ -4,7 +4,7 @@ from active import BY
 figs=[]
 for n,u,ov,sym in b4.DEMO:
     s=BY[sym]; tpl={"onoff":"AutoValve","control":"ControlValve"}.get(s.kind,"Motor")
-    p={"symbol": sym if tpl!="Motor" else f"{s.cat}/{sym}", "alarm": 3 if ov.get("Fault") and u=="PID_Motor" else 0}
+    p={"symbol": sym if tpl!="Motor" else f"{s.cat}/{sym}", "alarm": 3 if ov.get("Sts_Fault") and u=="T_Motor_Demo" else 0}
     orig=pv.LAYOUT[tpl]
     if tpl!="Motor": pv.LAYOUT[tpl]=b4.valve_layout(s,orig)
     nb = n in b4.NO_BUTTON

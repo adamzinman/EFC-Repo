@@ -55,9 +55,13 @@ Nested DDTs (`Mode`, `Alm_*`, `Run`, `Drv`...) are nested UDT instances. Arrays 
 | `OPCServer` | Ignition OPC connection name | `M580_Line1` |
 | `PathPrefix` | Node-ID prefix used by your OPC server | `ns=2;s=` (check with the OPC Quick Client) |
 | `BaseTag` | PLC instance name | `P101` |
+| `HistProvider` | Tag history provider (historian database) for the process values; leave empty for no history | `PlantHistorian` |
 
    Each tag's OPC path is `{PathPrefix}{BaseTag}.<Member>`. Browse one variable in the OPC Quick Client
    first and copy its prefix, because the namespace index and path syntax differ between Schneider OPC servers.
+   Process values (`T_AI.Val_PV`, `T_KPI.Val_PV`, `T_PID.Val_PV` / `Val_SP` / `Out_CV`, `T_Analyzer.Val_PV`)
+   are historized (analog deadband, on change) as soon as `HistProvider` names a provider; set it once on
+   the instance, or on a parent folder's instances through a Tag Browser multi-edit.
 4. In Perspective, bind faceplates to the instance (e.g. `[default]P101/Sts_State`). `Cfg_`, `Cmd_`, `Sim_`
    and `Prm_` tags are writable; everything else is read-only (ISA-101: the HMI never writes PLC status).
 
@@ -77,8 +81,9 @@ Nested DDTs (`Mode`, `Alm_*`, `Run`, `Drv`...) are nested UDT instances. Arrays 
 **Alarms:** each `T_Alarm` / `T_AlmLim` UDT has an Ignition alarm on `Sts_Active`, so PLC alarms appear in the
 Perspective Alarm Status Table and alarm journal. The alarm is enabled by `Cfg_En`, and its priority comes from
 `Cfg_Priority` (1=Critical 2=High 3=Medium 4=Low). Acknowledging in Ignition runs a tag event script that writes
-`Cmd_Ack` to the PLC, so the PLC alarm state (ISA-18.2) stays authoritative. Shelving is done in the PLC through
-`Cmd_Shelve`; Ignition's own shelving only hides the alarm in Ignition.
+`Cmd_Ack` to the PLC, so the PLC alarm state (ISA-18.2) stays authoritative. HMI shelving uses Ignition's alarm
+shelving (decision 37): the PLC alarm stays active, and `Cmd_Shelve` / `Sts_Shelved` are not driven by the HMI library
+(they remain available for PLC-side logic).
 
 
 ## Standards alignment

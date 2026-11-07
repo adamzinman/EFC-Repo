@@ -22,7 +22,7 @@ Since the October 24, 2026 merge (PR #36, decisions 31–32), dynamic windows us
 3. Dock: in Page Configuration on the overview page, add the library's **right dock** (the same on every page, see [library-reference](library-reference.md#page-setup-the-dw_right-dock)):
    - id `dw_Right`
    - view: the page's trends overview, shown on page load
-   - size 400 px at 1080p (37.04 vh), display "visible", content "cover", handle "hide" (decision 32)
+   - size 400 (`efc.ui.sizeDock` rescales it to 37.04 vh: 400 px at 1080p, 800 px at 4K, decision 33), display "visible", content "cover", handle "hide" (decision 32)
 
    The tile's onClick calls `efc.ui.openDynamic(self)`, which loads `Templates/Dynamic Window/Station/Station` with `{"tagPath": …}` into `dw_Right` and opens it (Ignition 8.1.19+). The window's ✕ calls `efc.ui.closeDynamic(self)`, which puts the page's default view back (`efc.ui.setDefaultDock` in the screen's onStartup) or closes the dock.
 

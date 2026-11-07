@@ -156,14 +156,16 @@ def first_out(group):
 I_TIP = ('"Interlock active - " + {view.custom.blockVerb} + " blocked" + '
          'if({view.custom.firstOut} >= 0 && len(coalesce({view.custom.firstDesc}, "")) > 0, ": " + {view.custom.firstDesc}, "")')
 
-def common_cfg(custom, cfg, perm=True):
-    """Members every bound device template reads: identity, mode, availability, permissive / interlock."""
+def common_cfg(custom, cfg, perm=True, avail=True):
+    """Members every bound device template reads: identity, mode, availability, permissive / interlock.
+    perm=False: no Sts_NotPerm (T_CValve). avail=False: no Sts_Avail / Sts_Local either (T_CValve has neither)."""
     custom.update({"name": "", "desc": "", "man": False, "oos": False, "avail": True, "local": False, "intlk": False,
                    "permMissing": False, "firstOut": -1, "firstDesc": "", "mode": 0})
     cfg.update({"custom.name": ftag("Cfg_Tag"), "custom.desc": ftag("Cfg_Desc"), "custom.man": ftag("Mode/Sts_Man"),
-                "custom.oos": ftag("Mode/Sts_OOS"), "custom.avail": ftag("Sts_Avail"), "custom.local": ftag("Sts_Local"),
+                "custom.oos": ftag("Mode/Sts_OOS"),
                 "custom.intlk": ftag("Sts_Intlk"), "custom.firstOut": ftag("Intlk/Sts_FirstOut"), "custom.firstDesc": first_out("Intlk"),
                 "custom.mode": expr("if({view.custom.man}, 1, 0)")})
+    if avail: cfg.update({"custom.avail": ftag("Sts_Avail"), "custom.local": ftag("Sts_Local")})
     if perm: cfg["custom.permMissing"] = ftag("Sts_NotPerm")
 
 def dw_params(params, ttype, dbl):
@@ -177,6 +179,20 @@ def symbol(s, L, custom, dbl):
     img["meta"]["tooltip"] = {"enabled": True, "text": "Open dynamic window" + (" (double-tap: command, touch mode)" if dbl else "")}
     img["events"] = {"dom": {"onClick": OPEN_DW, **({"onDoubleClick": DBL_CMD} if dbl else {})}}
     return img
+
+def access_lock(L, custom, cfg, btn):
+    """Decision 36: below Operator the Manual button stays pressable under a lock icon; efc.ui.cmd refuses the press
+    and opens the AccessDenied popup. The level comes from session.props.auth.securityLevels (efc.ui.level)."""
+    custom.update({"level": 0, "locked": False})
+    cfg["custom.level"] = {"binding": {"type": "property", "config": {"path": "session.props.auth.securityLevels"},
+                                       "transforms": [{"type": "script", "code": "\treturn efc.ui.level(value)"}]}}
+    cfg["custom.locked"] = expr("{view.params.useButton} && {view.custom.man} && {view.custom.level} < 1")
+    pc = btn["propConfig"]
+    pc["props.enabled"] = expr("{view.custom.canCmd} || {view.custom.locked}")
+    pc["meta.tooltip.text"] = expr('if({view.custom.locked}, "Requires Operator access", ' + pc["meta.tooltip.text"]["binding"]["config"]["expression"] + ")")
+    return {"type": "ia.display.icon", "version": 0, "meta": {"name": "Lock"}, "position": frac(L["pb"], L["size"]),
+            "props": {"path": "material/lock", "color": "#1F1F1F", "style": {"classes": "Indicator/Lock"}},
+            "propConfig": {"meta.visible": expr("{view.custom.locked}")}}
 
 def i_badge_tip(kids, verb):
     for k in kids:
@@ -207,7 +223,7 @@ def onoff_template(s, demo_path):
                                                     'if({view.custom.cmd}, "Close", "Open")))')},
            "events": {"component": {"onActionPerformed": click}}}
     kids = [tag_label(L), symbol(s, L, custom, True)] + badges(L, p_vis="{view.custom.permMissing}", i_vis="{view.custom.intlk}") + \
-           [status_label(L, status, cls, m_vis="!{view.params.useButton} && {view.custom.man}"), btn]
+           [status_label(L, status, cls, m_vis="!{view.params.useButton} && {view.custom.man}"), btn, access_lock(L, custom, cfg, btn)]
     i_badge_tip(kids, "open")
     v = view(demo_path, custom, cfg, kids, L["size"], use_button=True)
     dw_params(v["params"], "T_DValve", True); v["propConfig"].update({f"params.{k}": pin() for k in v["params"]})
@@ -220,7 +236,7 @@ def control_template(s, demo_path):
     cfg = {"custom.out": ftag("Val_Demand"), "custom.pos": ftag("Val_Pos"), "custom.fb": ftag("Cfg_HasFbk"), "custom.fault": ftag("Sts_Fault"),
            "custom.state": expr("if({view.custom.fault}, 3, if((if({view.custom.fb}, {view.custom.pos}, {view.custom.out})) > 1, 1, 0))"),
            "custom.command": expr("if({view.custom.fb}, if({view.custom.out} > 1, 1, 0), -1)")}
-    common_cfg(custom, cfg, perm=False)
+    common_cfg(custom, cfg, perm=False, avail=False)
     color_props(s, custom, cfg)
     status = 'if({view.custom.state} = 3, "FAULT", numberFormat(if({view.custom.fb}, {view.custom.pos}, {view.custom.out}), "0") + " %")'
     cls = 'case({view.custom.state}, 0, "State/Stopped", 1, "State/Running", 2, "State/Transition", 3, "State/Fault", "State/Unknown") + " Text/Mod/Tabular"'
@@ -275,7 +291,7 @@ def motor_template(s, demo_path):
           "events": {"component": {"onActionPerformed": click}}}
     dbl = tt == "T_Motor"   # decision 1: double-tap command on two-state T_DValve / T_Motor only
     kids = [tag_label(L), symbol(s, L, custom, dbl)] + badges(L) + \
-           [status_label(L, status, cls, m_vis="!{view.params.useButton} && {view.custom.man}"), pb]
+           [status_label(L, status, cls, m_vis="!{view.params.useButton} && {view.custom.man}"), pb, access_lock(L, custom, cfg, pb)]
     for k in kids:   # P badge reads the type's NotPerm status
         if k["meta"]["name"] == "P": k["propConfig"]["meta.visible"] = expr("{view.custom.permMissing}")
     i_badge_tip(kids, "start" if tt == "T_Motor" else "switch-on")

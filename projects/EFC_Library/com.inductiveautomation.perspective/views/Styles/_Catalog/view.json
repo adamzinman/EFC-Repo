@@ -3117,6 +3117,23 @@
                     "classes": "Indicator/InterlockBadge"
                   }
                 }
+              },
+              {
+                "type": "ia.display.label",
+                "version": 0,
+                "meta": {
+                  "name": "Lbl_Lock"
+                },
+                "position": {
+                  "basis": "auto",
+                  "shrink": 0
+                },
+                "props": {
+                  "text": "Lock",
+                  "style": {
+                    "classes": "Indicator/Lock"
+                  }
+                }
               }
             ]
           },

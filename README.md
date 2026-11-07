@@ -13,7 +13,7 @@ Everything ships as **one Perspective project, `EFC_Library`** (no parent). Its 
 |---|---|---|
 | `Templates/Valves`, `Rotating`, `HeatTransfer`, `_Demo` | 16 controlled-device templates (P&ID symbols embedded as Drawings) | `generator/build_pid.py` |
 | `Templates/ProcessValues` | `PV_StatusStrip`, `PV_RangeBar` with ISA-18.2 alarm letters | `generator/build_pv.py` |
-| `Templates/Loops` | PID loop cards B1–B4 and `Popups/LoopConfig` | `generator/pid_loops/` |
+| `Templates/Loops` | PID loop cards B1–B4 (a click opens the `dw_Loop` window; the LoopConfig popup is retired) | `generator/pid_loops/` |
 | `Templates/Station` | DDT_Station sidebar, fill and tile faceplates | `imported/EFC_StationFaceplates/` |
 | `Templates/IO` | Modicon x80 I/O card faceplates, parts and `RackOverview` | `imported/EFC_IOFaceplates/` |
 | `Templates/Dynamic Window` | Dynamic windows by category (`Valves`, `Rotating`, `HeatTransfer`, `ProcessValues`, `Loops`, `IO`, `Station`) and shared `Parts`. A template click opens one in the page's `dw_Right` dock (`efc.ui`) | `generator/docks/build_docks.py` (Station window from `imported/EFC_StationFaceplates/`) |
@@ -83,6 +83,8 @@ git add -A && git commit -m "..."  # 4. commit generator AND generated files (in
 
 **Tags:** in the Tag Browser, import `tags/*_UDT.json` into Data Types. Import `tags/PV_Demo_Tags.json` at the `[default]` provider root to try `Templates/ProcessValues/_Demo`, `tags/PID_Demo_Instances.json` for `Templates/_Demo`, and the Station and PID_Loops demo files for theirs. Real discrete valves use the plant `DDT_Valve` UDT. See [`docs/library-reference.md`](docs/library-reference.md).
 
+**Dynamic windows:** a click on any template opens its window in a right-side dock, id `dw_Right`, that each of your pages must define (right, size 400, display visible, content cover, initial view the page's trends overview). Each screen calls `efc.ui.setDefaultDock(self, viewPath, params)` in its root onStartup and `efc.ui.sizeDock(self)` from a change script on `page.props.dimensions.viewport.height`. Needs Ignition 8.1.19 or later. Steps in [`docs/library-reference.md`](docs/library-reference.md#page-setup-the-dw_right-dock).
+
 ## Adding or refreshing a Designer-built part
 ```bash
 python3 tools/import_project_zip.py EFC_IOFaceplates.zip
@@ -94,6 +96,7 @@ Parts in `imported/` have no generator here, so edit them in the Designer, expor
 - [`docs/inventory.md`](docs/inventory.md): every design, version, status and location.
 - [`docs/template-review.md`](docs/template-review.md): findings from the rendered review images.
 - [`docs/library-reference.md`](docs/library-reference.md): templates, UDT mapping, status logic, page setup (the `dw_Right` dock for dynamic windows), colors, 8.1 compatibility.
+- [`docs/efc-ui.md`](docs/efc-ui.md): the `efc.ui` script library: dynamic windows, command access checks, audit and logging, trend, troubleshooting.
 - [`docs/design-notes.md`](docs/design-notes.md): every design decision (notes 1–42) and the open items.
 - [`docs/isa101-audit.md`](docs/isa101-audit.md): the ISA-101 / ISA-18.2 audit and documented deviations.
 - [`docs/style-library.md`](docs/style-library.md) / [`docs/style-class-index.md`](docs/style-class-index.md): how to use EFC_Styles; every class (generated).

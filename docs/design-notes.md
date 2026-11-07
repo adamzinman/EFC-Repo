@@ -51,7 +51,7 @@ These are the decisions behind PID_Symbols, numbered in the order they were made
 21. **The symbol is embedded inside each template**, with all the other agreed elements kept. That means one template per symbol and no nested symbol views.
 22. **Defaults applied with v4 (2026-10-05):**
     - The alarm outline is the highest active alarm priority on the UDT instance (`isAlarmActiveFiltered` on `tagPath/*`).
-    - Clicking the symbol does nothing yet; faceplates are to follow.
+    - Clicking the symbol does nothing yet; faceplates are to follow. (Superseded: since decision 31 a click runs `efc.ui.openDynamic` and opens the device's dynamic window in the page's `dw_Right` dock; see [library-reference](library-reference.md#page-setup-the-dw_right-dock).)
     - The control valve has no actuation button.
 23. **Views land in `Views/Templates`** (`Templates/<Category>/<Symbol>`, demo at `Templates/_Demo`), with no `PID` folder.
 24. **The actuation button is hidden unless the device is in Manual** (valves: `Manual`; motors: `Mode` = 1). The existing enable rules still apply when it's visible.

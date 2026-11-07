@@ -125,9 +125,12 @@ def make_view(root, w, h, params, extra_custom=None):
     for k, e in DERIVED.items(): pcfg["custom." + k] = expr(e)
     for k, e in (extra_custom or {}).items():
         custom[k] = None; pcfg["custom." + k] = expr(e)
-    params = dict(params, tType="T_KPI", dockId="", dwTagPath="")    # efc.ui.openDynamic -> dw_ProcessValue
+    params = dict(params, tType="T_KPI", dockId="", dwTagPath="", census=True)    # efc.ui.openDynamic -> dw_ProcessValue
     for p in params: pcfg["params." + p] = {"paramDirection": "input", "persistent": True}
-    root["events"] = {"dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}
+    pcfg["params.tagPath"] = {"paramDirection": "input", "persistent": True, "onChange": {"enabled": None, "script": "\tefc.pv.rebind(self, previousValue, currentValue)"}}
+    root["events"] = {"system": {"onStartup": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.register(self)"}},
+                       "onShutdown": {"type": "script", "scope": "G", "config": {"script": "\tefc.pv.unregister(self)"}}},
+           "dom": {"onClick": {"type": "script", "scope": "G", "config": {"script": "\tefc.ui.openDynamic(self)"}}}}   # click opens the window; startup/shutdown register the value (efc.pv, decision 35)
     return {"custom": custom, "params": params, "propConfig": pcfg,
             "props": {"defaultSize": {"width": w, "height": h}}, "root": root}
 
@@ -221,14 +224,14 @@ VIEWS = {
 # ---------------------------------------------------------------- examples view
 def emb(name, path, w, h, params):
     return comp("ia.display.view", name, {"path": "Templates/AnalogIndicator/" + path, "params": params, "useDefaultViewWidth": False, "useDefaultViewHeight": False},
-                {"basis": f"{w}px", "shrink": 0, "grow": 0}) | {"position": {"basis": f"{w}px", "shrink": 0, "grow": 0, "height": h}}
+                {"basis": V(w), "shrink": 0, "grow": 0}) | {"position": {"basis": V(w), "shrink": 0, "grow": 0, "height": h}}
 tp = "[default]KPI/KPI_101"
 ex_root = flex("root", "row", [
-    flex("A", "column", [comp("ia.display.view", "A1", {"path": "Templates/AnalogIndicator/A_RangeBar", "params": {"tagPath": tp, "LabelMode": "Both", "ShowMinMax": True, "Format": "#,##0.0"}}, {"basis": "120px", "shrink": 0})], basis="256px"),
-    flex("B", "column", [comp("ia.display.view", "B1", {"path": "Templates/AnalogIndicator/B_PointerScale", "params": {"tagPath": tp, "ShowLimitType": True, "ShowLimitValue": True, "Format": "#,##0.0"}}, {"basis": "330px", "shrink": 0})], basis="128px"),
-    flex("C", "column", [comp("ia.display.view", f"C{i}", {"path": "Templates/AnalogIndicator/C_CompactRow", "params": {"tagPath": tp, "Header": hdr, "Format": "#,##0.0"}}, {"basis": "46px", "shrink": 0}) for i, hdr in [(1, "Tag"), (2, "Desc")]], basis="200px", extra={"style": {"classes": "", "gap": "4px"}}),
-    flex("D", "row", [comp("ia.display.view", f"D{i}", {"path": "Templates/AnalogIndicator/D_MiniColumn", "params": {"tagPath": tp, "Header": hdr, "Format": "#,##0.0"}}, {"basis": "64px", "shrink": 0}) for i, hdr in [(1, "Tag"), (2, "Desc")]], basis="134px", extra={"style": {"classes": "", "gap": "6px"}, "alignItems": "flex-start"}),
-], extra={"alignItems": "flex-start", "style": {"classes": "Container/Screen", "gap": "24px", "padding": "24px"}})
+    flex("A", "column", [comp("ia.display.view", "A1", {"path": "Templates/AnalogIndicator/A_RangeBar", "params": {"tagPath": tp, "LabelMode": "Both", "ShowMinMax": True, "Format": "#,##0.0"}}, {"basis": V(120), "shrink": 0})], basis=V(256)),
+    flex("B", "column", [comp("ia.display.view", "B1", {"path": "Templates/AnalogIndicator/B_PointerScale", "params": {"tagPath": tp, "ShowLimitType": True, "ShowLimitValue": True, "Format": "#,##0.0"}}, {"basis": V(330), "shrink": 0})], basis=V(128)),
+    flex("C", "column", [comp("ia.display.view", f"C{i}", {"path": "Templates/AnalogIndicator/C_CompactRow", "params": {"tagPath": tp, "Header": hdr, "Format": "#,##0.0"}}, {"basis": V(46), "shrink": 0}) for i, hdr in [(1, "Tag"), (2, "Desc")]], basis=V(200), extra={"style": {"classes": "", "gap": V(4)}}),
+    flex("D", "row", [comp("ia.display.view", f"D{i}", {"path": "Templates/AnalogIndicator/D_MiniColumn", "params": {"tagPath": tp, "Header": hdr, "Format": "#,##0.0"}}, {"basis": V(64), "shrink": 0}) for i, hdr in [(1, "Tag"), (2, "Desc")]], basis=V(134), extra={"style": {"classes": "", "gap": V(6)}, "alignItems": "flex-start"}),
+], extra={"alignItems": "flex-start", "style": {"classes": "Container/Screen", "gap": V(24), "padding": V(24)}})
 EXAMPLES = {"custom": {}, "params": {}, "props": {"defaultSize": {"width": 900, "height": 420}}, "root": ex_root}
 
 # ---------------------------------------------------------------- write

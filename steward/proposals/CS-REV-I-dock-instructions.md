@@ -8,6 +8,8 @@ Instructions for an agent working on the EFC Controls Standard (LaTeX, Google Dr
 
 **Decision 32 (`steward/DECISIONS.md`, 2026-10-24) refines 31 and supersedes decision 25 for the dock:** the dock covers the right-hand section of the shell (a content cover, not a reserved column) and is always displayed; it is not shown on demand. Each page's initial dock view is its trends overview, shown when the page loads. The `dockId` template parameter keeps its name. The text below uses these settings. The 8.1.22 library minimum and the no-default-view close case are still open (see Still open).
 
+**Sizing (decision 33, 2026-10-24):** all design work is for a 1920 x 1080 page that scales up to 4K, so any px size is its vh / vw equivalent. Page Configuration takes the `dw_Right` size in px only, so the library scales it: `efc.ui.sizeDock` sets the dock to 400 x viewport height / 1080 (37.04 vh; 400 px at 1080p, 800 px at 4K) through `alterDock` on every open, close and screen startup, and a screen change script on `page.props.dimensions.viewport.height` (Ignition 8.1.7+) calls it on resize. Edits 8a and 9 state this.
+
 **Source of the content:** `steward/DECISIONS.md` rows 31 and 32 (and rows 24, 25, 2 for context). Library view paths: EFCLib `Templates/Dynamic Window/` tree, decision 31.
 
 ---
@@ -90,7 +92,7 @@ Three changes in this appendix. All three anchors are the batch's applied text a
 **8a. Shell paragraph (line 6).** Substring replace (unique in the line):
 
 - Old: `Each screen region (header, menu, main area, trends, alarm bar) is an Embedded View placed in the shell. Perspective docks are not used for these regions, because docks are sized in fixed pixels and would not stay aligned with the scaled content.`
-- New: `Each screen region (header, menu, main area, alarm bar) is an Embedded View placed in the shell. The dynamic window is not an Embedded View: it is the page's right-hand Perspective dock, \texttt{dw\_Right} (Section~\ref{sec:hmi-dynamic-windows}), which covers the right-hand section of the shell. The dock is sized in viewport units, as set out in the Trends / dynamic window paragraph below.`
+- New: `Each screen region (header, menu, main area, alarm bar) is an Embedded View placed in the shell. The dynamic window is not an Embedded View: it is the page's right-hand Perspective dock, \texttt{dw\_Right} (Section~\ref{sec:hmi-dynamic-windows}), which covers the right-hand section of the shell. The dock is set in pixels in Page Configuration and scaled to viewport units by \texttt{efc.ui.sizeDock}, as set out in the Trends / dynamic window paragraph below.`
 
 **8b. Shell Layout table row (line 28).** Keep the row's label and design size. Replace the four percent cells with one spanning cell. Substring replace (unique in the file):
 
@@ -114,7 +116,7 @@ Percent values are the position properties to enter on each Embedded View in the
 Replace the whole paragraph that begins `\textbf{Trends / dynamic window.} The right-hand region of the shell is one Embedded View` (it is one line, the batch's applied text) with:
 
 ```latex
-\textbf{Trends / dynamic window.} The dynamic window is the page's right-hand Perspective dock, \texttt{dw\_Right}. Every page configuration defines this one dock, with the common id \texttt{dw\_Right}. The dock covers the right-hand section of the shell and is always displayed on every page. It is sized in viewport height: 37.04\,vh wide and 79.63\,vh tall, the full height between the header and the alarm bar (400 $\times$ 860 at 1920 $\times$ 1080; 800 $\times$ 1720 at 3840 $\times$ 2160). When the page loads, the dock shows the page's trends overview. A click on a template symbol calls \texttt{efc.ui.openDynamic}, which sets the view and params of the dock to that device's dynamic window for its tag path, then opens the dock (\texttt{system.perspective.alterDock} with \texttt{dw\_Right}, then \texttt{system.perspective.openDock}; Ignition 8.1.19 or later). The close button calls \texttt{efc.ui.closeDynamic}, which returns the dock to the page's default view. The behaviour for a page with no default view is \tbd. Each screen view names its default view in the \texttt{defaultDock} view parameter, which \texttt{setDefaultDock} reads on startup. An expanded trend graph fills the dynamic window below its header; the window keeps its size. What the dynamic window shows and how it opens and closes is set in Section~\ref{sec:hmi-dynamic-windows}. \newmark
+\textbf{Trends / dynamic window.} The dynamic window is the page's right-hand Perspective dock, \texttt{dw\_Right}. Every page configuration defines this one dock, with the common id \texttt{dw\_Right}. The dock covers the right-hand section of the shell and is always displayed on every page. It is set in pixels in Page Configuration and scaled in script by \texttt{efc.ui.sizeDock} so that it stays sized in viewport height: 37.04\,vh wide and 79.63\,vh tall, the full height between the header and the alarm bar (400 $\times$ 860 at 1920 $\times$ 1080; 800 $\times$ 1720 at 3840 $\times$ 2160). When the page loads, the dock shows the page's trends overview. A click on a template symbol calls \texttt{efc.ui.openDynamic}, which sets the view and params of the dock to that device's dynamic window for its tag path, then opens the dock (\texttt{system.perspective.alterDock} with \texttt{dw\_Right}, then \texttt{system.perspective.openDock}; Ignition 8.1.19 or later). The close button calls \texttt{efc.ui.closeDynamic}, which returns the dock to the page's default view. The behaviour for a page with no default view is \tbd. Each screen view names its default view in the \texttt{defaultDock} view parameter, which \texttt{setDefaultDock} reads on startup. An expanded trend graph fills the dynamic window below its header; the window keeps its size. What the dynamic window shows and how it opens and closes is set in Section~\ref{sec:hmi-dynamic-windows}. \newmark
 ```
 
 ## Edit 10: `references/REV-I-CHANGES.md`, new numbered item
@@ -142,7 +144,6 @@ Resolved by decision 32 (no longer open): the shell layout (the dock covers the 
 - Macros used exist: `\newmark` (already used in both files), `\tbd` (used in the batch), `\texttt`, `\textit`, `\textbf`, `\multicolumn`, `\item`. The `<category>` placeholder is written as `\textit{category}`, so no raw `<` or `>` appear.
 - Underscores in text are escaped as `\_` (for example `dw\_Right`, `Cfg\_BypassMax`).
 - Braces and environments balance in each changed file. Do not compile until told.
-- Check before applying: the batch said docks are sized in fixed pixels. Edits 8a and 9 now say the dock is sized in viewport units (vh). Confirm the library dock size can follow the viewport; if it cannot, stop and ask Adam before Edits 8a and 9.
 
 ## Background for the reviewer (not pasted into the standard)
 

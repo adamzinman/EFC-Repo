@@ -1,7 +1,8 @@
 {
   "base": {
     "style": {
-      "gap": "6px"
+      "pointerEvents": "none",
+      "padding": "8%"
     }
   },
   "variants": []
